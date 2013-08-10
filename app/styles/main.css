@@ -4600,6 +4600,7 @@ body {
   padding-left: 0;
   padding-right: 0;
   border-right: 1px solid #e6e6e6;
+  background-color: #FFF;
 }
 #sidebar .navbar {
   background: #f8f8f8 repeat-x;

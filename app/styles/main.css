@@ -4671,7 +4671,7 @@ body {
   background: #FFF;
   padding: 15px;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   html,
   body {
     overflow: auto;
@@ -4681,8 +4681,8 @@ body {
     height: auto;
     overflow: visible;
   }
-  #content {
-    margin-bottom: 15px;
+  #sidebar {
+    background-color: transparent;
   }
   .navbar .nav,
   .navbar .navbar-brand {

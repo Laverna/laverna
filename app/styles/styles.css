@@ -490,6 +490,9 @@
 .glyphicon-collapse-top:before {
   content: "\e160";
 }
+/**
+ * Main styles
+ */
 html,
 body,
 #wrapper {

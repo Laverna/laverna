@@ -6,7 +6,8 @@
     "modernizr": "~2.6.2",
     "jquery": "~1.9.1",
     "marionette": "~1.0.4",
-    "bootstrap": "~3.0"
+    "bootstrap": "~3.0",
+    "bootstrap-glyphicons": "gh-pages"
   },
   "devDependencies": {}
 }

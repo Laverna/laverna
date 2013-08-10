@@ -1520,7 +1520,7 @@ select.input-small {
 }
 .btn:hover,
 .btn:focus {
-  color: #ffffff;
+  color: #333333;
   text-decoration: none;
 }
 .btn:active,
@@ -1540,16 +1540,16 @@ fieldset[disabled] .btn {
   box-shadow: none;
 }
 .btn-default {
-  color: #ffffff;
-  background-color: #474949;
-  border-color: #474949;
+  color: #333333;
+  background-color: #ffffff;
+  border-color: #e6e6e6;
 }
 .btn-default:hover,
 .btn-default:focus,
 .btn-default:active,
 .btn-default.active {
-  background-color: #3a3c3c;
-  border-color: #2e2f2f;
+  background-color: #f2f2f2;
+  border-color: #cccccc;
 }
 .btn-default.disabled,
 .btn-default[disabled],
@@ -1566,11 +1566,11 @@ fieldset[disabled] .btn-default:active,
 .btn-default.disabled.active,
 .btn-default[disabled].active,
 fieldset[disabled] .btn-default.active {
-  background-color: #474949;
-  border-color: #474949;
+  background-color: #ffffff;
+  border-color: #e6e6e6;
 }
 .btn-primary {
-  color: #ffffff;
+  color: #333333;
   background-color: #428bca;
   border-color: #428bca;
 }
@@ -1600,7 +1600,7 @@ fieldset[disabled] .btn-primary.active {
   border-color: #428bca;
 }
 .btn-warning {
-  color: #ffffff;
+  color: #333333;
   background-color: #f0ad4e;
   border-color: #f0ad4e;
 }
@@ -1630,7 +1630,7 @@ fieldset[disabled] .btn-warning.active {
   border-color: #f0ad4e;
 }
 .btn-danger {
-  color: #ffffff;
+  color: #333333;
   background-color: #d9534f;
   border-color: #d9534f;
 }
@@ -1660,7 +1660,7 @@ fieldset[disabled] .btn-danger.active {
   border-color: #d9534f;
 }
 .btn-success {
-  color: #ffffff;
+  color: #333333;
   background-color: #5cb85c;
   border-color: #5cb85c;
 }
@@ -1690,7 +1690,7 @@ fieldset[disabled] .btn-success.active {
   border-color: #5cb85c;
 }
 .btn-info {
-  color: #ffffff;
+  color: #333333;
   background-color: #5bc0de;
   border-color: #5bc0de;
 }
@@ -2611,10 +2611,10 @@ button.close {
   color: #ffffff;
 }
 .btn .caret {
-  border-top-color: #ffffff;
+  border-top-color: #333333;
 }
 .dropup .btn .caret {
-  border-bottom-color: #ffffff;
+  border-bottom-color: #333333;
 }
 .btn-group,
 .btn-group-vertical {
@@ -4584,8 +4584,19 @@ body,
   width: 100%;
   margin: 0;
 }
-#sidebar {
+body {
+  background: #f5f5f5;
+}
+html,
+body {
+  overflow: hidden;
+}
+#sidebar,
+#content {
   height: 100%;
+  overflow: auto;
+}
+#sidebar {
   padding-left: 0;
   padding-right: 0;
   border-right: 1px solid #e6e6e6;
@@ -4593,25 +4604,24 @@ body,
 #sidebar .navbar {
   background: #f8f8f8 repeat-x;
   margin-bottom: 0;
-  padding-right: 0;
 }
-#sidebar .navbar .nav a.notes {
+#sidebar .navbar .btn {
   margin-top: 7px;
   padding-top: 8px;
   padding-bottom: 8px;
-  border: 1px solid #e6e6e6;
-  border-radius: 5px;
+  border-radius: 3px;
 }
-#sidebar .navbar .nav a.addlink {
+#sidebar .navbar .addlink {
   color: #FFF;
 }
-#sidebar .navbar .nav a.addlink:hover {
+#sidebar .navbar .addlink:hover {
   border-color: #D9534F;
   background: #d43f3a;
 }
 #sidebar .main .list-group .list-group-item {
   border-radius: 0;
   padding-right: 15px;
+  border-right-width: 0;
 }
 #sidebar .main .list-group .list-group-item.active {
   border-color: #00A693;
@@ -4625,8 +4635,6 @@ body,
 #content {
   padding-left: 0;
   padding-right: 0;
-  height: 100%;
-  background: #f5f5f5;
 }
 #content .navbar {
   background: #f5f5f5;
@@ -4643,6 +4651,7 @@ body,
 #content .main {
   padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 10px;
 }
 #content .main header .article-headline {
   font-size: 26px;
@@ -4660,4 +4669,36 @@ body,
   border-radius: 5px;
   background: #FFF;
   padding: 15px;
+}
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow: auto;
+  }
+  #sidebar,
+  #content {
+    height: auto;
+    overflow: visible;
+  }
+  #content {
+    margin-bottom: 15px;
+  }
+  .navbar .nav,
+  .navbar .navbar-brand {
+    float: left;
+  }
+  .navbar .navbar-brand {
+    margin-top: 10px;
+    max-width: 120px;
+    height: 34px;
+    overflow: hidden;
+  }
+  .navbar .pull-right {
+    float: right;
+    width: auto;
+    margin-bottom: 15px;
+  }
+  .navbar .nav > li {
+    float: left;
+  }
 }

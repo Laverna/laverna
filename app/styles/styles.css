@@ -516,7 +516,7 @@ body,
   padding-top: 8px;
   padding-bottom: 8px;
   border: 1px solid #e6e6e6;
-  border-radius: 5px;
+  border-radius: 0;
 }
 #sidebar .navbar .nav a.addlink {
   color: #FFF;
@@ -534,9 +534,55 @@ body,
   border-left: 5px solid #007366;
   background: #00A693;
 }
+#sidebar .main .list-group .list-group-item.active .favourite.active {
+  color: #FFF;
+}
 #sidebar .main .list-group .list-group-item .favourite {
   font-size: 22px;
   margin-right: -5px;
+  color: #b3b3b3;
+}
+#sidebar .main .list-group .list-group-item .favourite.active {
+  color: #007366;
+}
+#sidebar .search-form {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#sidebar .search-form .row {
+  margin-right: 0;
+  width: 100%;
+}
+#sidebar .search-form .row .input-append input {
+  float: left;
+  width: 10%;
+}
+#sidebar .search-form span.glyphicon-search {
+  margin-left: 10px;
+  width: 3%;
+  color: #cccccc;
+}
+#sidebar .search-form span.glyphicon-search.active {
+  color: #101010;
+}
+#sidebar .search-form .search-input {
+  border-radius: 0;
+  border: 1px solid transparent;
+  box-shadow: none;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  width: 80%;
+}
+#sidebar .search-form .search-input:focus {
+  box-shadow: none;
+  border: 1px solid #00A693;
+}
+#sidebar .search-form button {
+  padding: 5px;
+}
+#sidebar .search-form button span {
+  margin-left: 0;
 }
 #content {
   padding-left: 0;
@@ -553,7 +599,7 @@ body,
   padding-top: 8px;
   padding-bottom: 8px;
   border: 1px solid #e6e6e6;
-  border-radius: 5px;
+  border-radius: 0;
   margin-left: 10px;
 }
 #content .main {

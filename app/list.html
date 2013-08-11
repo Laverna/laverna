@@ -6,11 +6,12 @@
 </head>
 <body>
     <div class="row" id="wrapper">
-        <div class="col-4 sidebar-notes" id="sidebar">
+        <!-- Sidebar {{ -->
+        <div class="col-12 col-sm-6 col-lg-4 sidebar-notes" id="sidebar">
             <div class="navbar navbar-static-top">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#" class="btn notes">
+                        <a href="#" class="btn btn-default notes">
                             <span class="glyphicon glyphicon-align-justify"></span>
                         </a>
                     </li>
@@ -29,11 +30,13 @@
                     </li>
                 </ul>
             </div>
+
             <form class="form-inline search-form">
                 <span class="glyphicon glyphicon-search input-append"></span>
                 <input type="text" placeholder="Search" class="input-append search-input" />
                 <!--<span class="glyphicon glyphicon-off input-append"></span>-->
             </form>
+
             <div class="main">
                 <div class="list-group">
                     <a href="#" class="list-group-item active">
@@ -60,22 +63,26 @@
                 </div>
             </div>
         </div>
-        <div class="col-8 content-notes" id="content">
+        <!-- Sidebar }} -->
+
+        <!-- Content {{ -->
+        <div class="col-12 col-sm-6 col-lg-8 content-notes" id="content">
             <div class="navbar navbar-static-top">
                 <ul class="nav navbar-nav pull-right">
                     <li>
-                        <a href="#" class="btn">
+                        <a href="#" class="btn btn-default">
                             <span class="glyphicon glyphicon-pencil"></span> Edit
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="btn">
+                        <a href="#" class="btn btn-default">
                             <span class="glyphicon glyphicon-trash"></span> Delete
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="btn">
-                            <span class="glyphicon glyphicon-cog"></span> Settings
+                        <a href="#" class="btn btn-default">
+                            <span class="hidden-sm"><span class="glyphicon glyphicon-cog"></span> Settings</span>
+                            <span class="visible-sm"><span class="glyphicon glyphicon-cog"></span></span>
                         </a>
                     </li>
                 </ul>
@@ -104,6 +111,8 @@
                 </div>
             </div>
         </div>
-    </div>
+        <!-- Content }} -->
+
+    </div><!-- /.wrapper -->
 </body>
 </html>

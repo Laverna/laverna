@@ -6,7 +6,9 @@
 </head>
 <body>
 <div class="row" id="wrapper">
-    <div class="col-4 sidebar-tags" id="sidebar">
+
+    <!-- Sidebar {{ -->
+    <div class="col-12 col-sm-6 col-lg-4 sidebar-tags" id="sidebar">
         <div class="navbar navbar-static-top">
             <a href="" class="navbar-brand">Profile name</a>
         </div>
@@ -53,22 +55,26 @@
             </div>
         </div>
     </div>
-    <div class="col-8 content-tags" id="content">
+    <!-- Sidebar }} -->
+
+    <!-- Content {{ -->
+    <div class="col-12 col-sm-6 col-lg-8 content-tags" id="content">
         <div class="navbar navbar-static-top">
             <ul class="nav navbar-nav pull-right">
                 <li>
-                    <a href="#" class="btn">
+                    <a href="#" class="btn btn-default">
                         <span class="glyphicon glyphicon-pencil"></span> Edit
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="btn">
+                    <a href="#" class="btn btn-default">
                         <span class="glyphicon glyphicon-trash"></span> Delete
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="btn">
-                        <span class="glyphicon glyphicon-cog"></span> Settings
+                    <a href="#" class="btn btn-default">
+                        <span class="hidden-sm"><span class="glyphicon glyphicon-cog"></span> Settings</span>
+                        <span class="visible-sm"><span class="glyphicon glyphicon-cog"></span></span>
                     </a>
                 </li>
             </ul>
@@ -97,6 +103,7 @@
             </div>
         </div>
     </div>
+    <!-- Content }} -->
 </div>
 </body>
 </html>

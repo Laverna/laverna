@@ -1,0 +1,39 @@
+//
+// Responsive.less
+//
+
+// Tablets and small screens only
+@media (max-width: 767px) {
+    html, body {
+        overflow: auto;
+    }
+    #sidebar, #content {
+        height: auto;
+        overflow: visible;
+    }
+    #sidebar {
+        background-color: transparent;
+    }
+    // Navbar
+    .navbar {
+        .nav, .navbar-brand {
+            float: left;
+        }
+        .navbar-brand {
+            margin-top: 10px;
+            max-width: 320px - 200px;
+            height: @font-size-base + 20px;
+            overflow: hidden;
+        }
+        .pull-right {
+            float: right;
+            width: auto;
+            margin-bottom: 15px;
+        }
+        .nav {
+            > li {
+                float: left;
+            }
+        }
+    }
+}

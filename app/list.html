@@ -6,8 +6,8 @@
 </head>
 <body>
     <div class="row" id="wrapper">
-        <!-- sidebar {{ -->
-        <div class="col-12 col-sm-6 col-lg-4" id="sidebar">
+        <!-- Sidebar {{ -->
+        <div class="col-12 col-sm-6 col-lg-4 sidebar-notes" id="sidebar">
             <div class="navbar navbar-static-top">
                 <ul class="nav navbar-nav">
                     <li>
@@ -16,12 +16,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="btn">
+                        <a href="#">
                             <span class="glyphicon glyphicon-refresh"></span>
                         </a>
                     </li>
                 </ul>
-                <a href="" class="navbar-brand">Some note name</a>
+                <a href="" class="navbar-brand">Some base note</a>
                 <ul class="nav navbar-nav pull-right">
                     <li>
                         <a href="#addlink" class="btn btn-danger addlink">
@@ -30,33 +30,43 @@
                     </li>
                 </ul>
             </div>
-            <div class="main">
-                <form class="form-inline">
 
-                </form>
+            <form class="form-inline search-form">
+                <span class="glyphicon glyphicon-search input-append"></span>
+                <input type="text" placeholder="Search" class="input-append search-input" />
+                <!--<span class="glyphicon glyphicon-off input-append"></span>-->
+            </form>
+
+            <div class="main">
                 <div class="list-group">
+                    <a href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">List group item heading</h4>
+                        <p class="clearfix list-group-item-text">
+                            some text... . .. .. . .. .. . . ..
+                            <span class="favourite pull-right glyphicon glyphicon-star active"></span>
+                        </p>
+                    </a>
                     <a href="#" class="list-group-item">
                         <h4 class="list-group-item-heading">List group item heading</h4>
                         <p class="clearfix list-group-item-text">
                             some text... . .. .. . .. .. . . ..
-                            <span class="favourite pull-right glyphicon glyphicon-star-empty"></span>
+                            <span class="favourite pull-right glyphicon glyphicon-star active"></span>
                         </p>
-                    </a>
-                    <a href="#" class="list-group-item active">
-                        <h4 class="list-group-item-heading">List group item heading</h4>
-                        <p class="list-group-item-text">...</p>
                     </a>
                     <a href="#" class="list-group-item">
                         <h4 class="list-group-item-heading">List group item heading</h4>
-                        <p class="list-group-item-text">...</p>
+                        <p class="clearfix list-group-item-text">
+                            some text... . .. .. . .. .. . . ..
+                            <span class="favourite pull-right glyphicon glyphicon-star"></span>
+                        </p>
                     </a>
                 </div>
             </div>
         </div>
-        <!-- sidebar }} -->
+        <!-- Sidebar }} -->
 
-        <!-- content {{ -->
-        <div class="col-12 col-sm-6 col-lg-8" id="content">
+        <!-- Content {{ -->
+        <div class="col-12 col-sm-6 col-lg-8 content-notes" id="content">
             <div class="navbar navbar-static-top">
                 <ul class="nav navbar-nav pull-right">
                     <li>
@@ -101,8 +111,7 @@
                 </div>
             </div>
         </div>
-        <!-- content }} -->
-
+        <!-- Content }} -->
     </div><!-- /.wrapper -->
 </body>
 </html>

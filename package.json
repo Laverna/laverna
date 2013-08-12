@@ -30,5 +30,19 @@
   },
   "engines": {
     "node": ">=0.8.0"
-  }
+  },
+  "description": "ERROR: No README data found!",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:ofnote/ofnote.git"
+  },
+  "author": "",
+  "license": "BSD"
 }

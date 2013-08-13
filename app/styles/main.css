@@ -1520,7 +1520,7 @@ select.input-small {
 }
 .btn:hover,
 .btn:focus {
-  color: #333333;
+  color: #ffffff;
   text-decoration: none;
 }
 .btn:active,
@@ -1540,7 +1540,7 @@ fieldset[disabled] .btn {
   box-shadow: none;
 }
 .btn-default {
-  color: #333333;
+  color: #ffffff;
   background-color: #ffffff;
   border-color: #e6e6e6;
 }
@@ -1570,7 +1570,7 @@ fieldset[disabled] .btn-default.active {
   border-color: #e6e6e6;
 }
 .btn-primary {
-  color: #333333;
+  color: #ffffff;
   background-color: #428bca;
   border-color: #428bca;
 }
@@ -1600,7 +1600,7 @@ fieldset[disabled] .btn-primary.active {
   border-color: #428bca;
 }
 .btn-warning {
-  color: #333333;
+  color: #ffffff;
   background-color: #f0ad4e;
   border-color: #f0ad4e;
 }
@@ -1630,7 +1630,7 @@ fieldset[disabled] .btn-warning.active {
   border-color: #f0ad4e;
 }
 .btn-danger {
-  color: #333333;
+  color: #ffffff;
   background-color: #d9534f;
   border-color: #d9534f;
 }
@@ -1660,7 +1660,7 @@ fieldset[disabled] .btn-danger.active {
   border-color: #d9534f;
 }
 .btn-success {
-  color: #333333;
+  color: #ffffff;
   background-color: #5cb85c;
   border-color: #5cb85c;
 }
@@ -1690,7 +1690,7 @@ fieldset[disabled] .btn-success.active {
   border-color: #5cb85c;
 }
 .btn-info {
-  color: #333333;
+  color: #ffffff;
   background-color: #5bc0de;
   border-color: #5bc0de;
 }
@@ -2611,10 +2611,10 @@ button.close {
   color: #ffffff;
 }
 .btn .caret {
-  border-top-color: #333333;
+  border-top-color: #ffffff;
 }
 .dropup .btn .caret {
-  border-bottom-color: #333333;
+  border-bottom-color: #ffffff;
 }
 .btn-group,
 .btn-group-vertical {
@@ -4595,6 +4595,45 @@ body {
 #content {
   height: 100%;
   overflow: auto;
+}
+.btn-default,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
+  color: #333333;
+}
+.form-control {
+  border-radius: 0;
+}
+.form-control:focus,
+.form-control:active {
+  border-color: #00c0aa;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.modal-header {
+  background-color: #f5f5f5;
+  border-radius: 4px 4px 0 0;
+}
+.modal-body {
+  padding-top: 0;
+}
+.modal-body .form-group {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 0;
+  margin-left: -19px;
+  margin-right: -19px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.modal-body .form-control,
+.modal-body .form-control:active,
+.modal-body .form-control:focus,
+.modal-body input,
+.modal-body textarea {
+  border-width: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .navbar .btn {
   margin-top: 7px;

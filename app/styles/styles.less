@@ -1,6 +1,8 @@
 @import "../bower_components/bootstrap/less/mixins.less";
 @import "../bower_components/bootstrap-glyphicons/less/bootstrap-glyphicons.less";
 
+@baseGreenColor: #00A693;
+
 /**
  * Main styles
  */
@@ -20,6 +22,44 @@ html, body {
 #sidebar, #content {
     height: 100%;
     overflow: auto;
+}
+
+//
+// Buttons, forms etc
+//
+.btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active {
+    color: darken(@btn-default-bg, 80%);
+}
+.form-control {
+    border-radius: 0;
+    &:focus, &:active {
+        border-color: lighten(@baseGreenColor, 5%);
+        .box-shadow(none);
+        // .box-shadow(~"inset 0 1px 1px lighten(@baseGreenColor, 20%), 0 0 8px lighten(@baseGreenColor, 40%)");
+    }
+}
+
+//
+// Modals
+//
+.modal-header {
+    background-color: darken(#FFF, 4%);
+    border-radius: 4px 4px 0 0;
+}
+.modal-body {
+    padding-top: 0;
+    .form-group {
+        border-bottom: 1px solid @modal-header-border-color;
+        margin-bottom: 0;
+        margin-left: -(15px  + 4px);
+        margin-right: -(15px + 4px);
+        padding-top    : 5px;
+        padding-bottom : 5px;
+    }
+    .form-control, .form-control:active,.form-control:focus, input, textarea {
+        border-width: 0;
+        .box-shadow(none);
+    }
 }
 
 //
@@ -217,3 +257,4 @@ html, body {
         padding: 15px;
     }
 }
+

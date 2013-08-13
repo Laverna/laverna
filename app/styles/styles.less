@@ -38,18 +38,53 @@ html, body {
 // Sidebar styles (sidebar - place where notes & tags should be)
 //
 #sidebar {
-  padding-left: 0;
-  padding-right: 0;
-  border-right: 1px solid darken(#FFF, 10%);
-  background-color: #FFF;
+    padding-left: 0;
+    padding-right: 0;
+    border-right: 1px solid darken(#FFF, 10%);
+    background-color: #FFF;
+    // Sidebar content styles
+    .main {
+        .list-group {
+        }
+        .list-group-item {
+            border-radius: 0;
+            padding-right: 15px;
+            border-left-width: 0;
+            border-right-width: 0;
+            color: #202020;
+            &.active {
+                border-color: #00A693;
+                color: #FFF;
+                border-left: 5px solid darken(#00A693, 10%);
+                background: #00A693;   
+                &:hover, .badge {
+                  background: darken(#00A693, 2%);
+                }
+            }                          
+            .favorite {                
+                font-size: 22px;       
+                margin-right: -5px;    
+                color: darken(#FFF, 30%);
+                &.active{
+                  color: darken(#00A693, 10%);
+                }
+            }
+        }
+    }
+    .list-group .navbar {
+        min-height: 20px;
+        .navbar-brand {
+            padding: 8px 15px;
+        }
+    }
 }
 
 //
 // Tags sidebar
 //
 #sidebar.sidebar-tags {
+    @tagsPadding: 25px;
     .navbar {
-        background: #F8F8F8 repeat-x;
         margin-bottom: 0;
         .navbar-brand {
             max-width: none;
@@ -60,23 +95,15 @@ html, body {
         li {
             list-style: none;
         }
-        .tags {
-            margin-left: 10px;
+        .list-group-item {
+            border-radius: 0;
         }
         .list-group-tag {
-        }
-        .list-group-item {
-            border-left: none;
-            border-right: none;
-            border-bottom-color: darken(#FFF, 30%);
-            border-radius: 0;
-            padding-left: 5px;
-            color: #202020;
-            &.active {
-                background: #00A693;
-                color: #FFF;
-                &:hover{
-                  background: darken(#00A693, 2%);
+            .tags {
+                padding-left: @tagsPadding;
+                .list-group-item {
+                    margin-left: -(@tagsPadding * 2);
+                    padding-left: @tagsPadding * 3;
                 }
             }
         }
@@ -98,29 +125,6 @@ html, body {
             &:hover {
                 border-color: #D9534F;
                 background: darken(#D9534F, 5%);
-            }
-        }
-    }
-    // Sidebar content styles
-    .main {
-        .list-group {
-        }
-        .list-group-item {
-            border-radius: 0;
-            padding-right: 15px;
-            border-right-width: 0;
-            &.active {
-                border-color: #00A693;
-                border-left: 5px solid darken(#00A693, 10%);
-                background: #00A693;   
-            }                          
-            .favorite {                
-                font-size: 22px;       
-                margin-right: -5px;    
-                color: darken(#FFF, 30%);
-                &.active{
-                  color: darken(#00A693, 10%);
-                }
             }
         }
     }

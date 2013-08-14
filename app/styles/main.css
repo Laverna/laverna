@@ -1661,15 +1661,15 @@ fieldset[disabled] .btn-danger.active {
 }
 .btn-success {
   color: #ffffff;
-  background-color: #5cb85c;
-  border-color: #5cb85c;
+  background-color: #00a693;
+  border-color: #00ab98;
 }
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active,
 .btn-success.active {
-  background-color: #4cae4c;
-  border-color: #449d44;
+  background-color: #008d7c;
+  border-color: #00786a;
 }
 .btn-success.disabled,
 .btn-success[disabled],
@@ -1686,8 +1686,8 @@ fieldset[disabled] .btn-success:active,
 .btn-success.disabled.active,
 .btn-success[disabled].active,
 fieldset[disabled] .btn-success.active {
-  background-color: #5cb85c;
-  border-color: #5cb85c;
+  background-color: #00a693;
+  border-color: #00ab98;
 }
 .btn-info {
   color: #ffffff;

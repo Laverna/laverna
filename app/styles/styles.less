@@ -46,7 +46,7 @@ html, body {
 .task input[type=checkbox] {
     display: none;
 }
-.task label {
+.task span {
     position: relative;
     padding-left: 16px + 8px;
     display: inline-block;
@@ -62,18 +62,17 @@ html, body {
 	    margin-right: 10px;
 	    position: absolute;
 	    left: 0;
-	    bottom: 1px;
-        background-color: darken(#FFF, 4%);
+	    bottom: 2px;
         border: 1px solid darken(#FFF, 20%);
-	    // box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+	    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .2), 0px 1px 0px 0px rgba(255, 255, 255, .4);
         font-weight: bold;
-	    font-size: 25px;
-        line-height: 14px;
+	    font-size: 20px;
+        line-height: 15px;
 	    text-align: center;
     }
 }
 .task input[type=checkbox]:checked {
-    + label {
+    + span {
         text-decoration: line-through;
         &:before {
 	        content: "\2713";

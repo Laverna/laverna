@@ -2,9 +2,18 @@
 // Variables for less
 //
 
-@baseGreenColor: #00A693;
+@border-radius-base: 3px;
 
-@border-radius-base: 4px;
+// Brand colors
+// -------------------------
+@brand-primary:         #428bca;
+@brand-success:         #00A693;
+@brand-warning:         #E6781E;
+// @brand-danger:          #D14334;
+@brand-danger:          darken(#D9534F, 5%);
+@brand-info:            #1693A7;
+
+@baseGreenColor: @brand-success;
 
 // Default buttons
 @btn-default-bg: #FFF;
@@ -13,3 +22,4 @@
 // Success buttons
 @btn-success-bg: @baseGreenColor;
 @btn-success-border: lighten(@baseGreenColor, 1%);
+

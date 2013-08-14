@@ -110,7 +110,7 @@ html, body {
         margin-top: 7px;
         padding-top: 8px;
         padding-bottom: 8px;
-        border-radius: 3px;
+        border-radius: @border-radius-base;
     }
 }
 
@@ -203,8 +203,8 @@ html, body {
         .addlink {
             color: #FFF;
             &:hover {
-                border-color: #D9534F;
-                background: darken(#D9534F, 5%);
+                border-color: lighten(@brand-danger, 5%);
+                background: darken(@brand-danger, 5%);
             }
         }
     }

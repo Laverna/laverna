@@ -1,0 +1,5 @@
+NameError: variable @font-size-base is undefined in /home/greenstar/webserver/notes/app/styles/responsive.less on line 25, column 21:
+24             max-width: 320px - 200px;
+25             height: @font-size-base + 20px;
+26             overflow: hidden;
+

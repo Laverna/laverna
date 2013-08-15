@@ -524,8 +524,38 @@ body {
   border-right: 1px solid #e6e6e6;
   background-color: #FFF;
 }
+#sidebar .main .list-group-item {
+  border-radius: 0;
+  padding-right: 15px;
+  border-left-width: 0;
+  border-right-width: 0;
+  color: #202020;
+}
+#sidebar .main .list-group-item.active {
+  border-color: #00A693;
+  color: #FFF;
+  border-left: 5px solid #007366;
+  background: #00A693;
+}
+#sidebar .main .list-group-item.active:hover,
+#sidebar .main .list-group-item.active .badge {
+  background: #009c8a;
+}
+#sidebar .main .list-group-item .favorite {
+  font-size: 22px;
+  margin-right: -5px;
+  color: #b3b3b3;
+}
+#sidebar .main .list-group-item .favorite.active {
+  color: #007366;
+}
+#sidebar .list-group .navbar {
+  min-height: 20px;
+}
+#sidebar .list-group .navbar .navbar-brand {
+  padding: 8px 15px;
+}
 #sidebar.sidebar-tags .navbar {
-  background: #f8f8f8 repeat-x;
   margin-bottom: 0;
 }
 #sidebar.sidebar-tags .navbar .navbar-brand {
@@ -535,23 +565,15 @@ body {
 #sidebar.sidebar-tags .main li {
   list-style: none;
 }
-#sidebar.sidebar-tags .main .tags {
-  margin-left: 10px;
-}
 #sidebar.sidebar-tags .main .list-group-item {
-  border-left: none;
-  border-right: none;
-  border-bottom-color: #b3b3b3;
   border-radius: 0;
-  padding-left: 5px;
-  color: #202020;
 }
-#sidebar.sidebar-tags .main .list-group-item.active {
-  background: #00A693;
-  color: #FFF;
+#sidebar.sidebar-tags .main .list-group-tag .tags {
+  padding-left: 25px;
 }
-#sidebar.sidebar-tags .main .list-group-item.active:hover {
-  background: #009c8a;
+#sidebar.sidebar-tags .main .list-group-tag .tags .list-group-item {
+  margin-left: -50px;
+  padding-left: 75px;
 }
 #sidebar.sidebar-notes .navbar .addlink {
   color: #FFF;
@@ -559,24 +581,6 @@ body {
 #sidebar.sidebar-notes .navbar .addlink:hover {
   border-color: #D9534F;
   background: #d43f3a;
-}
-#sidebar.sidebar-notes .main .list-group-item {
-  border-radius: 0;
-  padding-right: 15px;
-  border-right-width: 0;
-}
-#sidebar.sidebar-notes .main .list-group-item.active {
-  border-color: #00A693;
-  border-left: 5px solid #007366;
-  background: #00A693;
-}
-#sidebar.sidebar-notes .main .list-group-item .favorite {
-  font-size: 22px;
-  margin-right: -5px;
-  color: #b3b3b3;
-}
-#sidebar.sidebar-notes .main .list-group-item .favorite.active {
-  color: #007366;
 }
 .search-form {
   padding-top: 10px;
@@ -647,7 +651,7 @@ body {
 }
 #content .article {
   margin-top: 15px;
-  border-radius: 5px;
+  border-radius: 3px;
   background: #FFF;
   padding: 15px;
 }

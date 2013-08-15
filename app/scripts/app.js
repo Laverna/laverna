@@ -1,6 +1,6 @@
 /*global define */
-define([], function () {
+define(['marionette'], function(Marionette){
     'use strict';
-
-    return '\'Allo \'Allo!';
+    var App = new Marionette.Application();
+    return App;
 });

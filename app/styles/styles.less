@@ -23,6 +23,86 @@ html, body {
 }
 
 //
+// Buttons, forms etc
+//
+.btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active {
+    color: darken(@btn-default-bg, 80%);
+}
+.form-control {
+    border-radius: 0;
+    &:focus, &:active {
+        border-color: lighten(@baseGreenColor, 5%);
+        .box-shadow(none);
+        // .box-shadow(~"inset 0 1px 1px lighten(@baseGreenColor, 20%), 0 0 8px lighten(@baseGreenColor, 40%)");
+    }
+}
+// Checkboxes
+.task {
+    display: block;
+    margin-bottom: 4px;
+}
+.task input[type=checkbox] {
+    display: none;
+}
+.task span {
+    position: relative;
+    padding-left: 16px + 8px;
+    display: inline-block;
+	cursor: pointer;
+    font-weight: normal;
+    &:before {
+        // border-radius: 2px;
+        color: darken(@baseGreenColor, 1%);
+        content: "";
+	    display: inline-block;
+	    width: 14px;
+	    height: 14px;
+	    margin-right: 10px;
+	    position: absolute;
+	    left: 0;
+	    bottom: 2px;
+        border: 1px solid darken(#FFF, 20%);
+	    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .2), 0px 1px 0px 0px rgba(255, 255, 255, .4);
+        font-weight: bold;
+	    font-size: 20px;
+        line-height: 15px;
+	    text-align: center;
+    }
+}
+.task input[type=checkbox]:checked {
+    + span {
+        text-decoration: line-through;
+        &:before {
+	        content: "\2713";
+	        text-shadow: 1px 1px 1px darken(@baseGreenColor, 5%);
+        }
+    }
+}
+
+//
+// Modals
+//
+.modal-header {
+    background-color: darken(#FFF, 4%);
+    border-radius: 4px 4px 0 0;
+}
+.modal-body {
+    padding-top: 0;
+    .form-group {
+        border-bottom: 1px solid @modal-header-border-color;
+        margin-bottom: 0;
+        margin-left: -(15px  + 4px);
+        margin-right: -(15px + 4px);
+        padding-top    : 5px;
+        padding-bottom : 5px;
+    }
+    .form-control, .form-control:active,.form-control:focus, input, textarea {
+        border-width: 0;
+        .box-shadow(none);
+    }
+}
+
+//
 // Basic styles for all navbars
 //
 .navbar {
@@ -30,7 +110,7 @@ html, body {
         margin-top: 7px;
         padding-top: 8px;
         padding-bottom: 8px;
-        border-radius: 3px;
+        border-radius: @border-radius-base;
     }
 }
 
@@ -123,8 +203,8 @@ html, body {
         .addlink {
             color: #FFF;
             &:hover {
-                border-color: #D9534F;
-                background: darken(#D9534F, 5%);
+                border-color: lighten(@brand-danger, 5%);
+                background: darken(@brand-danger, 5%);
             }
         }
     }
@@ -217,3 +297,4 @@ html, body {
         padding: 15px;
     }
 }
+

@@ -26,5 +26,4 @@ require(['backbone', 'underscore', 'jquery', 'marionette', 'router'],
     'use strict';
     new Router();
     Backbone.history.start();
-//    console.log('Running jQuery %s', $().jquery);
 });

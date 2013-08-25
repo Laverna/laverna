@@ -1,9 +1,12 @@
 /*global define*/
-define(['marionette'], function(Marionette){
+define(['marionette'], function(Marionette) {
+    'use strict';
+
     var Controller = Marionette.Controller.extend({
-        index: function(){
+        index: function() {
             console.log('index page');
         }
     });
+
     return Controller;
 });

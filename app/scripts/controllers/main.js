@@ -1,5 +1,10 @@
 /*global define*/
-define(['marionette'], function(Marionette) {
+define([
+    'marionette',
+    'bootstrap-modal',
+    // Views
+    'views/noteAdd'
+], function(Marionette, Modal, noteAdd) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -18,6 +23,9 @@ define(['marionette'], function(Marionette) {
         },
 
         noteAdd: function () {
+            new Backbone.BootstrapModal({
+                content: new noteAdd(),
+            }).open();
             console.log('add page');
         },
 

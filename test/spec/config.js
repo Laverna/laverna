@@ -22,7 +22,7 @@ require.config({
     }
 });
 
-require([], function () {
+require(['../test/spec/Models/note'], function () {
     'use strict';
 });
 

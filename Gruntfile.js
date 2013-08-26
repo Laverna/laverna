@@ -70,7 +70,7 @@ module.exports = function (grunt) {
                     }
                 }
             },
-            test: {
+            /*test: {
                 options: {
                     middleware: function (connect) {
                         return [
@@ -79,7 +79,7 @@ module.exports = function (grunt) {
                         ];
                     }
                 }
-            },
+            },*/
             dist: {
                 options: {
                     middleware: function (connect) {
@@ -355,12 +355,12 @@ module.exports = function (grunt) {
         ]);
     });
 
-    grunt.registerTask('test', [
+    /*grunt.registerTask('test', [
         'clean:server',
         'concurrent:test',
         'connect:test',
-        'mocha'
-    ]);
+        // 'mocha'
+    ]);*/
 
     grunt.registerTask('build', [
         'clean:dist',
@@ -377,7 +377,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'jshint',
-        'test',
+        // 'test',
         'build'
     ]);
 };

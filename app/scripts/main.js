@@ -21,9 +21,11 @@ require.config({
     }
 });
 
-require(['backbone', 'underscore', 'jquery', 'marionette', 'router'],
-    function (Backbone, _, $, Marionette, Router) {
+require(['jquery', 'router', 'app'],
+function ($, Router, App) {
     'use strict';
+
+    // App starts here
     new Router();
-    Backbone.history.start();
+    App.start();
 });

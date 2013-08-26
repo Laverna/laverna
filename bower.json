@@ -2,12 +2,15 @@
   "name": "ofnote",
   "version": "0.0.0",
   "dependencies": {
-    "requirejs": "~2.1.4",
-    "modernizr": "~2.6.2",
-    "jquery": "~1.9.1",
-    "marionette": "~1.0.4",
-    "bootstrap": "~3.0",
-    "bootstrap-glyphicons": "gh-pages"
+    "requirejs"            :  "~2.1.4",
+    "modernizr"            :  "~2.6.2",
+    "jquery"               :  "~1.9.1",
+    "marionette"           :  "~1.0.4",
+    "bootstrap"            :  "~3.0",
+    "bootstrap-glyphicons" :  "gh-pages",
+    "qunit"                :  "~1.12.0",
+    "sinonjs"              :  "~1.7.1",
+    "sinon-qunit"          :  "~1.0.0"
   },
   "devDependencies": {}
 }

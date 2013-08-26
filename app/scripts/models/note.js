@@ -12,7 +12,7 @@ define(['underscore', 'backbone'], function(_, Backbone){
             'created': null,
             'updated': null,
             'tagsId': [],
-            'isFavourite': 0
+            'isFavorite': 0
         }
     });
     return Model;

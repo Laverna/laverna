@@ -2,7 +2,7 @@
 // Responsive.less
 //
 
-@import "../bower_components/bootstrap/less/variables.less";
+@import "@{boot_dir}variables.less";
 @import "variables.less";
 
 // Tablets and small screens only
@@ -23,9 +23,11 @@
             float: left;
         }
         .navbar-brand {
-            margin-top: 10px;
-            max-width: 320px - 200px;
-            height: @font-size-base + 20px;
+            padding: 15px;
+            font-size: 18px;
+            line-height: 20px;
+            max-height: @font-size-base + 30px;
+            max-width: 320px - 170px;
             overflow: hidden;
         }
         .pull-right {
@@ -38,5 +40,14 @@
                 float: left;
             }
         }
+        .navbar-left {
+            float: left;
+        }
+        .navbar-right {
+            float: right;
+        }
+    }
+    .navbar-nav {
+        margin: 0;
     }
 }

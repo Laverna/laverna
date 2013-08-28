@@ -2,12 +2,21 @@
 define([
     'marionette',
     'bootstrap-modal',
+    // collections
+    'collections/notes',
     // Views
     'views/noteAdd'
-], function(Marionette, Modal, noteAdd) {
+], function(Marionette, Modal, CollectionNotes, noteAdd) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
+        /**
+         * Initialization
+         */
+        initialize: function(){
+            this.collectionNotes = new CollectionNotes();
+        },
+
         /**
          * Index page
          */
@@ -24,9 +33,11 @@ define([
 
         noteAdd: function () {
             new Backbone.BootstrapModal({
-                content: new noteAdd(),
+                content: new noteAdd({
+                    collection: this.collectionNotes,
+                }),
+                okText: 'Create'
             }).open();
-            console.log('add page');
         },
 
         noteEdit: function () {

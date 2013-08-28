@@ -20,9 +20,10 @@ define([
 
         okClicked: function(modal){
             var data = {
+                id: this.collection.getNewId(),
                 title: this.ui.title.val(),
                 content: this.ui.content.val(),
-                tagsId: this.ui.tagsId.val(),
+                tagsId: this.collection.setTags(this.ui.tagsId.val()),
                 notebookId: this.ui.notebookId.val()
             }
             var note = new Note(data);

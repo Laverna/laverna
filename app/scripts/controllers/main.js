@@ -18,6 +18,7 @@ define([
          */
         initialize: function(){
             this.collectionNotes = new CollectionNotes();
+            this.collectionNotes.fetch();
         },
 
         /**
@@ -31,9 +32,9 @@ define([
          * Notes actions
          * ------------------------------ */
         note: function (id) {
-            console.log(NoteItem);
+            console.log(this.collectionNotes.get(id));
             App.content.show(new NoteItem({
-//                model: this.collectionNotes.get(id),
+                model: this.collectionNotes.get(id),
             }));
             console.log('note page' + id);
         },

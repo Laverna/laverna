@@ -3,11 +3,13 @@ define([
     'backbone',
     'marionette',
     'bootstrap-modal',
+    'app',
     // collections
     'collections/notes',
     // Views
-    'views/noteAdd'
-], function(Backbone, Marionette, Modal, CollectionNotes, noteAdd) {
+    'views/noteAdd',
+    'views/noteItem'
+], function(Backbone, Marionette, Modal, App, CollectionNotes, noteAdd, noteItem) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -29,6 +31,10 @@ define([
          * Notes actions
          * ------------------------------ */
         note: function (id) {
+            console.log(App.content);
+            App.content.show(new noteItem({
+//                model: this.collectionNotes.get(id),
+            }));
             console.log('note page' + id);
         },
 

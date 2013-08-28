@@ -54,7 +54,11 @@ define([
         // Remove Note
         noteRemove: function (id) {
             var note = this.collectionNotes.get(id);
-            console.log(note.get('id'));
+            var result = note.save({'trash': 1});
+
+            if (result !== false) {
+                Backbone.history.navigate('', true);
+            }
         },
 
         /* ------------------------------

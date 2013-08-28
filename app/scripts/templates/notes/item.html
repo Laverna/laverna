@@ -1,12 +1,12 @@
 <div class="navbar navbar-static-top">
     <ul class="nav navbar-nav pull-right">
         <li>
-            <a href="#" class="btn btn-default">
+            <a href="#/note/edit/{{id}}" class="btn btn-default">
                 <span class="glyphicon glyphicon-pencil"></span> Edit
             </a>
         </li>
         <li>
-            <a href="#" class="btn btn-default">
+            <a href="#/note/remove/{{id}}" class="btn btn-default">
                 <span class="glyphicon glyphicon-trash"></span> Delete
             </a>
         </li>
@@ -21,7 +21,7 @@
 <div class="main">
     <header>
         <h1 class="article-headline">
-            <%- title %>
+            {{title}}
             <a href="#" class="favorite pull-right">
                 <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
             </a>
@@ -33,7 +33,7 @@
                 <span class="sr-only">50% of tasks is completed</span>
             </div>
         </div>
-        <p><%= getContent() %></p>
+        <p>{{content}}</p>
         <!--<h2>My tasks</h2>-->
         <!--<p>-->
             <!--<label class="task">-->

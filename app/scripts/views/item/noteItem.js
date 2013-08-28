@@ -1,29 +1,38 @@
 /*global define */
-define(['underscore', 'marionette', 'text!templates/notes/item.html'],
+define(['underscore', 'marionette', 'text!noteItemTempl'],
 function (_, Marionette, Template) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
         template: _.template(Template),
+
         className: 'content-notes',
+
         events: {
             'click .favorite': 'favorite'
         },
-        initialize: function(){
+
+        initialize: function() {
             this.listenTo(this.model, 'change', this.render);
         },
-        favorite: function(e){
+
+        favorite: function(e) {
             e.preventDefault();
-            if (this.model.get('isFavorite') === 1){
-                this.model.save('isFavorite', 0);
-            } else if (this.model.get('isFavorite') === 0) {
-                this.model.save('isFavorite', 1);
+            var isFavorite = this.model.get('isFavorite');
+
+            if (isFavorite === 1) {
+                isFavorite = 0;
+            } else {
+                isFavorite = 1;
             }
+
+            this.model.save({isFavorite: isFavorite});
         },
+
         templateHelpers: function() {
             var model = this.model;
             return {
-                getContent: function(){
+                getContent: function() {
                     return model.get('content');
                 }
             };

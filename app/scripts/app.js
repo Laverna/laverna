@@ -4,8 +4,9 @@ define(['underscore', 'backbone', 'marionette'], function (_, Backbone) {
 
     // Underscore template
     _.templateSettings = {
-        interpolate :  /\{\{(.+?)\}\}/g,
-        evaluate    :  /<%([\s\S]+?)%>/g
+        // interpolate : /\{\{(.+?)\}\}/g
+        interpolate: /\{\{(.+?)\}\}/g,
+        evaluate: /<%([\s\S]+?)%>/g
     };
 
     var App = new Backbone.Marionette.Application();
@@ -13,9 +14,6 @@ define(['underscore', 'backbone', 'marionette'], function (_, Backbone) {
     App.addRegions({
         sidebar :  '#sidebar-content',
         content :  '#content'
-    });
-
-    App.on('initialize:before', function () {
     });
 
     App.on('initialize:after', function() {

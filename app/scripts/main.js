@@ -13,9 +13,13 @@ require.config({
         'bootstrap-modal'     : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         // Application        : scripts here
         'noteEdit'            : 'views/item/noteEdit',
+        'noteAdd'             : 'views/item/noteAdd',
+        'noteItem'            : 'views/item/noteItem',
         // Templates          : here
         'modalTempl'          : 'templates/modal.html',
-        'noteFormTempl'       : 'templates/notes/form.html'
+        'noteFormTempl'       : 'templates/notes/form.html',
+        'noteAddTempl'        : 'templates/notes/add.html',
+        'noteItemTempl'       : 'templates/notes/item.html'
     },
     shim: {
         underscore: {

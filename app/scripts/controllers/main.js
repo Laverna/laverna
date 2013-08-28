@@ -8,11 +8,13 @@ define([
     // collections
     'collections/notes',
     // Views
-    'views/noteAdd',
-    'views/noteItem',
+    'noteAdd',
+    'noteItem',
     'noteEdit',
     'text!modalTempl'
-], function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
+],
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
+// function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -42,6 +44,7 @@ define([
 
         noteAdd: function () {
             new Backbone.BootstrapModal({
+                template: _.template(ModalTempl),
                 content: new NoteAdd({
                     collection: this.collectionNotes,
                 }),
@@ -51,11 +54,11 @@ define([
 
         // Edit an existing note
         noteEdit: function (id) {
-            var note = this.collectionNotes.get(id),
-                content = new NoteEdit({
-                    collection : this.collectionNotes,
-                    model      : note
-                });
+            var note = this.collectionNotes.get(id);
+            var content = new NoteEdit({
+                collection : this.collectionNotes,
+                model      : note
+            });
 
             // Show content in modal window
             new Backbone.BootstrapModal({

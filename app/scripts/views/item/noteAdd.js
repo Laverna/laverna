@@ -1,12 +1,11 @@
 /*global define*/
-define([
-    'marionette',
-    'underscore',
-    'models/note',
-    'text!templates/notes/add.html'
-], function(Marionette, _, Note, Template){
+define(['underscore', 'marionette', 'models/note', 'text!noteAddTempl'],
+function (_, Marionette, Note, Template) {
+    'use strict';
+
     var View = Marionette.ItemView.extend({
         template: _.template(Template),
+
         ui: {
             title: 'input[name="title"]',
             content: 'textarea[name="content"]',
@@ -14,21 +13,22 @@ define([
             notebookId: 'input[name="notebookId"]'
         },
 
-        initialize: function(){
+        initialize: function() {
             this.on('ok', this.okClicked);
         },
 
-        okClicked: function(modal){
+        okClicked: function() {
             var data = {
                 id: this.collection.getNewId(),
                 title: this.ui.title.val(),
                 content: this.ui.content.val(),
                 tagsId: this.collection.setTags(this.ui.tagsId.val()),
                 notebookId: this.ui.notebookId.val()
-            }
+            };
             var note = new Note(data);
             this.collection.create(note);
         }
     });
+
     return View;
 });

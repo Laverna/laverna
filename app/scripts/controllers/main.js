@@ -9,7 +9,7 @@ define([
     // Views
     'views/noteAdd',
     'views/noteItem'
-], function(Backbone, Marionette, Modal, App, CollectionNotes, noteAdd, noteItem) {
+], function(Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -31,8 +31,8 @@ define([
          * Notes actions
          * ------------------------------ */
         note: function (id) {
-            console.log(App.content);
-            App.content.show(new noteItem({
+            console.log(NoteItem);
+            App.content.show(new NoteItem({
 //                model: this.collectionNotes.get(id),
             }));
             console.log('note page' + id);
@@ -40,7 +40,7 @@ define([
 
         noteAdd: function () {
             new Backbone.BootstrapModal({
-                content: new noteAdd({
+                content: new NoteAdd({
                     collection: this.collectionNotes,
                 }),
                 okText: 'Create',

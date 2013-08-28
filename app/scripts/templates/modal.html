@@ -1,0 +1,15 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">
+                <% if (title) { %>{{title}}<% } %>
+                <a class="btn btn-danger ok" href="#">{{okText}}</a>
+                <% if (allowCancel) { %>
+                <a class="btn btn-default cancel" href="#">{{cancelText}}</a>
+                <% } %>
+            </h4>
+        </div>
+        <div class="modal-body">{{content}}</div>
+    </div>
+</div>

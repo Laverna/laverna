@@ -50,7 +50,10 @@ define([
         noteEdit: function () {
         },
 
-        noteRemove: function () {
+        // Remove Note
+        noteRemove: function (id) {
+            var note = this.collectionNotes.get(id);
+            console.log(note);
         },
 
         /* ------------------------------

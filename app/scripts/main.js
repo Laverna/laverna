@@ -11,7 +11,7 @@ require.config({
         'backbone.babysitter' :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'bootstrap'           :  '../bower_components/bootstrap/dist/js/bootstrap.min',
         'bootstrap-modal'     :  '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal'
-        // Application        :  scripts here
+        // Application        :  scripts here he
     },
     shim: {
         underscore: {
@@ -21,11 +21,16 @@ require.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
+        bootstrap: {
+            deps: ['jquery'],
+            exports: '$'
+        },
         'bootstrap-modal': {
             deps: ['bootstrap', 'underscore', 'jquery'],
             exports: 'Backbone.BootstrapModal'
         }
-    }
+    },
+    waitSeconds: 8
 });
 
 require(['jquery', 'router', 'app'],

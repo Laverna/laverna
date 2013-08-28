@@ -8,15 +8,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         initialize: function () {
-            this.on('add', this.autoset);
-        },
-
-        autoset: function (note) {
-            note.set('id', this.getNewId());
-
-            if ( _.isString(note.get('tagsId')) ) {
-                note.set('tagsId', this.getTags(note));
-            }
         },
 
         /**

@@ -54,7 +54,7 @@ define([
         // Remove Note
         noteRemove: function (id) {
             var note = this.collectionNotes.get(id);
-            console.log(note);
+            console.log(note.get('id'));
         },
 
         /* ------------------------------

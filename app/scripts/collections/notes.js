@@ -8,12 +8,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         initialize: function () {
-            this.on('add', this.autoset);
-        },
-
-        autoset: function (note) {
-            note.set('id', this.getNewId());
-
         },
 
         /**
@@ -21,7 +15,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
          */
         setTags: function(tagsId){
             if ( _.isString(tagsId) ) {
-
                 tagsId = tagsId.split(',');
                 _.forEach(tagsId, function(item, index){
                     tagsId[index] = $.trim(item);

@@ -1,1 +1,49 @@
-Hello
+<div class="navbar navbar-static-top">
+    <ul class="nav navbar-nav pull-right">
+        <li>
+            <a href="#" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil"></span> Edit
+            </a>
+        </li>
+        <li>
+            <a href="#" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span> Delete
+            </a>
+        </li>
+        <li>
+            <a href="#" class="btn btn-default">
+                <span class="hidden-sm"><span class="glyphicon glyphicon-cog"></span> Settings</span>
+                <span class="visible-sm"><span class="glyphicon glyphicon-cog"></span></span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="main">
+    <header>
+        <h1 class="article-headline">
+            <%- title %>
+            <a href="#" class="favorite pull-right">
+                <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
+            </a>
+        </h1>
+    </header>
+    <div class="article">
+        <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                <span class="sr-only">50% of tasks is completed</span>
+            </div>
+        </div>
+        <p><%= getContent() %></p>
+        <!--<h2>My tasks</h2>-->
+        <!--<p>-->
+            <!--<label class="task">-->
+                <!--<input type="checkbox" />-->
+                <!--<span>Task N1</span>-->
+            <!--</label>-->
+            <!--<label class="task">-->
+                <!--<input type="checkbox" checked />-->
+                <!--<span>Checked task</span>-->
+            <!--</label>-->
+        <!--</p>-->
+    </div>
+</div>

@@ -13,7 +13,10 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
 
         autoset: function (note) {
             note.set('id', this.getNewId());
-            note.set('tagsId', this.getTags(note));
+
+            if ( _.isString(note.get('tagsId')) ) {
+                note.set('tagsId', this.getTags(note));
+            }
         },
 
         /**
@@ -25,7 +28,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
                 tagsId[index] = $.trim(item);
             });
             return tagsId;
-
         },
 
         /**

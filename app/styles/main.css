@@ -5538,10 +5538,10 @@ body {
   font-size: 26px;
   border: none;
 }
-#content header .article-headline .favourite {
+#content header .article-headline .favorite {
   color: #b3b3b3;
 }
-#content header .article-headline .favourite:hover {
+#content header .article-headline .favorite:hover {
   text-decoration: none;
   color: #666666;
 }

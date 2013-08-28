@@ -7,8 +7,8 @@ define([
     // collections
     'collections/notes',
     // Views
-    'views/noteAdd',
-    'views/noteItem'
+    'views/item/noteAdd',
+    'views/item/noteItem'
 ], function(Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem) {
     'use strict';
 
@@ -18,7 +18,7 @@ define([
          */
         initialize: function(){
             this.collectionNotes = new CollectionNotes();
-            this.collectionNotes.fetch();
+            this.collectionNotes.fetch({reset: true});
         },
 
         /**
@@ -32,11 +32,9 @@ define([
          * Notes actions
          * ------------------------------ */
         note: function (id) {
-            console.log(this.collectionNotes.get(id));
             App.content.show(new NoteItem({
-                model: this.collectionNotes.get(id),
+                model: this.collectionNotes.get(id)
             }));
-            console.log('note page' + id);
         },
 
         noteAdd: function () {

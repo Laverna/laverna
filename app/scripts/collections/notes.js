@@ -7,9 +7,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
 
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
-        initialize: function () {
-        },
-
         /**
          * Generates tags for note
          */

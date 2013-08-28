@@ -1,12 +1,13 @@
 /*global define*/
 define([
+    'backbone',
     'marionette',
     'bootstrap-modal',
     // collections
     'collections/notes',
     // Views
     'views/noteAdd'
-], function(Marionette, Modal, CollectionNotes, noteAdd) {
+], function(Backbone, Marionette, Modal, CollectionNotes, noteAdd) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -36,7 +37,7 @@ define([
                 content: new noteAdd({
                     collection: this.collectionNotes,
                 }),
-                okText: 'Create'
+                okText: 'Create',
             }).open();
         },
 

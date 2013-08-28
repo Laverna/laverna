@@ -10,7 +10,7 @@ require.config({
         'backbone.wreqr'      :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'bootstrap'           :  '../bower_components/bootstrap/dist/js/bootstrap.min',
-        'bootstrap-modal'     :  'lib/modal/src/backbone.bootstrap-modal'
+        'bootstrap-modal'     :  '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal'
         // Application        :  scripts here
     },
     shim: {

@@ -1,6 +1,6 @@
-@import "../bower_components/bootstrap/less/mixins.less";
-@import "../bower_components/bootstrap-glyphicons/less/bootstrap-glyphicons.less";
-@import "../bower_components/bootstrap/less/variables.less";
+
+@import "@{boot_dir}mixins.less";
+@import "@{boot_dir}variables.less";
 @import "variables.less";
 
 /**
@@ -27,7 +27,10 @@ html, body {
 //
 // Buttons, forms etc
 //
-.btn-default, .btn-default:hover, .btn-default:focus, .btn-default:active {
+.btn-default,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
     color: darken(@btn-default-bg, 80%);
 }
 .form-control {
@@ -48,26 +51,27 @@ html, body {
 }
 .task span {
     position: relative;
-    padding-left: 16px + 8px;
+    padding-left: 16px + 6px;
     display: inline-block;
 	cursor: pointer;
     font-weight: normal;
     &:before {
+        @task-size: 14px;
         // border-radius: 2px;
         color: darken(@baseGreenColor, 1%);
         content: "";
 	    display: inline-block;
-	    width: 14px;
-	    height: 14px;
-	    margin-right: 10px;
+	    width: @task-size;
+	    height: @task-size;
+	    margin-right: 14px;
 	    position: absolute;
 	    left: 0;
-	    bottom: 2px;
+	    top: 3px;
         border: 1px solid darken(#FFF, 20%);
 	    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .2), 0px 1px 0px 0px rgba(255, 255, 255, .4);
         font-weight: bold;
-	    font-size: 20px;
-        line-height: 15px;
+	    font-size: @task-size + 4px;
+        line-height: @task-size - 4px;
 	    text-align: center;
     }
 }
@@ -108,6 +112,7 @@ html, body {
 // Basic styles for all navbars
 //
 .navbar {
+    padding: 0 10px;
     .btn {
         margin-top: 7px;
         padding-top: 8px;
@@ -138,14 +143,14 @@ html, body {
                 border-color: #00A693;
                 color: #FFF;
                 border-left: 5px solid darken(#00A693, 10%);
-                background: #00A693;   
+                background: #00A693;
                 &:hover, .badge {
                   background: darken(#00A693, 2%);
                 }
-            }                          
-            .favorite {                
-                font-size: 22px;       
-                margin-right: -5px;    
+            }
+            .favorite {
+                font-size: 22px;
+                margin-right: -5px;
                 color: darken(#FFF, 30%);
                 &.active{
                   color: darken(#00A693, 10%);
@@ -198,13 +203,12 @@ html, body {
 #sidebar.sidebar-notes {
     // Navigation buttons on sidebar
     .navbar {
-        // padding-right: 10px;
-        // Add note
+        margin-bottom: 0;
         .notes {
         }
         .addlink {
             color: #FFF;
-            &:hover {
+            &:hover, &:focus {
                 border-color: lighten(@brand-danger, 5%);
                 background: darken(@brand-danger, 5%);
             }
@@ -267,7 +271,7 @@ html, body {
         background: darken(#F8F8F8, 1%);
         border-bottom: 1px solid darken(#FFF, 10%);
         .btn {
-            margin-right: 4px;
+            margin-left: 4px;
         }
     }
     // Main wrapper

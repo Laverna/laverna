@@ -8,62 +8,60 @@
  * Designed and built with all the love in the world by @mdo and @fat.
  */
 
+@boot_dir: '../bower_components/bootstrap/less/';
+
 // Core variables and mixins
-@import "../bower_components/bootstrap/less/variables.less";
-@import "../bower_components/bootstrap/less/mixins.less";
+@import "@{boot_dir}variables.less";
+@import "@{boot_dir}mixins.less";
 
 // Application variables
 @import "variables.less";
 
 // Reset
-@import "../bower_components/bootstrap/less/normalize.less";
-@import "../bower_components/bootstrap/less/print.less";
+@import "@{boot_dir}normalize.less";
+@import "@{boot_dir}print.less";
 
 // Core CSS
-@import "../bower_components/bootstrap/less/scaffolding.less";
-@import "../bower_components/bootstrap/less/type.less";
-@import "../bower_components/bootstrap/less/code.less";
-@import "../bower_components/bootstrap/less/grid.less";
+@import "@{boot_dir}scaffolding.less";
+@import "@{boot_dir}type.less";
+@import "@{boot_dir}code.less";
+@import "@{boot_dir}grid.less";
+@import "@{boot_dir}tables.less";
+@import "@{boot_dir}forms.less";
+@import "@{boot_dir}buttons.less";
 
-@import "../bower_components/bootstrap/less/tables.less";
-@import "../bower_components/bootstrap/less/forms.less";
-@import "../bower_components/bootstrap/less/buttons.less";
+// Components
+@import "@{boot_dir}component-animations.less";
+@import "@{boot_dir}glyphicons.less";
+@import "@{boot_dir}dropdowns.less";
+@import "@{boot_dir}button-groups.less";
+@import "@{boot_dir}input-groups.less";
+@import "@{boot_dir}navs.less";
+@import "@{boot_dir}navbar.less";
+// @import "@{boot_dir}breadcrumbs.less";
+// @import "@{boot_dir}pagination.less";
+// @import "@{boot_dir}pager.less";
+@import "@{boot_dir}labels.less";
+@import "@{boot_dir}badges.less";
+// @import "@{boot_dir}jumbotron.less";
+// @import "@{boot_dir}thumbnails.less";
+@import "@{boot_dir}alerts.less";
+@import "@{boot_dir}progress-bars.less";
+@import "@{boot_dir}media.less";
+@import "@{boot_dir}list-group.less";
+// @import "@{boot_dir}panels.less";
+// @import "@{boot_dir}wells.less";
+@import "@{boot_dir}close.less";
 
-// Components: common
-@import "../bower_components/bootstrap/less/component-animations.less";
-@import "../bower_components/bootstrap/less/dropdowns.less";
-@import "../bower_components/bootstrap/less/list-group.less";
-// @import "../bower_components/bootstrap/less/panels.less";
-// @import "../bower_components/bootstrap/less/wells.less";
-@import "../bower_components/bootstrap/less/close.less";
-
-// Components: Nav
-@import "../bower_components/bootstrap/less/navs.less";
-@import "../bower_components/bootstrap/less/navbar.less";
-@import "../bower_components/bootstrap/less/button-groups.less";
-// @import "../bower_components/bootstrap/less/breadcrumbs.less";
-// @import "../bower_components/bootstrap/less/pagination.less";
-// @import "../bower_components/bootstrap/less/pager.less";
-
-// Components: Popovers
-@import "../bower_components/bootstrap/less/modals.less";
-@import "../bower_components/bootstrap/less/tooltip.less";
-@import "../bower_components/bootstrap/less/popovers.less";
-
-// Components: Misc
-@import "../bower_components/bootstrap/less/alerts.less";
-// @import "../bower_components/bootstrap/less/thumbnails.less";
-@import "../bower_components/bootstrap/less/media.less";
-@import "../bower_components/bootstrap/less/labels.less";
-@import "../bower_components/bootstrap/less/badges.less";
-@import "../bower_components/bootstrap/less/progress-bars.less";
-//@import "../bower_components/bootstrap/less/accordion.less";
-// @import "../bower_components/bootstrap/less/carousel.less";
-// @import "../bower_components/bootstrap/less/jumbotron.less";
+// Components w/ JavaScript
+@import "@{boot_dir}modals.less";
+@import "@{boot_dir}tooltip.less";
+@import "@{boot_dir}popovers.less";
+// @import "@{boot_dir}carousel.less";
 
 // Utility classes
-@import "../bower_components/bootstrap/less/utilities.less"; // Has to be last to override when necessary
-@import "../bower_components/bootstrap/less/responsive-utilities.less";
+@import "@{boot_dir}utilities.less";
+@import "@{boot_dir}responsive-utilities.less";
 
 // App styles
 @import "styles.less";

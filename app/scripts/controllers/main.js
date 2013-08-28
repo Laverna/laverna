@@ -1,5 +1,6 @@
 /*global define*/
 define([
+    'underscore',
     'backbone',
     'marionette',
     'bootstrap-modal',
@@ -7,16 +8,18 @@ define([
     // collections
     'collections/notes',
     // Views
-    'views/item/noteAdd',
-    'views/item/noteItem'
-], function(Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem) {
+    'views/noteAdd',
+    'views/noteItem',
+    'noteEdit',
+    'text!modalTempl'
+], function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
         /**
          * Initialization
          */
-        initialize: function(){
+        initialize: function() {
             this.collectionNotes = new CollectionNotes();
             this.collectionNotes.fetch({reset: true});
         },
@@ -46,7 +49,23 @@ define([
             }).open();
         },
 
-        noteEdit: function () {
+        // Edit an existing note
+        noteEdit: function (id) {
+            var note = this.collectionNotes.get(id),
+                content = new NoteEdit({
+                    collection : this.collectionNotes,
+                    model      : note
+                });
+
+            // Show content in modal window
+            new Backbone.BootstrapModal({
+                template: _.template(ModalTempl),
+                content: content,
+                okText: 'Save',
+                modalOptions: {
+                    backdrop: 'static'
+                }
+            }).open();
         },
 
         // Remove Note

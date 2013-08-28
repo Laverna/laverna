@@ -19,8 +19,14 @@ define([
         },
 
         okClicked: function(modal){
-            var note = new Note(this.ui);
-            console.log(note);
+            var data = {
+                title: this.ui.title.val(),
+                content: this.ui.content.val(),
+                tagsId: this.ui.tagsId.val(),
+                notebookId: this.ui.notebookId.val()
+            }
+            var note = new Note(data);
+            this.collection.create(note);
         }
     });
     return View;

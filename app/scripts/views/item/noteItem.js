@@ -13,27 +13,18 @@ function (_, Marionette, Template) {
         },
 
         initialize: function() {
-            this.listenTo(this.model, 'change', this.render);
+            this.model.on('change:isFavorite', this.render);
         },
 
         favorite: function(e) {
-            e.preventDefault();
-            var isFavorite = this.model.get('isFavorite');
-
-            if (isFavorite === 1) {
-                isFavorite = 0;
-            } else {
-                isFavorite = 1;
-            }
-
-            this.model.save({isFavorite: isFavorite});
+            var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1 ;
+            this.model.save('isFavorite', isFavorite);
         },
 
         templateHelpers: function() {
-            var model = this.model;
             return {
-                getContent: function() {
-                    return model.get('content');
+                getProgress: function(taskCompleted, taskAll) {
+                    return taskCompleted * 100 / taskAll;
                 }
             };
         }

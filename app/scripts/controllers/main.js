@@ -14,7 +14,6 @@ define([
     'text!modalTempl'
 ],
 function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
-// function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -24,6 +23,22 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
         initialize: function() {
             this.collectionNotes = new CollectionNotes();
             this.collectionNotes.fetch({reset: true});
+        },
+
+        /**
+         * Shows bootstrap modal window
+         */
+        showModal: function (options) {
+            var opt = _.extend({
+                template: _.template(ModalTempl),
+                okText: 'Create',
+                allowCancel: true,
+                modalOptions: {
+                    backdrop: 'static'
+                }
+            }, options);
+
+            return new Backbone.BootstrapModal(opt).open();
         },
 
         /**
@@ -42,14 +57,14 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             }));
         },
 
+        // Add a new note
         noteAdd: function () {
-            new Backbone.BootstrapModal({
-                template: _.template(ModalTempl),
+            this.showModal({
                 content: new NoteAdd({
-                    collection: this.collectionNotes,
+                    collection: this.collectionNotes
                 }),
-                okText: 'Create',
-            }).open();
+                okText: 'Create'
+            });
         },
 
         // Edit an existing note
@@ -61,24 +76,23 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             });
 
             // Show content in modal window
-            new Backbone.BootstrapModal({
-                template: _.template(ModalTempl),
+            this.showModal({
                 content: content,
                 okText: 'Save',
-                modalOptions: {
-                    backdrop: 'static'
-                }
-            }).open();
+            });
         },
 
         // Remove Note
         noteRemove: function (id) {
-            var note = this.collectionNotes.get(id);
-            var result = note.save({'trash': 1});
+            var note, result, url = '';
+            note = this.collectionNotes.get(id);
+            result = note.save({'trash': 1});
 
-            if (result !== false) {
-                Backbone.history.navigate('', true);
+            if (result === false) {
+                url = '/note/' + id;
             }
+
+            Backbone.history.navigate(url, true);
         },
 
         /* ------------------------------

@@ -26,11 +26,13 @@
         </h1>
     </header>
     <div class="article">
+        <% if (taskAll !== 0) { %>
         <div class="progress">
             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
                 <span class="sr-only">  50% of tasks is completed</span>
             </div>
         </div>
+        <% } %>
 
         <p>{{content}}</p>
         <!--<h2>My tasks</h2>-->

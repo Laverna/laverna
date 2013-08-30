@@ -15,6 +15,7 @@ function (_, Marionette, Note, Template) {
 
         initialize: function() {
             this.on('ok', this.okClicked);
+            this.on('cancel', this.redirect);
         },
 
         okClicked: function() {
@@ -27,6 +28,14 @@ function (_, Marionette, Note, Template) {
             };
             var note = new Note(data);
             this.collection.create(note);
+        },
+
+
+        /**
+         * Redirect to note
+         */
+        redirect: function () {
+            window.history.back();
         }
     });
 

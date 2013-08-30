@@ -71,7 +71,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
                 content: new NoteAdd({
                     collection: this.collectionNotes
                 }),
-                okText: 'Create'
+                okText: 'Create',
+                escape: false
             });
         },
 

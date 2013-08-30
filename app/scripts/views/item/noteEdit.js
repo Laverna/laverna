@@ -20,6 +20,7 @@ function (_, $, Backbone, Marionette, Template) {
         initialize: function () {
             this.on('ok', this.saveNote);
             this.on('cancel', this.redirect);
+            this.on('hidden.bs.modal', this.redirect);
             // $(window).unload(this.closeModal);
         },
 
@@ -35,6 +36,7 @@ function (_, $, Backbone, Marionette, Template) {
             };
 
             this.model.trigger('update.note');
+
             data.tagsId = this.collection.setTags(data.tagsId);
             var result = this.model.save(data);
 

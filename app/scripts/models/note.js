@@ -24,6 +24,7 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
 
             if (this.isNew()) {
                 this.set('created', Date.now());
+                this.setUpdate();
             }
         },
 

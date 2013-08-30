@@ -1,0 +1,3 @@
+[submodule "app/scripts/libs/backbone.bootstrap-modal"]
+	path = app/scripts/libs/backbone.bootstrap-modal
+	url = git://github.com:wwebfor/backbone.bootstrap-modal.git

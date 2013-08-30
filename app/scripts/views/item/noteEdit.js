@@ -34,6 +34,7 @@ function (_, $, Backbone, Marionette, Template) {
                 notebookId :  this.ui.notebookId
             };
 
+            this.model.trigger('update.note');
             data.tagsId = this.collection.setTags(data.tagsId);
             var result = this.model.save(data);
 

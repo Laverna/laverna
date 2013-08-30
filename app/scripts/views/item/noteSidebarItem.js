@@ -8,7 +8,7 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
-        initialize: function(){
+        initialize: function () {
             this.listenTo(this.model,  'change', this.render);
         }
 

@@ -20,7 +20,7 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
         },
 
         initialize: function () {
-            this.on('change', this.setUpdate);
+            this.on('update.note', this.setUpdate);
 
             if (this.isNew()) {
                 this.set('created', Date.now());

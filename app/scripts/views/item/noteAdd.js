@@ -9,10 +9,10 @@ function (_, Backbone, Marionette, Note, Template) {
         template: _.template(Template),
 
         ui: {
-            title: 'input[name="title"]',
-            content: 'textarea[name="content"]',
-            tagsId: 'input[name="tags"]',
-            notebookId: 'input[name="notebookId"]'
+            title      : 'input[name="title"]',
+            content    : 'textarea[name="content"]',
+            tagsId     : 'input[name="tags"]',
+            notebookId : 'input[name="notebookId"]'
         },
 
         initialize: function() {
@@ -23,17 +23,16 @@ function (_, Backbone, Marionette, Note, Template) {
 
         okClicked: function() {
             var data = {
-                id: this.collection.getNewId(),
-                title: this.ui.title.val(),
-                content: this.ui.content.val(),
-                tagsId: this.collection.setTags(this.ui.tagsId.val()),
-                notebookId: this.ui.notebookId.val()
+                id         : this.collection.getNewId(),
+                title      : this.ui.title.val(),
+                content    : this.ui.content.val(),
+                tagsId     : this.collection.setTags(this.ui.tagsId.val()),
+                notebookId : this.ui.notebookId.val()
             };
 
             var note = this.model.set(data);
             this.collection.create(note);
         },
-
 
         /**
          * Redirect to note

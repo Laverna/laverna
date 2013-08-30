@@ -1,0 +1,21 @@
+{
+  "name": "backbone.bootstrap-modal",
+  "description": "Bootstrap Modal wrapper for use with Backbone",
+  "author": {
+    "name": "Charles Davison"
+  },
+  "version": "0.9.0",
+  "dependencies": {
+    "backbone": ">=0.9.10"
+  },
+  "main": "src/backbone.bootstrap-modal.js",
+  "jam": {
+    "dependencies": {
+      "bootstrap": null
+    },
+    "shim": {
+      "deps": ["jquery", "underscore", "backbone", "exports"],
+      "exports": "Backbone.BootstrapModal"
+    }
+  }
+}

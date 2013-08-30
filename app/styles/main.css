@@ -5321,6 +5321,14 @@ body {
   height: 100%;
   overflow-y: auto;
 }
+#sidebar.blur,
+#content.blur {
+  opacity: .5;
+}
+#sidebar.focus,
+#content.focus {
+  opacity: 1;
+}
 .btn-default,
 .btn-default:hover,
 .btn-default:focus,
@@ -5410,11 +5418,25 @@ body {
   padding-bottom: 8px;
   border-radius: 3px;
 }
+.header-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+}
+.header-nav .navbar {
+  margin-right: -18px;
+  border-right: 1px solid #d9d9d9;
+}
 #sidebar {
   padding-left: 0;
   padding-right: 0;
   border-right: 1px solid #e6e6e6;
   background-color: #FFF;
+}
+#sidebar .search-form {
+  padding-top: 60px;
 }
 #sidebar .main .list-group div:last-child .list-group-item {
   border-bottom-width: 1px;

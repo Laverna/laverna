@@ -14,6 +14,11 @@ function (_, Marionette, Template) {
 
         initialize: function() {
             this.model.on('change:isFavorite', this.render);
+            this.listenTo(this.model, 'change', this.changeFocus);
+        },
+
+        changeFocus: function() {
+            $('#sidebar #note-' + this.model.get('id')).addClass('active');
         },
 
         favorite: function(e) {

@@ -14,11 +14,15 @@ require.config({
         // Application        : scripts here
         'noteEdit'            : 'views/item/noteEdit',
         'noteAdd'             : 'views/item/noteAdd',
+        'noteSidebar'         : 'views/composite/noteSidebar',
+        'noteSidebarItem'     : 'views/item/noteSidebarItem',
         'noteItem'            : 'views/item/noteItem',
         // Templates          : here
         'modalTempl'          : 'templates/modal.html',
         'noteFormTempl'       : 'templates/notes/form.html',
         'noteAddTempl'        : 'templates/notes/add.html',
+        'noteSidebarTempl'    : 'templates/notes/sidebarList.html',
+        'noteSidebarItemTempl': 'templates/notes/sidebarListItem.html',
         'noteItemTempl'       : 'templates/notes/item.html'
     },
     shim: {

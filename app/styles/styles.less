@@ -139,8 +139,9 @@ html, body {
         .list-group-item {
             border-radius: 0;
             padding-right: 15px;
-            border-left-width: 0;
+            border-left-width: 5px;
             border-right-width: 0;
+            border-left-color: transparent;
             color: #202020;
             &.active {
                 border-color: #00A693;
@@ -172,7 +173,7 @@ html, body {
 //
 // Tags sidebar
 //
-#sidebar.sidebar-tags {
+#sidebar .sidebar-tags {
     @tagsPadding: 25px;
     .navbar {
         margin-bottom: 0;
@@ -203,7 +204,7 @@ html, body {
 //
 // Notes list on sidebar
 //
-#sidebar.sidebar-notes {
+#sidebar .sidebar-notes {
     // Navigation buttons on sidebar
     .navbar {
         margin-bottom: 0;

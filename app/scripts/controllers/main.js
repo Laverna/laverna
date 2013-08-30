@@ -11,9 +11,10 @@ define([
     'noteAdd',
     'noteItem',
     'noteEdit',
+    'noteSidebar',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, NoteSidebar, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -22,7 +23,13 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
          */
         initialize: function() {
             this.collectionNotes = new CollectionNotes();
-            this.collectionNotes.fetch({reset: true});
+            this.collectionNotes.fetch({
+                reset: true
+            });
+
+            App.sidebar.show(new NoteSidebar({
+                collection: this.collectionNotes
+            }));
         },
 
         /**
@@ -52,6 +59,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
          * Notes actions
          * ------------------------------ */
         note: function (id) {
+            App.sidebar.$el.find('#note-' + id).addClass('active');
             App.content.show(new NoteItem({
                 model: this.collectionNotes.get(id)
             }));

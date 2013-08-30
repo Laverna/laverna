@@ -37,6 +37,18 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
             return this.filter(function (note) {
                 return note.get('isFavorite') === 1;
             });
+        },
+
+        /**
+         * Search
+         */
+        search : function(letters){
+            if(letters == '') return this;
+
+            var pattern = new RegExp(letters, 'gi');
+            return this.filter(function(model) {
+                return pattern.test(model.get('title'));
+            });
         }
     });
 

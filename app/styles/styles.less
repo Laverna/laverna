@@ -135,6 +135,9 @@ html, body {
     // Sidebar content styles
     .main {
         .list-group {
+            div:last-child .list-group-item {
+                border-bottom-width: 1px;
+            }
         }
         .list-group-item {
             border-radius: 0;
@@ -144,9 +147,6 @@ html, body {
             border-bottom-width: 0;
             border-left-color: transparent;
             color: #202020;
-            &:last-child {
-                border-bottom-width: 1px;
-            }
             &.active {
                 border-color: #00A693;
                 color: #FFF;

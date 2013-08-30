@@ -5416,6 +5416,9 @@ body {
   border-right: 1px solid #e6e6e6;
   background-color: #FFF;
 }
+#sidebar .main .list-group div:last-child .list-group-item {
+  border-bottom-width: 1px;
+}
 #sidebar .main .list-group-item {
   border-radius: 0;
   padding-right: 15px;
@@ -5424,9 +5427,6 @@ body {
   border-bottom-width: 0;
   border-left-color: transparent;
   color: #202020;
-}
-#sidebar .main .list-group-item:last-child {
-  border-bottom-width: 1px;
 }
 #sidebar .main .list-group-item.active {
   border-color: #00A693;

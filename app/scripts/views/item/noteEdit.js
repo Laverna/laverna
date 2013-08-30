@@ -19,9 +19,8 @@ function (_, $, Backbone, Marionette, Template) {
 
         initialize: function () {
             this.on('ok', this.saveNote);
-            this.on('cancel', this.redirect);
             this.on('hidden.bs.modal', this.redirect);
-            // $(window).unload(this.closeModal);
+            // this.on('cancel', this.redirect);
         },
 
         /**
@@ -40,8 +39,8 @@ function (_, $, Backbone, Marionette, Template) {
             data.tagsId = this.collection.setTags(data.tagsId);
             var result = this.model.save(data);
 
-            if (result !== false) {
-                this.redirect();
+            if (result === false) {
+                console.log(result);
             }
         },
 

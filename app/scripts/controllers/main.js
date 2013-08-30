@@ -45,7 +45,13 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
                 }
             }, options);
 
-            return new Backbone.BootstrapModal(opt).open();
+            var modal = new Backbone.BootstrapModal(opt).open();
+
+            $(window).bind('hashchange', function () {
+                modal.close();
+            });
+
+            return modal;
         },
 
         /**

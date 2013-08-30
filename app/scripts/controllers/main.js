@@ -27,6 +27,16 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
                 reset: true
             });
 
+            this.showAllNotes();
+        },
+
+        /**
+         * Show list of notes
+         */
+        showAllNotes: function () {
+            var notes = this.collectionNotes.getActive();
+            this.collectionNotes = new CollectionNotes(notes);
+
             App.sidebar.show(new NoteSidebar({
                 collection: this.collectionNotes
             }));

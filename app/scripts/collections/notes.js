@@ -40,10 +40,28 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
         },
 
         /**
+         * Only active notes
+         */
+        getActive: function () {
+            return this.without.apply(this, this.getTrashed());
+        },
+
+        /**
+         * Filter the list of notes that are removed to trash
+         */
+        getTrashed: function () {
+            return this.filter(function (note) {
+                return note.get('trash') === 1;
+            });
+        },
+
+        /**
          * Search
          */
         search : function(letters){
-            if(letters == '') return this;
+            if(letters === '') {
+                return this;
+            }
 
             var pattern = new RegExp(letters, 'gi');
             return this.filter(function(model) {

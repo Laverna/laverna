@@ -5319,7 +5319,7 @@ body {
 #sidebar,
 #content {
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
 }
 .btn-default,
 .btn-default:hover,

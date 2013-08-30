@@ -11,7 +11,7 @@ require.config({
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',
         // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
-        'bootstrap-modal'     : 'libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
+        'bootstrap-modal'     : 'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // Application        : scripts here
         'noteEdit'            : 'views/item/noteEdit',
         'noteAdd'             : 'views/item/noteAdd',

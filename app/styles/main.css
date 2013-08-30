@@ -5421,8 +5421,12 @@ body {
   padding-right: 15px;
   border-left-width: 5px;
   border-right-width: 0;
+  border-bottom-width: 0;
   border-left-color: transparent;
   color: #202020;
+}
+#sidebar .main .list-group-item:last-child {
+  border-bottom-width: 1px;
 }
 #sidebar .main .list-group-item.active {
   border-color: #00A693;

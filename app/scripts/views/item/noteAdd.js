@@ -1,9 +1,11 @@
 /*global define*/
-define(['underscore', 'marionette', 'models/note', 'text!noteAddTempl'],
-function (_, Marionette, Note, Template) {
+define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl'],
+function (_, Backbone, Marionette, Note, Template) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
+        model:  new Note(),
+
         template: _.template(Template),
 
         ui: {
@@ -15,7 +17,8 @@ function (_, Marionette, Note, Template) {
 
         initialize: function() {
             this.on('ok', this.okClicked);
-            this.on('cancel', this.redirect);
+            this.on('hidden.bs.modal', this.redirect);
+            // this.on('cancel', this.redirect);
         },
 
         okClicked: function() {
@@ -26,7 +29,8 @@ function (_, Marionette, Note, Template) {
                 tagsId: this.collection.setTags(this.ui.tagsId.val()),
                 notebookId: this.ui.notebookId.val()
             };
-            var note = new Note(data);
+
+            var note = this.model.set(data);
             this.collection.create(note);
         },
 
@@ -35,7 +39,13 @@ function (_, Marionette, Note, Template) {
          * Redirect to note
          */
         redirect: function () {
-            window.history.back();
+            var id = this.model.get('id');
+
+            if (id === 0) {
+                window.history.back();
+            } else {
+                Backbone.history.navigate('/note/' + id, true);
+            }
         }
     });
 

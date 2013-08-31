@@ -111,12 +111,17 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
         // Remove Note
         noteRemove: function (id) {
-            var note, result, url = '';
+            var note, result, url = '', i, prev;
             note = this.collectionNotes.get(id);
             result = note.save({'trash': 1});
 
             if (result === false) {
                 url = '/note/' + id;
+            } else {
+                i = this.collectionNotes.indexOf(note);
+                prev = this.collectionNotes.at(i - 1);
+
+                url = '/note/' + prev.get('id');
             }
 
             Backbone.history.navigate(url, true);

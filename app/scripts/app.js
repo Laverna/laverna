@@ -17,7 +17,7 @@ define(['underscore', 'backbone', 'marionette'], function (_, Backbone) {
     });
 
     App.on('initialize:after', function() {
-        Backbone.history.start();
+        Backbone.history.start({pushState: false});
     });
 
     return App;

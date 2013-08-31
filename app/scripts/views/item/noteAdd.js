@@ -4,8 +4,6 @@ function (_, Backbone, Marionette, Note, Template) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
-        model:  new Note(),
-
         template: _.template(Template),
 
         ui: {
@@ -30,7 +28,8 @@ function (_, Backbone, Marionette, Note, Template) {
                 notebookId : this.ui.notebookId.val()
             };
 
-            var note = this.model.set(data);
+            var note = new Note(data);
+            this.model = note;
             this.collection.create(note);
         },
 

@@ -84,10 +84,11 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
         // Add a new note
         noteAdd: function () {
+            var content = new NoteAdd({
+                collection: this.collectionNotes
+            });
             this.showModal({
-                content: new NoteAdd({
-                    collection: this.collectionNotes
-                }),
+                content: content,
                 okText: 'Create',
                 escape: false
             });

@@ -18,7 +18,7 @@ function(_, Marionette, NoteSidebarItem, Template) {
         },
 
         initialize: function () {
-            this.listenTo(this.collection, 'create', this.render);
+//            this.listenTo(this.collection, 'create', this.render);
         },
 
         search: function(e) {
@@ -29,7 +29,7 @@ function(_, Marionette, NoteSidebarItem, Template) {
         },
 
         changeFocus: function(e) {
-            $('#sidebar .list-group-item.active').removeClass('active');
+            this.$el.find('.list-group-item.active').removeClass('active');
             $(e.currentTarget).addClass('active');
         }
 

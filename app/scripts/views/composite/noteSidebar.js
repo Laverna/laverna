@@ -29,7 +29,7 @@ function(_, Marionette, NoteSidebarItem, Template) {
         },
 
         changeFocus: function(e) {
-            this.$el.find('.list-group-item.active').removeClass('active');
+            $('#sidebar .list-group-item.active').removeClass('active');
             $(e.currentTarget).addClass('active');
         }
 

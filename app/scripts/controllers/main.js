@@ -75,6 +75,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
          * Notes actions
          * ------------------------------ */
         note: function (id) {
+            App.sidebar.$el.find('.list-group-item.active').removeClass('active');
             App.sidebar.$el.find('#note-' + id).addClass('active');
             App.content.show(new NoteItem({
                 model: this.collectionNotes.get(id)

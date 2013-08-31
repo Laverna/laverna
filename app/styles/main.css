@@ -5316,11 +5316,6 @@ html,
 body {
   overflow: hidden;
 }
-#sidebar,
-#content {
-  height: 100%;
-  overflow-y: auto;
-}
 #sidebar.blur,
 #content.blur {
   opacity: .5;
@@ -5328,6 +5323,36 @@ body {
 #sidebar.focus,
 #content.focus {
   opacity: 1;
+}
+#sidebar,
+#content {
+  position: relative;
+  height: 100%;
+}
+#sidebar .ui-s-cont,
+#content .ui-s-cont {
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  height: 100%;
+}
+#sidebar .ui-s-content,
+#content .ui-s-content {
+  position: absolute;
+  top: 0;
+  bottom: 50px;
+  width: 100%;
+  overflow-y: scroll;
+}
+#sidebar .navbar-bottom,
+#content .navbar-bottom {
+  z-index: inherit;
+  padding-bottom: 25px;
+}
+#sidebar .navbar-bottom .btn,
+#content .navbar-bottom .btn {
+  font-weight: bold;
 }
 .btn-default,
 .btn-default:hover,
@@ -5418,25 +5443,11 @@ body {
   padding-bottom: 8px;
   border-radius: 3px;
 }
-.header-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-}
-.header-nav .navbar {
-  margin-right: -19px;
-  border-right: 1px solid #d9d9d9;
-}
 #sidebar {
   padding-left: 0;
   padding-right: 0;
   border-right: 1px solid #e6e6e6;
   background-color: #FFF;
-}
-#sidebar .search-form {
-  padding-top: 60px;
 }
 #sidebar .main .list-group div:last-child .list-group-item {
   border-bottom-width: 1px;

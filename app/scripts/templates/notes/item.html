@@ -19,33 +19,26 @@
     </ul>
 </nav>
 
-<div class="main">
-    <header>
-        <h1 class="article-headline">
-            {{title}}
-            <span class="btn btn-link favorite pull-right glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
-        </h1>
-    </header>
-    <div class="article">
-        <% if (taskAll !== 0) { %>
-        <div class="progress">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
-                <span class="sr-only">  50% of tasks is completed</span>
+<div class="ui-s-cont">
+    <div class="ui-s-content">
+        <div class="main">
+            <header>
+                <h1 class="article-headline">
+                    {{title}}
+                    <span class="btn btn-link favorite pull-right glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
+                </h1>
+            </header>
+            <div class="article">
+                <% if (taskAll !== 0) { %>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
+                        <span class="sr-only">  50% of tasks is completed</span>
+                    </div>
+                </div>
+                <% } %>
+
+                <p>{{content}}</p>
             </div>
         </div>
-        <% } %>
-
-        <p>{{content}}</p>
-        <!--<h2>My tasks</h2>-->
-        <!--<p>-->
-            <!--<label class="task">-->
-                <!--<input type="checkbox" />-->
-                <!--<span>Task N1</span>-->
-            <!--</label>-->
-            <!--<label class="task">-->
-                <!--<input type="checkbox" checked />-->
-                <!--<span>Checked task</span>-->
-            <!--</label>-->
-        <!--</p>-->
     </div>
 </div>

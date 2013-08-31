@@ -37,11 +37,10 @@ function (_, Backbone, Marionette, Note, Template) {
          * Redirect to note
          */
         redirect: function () {
-            var id = this.model.get('id');
-
-            if (id === 0) {
+            if (this.model === undefined) {
                 window.history.back();
             } else {
+                var id = this.model.get('id');
                 Backbone.history.navigate('/note/' + id, true);
             }
         }

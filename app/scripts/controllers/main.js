@@ -35,10 +35,10 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
          */
         showAllNotes: function () {
             var notes = this.collectionNotes.getActive();
-            this.collectionNotes = new CollectionNotes(notes);
+//            notes = new CollectionNotes(notes);
 
             App.sidebar.show(new NoteSidebar({
-                collection: this.collectionNotes
+                collection: notes
             }));
         },
 
@@ -98,7 +98,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
         noteEdit: function (id) {
             var note = this.collectionNotes.get(id);
             var content = new NoteEdit({
-                collection : this.collectionNotes,
+//                collection : this.collectionNotes,
                 model      : note
             });
 

@@ -6,9 +6,9 @@ function (_, $, Backbone, Marionette, Template) {
     var Edit = Marionette.ItemView.extend({
         template: _.template(Template),
 
-        events: {
-            'unload window': 'unload'
-        },
+//        events: {
+//            'unload window': 'unload'
+//        },
 
         ui: {
             title      :  'input[name="title"]',
@@ -28,20 +28,22 @@ function (_, $, Backbone, Marionette, Template) {
          */
         saveNote: function () {
             var data = {
-                title      :  this.ui.title.val().trim(),
-                content    :  this.ui.content.val().trim(),
-                tagsId     :  this.ui.tagsId.val().trim(),
-                notebookId :  this.ui.notebookId
+                "title"      :  this.ui.title.val().trim(),
+                "content"    :  this.ui.content.val().trim(),
+                "tagsId"     :  this.ui.tagsId.val().trim(),
+                "notebookId" :  this.ui.notebookId
             };
 
-            this.model.trigger('update.note');
+            this.model.set('title', data.title);
 
-            data.tagsId = this.collection.setTags(data.tagsId);
-            var result = this.model.save(data);
+//            data.tagsId = this.collection.setTags(data.tagsId);
+//            var result = this.model.set(data);
 
-            if (result === false) {
-                console.log(result);
-            }
+//            this.model.trigger('update.note');
+
+//            if (result === false) {
+//                console.log(result);
+//            }
         },
 
         /**

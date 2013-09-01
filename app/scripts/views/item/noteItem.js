@@ -23,7 +23,7 @@ function (_, Marionette, Template) {
 
         favorite: function(e) {
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1 ;
-            this.model.save('isFavorite', isFavorite);
+            this.model.save({'isFavorite': isFavorite});
         },
 
         templateHelpers: function() {

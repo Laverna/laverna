@@ -1,5 +1,5 @@
 /*global define*/
-define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note, Backbone, _) {
+define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, Note, Backbone) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
@@ -21,16 +21,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
                 });
             }
             return tagsId;
-        },
-
-        /**
-         * Generates a new id for new note
-         */
-        getNewId: function () {
-            if ( ! this.length) {
-                return 1;
-            }
-            return this.last().get('id') + 1;
         },
 
         /**

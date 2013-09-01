@@ -28,7 +28,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             });
 
             this.showAllNotes();
-            this.listenTo(this.collectionNotes, 'add', this.showAllNotes);
         },
 
         /**
@@ -36,11 +35,10 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
          */
         showAllNotes: function () {
             var notes = this.collectionNotes.getActive();
-            notes = new CollectionNotes(notes);
-            console.log('notes');
+            this.collectionNotes = this.collectionNotes.reset(notes);
 
             App.sidebar.show(new NoteSidebar({
-                collection: notes
+                collection: this.collectionNotes
             }));
         },
 

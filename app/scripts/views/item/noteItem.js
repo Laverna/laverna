@@ -21,8 +21,8 @@ function (_, Marionette, Template) {
             $('#sidebar #note-' + this.model.get('id')).addClass('active');
         },
 
-        favorite: function(e) {
-            var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1 ;
+        favorite: function() {
+            var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
             this.model.save({'isFavorite': isFavorite});
         },
 

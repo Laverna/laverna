@@ -11,19 +11,6 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
         },
 
         /**
-         * Generates tags for note
-         */
-        setTags: function(tagsId){
-            if ( _.isString(tagsId) ) {
-                tagsId = tagsId.split(',');
-                _.forEach(tagsId, function(item, index){
-                    tagsId[index] = $.trim(item);
-                });
-            }
-            return tagsId;
-        },
-
-        /**
          * Filter the list of all notes that are favorite
          */
         getFavorites: function () {

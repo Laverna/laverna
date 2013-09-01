@@ -3,7 +3,6 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
     'use strict';
 
     var Model = Backbone.Model.extend({
-        // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         defaults: {
             'id'            :  undefined,

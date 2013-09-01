@@ -6,9 +6,6 @@ function (_, $, Backbone, Marionette, Template) {
     var Edit = Marionette.ItemView.extend({
         template: _.template(Template),
 
-        events: {
-        },
-
         ui: {
             title      :  'input[name="title"]',
             content    :  'textarea[name="content"]',

@@ -28,10 +28,10 @@ function (_, $, Backbone, Marionette, Template) {
          */
         saveNote: function () {
             var data = {
-                "title"      :  this.ui.title.val().trim(),
-                "content"    :  this.ui.content.val().trim(),
-                "tagsId"     :  this.ui.tagsId.val().trim(),
-                "notebookId" :  this.ui.notebookId
+                'title'      :  this.ui.title.val().trim(),
+                'content'    :  this.ui.content.val().trim(),
+                'tagsId'     :  this.ui.tagsId.val().trim(),
+                'notebookId' :  this.ui.notebookId
             };
 
             this.model.set('title', data.title);

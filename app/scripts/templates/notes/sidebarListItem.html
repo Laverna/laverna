@@ -1,7 +1,7 @@
 <a href="#/note/{{ id }}" class="list-group-item" id="note-{{ id }}">
-    <h4 class="list-group-item-heading">{{ title }}</h4>
+    <h4 class="list-group-item-heading">{{ title.replace(/<(?:.|\n)*?>/gm, '') }}</h4>
     <p class="clearfix list-group-item-text">
-        {{ content.substring(0, 50) }}
+        {{ content.substring(0, 50).replace(/<(?:.|\n)*?>/gm, '') }}
         <span class="favourite pull-right glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
     </p>
 </a>

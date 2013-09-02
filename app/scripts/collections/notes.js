@@ -27,6 +27,7 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
          * Generates a new id for new note
          */
         getNewId: function () {
+
             if ( ! this.length) {
                 return 1;
             }
@@ -46,6 +47,11 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
          * Only active notes
          */
         getActive: function () {
+            this.fetch({
+                success: function(data) {
+                    console.log(data);
+                }
+            });
             return this.without.apply(this, this.getTrashed());
         },
 

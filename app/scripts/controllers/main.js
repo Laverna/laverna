@@ -23,9 +23,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
          */
         initialize: function() {
             this.collectionNotes = new CollectionNotes();
-            this.collectionNotes.fetch({
-                reset: true
-            });
+            this.collectionNotes.fetch({reset: true});
 
             this.showAllNotes();
         },
@@ -98,7 +96,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
         noteEdit: function (id) {
             var note = this.collectionNotes.get(id);
             var content = new NoteEdit({
-//                collection : this.collectionNotes,
+                collection : this.collectionNotes,
                 model      : note
             });
 
@@ -117,11 +115,16 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
             if (result === false) {
                 url = '/note/' + id;
-            } else {
+            } else if (this.collectionNotes.length > 1) {
                 i = this.collectionNotes.indexOf(note);
-                prev = this.collectionNotes.at(i - 1);
+                i = (i === 0) ? i : i - 1;
+
+                this.collectionNotes.remove(note);
+                prev = this.collectionNotes.at(i);
 
                 url = '/note/' + prev.get('id');
+            } else {
+                url = '';
             }
 
             Backbone.history.navigate(url, true);

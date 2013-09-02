@@ -3,10 +3,9 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
     'use strict';
 
     var Model = Backbone.Model.extend({
-//        localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         defaults: {
-            'id'            :  0,
+            'id'            :  undefined,
             'notebookId'    :  0,
             'title'         :  '',
             'content'       :  '',
@@ -30,6 +29,23 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
 
         setUpdate: function () {
             this.set('updated', Date.now());
+            this.setTags();
+        },
+
+        /**
+         * Generates tags for note
+         */
+        setTags: function () {
+            var tagsId = this.get('tagsId');
+
+            if ( _.isString(tagsId) ) {
+                tagsId = tagsId.split(',');
+                _.forEach(tagsId, function(item, index){
+                    tagsId[index] = $.trim(item);
+                });
+            }
+
+            return tagsId;
         }
 
     });

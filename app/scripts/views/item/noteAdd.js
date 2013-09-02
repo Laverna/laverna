@@ -21,10 +21,9 @@ function (_, Backbone, Marionette, Note, Template) {
 
         okClicked: function() {
             var data = {
-                id         : this.collection.getNewId(),
                 title      : this.ui.title.val(),
                 content    : this.ui.content.val(),
-                tagsId     : this.collection.setTags(this.ui.tagsId.val()),
+                tagsId     : this.ui.tagsId.val(),
                 notebookId : this.ui.notebookId.val()
             };
 

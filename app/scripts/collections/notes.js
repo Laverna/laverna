@@ -1,5 +1,5 @@
 /*global define*/
-define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note, Backbone, _) {
+define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, Note, Backbone) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
@@ -8,30 +8,6 @@ define(['models/note', 'backbone', 'underscore', 'localStorage'], function (Note
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         initialize: function () {
-        },
-
-        /**
-         * Generates tags for note
-         */
-        setTags: function(tagsId){
-            if ( _.isString(tagsId) ) {
-                tagsId = tagsId.split(',');
-                _.forEach(tagsId, function(item, index){
-                    tagsId[index] = $.trim(item);
-                });
-            }
-            return tagsId;
-        },
-
-        /**
-         * Generates a new id for new note
-         */
-        getNewId: function () {
-
-            if ( ! this.length) {
-                return 1;
-            }
-            return this.last().get('id') + 1;
         },
 
         /**

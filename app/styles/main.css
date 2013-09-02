@@ -5601,6 +5601,16 @@ body {
     height: auto;
     overflow: visible;
   }
+  #sidebar .ui-s-cont,
+  #content .ui-s-cont {
+    overflow: auto;
+    position: inherit;
+  }
+  #sidebar .ui-s-content,
+  #content .ui-s-content {
+    overflow: auto;
+    position: inherit;
+  }
   #sidebar {
     background-color: transparent;
   }

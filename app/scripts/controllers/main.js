@@ -25,18 +25,18 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             this.collectionNotes = new CollectionNotes();
             this.collectionNotes.fetch({reset: true});
 
-            this.showAllNotes();
+            this.on('notes.shown', this.showAllNotes);
         },
 
         /**
          * Show list of notes
          */
         showAllNotes: function () {
-            var notes = this.collectionNotes.getActive();
-            this.collectionNotes = this.collectionNotes.reset(notes);
+            var notes = this.collectionNotes.clone();
 
             App.sidebar.show(new NoteSidebar({
-                collection: this.collectionNotes
+                collection : notes,
+                lastPage   : this.pageN
             }));
         },
 
@@ -65,16 +65,32 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
         /**
          * Index page
          */
-        index: function () {
+        index: function (notebook, page) {
+            this.noteInit(notebook, page);
             console.log('index page');
         },
 
         /* ------------------------------
          * Notes actions
          * ------------------------------ */
-        note: function (id) {
+        noteInit: function (notebook, page) {
+            this.notebookId = notebook;
+            this.pageN = page;
+            this.trigger('notes.shown');
+        },
+
+        // Show note's content
+        noteShow: function (notebook, page, id) {
+            if (id !== undefined) {
+                this.noteInit(notebook, page, id);
+            } else {
+                id = notebook;
+                this.noteInit();
+            }
+
             App.sidebar.$el.find('.list-group-item.active').removeClass('active');
             App.sidebar.$el.find('#note-' + id).addClass('active');
+
             App.content.show(new NoteItem({
                 model: this.collectionNotes.get(id)
             }));
@@ -109,12 +125,17 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
         // Remove Note
         noteRemove: function (id) {
-            var note, result, url = '', i, prev;
+            var note, result, url = '/note/show/', i, prev;
             note = this.collectionNotes.get(id);
+
+            // var Note = this.collectionNotes.model;
+            // note = new Note(id);
+            // note.fetch();
+
             result = note.save({'trash': 1});
 
             if (result === false) {
-                url = '/note/' + id;
+                url += id;
             } else if (this.collectionNotes.length > 1) {
                 i = this.collectionNotes.indexOf(note);
                 i = (i === 0) ? i : i - 1;
@@ -122,7 +143,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
                 this.collectionNotes.remove(note);
                 prev = this.collectionNotes.at(i);
 
-                url = '/note/' + prev.get('id');
+                url += prev.get('id');
             } else {
                 url = '';
             }

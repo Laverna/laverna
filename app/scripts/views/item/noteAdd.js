@@ -40,7 +40,7 @@ function (_, Backbone, Marionette, Note, Template) {
                 window.history.back();
             } else {
                 var id = this.model.get('id');
-                Backbone.history.navigate('/note/' + id, true);
+                Backbone.history.navigate('/note/show/' + id, true);
             }
         }
     });

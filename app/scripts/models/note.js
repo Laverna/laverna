@@ -3,6 +3,7 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
     'use strict';
 
     var Model = Backbone.Model.extend({
+        idAttribute: 'id',
 
         defaults: {
             'id'            :  undefined,

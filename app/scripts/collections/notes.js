@@ -7,9 +7,6 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
 
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
-        initialize: function () {
-        },
-
         /**
          * Filter the list of all notes that are favorite
          */
@@ -23,11 +20,6 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
          * Only active notes
          */
         getActive: function () {
-            this.fetch({
-                success: function(data) {
-                    console.log(data);
-                }
-            });
             return this.without.apply(this, this.getTrashed());
         },
 
@@ -51,6 +43,28 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
             var pattern = new RegExp(letters, 'gi');
             return this.filter(function(model) {
                 return pattern.test(model.get('title'));
+            });
+        },
+
+        /**
+         * Pagination
+         * @var int perPage
+         * @var int page
+         * @var string filter
+         */
+        pagination : function (perPage, page, filter) {
+            if (filter === 'active') {
+                this.reset(this.getActive());
+            }
+
+            var collection = this;
+            page = page - 1;
+
+            collection = _(collection.rest(perPage * page));
+            collection = _(collection.first(perPage));
+
+            return collection.map( function(model) {
+                return model;
             });
         }
     });

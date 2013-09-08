@@ -42,7 +42,7 @@ function (_, $, Backbone, Marionette, Template) {
          * Redirect to note
          */
         redirect: function () {
-            Backbone.history.navigate('/note/' + this.model.get('id'), true);
+            Backbone.history.navigate('/note/show/' + this.model.get('id'), true);
         }
     });
 

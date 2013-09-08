@@ -16,7 +16,13 @@ function (_, $, Backbone, Marionette, Template) {
         initialize: function () {
             this.on('ok', this.saveNote);
             this.on('hidden.bs.modal', this.redirect);
+            this.on('render', this.afterRender)
             // this.on('cancel', this.redirect);
+        },
+
+        afterRender: function() {
+            this.ui.content.mdmagick();
+            this.$el.find('.mdm-control').css('width', '100%');
         },
 
         /**

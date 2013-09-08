@@ -5488,23 +5488,23 @@ body {
 #sidebar .list-group .navbar .navbar-brand {
   padding: 8px 15px;
 }
-#sidebar .sidebar-tags .navbar {
+.sidebar-tags .navbar {
   margin-bottom: 0;
 }
-#sidebar .sidebar-tags .navbar .navbar-brand {
+.sidebar-tags .navbar .navbar-brand {
   max-width: none;
   width: 100%;
 }
-#sidebar .sidebar-tags .main li {
+.sidebar-tags .main li {
   list-style: none;
 }
-#sidebar .sidebar-tags .main .list-group-item {
+.sidebar-tags .main .list-group-item {
   border-radius: 0;
 }
-#sidebar .sidebar-tags .main .list-group-tag .tags {
+.sidebar-tags .main .list-group-tag .tags {
   padding-left: 25px;
 }
-#sidebar .sidebar-tags .main .list-group-tag .tags .list-group-item {
+.sidebar-tags .main .list-group-tag .tags .list-group-item {
   margin-left: -50px;
   padding-left: 75px;
 }

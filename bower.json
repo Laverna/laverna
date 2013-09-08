@@ -12,7 +12,8 @@
     "backbone.bootstrap-modal": "bootstrap3",
     "qunit"                :  "~1.12.0",
     "sinonjs"              :  "~1.7.1",
-    "sinon-qunit"          :  "~1.0.0"
+    "sinon-qunit"          :  "~1.0.0",
+    "bootstrap-markdown"   :  "gh-pages"
   },
   "devDependencies": {}
 }

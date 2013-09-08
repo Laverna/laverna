@@ -1,5 +1,5 @@
 /*global define*/
-define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl'],
+define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl', 'mdmagick'],
 function (_, Backbone, Marionette, Note, Template) {
     'use strict';
 
@@ -16,7 +16,13 @@ function (_, Backbone, Marionette, Note, Template) {
         initialize: function() {
             this.on('ok', this.okClicked);
             this.on('hidden.bs.modal', this.redirect);
+            this.on('render', this.afterRender)
             // this.on('cancel', this.redirect);
+        },
+
+        afterRender: function() {
+            this.ui.content.mdmagick();
+            this.$el.find('.mdm-control').css('width', '100%');
         },
 
         okClicked: function() {

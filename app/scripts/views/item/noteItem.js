@@ -1,6 +1,6 @@
 /*global define */
-define(['underscore', 'marionette', 'text!noteItemTempl'],
-function (_, Marionette, Template) {
+define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown'],
+function (_, Marionette, Template, Showdown) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -30,6 +30,10 @@ function (_, Marionette, Template) {
             return {
                 getProgress: function(taskCompleted, taskAll) {
                     return taskCompleted * 100 / taskAll;
+                },
+                getContent: function(text) {
+                    var converter = new Showdown.converter();
+                    return converter.makeHtml(text);
                 }
             };
         }

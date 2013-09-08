@@ -9,6 +9,15 @@ function(_, Marionette, Template){
         initialize: function () {
             this.listenTo(this.model,  'change', this.render);
             this.listenTo(this.model,  'change:trash', this.remove);
+        },
+
+        templateHelpers: function () {
+            return {
+                getContent: function(text) {
+                    var converter = new Showdown.converter();
+                    return converter.makeHtml(text);
+                }
+            }
         }
 
     });

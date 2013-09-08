@@ -1,3 +1,6 @@
+@import "../scripts/libs/mdmagick/assets/mdmagick.css";
+
+@import "../scripts/libs/mdmagick/assets/icon_font/style.css";
 /*!
  * Bootstrap v3.0.0
  *
@@ -5590,6 +5593,23 @@ body {
   border-radius: 5px;
   background: #FFF;
   padding: 15px;
+}
+/* MdMagick */
+div.mdm-buttons {
+  width: 100%;
+  margin: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+div.mdm-buttons ul {
+  padding: 0;
+  padding-left: 8px;
+  margin: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+div.mdm-preview {
+  width: 100%;
 }
 @media (max-width: 767px) {
   html,

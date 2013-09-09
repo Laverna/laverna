@@ -237,7 +237,8 @@ html, body {
 //
 // Notes list on sidebar
 //
-#sidebar .sidebar-notes {
+#sidebar.sidebar-notes {
+    @tagsPadding: 25px;
     // Navigation buttons on sidebar
     .navbar {
         margin-bottom: 0;
@@ -248,6 +249,26 @@ html, body {
             &:hover, &:focus {
                 border-color: lighten(@brand-danger, 5%);
                 background: darken(@brand-danger, 5%);
+            }
+        }
+    }
+    .main {
+        ul{
+            list-style: none;
+        }
+        li {
+            list-style: none;
+        }
+        .list-group-item {
+            border-radius: 0;
+        }
+        .list-group-tag {
+            .tags {
+                padding-left: @tagsPadding;
+                .list-group-item {
+                    margin-left: -(@tagsPadding * 2);
+                    padding-left: @tagsPadding * 3;
+                }
             }
         }
     }

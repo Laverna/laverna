@@ -10,8 +10,7 @@ require.config({
         // Markdown MDMAgick
         mdmagick              : 'libs/mdmagick/lib/mdmagick',
         showdown              : 'libs/mdmagick/vendor/showdown',
-        'a-tools'               : 'libs/mdmagick/vendor/a-tools',
-        localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
+        'a-tools'             : 'libs/mdmagick/vendor/a-tools',
         'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',

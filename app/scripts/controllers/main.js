@@ -36,7 +36,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
-                lastPage   : this.pageN
+                lastPage   : this.pageN,
+                notebookId : this.notebookId
             }));
         },
 
@@ -85,7 +86,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
                 this.noteInit(notebook, page, id);
             } else {
                 id = notebook;
-                this.noteInit();
+                this.noteInit(notebook, page, id);
             }
 
             App.sidebar.$el.find('.list-group-item.active').removeClass('active');

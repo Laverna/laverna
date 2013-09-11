@@ -10,8 +10,11 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
 
         itemViewContainer: '.main > .list-group',
 
+        itemViewOptions: {},
+
         className: 'sidebar-notes',
 
+        // How many items should be shown
         perPage : 8,
 
         ui: {
@@ -26,9 +29,25 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
 
         initialize: function () {
             this.pagination();
+
+            this.itemViewOptions.page = this.options.lastPage;
+            this.itemViewOptions.shownNotebook = this.options.notebookId;
         },
 
+        onRender: function () {
+            if (this.nextPage === this.lastPage && this.lastPage === 1) {
+                this.ui.nextPage.addClass('hide');
+                this.ui.prevPage.addClass('hide');
+            } else {
+                this.disableBtn();
+            }
+        },
+
+        /**
+         * Pagination
+         */
         pagination: function () {
+            // Get active notes
             var notes = this.collection.getActive();
             this.collection.reset(notes);
 
@@ -40,11 +59,12 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
                 this.lastPage = 1;
             }
 
+            // Limit
             notes = this.collection.pagination(this.perPage, this.lastPage);
             this.collection.reset(notes);
 
             // Next page
-            if ( Math.round(this.pageCount / this.perPage) > this.lastPage) {
+            if ( (this.pageCount / this.perPage) > this.lastPage) {
                 this.nextPage = this.lastPage + 1;
             } else {
                 this.nextPage = this.lastPage;
@@ -54,7 +74,16 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
             this.prevPage = (this.lastPage !== 1) ? this.lastPage - 1 : 1;
         },
 
-        onRender: function () {
+        /**
+         * Disable pagination buttons
+         */
+        disableBtn: function () {
+            if (this.nextPage === this.lastPage) {
+                this.ui.nextPage.addClass('disabled');
+            }
+            if (this.lastPage === 1) {
+                this.ui.prevPage.addClass('disabled');
+            }
         },
 
         serializeData: function () {

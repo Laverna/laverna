@@ -10,7 +10,6 @@ function(_, Marionette, Template){
         initialize: function () {
             this.listenTo(this.model,  'change', this.render);
             this.listenTo(this.model,  'change:trash', this.remove);
-            console.log(this.options);
         },
 
         serializeData: function () {

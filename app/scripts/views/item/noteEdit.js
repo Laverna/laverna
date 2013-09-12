@@ -16,7 +16,7 @@ function (_, $, Backbone, Marionette, Template) {
         initialize: function () {
             this.on('ok', this.saveNote);
             this.on('hidden.bs.modal', this.redirect);
-            this.on('render', this.afterRender)
+            this.on('render', this.afterRender);
             // this.on('cancel', this.redirect);
         },
 
@@ -48,7 +48,13 @@ function (_, $, Backbone, Marionette, Template) {
          * Redirect to note
          */
         redirect: function () {
-            Backbone.history.navigate('/note/show/' + this.model.get('id'), true);
+            var url = window.history;
+            if (url.length === 0) {
+                url = '/note/show/' + this.model.get('id');
+                Backbone.history.navigate(url);
+            } else {
+                url.back();
+            }
         }
     });
 

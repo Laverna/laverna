@@ -126,12 +126,9 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
         // Remove Note
         noteRemove: function (id) {
-            var note, result, url = '/note/show/', i, prev;
+            var note, result, i, prev;
+            var url = '/note/' + this.notebookId + '/p' + this.pageN + '/show/';
             note = this.collectionNotes.get(id);
-
-            // var Note = this.collectionNotes.model;
-            // note = new Note(id);
-            // note.fetch();
 
             result = note.save({'trash': 1});
 

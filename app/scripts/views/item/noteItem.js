@@ -1,6 +1,6 @@
 /*global define */
-define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown'],
-function (_, Marionette, Template, Showdown) {
+define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown', 'prettify'],
+function (_, Marionette, Template, Showdown, prettify) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -13,8 +13,17 @@ function (_, Marionette, Template, Showdown) {
         },
 
         initialize: function() {
-            this.model.on('change:isFavorite', this.render);
+            this.model.on('change', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
+        },
+
+        onRender: function () {
+            // Google code prettify
+            var code = null;
+            this.$('pre').addClass('prettyprint').each(function (idx, el) {
+                code = el.firstChild;
+                code.innerHTML = prettify.prettyPrintOne(code.innerHTML);
+            });
         },
 
         changeFocus: function() {

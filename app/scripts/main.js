@@ -4,18 +4,21 @@ require.config({
         text                  : '../bower_components/requirejs-text/text',
         jquery                : '../bower_components/jquery/jquery',
         underscore            : '../bower_components/underscore/underscore',
+        // Backbone &         : Marionette
         backbone              : '../bower_components/backbone/backbone',
         marionette            : '../bower_components/marionette/lib/core/amd/backbone.marionette',
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
+        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
+        'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Markdown MDMAgick
         mdmagick              : 'libs/mdmagick/lib/mdmagick',
         showdown              : 'libs/mdmagick/vendor/showdown',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
-        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
-        'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
+        // Other              : libraries
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',
-        // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
+        'prettify'            : '../bower_components/google-code-prettify/src/prettify',
         'bootstrap-modal'     : 'libs/bootstrap-modal/src/backbone.bootstrap-modal',
+        // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         // Application        : scripts here
         'noteEdit'            : 'views/item/noteEdit',
         'noteAdd'             : 'views/item/noteAdd',
@@ -53,9 +56,11 @@ require.config({
                 'jquery',
                 'showdown',
                 'a-tools'
-//                'libs/mdmagick/assets/icon_font/lte-ie7'
             ],
             exports: 'mdmagick'
+        },
+        prettify: {
+            exports: 'prettify'
         },
         'bootstrap-modal': {
             deps: ['bootstrap', 'underscore', 'jquery'],

@@ -120,7 +120,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             // Show content in modal window
             this.showModal({
                 content: content,
-                okText: 'Save',
+                okText: 'Save'
             });
         },
 

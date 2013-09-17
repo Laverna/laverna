@@ -13,6 +13,7 @@ require.config({
         // Markdown MDMAgick
         mdmagick              : 'libs/mdmagick/lib/mdmagick',
         showdown              : 'libs/mdmagick/vendor/showdown',
+        checklist             : 'libs/checklist',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
         // Other              : libraries
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',

@@ -1,6 +1,6 @@
 /*global define */
-define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown', 'prettify'],
-function (_, Marionette, Template, Showdown, prettify) {
+define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
+function (_, Marionette, Template, Showdown, Checklist, prettify) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -41,6 +41,7 @@ function (_, Marionette, Template, Showdown, prettify) {
                     return taskCompleted * 100 / taskAll;
                 },
                 getContent: function(text) {
+                    text = new Checklist().parse(text);
                     var converter = new Showdown.converter();
                     return converter.makeHtml(text);
                 }

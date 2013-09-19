@@ -1,6 +1,6 @@
 /*global define*/
-define(['underscore', 'jquery', 'backbone', 'marionette', 'text!noteFormTempl'],
-function (_, $, Backbone, Marionette, Template) {
+define(['underscore', 'jquery', 'backbone', 'marionette', 'text!noteFormTempl', 'checklist'],
+function (_, $, Backbone, Marionette, Template, Checklist) {
     'use strict';
 
     var Edit = Marionette.ItemView.extend({
@@ -35,6 +35,11 @@ function (_, $, Backbone, Marionette, Template) {
             this.model.set('notebookId', this.ui.notebookId.val());
             this.model.set('tagsId', this.ui.tagsId.val().trim());
             this.model.trigger('update.note');
+
+            // Count checklists
+            var checklist = new Checklist().count(this.model.get('content'));
+            this.model.set('taskAll', checklist.all);
+            this.model.set('taskCompleted', checklist.completed);
 
             // Save changes
             var result = this.model.save({});

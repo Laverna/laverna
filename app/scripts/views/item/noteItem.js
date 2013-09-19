@@ -9,7 +9,8 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
         className: 'content-notes',
 
         events: {
-            'click .favorite': 'favorite'
+            'click .favorite': 'favorite',
+            'click .task :checkbox': 'toggleTask'
         },
 
         initialize: function() {
@@ -30,18 +31,30 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
             $('#sidebar #note-' + this.model.get('id')).addClass('active');
         },
 
-        favorite: function() {
+        /**
+         * Add note item to your favorite notes list
+         */
+        favorite: function () {
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
             this.model.save({'isFavorite': isFavorite});
+        },
+
+        /**
+         * Toggle task status
+         */
+        toggleTask: function (e) {
+            var task = $(e.target);
+            var taskId = parseInt(task.attr('data-task'), null);
+            console.log(taskId);
         },
 
         templateHelpers: function() {
             return {
                 getProgress: function(taskCompleted, taskAll) {
-                    return taskCompleted * 100 / taskAll;
+                    return Math.round(taskCompleted * 100 / taskAll);
                 },
                 getContent: function(text) {
-                    text = new Checklist().parse(text);
+                    text = new Checklist().toHtml(text);
                     var converter = new Showdown.converter();
                     return converter.makeHtml(text);
                 }

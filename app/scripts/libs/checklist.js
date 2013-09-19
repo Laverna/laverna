@@ -1,5 +1,5 @@
 /*
- * Showdown extension
+ * Checklist
  * [] Task -> <label><input type="checkbox" />Task</label>
  * [*] Task -> <label><input type="checkbox" checked="checked" />Task</label>
  */
@@ -11,12 +11,27 @@ define(['underscore'], function (_) {
     };
 
     _.extend(Checklist.prototype, {
+        pattern: /^\[([ Xx])\]/mg,
 
-        parse: function (text) {
-            var pattern = /^([*-]) \[([ Xx])\]/mg;
-            var count = 0;
+        /**
+         * Count checkboxes
+         */
+        count: function (text) {
+            if ( ! this.countTasks) {
+                this.parse(text);
+            }
 
-            text = text.replace(pattern, function(match, prefix, marker) {
+            return {
+                all       : this.countTasks,
+                completed : this.completed
+            };
+        },
+
+        /**
+         * [] - to html checkboxes
+         */
+        toHtml: function (text) {
+            return this.parse(text, function (match, marker, count) {
                 var content = '', checked = '';
 
                 if (count !== 0) {
@@ -27,13 +42,38 @@ define(['underscore'], function (_) {
                     checked = ' checked="checked"';
                 }
 
-                content += '<label class="task"><input type="checkbox"' + checked + ' /><span>';
+                content += '<label class="task"><input data-task="' + count + '" type="checkbox"' + checked + ' /><span>';
+
+                return content;
+            });
+        },
+
+        /**
+         * Regex parsing here
+         */
+        parse: function (text, callback) {
+            var count = 0, completed = 0;
+
+            text = text.replace(this.pattern, function(match, marker) {
+                var content = '';
+
+                if (callback) {
+                    content += callback(match, marker, count);
+                } else {
+                    content = match;
+                }
+
+                if (marker !== ' ') {
+                    completed ++;
+                }
 
                 count ++;
                 return content;
             });
 
-            console.log(count);
+            this.countTasks = count;
+            this.completed = completed;
+
             return text;
         }
 

@@ -45,13 +45,18 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
         toggleTask: function (e) {
             var task = $(e.target);
             var taskId = parseInt(task.attr('data-task'), null);
-            console.log(taskId);
+            var text = new Checklist().toggle(this.model.get('content'), taskId);
+
+            // Save result
+            this.model.set('content', text.content);
+            this.model.set('taskCompleted', text.completed);
+            this.model.save();
         },
 
         templateHelpers: function() {
             return {
                 getProgress: function(taskCompleted, taskAll) {
-                    return Math.round(taskCompleted * 100 / taskAll);
+                    return parseInt(taskCompleted * 100 / taskAll, null);
                 },
                 getContent: function(text) {
                     text = new Checklist().toHtml(text);

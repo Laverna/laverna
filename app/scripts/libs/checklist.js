@@ -28,6 +28,27 @@ define(['underscore'], function (_) {
         },
 
         /**
+         * Toggle task completed status
+         */
+        toggle: function (text, index) {
+            var newMarker;
+            text = this.parse(text, function (match, marker, count) {
+                if (count === index) {
+                    marker = (marker === ' ') ? 'x' : ' ';
+                    newMarker = marker;
+                }
+                return '[' + marker + ']';
+            });
+
+            this.completed = (newMarker === 'x') ? this.completed + 1 : this.completed - 1;
+
+            return {
+                content: text,
+                completed: this.completed
+            };
+        },
+
+        /**
          * [] - to html checkboxes
          */
         toHtml: function (text) {

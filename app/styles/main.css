@@ -5365,6 +5365,7 @@ body {
 }
 .task input[type=checkbox]:checked + span {
   text-decoration: line-through;
+  color: #808080;
 }
 .task input[type=checkbox]:checked + span:before {
   content: "\2713";

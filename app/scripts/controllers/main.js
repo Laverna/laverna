@@ -37,7 +37,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
                 lastPage   : this.pageN,
-                notebookId : this.notebookId
+                parentId : this.parentId
             }));
         },
 
@@ -93,7 +93,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             App.sidebar.$el.find('#note-' + id).addClass('active');
 
             App.content.show(new NoteItem({
-                model: this.collectionNotes.get(id)
+                model: this.collectionNotes.get(id),
+                collection: this.collectionNotes
             }));
         },
 

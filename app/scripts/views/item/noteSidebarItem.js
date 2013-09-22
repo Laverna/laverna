@@ -7,6 +7,8 @@ function(_, Marionette, Template){
     var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
+        className: 'list-group',
+
         initialize: function () {
             this.listenTo(this.model,  'change', this.render);
             this.listenTo(this.model,  'change:trash', this.remove);
@@ -34,7 +36,7 @@ function(_, Marionette, Template){
 
                 // Generate link
                 link: function (id, page, notebook) {
-                    var url = '/note/';
+                    var url = '/note/show/';
                     notebook = (notebook === undefined) ? 0 : notebook;
 
                     if (page !== undefined) {

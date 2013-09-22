@@ -15,6 +15,9 @@ function (_, Marionette, Template, Showdown) {
         initialize: function() {
             this.model.on('change:isFavorite', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
+            this.collection = this.collection.filter(function(model){
+                return model.get('parentId') === this.model.get('id');
+            }, this);
         },
 
         changeFocus: function() {
@@ -27,6 +30,7 @@ function (_, Marionette, Template, Showdown) {
         },
 
         templateHelpers: function() {
+            var data = this;
             return {
                 getProgress: function(taskCompleted, taskAll) {
                     return taskCompleted * 100 / taskAll;
@@ -34,6 +38,21 @@ function (_, Marionette, Template, Showdown) {
                 getContent: function(text) {
                     var converter = new Showdown.converter();
                     return converter.makeHtml(text);
+                },
+                getChilds: function() {
+                    return data.collection;
+                },
+
+                // Generate link
+                link: function (id, page, notebook) {
+                    var url = '/note/show/';
+                    notebook = (notebook === undefined) ? 0 : notebook;
+
+                    if (page !== undefined) {
+                        url += notebook + '/p' + page + '/show/';
+                    }
+
+                    return url + id;
                 }
             };
         }

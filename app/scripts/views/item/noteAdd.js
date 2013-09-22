@@ -1,5 +1,5 @@
 /*global define*/
-define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl', 'mdmagick'],
+define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl', 'typeahead', 'mdmagick'],
 function (_, Backbone, Marionette, Note, Template) {
     'use strict';
 
@@ -10,7 +10,7 @@ function (_, Backbone, Marionette, Note, Template) {
             title      : 'input[name="title"]',
             content    : 'textarea[name="content"]',
             tagsId     : 'input[name="tags"]',
-            notebookId : 'input[name="notebookId"]'
+            parentId : 'input[name="parentId"]'
         },
 
         initialize: function() {
@@ -23,6 +23,14 @@ function (_, Backbone, Marionette, Note, Template) {
         afterRender: function() {
             this.ui.content.mdmagick();
             this.$el.find('.mdm-control').css('width', '100%');
+
+            this.ui.parentId.typeahead({
+                valueKey: 'title',
+                local: this.collection.toJSON()
+            });
+            this.ui.parentId.on('typeahead:selected', function(e, model){
+                $(e.currentTarget).attr('data-id', model.id);
+            });
         },
 
         okClicked: function() {
@@ -30,8 +38,19 @@ function (_, Backbone, Marionette, Note, Template) {
                 title      : this.ui.title.val(),
                 content    : this.ui.content.val(),
                 tagsId     : this.ui.tagsId.val(),
-                notebookId : this.ui.notebookId.val()
             };
+
+            if (this.ui.parentId.attr('data-id')) {
+                data['parentId'] = this.ui.parentId.attr('data-id');
+            }
+            else {
+                if (this.ui.parentId.val() !== '') {
+                    var parents = this.collection.filter(function(model){
+                        return model.get('title') === this.ui.parentId.val()
+                    }, this);
+                    data['parentId'] = parents[0]['id'];
+                }
+            }
 
             var note = new Note(data);
             this.model = note;

@@ -7,7 +7,7 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
 
         defaults: {
             'id'            :  undefined,
-            'notebookId'    :  0,
+            'parentId'      :  0,
             'title'         :  '',
             'content'       :  '',
             'taskAll'       :  0,

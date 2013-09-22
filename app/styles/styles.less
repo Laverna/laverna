@@ -179,6 +179,7 @@ html, body {
             &.active {
                 border-color: #00A693;
                 color: #FFF;
+                margin-left: 0;
                 border-left: 5px solid darken(#00A693, 10%);
                 background: #00A693;
                 &:hover, .badge {
@@ -253,23 +254,8 @@ html, body {
         }
     }
     .main {
-        ul{
-            list-style: none;
-        }
-        li {
-            list-style: none;
-        }
-        .list-group-item {
-            border-radius: 0;
-        }
-        .list-group-tag {
-            .tags {
-                padding-left: @tagsPadding;
-                .list-group-item {
-                    margin-left: -(@tagsPadding * 2);
-                    padding-left: @tagsPadding * 3;
-                }
-            }
+        .list-group{
+            margin-bottom: 0;
         }
     }
 }
@@ -337,6 +323,23 @@ html, body {
         padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 10px;
+        .panel-group .panel + .panel{
+            margin-top: 0;
+        }
+        .panel-group{
+            margin-top: 15px;
+            .panel{
+                border-radius: 0;
+                .panel-heading{
+                    background: #FFF;
+                }
+                .panel-collapse{
+                    .panel-body{
+                        border: none;
+                    }
+                }
+            }
+        }
     }
     // Header
     header {
@@ -381,4 +384,47 @@ div.mdm-buttons{
 }
 div.mdm-preview{
     width: 100%;
+}
+
+.tt-hint{
+    display: none;
+}
+.tt-query{
+    width: 100%;
+}
+.twitter-typeahead{
+    width: 100%;
+}
+.tt-dropdown-menu {
+    min-width: 160px;
+    margin-top: 2px;
+    padding: 5px 0;
+    background-color: @dropdown-bg;
+    border: 1px solid #ccc;
+    border: 1px solid @dropdown-border;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    border-radius: 6px;
+    .box-shadow(0 5px 10px rgba(0,0,0,.2));
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}
+
+.tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: @dropdown-link-hover-color;
+    #gradient > .vertical(@dropdown-link-hover-bg, darken(@dropdown-link-hover-bg, 5%));
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+    color: @dropdown-bg;
+}
+
+.tt-suggestion p {
+    margin: 0;
 }

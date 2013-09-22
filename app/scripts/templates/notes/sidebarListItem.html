@@ -1,7 +1,4 @@
 <a href="#{{ link(id, page, shownNotebook) }}" class="list-group-item" id="note-{{ id }}">
     <h4 class="list-group-item-heading">{{ getTitle(title) }}</h4>
-    <p class="clearfix list-group-item-text">
-        {{ getContent(content) }}
-        <span class="favourite pull-right glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
-    </p>
+    <p class="list-group-item-text">{{ getContent(content) }}</p>
 </a>

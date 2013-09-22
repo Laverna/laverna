@@ -8,9 +8,11 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
 
         itemView: NoteSidebarItem,
 
-        itemViewContainer: '.main > .list-group',
+        itemViewContainer: '.main',
 
         itemViewOptions: {},
+
+        id: 'sidebar',
 
         className: 'sidebar-notes',
 
@@ -32,6 +34,9 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
 
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
+            this.collection.reset(this.collection.filter(function(model){
+                return model.get('parentId') === 0;
+            }));
         },
 
         onRender: function () {

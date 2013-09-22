@@ -1,6 +1,6 @@
 /*global define */
-define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown'],
-function (_, Marionette, Template, Showdown) {
+define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
+function (_, Marionette, Template, Showdown, Checklist, prettify) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -9,33 +9,61 @@ function (_, Marionette, Template, Showdown) {
         className: 'content-notes',
 
         events: {
-            'click .favorite': 'favorite'
+            'click .favorite': 'favorite',
+            'click .task :checkbox': 'toggleTask'
         },
 
         initialize: function() {
-            this.model.on('change:isFavorite', this.render);
+            this.model.on('change', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
             this.collection = this.collection.filter(function(model){
                 return model.get('parentId') === this.model.get('id');
             }, this);
         },
 
+        onRender: function () {
+            // Google code prettify
+            var code = null;
+            this.$('pre').addClass('prettyprint').each(function (idx, el) {
+                code = el.firstChild;
+                code.innerHTML = prettify.prettyPrintOne(code.innerHTML);
+            });
+        },
+
         changeFocus: function() {
             $('#sidebar #note-' + this.model.get('id')).addClass('active');
         },
 
-        favorite: function() {
+        /**
+         * Add note item to your favorite notes list
+         */
+        favorite: function () {
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
             this.model.save({'isFavorite': isFavorite});
+        },
+
+        /**
+         * Toggle task status
+         */
+        toggleTask: function (e) {
+            var task = $(e.target);
+            var taskId = parseInt(task.attr('data-task'), null);
+            var text = new Checklist().toggle(this.model.get('content'), taskId);
+
+            // Save result
+            this.model.set('content', text.content);
+            this.model.set('taskCompleted', text.completed);
+            this.model.save();
         },
 
         templateHelpers: function() {
             var data = this;
             return {
                 getProgress: function(taskCompleted, taskAll) {
-                    return taskCompleted * 100 / taskAll;
+                    return parseInt(taskCompleted * 100 / taskAll, null);
                 },
                 getContent: function(text) {
+                    text = new Checklist().toHtml(text);
                     var converter = new Showdown.converter();
                     return converter.makeHtml(text);
                 },

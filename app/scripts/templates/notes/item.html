@@ -28,6 +28,13 @@
                         <h4 class="panel-title">
                             {{ title }}
                         </h4>
+                        <% if (taskAll !== 0) { %>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
+                                <span>{{ getProgress(taskCompleted, taskAll) }}% of tasks is completed</span>
+                            </div>
+                        </div>
+                        <% } %>
                     </div>
                     <div id="c-note-{{id}}" class="panel-collapse collapse in">
                         <div class="panel-body">
@@ -35,22 +42,22 @@
                         </div>
                     </div>
                 </div>
-                <% _.each(getChilds(), function(model){ %>
-                    <div class="panel panel-default">
-                        <div class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#c-note-{{model.get('id')}}">
-                            <h4 class="panel-title">
-                                {{ model.get('title') }}
-                                <a href="" class="pull-right">More</a>
-                            </h4>
-                        </div>
-                        <div id="c-note-{{model.get('id')}}" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                {{ getContent(model.get('content')) }}
-                            </div>
+
+            <% _.each(getChilds(), function(model){ %>
+                <div class="panel panel-default">
+                    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#c-note-{{model.get('id')}}">
+                        <h4 class="panel-title">
+                            {{ model.get('title') }}
+                            <a href="" class="pull-right">More</a>
+                        </h4>
+                    </div>
+                    <div id="c-note-{{model.get('id')}}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            {{ getContent(model.get('content')) }}
                         </div>
                     </div>
-                <% }) %>
-            </div>
+                </div>
+            <% }) %>
         </div>
     </div>
 </div>

@@ -107,6 +107,7 @@ html, body {
 .task input[type=checkbox]:checked {
     + span {
         text-decoration: line-through;
+        color: darken(@gray-light, 10%);
         &:before {
 	        content: "\2713";
 	        text-shadow: 1px 1px 1px darken(@baseGreenColor, 5%);

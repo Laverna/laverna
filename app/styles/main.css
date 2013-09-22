@@ -604,46 +604,6 @@ address {
   font-style: normal;
   line-height: 1.428571429;
 }
-code,
-pre {
-  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-}
-code {
-  padding: 2px 4px;
-  font-size: 90%;
-  color: #c7254e;
-  background-color: #f9f2f4;
-  white-space: nowrap;
-  border-radius: 3px;
-}
-pre {
-  display: block;
-  padding: 9.5px;
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 1.428571429;
-  word-break: break-all;
-  word-wrap: break-word;
-  color: #333333;
-  background-color: #f5f5f5;
-  border: 1px solid #cccccc;
-  border-radius: 3px;
-}
-pre.prettyprint {
-  margin-bottom: 20px;
-}
-pre code {
-  padding: 0;
-  font-size: inherit;
-  color: inherit;
-  white-space: pre-wrap;
-  background-color: transparent;
-  border: 0;
-}
-.pre-scrollable {
-  max-height: 340px;
-  overflow-y: scroll;
-}
 .container {
   margin-right: auto;
   margin-left: auto;
@@ -5587,6 +5547,7 @@ body {
 }
 .task input[type=checkbox]:checked + span {
   text-decoration: line-through;
+  color: #808080;
 }
 .task input[type=checkbox]:checked + span:before {
   content: "\2713";
@@ -5855,6 +5816,48 @@ div.mdm-preview {
 }
 .tt-suggestion p {
   margin: 0;
+}
+/* Solarized for Google Code Prettify */
+.prettyprint {
+  color: #839496;
+  background-color: #002b36;
+  padding: 4px 6px;
+  font-size: 90%;
+}
+.prettyprint .pln {
+  color: inherit;
+}
+.prettyprint .str,
+.prettyprint .lit,
+.prettyprint .atv {
+  color: #2aa198;
+}
+.prettyprint .kwd {
+  color: #268bd2;
+}
+.prettyprint .com,
+.prettyprint .dec {
+  color: #586e75;
+  font-style: italic;
+}
+.prettyprint .typ {
+  color: #b58900;
+}
+.prettyprint .pun {
+  color: inherit;
+}
+.prettyprint .opn {
+  color: inherit;
+}
+.prettyprint .clo {
+  color: inherit;
+}
+.prettyprint .tag {
+  color: #268bd2;
+  font-weight: bold;
+}
+.prettyprint .atn {
+  color: inherit;
 }
 @media (max-width: 767px) {
   html,

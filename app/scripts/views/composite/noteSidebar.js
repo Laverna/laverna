@@ -12,8 +12,6 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
 
         itemViewOptions: {},
 
-        id: 'sidebar',
-
         className: 'sidebar-notes',
 
         // How many items should be shown

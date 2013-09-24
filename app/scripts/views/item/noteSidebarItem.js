@@ -36,11 +36,13 @@ function(_, Marionette, Template){
 
                 // Generate link
                 link: function (id, page, notebook) {
-                    var url = '/note/show/';
+                    var url = '/note/';
                     notebook = (notebook === undefined) ? 0 : notebook;
 
                     if (page !== undefined) {
                         url += notebook + '/p' + page + '/show/';
+                    } else {
+                        url += 'show/';
                     }
 
                     return url + id;

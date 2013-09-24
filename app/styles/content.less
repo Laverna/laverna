@@ -1,0 +1,62 @@
+//
+// Contents styles
+//
+#content {
+    padding-left: 0;
+    padding-right: 0;
+}
+// Navbar
+#content .navbar {
+    background: darken(#F8F8F8, 1%);
+    border-bottom: 1px solid darken(#FFF, 10%);
+    .btn {
+        margin-left: 4px;
+    }
+}
+// Main wrapper
+#content .main {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    .panel-group .panel + .panel{
+        margin-top: 0;
+    }
+    .panel-group{
+        margin-top: 15px;
+        .panel{
+            border-radius: 0;
+            .panel-heading{
+                background: #FFF;
+            }
+            .panel-collapse{
+                .panel-body{
+                    border: none;
+                }
+            }
+        }
+    }
+}
+// Header
+#content .header {
+    .article-headline {
+        font-size: 26px;
+        border: none;
+        // Favorite button
+        .favorite {
+            font-size: inherit;
+            padding: 0;
+            color: darken(#FFF, 30%);
+            &:hover {
+                text-decoration: none;
+                color: darken(#FFF, 60%);
+            }
+        }
+    }
+}
+// Article
+#content .article {
+    margin-top: 15px;
+    border-radius: 5px;
+    background: #FFF;
+    padding: 15px;
+}

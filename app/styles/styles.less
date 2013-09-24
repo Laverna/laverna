@@ -1,31 +1,25 @@
-
 @import "@{boot_dir}mixins.less";
 @import "@{boot_dir}variables.less";
 @import "variables.less";
 
-/**
- * Main styles
- */
+//
+// Main styles
+//
 html, body, #wrapper {
   height: 100%;
   width: 100%;
   margin: 0;
 }
+
 body {
     background: darken(#FFF, 4%);
 }
 
+//
 // Make sidebar and content scrollable
+//
 html, body {
     overflow: hidden;
-}
-#sidebar, #content {
-    &.blur {
-        opacity: .5;
-    }
-    &.focus {
-        opacity: 1;
-    }
 }
 #sidebar, #content {
     position: relative;
@@ -54,64 +48,15 @@ html, body {
 }
 
 //
-// Buttons, forms etc
+// Basic styles for all navbars
 //
-.btn-default,
-.btn-default:hover,
-.btn-default:focus,
-.btn-default:active {
-    color: darken(@btn-default-bg, 80%);
-}
-.form-control {
-    border-radius: 0;
-    &:focus, &:active {
-        border-color: lighten(@baseGreenColor, 5%);
-        .box-shadow(none);
-        // .box-shadow(~"inset 0 1px 1px lighten(@baseGreenColor, 20%), 0 0 8px lighten(@baseGreenColor, 40%)");
-    }
-}
-// Checkboxes
-.task {
-    display: block;
-    margin-bottom: 4px;
-}
-.task input[type=checkbox] {
-    display: none;
-}
-.task span {
-    position: relative;
-    padding-left: 16px + 6px;
-    display: inline-block;
-	cursor: pointer;
-    font-weight: normal;
-    &:before {
-        @task-size: 14px;
-        // border-radius: 2px;
-        color: darken(@baseGreenColor, 1%);
-        content: "";
-	    display: inline-block;
-	    width: @task-size;
-	    height: @task-size;
-	    margin-right: 14px;
-	    position: absolute;
-	    left: 0;
-	    top: 3px;
-        border: 1px solid darken(#FFF, 20%);
-	    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .2), 0px 1px 0px 0px rgba(255, 255, 255, .4);
-        font-weight: bold;
-	    font-size: @task-size + 4px;
-        line-height: @task-size - 4px;
-	    text-align: center;
-    }
-}
-.task input[type=checkbox]:checked {
-    + span {
-        text-decoration: line-through;
-        color: darken(@gray-light, 10%);
-        &:before {
-	        content: "\2713";
-	        text-shadow: 1px 1px 1px darken(@baseGreenColor, 5%);
-        }
+.navbar {
+    padding: 0 10px;
+    .btn {
+        margin-top: 7px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-radius: @border-radius-base;
     }
 }
 
@@ -141,235 +86,18 @@ html, body {
     }
 }
 
-//
-// Basic styles for all navbars
-//
-.navbar {
-    padding: 0 10px;
-    .btn {
-        margin-top: 7px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        border-radius: @border-radius-base;
-    }
-}
+// Forms
+@import "forms.less";
+
+// Sidebars
+@import "sidebar.less";
+
+// Content
+@import "content.less";
 
 //
-// Sidebar styles (sidebar - place where notes & tags should be)
+// MdMagick
 //
-#sidebar {
-    padding-left: 0;
-    padding-right: 0;
-    border-right: 1px solid darken(#FFF, 10%);
-    background-color: #FFF;
-    // Sidebar content styles
-    .main {
-        .list-group {
-            div:last-child .list-group-item {
-                border-bottom-width: 1px;
-            }
-        }
-        .list-group-item {
-            border-radius: 0;
-            padding-right: 15px;
-            border-left-width: 5px;
-            border-right-width: 0;
-            border-bottom-width: 0;
-            border-left-color: transparent;
-            color: #202020;
-            &.active {
-                border-color: #00A693;
-                color: #FFF;
-                margin-left: 0;
-                border-left: 5px solid darken(#00A693, 10%);
-                background: #00A693;
-                &:hover, .badge {
-                  background: darken(#00A693, 2%);
-                }
-            }
-            .favorite {
-                font-size: 22px;
-                margin-right: -5px;
-                color: darken(#FFF, 30%);
-                &.active{
-                  color: darken(#00A693, 10%);
-                }
-            }
-        }
-    }
-    .list-group .navbar {
-        min-height: 20px;
-        .navbar-brand {
-            padding: 8px 15px;
-        }
-    }
-}
-
-//
-// Tags sidebar
-//
-.sidebar-tags {
-    @tagsPadding: 25px;
-    .navbar {
-        margin-bottom: 0;
-        .navbar-brand {
-            max-width: none;
-            width: 100%;
-        }
-    }
-    .main {
-        li {
-            list-style: none;
-        }
-        .list-group-item {
-            border-radius: 0;
-        }
-        .list-group-tag {
-            .tags {
-                padding-left: @tagsPadding;
-                .list-group-item {
-                    margin-left: -(@tagsPadding * 2);
-                    padding-left: @tagsPadding * 3;
-                }
-            }
-        }
-    }
-}
-
-//
-// Notes list on sidebar
-//
-#sidebar.sidebar-notes {
-    @tagsPadding: 25px;
-    // Navigation buttons on sidebar
-    .navbar {
-        margin-bottom: 0;
-        .notes {
-        }
-        .addlink {
-            color: #FFF;
-            &:hover, &:focus {
-                border-color: lighten(@brand-danger, 5%);
-                background: darken(@brand-danger, 5%);
-            }
-        }
-    }
-    .main {
-        .list-group{
-            margin-bottom: 0;
-        }
-    }
-}
-
-//
-// Search form
-//
-.search-form {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    .row {
-        margin-right: 0;
-        width: 100%;
-        .input-append input {
-            float: left;
-            width: 10%;
-        }
-    }
-    .glyphicon-search {
-        margin-left: 10px;
-        width: 3%;
-        color: darken(#FFF, 20%);
-        &.active {
-            color: #101010;
-        }
-    }
-    .search-input {
-        border-radius: 0;
-        background-color: transparent;
-        box-shadow: none;
-        padding: 5px;
-        width: 80%;
-        border-width: 1px;
-        border-style: solid;
-        border-color: transparent;
-        &:focus {
-            box-shadow: none;
-            border-color: #00a693;
-        }
-    }
-    button {
-        padding: 5px;
-        span {
-            margin-left: 0;
-        }
-    }
-}
-
-//
-// Styles for content
-//
-#content {
-    padding-left: 0;
-    padding-right: 0;
-    // Navbar
-    .navbar {
-        background: darken(#F8F8F8, 1%);
-        border-bottom: 1px solid darken(#FFF, 10%);
-        .btn {
-            margin-left: 4px;
-        }
-    }
-    // Main wrapper
-    .main {
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-bottom: 10px;
-        .panel-group .panel + .panel{
-            margin-top: 0;
-        }
-        .panel-group{
-            margin-top: 15px;
-            .panel{
-                border-radius: 0;
-                .panel-heading{
-                    background: #FFF;
-                }
-                .panel-collapse{
-                    .panel-body{
-                        border: none;
-                    }
-                }
-            }
-        }
-    }
-    // Header
-    header {
-        .article-headline {
-            font-size: 26px;
-            border: none;
-            // Favorite button
-            .favorite {
-                font-size: inherit;
-                padding: 0;
-                color: darken(#FFF, 30%);
-                &:hover {
-                    text-decoration: none;
-                    color: darken(#FFF, 60%);
-                }
-            }
-        }
-    }
-    // Content
-    .article {
-        margin-top: 15px;
-        border-radius: 5px;
-        background: #FFF;
-        padding: 15px;
-    }
-}
-
-
-/* MdMagick */
 div.mdm-buttons{
     width:  100%;
     margin: 0;

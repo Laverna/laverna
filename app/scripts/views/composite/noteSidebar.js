@@ -28,22 +28,15 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
         },
 
         initialize: function () {
-            this.pagination();
-
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
-            this.collection.reset(this.collection.filter(function(model){
-                return model.get('parentId') === 0;
-            }));
+
+            this.pagination();
         },
 
-        onRender: function () {
-            if (this.nextPage === this.lastPage && this.lastPage === 1) {
-                this.ui.nextPage.addClass('hide');
-                this.ui.prevPage.addClass('hide');
-            } else {
-                this.disableBtn();
-            }
+        changeFocus: function(e) {
+            this.$el.find('.list-group-item.active').removeClass('active');
+            $(e.currentTarget).addClass('active');
         },
 
         /**
@@ -94,18 +87,6 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
             viewData.nextPage = this.nextPage;
             viewData.prevPage = this.prevPage;
             return viewData;
-        },
-
-        search: function(e) {
-            var el = $(e.currentTarget);
-            if (el.val().length >= 1) {
-                // var collection = this.collection.search(el.val());
-            }
-        },
-
-        changeFocus: function(e) {
-            this.$el.find('.list-group-item.active').removeClass('active');
-            $(e.currentTarget).addClass('active');
         }
 
     });

@@ -1,9 +1,9 @@
 /*global define */
-define(['underscore', 'marionette', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
-function (_, Marionette, Template, Showdown, Checklist, prettify) {
+define(['underscore', 'shortcutView', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
+function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
     'use strict';
 
-    var View = Marionette.ItemView.extend({
+    var View = ShortcutView.ItemView.extend({
         template: _.template(Template),
 
         className: 'content-notes',
@@ -13,9 +13,19 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
             'click .task :checkbox': 'toggleTask'
         },
 
+        shortcuts: {
+            39: 'right',
+        },
+
+        right: function () {
+            console.log('yes');
+        },
+
         initialize: function() {
             this.model.on('change', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
+
+            this.enableShortcut();
         },
 
         onRender: function () {

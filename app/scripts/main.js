@@ -16,8 +16,6 @@ require.config({
         checklist             : 'libs/checklist',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
         'typeahead'           : '../bower_components/typeahead.js/dist/typeahead.min',
-        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
-        'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Other              : libraries
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',
         'prettify'            : '../bower_components/google-code-prettify/src/prettify',
@@ -29,6 +27,7 @@ require.config({
         'noteSidebar'         : 'views/composite/noteSidebar',
         'noteSidebarItem'     : 'views/item/noteSidebarItem',
         'noteItem'            : 'views/item/noteItem',
+        'shortcutView'        : 'views/shortcutView',
         // Templates          : here
         'modalTempl'          : 'templates/modal.html',
         'noteFormTempl'       : 'templates/notes/form.html',

@@ -184,16 +184,16 @@ html, body {
                 border-left: 5px solid darken(#00A693, 10%);
                 background: #00A693;
                 &:hover, .badge {
-                  background: darken(#00A693, 2%);
+                    background: darken(#00A693, 2%);
+                }
+                .favorite{
+                    color: darken(#00A693, 15%);
                 }
             }
             .favorite {
                 font-size: 22px;
                 margin-right: -5px;
-                color: darken(#FFF, 30%);
-                &.active{
-                  color: darken(#00A693, 10%);
-                }
+                color: darken(#FFF, 60%);
             }
         }
     }
@@ -324,23 +324,6 @@ html, body {
         padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 10px;
-        .panel-group .panel + .panel{
-            margin-top: 0;
-        }
-        .panel-group{
-            margin-top: 15px;
-            .panel{
-                border-radius: 0;
-                .panel-heading{
-                    background: #FFF;
-                }
-                .panel-collapse{
-                    .panel-body{
-                        border: none;
-                    }
-                }
-            }
-        }
     }
     // Header
     header {

@@ -22,42 +22,24 @@
 <div class="ui-s-cont">
     <div class="ui-s-content">
         <div class="main">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#c-note-{{id}}">
-                        <h4 class="panel-title">
-                            {{ title }}
-                        </h4>
-                        <% if (taskAll !== 0) { %>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
-                                <span>{{ getProgress(taskCompleted, taskAll) }}% of tasks is completed</span>
-                            </div>
-                        </div>
-                        <% } %>
-                    </div>
-                    <div id="c-note-{{id}}" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            {{ getContent(content) }}
-                        </div>
+            <header>
+                <h1 class="article-headline">
+                    {{ title }}
+                    <a class="favorite pull-right">
+                        <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
+                    </a>
+                </h1>
+            </header>
+            <div class="article">
+                <% if (taskAll !== 0) { %>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
+                        <span>{{ getProgress(taskCompleted, taskAll) }}% of tasks is completed</span>
                     </div>
                 </div>
-
-            <% _.each(getChilds(), function(model){ %>
-                <div class="panel panel-default">
-                    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#c-note-{{model.get('id')}}">
-                        <h4 class="panel-title">
-                            {{ model.get('title') }}
-                            <a href="" class="pull-right">More</a>
-                        </h4>
-                    </div>
-                    <div id="c-note-{{model.get('id')}}" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            {{ getContent(model.get('content')) }}
-                        </div>
-                    </div>
-                </div>
-            <% }) %>
+                <% } %>
+                {{ getContent(content) }}
+            </div>
         </div>
     </div>
 </div>

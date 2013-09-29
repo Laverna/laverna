@@ -10,7 +10,7 @@ function (_, $, Backbone, Marionette, Template, Checklist) {
             title      :  'input[name="title"]',
             content    :  'textarea[name="content"]',
             tagsId     :  'input[name="tags"]',
-            notebookId :  'input[name="notebookId"]'
+//            notebookId :  'input[name="notebookId"]'
         },
 
         initialize: function () {
@@ -32,7 +32,7 @@ function (_, $, Backbone, Marionette, Template, Checklist) {
             // Set new value
             this.model.set('content', this.ui.content.val());
             this.model.set('title', this.ui.title.val());
-            this.model.set('notebookId', this.ui.notebookId.val());
+//            this.model.set('notebookId', this.ui.notebookId.val());
             this.model.set('tagsId', this.ui.tagsId.val().trim());
             this.model.trigger('update.note');
 

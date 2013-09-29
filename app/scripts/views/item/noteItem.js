@@ -16,9 +16,6 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
         initialize: function() {
             this.model.on('change', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
-            this.collection = this.collection.filter(function(model){
-                return model.get('parentId') === this.model.get('id');
-            }, this);
         },
 
         onRender: function () {
@@ -37,7 +34,8 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
         /**
          * Add note item to your favorite notes list
          */
-        favorite: function () {
+        favorite: function (e) {
+            e.preventDefault();
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
             this.model.save({'isFavorite': isFavorite});
         },
@@ -57,7 +55,6 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
         },
 
         templateHelpers: function() {
-            var data = this;
             return {
                 getProgress: function(taskCompleted, taskAll) {
                     return parseInt(taskCompleted * 100 / taskAll, null);
@@ -66,9 +63,6 @@ function (_, Marionette, Template, Showdown, Checklist, prettify) {
                     text = new Checklist().toHtml(text);
                     var converter = new Showdown.converter();
                     return converter.makeHtml(text);
-                },
-                getChilds: function() {
-                    return data.collection;
                 },
 
                 // Generate link

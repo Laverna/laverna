@@ -5449,13 +5449,13 @@ body {
 #sidebar .main .list-group-item.active .badge {
   background: #009c8a;
 }
+#sidebar .main .list-group-item.active .favorite {
+  color: #005a4f;
+}
 #sidebar .main .list-group-item .favorite {
   font-size: 22px;
   margin-right: -5px;
-  color: #b3b3b3;
-}
-#sidebar .main .list-group-item .favorite.active {
-  color: #007366;
+  color: #666666;
 }
 .sidebar-tags .navbar {
   margin-bottom: 0;
@@ -5527,6 +5527,7 @@ body {
   background: #FFF;
   padding: 15px;
 }
+/* MdMagick */
 div.mdm-buttons {
   width: 100%;
   margin: 0;

@@ -15,6 +15,16 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
 
         shortcuts: {
             39: 'right',
+//            69: 'delete',
+            70: 'favorite'
+        },
+
+        onClose: function() {
+            this.disableShortcut();
+        },
+
+        delete: function() {
+            Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
         },
 
         right: function () {
@@ -45,7 +55,10 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
          * Add note item to your favorite notes list
          */
         favorite: function (e) {
-            e.preventDefault();
+            if (e !== undefined) {
+                e.preventDefault();
+            }
+
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
             this.model.save({'isFavorite': isFavorite});
         },

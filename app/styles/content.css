@@ -1,0 +1,50 @@
+#content {
+  padding-left: 0;
+  padding-right: 0;
+}
+#content .navbar {
+  background: #f5f5f5;
+  border-bottom: 1px solid #e6e6e6;
+}
+#content .navbar .btn {
+  margin-left: 4px;
+}
+#content .main {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+#content .main .panel-group .panel + .panel {
+  margin-top: 0;
+}
+#content .main .panel-group {
+  margin-top: 15px;
+}
+#content .main .panel-group .panel {
+  border-radius: 0;
+}
+#content .main .panel-group .panel .panel-heading {
+  background: #FFF;
+}
+#content .main .panel-group .panel .panel-collapse .panel-body {
+  border: none;
+}
+#content .header .article-headline {
+  font-size: 26px;
+  border: none;
+}
+#content .header .article-headline .favorite {
+  font-size: inherit;
+  padding: 0;
+  color: #b3b3b3;
+}
+#content .header .article-headline .favorite:hover {
+  text-decoration: none;
+  color: #666666;
+}
+#content .article {
+  margin-top: 15px;
+  border-radius: 5px;
+  background: #FFF;
+  padding: 15px;
+}

@@ -10,25 +10,18 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
 
         events: {
             'click .favorite': 'favorite',
-            'click .task :checkbox': 'toggleTask'
+            'click .task :checkbox': 'toggleTask',
+            'keydown .content-notes': 'delete'
         },
 
         shortcuts: {
-            39: 'right',
 //            69: 'delete',
             70: 'favorite'
         },
 
-        onClose: function() {
-            this.disableShortcut();
-        },
-
         delete: function() {
-            Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
-        },
-
-        right: function () {
-            console.log('yes');
+            console.log('event');
+            // Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
         },
 
         initialize: function() {
@@ -36,6 +29,11 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
             this.listenTo(this.model, 'change', this.changeFocus);
 
             this.enableShortcut();
+        },
+
+        onBeforeClose: function () {
+            console.log('yes');
+            this.disableShortcut();
         },
 
         onRender: function () {

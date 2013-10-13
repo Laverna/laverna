@@ -38,7 +38,7 @@ function (_, $, Marionette) {
          * Disable shortcuts
          */
         disableShortcut: function () {
-            this.$document.unbind('keydown', 'getShortcut');
+            this.$document.unbind('keydown', this.getShortcut);
             return this;
         }
     };

@@ -1,6 +1,6 @@
 /*global define */
-define(['underscore', 'shortcutView', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
-function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
+define(['underscore', 'backbone', 'shortcutView', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
+function (_, Backbone, ShortcutView, Template, Showdown, Checklist, prettify) {
     'use strict';
 
     var View = ShortcutView.ItemView.extend({
@@ -8,20 +8,18 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
 
         className: 'content-notes',
 
+        ui: {
+            editBtn: '.btn-edit'
+        },
+
         events: {
             'click .favorite': 'favorite',
-            'click .task :checkbox': 'toggleTask',
-            'keydown .content-notes': 'delete'
+            'click .task :checkbox': 'toggleTask'
         },
 
         shortcuts: {
-//            69: 'delete',
+            69: 'editNote',
             70: 'favorite'
-        },
-
-        delete: function() {
-            console.log('event');
-            // Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
         },
 
         initialize: function() {
@@ -32,7 +30,6 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
         },
 
         onBeforeClose: function () {
-            console.log('yes');
             this.disableShortcut();
         },
 
@@ -61,6 +58,16 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
             this.model.save({'isFavorite': isFavorite});
         },
 
+        editNote: function () {
+            var uri = this.ui.editBtn.attr('href');
+            Backbone.history.navigate(uri);
+        },
+
+        deleteNote: function() {
+            console.log('event');
+            // Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
+        },
+
         /**
          * Toggle task status
          */
@@ -80,6 +87,7 @@ function (_, ShortcutView, Template, Showdown, Checklist, prettify) {
                 getProgress: function(taskCompleted, taskAll) {
                     return parseInt(taskCompleted * 100 / taskAll, null);
                 },
+
                 getContent: function(text) {
                     text = new Checklist().toHtml(text);
                     var converter = new Showdown.converter();

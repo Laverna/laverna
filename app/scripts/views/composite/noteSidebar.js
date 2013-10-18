@@ -45,7 +45,6 @@ function(_, Backbone, ShortcutView, NoteSidebarItem, Template) {
 
            if(el.length !== 0) {
                Backbone.history.navigate(el.attr('href'));
-               el.trigger('click');
            }
         },
 

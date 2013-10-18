@@ -22,7 +22,7 @@ function (_, $, Marionette) {
             console.log(key);
             if (methods[key] && !meta && !ctrl) {
                 e.stopPropagation();
-                return this[methods[key]]();
+                return this[methods[key]](e);
             }
             return e;
         },

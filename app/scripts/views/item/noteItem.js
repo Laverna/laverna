@@ -19,7 +19,8 @@ function (_, Backbone, ShortcutView, Template, Showdown, Checklist, prettify) {
 
         shortcuts: {
             69: 'editNote',
-            70: 'favorite'
+            70: 'favorite',
+            51: 'deleteNote'
         },
 
         initialize: function() {
@@ -63,9 +64,11 @@ function (_, Backbone, ShortcutView, Template, Showdown, Checklist, prettify) {
             Backbone.history.navigate(uri);
         },
 
-        deleteNote: function() {
-            console.log('event');
-            // Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
+        deleteNote: function(e) {
+            if (e.shiftKey) {
+                Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
+            }
+            // console.log(e);
         },
 
         /**

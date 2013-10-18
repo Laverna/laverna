@@ -1,0 +1,1019 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install' ]
+2 info using npm@1.3.11
+3 info using node@v0.10.20
+4 verbose node symlink /usr/bin/node
+5 warn package.json ofnote@0.0.0 No README data
+6 verbose readDependencies using package.json deps
+7 verbose install where, deps [ '/home/greenstar/webserver/ofnote',
+7 verbose install   [ 'grunt',
+7 verbose install     'grunt-contrib-copy',
+7 verbose install     'grunt-contrib-concat',
+7 verbose install     'grunt-contrib-coffee',
+7 verbose install     'grunt-contrib-uglify',
+7 verbose install     'grunt-contrib-compass',
+7 verbose install     'grunt-contrib-jshint',
+7 verbose install     'grunt-contrib-cssmin',
+7 verbose install     'grunt-contrib-connect',
+7 verbose install     'grunt-contrib-clean',
+7 verbose install     'grunt-contrib-htmlmin',
+7 verbose install     'grunt-bower-requirejs',
+7 verbose install     'grunt-contrib-requirejs',
+7 verbose install     'grunt-contrib-imagemin',
+7 verbose install     'grunt-contrib-watch',
+7 verbose install     'grunt-rev',
+7 verbose install     'grunt-usemin',
+7 verbose install     'grunt-mocha',
+7 verbose install     'grunt-open',
+7 verbose install     'grunt-svgmin',
+7 verbose install     'grunt-concurrent',
+7 verbose install     'matchdep',
+7 verbose install     'connect-livereload',
+7 verbose install     'grunt-recess' ] ]
+8 info preinstall ofnote@0.0.0
+9 verbose readDependencies using package.json deps
+10 verbose cache add [ 'grunt@~0.4.1', null ]
+11 verbose cache add name=undefined spec="grunt@~0.4.1" args=["grunt@~0.4.1",null]
+12 verbose parsed url { protocol: null,
+12 verbose parsed url   slashes: null,
+12 verbose parsed url   auth: null,
+12 verbose parsed url   host: null,
+12 verbose parsed url   port: null,
+12 verbose parsed url   hostname: null,
+12 verbose parsed url   hash: null,
+12 verbose parsed url   search: null,
+12 verbose parsed url   query: null,
+12 verbose parsed url   pathname: 'grunt@~0.4.1',
+12 verbose parsed url   path: 'grunt@~0.4.1',
+12 verbose parsed url   href: 'grunt@~0.4.1' }
+13 verbose cache add name="grunt" spec="~0.4.1" args=["grunt","~0.4.1"]
+14 verbose parsed url { protocol: null,
+14 verbose parsed url   slashes: null,
+14 verbose parsed url   auth: null,
+14 verbose parsed url   host: null,
+14 verbose parsed url   port: null,
+14 verbose parsed url   hostname: null,
+14 verbose parsed url   hash: null,
+14 verbose parsed url   search: null,
+14 verbose parsed url   query: null,
+14 verbose parsed url   pathname: '~0.4.1',
+14 verbose parsed url   path: '~0.4.1',
+14 verbose parsed url   href: '~0.4.1' }
+15 verbose addNamed [ 'grunt', '~0.4.1' ]
+16 verbose addNamed [ null, '>=0.4.1-0 <0.5.0-0' ]
+17 verbose cache add [ 'grunt-contrib-copy@~0.4.1', null ]
+18 verbose cache add name=undefined spec="grunt-contrib-copy@~0.4.1" args=["grunt-contrib-copy@~0.4.1",null]
+19 verbose parsed url { protocol: null,
+19 verbose parsed url   slashes: null,
+19 verbose parsed url   auth: null,
+19 verbose parsed url   host: null,
+19 verbose parsed url   port: null,
+19 verbose parsed url   hostname: null,
+19 verbose parsed url   hash: null,
+19 verbose parsed url   search: null,
+19 verbose parsed url   query: null,
+19 verbose parsed url   pathname: 'grunt-contrib-copy@~0.4.1',
+19 verbose parsed url   path: 'grunt-contrib-copy@~0.4.1',
+19 verbose parsed url   href: 'grunt-contrib-copy@~0.4.1' }
+20 verbose cache add name="grunt-contrib-copy" spec="~0.4.1" args=["grunt-contrib-copy","~0.4.1"]
+21 verbose parsed url { protocol: null,
+21 verbose parsed url   slashes: null,
+21 verbose parsed url   auth: null,
+21 verbose parsed url   host: null,
+21 verbose parsed url   port: null,
+21 verbose parsed url   hostname: null,
+21 verbose parsed url   hash: null,
+21 verbose parsed url   search: null,
+21 verbose parsed url   query: null,
+21 verbose parsed url   pathname: '~0.4.1',
+21 verbose parsed url   path: '~0.4.1',
+21 verbose parsed url   href: '~0.4.1' }
+22 verbose addNamed [ 'grunt-contrib-copy', '~0.4.1' ]
+23 verbose addNamed [ null, '>=0.4.1-0 <0.5.0-0' ]
+24 verbose cache add [ 'grunt-contrib-concat@~0.1.3', null ]
+25 verbose cache add name=undefined spec="grunt-contrib-concat@~0.1.3" args=["grunt-contrib-concat@~0.1.3",null]
+26 verbose parsed url { protocol: null,
+26 verbose parsed url   slashes: null,
+26 verbose parsed url   auth: null,
+26 verbose parsed url   host: null,
+26 verbose parsed url   port: null,
+26 verbose parsed url   hostname: null,
+26 verbose parsed url   hash: null,
+26 verbose parsed url   search: null,
+26 verbose parsed url   query: null,
+26 verbose parsed url   pathname: 'grunt-contrib-concat@~0.1.3',
+26 verbose parsed url   path: 'grunt-contrib-concat@~0.1.3',
+26 verbose parsed url   href: 'grunt-contrib-concat@~0.1.3' }
+27 verbose cache add name="grunt-contrib-concat" spec="~0.1.3" args=["grunt-contrib-concat","~0.1.3"]
+28 verbose parsed url { protocol: null,
+28 verbose parsed url   slashes: null,
+28 verbose parsed url   auth: null,
+28 verbose parsed url   host: null,
+28 verbose parsed url   port: null,
+28 verbose parsed url   hostname: null,
+28 verbose parsed url   hash: null,
+28 verbose parsed url   search: null,
+28 verbose parsed url   query: null,
+28 verbose parsed url   pathname: '~0.1.3',
+28 verbose parsed url   path: '~0.1.3',
+28 verbose parsed url   href: '~0.1.3' }
+29 verbose addNamed [ 'grunt-contrib-concat', '~0.1.3' ]
+30 verbose addNamed [ null, '>=0.1.3-0 <0.2.0-0' ]
+31 silly lockFile 766a3bd3-grunt-0-4-1 grunt@~0.4.1
+32 verbose lock grunt@~0.4.1 /home/greenstar/.npm/766a3bd3-grunt-0-4-1.lock
+33 silly lockFile c84f658a-grunt-contrib-copy-0-4-1 grunt-contrib-copy@~0.4.1
+34 verbose lock grunt-contrib-copy@~0.4.1 /home/greenstar/.npm/c84f658a-grunt-contrib-copy-0-4-1.lock
+35 silly lockFile dfacc275-grunt-contrib-concat-0-1-3 grunt-contrib-concat@~0.1.3
+36 verbose lock grunt-contrib-concat@~0.1.3 /home/greenstar/.npm/dfacc275-grunt-contrib-concat-0-1-3.lock
+37 verbose cache add [ 'grunt-contrib-uglify@~0.2.0', null ]
+38 verbose cache add name=undefined spec="grunt-contrib-uglify@~0.2.0" args=["grunt-contrib-uglify@~0.2.0",null]
+39 verbose parsed url { protocol: null,
+39 verbose parsed url   slashes: null,
+39 verbose parsed url   auth: null,
+39 verbose parsed url   host: null,
+39 verbose parsed url   port: null,
+39 verbose parsed url   hostname: null,
+39 verbose parsed url   hash: null,
+39 verbose parsed url   search: null,
+39 verbose parsed url   query: null,
+39 verbose parsed url   pathname: 'grunt-contrib-uglify@~0.2.0',
+39 verbose parsed url   path: 'grunt-contrib-uglify@~0.2.0',
+39 verbose parsed url   href: 'grunt-contrib-uglify@~0.2.0' }
+40 verbose cache add name="grunt-contrib-uglify" spec="~0.2.0" args=["grunt-contrib-uglify","~0.2.0"]
+41 verbose parsed url { protocol: null,
+41 verbose parsed url   slashes: null,
+41 verbose parsed url   auth: null,
+41 verbose parsed url   host: null,
+41 verbose parsed url   port: null,
+41 verbose parsed url   hostname: null,
+41 verbose parsed url   hash: null,
+41 verbose parsed url   search: null,
+41 verbose parsed url   query: null,
+41 verbose parsed url   pathname: '~0.2.0',
+41 verbose parsed url   path: '~0.2.0',
+41 verbose parsed url   href: '~0.2.0' }
+42 verbose addNamed [ 'grunt-contrib-uglify', '~0.2.0' ]
+43 verbose addNamed [ null, '>=0.2.0-0 <0.3.0-0' ]
+44 silly lockFile 2cc6dac2-grunt-contrib-uglify-0-2-0 grunt-contrib-uglify@~0.2.0
+45 verbose lock grunt-contrib-uglify@~0.2.0 /home/greenstar/.npm/2cc6dac2-grunt-contrib-uglify-0-2-0.lock
+46 verbose cache add [ 'grunt-contrib-coffee@~0.6.5', null ]
+47 verbose cache add name=undefined spec="grunt-contrib-coffee@~0.6.5" args=["grunt-contrib-coffee@~0.6.5",null]
+48 verbose parsed url { protocol: null,
+48 verbose parsed url   slashes: null,
+48 verbose parsed url   auth: null,
+48 verbose parsed url   host: null,
+48 verbose parsed url   port: null,
+48 verbose parsed url   hostname: null,
+48 verbose parsed url   hash: null,
+48 verbose parsed url   search: null,
+48 verbose parsed url   query: null,
+48 verbose parsed url   pathname: 'grunt-contrib-coffee@~0.6.5',
+48 verbose parsed url   path: 'grunt-contrib-coffee@~0.6.5',
+48 verbose parsed url   href: 'grunt-contrib-coffee@~0.6.5' }
+49 verbose cache add name="grunt-contrib-coffee" spec="~0.6.5" args=["grunt-contrib-coffee","~0.6.5"]
+50 verbose parsed url { protocol: null,
+50 verbose parsed url   slashes: null,
+50 verbose parsed url   auth: null,
+50 verbose parsed url   host: null,
+50 verbose parsed url   port: null,
+50 verbose parsed url   hostname: null,
+50 verbose parsed url   hash: null,
+50 verbose parsed url   search: null,
+50 verbose parsed url   query: null,
+50 verbose parsed url   pathname: '~0.6.5',
+50 verbose parsed url   path: '~0.6.5',
+50 verbose parsed url   href: '~0.6.5' }
+51 verbose addNamed [ 'grunt-contrib-coffee', '~0.6.5' ]
+52 verbose addNamed [ null, '>=0.6.5-0 <0.7.0-0' ]
+53 silly lockFile 1f66cda0-grunt-contrib-coffee-0-6-5 grunt-contrib-coffee@~0.6.5
+54 verbose lock grunt-contrib-coffee@~0.6.5 /home/greenstar/.npm/1f66cda0-grunt-contrib-coffee-0-6-5.lock
+55 verbose cache add [ 'grunt-contrib-compass@~0.2.0', null ]
+56 verbose cache add name=undefined spec="grunt-contrib-compass@~0.2.0" args=["grunt-contrib-compass@~0.2.0",null]
+57 verbose parsed url { protocol: null,
+57 verbose parsed url   slashes: null,
+57 verbose parsed url   auth: null,
+57 verbose parsed url   host: null,
+57 verbose parsed url   port: null,
+57 verbose parsed url   hostname: null,
+57 verbose parsed url   hash: null,
+57 verbose parsed url   search: null,
+57 verbose parsed url   query: null,
+57 verbose parsed url   pathname: 'grunt-contrib-compass@~0.2.0',
+57 verbose parsed url   path: 'grunt-contrib-compass@~0.2.0',
+57 verbose parsed url   href: 'grunt-contrib-compass@~0.2.0' }
+58 verbose cache add name="grunt-contrib-compass" spec="~0.2.0" args=["grunt-contrib-compass","~0.2.0"]
+59 verbose parsed url { protocol: null,
+59 verbose parsed url   slashes: null,
+59 verbose parsed url   auth: null,
+59 verbose parsed url   host: null,
+59 verbose parsed url   port: null,
+59 verbose parsed url   hostname: null,
+59 verbose parsed url   hash: null,
+59 verbose parsed url   search: null,
+59 verbose parsed url   query: null,
+59 verbose parsed url   pathname: '~0.2.0',
+59 verbose parsed url   path: '~0.2.0',
+59 verbose parsed url   href: '~0.2.0' }
+60 verbose addNamed [ 'grunt-contrib-compass', '~0.2.0' ]
+61 verbose addNamed [ null, '>=0.2.0-0 <0.3.0-0' ]
+62 silly lockFile f2e16aab-grunt-contrib-compass-0-2-0 grunt-contrib-compass@~0.2.0
+63 verbose lock grunt-contrib-compass@~0.2.0 /home/greenstar/.npm/f2e16aab-grunt-contrib-compass-0-2-0.lock
+64 verbose cache add [ 'grunt-contrib-jshint@~0.4.1', null ]
+65 verbose cache add name=undefined spec="grunt-contrib-jshint@~0.4.1" args=["grunt-contrib-jshint@~0.4.1",null]
+66 verbose parsed url { protocol: null,
+66 verbose parsed url   slashes: null,
+66 verbose parsed url   auth: null,
+66 verbose parsed url   host: null,
+66 verbose parsed url   port: null,
+66 verbose parsed url   hostname: null,
+66 verbose parsed url   hash: null,
+66 verbose parsed url   search: null,
+66 verbose parsed url   query: null,
+66 verbose parsed url   pathname: 'grunt-contrib-jshint@~0.4.1',
+66 verbose parsed url   path: 'grunt-contrib-jshint@~0.4.1',
+66 verbose parsed url   href: 'grunt-contrib-jshint@~0.4.1' }
+67 verbose cache add name="grunt-contrib-jshint" spec="~0.4.1" args=["grunt-contrib-jshint","~0.4.1"]
+68 verbose parsed url { protocol: null,
+68 verbose parsed url   slashes: null,
+68 verbose parsed url   auth: null,
+68 verbose parsed url   host: null,
+68 verbose parsed url   port: null,
+68 verbose parsed url   hostname: null,
+68 verbose parsed url   hash: null,
+68 verbose parsed url   search: null,
+68 verbose parsed url   query: null,
+68 verbose parsed url   pathname: '~0.4.1',
+68 verbose parsed url   path: '~0.4.1',
+68 verbose parsed url   href: '~0.4.1' }
+69 verbose addNamed [ 'grunt-contrib-jshint', '~0.4.1' ]
+70 verbose addNamed [ null, '>=0.4.1-0 <0.5.0-0' ]
+71 silly lockFile 07e17f92-grunt-contrib-jshint-0-4-1 grunt-contrib-jshint@~0.4.1
+72 verbose lock grunt-contrib-jshint@~0.4.1 /home/greenstar/.npm/07e17f92-grunt-contrib-jshint-0-4-1.lock
+73 verbose cache add [ 'grunt-contrib-cssmin@~0.6.0', null ]
+74 verbose cache add name=undefined spec="grunt-contrib-cssmin@~0.6.0" args=["grunt-contrib-cssmin@~0.6.0",null]
+75 verbose parsed url { protocol: null,
+75 verbose parsed url   slashes: null,
+75 verbose parsed url   auth: null,
+75 verbose parsed url   host: null,
+75 verbose parsed url   port: null,
+75 verbose parsed url   hostname: null,
+75 verbose parsed url   hash: null,
+75 verbose parsed url   search: null,
+75 verbose parsed url   query: null,
+75 verbose parsed url   pathname: 'grunt-contrib-cssmin@~0.6.0',
+75 verbose parsed url   path: 'grunt-contrib-cssmin@~0.6.0',
+75 verbose parsed url   href: 'grunt-contrib-cssmin@~0.6.0' }
+76 verbose cache add name="grunt-contrib-cssmin" spec="~0.6.0" args=["grunt-contrib-cssmin","~0.6.0"]
+77 verbose parsed url { protocol: null,
+77 verbose parsed url   slashes: null,
+77 verbose parsed url   auth: null,
+77 verbose parsed url   host: null,
+77 verbose parsed url   port: null,
+77 verbose parsed url   hostname: null,
+77 verbose parsed url   hash: null,
+77 verbose parsed url   search: null,
+77 verbose parsed url   query: null,
+77 verbose parsed url   pathname: '~0.6.0',
+77 verbose parsed url   path: '~0.6.0',
+77 verbose parsed url   href: '~0.6.0' }
+78 verbose addNamed [ 'grunt-contrib-cssmin', '~0.6.0' ]
+79 verbose addNamed [ null, '>=0.6.0-0 <0.7.0-0' ]
+80 silly lockFile 681ad0ec-grunt-contrib-cssmin-0-6-0 grunt-contrib-cssmin@~0.6.0
+81 verbose lock grunt-contrib-cssmin@~0.6.0 /home/greenstar/.npm/681ad0ec-grunt-contrib-cssmin-0-6-0.lock
+82 verbose cache add [ 'grunt-contrib-connect@~0.2.0', null ]
+83 verbose cache add name=undefined spec="grunt-contrib-connect@~0.2.0" args=["grunt-contrib-connect@~0.2.0",null]
+84 verbose parsed url { protocol: null,
+84 verbose parsed url   slashes: null,
+84 verbose parsed url   auth: null,
+84 verbose parsed url   host: null,
+84 verbose parsed url   port: null,
+84 verbose parsed url   hostname: null,
+84 verbose parsed url   hash: null,
+84 verbose parsed url   search: null,
+84 verbose parsed url   query: null,
+84 verbose parsed url   pathname: 'grunt-contrib-connect@~0.2.0',
+84 verbose parsed url   path: 'grunt-contrib-connect@~0.2.0',
+84 verbose parsed url   href: 'grunt-contrib-connect@~0.2.0' }
+85 verbose cache add name="grunt-contrib-connect" spec="~0.2.0" args=["grunt-contrib-connect","~0.2.0"]
+86 verbose parsed url { protocol: null,
+86 verbose parsed url   slashes: null,
+86 verbose parsed url   auth: null,
+86 verbose parsed url   host: null,
+86 verbose parsed url   port: null,
+86 verbose parsed url   hostname: null,
+86 verbose parsed url   hash: null,
+86 verbose parsed url   search: null,
+86 verbose parsed url   query: null,
+86 verbose parsed url   pathname: '~0.2.0',
+86 verbose parsed url   path: '~0.2.0',
+86 verbose parsed url   href: '~0.2.0' }
+87 verbose addNamed [ 'grunt-contrib-connect', '~0.2.0' ]
+88 verbose addNamed [ null, '>=0.2.0-0 <0.3.0-0' ]
+89 silly lockFile 37225af9-grunt-contrib-connect-0-2-0 grunt-contrib-connect@~0.2.0
+90 verbose lock grunt-contrib-connect@~0.2.0 /home/greenstar/.npm/37225af9-grunt-contrib-connect-0-2-0.lock
+91 verbose cache add [ 'grunt-contrib-clean@~0.4.0', null ]
+92 verbose cache add name=undefined spec="grunt-contrib-clean@~0.4.0" args=["grunt-contrib-clean@~0.4.0",null]
+93 verbose parsed url { protocol: null,
+93 verbose parsed url   slashes: null,
+93 verbose parsed url   auth: null,
+93 verbose parsed url   host: null,
+93 verbose parsed url   port: null,
+93 verbose parsed url   hostname: null,
+93 verbose parsed url   hash: null,
+93 verbose parsed url   search: null,
+93 verbose parsed url   query: null,
+93 verbose parsed url   pathname: 'grunt-contrib-clean@~0.4.0',
+93 verbose parsed url   path: 'grunt-contrib-clean@~0.4.0',
+93 verbose parsed url   href: 'grunt-contrib-clean@~0.4.0' }
+94 verbose cache add name="grunt-contrib-clean" spec="~0.4.0" args=["grunt-contrib-clean","~0.4.0"]
+95 verbose parsed url { protocol: null,
+95 verbose parsed url   slashes: null,
+95 verbose parsed url   auth: null,
+95 verbose parsed url   host: null,
+95 verbose parsed url   port: null,
+95 verbose parsed url   hostname: null,
+95 verbose parsed url   hash: null,
+95 verbose parsed url   search: null,
+95 verbose parsed url   query: null,
+95 verbose parsed url   pathname: '~0.4.0',
+95 verbose parsed url   path: '~0.4.0',
+95 verbose parsed url   href: '~0.4.0' }
+96 verbose addNamed [ 'grunt-contrib-clean', '~0.4.0' ]
+97 verbose addNamed [ null, '>=0.4.0-0 <0.5.0-0' ]
+98 silly lockFile 9d1c9db7-grunt-contrib-clean-0-4-0 grunt-contrib-clean@~0.4.0
+99 verbose lock grunt-contrib-clean@~0.4.0 /home/greenstar/.npm/9d1c9db7-grunt-contrib-clean-0-4-0.lock
+100 verbose cache add [ 'grunt-contrib-htmlmin@~0.1.3', null ]
+101 verbose cache add name=undefined spec="grunt-contrib-htmlmin@~0.1.3" args=["grunt-contrib-htmlmin@~0.1.3",null]
+102 verbose parsed url { protocol: null,
+102 verbose parsed url   slashes: null,
+102 verbose parsed url   auth: null,
+102 verbose parsed url   host: null,
+102 verbose parsed url   port: null,
+102 verbose parsed url   hostname: null,
+102 verbose parsed url   hash: null,
+102 verbose parsed url   search: null,
+102 verbose parsed url   query: null,
+102 verbose parsed url   pathname: 'grunt-contrib-htmlmin@~0.1.3',
+102 verbose parsed url   path: 'grunt-contrib-htmlmin@~0.1.3',
+102 verbose parsed url   href: 'grunt-contrib-htmlmin@~0.1.3' }
+103 verbose cache add name="grunt-contrib-htmlmin" spec="~0.1.3" args=["grunt-contrib-htmlmin","~0.1.3"]
+104 verbose parsed url { protocol: null,
+104 verbose parsed url   slashes: null,
+104 verbose parsed url   auth: null,
+104 verbose parsed url   host: null,
+104 verbose parsed url   port: null,
+104 verbose parsed url   hostname: null,
+104 verbose parsed url   hash: null,
+104 verbose parsed url   search: null,
+104 verbose parsed url   query: null,
+104 verbose parsed url   pathname: '~0.1.3',
+104 verbose parsed url   path: '~0.1.3',
+104 verbose parsed url   href: '~0.1.3' }
+105 verbose addNamed [ 'grunt-contrib-htmlmin', '~0.1.3' ]
+106 verbose addNamed [ null, '>=0.1.3-0 <0.2.0-0' ]
+107 silly lockFile 2f1223f9-grunt-contrib-htmlmin-0-1-3 grunt-contrib-htmlmin@~0.1.3
+108 verbose lock grunt-contrib-htmlmin@~0.1.3 /home/greenstar/.npm/2f1223f9-grunt-contrib-htmlmin-0-1-3.lock
+109 verbose cache add [ 'grunt-bower-requirejs@~0.4.1', null ]
+110 verbose cache add name=undefined spec="grunt-bower-requirejs@~0.4.1" args=["grunt-bower-requirejs@~0.4.1",null]
+111 verbose parsed url { protocol: null,
+111 verbose parsed url   slashes: null,
+111 verbose parsed url   auth: null,
+111 verbose parsed url   host: null,
+111 verbose parsed url   port: null,
+111 verbose parsed url   hostname: null,
+111 verbose parsed url   hash: null,
+111 verbose parsed url   search: null,
+111 verbose parsed url   query: null,
+111 verbose parsed url   pathname: 'grunt-bower-requirejs@~0.4.1',
+111 verbose parsed url   path: 'grunt-bower-requirejs@~0.4.1',
+111 verbose parsed url   href: 'grunt-bower-requirejs@~0.4.1' }
+112 verbose cache add name="grunt-bower-requirejs" spec="~0.4.1" args=["grunt-bower-requirejs","~0.4.1"]
+113 verbose parsed url { protocol: null,
+113 verbose parsed url   slashes: null,
+113 verbose parsed url   auth: null,
+113 verbose parsed url   host: null,
+113 verbose parsed url   port: null,
+113 verbose parsed url   hostname: null,
+113 verbose parsed url   hash: null,
+113 verbose parsed url   search: null,
+113 verbose parsed url   query: null,
+113 verbose parsed url   pathname: '~0.4.1',
+113 verbose parsed url   path: '~0.4.1',
+113 verbose parsed url   href: '~0.4.1' }
+114 verbose addNamed [ 'grunt-bower-requirejs', '~0.4.1' ]
+115 verbose addNamed [ null, '>=0.4.1-0 <0.5.0-0' ]
+116 silly lockFile 3cce47c9-grunt-bower-requirejs-0-4-1 grunt-bower-requirejs@~0.4.1
+117 verbose lock grunt-bower-requirejs@~0.4.1 /home/greenstar/.npm/3cce47c9-grunt-bower-requirejs-0-4-1.lock
+118 verbose cache add [ 'grunt-contrib-requirejs@~0.4.0', null ]
+119 verbose cache add name=undefined spec="grunt-contrib-requirejs@~0.4.0" args=["grunt-contrib-requirejs@~0.4.0",null]
+120 verbose parsed url { protocol: null,
+120 verbose parsed url   slashes: null,
+120 verbose parsed url   auth: null,
+120 verbose parsed url   host: null,
+120 verbose parsed url   port: null,
+120 verbose parsed url   hostname: null,
+120 verbose parsed url   hash: null,
+120 verbose parsed url   search: null,
+120 verbose parsed url   query: null,
+120 verbose parsed url   pathname: 'grunt-contrib-requirejs@~0.4.0',
+120 verbose parsed url   path: 'grunt-contrib-requirejs@~0.4.0',
+120 verbose parsed url   href: 'grunt-contrib-requirejs@~0.4.0' }
+121 verbose cache add name="grunt-contrib-requirejs" spec="~0.4.0" args=["grunt-contrib-requirejs","~0.4.0"]
+122 verbose parsed url { protocol: null,
+122 verbose parsed url   slashes: null,
+122 verbose parsed url   auth: null,
+122 verbose parsed url   host: null,
+122 verbose parsed url   port: null,
+122 verbose parsed url   hostname: null,
+122 verbose parsed url   hash: null,
+122 verbose parsed url   search: null,
+122 verbose parsed url   query: null,
+122 verbose parsed url   pathname: '~0.4.0',
+122 verbose parsed url   path: '~0.4.0',
+122 verbose parsed url   href: '~0.4.0' }
+123 verbose addNamed [ 'grunt-contrib-requirejs', '~0.4.0' ]
+124 verbose addNamed [ null, '>=0.4.0-0 <0.5.0-0' ]
+125 silly lockFile de923408-grunt-contrib-requirejs-0-4-0 grunt-contrib-requirejs@~0.4.0
+126 verbose lock grunt-contrib-requirejs@~0.4.0 /home/greenstar/.npm/de923408-grunt-contrib-requirejs-0-4-0.lock
+127 verbose cache add [ 'grunt-contrib-imagemin@~0.1.3', null ]
+128 verbose cache add name=undefined spec="grunt-contrib-imagemin@~0.1.3" args=["grunt-contrib-imagemin@~0.1.3",null]
+129 verbose parsed url { protocol: null,
+129 verbose parsed url   slashes: null,
+129 verbose parsed url   auth: null,
+129 verbose parsed url   host: null,
+129 verbose parsed url   port: null,
+129 verbose parsed url   hostname: null,
+129 verbose parsed url   hash: null,
+129 verbose parsed url   search: null,
+129 verbose parsed url   query: null,
+129 verbose parsed url   pathname: 'grunt-contrib-imagemin@~0.1.3',
+129 verbose parsed url   path: 'grunt-contrib-imagemin@~0.1.3',
+129 verbose parsed url   href: 'grunt-contrib-imagemin@~0.1.3' }
+130 verbose cache add name="grunt-contrib-imagemin" spec="~0.1.3" args=["grunt-contrib-imagemin","~0.1.3"]
+131 verbose parsed url { protocol: null,
+131 verbose parsed url   slashes: null,
+131 verbose parsed url   auth: null,
+131 verbose parsed url   host: null,
+131 verbose parsed url   port: null,
+131 verbose parsed url   hostname: null,
+131 verbose parsed url   hash: null,
+131 verbose parsed url   search: null,
+131 verbose parsed url   query: null,
+131 verbose parsed url   pathname: '~0.1.3',
+131 verbose parsed url   path: '~0.1.3',
+131 verbose parsed url   href: '~0.1.3' }
+132 verbose addNamed [ 'grunt-contrib-imagemin', '~0.1.3' ]
+133 verbose addNamed [ null, '>=0.1.3-0 <0.2.0-0' ]
+134 silly lockFile cc92541f-grunt-contrib-imagemin-0-1-3 grunt-contrib-imagemin@~0.1.3
+135 verbose lock grunt-contrib-imagemin@~0.1.3 /home/greenstar/.npm/cc92541f-grunt-contrib-imagemin-0-1-3.lock
+136 verbose cache add [ 'grunt-contrib-watch@~0.4.0', null ]
+137 verbose cache add name=undefined spec="grunt-contrib-watch@~0.4.0" args=["grunt-contrib-watch@~0.4.0",null]
+138 verbose parsed url { protocol: null,
+138 verbose parsed url   slashes: null,
+138 verbose parsed url   auth: null,
+138 verbose parsed url   host: null,
+138 verbose parsed url   port: null,
+138 verbose parsed url   hostname: null,
+138 verbose parsed url   hash: null,
+138 verbose parsed url   search: null,
+138 verbose parsed url   query: null,
+138 verbose parsed url   pathname: 'grunt-contrib-watch@~0.4.0',
+138 verbose parsed url   path: 'grunt-contrib-watch@~0.4.0',
+138 verbose parsed url   href: 'grunt-contrib-watch@~0.4.0' }
+139 verbose cache add name="grunt-contrib-watch" spec="~0.4.0" args=["grunt-contrib-watch","~0.4.0"]
+140 verbose parsed url { protocol: null,
+140 verbose parsed url   slashes: null,
+140 verbose parsed url   auth: null,
+140 verbose parsed url   host: null,
+140 verbose parsed url   port: null,
+140 verbose parsed url   hostname: null,
+140 verbose parsed url   hash: null,
+140 verbose parsed url   search: null,
+140 verbose parsed url   query: null,
+140 verbose parsed url   pathname: '~0.4.0',
+140 verbose parsed url   path: '~0.4.0',
+140 verbose parsed url   href: '~0.4.0' }
+141 verbose addNamed [ 'grunt-contrib-watch', '~0.4.0' ]
+142 verbose addNamed [ null, '>=0.4.0-0 <0.5.0-0' ]
+143 silly lockFile a1b987bc-grunt-contrib-watch-0-4-0 grunt-contrib-watch@~0.4.0
+144 verbose lock grunt-contrib-watch@~0.4.0 /home/greenstar/.npm/a1b987bc-grunt-contrib-watch-0-4-0.lock
+145 verbose cache add [ 'grunt-rev@~0.1.0', null ]
+146 verbose cache add name=undefined spec="grunt-rev@~0.1.0" args=["grunt-rev@~0.1.0",null]
+147 verbose parsed url { protocol: null,
+147 verbose parsed url   slashes: null,
+147 verbose parsed url   auth: null,
+147 verbose parsed url   host: null,
+147 verbose parsed url   port: null,
+147 verbose parsed url   hostname: null,
+147 verbose parsed url   hash: null,
+147 verbose parsed url   search: null,
+147 verbose parsed url   query: null,
+147 verbose parsed url   pathname: 'grunt-rev@~0.1.0',
+147 verbose parsed url   path: 'grunt-rev@~0.1.0',
+147 verbose parsed url   href: 'grunt-rev@~0.1.0' }
+148 verbose cache add name="grunt-rev" spec="~0.1.0" args=["grunt-rev","~0.1.0"]
+149 verbose parsed url { protocol: null,
+149 verbose parsed url   slashes: null,
+149 verbose parsed url   auth: null,
+149 verbose parsed url   host: null,
+149 verbose parsed url   port: null,
+149 verbose parsed url   hostname: null,
+149 verbose parsed url   hash: null,
+149 verbose parsed url   search: null,
+149 verbose parsed url   query: null,
+149 verbose parsed url   pathname: '~0.1.0',
+149 verbose parsed url   path: '~0.1.0',
+149 verbose parsed url   href: '~0.1.0' }
+150 verbose addNamed [ 'grunt-rev', '~0.1.0' ]
+151 verbose addNamed [ null, '>=0.1.0-0 <0.2.0-0' ]
+152 silly lockFile a3a49760-grunt-rev-0-1-0 grunt-rev@~0.1.0
+153 verbose lock grunt-rev@~0.1.0 /home/greenstar/.npm/a3a49760-grunt-rev-0-1-0.lock
+154 verbose cache add [ 'grunt-usemin@~0.1.10', null ]
+155 verbose cache add name=undefined spec="grunt-usemin@~0.1.10" args=["grunt-usemin@~0.1.10",null]
+156 verbose parsed url { protocol: null,
+156 verbose parsed url   slashes: null,
+156 verbose parsed url   auth: null,
+156 verbose parsed url   host: null,
+156 verbose parsed url   port: null,
+156 verbose parsed url   hostname: null,
+156 verbose parsed url   hash: null,
+156 verbose parsed url   search: null,
+156 verbose parsed url   query: null,
+156 verbose parsed url   pathname: 'grunt-usemin@~0.1.10',
+156 verbose parsed url   path: 'grunt-usemin@~0.1.10',
+156 verbose parsed url   href: 'grunt-usemin@~0.1.10' }
+157 verbose cache add name="grunt-usemin" spec="~0.1.10" args=["grunt-usemin","~0.1.10"]
+158 verbose parsed url { protocol: null,
+158 verbose parsed url   slashes: null,
+158 verbose parsed url   auth: null,
+158 verbose parsed url   host: null,
+158 verbose parsed url   port: null,
+158 verbose parsed url   hostname: null,
+158 verbose parsed url   hash: null,
+158 verbose parsed url   search: null,
+158 verbose parsed url   query: null,
+158 verbose parsed url   pathname: '~0.1.10',
+158 verbose parsed url   path: '~0.1.10',
+158 verbose parsed url   href: '~0.1.10' }
+159 verbose addNamed [ 'grunt-usemin', '~0.1.10' ]
+160 verbose addNamed [ null, '>=0.1.10-0 <0.2.0-0' ]
+161 silly lockFile 9870b616-grunt-usemin-0-1-10 grunt-usemin@~0.1.10
+162 verbose lock grunt-usemin@~0.1.10 /home/greenstar/.npm/9870b616-grunt-usemin-0-1-10.lock
+163 verbose cache add [ 'grunt-mocha@~0.3.0', null ]
+164 verbose cache add name=undefined spec="grunt-mocha@~0.3.0" args=["grunt-mocha@~0.3.0",null]
+165 verbose parsed url { protocol: null,
+165 verbose parsed url   slashes: null,
+165 verbose parsed url   auth: null,
+165 verbose parsed url   host: null,
+165 verbose parsed url   port: null,
+165 verbose parsed url   hostname: null,
+165 verbose parsed url   hash: null,
+165 verbose parsed url   search: null,
+165 verbose parsed url   query: null,
+165 verbose parsed url   pathname: 'grunt-mocha@~0.3.0',
+165 verbose parsed url   path: 'grunt-mocha@~0.3.0',
+165 verbose parsed url   href: 'grunt-mocha@~0.3.0' }
+166 verbose cache add name="grunt-mocha" spec="~0.3.0" args=["grunt-mocha","~0.3.0"]
+167 verbose parsed url { protocol: null,
+167 verbose parsed url   slashes: null,
+167 verbose parsed url   auth: null,
+167 verbose parsed url   host: null,
+167 verbose parsed url   port: null,
+167 verbose parsed url   hostname: null,
+167 verbose parsed url   hash: null,
+167 verbose parsed url   search: null,
+167 verbose parsed url   query: null,
+167 verbose parsed url   pathname: '~0.3.0',
+167 verbose parsed url   path: '~0.3.0',
+167 verbose parsed url   href: '~0.3.0' }
+168 verbose addNamed [ 'grunt-mocha', '~0.3.0' ]
+169 verbose addNamed [ null, '>=0.3.0-0 <0.4.0-0' ]
+170 silly lockFile 7a06ee59-grunt-mocha-0-3-0 grunt-mocha@~0.3.0
+171 verbose lock grunt-mocha@~0.3.0 /home/greenstar/.npm/7a06ee59-grunt-mocha-0-3-0.lock
+172 verbose cache add [ 'grunt-open@~0.2.0', null ]
+173 verbose cache add name=undefined spec="grunt-open@~0.2.0" args=["grunt-open@~0.2.0",null]
+174 verbose parsed url { protocol: null,
+174 verbose parsed url   slashes: null,
+174 verbose parsed url   auth: null,
+174 verbose parsed url   host: null,
+174 verbose parsed url   port: null,
+174 verbose parsed url   hostname: null,
+174 verbose parsed url   hash: null,
+174 verbose parsed url   search: null,
+174 verbose parsed url   query: null,
+174 verbose parsed url   pathname: 'grunt-open@~0.2.0',
+174 verbose parsed url   path: 'grunt-open@~0.2.0',
+174 verbose parsed url   href: 'grunt-open@~0.2.0' }
+175 verbose cache add name="grunt-open" spec="~0.2.0" args=["grunt-open","~0.2.0"]
+176 verbose parsed url { protocol: null,
+176 verbose parsed url   slashes: null,
+176 verbose parsed url   auth: null,
+176 verbose parsed url   host: null,
+176 verbose parsed url   port: null,
+176 verbose parsed url   hostname: null,
+176 verbose parsed url   hash: null,
+176 verbose parsed url   search: null,
+176 verbose parsed url   query: null,
+176 verbose parsed url   pathname: '~0.2.0',
+176 verbose parsed url   path: '~0.2.0',
+176 verbose parsed url   href: '~0.2.0' }
+177 verbose addNamed [ 'grunt-open', '~0.2.0' ]
+178 verbose addNamed [ null, '>=0.2.0-0 <0.3.0-0' ]
+179 silly lockFile a449c8be-grunt-open-0-2-0 grunt-open@~0.2.0
+180 verbose lock grunt-open@~0.2.0 /home/greenstar/.npm/a449c8be-grunt-open-0-2-0.lock
+181 verbose cache add [ 'grunt-svgmin@~0.1.0', null ]
+182 verbose cache add name=undefined spec="grunt-svgmin@~0.1.0" args=["grunt-svgmin@~0.1.0",null]
+183 verbose parsed url { protocol: null,
+183 verbose parsed url   slashes: null,
+183 verbose parsed url   auth: null,
+183 verbose parsed url   host: null,
+183 verbose parsed url   port: null,
+183 verbose parsed url   hostname: null,
+183 verbose parsed url   hash: null,
+183 verbose parsed url   search: null,
+183 verbose parsed url   query: null,
+183 verbose parsed url   pathname: 'grunt-svgmin@~0.1.0',
+183 verbose parsed url   path: 'grunt-svgmin@~0.1.0',
+183 verbose parsed url   href: 'grunt-svgmin@~0.1.0' }
+184 verbose cache add name="grunt-svgmin" spec="~0.1.0" args=["grunt-svgmin","~0.1.0"]
+185 verbose parsed url { protocol: null,
+185 verbose parsed url   slashes: null,
+185 verbose parsed url   auth: null,
+185 verbose parsed url   host: null,
+185 verbose parsed url   port: null,
+185 verbose parsed url   hostname: null,
+185 verbose parsed url   hash: null,
+185 verbose parsed url   search: null,
+185 verbose parsed url   query: null,
+185 verbose parsed url   pathname: '~0.1.0',
+185 verbose parsed url   path: '~0.1.0',
+185 verbose parsed url   href: '~0.1.0' }
+186 verbose addNamed [ 'grunt-svgmin', '~0.1.0' ]
+187 verbose addNamed [ null, '>=0.1.0-0 <0.2.0-0' ]
+188 silly lockFile 7f81f70a-grunt-svgmin-0-1-0 grunt-svgmin@~0.1.0
+189 verbose lock grunt-svgmin@~0.1.0 /home/greenstar/.npm/7f81f70a-grunt-svgmin-0-1-0.lock
+190 silly addNameRange { name: 'grunt', range: '>=0.4.1-0 <0.5.0-0', hasData: false }
+191 silly addNameRange { name: 'grunt-contrib-copy',
+191 silly addNameRange   range: '>=0.4.1-0 <0.5.0-0',
+191 silly addNameRange   hasData: false }
+192 silly addNameRange { name: 'grunt-contrib-concat',
+192 silly addNameRange   range: '>=0.1.3-0 <0.2.0-0',
+192 silly addNameRange   hasData: false }
+193 silly addNameRange { name: 'grunt-contrib-uglify',
+193 silly addNameRange   range: '>=0.2.0-0 <0.3.0-0',
+193 silly addNameRange   hasData: false }
+194 silly addNameRange { name: 'grunt-contrib-coffee',
+194 silly addNameRange   range: '>=0.6.5-0 <0.7.0-0',
+194 silly addNameRange   hasData: false }
+195 silly addNameRange { name: 'grunt-contrib-compass',
+195 silly addNameRange   range: '>=0.2.0-0 <0.3.0-0',
+195 silly addNameRange   hasData: false }
+196 silly addNameRange { name: 'grunt-contrib-jshint',
+196 silly addNameRange   range: '>=0.4.1-0 <0.5.0-0',
+196 silly addNameRange   hasData: false }
+197 silly addNameRange { name: 'grunt-contrib-cssmin',
+197 silly addNameRange   range: '>=0.6.0-0 <0.7.0-0',
+197 silly addNameRange   hasData: false }
+198 silly addNameRange { name: 'grunt-contrib-connect',
+198 silly addNameRange   range: '>=0.2.0-0 <0.3.0-0',
+198 silly addNameRange   hasData: false }
+199 verbose cache add [ 'grunt-concurrent@~0.1.0', null ]
+200 verbose cache add name=undefined spec="grunt-concurrent@~0.1.0" args=["grunt-concurrent@~0.1.0",null]
+201 verbose parsed url { protocol: null,
+201 verbose parsed url   slashes: null,
+201 verbose parsed url   auth: null,
+201 verbose parsed url   host: null,
+201 verbose parsed url   port: null,
+201 verbose parsed url   hostname: null,
+201 verbose parsed url   hash: null,
+201 verbose parsed url   search: null,
+201 verbose parsed url   query: null,
+201 verbose parsed url   pathname: 'grunt-concurrent@~0.1.0',
+201 verbose parsed url   path: 'grunt-concurrent@~0.1.0',
+201 verbose parsed url   href: 'grunt-concurrent@~0.1.0' }
+202 verbose cache add name="grunt-concurrent" spec="~0.1.0" args=["grunt-concurrent","~0.1.0"]
+203 verbose parsed url { protocol: null,
+203 verbose parsed url   slashes: null,
+203 verbose parsed url   auth: null,
+203 verbose parsed url   host: null,
+203 verbose parsed url   port: null,
+203 verbose parsed url   hostname: null,
+203 verbose parsed url   hash: null,
+203 verbose parsed url   search: null,
+203 verbose parsed url   query: null,
+203 verbose parsed url   pathname: '~0.1.0',
+203 verbose parsed url   path: '~0.1.0',
+203 verbose parsed url   href: '~0.1.0' }
+204 verbose addNamed [ 'grunt-concurrent', '~0.1.0' ]
+205 verbose addNamed [ null, '>=0.1.0-0 <0.2.0-0' ]
+206 silly lockFile fbd43407-grunt-concurrent-0-1-0 grunt-concurrent@~0.1.0
+207 verbose lock grunt-concurrent@~0.1.0 /home/greenstar/.npm/fbd43407-grunt-concurrent-0-1-0.lock
+208 verbose cache add [ 'matchdep@~0.1.1', null ]
+209 verbose cache add name=undefined spec="matchdep@~0.1.1" args=["matchdep@~0.1.1",null]
+210 verbose parsed url { protocol: null,
+210 verbose parsed url   slashes: null,
+210 verbose parsed url   auth: null,
+210 verbose parsed url   host: null,
+210 verbose parsed url   port: null,
+210 verbose parsed url   hostname: null,
+210 verbose parsed url   hash: null,
+210 verbose parsed url   search: null,
+210 verbose parsed url   query: null,
+210 verbose parsed url   pathname: 'matchdep@~0.1.1',
+210 verbose parsed url   path: 'matchdep@~0.1.1',
+210 verbose parsed url   href: 'matchdep@~0.1.1' }
+211 verbose cache add name="matchdep" spec="~0.1.1" args=["matchdep","~0.1.1"]
+212 verbose parsed url { protocol: null,
+212 verbose parsed url   slashes: null,
+212 verbose parsed url   auth: null,
+212 verbose parsed url   host: null,
+212 verbose parsed url   port: null,
+212 verbose parsed url   hostname: null,
+212 verbose parsed url   hash: null,
+212 verbose parsed url   search: null,
+212 verbose parsed url   query: null,
+212 verbose parsed url   pathname: '~0.1.1',
+212 verbose parsed url   path: '~0.1.1',
+212 verbose parsed url   href: '~0.1.1' }
+213 verbose addNamed [ 'matchdep', '~0.1.1' ]
+214 verbose addNamed [ null, '>=0.1.1-0 <0.2.0-0' ]
+215 silly lockFile 5c68bc92-matchdep-0-1-1 matchdep@~0.1.1
+216 verbose lock matchdep@~0.1.1 /home/greenstar/.npm/5c68bc92-matchdep-0-1-1.lock
+217 verbose cache add [ 'connect-livereload@~0.2.0', null ]
+218 verbose cache add name=undefined spec="connect-livereload@~0.2.0" args=["connect-livereload@~0.2.0",null]
+219 verbose parsed url { protocol: null,
+219 verbose parsed url   slashes: null,
+219 verbose parsed url   auth: null,
+219 verbose parsed url   host: null,
+219 verbose parsed url   port: null,
+219 verbose parsed url   hostname: null,
+219 verbose parsed url   hash: null,
+219 verbose parsed url   search: null,
+219 verbose parsed url   query: null,
+219 verbose parsed url   pathname: 'connect-livereload@~0.2.0',
+219 verbose parsed url   path: 'connect-livereload@~0.2.0',
+219 verbose parsed url   href: 'connect-livereload@~0.2.0' }
+220 verbose cache add name="connect-livereload" spec="~0.2.0" args=["connect-livereload","~0.2.0"]
+221 verbose parsed url { protocol: null,
+221 verbose parsed url   slashes: null,
+221 verbose parsed url   auth: null,
+221 verbose parsed url   host: null,
+221 verbose parsed url   port: null,
+221 verbose parsed url   hostname: null,
+221 verbose parsed url   hash: null,
+221 verbose parsed url   search: null,
+221 verbose parsed url   query: null,
+221 verbose parsed url   pathname: '~0.2.0',
+221 verbose parsed url   path: '~0.2.0',
+221 verbose parsed url   href: '~0.2.0' }
+222 verbose addNamed [ 'connect-livereload', '~0.2.0' ]
+223 verbose addNamed [ null, '>=0.2.0-0 <0.3.0-0' ]
+224 silly lockFile 78f564f0-connect-livereload-0-2-0 connect-livereload@~0.2.0
+225 verbose lock connect-livereload@~0.2.0 /home/greenstar/.npm/78f564f0-connect-livereload-0-2-0.lock
+226 verbose cache add [ 'grunt-recess@~0.3.4', null ]
+227 verbose cache add name=undefined spec="grunt-recess@~0.3.4" args=["grunt-recess@~0.3.4",null]
+228 verbose parsed url { protocol: null,
+228 verbose parsed url   slashes: null,
+228 verbose parsed url   auth: null,
+228 verbose parsed url   host: null,
+228 verbose parsed url   port: null,
+228 verbose parsed url   hostname: null,
+228 verbose parsed url   hash: null,
+228 verbose parsed url   search: null,
+228 verbose parsed url   query: null,
+228 verbose parsed url   pathname: 'grunt-recess@~0.3.4',
+228 verbose parsed url   path: 'grunt-recess@~0.3.4',
+228 verbose parsed url   href: 'grunt-recess@~0.3.4' }
+229 verbose cache add name="grunt-recess" spec="~0.3.4" args=["grunt-recess","~0.3.4"]
+230 verbose parsed url { protocol: null,
+230 verbose parsed url   slashes: null,
+230 verbose parsed url   auth: null,
+230 verbose parsed url   host: null,
+230 verbose parsed url   port: null,
+230 verbose parsed url   hostname: null,
+230 verbose parsed url   hash: null,
+230 verbose parsed url   search: null,
+230 verbose parsed url   query: null,
+230 verbose parsed url   pathname: '~0.3.4',
+230 verbose parsed url   path: '~0.3.4',
+230 verbose parsed url   href: '~0.3.4' }
+231 verbose addNamed [ 'grunt-recess', '~0.3.4' ]
+232 verbose addNamed [ null, '>=0.3.4-0 <0.4.0-0' ]
+233 silly lockFile c0e7cf4e-grunt-recess-0-3-4 grunt-recess@~0.3.4
+234 verbose lock grunt-recess@~0.3.4 /home/greenstar/.npm/c0e7cf4e-grunt-recess-0-3-4.lock
+235 verbose url raw grunt
+236 verbose url resolving [ 'https://registry.npmjs.org/', './grunt' ]
+237 verbose url resolved https://registry.npmjs.org/grunt
+238 info trying registry request attempt 1 at 18:46:46
+239 http GET https://registry.npmjs.org/grunt
+240 verbose url raw grunt-contrib-copy
+241 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-copy' ]
+242 verbose url resolved https://registry.npmjs.org/grunt-contrib-copy
+243 info trying registry request attempt 1 at 18:46:46
+244 http GET https://registry.npmjs.org/grunt-contrib-copy
+245 verbose url raw grunt-contrib-concat
+246 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-concat' ]
+247 verbose url resolved https://registry.npmjs.org/grunt-contrib-concat
+248 info trying registry request attempt 1 at 18:46:46
+249 http GET https://registry.npmjs.org/grunt-contrib-concat
+250 verbose url raw grunt-contrib-uglify
+251 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-uglify' ]
+252 verbose url resolved https://registry.npmjs.org/grunt-contrib-uglify
+253 info trying registry request attempt 1 at 18:46:46
+254 http GET https://registry.npmjs.org/grunt-contrib-uglify
+255 verbose url raw grunt-contrib-coffee
+256 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-coffee' ]
+257 verbose url resolved https://registry.npmjs.org/grunt-contrib-coffee
+258 info trying registry request attempt 1 at 18:46:46
+259 http GET https://registry.npmjs.org/grunt-contrib-coffee
+260 verbose url raw grunt-contrib-compass
+261 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-compass' ]
+262 verbose url resolved https://registry.npmjs.org/grunt-contrib-compass
+263 info trying registry request attempt 1 at 18:46:46
+264 http GET https://registry.npmjs.org/grunt-contrib-compass
+265 verbose url raw grunt-contrib-jshint
+266 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-jshint' ]
+267 verbose url resolved https://registry.npmjs.org/grunt-contrib-jshint
+268 info trying registry request attempt 1 at 18:46:46
+269 http GET https://registry.npmjs.org/grunt-contrib-jshint
+270 verbose url raw grunt-contrib-cssmin
+271 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-cssmin' ]
+272 verbose url resolved https://registry.npmjs.org/grunt-contrib-cssmin
+273 info trying registry request attempt 1 at 18:46:46
+274 http GET https://registry.npmjs.org/grunt-contrib-cssmin
+275 verbose url raw grunt-contrib-connect
+276 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-connect' ]
+277 verbose url resolved https://registry.npmjs.org/grunt-contrib-connect
+278 info trying registry request attempt 1 at 18:46:46
+279 http GET https://registry.npmjs.org/grunt-contrib-connect
+280 silly addNameRange { name: 'grunt-contrib-clean',
+280 silly addNameRange   range: '>=0.4.0-0 <0.5.0-0',
+280 silly addNameRange   hasData: false }
+281 silly addNameRange { name: 'grunt-contrib-htmlmin',
+281 silly addNameRange   range: '>=0.1.3-0 <0.2.0-0',
+281 silly addNameRange   hasData: false }
+282 silly addNameRange { name: 'grunt-bower-requirejs',
+282 silly addNameRange   range: '>=0.4.1-0 <0.5.0-0',
+282 silly addNameRange   hasData: false }
+283 silly addNameRange { name: 'grunt-contrib-requirejs',
+283 silly addNameRange   range: '>=0.4.0-0 <0.5.0-0',
+283 silly addNameRange   hasData: false }
+284 silly addNameRange { name: 'grunt-contrib-imagemin',
+284 silly addNameRange   range: '>=0.1.3-0 <0.2.0-0',
+284 silly addNameRange   hasData: false }
+285 silly addNameRange { name: 'grunt-contrib-watch',
+285 silly addNameRange   range: '>=0.4.0-0 <0.5.0-0',
+285 silly addNameRange   hasData: false }
+286 silly addNameRange { name: 'grunt-rev',
+286 silly addNameRange   range: '>=0.1.0-0 <0.2.0-0',
+286 silly addNameRange   hasData: false }
+287 silly addNameRange { name: 'grunt-usemin',
+287 silly addNameRange   range: '>=0.1.10-0 <0.2.0-0',
+287 silly addNameRange   hasData: false }
+288 silly addNameRange { name: 'grunt-mocha',
+288 silly addNameRange   range: '>=0.3.0-0 <0.4.0-0',
+288 silly addNameRange   hasData: false }
+289 silly addNameRange { name: 'grunt-open',
+289 silly addNameRange   range: '>=0.2.0-0 <0.3.0-0',
+289 silly addNameRange   hasData: false }
+290 silly addNameRange { name: 'grunt-svgmin',
+290 silly addNameRange   range: '>=0.1.0-0 <0.2.0-0',
+290 silly addNameRange   hasData: false }
+291 verbose url raw grunt-contrib-clean
+292 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-clean' ]
+293 verbose url resolved https://registry.npmjs.org/grunt-contrib-clean
+294 info trying registry request attempt 1 at 18:46:47
+295 http GET https://registry.npmjs.org/grunt-contrib-clean
+296 verbose url raw grunt-contrib-htmlmin
+297 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-htmlmin' ]
+298 verbose url resolved https://registry.npmjs.org/grunt-contrib-htmlmin
+299 info trying registry request attempt 1 at 18:46:47
+300 http GET https://registry.npmjs.org/grunt-contrib-htmlmin
+301 verbose url raw grunt-bower-requirejs
+302 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-bower-requirejs' ]
+303 verbose url resolved https://registry.npmjs.org/grunt-bower-requirejs
+304 info trying registry request attempt 1 at 18:46:47
+305 http GET https://registry.npmjs.org/grunt-bower-requirejs
+306 verbose url raw grunt-contrib-requirejs
+307 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-requirejs' ]
+308 verbose url resolved https://registry.npmjs.org/grunt-contrib-requirejs
+309 info trying registry request attempt 1 at 18:46:47
+310 http GET https://registry.npmjs.org/grunt-contrib-requirejs
+311 verbose url raw grunt-contrib-imagemin
+312 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-imagemin' ]
+313 verbose url resolved https://registry.npmjs.org/grunt-contrib-imagemin
+314 info trying registry request attempt 1 at 18:46:47
+315 http GET https://registry.npmjs.org/grunt-contrib-imagemin
+316 verbose url raw grunt-contrib-watch
+317 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-contrib-watch' ]
+318 verbose url resolved https://registry.npmjs.org/grunt-contrib-watch
+319 info trying registry request attempt 1 at 18:46:47
+320 http GET https://registry.npmjs.org/grunt-contrib-watch
+321 verbose url raw grunt-rev
+322 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-rev' ]
+323 verbose url resolved https://registry.npmjs.org/grunt-rev
+324 info trying registry request attempt 1 at 18:46:47
+325 http GET https://registry.npmjs.org/grunt-rev
+326 verbose url raw grunt-usemin
+327 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-usemin' ]
+328 verbose url resolved https://registry.npmjs.org/grunt-usemin
+329 info trying registry request attempt 1 at 18:46:47
+330 http GET https://registry.npmjs.org/grunt-usemin
+331 verbose url raw grunt-mocha
+332 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-mocha' ]
+333 verbose url resolved https://registry.npmjs.org/grunt-mocha
+334 info trying registry request attempt 1 at 18:46:47
+335 http GET https://registry.npmjs.org/grunt-mocha
+336 verbose url raw grunt-open
+337 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-open' ]
+338 verbose url resolved https://registry.npmjs.org/grunt-open
+339 info trying registry request attempt 1 at 18:46:47
+340 http GET https://registry.npmjs.org/grunt-open
+341 silly addNameRange { name: 'grunt-concurrent',
+341 silly addNameRange   range: '>=0.1.0-0 <0.2.0-0',
+341 silly addNameRange   hasData: false }
+342 silly addNameRange { name: 'matchdep', range: '>=0.1.1-0 <0.2.0-0', hasData: false }
+343 silly addNameRange { name: 'connect-livereload',
+343 silly addNameRange   range: '>=0.2.0-0 <0.3.0-0',
+343 silly addNameRange   hasData: false }
+344 silly addNameRange { name: 'grunt-recess',
+344 silly addNameRange   range: '>=0.3.4-0 <0.4.0-0',
+344 silly addNameRange   hasData: false }
+345 verbose url raw grunt-svgmin
+346 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-svgmin' ]
+347 verbose url resolved https://registry.npmjs.org/grunt-svgmin
+348 info trying registry request attempt 1 at 18:46:47
+349 http GET https://registry.npmjs.org/grunt-svgmin
+350 verbose url raw grunt-concurrent
+351 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-concurrent' ]
+352 verbose url resolved https://registry.npmjs.org/grunt-concurrent
+353 info trying registry request attempt 1 at 18:46:47
+354 http GET https://registry.npmjs.org/grunt-concurrent
+355 verbose url raw matchdep
+356 verbose url resolving [ 'https://registry.npmjs.org/', './matchdep' ]
+357 verbose url resolved https://registry.npmjs.org/matchdep
+358 info trying registry request attempt 1 at 18:46:47
+359 http GET https://registry.npmjs.org/matchdep
+360 verbose url raw connect-livereload
+361 verbose url resolving [ 'https://registry.npmjs.org/', './connect-livereload' ]
+362 verbose url resolved https://registry.npmjs.org/connect-livereload
+363 info trying registry request attempt 1 at 18:46:47
+364 http GET https://registry.npmjs.org/connect-livereload
+365 verbose url raw grunt-recess
+366 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-recess' ]
+367 verbose url resolved https://registry.npmjs.org/grunt-recess
+368 info trying registry request attempt 1 at 18:46:47
+369 http GET https://registry.npmjs.org/grunt-recess
+370 http 200 https://registry.npmjs.org/grunt-contrib-copy
+371 silly registry.get cb [ 200,
+371 silly registry.get   { vary: 'Accept',
+371 silly registry.get     server: 'CouchDB/1.3.1 (Erlang OTP/R15B03)',
+371 silly registry.get     etag: '"O5TILD718JALFGOGBIA6LAB1"',
+371 silly registry.get     date: 'Thu, 17 Oct 2013 12:46:49 GMT',
+371 silly registry.get     'content-type': 'application/json',
+371 silly registry.get     'content-length': '56632' } ]
+372 silly addNameRange number 2 { name: 'grunt-contrib-copy',
+372 silly addNameRange   range: '>=0.4.1-0 <0.5.0-0',
+372 silly addNameRange   hasData: true }
+373 silly addNameRange versions [ 'grunt-contrib-copy',
+373 silly addNameRange   [ '0.2.0',
+373 silly addNameRange     '0.2.1',
+373 silly addNameRange     '0.2.2',
+373 silly addNameRange     '0.2.3',
+373 silly addNameRange     '0.2.4',
+373 silly addNameRange     '0.3.0',
+373 silly addNameRange     '0.3.1',
+373 silly addNameRange     '0.3.2',
+373 silly addNameRange     '0.4.0',
+373 silly addNameRange     '0.4.1',
+373 silly addNameRange     '0.4.0-rc7' ] ]
+374 verbose addNamed [ 'grunt-contrib-copy', '0.4.1' ]
+375 verbose addNamed [ '0.4.1', '0.4.1' ]
+376 silly lockFile 4dbab511-grunt-contrib-copy-0-4-1 grunt-contrib-copy@0.4.1
+377 verbose lock grunt-contrib-copy@0.4.1 /home/greenstar/.npm/4dbab511-grunt-contrib-copy-0-4-1.lock
+378 silly lockFile 52435995-opy-grunt-contrib-copy-0-4-1-tgz https://registry.npmjs.org/grunt-contrib-copy/-/grunt-contrib-copy-0.4.1.tgz
+379 verbose lock https://registry.npmjs.org/grunt-contrib-copy/-/grunt-contrib-copy-0.4.1.tgz /home/greenstar/.npm/52435995-opy-grunt-contrib-copy-0-4-1-tgz.lock
+380 verbose addRemoteTarball [ 'https://registry.npmjs.org/grunt-contrib-copy/-/grunt-contrib-copy-0.4.1.tgz',
+380 verbose addRemoteTarball   'f0753b40ae21bb706daefb0b299e03cdf5fa9d6e' ]
+381 silly lockFile 52435995-opy-grunt-contrib-copy-0-4-1-tgz https://registry.npmjs.org/grunt-contrib-copy/-/grunt-contrib-copy-0.4.1.tgz
+382 silly lockFile 52435995-opy-grunt-contrib-copy-0-4-1-tgz https://registry.npmjs.org/grunt-contrib-copy/-/grunt-contrib-copy-0.4.1.tgz
+383 silly lockFile 4dbab511-grunt-contrib-copy-0-4-1 grunt-contrib-copy@0.4.1
+384 silly lockFile 4dbab511-grunt-contrib-copy-0-4-1 grunt-contrib-copy@0.4.1
+385 silly lockFile c84f658a-grunt-contrib-copy-0-4-1 grunt-contrib-copy@~0.4.1
+386 silly lockFile c84f658a-grunt-contrib-copy-0-4-1 grunt-contrib-copy@~0.4.1
+387 error Error: EACCES, mkdir '/home/greenstar/tmp/npm-32672-NoAXQvnk'
+387 error  { [Error: EACCES, mkdir '/home/greenstar/tmp/npm-32672-NoAXQvnk']
+387 error   errno: 3,
+387 error   code: 'EACCES',
+387 error   path: '/home/greenstar/tmp/npm-32672-NoAXQvnk' }
+388 error Please try running this command again as root/Administrator.
+389 error System Linux 3.2.0-52-generic
+390 error command "/usr/bin/node" "/usr/bin/npm" "install"
+391 error cwd /home/greenstar/webserver/ofnote
+392 error node -v v0.10.20
+393 error npm -v 1.3.11
+394 error path /home/greenstar/tmp/npm-32672-NoAXQvnk
+395 error code EACCES
+396 error errno 3
+397 error stack Error: EACCES, mkdir '/home/greenstar/tmp/npm-32672-NoAXQvnk'
+398 verbose exit [ 3, true ]

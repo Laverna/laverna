@@ -1,9 +1,9 @@
 /*global define */
-define(['underscore', 'backbone', 'marionette', 'noteSidebarItem', 'text!noteSidebarTempl'],
-function(_, Backbone, Marionette, NoteSidebarItem, Template) {
+define(['underscore', 'backbone', 'shortcutView', 'noteSidebarItem', 'text!noteSidebarTempl'],
+function(_, Backbone, ShortcutView, NoteSidebarItem, Template) {
     'use strict';
 
-    var View = Marionette.CompositeView.extend({
+    var View = ShortcutView.CompositeView.extend({
         template: _.template(Template),
 
         itemView: NoteSidebarItem,
@@ -27,11 +27,52 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
             'keypress .search-form input[type="text"]': 'search',
         },
 
+        shortcuts: {
+            74: 'navigateBottom',
+            75: 'navigateTop'
+        },
+
         initialize: function () {
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
 
+            this.enableShortcut();
             this.pagination();
+        },
+
+        navigate: function(el) {
+           el = el.children('.list-group-item');
+
+           if(el.length !== 0) {
+               Backbone.history.navigate(el.attr('href'));
+               el.trigger('click');
+           }
+        },
+
+        navigateBottom: function () {
+           var active = this.$el.find('.list-group-item.active'); 
+           var new_active = null;
+
+           if (active.length !== 0) {
+              new_active = active.parent().next('.list-group');
+           } else {
+              new_active = this.$el.find('.list-group:first');
+           }
+
+           this.navigate(new_active);
+        },
+
+        navigateTop: function () {
+           var active = this.$el.find('.list-group-item.active'); 
+           var new_active = null;
+
+           if (active.length !== 0) {
+              new_active = active.parent().prev('.list-group');
+           } else {
+              new_active = this.$el.find('.list-group:last');
+           }
+
+           this.navigate(new_active);
         },
 
         changeFocus: function(e) {

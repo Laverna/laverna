@@ -1,6 +1,6 @@
 /*global define*/
-define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl', 'typeahead', 'mdmagick'],
-function (_, Backbone, Marionette, Note, Template) {
+define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl', 'pagedown', 'ace'],
+function (_, Backbone, Marionette, Note, Template, Markdown, ace) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -21,8 +21,13 @@ function (_, Backbone, Marionette, Note, Template) {
         },
 
         afterRender: function() {
-            this.ui.content.mdmagick();
-            this.$el.find('.mdm-control').css('width', '100%');
+            var converter = Markdown.getSanitizingConverter();
+            var editor = new Markdown.Editor(converter);
+            
+            var text = this.$('#wmd-input').innerHTML;
+            var ace1 = ace.edit('wmd-input');
+            ace1.setValue(text, -1);
+            editor.run(ace1);
         },
 
         okClicked: function() {

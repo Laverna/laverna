@@ -12,6 +12,10 @@ require.config({
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Markdown MDMAgick
         mdmagick              : 'libs/mdmagick/lib/mdmagick',
+        pagedown              : 'libs/pagedown-ace/Markdown.Editor',
+        'pagedown.converter'  : 'libs/pagedown-ace/Markdown.Converter',
+        'pagedown.sanitizer'  : 'libs/pagedown-ace/Markdown.Sanitizer',
+        'ace'                 : 'libs/ace',
         showdown              : 'libs/mdmagick/vendor/showdown',
         checklist             : 'libs/checklist',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
@@ -61,6 +65,16 @@ require.config({
                 'a-tools'
             ],
             exports: 'mdmagick'
+        },
+        pagedown: {
+            deps: [
+                'pagedown.converter',
+                'pagedown.sanitizer'
+            ],
+            exports: 'Markdown'
+        },
+        ace: {
+            exports: 'ace' 
         },
         prettify: {
             exports: 'prettify'

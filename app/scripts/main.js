@@ -1,4 +1,9 @@
 require.config({
+    packages: [{
+        name: 'ace',
+        location: '../bower_components/ace/lib/ace',
+        main: 'ace'
+    }],
     paths: {
         // Dependencies       : and libraries
         text                  : '../bower_components/requirejs-text/text',
@@ -12,13 +17,13 @@ require.config({
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Markdown MDMAgick
         mdmagick              : 'libs/mdmagick/lib/mdmagick',
-        pagedown              : 'libs/pagedown-ace/Markdown.Editor',
-        'pagedown.converter'  : 'libs/pagedown-ace/Markdown.Converter',
-        'pagedown.sanitizer'  : 'libs/pagedown-ace/Markdown.Sanitizer',
-        'ace'                 : 'libs/ace',
         showdown              : 'libs/mdmagick/vendor/showdown',
-        checklist             : 'libs/checklist',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
+        // Pagedown           :
+        'pagedown-ace'        : '../bower_components/pagedown-ace/Markdown.Editor',
+        'pagedown.converter'  : '../bower_components/pagedown-ace/Markdown.Converter',
+        'pagedown.sanitizer'  : '../bower_components/pagedown-ace/Markdown.Sanitizer',
+        checklist             : 'libs/checklist',
         'typeahead'           : '../bower_components/typeahead.js/dist/typeahead.min',
         // Other              : libraries
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',
@@ -26,6 +31,7 @@ require.config({
         'bootstrap-modal'     : 'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         // Application        : scripts here
+        'noteForm'            : 'views/item/noteForm',
         'noteEdit'            : 'views/item/noteEdit',
         'noteAdd'             : 'views/item/noteAdd',
         'noteSidebar'         : 'views/composite/noteSidebar',
@@ -66,16 +72,10 @@ require.config({
             ],
             exports: 'mdmagick'
         },
-        pagedown: {
-            deps: [
-                'pagedown.converter',
-                'pagedown.sanitizer'
-            ],
-            exports: 'Markdown'
-        },
         ace: {
-            exports: 'ace' 
+            exports: 'ace'
         },
+        'pagedown-ace': ['../bower_components/pagedown-ace/Markdown.Converter'],
         prettify: {
             exports: 'prettify'
         },

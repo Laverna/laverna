@@ -49,8 +49,9 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
                 template: _.template(ModalTempl),
                 okText: 'Create',
                 allowCancel: true,
+                animate: true,
                 modalOptions: {
-                    backdrop: 'static'
+                    backdrop: 'static',
                 }
             }, options);
 
@@ -100,29 +101,27 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
 
         // Add a new note
         noteAdd: function () {
+            this.noteInit();
             var content = new NoteAdd({
                 collection: this.collectionNotes
             });
-            this.showModal({
-                content: content,
-                okText: 'Create',
-                escape: false
-            });
+
+            App.content.show(content);
+            content.trigger('shown');
         },
 
         // Edit an existing note
         noteEdit: function (id) {
+            this.noteInit();
+
             var note = this.collectionNotes.get(id);
             var content = new NoteEdit({
                 collection : this.collectionNotes,
                 model      : note
             });
 
-            // Show content in modal window
-            this.showModal({
-                content: content,
-                okText: 'Save'
-            });
+            App.content.show(content);
+            content.trigger('shown');
         },
 
         // Remove Note

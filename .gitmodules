@@ -4,6 +4,3 @@
 [submodule "app/scripts/libs/backbone-autocomplete"]
 	path = app/scripts/libs/backbone-autocomplete
 	url = https://github.com/fatiherikli/backbone-autocomplete.git
-[submodule "app/scripts/libs/pagedown-ace"]
-	path = app/scripts/libs/pagedown-ace
-	url = https://github.com/benweet/pagedown-ace.git

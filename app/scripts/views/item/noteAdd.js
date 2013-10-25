@@ -1,9 +1,17 @@
 /*global define*/
-define(['underscore', 'backbone', 'marionette', 'models/note', 'text!noteAddTempl', 'pagedown', 'ace'],
-function (_, Backbone, Marionette, Note, Template, Markdown, ace) {
+define([
+    'underscore',
+    'backbone',
+    'marionette',
+    'models/note',
+    'noteForm',
+    'text!noteAddTempl',
+    'ace',
+    'pagedown-ace'
+], function (_, Backbone, Marionette, Note, NoteForm, Template) {
     'use strict';
 
-    var View = Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend(_.extend(NoteForm, {
         template: _.template(Template),
 
         ui: {
@@ -14,23 +22,13 @@ function (_, Backbone, Marionette, Note, Template, Markdown, ace) {
         },
 
         initialize: function() {
-            this.on('ok', this.okClicked);
+            this.on('ok', this.save);
             this.on('hidden.bs.modal', this.redirect);
-            this.on('render', this.afterRender)
+            this.on('shown', this.pagedownRender);
             // this.on('cancel', this.redirect);
         },
 
-        afterRender: function() {
-            var converter = Markdown.getSanitizingConverter();
-            var editor = new Markdown.Editor(converter);
-            
-            var text = this.$('#wmd-input').innerHTML;
-            var ace1 = ace.edit('wmd-input');
-            ace1.setValue(text, -1);
-            editor.run(ace1);
-        },
-
-        okClicked: function() {
+        save: function() {
             var data = {
                 title      : this.ui.title.val(),
                 content    : this.ui.content.val(),
@@ -53,7 +51,7 @@ function (_, Backbone, Marionette, Note, Template, Markdown, ace) {
                 Backbone.history.navigate('/note/show/' + id, true);
             }
         }
-    });
+    }));
 
     return View;
 });

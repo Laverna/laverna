@@ -1,14 +1,24 @@
 /*global define*/
-define(['underscore', 'jquery', 'backbone', 'marionette', 'text!noteFormTempl', 'checklist'],
-function (_, $, Backbone, Marionette, Template, Checklist) {
+define([
+    'underscore',
+    'jquery',
+    'backbone',
+    'marionette',
+    'noteForm',
+    'text!noteFormTempl',
+    'checklist',
+    'ace',
+    'pagedown-ace'
+],
+function (_, $, Backbone, Marionette, NoteForm, Template, Checklist) {
     'use strict';
 
-    var Edit = Marionette.ItemView.extend({
+    var Edit = Marionette.ItemView.extend(_.extend(NoteForm, {
         template: _.template(Template),
 
         ui: {
             title      :  'input[name="title"]',
-            content    :  'textarea[name="content"]',
+            // content    :  'textarea[name="content"]',
             tagsId     :  'input[name="tags"]',
 //            notebookId :  'input[name="notebookId"]'
         },
@@ -16,13 +26,8 @@ function (_, $, Backbone, Marionette, Template, Checklist) {
         initialize: function () {
             this.on('ok', this.saveNote);
             this.on('hidden.bs.modal', this.redirect);
-            this.on('render', this.afterRender);
+            this.on('shown', this.pagedownRender);
             // this.on('cancel', this.redirect);
-        },
-
-        afterRender: function() {
-            this.ui.content.mdmagick();
-            this.$el.find('.mdm-control').css('width', '100%');
         },
 
         /**
@@ -61,7 +66,7 @@ function (_, $, Backbone, Marionette, Template, Checklist) {
                 url.back();
             }
         }
-    });
+    }));
 
     return Edit;
 });

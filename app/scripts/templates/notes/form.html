@@ -4,13 +4,13 @@
 
 <div class="ui-s-cont">
     <div class="ui-s-content">
-        <div class="main">
-            <form class="form-horizontal" action="#">
+        <div class="main" id="form">
+            <form class="form-horizontal" action="#" method="post">
                 <div class="article">
                     <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="Title" />
-                    <div class="wmd-input" id="wmd-input">{{content}}</div>
-                    <!-- <div id="wmd&#45;preview" class="wmd&#45;panel wmd&#45;preview"></div> -->
+                    <div class="wmd-input" id="wmd-input">{{content}}</div> <!-- <div id="wmd&#45;preview" class="wmd&#45;panel wmd&#45;preview"></div> -->
                 </div>
+                <input id="btn" type="submit" value="Save" />
             </form>
         </div>
     </div>

@@ -10,7 +10,7 @@ define([
     'ace',
     'pagedown-ace'
 ],
-function (_, $, Backbone, Marionette, NoteForm, Template, Checklist) {
+function (_, $, Backbone, Marionette, NoteForm, Template, Checklist, ace) {
     'use strict';
 
     var Edit = Marionette.ItemView.extend(_.extend(NoteForm, {
@@ -18,9 +18,14 @@ function (_, $, Backbone, Marionette, NoteForm, Template, Checklist) {
 
         ui: {
             title      :  'input[name="title"]',
-            // content    :  'textarea[name="content"]',
+            content    :  '.wmd-input',
             tagsId     :  'input[name="tags"]',
 //            notebookId :  'input[name="notebookId"]'
+        },
+
+        events: {
+            'submit .form-horizontal': 'saveNote',
+            'click #btn': 'saveNote',
         },
 
         initialize: function () {
@@ -33,12 +38,17 @@ function (_, $, Backbone, Marionette, NoteForm, Template, Checklist) {
         /**
          * Save changes
          */
-        saveNote: function () {
+        saveNote: function (e) {
+            e.preventDefault();
+
+            // Get current value
+            var editor = ace.edit('wmd-input');
+            this.model.set('content', editor.getSession().getValue());
+
             // Set new value
-            this.model.set('content', this.ui.content.val());
             this.model.set('title', this.ui.title.val());
 //            this.model.set('notebookId', this.ui.notebookId.val());
-            this.model.set('tagsId', this.ui.tagsId.val().trim());
+            // this.model.set('tagsId', this.ui.tagsId.val().trim());
             this.model.trigger('update.note');
 
             // Count checklists

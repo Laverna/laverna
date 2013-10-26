@@ -15,7 +15,7 @@
     "backbone.bootstrap-modal": "bootstrap3",
     "showdown"             :  "master",
     "ace"                  :  "master",
-    "pagedown-ace"         :  "git://github.com:benweet/pagedown-ace.git#7805f240f343b5b2a05a5b9c0d4a3f5091e7a49b",
+    "pagedown-ace"         :  "git@github.com:benweet/pagedown-ace.git#7805f240f343b5b2a05a5b9c0d4a3f5091e7a49b",
     "google-code-prettify" :  "master",
     "qunit"                :  "~1.12.0",
     "sinonjs"              :  "~1.7.1",

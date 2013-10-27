@@ -20,8 +20,8 @@ require.config({
         showdown              : 'libs/mdmagick/vendor/showdown',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
         // Keybindings
-        'Mousetrap'           : '../bower_components/mousetrap/mousetrap.min',
-        'backbone.mousetrap'  : 'libs/backbone.mousetrap/backbone.mousetrap',
+        'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
+        'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
         // Pagedown           :
         'pagedown-ace'        : '../bower_components/pagedown-ace/Markdown.Editor',
         'pagedown.converter'  : '../bower_components/pagedown-ace/Markdown.Converter',
@@ -35,8 +35,6 @@ require.config({
         // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         // Application        : scripts here
         'noteForm'            : 'views/item/noteForm',
-        'noteEdit'            : 'views/item/noteEdit',
-        'noteAdd'             : 'views/item/noteAdd',
         'noteSidebar'         : 'views/composite/noteSidebar',
         'noteSidebarItem'     : 'views/item/noteSidebarItem',
         'noteItem'            : 'views/item/noteItem',
@@ -75,6 +73,7 @@ require.config({
             ],
             exports: 'mdmagick'
         },
+        'Mousetrap': {},
         'backbone.mousetrap': {
             deps: [
                 'Mousetrap'

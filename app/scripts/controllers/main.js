@@ -8,13 +8,12 @@ define([
     // collections
     'collections/notes',
     // Views
-    'noteAdd',
+    'noteForm',
     'noteItem',
-    'noteEdit',
     'noteSidebar',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem, NoteEdit, NoteSidebar, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteItem, NoteSidebar, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -102,7 +101,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
         // Add a new note
         noteAdd: function () {
             this.noteInit();
-            var content = new NoteAdd({
+            var content = new NoteForm({
                 collection: this.collectionNotes
             });
 
@@ -115,7 +114,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteAdd, NoteItem
             this.noteInit();
 
             var note = this.collectionNotes.get(id);
-            var content = new NoteEdit({
+            var content = new NoteForm({
                 collection : this.collectionNotes,
                 model      : note
             });

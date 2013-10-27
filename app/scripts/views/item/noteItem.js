@@ -1,6 +1,14 @@
 /*global define */
-define(['underscore', 'backbone', 'marionette', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify', 'backbone.mousetrap'],
-function (_, Backbone, Marionette, Template, Showdown, Checklist, prettify) {
+define([
+    'underscore',
+    'backbone',
+    'marionette',
+    'text!noteItemTempl',
+    'showdown',
+    'checklist',
+    'prettify',
+    'backbone.mousetrap'
+], function (_, Backbone, Marionette, Template, Showdown, Checklist, prettify) {
     'use strict';
 
     // Intergrating backbone.mousetrap in marionette
@@ -61,7 +69,7 @@ function (_, Backbone, Marionette, Template, Showdown, Checklist, prettify) {
             Backbone.history.navigate(uri);
         },
 
-        deleteNote: function(e) {
+        deleteNote: function() {
             Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
         },
 

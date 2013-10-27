@@ -1,9 +1,12 @@
 /*global define */
-define(['underscore', 'backbone', 'shortcutView', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify'],
-function (_, Backbone, ShortcutView, Template, Showdown, Checklist, prettify) {
+define(['underscore', 'backbone', 'marionette', 'text!noteItemTempl', 'showdown', 'checklist', 'prettify', 'backbone.mousetrap'],
+function (_, Backbone, Marionette, Template, Showdown, Checklist, prettify) {
     'use strict';
 
-    var View = ShortcutView.ItemView.extend({
+    // Intergrating backbone.mousetrap in marionette
+    _.extend(Marionette.ItemView, Backbone.View);
+
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'content-notes',
@@ -17,21 +20,15 @@ function (_, Backbone, ShortcutView, Template, Showdown, Checklist, prettify) {
             'click .task :checkbox': 'toggleTask'
         },
 
-        shortcuts: {
-            69: 'editNote',
-            70: 'favorite',
-            51: 'deleteNote'
+        keyboardEvents: {
+            'e': 'editNote',
+            'f': 'favorite',
+            'shift+3': 'deleteNote'
         },
 
         initialize: function() {
             this.model.on('change', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
-
-            this.enableShortcut();
-        },
-
-        onBeforeClose: function () {
-            this.disableShortcut();
         },
 
         onRender: function () {
@@ -65,10 +62,7 @@ function (_, Backbone, ShortcutView, Template, Showdown, Checklist, prettify) {
         },
 
         deleteNote: function(e) {
-            if (e.shiftKey) {
-                Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
-            }
-            // console.log(e);
+            Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
         },
 
         /**

@@ -1,9 +1,12 @@
 /*global define */
-define(['underscore', 'backbone', 'shortcutView', 'noteSidebarItem', 'text!noteSidebarTempl'],
-function(_, Backbone, ShortcutView, NoteSidebarItem, Template) {
+define(['underscore', 'backbone', 'marionette', 'noteSidebarItem', 'text!noteSidebarTempl', 'backbone.mousetrap'],
+function(_, Backbone, Marionette, NoteSidebarItem, Template) {
     'use strict';
 
-    var View = ShortcutView.CompositeView.extend({
+    // Integrations backbone.mousetrap into marionette
+    _.extend(Marionette.CompositeView, Backbone.View);
+
+    var View = Marionette.CompositeView.extend({
         template: _.template(Template),
 
         itemView: NoteSidebarItem,
@@ -27,16 +30,15 @@ function(_, Backbone, ShortcutView, NoteSidebarItem, Template) {
             'keypress .search-form input[type="text"]': 'search',
         },
 
-        shortcuts: {
-            74: 'navigateBottom',
-            75: 'navigateTop'
+        keyboardEvents: {
+            'j': 'navigateBottom',
+            'k': 'navigateTop'
         },
 
         initialize: function () {
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
 
-            this.enableShortcut();
             this.pagination();
         },
 

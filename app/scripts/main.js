@@ -19,6 +19,9 @@ require.config({
         mdmagick              : 'libs/mdmagick/lib/mdmagick',
         showdown              : 'libs/mdmagick/vendor/showdown',
         'a-tools'             : 'libs/mdmagick/vendor/a-tools',
+        // Keybindings
+        'Mousetrap'           : '../bower_components/mousetrap/mousetrap.min',
+        'backbone.mousetrap'  : 'libs/backbone.mousetrap/backbone.mousetrap',
         // Pagedown           :
         'pagedown-ace'        : '../bower_components/pagedown-ace/Markdown.Editor',
         'pagedown.converter'  : '../bower_components/pagedown-ace/Markdown.Converter',
@@ -71,6 +74,11 @@ require.config({
                 'a-tools'
             ],
             exports: 'mdmagick'
+        },
+        'backbone.mousetrap': {
+            deps: [
+                'Mousetrap'
+            ],
         },
         ace: {
             exports: 'ace'

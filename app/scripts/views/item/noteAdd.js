@@ -8,7 +8,7 @@ define([
     'text!noteAddTempl',
     'ace',
     'pagedown-ace'
-], function (_, Backbone, Marionette, Note, NoteForm, Template) {
+], function (_, Backbone, Marionette, Note, NoteForm, Template, ace) {
     'use strict';
 
     var View = Marionette.ItemView.extend(_.extend(NoteForm, {

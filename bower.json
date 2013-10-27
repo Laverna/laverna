@@ -10,6 +10,8 @@
     "backbone"             :  "~1.0.0",
     "marionette"           :  "~1.0.4",
     "backbone.localStorage":  "~1.1.5",
+    "mousetrap"            :  "~1.4.5",
+    "backbone.mousetrap"   :  "git@github.com:elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
     "bootstrap"            :  "~3.0",
     "typeahead.js"         :  "~0.9.3",
     "backbone.bootstrap-modal": "bootstrap3",
@@ -20,7 +22,6 @@
     "qunit"                :  "~1.12.0",
     "sinonjs"              :  "~1.7.1",
     "sinon-qunit"          :  "~1.0.0",
-    "mousetrap"            :  "~1.4.5",
     "font-awesome"         :  "~4.0.0"
   },
   "devDependencies": {}

@@ -4,6 +4,3 @@
 [submodule "app/scripts/libs/backbone-autocomplete"]
 	path = app/scripts/libs/backbone-autocomplete
 	url = https://github.com/fatiherikli/backbone-autocomplete.git
-[submodule "app/scripts/libs/backbone.mousetrap"]
-	path = app/scripts/libs/backbone.mousetrap
-	url = https://github.com/elasticsales/backbone.mousetrap.git

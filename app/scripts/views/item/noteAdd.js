@@ -5,7 +5,7 @@ define([
     'marionette',
     'models/note',
     'noteForm',
-    'text!noteAddTempl',
+    'text!noteFormTempl',
     'ace',
     'pagedown-ace'
 ], function (_, Backbone, Marionette, Note, NoteForm, Template, ace) {

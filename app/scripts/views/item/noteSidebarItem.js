@@ -1,10 +1,11 @@
 /*global define*/
-/*global Showdown*/
+/*global Markdown*/
 define([
     'underscore',
     'backbone',
     'marionette',
     'text!noteSidebarItemTempl',
+    'pagedown-ace'
 ], function(_, Backbone, Marionette, Template) {
     'use strict';
 
@@ -28,7 +29,9 @@ define([
         templateHelpers: function () {
             return {
                 getContent: function (text) {
-                    var converter = new Showdown.converter();
+                    // Pagedown
+                    var converter = new Markdown.Converter();
+                    // var safeConverter = pagedown.getSanitizingConverter();
                     var content = converter.makeHtml(text);
                     content = content.substring(0, 50).replace(/<(?:.|\n)*?>/gm, '');
                     return content;

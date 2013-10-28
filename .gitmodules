@@ -1,6 +1,3 @@
-[submodule "app/scripts/libs/mdmagick"]
-	path = app/scripts/libs/mdmagick
-	url = https://github.com/fguillen/MDMagick.git
 [submodule "app/scripts/libs/backbone-autocomplete"]
 	path = app/scripts/libs/backbone-autocomplete
 	url = https://github.com/fatiherikli/backbone-autocomplete.git

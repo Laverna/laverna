@@ -15,10 +15,6 @@ require.config({
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
         'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
-        // Markdown MDMAgick
-        mdmagick              : 'libs/mdmagick/lib/mdmagick',
-        showdown              : 'libs/mdmagick/vendor/showdown',
-        'a-tools'             : 'libs/mdmagick/vendor/a-tools',
         // Keybindings
         'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
         'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
@@ -62,17 +58,6 @@ require.config({
             deps: ['jquery'],
             exports: '$'
         },
-        showdown: {
-            exports: 'Showdown'
-        },
-        mdmagick: {
-            deps: [
-                'jquery',
-                'showdown',
-                'a-tools'
-            ],
-            exports: 'mdmagick'
-        },
         'Mousetrap': {},
         'backbone.mousetrap': {
             deps: [
@@ -82,7 +67,10 @@ require.config({
         ace: {
             exports: 'ace'
         },
-        'pagedown-ace': ['../bower_components/pagedown-ace/Markdown.Converter'],
+        'pagedown-ace': [
+            '../bower_components/pagedown-ace/Markdown.Converter',
+            '../bower_components/pagedown-ace/Markdown.Sanitizer'
+        ],
         prettify: {
             exports: 'prettify'
         },

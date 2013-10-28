@@ -1,14 +1,15 @@
-/*global define */
+/*global define*/
+/*global Markdown*/
 define([
     'underscore',
     'backbone',
     'marionette',
     'text!noteItemTempl',
-    'showdown',
     'checklist',
     'prettify',
-    'backbone.mousetrap'
-], function (_, Backbone, Marionette, Template, Showdown, Checklist, prettify) {
+    'backbone.mousetrap',
+    'pagedown-ace',
+], function (_, Backbone, Marionette, Template, Checklist, prettify) {
     'use strict';
 
     // Intergrating backbone.mousetrap in marionette
@@ -95,7 +96,8 @@ define([
 
                 getContent: function(text) {
                     text = new Checklist().toHtml(text);
-                    var converter = new Showdown.converter();
+
+                    var converter = Markdown.getSanitizingConverter();
                     return converter.makeHtml(text);
                 },
 

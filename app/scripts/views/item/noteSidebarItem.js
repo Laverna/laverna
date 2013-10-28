@@ -1,7 +1,11 @@
 /*global define*/
 /*global Showdown*/
-define(['underscore', 'marionette', 'text!noteSidebarItemTempl'],
-function(_, Marionette, Template){
+define([
+    'underscore',
+    'backbone',
+    'marionette',
+    'text!noteSidebarItemTempl',
+], function(_, Backbone, Marionette, Template) {
     'use strict';
 
     var View = Marionette.ItemView.extend({

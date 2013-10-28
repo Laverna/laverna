@@ -31,8 +31,9 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
         },
 
         keyboardEvents: {
-            'j': 'navigateBottom',
-            'k': 'navigateTop'
+            'j' :  'navigateBottom',
+            'k' :  'navigateTop',
+            'c' :  'toCreate'
         },
 
         initialize: function () {
@@ -42,38 +43,42 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
             this.pagination();
         },
 
-        navigate: function(el) {
-           el = el.children('.list-group-item');
+        toCreate: function () {
+            Backbone.history.navigate('/note/add', true);
+        },
 
-           if(el.length !== 0) {
-               Backbone.history.navigate(el.attr('href'));
-           }
+        navigate: function(el) {
+            el = el.children('.list-group-item');
+
+            if(el.length !== 0) {
+                Backbone.history.navigate(el.attr('href'));
+            }
         },
 
         navigateBottom: function () {
-           var active = this.$el.find('.list-group-item.active'); 
-           var new_active = null;
+            var active = this.$el.find('.list-group-item.active');
+            var newActive = null;
 
-           if (active.length !== 0) {
-              new_active = active.parent().next('.list-group');
-           } else {
-              new_active = this.$el.find('.list-group:first');
-           }
+            if (active.length !== 0) {
+                newActive = active.parent().next('.list-group');
+            } else {
+                newActive = this.$el.find('.list-group:first');
+            }
 
-           this.navigate(new_active);
+            this.navigate(newActive);
         },
 
         navigateTop: function () {
-           var active = this.$el.find('.list-group-item.active'); 
-           var new_active = null;
+            var active = this.$el.find('.list-group-item.active');
+            var newActive = null;
 
-           if (active.length !== 0) {
-              new_active = active.parent().prev('.list-group');
-           } else {
-              new_active = this.$el.find('.list-group:last');
-           }
+            if (active.length !== 0) {
+                newActive = active.parent().prev('.list-group');
+            } else {
+                newActive = this.$el.find('.list-group:last');
+            }
 
-           this.navigate(new_active);
+            this.navigate(newActive);
         },
 
         changeFocus: function(e) {

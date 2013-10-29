@@ -48,21 +48,28 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
         },
 
         navigate: function(el) {
-            el = el.children('.list-group-item');
+            var href = null;
 
-            if(el.length !== 0) {
-                Backbone.history.navigate(el.attr('href'));
+            if (typeof (el) === 'object') {
+                console.log(el.children('.list-group-item').attr('href'));
+                href = el.children('.list-group-item').attr('href');
+            } else if (typeof (el) === 'string' && el !== '') {
+                href = el;
+            }
+
+            if (href !== null ) {
+                Backbone.history.navigate(href);
             }
         },
 
         navigateBottom: function () {
             var active = this.$el.find('.list-group-item.active');
-            var newActive = null;
-
-            if (active.length !== 0) {
-                newActive = active.parent().next('.list-group');
-            } else {
+            var newActive = active.parent().next('.list-group'); 
+            
+            if (newActive.length === 0 && active.length === 0) {
                 newActive = this.$el.find('.list-group:first');
+            } else if (newActive.length === 0 && active.length !== 0) {
+                newActive = this.ui.nextPage.attr('href');
             }
 
             this.navigate(newActive);
@@ -70,12 +77,12 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
 
         navigateTop: function () {
             var active = this.$el.find('.list-group-item.active');
-            var newActive = null;
-
-            if (active.length !== 0) {
-                newActive = active.parent().prev('.list-group');
-            } else {
+            var newActive = active.parent().prev('.list-group'); 
+            
+            if (newActive.length === 0 && active.length === 0) {
                 newActive = this.$el.find('.list-group:last');
+            } else if (newActive.length === 0 && active.length !== 0) {
+                newActive = this.ui.prevPage.attr('href');
             }
 
             this.navigate(newActive);

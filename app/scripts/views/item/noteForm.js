@@ -156,6 +156,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.$('#wmd-hr-button').append($('<i class="fa fa-minus">'));
             this.$('#wmd-undo-button').append($('<i class="fa fa-reply">'));
             this.$('#wmd-redo-button').append($('<i class="fa fa-share">'));
+
+            // Focus to input[title]
+            this.ui.title.focus();
         }
     });
 

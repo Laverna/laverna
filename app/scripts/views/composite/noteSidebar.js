@@ -1,6 +1,12 @@
 /*global define */
-define(['underscore', 'backbone', 'marionette', 'noteSidebarItem', 'text!noteSidebarTempl', 'backbone.mousetrap'],
-function(_, Backbone, Marionette, NoteSidebarItem, Template) {
+define([
+    'underscore',
+    'backbone',
+    'marionette',
+    'noteSidebarItem',
+    'text!noteSidebarTempl',
+    'backbone.mousetrap'
+], function(_, Backbone, Marionette, NoteSidebarItem, Template) {
     'use strict';
 
     // Integrations backbone.mousetrap into marionette
@@ -47,45 +53,40 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
             Backbone.history.navigate('/note/add', true);
         },
 
-        navigate: function(el) {
-            var href = null;
-
-            if (typeof (el) === 'object') {
-                console.log(el.children('.list-group-item').attr('href'));
-                href = el.children('.list-group-item').attr('href');
-            } else if (typeof (el) === 'string' && el !== '') {
-                href = el;
-            }
-
-            if (href !== null ) {
-                Backbone.history.navigate(href);
-            }
+        navigateTop: function () {
+            return this.nextOrPrev('prev');
         },
 
         navigateBottom: function () {
-            var active = this.$el.find('.list-group-item.active');
-            var newActive = active.parent().next('.list-group'); 
-            
-            if (newActive.length === 0 && active.length === 0) {
-                newActive = this.$el.find('.list-group:first');
-            } else if (newActive.length === 0 && active.length !== 0) {
-                newActive = this.ui.nextPage.attr('href');
-            }
-
-            this.navigate(newActive);
+            return this.nextOrPrev('next');
         },
 
-        navigateTop: function () {
-            var active = this.$el.find('.list-group-item.active');
-            var newActive = active.parent().prev('.list-group'); 
-            
-            if (newActive.length === 0 && active.length === 0) {
-                newActive = this.$el.find('.list-group:last');
-            } else if (newActive.length === 0 && active.length !== 0) {
-                newActive = this.ui.prevPage.attr('href');
+        nextOrPrev: function (n) {
+            var active, url = '/', id, note, i, prev;
+
+            // Active note
+            active = this.$el.find('.list-group-item.active');
+            id = active.attr('data-id');
+            note = this.collection.get(id);
+            i = this.collection.indexOf(note);
+
+            if ((i + 1) === this.perPage && n === 'next') {
+                url = this.ui.nextPage.attr('href');
+            } else if (i === 0 && n === 'prev') {
+                url = this.ui.prevPage.attr('href');
+            } else {
+                if (n === 'prev') {
+                    i = (i > 0) ? i - 1 : 0;
+                    console.log(i);
+                } else {
+                    i = (i === (this.collection.length - 1)) ? i : i + 1;
+                }
+
+                prev = this.collection.at(i);
+                url = '/note/' + 0 + '/p' + this.lastPage + '/show/' + prev.get('id');
             }
 
-            this.navigate(newActive);
+            Backbone.history.navigate(url, true);
         },
 
         changeFocus: function(e) {
@@ -107,6 +108,22 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
                 this.lastPage  = parseInt(this.options.lastPage, null);
             } else {
                 this.lastPage = 1;
+            }
+
+            // Next note
+            var nextI = this.perPage * this.lastPage;
+            if (this.collection.length > nextI) {
+                console.log('next==' + nextI);
+                var nextNote = this.collection.at(nextI);
+                this.nextNote = nextNote.get('id');
+            }
+
+            // Prev note
+            var prevI = (nextI - this.perPage) - 1;
+            if (prevI > 0) {
+                console.log('prev==' + prevI);
+                var prevNote = this.collection.at(prevI);
+                this.prevNote = prevNote.get('id');
             }
 
             // Limit
@@ -139,7 +156,9 @@ function(_, Backbone, Marionette, NoteSidebarItem, Template) {
         serializeData: function () {
             var viewData = {};
             viewData.nextPage = this.nextPage;
+            viewData.nextNote = this.nextNote;
             viewData.prevPage = this.prevPage;
+            viewData.prevNote = this.prevNote;
             return viewData;
         }
 

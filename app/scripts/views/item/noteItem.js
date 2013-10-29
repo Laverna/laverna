@@ -96,8 +96,8 @@ define([
 
                 getContent: function(text) {
                     text = new Checklist().toHtml(text);
-
-                    var converter = Markdown.getSanitizingConverter();
+                    // var converter = Markdown.getSanitizingConverter();
+                    var converter = new Markdown.Converter();
                     return converter.makeHtml(text);
                 },
 

@@ -98,6 +98,7 @@ define([
                     text = new Checklist().toHtml(text);
                     // var converter = Markdown.getSanitizingConverter();
                     var converter = new Markdown.Converter();
+                    Markdown.Extra.init(converter);
                     return converter.makeHtml(text);
                 },
 

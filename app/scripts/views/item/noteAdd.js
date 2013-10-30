@@ -38,7 +38,7 @@ define([
             var note = new Note(data);
             this.model = note;
             this.collection.create(note);
-            this.collection.sort();
+            //this.collection.sort();
         },
 
         /**

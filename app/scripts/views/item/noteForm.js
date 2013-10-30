@@ -53,10 +53,12 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         save: function (e) {
             e.preventDefault();
 
+            var content = this.editor.getSession().getValue();
+
             // Get values
             var data = {
                 title: this.ui.title.val(),
-                content: this.editor.getSession().getValue()
+                content: content
             };
 
             var checklist = new Checklist().count(data.content);
@@ -130,7 +132,11 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // ACE
             this.editor = ace.edit('wmd-input');
+            this.editor.getSession().setMode('ace/mode/markdown');
+            this.editor.setTheme('ace/theme/github');
 
+            // Ace configs
+            // this.editor.setOption('spellcheck', true);
             this.editor.renderer.setShowGutter(false);
             this.editor.renderer.setPrintMarginColumn(false);
             this.editor.session.setUseWrapMode(true);
@@ -155,6 +161,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.$('#wmd-hr-button').append($('<i class="fa fa-minus">'));
             this.$('#wmd-undo-button').append($('<i class="fa fa-reply">'));
             this.$('#wmd-redo-button').append($('<i class="fa fa-share">'));
+
+            $('.ace_content').css({'height': '100%'});
 
             // Focus to input[title]
             this.ui.title.focus();

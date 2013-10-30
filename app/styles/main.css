@@ -5259,45 +5259,21 @@ body {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.wmd-button:hover {
-  background-color: #DDDDDD;
-  border-color: rgba(0, 0, 0, 0);
-  color: #545454;
-}
 #form {
   margin-top: 50px;
 }
 #inputTitle {
   height: 40px;
   font-size: 16px;
+  font-weight: bold;
   padding-top: 5px;
   padding-bottom: 5px;
+  margin-left: 4px;
+  margin-right: 8px;
+  padding-left: 0;
   border: none;
   border-bottom: 1px solid #CCC;
   box-shadow: none;
-}
-#wmd-input {
-  width: 100%;
-  height: 700px;
-  border: none;
-  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  padding-top: 10px;
-  font-weight: 400;
-  font-size: 14px;
-  font-family: Menlo, Consolas, "Courier New", Courier, monospace;
-  color: #545454;
-  line-height: 20px;
-}
-#wmd-input.ace_focus {
-  border-color: #00C0AA;
-}
-#wmd-input .ace_content {
-  border: none;
-  width: 100%;
-  height: 100%;
-  padding-top: 15px;
-  padding-left: 15px;
-  padding-right: 20px;
 }
 .btn-default,
 .btn-default:hover,
@@ -5616,9 +5592,28 @@ div.mdm-preview {
 .wmd-panel {
   width: 100%;
 }
-.wmd-input {
-  height: 300px;
+.wmd-button:hover {
+  background-color: #DDDDDD;
+  border-color: rgba(0, 0, 0, 0);
+  color: #545454;
+}
+.wmd-input,
+#wmd-input {
+  height: 540px;
   width: 100%;
+  overflow: auto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  margin-left: 0;
+  border: none;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+.ace_active-line {
+  margin-left: 4px;
+}
+.ace_heading {
+  font-weight: bold;
 }
 .wmd-prompt-background {
   background-color: Black;
@@ -5628,7 +5623,6 @@ div.mdm-preview {
   background-color: #F5F5F5;
 }
 .wmd-prompt-dialog > div {
-  font-size: 0.8em;
   font-family: arial, helvetica, sans-serif;
 }
 .wmd-prompt-dialog > form > input[type="text"] {
@@ -5638,7 +5632,6 @@ div.mdm-preview {
 .wmd-prompt-dialog > form > input[type="button"] {
   border: 1px solid #888888;
   font-family: trebuchet MS, helvetica, sans-serif;
-  font-size: 0.8em;
   font-weight: bold;
 }
 @media (max-width: 767px) {

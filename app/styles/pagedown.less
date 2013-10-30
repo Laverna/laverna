@@ -8,12 +8,34 @@
 .wmd-button-bar {
 }
 
-.wmd-input {
-    height: 300px;
-    width: 100%;
+.wmd-button:hover{
+    background-color: #DDDDDD;
+    border-color: rgba(0, 0, 0, 0);
+    color: #545454;
 }
 
+.wmd-input, #wmd-input {
+    height: 540px;
+    width: 100%;
+    overflow: auto;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 0;
+    border: none;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
 
+.ace_active-line {
+    margin-left: 4px;
+}
+
+// Syntax
+.ace_heading {
+    font-weight: bold;
+}
+
+// Prompts
 .wmd-prompt-background {
 	background-color: Black;
 }
@@ -24,7 +46,7 @@
 }
 
 .wmd-prompt-dialog > div {
-	font-size: 0.8em;
+	// font-size: 0.8em;
 	font-family: arial, helvetica, sans-serif;
 }
 
@@ -37,6 +59,6 @@
 .wmd-prompt-dialog > form > input[type="button"] {
 	border: 1px solid #888888;
 	font-family: trebuchet MS, helvetica, sans-serif;
-	font-size: 0.8em;
+	// font-size: 0.8em;
 	font-weight: bold;
 }

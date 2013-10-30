@@ -49,8 +49,9 @@ define([
             this.pagination();
         },
 
-        toCreate: function () {
-            Backbone.history.navigate('/note/add', true);
+        toCreate: function (e) {
+            e.preventDefault();
+            return Backbone.history.navigate('/note/add', true);
         },
 
         navigateTop: function () {

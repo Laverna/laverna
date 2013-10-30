@@ -54,10 +54,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             e.preventDefault();
 
             // Get values
-            var editor = ace.edit('wmd-input');
             var data = {
                 title: this.ui.title.val(),
-                content: editor.getSession().getValue()
+                content: this.editor.getSession().getValue()
             };
 
             var checklist = new Checklist().count(data.content);
@@ -130,14 +129,14 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             editor = new Markdown.Editor(converter);
 
             // ACE
-            var wmd = ace.edit('wmd-input');
+            this.editor = ace.edit('wmd-input');
 
-            wmd.renderer.setShowGutter(false);
-            wmd.renderer.setPrintMarginColumn(false);
-            wmd.session.setUseWrapMode(true);
-            wmd.session.setNewLineMode('unix');
+            this.editor.renderer.setShowGutter(false);
+            this.editor.renderer.setPrintMarginColumn(false);
+            this.editor.session.setUseWrapMode(true);
+            this.editor.session.setNewLineMode('unix');
 
-            editor.run(wmd);
+            editor.run(this.editor);
 
             // Hide default buttons
             this.$('.wmd-button-row li').addClass('btn').css('left', 0).find('span').hide();
@@ -159,6 +158,14 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Focus to input[title]
             this.ui.title.focus();
+
+            // Save after every change if its existing
+            if (this.model !== undefined) {
+                var form = this.$('.form-horizontal');
+                this.editor.on('change', function () {
+                    form.trigger('submit');
+                });
+            }
         }
     });
 

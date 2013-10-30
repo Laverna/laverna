@@ -60,9 +60,7 @@ require.config({
         },
         'Mousetrap': {},
         'backbone.mousetrap': {
-            deps: [
-                'Mousetrap'
-            ],
+            deps: ['Mousetrap']
         },
         ace: {
             exports: 'ace'

@@ -4,6 +4,10 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
 
     var Notes = Backbone.Collection.extend({
         model: Note,
+        
+        comparator: function (model) {
+            return - model.get('created');
+        },
 
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 

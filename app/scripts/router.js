@@ -10,6 +10,10 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'note/edit/:id'                      :  'noteEdit',
             'note/remove/:id'                    :  'noteRemove',
             'note/show/:id'                      :  'noteShow',
+            // Favorite notes                    :
+            'note/favorite/p:page'               :  'noteFavorite',
+            'note/favorite/p:page/:id'           :  'noteFavorite',
+            // Notes with pagination             :
             'note/:notebook/p:page/show/:id'     :  'noteShow',
             'note/:notebook/p:page'              :  'noteInit',
             // Notebooks routes                  :

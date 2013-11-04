@@ -36,7 +36,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
                 lastPage   : this.pageN,
-                parentId : this.parentId
+                parentId   : this.parentId,
+                filter     : this.notesFilter
             }));
         },
 
@@ -77,7 +78,27 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
         noteInit: function (notebook, page) {
             this.notebookId = notebook;
             this.pageN = page;
+            this.SidebarView = NoteSidebar;
+
+            // Default filter
+            if (this.notesFilter === undefined) {
+                this.notesFilter = 'active';
+            }
+
             this.trigger('notes.shown');
+        },
+
+        // Show favorite notes
+        noteFavorite: function (page, id) {
+            this.notesFilter = 'favorite';
+            this.noteInit(0, page, id);
+
+            if (id !== undefined) {
+                App.content.show(new NoteItem({
+                    model: this.collectionNotes.get(id),
+                    collection: this.collectionNotes
+                }));
+            }
         },
 
         // Show note's content

@@ -4,7 +4,7 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
 
     var Notes = Backbone.Collection.extend({
         model: Note,
-        
+
         comparator: function (model) {
             return - model.get('created');
         },
@@ -16,7 +16,7 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
          */
         getFavorites: function () {
             return this.filter(function (note) {
-                return note.get('isFavorite') === 1;
+                return note.get('isFavorite') === 1 && note.get('trash') === 0;
             });
         },
 

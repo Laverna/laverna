@@ -46,7 +46,21 @@ define([
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
 
-            this.pagination();
+            // Filter
+            var notes;
+            switch (this.options.filter) {
+                case 'favorite':
+                    notes = this.collection.getFavorites();
+                    this.collection.reset(notes);
+                    break;
+                default:
+                    notes = this.collection.getActive();
+                    this.collection.reset(notes);
+                    break;
+            }
+
+            // Pagination
+            this.pagination(notes);
         },
 
         toCreate: function (e) {
@@ -98,11 +112,7 @@ define([
         /**
          * Pagination
          */
-        pagination: function () {
-            // Get active notes
-            var notes = this.collection.getActive();
-            this.collection.reset(notes);
-
+        pagination: function (notes) {
             this.pageCount = this.collection.length;
 
             if (this.options.lastPage !== undefined) {

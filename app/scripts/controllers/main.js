@@ -103,6 +103,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
 
         // Show note's content
         noteShow: function (notebook, page, id) {
+            this.notesFilter = 'active';
+
             if (id !== undefined) {
                 this.noteInit(notebook, page, id);
             } else {

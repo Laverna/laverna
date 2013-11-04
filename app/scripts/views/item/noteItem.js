@@ -38,6 +38,7 @@ define([
         initialize: function() {
             this.model.on('change', this.render);
             this.listenTo(this.model, 'change', this.changeFocus);
+            document.title = this.model.get('title');
         },
 
         onRender: function () {

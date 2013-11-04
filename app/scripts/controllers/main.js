@@ -106,6 +106,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
             });
 
             App.content.show(content);
+            document.title = 'Creating new note';
             content.trigger('shown');
         },
 
@@ -120,6 +121,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
             });
 
             App.content.show(content);
+            document.title = 'Editing note: ' + note.get('title');
             content.trigger('shown');
         },
 

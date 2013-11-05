@@ -31,7 +31,7 @@ define([
 
         keyboardEvents: {
             'e': 'editNote',
-            'f': 'favorite',
+            'm+f': 'favorite',
             'shift+3': 'deleteNote'
         },
 

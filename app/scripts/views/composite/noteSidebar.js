@@ -39,7 +39,8 @@ define([
         keyboardEvents: {
             'j' :  'navigateBottom',
             'k' :  'navigateTop',
-            'c' :  'toCreate'
+            'c' :  'toCreate',
+            'g+f' : 'showFavorites'
         },
 
         initialize: function () {
@@ -61,6 +62,10 @@ define([
 
             // Pagination
             this.pagination(notes);
+        },
+
+        showFavorites: function(e) {
+            return Backbone.history.navigate('/note/favorite/p0', true);
         },
 
         toCreate: function (e) {

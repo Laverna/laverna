@@ -13,6 +13,9 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             // Favorite notes                    :
             'note/favorite/p:page'               :  'noteFavorite',
             'note/favorite/p:page/:id'           :  'noteFavorite',
+            // Trashed notes                     :
+            'note/trashed/p:page'                :  'noteTrashed',
+            'note/trashed/p:page/:id'            :  'noteTrashed',
             // Notes with pagination             :
             'note/:notebook/p:page/show/:id'     :  'noteShow',
             'note/:notebook/p:page'              :  'noteInit',

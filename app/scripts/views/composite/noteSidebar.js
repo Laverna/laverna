@@ -40,7 +40,8 @@ define([
             'j' :  'navigateBottom',
             'k' :  'navigateTop',
             'c' :  'toCreate',
-            'g+f' : 'showFavorites'
+            'g+f' : 'showFavorites',
+            'g+t' : 'showTrashed'
         },
 
         initialize: function () {
@@ -54,6 +55,9 @@ define([
                     notes = this.collection.getFavorites();
                     this.collection.reset(notes);
                     break;
+                case 'trashed':
+                    notes = this.collection.getTrashed();
+                    this.collection.reset(notes);
                 default:
                     notes = this.collection.getActive();
                     this.collection.reset(notes);
@@ -66,6 +70,10 @@ define([
 
         showFavorites: function(e) {
             return Backbone.history.navigate('/note/favorite/p0', true);
+        },
+
+        showTrashed: function(e) {
+            return Backbone.history.navigate('/note/trashed/p0', true);
         },
 
         toCreate: function (e) {

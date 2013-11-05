@@ -101,6 +101,19 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
             }
         },
 
+        // Show favorite notes
+        noteTrashed: function (page, id) {
+            this.notesFilter = 'trashed';
+            this.noteInit(0, page, id);
+
+            if (id !== undefined) {
+                App.content.show(new NoteItem({
+                    model: this.collectionNotes.get(id),
+                    collection: this.collectionNotes
+                }));
+            }
+        },
+
         // Show note's content
         noteShow: function (notebook, page, id) {
             this.notesFilter = 'active';

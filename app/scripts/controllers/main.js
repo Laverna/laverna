@@ -37,6 +37,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
                 collection : notes,
                 lastPage   : this.pageN,
                 parentId   : this.parentId,
+                notebookId : this.notebookId,
                 filter     : this.notesFilter
             }));
         },
@@ -76,6 +77,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
          * Notes actions
          * ------------------------------ */
         noteInit: function (notebook, page) {
+            notebook = (notebook === undefined) ? 0 : notebook;
             this.notebookId = notebook;
             this.pageN = page;
             this.SidebarView = NoteSidebar;
@@ -90,10 +92,12 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
 
         // Show favorite notes
         noteFavorite: function (page, id) {
+            console.log('favorite');
             this.notesFilter = 'favorite';
             this.noteInit(0, page, id);
 
             if (id !== undefined) {
+                console.log('noteItem favorite');
                 App.content.show(new NoteItem({
                     model: this.collectionNotes.get(id),
                     collection: this.collectionNotes
@@ -125,8 +129,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
                 this.noteInit(notebook, page, id);
             }
 
-            App.sidebar.$el.find('.list-group-item.active').removeClass('active');
-            App.sidebar.$el.find('#note-' + id).addClass('active');
+            // App.sidebar.$el.find('.list-group-item.active').removeClass('active');
+            // App.sidebar.$el.find('#note-' + id).addClass('active');
 
             App.content.show(new NoteItem({
                 model: this.collectionNotes.get(id),

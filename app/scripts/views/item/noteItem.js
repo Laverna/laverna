@@ -37,6 +37,7 @@ define([
 
         initialize: function() {
             this.model.on('change', this.render);
+            this.model.trigger('shown');
             this.listenTo(this.model, 'change', this.changeFocus);
             document.title = this.model.get('title');
         },
@@ -51,7 +52,7 @@ define([
         },
 
         changeFocus: function() {
-            $('#sidebar #note-' + this.model.get('id')).addClass('active');
+            this.model.trigger('shown');
         },
 
         /**

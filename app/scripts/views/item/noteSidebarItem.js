@@ -15,14 +15,20 @@ define([
         className: 'list-group',
 
         initialize: function () {
-            this.listenTo(this.model,  'change', this.render);
-            this.listenTo(this.model,  'change:trash', this.remove);
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'change:trash', this.remove);
+            this.listenTo(this.model, 'shown', this.changeFocus);
+        },
+
+        changeFocus: function () {
+            this.$('.list-group-item').addClass('active');
         },
 
         serializeData: function () {
             return _.extend(this.model.toJSON(), {
                 page          : this.options.page,
-                shownNotebook : this.shownNotebook
+                shownNotebook : this.options.notebookId,
+                filter        : this.options.filter
             });
         },
 
@@ -42,17 +48,22 @@ define([
                 },
 
                 // Generate link
-                link: function (id, page, notebook) {
-                    var url = '/note/';
-                    notebook = (notebook === undefined) ? 0 : notebook;
+                link: function (id, page, notebook, filter) {
+                    var url;
 
-                    if (page !== undefined) {
-                        url += notebook + '/p' + page + '/show/';
-                    } else {
-                        url += 'show/';
+                    switch (filter) {
+                        case 'favorite':
+                            url = '#/note/favorite/p' + page;
+                            break;
+                        case 'trashed':
+                            url = '#/note/trashed/p' + page;
+                            break;
+                        default:
+                            url = '#/note/' + notebook + '/p' + page;
+                            break;
                     }
 
-                    return url + id;
+                    return url + '/show/' + id;
                 }
             };
         }

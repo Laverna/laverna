@@ -32,7 +32,6 @@ define([
         },
 
         events: {
-            'click .list-group-item': 'changeFocus',
             'keypress .search-form input[type="text"]': 'search',
         },
 
@@ -47,18 +46,23 @@ define([
         initialize: function () {
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
+            this.itemViewOptions.filter = this.options.filter;
+            this.itemViewOptions.notebookId = this.options.notebookId;
 
             // Filter
             var notes;
             switch (this.options.filter) {
                 case 'favorite':
                     notes = this.collection.getFavorites();
+                    this.urlPage = '/note/favorite';
                     break;
                 case 'trashed':
                     notes = this.collection.getTrashed();
+                    this.urlPage = '/note/trashed';
                     break;
                 default:
                     notes = this.collection.getActive();
+                    this.urlPage = '/note/' + this.options.notebookId;
                     break;
             }
 
@@ -68,11 +72,11 @@ define([
         },
 
         showFavorites: function() {
-            return Backbone.history.navigate('/note/favorite/p0', true);
+            return Backbone.history.navigate('/note/favorite/p1', true);
         },
 
         showTrashed: function() {
-            return Backbone.history.navigate('/note/trashed/p0', true);
+            return Backbone.history.navigate('/note/trashed/p1', true);
         },
 
         toCreate: function (e) {
@@ -110,15 +114,10 @@ define([
                 }
 
                 prev = this.collection.at(i);
-                url = '/note/' + 0 + '/p' + this.lastPage + '/show/' + prev.get('id');
+                url = this.urlPage + '/p' + this.lastPage + '/show/' + prev.get('id');
             }
 
             Backbone.history.navigate(url, true);
-        },
-
-        changeFocus: function(e) {
-            this.$el.find('.list-group-item.active').removeClass('active');
-            $(e.currentTarget).addClass('active');
         },
 
         /**
@@ -164,25 +163,29 @@ define([
             this.prevPage = (this.lastPage !== 1) ? this.lastPage - 1 : 1;
         },
 
-        /**
-         * Disable pagination buttons
-         */
-        disableBtn: function () {
-            if (this.nextPage === this.lastPage) {
-                this.ui.nextPage.addClass('disabled');
-            }
-            if (this.lastPage === 1) {
-                this.ui.prevPage.addClass('disabled');
-            }
-        },
-
         serializeData: function () {
             var viewData = {};
             viewData.nextPage = this.nextPage;
             viewData.nextNote = this.nextNote;
             viewData.prevPage = this.prevPage;
             viewData.prevNote = this.prevNote;
+            viewData.urlPage  = this.urlPage;
             return viewData;
+        },
+
+        templateHelpers: function () {
+            return {
+                pageUrl: function (page, noteId, urlPage) {
+                    var url;
+                    url = urlPage + '/p' + page;
+
+                    if (noteId) {
+                        url += '/show/' + noteId;
+                    }
+
+                    return '#' + url;
+                }
+            };
         }
 
     });

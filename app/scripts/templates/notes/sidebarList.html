@@ -34,8 +34,8 @@
 
         <nav class="navbar navbar-static-top navbar-bottom">
             <div class="btn-group btn-group-justified">
-                <a class="btn btn-default" id="prevPage" href="#/note/0/p{{prevPage}}<% if (prevNote) { %>/show/{{prevNote}}<% } %>">Prev</a>
-                <a class="btn btn-default" id="nextPage" href="#/note/0/p{{nextPage}}<% if (nextNote) { %>/show/{{nextNote}}<% } %>">Next</a>
+                <a class="btn btn-default" id="prevPage" href="{{ pageUrl(prevPage, prevNote, urlPage) }}">Prev</a>
+                <a class="btn btn-default" id="nextPage" href="{{ pageUrl(nextPage, nextNote, urlPage) }}">Next</a>
             </div>
         </nav>
     </div>

@@ -37,11 +37,11 @@ define([
         },
 
         keyboardEvents: {
-            'j' :  'navigateBottom',
-            'k' :  'navigateTop',
-            'c' :  'toCreate',
-            'g+f' : 'showFavorites',
-            'g+t' : 'showTrashed'
+            'j'   :  'navigateBottom',
+            'k'   :  'navigateTop',
+            'c'   :  'toCreate',
+            'g+f' :  'showFavorites',
+            'g+t' :  'showTrashed'
         },
 
         initialize: function () {
@@ -53,26 +53,25 @@ define([
             switch (this.options.filter) {
                 case 'favorite':
                     notes = this.collection.getFavorites();
-                    this.collection.reset(notes);
                     break;
                 case 'trashed':
                     notes = this.collection.getTrashed();
-                    this.collection.reset(notes);
+                    break;
                 default:
                     notes = this.collection.getActive();
-                    this.collection.reset(notes);
                     break;
             }
 
             // Pagination
+            this.collection.reset(notes);
             this.pagination(notes);
         },
 
-        showFavorites: function(e) {
+        showFavorites: function() {
             return Backbone.history.navigate('/note/favorite/p0', true);
         },
 
-        showTrashed: function(e) {
+        showTrashed: function() {
             return Backbone.history.navigate('/note/trashed/p0', true);
         },
 

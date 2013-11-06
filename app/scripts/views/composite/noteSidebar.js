@@ -29,6 +29,7 @@ define([
         ui: {
             prevPage: '#prevPage',
             nextPage: '#nextPage',
+            searchInput: '#search-input'
         },
 
         events: {
@@ -41,7 +42,8 @@ define([
             'c'   :  'toCreate',
             'g f' :  'showFavorites',
             'g t' :  'showTrashed',
-            'g i' :  'showInbox'
+            'g i' :  'showInbox',
+            '/'   :  'focusSearch'
         },
 
         initialize: function () {
@@ -70,6 +72,11 @@ define([
             // Pagination
             this.collection.reset(notes);
             this.pagination(notes);
+        },
+
+        focusSearch: function(e) {
+            e.preventDefault();
+            this.ui.searchInput.focus();
         },
 
         showFavorites: function() {

@@ -39,8 +39,9 @@ define([
             'j'   :  'navigateBottom',
             'k'   :  'navigateTop',
             'c'   :  'toCreate',
-            'g+f' :  'showFavorites',
-            'g+t' :  'showTrashed'
+            'g f' :  'showFavorites',
+            'g t' :  'showTrashed',
+            'g i' :  'showInbox'
         },
 
         initialize: function () {
@@ -73,6 +74,10 @@ define([
 
         showFavorites: function() {
             return Backbone.history.navigate('/note/favorite/p1', true);
+        },
+
+        showInbox: function() {
+            return Backbone.history.navigate('/note/0/p1', true);
         },
 
         showTrashed: function() {

@@ -18,7 +18,7 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'note/trashed/p:page/show/:id'      :  'noteTrashed',
             // Notes with pagination            :
             'note/:notebook/p:page/show/:id'    :  'noteShow',
-            'note/:notebook/p:page'             :  'noteInit',
+            'note/:notebook/p:page'             :  'index',
             // Notebooks routes                 :
             'notebook/add'                      :  'notebookAdd',
             'notebook/edit/:id'                 :  'notebookEdit',

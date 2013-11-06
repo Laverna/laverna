@@ -69,6 +69,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
          * Index page
          */
         index: function (notebook, page) {
+            this.notesFilter = 'active';
             this.noteInit(notebook, page);
             console.log('index page');
         },

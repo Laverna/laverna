@@ -29,10 +29,11 @@ define([
         ui: {
             prevPage: '#prevPage',
             nextPage: '#nextPage',
+            search  : '#search-input'
         },
 
         events: {
-            'keypress .search-form input[type="text"]': 'search',
+            'submit .search-form': 'toSearch',
         },
 
         keyboardEvents: {
@@ -49,6 +50,7 @@ define([
             this.itemViewOptions.shownNotebook = this.options.notebookId;
             this.itemViewOptions.filter = this.options.filter;
             this.itemViewOptions.notebookId = this.options.notebookId;
+            this.itemViewOptions.searchQuery = this.options.searchQuery;
 
             // Filter
             var notes;
@@ -61,6 +63,10 @@ define([
                     notes = this.collection.getTrashed();
                     this.urlPage = '/note/trashed';
                     break;
+                case 'search':
+                    notes = this.collection.search(this.options.searchQuery);
+                    this.urlPage = '/note/search/' + this.options.searchQuery;
+                    break;
                 default:
                     notes = this.collection.getActive();
                     this.urlPage = '/note/' + this.options.notebookId;
@@ -70,6 +76,12 @@ define([
             // Pagination
             this.collection.reset(notes);
             this.pagination(notes);
+        },
+
+        toSearch: function (e) {
+            e.preventDefault();
+            var text = this.ui.search.val();
+            return Backbone.history.navigate('/note/search/' + text + '/p1', true);
         },
 
         showFavorites: function() {
@@ -113,7 +125,6 @@ define([
             } else {
                 if (n === 'prev') {
                     i = (i > 0) ? i - 1 : 0;
-                    console.log(i);
                 } else {
                     i = (i === (this.collection.length - 1)) ? i : i + 1;
                 }
@@ -140,7 +151,6 @@ define([
             // Next note
             var nextI = this.perPage * this.lastPage;
             if (this.collection.length > nextI) {
-                console.log('next==' + nextI);
                 var nextNote = this.collection.at(nextI);
                 this.nextNote = nextNote.get('id');
             }
@@ -148,7 +158,6 @@ define([
             // Prev note
             var prevI = (nextI - this.perPage) - 1;
             if (prevI > 0) {
-                console.log('prev==' + prevI);
                 var prevNote = this.collection.at(prevI);
                 this.prevNote = prevNote.get('id');
             }

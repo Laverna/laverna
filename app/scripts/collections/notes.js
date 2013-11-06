@@ -39,7 +39,7 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
         /**
          * Search
          */
-        search : function(letters){
+        search : function(letters) {
             if(letters === '') {
                 return this;
             }

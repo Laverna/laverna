@@ -18,6 +18,21 @@ define([
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'change:trash', this.remove);
             this.listenTo(this.model, 'shown', this.changeFocus);
+
+            switch (this.options.filter) {
+                case 'favorite':
+                    this.url = '#/note/favorite/';
+                    break;
+                case 'trashed':
+                    this.url = '#/note/trashed/';
+                    break;
+                case 'search':
+                    this.url = '#/note/search/' + this.options.searchQuery;
+                    break;
+                default:
+                    this.url = '#/note/' + this.options.notebookId;
+                    break;
+            }
         },
 
         changeFocus: function () {
@@ -28,7 +43,8 @@ define([
             return _.extend(this.model.toJSON(), {
                 page          : this.options.page,
                 shownNotebook : this.options.notebookId,
-                filter        : this.options.filter
+                filter        : this.options.filter,
+                url           : this.url
             });
         },
 
@@ -48,22 +64,8 @@ define([
                 },
 
                 // Generate link
-                link: function (id, page, notebook, filter) {
-                    var url;
-
-                    switch (filter) {
-                        case 'favorite':
-                            url = '#/note/favorite/p' + page;
-                            break;
-                        case 'trashed':
-                            url = '#/note/trashed/p' + page;
-                            break;
-                        default:
-                            url = '#/note/' + notebook + '/p' + page;
-                            break;
-                    }
-
-                    return url + '/show/' + id;
+                link: function (id, page, url) {
+                    return url + '/p' + page + '/show/' + id;
                 }
             };
         }

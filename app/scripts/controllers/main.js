@@ -38,6 +38,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
                 lastPage   : this.pageN,
                 parentId   : this.parentId,
                 notebookId : this.notebookId,
+                searchQuery: this.searchQuery,
                 filter     : this.notesFilter
             }));
         },
@@ -91,9 +92,22 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
             this.trigger('notes.shown');
         },
 
+        // Search specific note
+        noteSearch: function (query, page, id) {
+            this.notesFilter = 'search';
+            this.searchQuery = query;
+            this.noteInit(0, page, id);
+
+            if (id !== undefined) {
+                App.content.show(new NoteItem({
+                    model: this.collectionNotes.get(id),
+                    collection: this.collectionNotes
+                }));
+            }
+        },
+
         // Show favorite notes
         noteFavorite: function (page, id) {
-            console.log('favorite');
             this.notesFilter = 'favorite';
             this.noteInit(0, page, id);
 
@@ -106,7 +120,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
             }
         },
 
-        // Show favorite notes
+        // Show notes which is deleted
         noteTrashed: function (page, id) {
             this.notesFilter = 'trashed';
             this.noteInit(0, page, id);

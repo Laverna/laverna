@@ -77,10 +77,17 @@
     }
 }
 .sidebar-tags .main {
+    .list-group:last-child .list-group-item {
+        border-bottom-width: 1px;
+        margin-bottom: 0;
+    }
     li {
         list-style: none;
     }
     .list-group-tag {
+        .list-group-item {
+            margin-bottom: 0;
+        }
         .tags {
             padding-left: @tagsPadding;
             .list-group-item {

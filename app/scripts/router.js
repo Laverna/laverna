@@ -23,6 +23,7 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'note/:notebook/p:page/show/:id'    :  'noteShow',
             'note/:notebook/p:page'             :  'index',
             // Notebooks routes                 :
+            'notebooks'                         :  'notebooks',
             'notebook/add'                      :  'notebookAdd',
             'notebook/edit/:id'                 :  'notebookEdit',
             'notebook/remove/:id'               :  'notebookRemove',

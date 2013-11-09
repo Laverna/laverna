@@ -5423,8 +5423,15 @@ body {
   max-width: none;
   width: 100%;
 }
+.sidebar-tags .main .list-group:last-child .list-group-item {
+  border-bottom-width: 1px;
+  margin-bottom: 0;
+}
 .sidebar-tags .main li {
   list-style: none;
+}
+.sidebar-tags .main .list-group-tag .list-group-item {
+  margin-bottom: 0;
 }
 .sidebar-tags .main .list-group-tag .tags {
   padding-left: 25px;

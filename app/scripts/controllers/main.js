@@ -7,13 +7,15 @@ define([
     'app',
     // collections
     'collections/notes',
+    'collections/notebooks',
     // Views
     'noteForm',
     'noteItem',
     'noteSidebar',
+    'notebookSidebar',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteItem, NoteSidebar, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -23,6 +25,9 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
         initialize: function() {
             this.collectionNotes = new CollectionNotes();
             this.collectionNotes.fetch({reset: true});
+
+            this.collectionNotebooks = new CollectionNotebooks();
+            this.collectionNotebooks.fetch({reset: true});
 
             this.on('notes.shown', this.showAllNotes);
         },
@@ -208,6 +213,31 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
         /* ------------------------------
          * Notebooks actions
          * ------------------------------ */
+        notebooks: function () {
+            this.collectionNotebooks.add({
+                id: 1,
+                parentId: 0,
+                name: 'notebooks 1',
+                count: 0
+            });
+            this.collectionNotebooks.add({
+                id: 2,
+                parentId: 0,
+                name: 'notebooks 2',
+                count: 0
+            });
+            this.collectionNotebooks.add({
+                id: 3,
+                parentId: 0,
+                name: 'notebooks 3',
+                count: 0
+            });
+            console.log(this.collectionNotebooks.models);
+            App.sidebar.show(new NotebookSidebar({
+                collection: this.collectionNotebooks 
+            }));
+        },
+
         notebook: function () {
         },
 

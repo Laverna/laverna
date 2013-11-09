@@ -10,7 +10,8 @@ require.config({
         'backbone.wreqr'      :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Test               :  scripts
-        modelTest             :  '../../test/spec/Models/note',
+        noteModel             :  '../../test/spec/Models/note',
+        notebookModel         :  '../../test/spec/Models/notebook',
         collectionTest        :  '../../test/spec/Collection/notes'
     },
     shim: {
@@ -25,6 +26,6 @@ require.config({
     waitSeconds: 15
 });
 
-require(['modelTest', 'collectionTest'], function () {
+require(['noteModel', 'notebookModel', 'collectionTest'], function () {
     'use strict';
 });

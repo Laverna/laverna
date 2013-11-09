@@ -81,7 +81,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, NoteForm, NoteIte
         noteInit: function (notebook, page) {
             notebook = (notebook === undefined) ? 0 : notebook;
             this.notebookId = notebook;
-            this.pageN = page;
+            this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;
 
             // Default filter

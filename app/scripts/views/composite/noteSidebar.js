@@ -190,6 +190,7 @@ define([
             viewData.prevPage = this.prevPage;
             viewData.prevNote = this.prevNote;
             viewData.urlPage  = this.urlPage;
+            viewData.searchQuery = this.options.searchQuery;
             return viewData;
         },
 

@@ -12,6 +12,7 @@ require.config({
         // Test               :  scripts
         noteModel             :  '../../test/spec/Models/note',
         notebookModel         :  '../../test/spec/Models/notebook',
+        notebooksCollection   :  '../../test/spec/Collection/notebooks',
         collectionTest        :  '../../test/spec/Collection/notes'
     },
     shim: {
@@ -26,6 +27,6 @@ require.config({
     waitSeconds: 15
 });
 
-require(['noteModel', 'notebookModel', 'collectionTest'], function () {
+require(['noteModel', 'notebookModel', 'collectionTest', 'notebooksCollection'], function () {
     'use strict';
 });

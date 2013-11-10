@@ -33,9 +33,10 @@ require.config({
         'noteForm'            : 'views/item/noteForm',
         'noteSidebar'         : 'views/composite/noteSidebar',
         'noteSidebarItem'     : 'views/item/noteSidebarItem',
+        'noteItem'            : 'views/item/noteItem',
         'notebookSidebar'     : 'views/composite/notebookSidebar',
         'notebookSidebarItem' : 'views/item/notebookSidebarItem',
-        'noteItem'            : 'views/item/noteItem',
+        'notebookForm'        : 'views/item/notebookForm',
         'shortcutView'        : 'views/shortcutView',
         // Templates          : here
         'modalTempl'          : 'templates/modal.html',
@@ -43,9 +44,10 @@ require.config({
         'noteAddTempl'        : 'templates/notes/add.html',
         'noteSidebarTempl'    : 'templates/notes/sidebarList.html',
         'noteSidebarItemTempl': 'templates/notes/sidebarListItem.html',
+        'noteItemTempl'       : 'templates/notes/item.html',
         'notebookSidebarTempl'    : 'templates/notebooks/sidebarList.html',
         'notebookSidebarItemTempl': 'templates/notebooks/sidebarListItem.html',
-        'noteItemTempl'       : 'templates/notes/item.html'
+        'notebookFormTempl': 'templates/notebooks/form.html',
     },
     shim: {
         underscore: {

@@ -1,11 +1,29 @@
 <!-- Sidebars header -->
 <nav class="navbar navbar-default navbar-static-top">
-    <a href="" class="btn-link navbar-brand">Notebooks and tags</a>
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <a href="#" class="btn btn-default notes">
+                <span class="glyphicon glyphicon-align-justify"></span>
+            </a>
+        </li>
+    </ul>
+    <a href="#/notebooks" class="btn-link navbar-brand">Notebooks & tags</a>
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a href="#/notebook/add" class="btn btn-danger addlink">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+        </li>
+    </ul>
 </nav>
 
 <!-- Notebooks list -->
 <div class="ui-s-cont">
     <div class="ui-s-content">
+        <form class="form-inline search-form" method="post">
+            <span class="glyphicon glyphicon-search input-append"></span>
+            <input type="text" id="search-input" placeholder="Search" class="input-append search-input" value="" />
+        </form>
         <div class="main">
             <div class="tags list-group list-notebooks">
             </div>

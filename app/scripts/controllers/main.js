@@ -13,9 +13,10 @@ define([
     'noteItem',
     'noteSidebar',
     'notebookSidebar',
+    'notebookForm',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, NotebookForm, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -214,34 +215,21 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Notebooks actions
          * ------------------------------ */
         notebooks: function () {
-            this.collectionNotebooks.add({
-                id: 1,
-                parentId: 0,
-                name: 'notebooks 1',
-                count: 0
-            });
-            this.collectionNotebooks.add({
-                id: 2,
-                parentId: 0,
-                name: 'notebooks 2',
-                count: 0
-            });
-            this.collectionNotebooks.add({
-                id: 3,
-                parentId: 0,
-                name: 'notebooks 3',
-                count: 0
-            });
+            this.collectionNotebooks.fetch();
             console.log(this.collectionNotebooks.models);
             App.sidebar.show(new NotebookSidebar({
-                collection: this.collectionNotebooks 
+                collection: this.collectionNotebooks
             }));
         },
 
-        notebook: function () {
-        },
-
         notebookAdd: function () {
+            var content = new NotebookForm({
+                collection: this.collectionNotebooks
+            });
+
+            this.showModal({
+                content: content
+            });
         },
 
         notebookEdit: function () {

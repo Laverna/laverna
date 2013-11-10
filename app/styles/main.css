@@ -5520,13 +5520,6 @@ body {
   margin-right: -5px;
   color: #666666;
 }
-.sidebar-tags .navbar {
-  margin-bottom: 0;
-}
-.sidebar-tags .navbar .navbar-brand {
-  max-width: none;
-  width: 100%;
-}
 #sidebar .list-notebooks .list-group-item {
   border-bottom-width: 0;
   border-right-width: 0;

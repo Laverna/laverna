@@ -26,8 +26,7 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'notebooks'                         :  'notebooks',
             'notebook/add'                      :  'notebookAdd',
             'notebook/edit/:id'                 :  'notebookEdit',
-            'notebook/remove/:id'               :  'notebookRemove',
-            'notebook/:id'                      :  'notebook'
+            'notebook/remove/:id'               :  'notebookRemove'
         },
 
         controller: new Controller()

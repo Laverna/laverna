@@ -20,7 +20,7 @@
 //
 // Sidebars content
 //
-#sidebar .main {
+#sidebar .notes-list {
     .list-group {
         margin-bottom: 0;
         &:last-child .list-group-item {
@@ -76,15 +76,19 @@
         }
     }
 }
-.sidebar-tags .main {
-    .list-group:last-child .list-group-item {
-        border-bottom-width: 1px;
-        margin-bottom: 0;
+#sidebar .list-notebooks {
+    .list-group-item {
+        border-bottom-width: 0;
+        border-right-width: 0;
+        border-radius: 0;
     }
     li {
         list-style: none;
     }
     .list-group-tag {
+        &:last-child .list-group-item {
+            border-bottom-width: 1px;
+        }
         .list-group-item {
             margin-bottom: 0;
         }

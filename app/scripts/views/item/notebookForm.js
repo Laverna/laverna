@@ -15,7 +15,8 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         template: _.template(Tmpl),
 
         ui: {
-            name: 'input[name="name"]'
+            name     : 'input[name="name"]',
+            parentId : 'select[name="parentId"]'
         },
 
         events: {
@@ -23,15 +24,27 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         initialize: function () {
-            this.bind('ok', 'save');
+            this.bind('ok', this.save);
+            this.bind('hidden.bs.modal', this.close);
             Mousetrap.reset();
         },
 
+        serializeData: function () {
+            return {
+                notebooks: this.options.collection.toJSON()
+            };
+        },
+
         save: function (e) {
-            e.preventDefault();
+            if (e.$el === undefined) {
+                e.preventDefault();
+            } else {
+                e.preventClose();
+            }
 
             var data = {
-                name: this.ui.name.val()
+                name     : this.ui.name.val(),
+                parentId : this.ui.parentId.val()
             };
 
             if (this.model !== undefined) {
@@ -51,6 +64,8 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
          * Create new notebook
          */
         create: function (data) {
+            data.order = this.collection.nextOrder();
+
             var notebook = new Notebook(data);
             this.collection.create(notebook);
             return this.redirect();
@@ -58,6 +73,11 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
 
         redirect: function () {
             Backbone.history.navigate('/notebooks', true);
+        },
+
+        close: function (m) {
+            m.preventClose();
+            this.redirect();
         }
     });
 

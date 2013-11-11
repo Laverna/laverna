@@ -7,6 +7,7 @@ define(['underscore', 'backbone'], function (_, Backbone) {
 
         defaults: {
             'id'       :  undefined,
+            'order'    :  1,
             'parentId' :  0,
             'name'     :  '',
             'count'    :  0

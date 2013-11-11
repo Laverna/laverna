@@ -54,11 +54,11 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          */
         showModal: function (options) {
             var opt = _.extend({
-                template: _.template(ModalTempl),
-                okText: 'Create',
-                allowCancel: true,
-                animate: true,
-                modalOptions: {
+                template     :  _.template(ModalTempl),
+                okText       :  'Create',
+                allowCancel  :  true,
+                animate      :  false,
+                modalOptions :  {
                     backdrop: 'static',
                 }
             }, options);
@@ -215,8 +215,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Notebooks actions
          * ------------------------------ */
         notebooks: function () {
-            this.collectionNotebooks.fetch();
-            console.log(this.collectionNotebooks.models);
             App.sidebar.show(new NotebookSidebar({
                 collection: this.collectionNotebooks
             }));

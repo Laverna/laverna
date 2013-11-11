@@ -8,20 +8,30 @@ function (Notebook, Notebooks, Backbone, Store) {
 
     module('Notebooks collection', {
         setup: function () {
-            this.notebook = new Notebook();
+            this.notebooks = new Notebooks();
+
+            this.notebook = new Notebook({
+                order: this.notebooks.nextOrder()
+            });
+            this.notebooks.add(this.notebook);
 
             this.secondNotebook = new Notebook({
-                name: 'Hello, world'
+                name: 'Hello, world',
+                order: this.notebooks.nextOrder()
             });
-
-            this.notebooks = new Notebooks();
-            this.notebooks.add(this.notebook);
             this.notebooks.add(this.secondNotebook);
         },
 
         teardown: function () {
             window.errors = null;
         }
+    });
+
+    test('Can generate right order numbers', function () {
+        var notebook = new Notebook({
+            order: this.notebooks.nextOrder()
+        });
+        equal(notebook.get('order'), 3);
     });
 
     test('Has the Notebook model', function () {

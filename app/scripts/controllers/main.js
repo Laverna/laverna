@@ -221,6 +221,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             }));
         },
 
+        // Add new notebook
         notebookAdd: function () {
             var content = new NotebookForm({
                 collection: this.collectionNotebooks
@@ -231,7 +232,18 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             });
         },
 
-        notebookEdit: function () {
+        // Edit existing notebook
+        notebookEdit: function (id) {
+            var notebook = this.collectionNotebooks.get(id),
+                content = new NotebookForm({
+                    model: notebook,
+                    collection: this.collectionNotebooks
+                });
+
+            this.showModal({
+                content: content,
+                okText       :  'Update',
+            });
         },
 
         notebookRemove: function () {

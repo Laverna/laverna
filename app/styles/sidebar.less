@@ -73,12 +73,18 @@
         border-right-width: 0;
         border-radius: 0;
     }
-    li {
-        list-style: none;
-    }
     .list-group-tag {
+        position: relative;
         &:last-child .list-group-item {
             border-bottom-width: 1px;
+        }
+        &:hover {
+            .list-group-item {
+                padding-right: 50px;
+            }
+            .edit-btn {
+                display: block;
+            }
         }
         .list-group-item {
             margin-bottom: 0;
@@ -89,6 +95,13 @@
                 margin-left: -(@tagsPadding * 2);
                 padding-left: @tagsPadding * 3;
             }
+        }
+        .edit-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            color: #000;
+            display: none;
         }
     }
 }

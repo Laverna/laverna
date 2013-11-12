@@ -5525,11 +5525,17 @@ body {
   border-right-width: 0;
   border-radius: 0;
 }
-#sidebar .list-notebooks li {
-  list-style: none;
+#sidebar .list-notebooks .list-group-tag {
+  position: relative;
 }
 #sidebar .list-notebooks .list-group-tag:last-child .list-group-item {
   border-bottom-width: 1px;
+}
+#sidebar .list-notebooks .list-group-tag:hover .list-group-item {
+  padding-right: 50px;
+}
+#sidebar .list-notebooks .list-group-tag:hover .edit-btn {
+  display: block;
 }
 #sidebar .list-notebooks .list-group-tag .list-group-item {
   margin-bottom: 0;
@@ -5540,6 +5546,13 @@ body {
 #sidebar .list-notebooks .list-group-tag .tags .list-group-item {
   margin-left: -50px;
   padding-left: 75px;
+}
+#sidebar .list-notebooks .list-group-tag .edit-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  color: #000;
+  display: none;
 }
 .sidebar-notes .main .list-group .list-group-item {
   min-height: 60px;

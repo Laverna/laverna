@@ -5531,10 +5531,10 @@ body {
 #sidebar .list-notebooks .list-group-tag:last-child .list-group-item {
   border-bottom-width: 1px;
 }
-#sidebar .list-notebooks .list-group-tag:hover .list-group-item {
+#sidebar .list-notebooks .list-group-tag:hover > .list-group-item {
   padding-right: 50px;
 }
-#sidebar .list-notebooks .list-group-tag:hover .edit-btn {
+#sidebar .list-notebooks .list-group-tag:hover > .edit-btn {
   display: block;
 }
 #sidebar .list-notebooks .list-group-tag .list-group-item {

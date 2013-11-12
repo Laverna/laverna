@@ -100,7 +100,6 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         templateHelpers: function () {
             return {
                 isParent: function (notebookId, parentId) {
-                    console.log(parentId);
                     var selected = '';
                     if (parseInt(notebookId) === parseInt(parentId)) {
                         selected = ' selected="selected"';

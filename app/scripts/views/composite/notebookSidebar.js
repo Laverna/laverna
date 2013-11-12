@@ -26,7 +26,6 @@ define([
         appendHtml: function (colView, itemView) {
             var parentId = parseInt(itemView.model.get('parentId'));
 
-            console.log(parentId);
             if (parentId === 0) {
                 colView.$(this.itemViewContainer).append(itemView.el);
             } else {

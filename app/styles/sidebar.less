@@ -69,39 +69,43 @@
 //
 #sidebar .list-notebooks {
     .list-group-item {
-        border-bottom-width: 0;
+        // border-bottom-width: 0;
         border-right-width: 0;
         border-radius: 0;
+        .badge {
+            margin-right: 18px;
+        }
     }
     .list-group-tag {
         position: relative;
-        &:last-child .list-group-item {
-            border-bottom-width: 1px;
-        }
-        &:hover {
-            > .list-group-item {
-                padding-right: 50px;
-            }
-            > .edit-btn {
-                display: block;
-            }
-        }
         .list-group-item {
             margin-bottom: 0;
         }
+        // Child notebooks
         .tags {
             padding-left: @tagsPadding;
             .list-group-item {
                 margin-left: -(@tagsPadding * 2);
                 padding-left: @tagsPadding * 3;
             }
+            .list-group-tag {
+                &:first-child .list-group-item {
+                    border-top-width: 0;
+                }
+                &:last-child .list-group-item {
+                    border-bottom-width: 0;
+                    border-top-width: 0;
+                }
+            }
         }
-        .edit-btn {
+        .dropdown {
             position: absolute;
-            top: 4px;
+            top: 0;
             right: 4px;
-            color: #000;
-            display: none;
+            padding: 8px 4px 8px 0;
+            .dropdown-menu {
+                top: 30px;
+            }
         }
     }
 }

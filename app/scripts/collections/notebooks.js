@@ -14,7 +14,7 @@ define(['underscore', 'models/notebook', 'backbone', 'localStorage'], function (
             if ( !this.length) {
                 return 1;
             }
-            return this.last().get('order') + 1;
+            return this.last().get('id') + 1;
         }
     });
 

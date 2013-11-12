@@ -64,7 +64,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
          * Create new notebook
          */
         create: function (data) {
-            data.order = this.collection.nextOrder();
+            data.id = this.collection.nextOrder();
 
             var notebook = new Notebook(data);
             this.collection.create(notebook);

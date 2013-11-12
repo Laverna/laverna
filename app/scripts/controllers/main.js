@@ -89,6 +89,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             this.notebookId = notebook;
             this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;
+            console.log(this.collectionNotebooks.get(notebook));
 
             // Default filter
             if (this.notesFilter === undefined) {

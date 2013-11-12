@@ -11,13 +11,13 @@ function (Notebook, Notebooks, Backbone, Store) {
             this.notebooks = new Notebooks();
 
             this.notebook = new Notebook({
-                order: this.notebooks.nextOrder()
+                id: this.notebooks.nextOrder()
             });
             this.notebooks.add(this.notebook);
 
             this.secondNotebook = new Notebook({
                 name: 'Hello, world',
-                order: this.notebooks.nextOrder()
+                id: this.notebooks.nextOrder()
             });
             this.notebooks.add(this.secondNotebook);
         },
@@ -31,7 +31,7 @@ function (Notebook, Notebooks, Backbone, Store) {
         var notebook = new Notebook({
             order: this.notebooks.nextOrder()
         });
-        equal(notebook.get('order'), 3);
+        equal(notebook.get('id'), 3);
     });
 
     test('Has the Notebook model', function () {

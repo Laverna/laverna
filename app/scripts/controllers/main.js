@@ -249,7 +249,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
         },
 
         notebookRemove: function (id) {
-            this.collectionNotebooks.remove(id);
+            this.collectionNotebooks.remove(this.collectionNotebooks.get(id));
             Backbone.history.navigate('/notebooks', true);
         }
 

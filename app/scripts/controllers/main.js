@@ -246,7 +246,9 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             });
         },
 
-        notebookRemove: function () {
+        notebookRemove: function (id) {
+            this.collectionNotebooks.remove(id);
+            Backbone.history.navigate('/notebooks', true);
         }
 
     });

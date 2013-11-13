@@ -249,7 +249,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
         },
 
         notebookRemove: function (id) {
-            this.collectionNotebooks.remove(this.collectionNotebooks.get(id));
+            var n = this.collectionNotebooks.get(id);
+            n.destroy();
             Backbone.history.navigate('/notebooks', true);
         }
 

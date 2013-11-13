@@ -164,7 +164,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
         noteAdd: function () {
             this.noteInit();
             var content = new NoteForm({
-                collection: this.collectionNotes
+                collection: this.collectionNotes,
+                notebooks : this.collectionNotebooks
             });
 
             App.content.show(content);
@@ -179,6 +180,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             var note = this.collectionNotes.get(id);
             var content = new NoteForm({
                 collection : this.collectionNotes,
+                notebooks  : this.collectionNotebooks,
                 model      : note
             });
 

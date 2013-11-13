@@ -13,6 +13,7 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
             'taskCompleted' :  0,
             'created'       :  null,
             'updated'       :  null,
+            'notebookId'    :  0,
             'tagsId'        :  [],
             'isFavorite'    :  0,
             'trash'         :  0

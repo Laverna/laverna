@@ -22,7 +22,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
             tagsId     :  'input[name="tags"]',
-            // notebookId :  'input[name="notebookId"]'
+            notebookId :  '[name="notebookId"]'
         },
 
         events: {
@@ -40,14 +40,18 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         },
 
         serializeData: function () {
+            var data;
             if (this.model === undefined) {
-                return {
+                data = {
                     title: null,
                     content: null
                 };
             } else {
-                return this.model.toJSON();
+                data = this.model.toJSON();
             }
+
+            data.notebooks = this.options.notebooks.toJSON();
+            return data;
         },
 
         save: function (e) {
@@ -58,7 +62,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             // Get values
             var data = {
                 title: this.ui.title.val(),
-                content: content
+                content: content,
+                notebookId: this.ui.notebookId.val()
             };
 
             var checklist = new Checklist().count(data.content);
@@ -90,7 +95,6 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             // Set new value
             this.model.set('title', data.title);
             this.model.set('content', data.content);
-//            this.model.set('notebookId', this.ui.notebookId.val());
             // this.model.set('tagsId', this.ui.tagsId.val().trim());
             this.model.set('taskAll', data.taskAll);
             this.model.set('taskCompleted', data.taskCompleted);

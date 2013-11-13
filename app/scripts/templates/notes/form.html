@@ -8,6 +8,11 @@
             <form class="form-horizontal" action="#" method="post">
                 <div class="article">
                     <input id="inputTitle" class="form-control mousetrap" name="title" type="text" value="{{title}}" placeholder="Title" />
+                    <select class="form-control" name="notebookId">
+                        <% _.forEach(notebooks, function (notebook) { %>
+                        <option value="{{notebook.id}}">{{notebook.name}}</option>
+                        <% }); %>
+                    </select>
                     <div class="wmd-input mousetrap" id="wmd-input">{{content}}</div>
                     <!-- <div id="wmd&#45;preview" class="wmd&#45;panel wmd&#45;preview"></div> -->
                 </div>

@@ -10,7 +10,7 @@ define([
     'checklist',
     'Mousetrap',
     'ace',
-    'pagedown-ace'
+    'pagedown-extra'
 ],
 function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace) {
     'use strict';
@@ -27,7 +27,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
         events: {
             'submit .form-horizontal': 'save',
-            'click #btn': 'save',
+            'click #saveBtn': 'saveRedirect'
         },
 
         keyboardEvents: {
@@ -52,6 +52,11 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             data.notebooks = this.options.notebooks.toJSON();
             return data;
+        },
+
+        saveRedirect: function (e) {
+            this.save(e);
+            this.redirectToNote();
         },
 
         save: function (e) {
@@ -146,6 +151,11 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.editor.session.setUseWrapMode(true);
             this.editor.session.setNewLineMode('unix');
 
+            // Auto expande: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
+            this.editor.setOptions({
+                maxLines: Infinity
+            });
+
             editor.run(this.editor);
 
             // Hide default buttons
@@ -166,18 +176,15 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.$('#wmd-undo-button').append($('<i class="fa fa-reply">'));
             this.$('#wmd-redo-button').append($('<i class="fa fa-share">'));
 
-            $('.ace_content').css({'height': '100%'});
-
             // Focus to input[title]
             this.ui.title.focus();
 
-            // Save after every change if its existing
-            if (this.model !== undefined) {
-                var form = this.$('.form-horizontal');
-                this.editor.on('change', function () {
-                    form.trigger('submit');
-                });
-            }
+            // Whenever a change happens inside the ACE editor, update the note
+            this.editor.on('change', function () {
+                if (this.model !== undefined) {
+                    this.$('.form-horizontal').trigger('submit');
+                }
+            });
         }
     });
 

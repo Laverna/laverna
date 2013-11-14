@@ -22,15 +22,15 @@
 <div class="ui-s-cont">
     <div class="ui-s-content">
         <div class="main">
-            <header>
-                <h1 class="article-headline">
-                    {{ title }}
-                    <a class="favorite pull-right">
-                        <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
-                    </a>
-                </h1>
-            </header>
             <div class="article">
+                <header>
+                    <h1 class="page-header">
+                        {{ title }}
+                        <a href="#" class="btn btn-link favorite pull-right">
+                            <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
+                        </a>
+                    </h1>
+                </header>
                 <% if (taskAll !== 0) { %>
                 <div class="progress">
                     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">

@@ -10,7 +10,7 @@ define([
     'checklist',
     'Mousetrap',
     'ace',
-    'pagedown-ace'
+    'pagedown-extra'
 ],
 function (_, $, Backbone, Marionette, Note, NoteForm, Template, Checklist, Mousetrap, ace) {
     'use strict';

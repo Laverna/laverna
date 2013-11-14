@@ -5335,24 +5335,10 @@ body {
   padding-top: 0;
 }
 .modal-body .form-group {
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 0;
   margin-left: -19px;
   margin-right: -19px;
   padding-top: 5px;
   padding-bottom: 5px;
-}
-.modal-body .form-group textarea {
-  resize: vertical;
-}
-.modal-body .form-control,
-.modal-body .form-control:active,
-.modal-body .form-control:focus,
-.modal-body input,
-.modal-body textarea {
-  border-width: 0;
-  -webkit-box-shadow: none;
-  box-shadow: none;
 }
 .form-control {
   border-radius: 0;
@@ -5363,20 +5349,36 @@ body {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-#form {
-  margin-top: 50px;
+.pretty-form .form-group {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 0;
+}
+.pretty-form .form-group textarea {
+  resize: vertical;
+}
+.pretty-form .border-0 {
+  border-bottom-width: 0;
+}
+.pretty-form .form-control,
+.pretty-form .form-control:active,
+.pretty-form .form-control:focus,
+.pretty-form input,
+.pretty-form textarea {
+  border-width: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.article .pretty-form .form-group {
+  padding-bottom: 4px;
+  padding-top: 4px;
+}
+.article .pretty-form .btn {
+  margin-left: 10px;
 }
 #inputTitle {
-  height: 40px;
-  font-size: 16px;
-  font-weight: bold;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin-left: 4px;
-  margin-right: 8px;
-  padding-left: 0;
+  height: 60px;
+  font-size: 36px;
   border: none;
-  border-bottom: 1px solid #CCC;
   box-shadow: none;
 }
 .btn-default,
@@ -5590,21 +5592,18 @@ body {
 #content .main .panel-group .panel .panel-collapse .panel-body {
   border: none;
 }
-#content .header .article-headline {
-  font-size: 26px;
-  border: none;
+#content header .page-header {
+  margin-top: 8px;
 }
-#content .header .article-headline .favorite {
+#content header .favorite {
   font-size: inherit;
   padding: 0;
-  color: #b3b3b3;
-}
-#content .header .article-headline .favorite:hover {
-  text-decoration: none;
+  cursor: pointer;
   color: #666666;
 }
 #content .article {
-  margin-top: 15px;
+  margin-top: 30px;
+  margin-bottom: 20px;
   border-radius: 5px;
   background: #FFF;
   padding: 15px;
@@ -5715,6 +5714,46 @@ div.mdm-preview {
 .wmd-panel {
   width: 100%;
 }
+.wmd-group {
+  padding-left: 10px;
+}
+#wmd-button-bar {
+  margin-left: -15px;
+  margin-right: -15px;
+  background: -moz-linear-gradient(center top, #f5f5f5, #eeeeee) repeat scroll 0% 0% #f5f5f5;
+  border-color: #d9d9d9;
+  box-shadow: 0px 1px 0px 0px #ffffff inset;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  padding-left: 58px;
+  padding: 6px 0;
+}
+#wmd-button-bar:before,
+#wmd-button-bar:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+#wmd-button-bar:after {
+  clear: both;
+}
+#wmd-button-bar:before,
+#wmd-button-bar:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+#wmd-button-bar:after {
+  clear: both;
+}
+#wmd-button-bar .btn {
+  margin-left: 0;
+}
+.wmd-button-row {
+  margin-bottom: 0;
+}
 .wmd-button:hover {
   background-color: #DDDDDD;
   border-color: rgba(0, 0, 0, 0);
@@ -5722,9 +5761,10 @@ div.mdm-preview {
 }
 .wmd-input,
 #wmd-input {
-  height: 540px;
+  height: 1056px;
+  min-height: 1056px;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;

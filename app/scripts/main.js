@@ -21,6 +21,7 @@ require.config({
         // Pagedown           :
         'pagedown-ace'        : '../bower_components/pagedown-ace/Markdown.Editor',
         'pagedown.converter'  : '../bower_components/pagedown-ace/Markdown.Converter',
+        'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
         'pagedown.sanitizer'  : '../bower_components/pagedown-ace/Markdown.Sanitizer',
         checklist             : 'libs/checklist',
         'typeahead'           : '../bower_components/typeahead.js/dist/typeahead.min',
@@ -71,9 +72,9 @@ require.config({
         ace: {
             exports: 'ace'
         },
+        'pagedown-extra': ['pagedown-ace'],
         'pagedown-ace': [
             '../bower_components/pagedown-ace/Markdown.Converter',
-            '../bower_components/pagedown-extra/Markdown.Extra',
             '../bower_components/pagedown-ace/Markdown.Sanitizer'
         ],
         prettify: {

@@ -248,6 +248,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             });
         },
 
+        // Remove notebook
         notebookRemove: function (id) {
             var n = this.collectionNotebooks.get(id);
             n.destroy();

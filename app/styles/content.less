@@ -37,25 +37,22 @@
     }
 }
 // Header
-#content .header {
-    .article-headline {
-        font-size: 26px;
-        border: none;
-        // Favorite button
-        .favorite {
-            font-size: inherit;
-            padding: 0;
-            color: darken(#FFF, 30%);
-            &:hover {
-                text-decoration: none;
-                color: darken(#FFF, 60%);
-            }
-        }
+#content header {
+    .page-header {
+        margin-top: 8px;
+    }
+    // Favorite button
+    .favorite {
+        font-size: inherit;
+        padding: 0;
+        cursor: pointer;
+        color: darken(#FFF, 60%);
     }
 }
 // Article
 #content .article {
-    margin-top: 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
     border-radius: 5px;
     background: #FFF;
     padding: 15px;

@@ -5602,6 +5602,7 @@ body {
   color: #666666;
 }
 #content .article {
+  min-height: 1056px;
   margin-top: 30px;
   margin-bottom: 20px;
   border-radius: 5px;
@@ -5762,7 +5763,6 @@ div.mdm-preview {
 .wmd-input,
 #wmd-input {
   height: 1056px;
-  min-height: 1056px;
   width: 100%;
   overflow: hidden;
   font-weight: 400;

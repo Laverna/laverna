@@ -69,7 +69,7 @@ define([
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
                 default:
-                    notes = this.collection.getActive();
+                    notes = this.collection.getNotebookNotes( this.options.notebookId );
                     this.urlPage = '/note/' + this.options.notebookId;
                     break;
             }

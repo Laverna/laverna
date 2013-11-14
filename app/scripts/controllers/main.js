@@ -42,7 +42,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
                 lastPage   : this.pageN,
-                parentId   : this.parentId,
+                //parentId   : this.parentId,
                 notebookId : this.notebookId,
                 searchQuery: this.searchQuery,
                 filter     : this.notesFilter

@@ -44,7 +44,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             if (this.model === undefined) {
                 data = {
                     title: null,
-                    content: null
+                    content: null,
+                    notebookId: 0
                 };
             } else {
                 data = this.model.toJSON();
@@ -95,6 +96,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             // Set new value
             this.model.set('title', data.title);
             this.model.set('content', data.content);
+            this.model.set('notebookId', data.notebookId);
             // this.model.set('tagsId', this.ui.tagsId.val().trim());
             this.model.set('taskAll', data.taskAll);
             this.model.set('taskCompleted', data.taskCompleted);
@@ -123,6 +125,18 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         redirectToNote: function () {
             var id = this.model.get('id');
             Backbone.history.navigate('/note/show/' + id, true);
+        },
+
+        templateHelpers: function() {
+            return {
+                isActive: function (id, notebookId) {
+                    var selected = '';
+                    if (parseInt(id) === parseInt(notebookId)) {
+                        selected = ' selected="selected"';
+                    }
+                    return selected;
+                }
+            };
         },
 
         /**

@@ -42,7 +42,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
                 lastPage   : this.pageN,
-                //parentId   : this.parentId,
                 notebookId : this.notebookId,
                 searchQuery: this.searchQuery,
                 filter     : this.notesFilter
@@ -89,7 +88,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             this.notebookId = notebook;
             this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;
-            console.log(this.collectionNotebooks.get(notebook));
 
             // Default filter
             if (this.notesFilter === undefined) {
@@ -148,11 +146,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 this.noteInit(notebook, page, id);
             } else {
                 id = notebook;
-                this.noteInit(notebook, page, id);
+                this.noteInit(0, page, id);
             }
-
-            // App.sidebar.$el.find('.list-group-item.active').removeClass('active');
-            // App.sidebar.$el.find('#note-' + id).addClass('active');
 
             App.content.show(new NoteItem({
                 model: this.collectionNotes.get(id),

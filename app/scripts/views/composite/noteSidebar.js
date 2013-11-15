@@ -55,6 +55,7 @@ define([
 
             // Filter
             var notes;
+            //this.collection.fetch({reset:false});
             switch (this.options.filter) {
                 case 'favorite':
                     notes = this.collection.getFavorites();

@@ -187,24 +187,30 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
         // Remove Note
         noteRemove: function (id) {
             var note, result, i, prev;
-            var url = '/note/' + this.notebookId + '/p' + this.pageN + '/show/';
+            var url = '/note/' + this.notebookId + '/p' + this.pageN;
             note = this.collectionNotes.get(id);
 
-            result = note.save({'trash': 1});
+            if (note.get('trash') === 0) {
+                result = note.save({'trash': 1});
 
-            if (result === false) {
-                url += id;
-            } else if (this.collectionNotes.length > 1) {
-                i = this.collectionNotes.indexOf(note);
-                i = (i === 0) ? i : i - 1;
+                if (result === false) {
+                    url += id;
+                } else if (this.collectionNotes.length > 1) {
+                    i = this.collectionNotes.indexOf(note);
+                    i = (i === 0) ? i : i - 1;
 
-                this.collectionNotes.remove(note);
-                prev = this.collectionNotes.at(i);
+                    this.collectionNotes.remove(note);
+                    prev = this.collectionNotes.at(i);
 
-                url += prev.get('id');
+                    url += prev.get('id');
+                } else {
+                    url = '';
+                }
             } else {
-                url = '';
+                note.destroy();
+                url = '/note/trashed/p' + this.pageN;
             }
+
 
             Backbone.history.navigate(url, true);
         },

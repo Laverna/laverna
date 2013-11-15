@@ -21,10 +21,10 @@ define([
 
             switch (this.options.filter) {
                 case 'favorite':
-                    this.url = '#/note/favorite/';
+                    this.url = '#/note/favorite';
                     break;
                 case 'trashed':
-                    this.url = '#/note/trashed/';
+                    this.url = '#/note/trashed';
                     break;
                 case 'search':
                     this.url = '#/note/search/' + this.options.searchQuery;

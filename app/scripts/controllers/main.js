@@ -37,6 +37,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Show list of notes
          */
         showAllNotes: function () {
+            console.log(this.collectionNotes.length);
             var notes = this.collectionNotes.clone();
 
             App.sidebar.show(new NoteSidebar({
@@ -117,7 +118,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             this.noteInit(0, page, id);
 
             if (id !== undefined) {
-                console.log('noteItem favorite');
                 App.content.show(new NoteItem({
                     model: this.collectionNotes.get(id),
                     collection: this.collectionNotes
@@ -199,7 +199,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                     i = this.collectionNotes.indexOf(note);
                     i = (i === 0) ? i : i - 1;
 
-                    this.collectionNotes.remove(note);
+                    // this.collectionNotes.remove(note);
                     prev = this.collectionNotes.at(i);
 
                     url += prev.get('id');

@@ -8,7 +8,7 @@ define([
     'checklist',
     'prettify',
     'backbone.mousetrap',
-    'pagedown-ace',
+    'pagedown-extra',
 ], function (_, Backbone, Marionette, Template, Checklist, prettify) {
     'use strict';
 

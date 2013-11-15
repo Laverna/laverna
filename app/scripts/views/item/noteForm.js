@@ -167,7 +167,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Auto expande: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
             this.editor.setOptions({
-                maxLines: Infinity
+                maxLines: Infinity,
+                minLines: 40
             });
 
             editor.run(this.editor);

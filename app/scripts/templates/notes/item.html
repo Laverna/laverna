@@ -34,7 +34,9 @@
                 <% if (taskAll !== 0) { %>
                 <div class="progress">
                     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
-                        <span>{{ getProgress(taskCompleted, taskAll) }}% of tasks is completed</span>
+                        <span class="progress-percent">
+                            {{ getProgress(taskCompleted, taskAll) }}%
+                        </span>
                     </div>
                 </div>
                 <% } %>

@@ -43,6 +43,7 @@ define([
             'g f' :  'showFavorites',
             'g t' :  'showTrashed',
             'g i' :  'showInbox',
+            'g n' :  'toNotebook',
             '/'   :  'focusSearch'
         },
 
@@ -94,18 +95,37 @@ define([
             return Backbone.history.navigate('/note/search/' + text + '/p1', true);
         },
 
+        /**
+         * Redirects to notebooks list page
+         */
+        toNotebook: function () {
+            return Backbone.history.navigate('/notebooks', true);
+        },
+
+        /**
+         * Redirects to favorite notes page
+         */
         showFavorites: function() {
             return Backbone.history.navigate('/note/favorite/p1', true);
         },
 
+        /**
+         * Redirects to Inbox page, index page
+         */
         showInbox: function() {
             return Backbone.history.navigate('/note/0/p1', true);
         },
 
+        /**
+         * Notes which has been removed to trash
+         */
         showTrashed: function() {
             return Backbone.history.navigate('/note/trashed/p1', true);
         },
 
+        /**
+         * Redirects to note creating page
+         */
         toCreate: function (e) {
             e.preventDefault();
             return Backbone.history.navigate('/note/add', true);

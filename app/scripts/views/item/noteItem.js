@@ -21,7 +21,10 @@ define([
         className: 'content-notes',
 
         ui: {
-            editBtn: '.btn-edit'
+            editBtn: '.btn-edit',
+            favorite: '.favorite span',
+            progress: '.progress-bar',
+            percent : '.progress-percent'
         },
 
         events: {
@@ -36,9 +39,11 @@ define([
         },
 
         initialize: function() {
-            this.model.on('change', this.render);
+            // this.model.on('change', this.render);
             this.model.trigger('shown');
             this.listenTo(this.model, 'change', this.changeFocus);
+            this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
+
             document.title = this.model.get('title');
         },
 
@@ -49,29 +54,43 @@ define([
                 code = el.firstChild;
                 code.innerHTML = prettify.prettyPrintOne(code.innerHTML);
             });
+
+            // Make table look good
+            this.$('table').addClass('table table-bordered');
         },
 
         changeFocus: function() {
             this.model.trigger('shown');
         },
 
+        changeFavorite: function () {
+            if (this.model.get('isFavorite') === 1) {
+                this.ui.favorite.removeClass('glyphicon-star-empty');
+            } else {
+                this.ui.favorite.addClass('glyphicon-star-empty');
+            }
+        },
+
         /**
          * Add note item to your favorite notes list
          */
-        favorite: function (e) {
-            if (e !== undefined) {
-                e.preventDefault();
-            }
-
+        favorite: function () {
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
             this.model.save({'isFavorite': isFavorite});
+            return false;
         },
 
+        /**
+         * Redirect to edit page
+         */
         editNote: function () {
             var uri = this.ui.editBtn.attr('href');
             Backbone.history.navigate(uri);
         },
 
+        /**
+         * Redirect to deleting page
+         */
         deleteNote: function() {
             Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
         },
@@ -88,12 +107,17 @@ define([
             this.model.set('content', text.content);
             this.model.set('taskCompleted', text.completed);
             this.model.save();
+
+            // Status in progress bar
+            var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
+            this.ui.progress.css({width: percent + '%'});
+            this.ui.percent.html(percent + '%');
         },
 
         templateHelpers: function() {
             return {
                 getProgress: function(taskCompleted, taskAll) {
-                    return parseInt(taskCompleted * 100 / taskAll, null);
+                    return Math.floor(taskCompleted * 100 / taskAll);
                 },
 
                 getContent: function(text) {

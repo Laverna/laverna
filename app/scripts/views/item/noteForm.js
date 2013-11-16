@@ -27,7 +27,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
         events: {
             'submit .form-horizontal': 'save',
-            'click #saveBtn': 'saveRedirect'
+            'click #saveBtn': 'saveRedirect',
+            'click #cancelBtn': 'redirect'
         },
 
         keyboardEvents: {
@@ -55,6 +56,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             return data;
         },
 
+        /**
+         * Save note and redirect
+         */
         saveRedirect: function (e) {
             this.save(e);
             this.redirectToNote();
@@ -63,13 +67,14 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         save: function (e) {
             e.preventDefault();
 
-            var content = this.editor.getSession().getValue();
+            var content = this.editor.getSession().getValue().trim(),
+                title   = this.ui.title.val().trim();
 
             // Get values
             var data = {
-                title: this.ui.title.val(),
-                content: content,
-                notebookId: this.ui.notebookId.val()
+                title      : (title !== '') ? title : 'Unnamed',
+                content    : content,
+                notebookId : this.ui.notebookId.val()
             };
 
             var checklist = new Checklist().count(data.content);
@@ -125,8 +130,12 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             } else {
                 url.back();
             }
+            return false;
         },
 
+        /**
+         * Redirects to notes page
+         */
         redirectToNote: function () {
             var id = this.model.get('id');
             Backbone.history.navigate('/note/show/' + id, true);
@@ -165,7 +174,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.editor.session.setUseWrapMode(true);
             this.editor.session.setNewLineMode('unix');
 
-            // Auto expande: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
+            // Auto expand: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
             this.editor.setOptions({
                 maxLines: Infinity,
                 minLines: 40

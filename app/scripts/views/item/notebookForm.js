@@ -66,13 +66,18 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
          * Update existing notebook
          */
         update: function (data) {
+            var that = this;
+
             this.model.set('name', data.name);
             this.model.set('parentId', data.parentId);
 
-            var result = this.model.save({});
-            if (result === false) {
-                console.log(result);
-            } else {
+            // Handle validation errors
+            this.model.on('invalid', function (model, errors) {
+                that.showErrors(errors);
+            });
+
+            var result = this.model.save({}, {validate: true});
+            if (result) {
                 this.redirect();
             }
         },
@@ -83,9 +88,27 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         create: function (data) {
             data.id = this.collection.nextOrder();
 
-            var notebook = new Notebook(data);
-            this.collection.create(notebook);
-            return this.redirect();
+            var notebook = new Notebook(data, {validate: true});
+
+            if ( !notebook.validationError) {
+                this.collection.create(notebook);
+                return this.redirect();
+            } else {
+                this.showErrors(notebook.validationError);
+            }
+        },
+
+        /**
+         * Shows validation errors
+         */
+        showErrors: function (errors) {
+            var that = this;
+            _.each(errors, function (e) {
+                if (e === 'name') {
+                    that.$('#notebook-name').addClass('has-error');
+                    that.ui.name.attr('placeholder', 'Notebook name is required');
+                }
+            });
         },
 
         redirect: function () {

@@ -1,8 +1,13 @@
 /*global define*/
-define(['underscore', 'backbone'], function (_, Backbone) {
+define([
+    'underscore',
+    'backbone',
+    'backbone.relational'
+], function (_, Backbone) {
     'use strict';
 
-    var Model = Backbone.Model.extend({
+    // var Model = Backbone.Model.extend({
+    var Model = Backbone.RelationalModel.extend({
         idAttribute: 'id',
 
         defaults: {

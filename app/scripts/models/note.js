@@ -1,8 +1,19 @@
 /*global define*/
-define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
+define([
+    'underscore',
+    'backbone',
+    'models/notebook',
+    'collections/notebooks',
+    'backbone.relational',
+    'localStorage'
+], function (_, Backbone, Notebook, Notebooks) {
     'use strict';
 
-    var Model = Backbone.Model.extend({
+    /**
+     * Notes model
+     */
+    // var Model = Backbone.Model.extend({
+    var Model = Backbone.RelationalModel.extend({
         idAttribute: 'id',
 
         defaults: {
@@ -18,6 +29,13 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
             'isFavorite'    :  0,
             'trash'         :  0
         },
+
+        relations: [{
+            type: Backbone.HasOne,
+            key : 'notebookId',
+            relatedModel: Notebook,
+            collectionType: Notebooks
+        }],
 
         initialize: function () {
             this.on('update.note', this.setUpdate);
@@ -48,7 +66,6 @@ define(['underscore', 'backbone', 'localStorage'], function (_, Backbone) {
 
             return tagsId;
         }
-
     });
 
     return Model;

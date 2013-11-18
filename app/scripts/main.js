@@ -1,8 +1,8 @@
 require.config({
     packages: [{
-        name: 'ace',
-        location: '../bower_components/ace/lib/ace',
-        main: 'ace'
+        name     : 'ace',
+        location : '../bower_components/ace/lib/ace',
+        main     : 'ace'
     }],
     paths: {
         // Dependencies       : and libraries
@@ -15,6 +15,7 @@ require.config({
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
         'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
+        'backbone.relational' : '../bower_components/backbone-relational/backbone-relational',
         // Keybindings        :
         'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
         'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
@@ -59,6 +60,9 @@ require.config({
             exports: 'Backbone'
         },
         localStorage: {
+            deps: ['underscore', 'backbone']
+        },
+        'backbone.relational': {
             deps: ['underscore', 'backbone']
         },
         bootstrap: {

@@ -32,7 +32,11 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
          */
         getNotebookNotes: function ( notebookId ) {
             return this.filter(function (note) {
-                return note.get('notebookId') === notebookId && note.get('trash') === 0;
+                var notebook = note.get('notebookId');
+
+                if (notebook !== null) {
+                    return notebook.get('id') === notebookId && note.get('trash') === 0;
+                }
             });
         },
 

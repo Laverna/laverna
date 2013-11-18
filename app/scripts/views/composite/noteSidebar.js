@@ -70,7 +70,7 @@ define([
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
                 default:
-                    if (parseInt(this.options.notebookId) !== 0) {
+                    if (this.options.notebookId !== 0) {
                         notes = this.collection.getNotebookNotes( this.options.notebookId );
                     } else {
                         notes = this.collection.getActive();
@@ -84,11 +84,17 @@ define([
             this.pagination(notes);
         },
 
+        /**
+         * Focus on search form
+         */
         focusSearch: function(e) {
             e.preventDefault();
             this.ui.searchInput.focus();
         },
 
+        /**
+         * Redirects to search page
+         */
         toSearch: function (e) {
             e.preventDefault();
             var text = this.ui.searchInput.val();
@@ -131,10 +137,16 @@ define([
             return Backbone.history.navigate('/note/add', true);
         },
 
+        /**
+         * Redirects to previous pagination page
+         */
         navigateTop: function () {
             return this.nextOrPrev('prev');
         },
 
+        /**
+         * Redirects to next pagination page
+         */
         navigateBottom: function () {
             return this.nextOrPrev('next');
         },
@@ -220,6 +232,7 @@ define([
 
         templateHelpers: function () {
             return {
+                // Generates the pagination url
                 pageUrl: function (page, noteId, urlPage) {
                     var url;
                     url = urlPage + '/p' + page;

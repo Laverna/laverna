@@ -109,7 +109,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Save changes
          */
         saveNote: function (data) {
-            var notebook = this.model.get('notebookId');
+            var notebook = this.model.get('notebook');
             if (notebook === null) { notebook = new this.options.notebooks.model(); }
 
             // Update notes count
@@ -157,7 +157,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             return {
                 isActive: function (id, notebookId) {
                     var selected = '';
-                    if (notebookId !== null && (id === notebookId.id) ) {
+                    if (notebookId && id === notebookId.id) {
                         selected = ' selected="selected"';
                     }
                     return selected;

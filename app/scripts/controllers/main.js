@@ -37,13 +37,12 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Show list of notes
          */
         showAllNotes: function () {
-            console.log(this.collectionNotes.length);
             var notes = this.collectionNotes.clone();
 
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
                 lastPage   : this.pageN,
-                notebookId : this.notebookId,
+                notebookId : parseInt(this.notebookId),
                 searchQuery: this.searchQuery,
                 filter     : this.notesFilter
             }));

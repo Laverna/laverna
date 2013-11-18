@@ -16,6 +16,9 @@ define([
             // 'click .list-group-tag': 'toNotebook'
         },
 
+        initialize: function () {
+        },
+
         /**
          * Redirect to notebook page
          */

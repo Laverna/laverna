@@ -31,10 +31,10 @@ define([
         },
 
         relations: [{
-            type: Backbone.HasOne,
-            key : 'notebookId',
-            relatedModel: Notebook,
-            collectionType: Notebooks
+            type           : Backbone.HasOne,
+            key            : 'notebookId',
+            relatedModel   : Notebook,
+            collectionType : Notebooks
         }],
 
         initialize: function () {

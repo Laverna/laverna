@@ -74,7 +74,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             var data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
-                notebookId : this.ui.notebookId.val()
+                notebookId : parseInt(this.ui.notebookId.val())
             };
 
             var checklist = new Checklist().count(data.content);
@@ -96,6 +96,12 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             var note = new Note(data);
             this.model = note;
             this.collection.create(note);
+
+            if (data.notebookId !== 0) {
+                var notebook = this.options.notebooks.get(data.notebookId);
+                notebook.plusCount();
+            }
+
             return this.redirectToNote();
         },
 
@@ -103,6 +109,16 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Save changes
          */
         saveNote: function (data) {
+            var notebook = this.model.get('notebookId');
+            if (notebook === null) { notebook = new this.options.notebooks.model(); }
+
+            // Update notes count
+            if ( data.notebookId !== notebook.get('id') ) {
+                notebook.minusCount();
+                var nNotebook = this.options.notebooks.get(data.notebookId);
+                nNotebook.plusCount();
+            }
+
             // Set new value
             this.model.set('title', data.title);
             this.model.set('content', data.content);
@@ -112,12 +128,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.model.set('taskCompleted', data.taskCompleted);
 
             // Save changes
-            var result = this.model.save({});
+            this.model.save({});
             this.model.trigger('update.note');
-
-            if (result === false) {
-                console.log(result);
-            }
         },
 
         /**
@@ -145,7 +157,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             return {
                 isActive: function (id, notebookId) {
                     var selected = '';
-                    if (parseInt(id) === parseInt(notebookId)) {
+                    if (notebookId !== null && (id === notebookId.id) ) {
                         selected = ' selected="selected"';
                     }
                     return selected;

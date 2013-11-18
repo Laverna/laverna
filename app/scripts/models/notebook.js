@@ -29,6 +29,22 @@ define([
         },
 
         initialize: function () {
+        },
+
+        plusCount: function () {
+            if (this.get('id') === 0) {
+                return;
+            }
+            this.set('count', this.get('count') + 1);
+            this.save();
+        },
+
+        minusCount: function () {
+            if (this.get('id') === 0) {
+                return;
+            }
+            this.set('count', this.get('count') - 1);
+            this.save();
         }
     });
 

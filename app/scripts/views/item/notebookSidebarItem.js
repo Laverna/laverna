@@ -17,6 +17,7 @@ define([
         },
 
         initialize: function () {
+            console.log(this.model.fetchRelated('notes'));
         },
 
         /**
@@ -24,6 +25,18 @@ define([
          */
         toNotebook: function (e) {
             console.log(e.target);
+        },
+
+        templateHelpers: function () {
+            return {
+                count: function (notes) {
+                    var count = 0;
+                    if (notes !== null) {
+                        count = notes.length;
+                    }
+                    return count;
+                }
+            };
         }
     });
 

@@ -63,7 +63,7 @@ require.config({
             deps: ['underscore', 'backbone']
         },
         'backbone.relational': {
-            deps: ['underscore', 'backbone']
+            deps: ['backbone']
         },
         bootstrap: {
             deps: ['jquery'],

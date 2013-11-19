@@ -26,9 +26,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         },
 
         events: {
-            'submit .form-horizontal': 'save',
-            'click #saveBtn': 'saveRedirect',
-            'click #cancelBtn': 'redirect'
+            'submit .form-horizontal' : 'save',
+            'click #saveBtn'          : 'saveRedirect',
+            'click #cancelBtn'        : 'redirect'
         },
 
         keyboardEvents: {
@@ -93,13 +93,17 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Create new note
          */
         createNote: function (data) {
-            var note = new Note(data);
+            var notebookId = data.notebookId,
+                note;
+
+            data.notebookId = null;
+            note = new Note(data);
             this.model = note;
             this.collection.create(note);
 
-            if (data.notebookId !== 0) {
-                var notebook = this.options.notebooks.get(data.notebookId);
-                notebook.plusCount();
+            if (notebookId !== 0) {
+                notebookId = this.options.notebooks.get(notebookId);
+                this.model.save({notebookId: notebookId});
             }
 
             return this.redirectToNote();
@@ -109,14 +113,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Save changes
          */
         saveNote: function (data) {
-            var notebook = this.model.get('notebook');
-            if (notebook === null) { notebook = new this.options.notebooks.model(); }
-
-            // Update notes count
-            if ( data.notebookId !== notebook.get('id') ) {
-                notebook.minusCount();
-                var nNotebook = this.options.notebooks.get(data.notebookId);
-                nNotebook.plusCount();
+            if (data.notebookId !== 0) {
+                data.notebookId = this.options.notebooks.get(data.notebookId);
             }
 
             // Set new value

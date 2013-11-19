@@ -30,12 +30,17 @@ define([
             'trash'         :  0
         },
 
-        relations: [{
-            type           : Backbone.HasOne,
-            key            : 'notebookId',
-            relatedModel   : Notebook,
-            collectionType : Notebooks
-        }],
+        relations: [
+            {
+                type           : Backbone.HasOne,
+                key            : 'notebookId',
+                relatedModel   : Notebook,
+                collectionType : Notebooks,
+                reverseRelation: {
+                    key : 'notes'
+                }
+            }
+        ],
 
         initialize: function () {
             this.on('update.note', this.setUpdate);

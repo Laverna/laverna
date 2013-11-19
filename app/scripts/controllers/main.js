@@ -37,12 +37,18 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Show list of notes
          */
         showAllNotes: function () {
-            var notes = this.collectionNotes.clone();
+            var notes;
+
+            if (this.notebookId !== 0) {
+                notes = this.collectionNotebooks.get(this.notebookId).get('notes');
+            } else {
+                notes = this.collectionNotes.clone();
+            }
 
             App.sidebar.show(new NoteSidebar({
                 collection : notes,
                 lastPage   : this.pageN,
-                notebookId : parseInt(this.notebookId),
+                notebookId : this.notebookId,
                 searchQuery: this.searchQuery,
                 filter     : this.notesFilter
             }));
@@ -84,7 +90,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Notes actions
          * ------------------------------ */
         noteInit: function (notebook, page) {
-            notebook = (notebook === undefined) ? 0 : notebook;
+            notebook = (notebook === undefined) ? 0 : parseInt(notebook);
             this.notebookId = notebook;
             this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;

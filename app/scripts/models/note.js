@@ -37,7 +37,8 @@ define([
                 relatedModel   : Notebook,
                 collectionType : Notebooks,
                 reverseRelation: {
-                    key : 'notes'
+                    key           : 'notes',
+                    includeInJSON : 'id'
                 }
             }
         ],

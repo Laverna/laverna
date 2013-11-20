@@ -70,7 +70,11 @@ define([
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
                 default:
-                    notes = this.collection.getActive();
+                    if (this.options.notebookId !== 0) {
+                        notes = this.collection.getNotebookNotes(this.options.notebookId);
+                    } else {
+                        notes = this.collection.getActive();
+                    }
                     this.urlPage = '/note/' + this.options.notebookId;
                     break;
             }

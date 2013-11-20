@@ -5806,6 +5806,10 @@ div.mdm-preview {
   border-color: rgba(0, 0, 0, 0);
   color: #545454;
 }
+.wmd-spacer {
+  padding-left: 4px;
+  padding-right: 4px;
+}
 .wmd-input,
 #wmd-input {
   height: 1056px;

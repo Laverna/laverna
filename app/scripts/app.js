@@ -1,5 +1,9 @@
 /*global define */
-define(['underscore', 'backbone', 'marionette'], function (_, Backbone) {
+define([
+    'underscore',
+    'backbone',
+    'marionette'
+], function (_, Backbone) {
     'use strict';
 
     // Underscore template

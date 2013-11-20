@@ -17,7 +17,6 @@ define([
         },
 
         initialize: function () {
-            console.log(this.model.fetchRelated('notes'));
         },
 
         /**

@@ -58,7 +58,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 allowCancel  :  true,
                 animate      :  false,
                 modalOptions :  {
-                    backdrop: 'static',
+                    backdrop: 'static'
                 }
             }, options);
 

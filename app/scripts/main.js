@@ -32,6 +32,7 @@ require.config({
         'bootstrap-modal'     : 'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         // Application        : scripts here
+        'sidebar'             : 'views/composite/sidebar',
         'noteForm'            : 'views/item/noteForm',
         'noteSidebar'         : 'views/composite/noteSidebar',
         'noteSidebarItem'     : 'views/item/noteSidebarItem',

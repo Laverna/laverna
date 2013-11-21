@@ -15,14 +15,15 @@ define([
 function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace) {
     'use strict';
 
-    var Edit = Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         ui: {
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
             tagsId     :  'input[name="tags"]',
-            notebookId :  '[name="notebookId"]'
+            notebookId :  '[name="notebookId"]',
+            sCont      :  '.ui-s-content'
         },
 
         events: {
@@ -219,8 +220,20 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
                     this.$('.form-horizontal').trigger('submit');
                 }
             });
+
+            // Editor bar spy your scrolls
+            var wmdBar = this.$('#wmd-button-bar');
+            this.ui.sCont.on('scroll', function () {
+                var scroll = $(this).scrollTop();
+                if (scroll >= 260) {
+                    wmdBar.addClass('wmd-bar-fixed');
+                    wmdBar.animate({top: scroll-2 + 'px'}, 5);
+                } else {
+                    wmdBar.removeClass('wmd-bar-fixed');
+                }
+            });
         }
     });
 
-    return Edit;
+    return View;
 });

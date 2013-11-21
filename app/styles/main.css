@@ -5795,6 +5795,13 @@ div.mdm-preview {
 #wmd-button-bar:after {
   clear: both;
 }
+#wmd-button-bar.wmd-bar-fixed {
+  position: absolute;
+  z-index: 99999;
+  top: 0px;
+  right: 24px;
+  left: 24px;
+}
 #wmd-button-bar .btn {
   margin-left: 0;
 }

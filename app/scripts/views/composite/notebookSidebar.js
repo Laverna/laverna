@@ -22,9 +22,19 @@ define([
         className: 'sidebar-tags',
         id: 'sidebar',
 
+        events: {
+            'submit .search-form'    : 'toSearch',
+            'keypress #search-input' : 'escSearch'
+        },
+
+        ui: {
+            searchInput : '#search-input'
+        },
+
         initialize: function () {
             this.keyboardEvents = _.extend(this.keyboardEvents, {
-                'o' : 'toNotes'
+                'o' : 'toNotes',
+                '/'   :  'focusSearch'
             });
         },
 
@@ -39,6 +49,32 @@ define([
             } else {
                 this.$('div[data-id=' + parentId + ']').append(itemView.el);
             }
+        },
+
+        /**
+         * Focus on search form
+         */
+        focusSearch: function(e) {
+            e.preventDefault();
+            this.ui.searchInput.focus();
+        },
+
+        /**
+         * Unfocus if pressed ESC
+         */
+        escSearch: function (e) {
+            if (e.which === 0) {
+                this.ui.searchInput.trigger('blur');
+            }
+        },
+
+        /**
+         * Redirects to search page
+         */
+        toSearch: function (e) {
+            e.preventDefault();
+            var text = this.ui.searchInput.val();
+            return Backbone.history.navigate('/note/search/' + text + '/p1', true);
         },
 
         /**

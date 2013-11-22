@@ -36,8 +36,8 @@ define([
         },
 
         events: {
-            'submit .search-form': 'toSearch',
-            'keypress #search-input': 'escSearch'
+            'submit .search-form'    : 'toSearch',
+            'keypress #search-input' : 'escSearch'
         },
 
         keyboardEvents: {

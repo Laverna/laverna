@@ -77,71 +77,15 @@ html, body {
     }
 }
 
+.m0 {
+    margin: 0;
+}
+
 // Forms
 @import "forms.less";
 
 // Sidebars
 @import "sidebar.less";
+
 // Content
 @import "content.less";
-
-/* MdMagick */
-div.mdm-buttons{
-    width:  100%;
-    margin: 0;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    ul{
-        padding: 0;
-        padding-left: 8px;
-        margin: 0;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-}
-div.mdm-preview{
-    width: 100%;
-}
-
-.tt-hint{
-    display: none;
-}
-.tt-query{
-    width: 100%;
-}
-.twitter-typeahead{
-    width: 100%;
-}
-.tt-dropdown-menu {
-    min-width: 160px;
-    margin-top: 2px;
-    padding: 5px 0;
-    background-color: @dropdown-bg;
-    border: 1px solid #ccc;
-    border: 1px solid @dropdown-border;
-    *border-right-width: 2px;
-    *border-bottom-width: 2px;
-    border-radius: 6px;
-    .box-shadow(0 5px 10px rgba(0,0,0,.2));
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-}
-
-.tt-suggestion {
-    display: block;
-    padding: 3px 20px;
-}
-
-.tt-suggestion.tt-is-under-cursor {
-    color: @dropdown-link-hover-color;
-    #gradient > .vertical(@dropdown-link-hover-bg, darken(@dropdown-link-hover-bg, 5%));
-}
-
-.tt-suggestion.tt-is-under-cursor a {
-    color: @dropdown-bg;
-}
-
-.tt-suggestion p {
-    margin: 0;
-}

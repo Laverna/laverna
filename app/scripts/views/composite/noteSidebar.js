@@ -37,6 +37,7 @@ define([
 
         events: {
             'submit .search-form': 'toSearch',
+            'keypress #search-input': 'escSearch'
         },
 
         keyboardEvents: {
@@ -96,6 +97,15 @@ define([
         },
 
         /**
+         * Unfocus if pressed ESC
+         */
+        escSearch: function (e) {
+            if (e.which === 0) {
+                this.ui.searchInput.trigger('blur');
+            }
+        },
+
+        /**
          * Redirects to search page
          */
         toSearch: function (e) {
@@ -146,13 +156,14 @@ define([
         },
 
         serializeData: function () {
-            var viewData = {};
-            viewData.nextPage = this.nextPage;
-            viewData.nextNote = this.nextNote;
-            viewData.prevPage = this.prevPage;
-            viewData.prevNote = this.prevNote;
-            viewData.urlPage  = this.urlPage;
-            viewData.searchQuery = this.options.searchQuery;
+            var viewData = {
+                nextPage    : this.nextPage,
+                nextNote    : this.nextNote,
+                prevPage    : this.prevPage,
+                prevNote    : this.prevNote,
+                urlPage     : this.urlPage,
+                searchQuery : this.options.searchQuery
+            };
             return viewData;
         },
 

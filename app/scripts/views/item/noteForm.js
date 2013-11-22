@@ -226,8 +226,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.ui.sCont.on('scroll', function () {
                 var scroll = $(this).scrollTop();
                 if (scroll >= 260) {
-                    wmdBar.addClass('wmd-bar-fixed');
-                    wmdBar.animate({top: scroll-2 + 'px'}, 5);
+                    wmdBar.addClass('wmd-bar-fixed')
+                        .css({top: scroll-2 + 'px'});
                 } else {
                     wmdBar.removeClass('wmd-bar-fixed');
                 }

@@ -1,20 +1,20 @@
 /*global define*/
 define([
     'underscore',
-    'backbone',
-    'backbone.relational'
+    'backbone'
 ], function (_, Backbone) {
     'use strict';
 
-    // var Model = Backbone.Model.extend({
-    var Model = Backbone.RelationalModel.extend({
+    /**
+     * Tags model
+     */
+    var Tag = Backbone.Model.extend({
         idAttribute: 'id',
 
         defaults: {
-            'id'       :  undefined,
-            'parentId' :  0,
-            'name'     :  '',
-            'notes'    :  ''
+            'id'    : undefined,
+            'name'  : '',
+            'count' : ''
         },
 
         validate: function (attrs) {
@@ -22,15 +22,11 @@ define([
             if (attrs.name === '') {
                 errors.push('name');
             }
-
             if (errors.length > 0) {
                 return errors;
             }
-        },
-
-        initialize: function () {
         }
     });
 
-    return Model;
+    return Tag;
 });

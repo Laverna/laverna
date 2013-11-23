@@ -9,9 +9,11 @@ require.config({
         localStorage          :  '../bower_components/backbone.localStorage/backbone.localStorage',
         'backbone.wreqr'      :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
+        'backbone.relational' : '../bower_components/backbone-relational/backbone-relational',
         // Test               :  scripts
         noteModel             :  '../../test/spec/Models/note',
         notebookModel         :  '../../test/spec/Models/notebook',
+        tagModel              :  '../../test/spec/Models/tag',
         notebooksCollection   :  '../../test/spec/Collection/notebooks',
         collectionTest        :  '../../test/spec/Collection/notes'
     },
@@ -22,11 +24,20 @@ require.config({
         backbone: {
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
+        },
+        'backbone.relational': {
+            deps: ['backbone']
         }
     },
     waitSeconds: 15
 });
 
-require(['noteModel', 'notebookModel', 'collectionTest', 'notebooksCollection'], function () {
+require([
+    'noteModel',
+    'notebookModel',
+    'tagModel',
+    'collectionTest',
+    'notebooksCollection'
+], function () {
     'use strict';
 });

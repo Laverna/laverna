@@ -157,6 +157,7 @@ define([
 
         serializeData: function () {
             var viewData = {
+                notebook    : this.options.notebook,
                 nextPage    : this.nextPage,
                 nextNote    : this.nextNote,
                 prevPage    : this.prevPage,
@@ -179,6 +180,20 @@ define([
                     }
 
                     return '#' + url;
+                },
+                getTitle: function (notebook) {
+                    var title = 'Inbox';
+                    if (notebook) {
+                        title = notebook.get('name');
+                    }
+                    return title;
+                },
+                getLink: function (notebook) {
+                    var link = '/';
+                    if (notebook) {
+                        link += 'note/' + notebook.get('id') + '/p1';
+                    }
+                    return link;
                 }
             };
         }

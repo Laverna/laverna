@@ -43,6 +43,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 collection : notes,
                 lastPage   : this.pageN,
                 notebookId : this.notebookId,
+                notebook   : this.collectionNotebooks.get(this.notebookId),
                 searchQuery: this.searchQuery,
                 filter     : this.notesFilter
             }));

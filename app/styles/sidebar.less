@@ -3,11 +3,13 @@
 //
 @tagsPadding: 25px;
 
+// Sidebar styles
 #sidebar {
     padding-left: 0;
     padding-right: 0;
     border-right: 1px solid darken(#FFF, 10%);
     background-color: #FFF;
+    // Navbar in sidebar
     .navbar .addlink {
         color: #FFF;
         &:hover, &:focus {
@@ -17,8 +19,33 @@
     }
 }
 
+// List group
+.list-group-item {
+    color: #202020;
+    border-bottom-width: 0;
+    transition: background-color .1s;
+    &.active {
+        color: #FFF;
+        .list-group-item-text {
+            color: darken(#FFF, 3%);
+        }
+    }
+    &:last-child .list-group-item {
+        border-bottom-width: 1px;
+    }
+}
+a.list-group-item {
+    &.active,
+    &.active:hover,
+    &.active:focus {
+        .list-group-item-text {
+            color: darken(#FFF, 3%);
+        }
+    }
+}
+
 //
-// Sidebars content
+// Notes list
 //
 #sidebar .notes-list {
     .list-group {
@@ -27,31 +54,16 @@
             border-bottom-width: 1px;
             margin-bottom: 15px;
         }
-        .navbar {
-            min-height: 20px;
-            margin-bottom: 0;
-            .navbar-brand {
-                padding: 8px 15px;
-            }
-        }
     }
     .list-group-item {
-        border-radius: 0;
+        min-height: 60px;
         padding-right: 15px;
         border-left-width: 5px;
         border-right-width: 0;
-        border-bottom-width: 0;
         border-left-color: transparent;
-        color: #202020;
         &.active {
-            border-color: #00A693;
-            color: #FFF;
             margin-left: 0;
             border-left: 5px solid darken(#00A693, 10%);
-            background: #00A693;
-            &:hover, .badge {
-              background: darken(#00A693, 2%);
-            }
             .favorite{
                 color: darken(#00A693, 15%);
             }
@@ -65,37 +77,23 @@
 }
 
 //
-// Tags
+// Tags & notebooks list
 //
 #sidebar .list-notebooks {
     .list-group-item {
-        // border-bottom-width: 0;
         border-right-width: 0;
-        border-radius: 0;
         .badge {
             margin-right: 18px;
         }
     }
     .list-group-tag {
         position: relative;
-        .list-group-item {
-            margin-bottom: 0;
-        }
         // Child notebooks
         .tags {
             padding-left: @tagsPadding;
             .list-group-item {
                 margin-left: -(@tagsPadding * 2);
                 padding-left: @tagsPadding * 3;
-            }
-            .list-group-tag {
-                &:first-child .list-group-item {
-                    border-top-width: 0;
-                }
-                &:last-child .list-group-item {
-                    border-bottom-width: 0;
-                    border-top-width: 0;
-                }
             }
         }
         .dropdown {
@@ -106,17 +104,6 @@
             .dropdown-menu {
                 top: 30px;
             }
-        }
-    }
-}
-
-//
-// Notes
-//
-.sidebar-notes {
-    .main .list-group {
-        .list-group-item {
-            min-height: 60px;
         }
     }
 }

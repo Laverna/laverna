@@ -29,7 +29,7 @@ function (Notebook, Notebooks, Backbone, Store) {
 
     test('Can generate right order numbers', function () {
         var notebook = new Notebook({
-            order: this.notebooks.nextOrder()
+            id: this.notebooks.nextOrder()
         });
         equal(notebook.get('id'), 3);
     });

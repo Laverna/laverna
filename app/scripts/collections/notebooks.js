@@ -1,5 +1,10 @@
 /*global define*/
-define(['underscore', 'models/notebook', 'backbone', 'localStorage'], function (_, Notebook, Backbone) {
+define([
+    'underscore',
+    'backbone',
+    'models/notebook',
+    'localStorage'
+], function (_, Backbone, Notebook) {
     'use strict';
 
     var Notebooks = Backbone.Collection.extend({

@@ -8,13 +8,13 @@ define(['models/notebook'], function (Model) {
 
     test('Can be created with default values', function() {
         var notebook = new Model();
-        equal(notebook.get('id'), undefined, 'Default id for notebooks is undefined');
+        equal(notebook.get('id'), 0, 'Default id for notebooks is 0');
     });
 
     test('Update attributes', function(){
         var notebook = new Model();
         notebook.set('name', 'new name');
         equal(notebook.get('name'), 'new name');
-        equal(notebook.get('count'), undefined, 'Default notebook id for notebooks is undefined');
+        equal(notebook.get('count'), 0, 'Default notebook id for notebooks is 0');
     });
 });

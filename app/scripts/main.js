@@ -16,6 +16,7 @@ require.config({
         'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'backbone.relational' : '../bower_components/backbone-relational/backbone-relational',
+        'backbone.assosiations': '../bower_components/backbone-associations/backbone-associations',
         // Keybindings        :
         'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
         'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
@@ -31,7 +32,9 @@ require.config({
         'prettify'            : '../bower_components/google-code-prettify/src/prettify',
         'bootstrap-modal'     : 'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // 'bootstrap-modal'  : '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
-        // Application        : scripts here
+        // Collections        : scripts
+        'notesCollection'     : 'collections/notes',
+        // View               : scripts here
         'sidebar'             : 'views/composite/sidebar',
         'noteForm'            : 'views/item/noteForm',
         'noteSidebar'         : 'views/composite/noteSidebar',
@@ -64,6 +67,9 @@ require.config({
             deps: ['underscore', 'backbone']
         },
         'backbone.relational': {
+            deps: ['backbone']
+        },
+        'backbone.assosiations': {
             deps: ['backbone']
         },
         bootstrap: {

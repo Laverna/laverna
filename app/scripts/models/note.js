@@ -4,7 +4,7 @@ define([
     'backbone',
     'models/notebook',
     'collections/notebooks',
-    'backbone.relational',
+    'backbone.assosiations',
     'localStorage'
 ], function (_, Backbone, Notebook, Notebooks) {
     'use strict';
@@ -13,7 +13,7 @@ define([
      * Notes model
      */
     // var Model = Backbone.Model.extend({
-    var Model = Backbone.RelationalModel.extend({
+    var Model = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
         defaults: {
@@ -32,19 +32,16 @@ define([
 
         relations: [
             {
-                type           : Backbone.HasOne,
+                type           : Backbone.One,
                 key            : 'notebookId',
-                relatedModel   : Notebook,
                 collectionType : Notebooks,
-                reverseRelation: {
-                    key           : 'notes',
-                    includeInJSON : 'id'
-                }
+                relatedModel   : Notebook
             }
         ],
 
         initialize: function () {
             this.on('update.note', this.setUpdate);
+            this.on('changed:notebookId', this.updateNotebookCount);
 
             if (this.isNew()) {
                 this.set('created', Date.now());
@@ -52,6 +49,21 @@ define([
             }
         },
 
+        updateNotebookCount: function (args) {
+            var notebook = this.get('notebookId');
+
+            if (args.last !== 0) {
+                args.last.trigger('removed:note');
+            }
+
+            if (notebook !== 0) {
+                notebook.trigger('add:note');
+            }
+        },
+
+        /**
+         * Note's last modified time
+         */
         setUpdate: function () {
             this.set('updated', Date.now());
             this.setTags();

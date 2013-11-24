@@ -97,7 +97,6 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             var notebookId = data.notebookId,
                 note;
 
-            data.notebookId = null;
             note = new Note(data);
             this.model = note;
             this.collection.create(note);
@@ -105,6 +104,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             if (notebookId !== 0) {
                 notebookId = this.options.notebooks.get(notebookId);
                 this.model.save({notebookId: notebookId});
+                notebookId.trigger('add:note');
             }
 
             return this.redirectToNote();
@@ -114,21 +114,16 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Save changes
          */
         saveNote: function (data) {
+            var lastNotebook = this.model.get('notebookId');
+
             if (data.notebookId !== 0) {
                 data.notebookId = this.options.notebooks.get(data.notebookId);
             }
 
-            // Set new value
-            this.model.set('title', data.title);
-            this.model.set('content', data.content);
-            this.model.set('notebookId', data.notebookId);
-            // this.model.set('tagsId', this.ui.tagsId.val().trim());
-            this.model.set('taskAll', data.taskAll);
-            this.model.set('taskCompleted', data.taskCompleted);
-
             // Save changes
-            this.model.save({});
+            this.model.save(data);
             this.model.trigger('update.note');
+            this.model.trigger('changed:notebookId', {last: lastNotebook});
         },
 
         /**

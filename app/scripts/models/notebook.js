@@ -2,19 +2,21 @@
 define([
     'underscore',
     'backbone',
-    'backbone.relational'
+    'backbone.assosiations'
 ], function (_, Backbone) {
     'use strict';
 
     // var Model = Backbone.Model.extend({
-    var Model = Backbone.RelationalModel.extend({
+    //AssociatedModel
+    var Model = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
         defaults: {
-            'id'       :  undefined,
+            'id'       :  0,
             'parentId' :  0,
             'name'     :  '',
-            'notes'    :  ''
+            'notes'    :  '',
+            'count'    :  0
         },
 
         validate: function (attrs) {
@@ -29,6 +31,20 @@ define([
         },
 
         initialize: function () {
+            this.on('removed:note', this.removeCount);
+            this.on('add:note', this.addCount);
+        },
+
+        addCount: function () {
+            this.save({
+                'count': this.get('count') + 1
+            });
+        },
+
+        removeCount: function () {
+            this.save({
+                'count': this.get('count') - 1
+            });
         }
     });
 

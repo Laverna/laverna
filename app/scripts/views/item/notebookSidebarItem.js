@@ -13,28 +13,13 @@ define([
         className: 'list-group-tag',
 
         events: {
-            // 'click .list-group-tag': 'toNotebook'
         },
 
         initialize: function () {
         },
 
-        /**
-         * Redirect to notebook page
-         */
-        toNotebook: function (e) {
-            console.log(e.target);
-        },
-
         templateHelpers: function () {
             return {
-                count: function (notes) {
-                    var count = 0;
-                    if (notes !== null) {
-                        count = notes.length;
-                    }
-                    return count;
-                }
             };
         }
     });

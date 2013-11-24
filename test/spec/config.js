@@ -10,11 +10,13 @@ require.config({
         'backbone.wreqr'      :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter' :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'backbone.relational' : '../bower_components/backbone-relational/backbone-relational',
+        'backbone.assosiations': '../bower_components/backbone-associations/backbone-associations',
         // Test               :  scripts
         noteModel             :  '../../test/spec/Models/note',
         notebookModel         :  '../../test/spec/Models/notebook',
         tagModel              :  '../../test/spec/Models/tag',
         notebooksCollection   :  '../../test/spec/Collection/notebooks',
+        tagsCollection        :  '../../test/spec/Collection/tags',
         collectionTest        :  '../../test/spec/Collection/notes'
     },
     shim: {
@@ -27,6 +29,9 @@ require.config({
         },
         'backbone.relational': {
             deps: ['backbone']
+        },
+        'backbone.assosiations': {
+            deps: ['backbone']
         }
     },
     waitSeconds: 15
@@ -37,7 +42,8 @@ require([
     'notebookModel',
     'tagModel',
     'collectionTest',
-    'notebooksCollection'
+    'notebooksCollection',
+    'tagsCollection'
 ], function () {
     'use strict';
 });

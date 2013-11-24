@@ -1,5 +1,10 @@
 /*global define*/
-define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, Note, Backbone) {
+define([
+    'underscore',
+    'models/note',
+    'backbone',
+    'localStorage'
+], function (_, Note, Backbone) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
@@ -34,7 +39,7 @@ define(['underscore', 'models/note', 'backbone', 'localStorage'], function (_, N
             return this.filter(function (note) {
                 var notebook = note.get('notebookId');
 
-                if (notebook !== null) {
+                if (notebook !== 0) {
                     return notebook.get('id') === notebookId && note.get('trash') === 0;
                 }
             });

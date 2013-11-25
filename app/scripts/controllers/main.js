@@ -8,15 +8,17 @@ define([
     // collections
     'collections/notes',
     'collections/notebooks',
+    'collections/tags',
     // Views
     'noteForm',
     'noteItem',
     'noteSidebar',
     'notebookSidebar',
     'notebookForm',
+    'tagForm',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, NotebookForm, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, NotebookForm, TagForm, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -29,6 +31,9 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
 
             this.collectionNotebooks = new CollectionNotebooks();
             this.collectionNotebooks.fetch({reset: true});
+
+            this.collectionTags = new CollectionTags();
+            this.collectionTags.fetch({reset: true});
 
             this.on('notes.shown', this.showAllNotes);
         },
@@ -254,8 +259,31 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             var n = this.collectionNotebooks.get(id);
             n.destroy();
             Backbone.history.navigate('/notebooks', true);
-        }
+        },
 
+        /* ---------------------------------
+         * Tags actions
+         * --------------------------------- */
+        tagAdd: function() {
+            var content = new TagForm({
+                collection: this.collectionTags
+            });
+
+            this.showModal({
+                content: content
+            });
+        },
+
+        tagEdit: function(id) {
+            var content = new TagForm({
+                collection: this.collectionTags,
+                model: this.collectionTags.get(id)
+            });
+            this.showModal({
+                content: content
+            });
+        }
+        
     });
 
     return Controller;

@@ -8,15 +8,17 @@ define([
     // collections
     'collections/notes',
     'collections/notebooks',
+    'collections/tags',
     // Views
     'noteForm',
     'noteItem',
     'noteSidebar',
     'notebookSidebar',
+    'tagsSidebar',
     'notebookForm',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, NotebookForm, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, TagsSidebar, NotebookForm, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -24,11 +26,17 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Initialization
          */
         initialize: function() {
+            // Fetch notes
             this.collectionNotes = new CollectionNotes();
             this.collectionNotes.fetch({reset: true});
 
+            // Fetch notebooks
             this.collectionNotebooks = new CollectionNotebooks();
             this.collectionNotebooks.fetch({reset: true});
+
+            // Fetch tags
+            this.collectionTags = new CollectionTags();
+            this.collectionTags.fetch({reset: true});
 
             this.on('notes.shown', this.showAllNotes);
         },
@@ -219,8 +227,13 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Notebooks actions
          * ------------------------------ */
         notebooks: function () {
+            var tags = new TagsSidebar({
+                collection: this.collectionTags
+            });
+
             App.sidebar.show(new NotebookSidebar({
-                collection: this.collectionNotebooks
+                collection: this.collectionNotebooks,
+                tags      : tags
             }));
         },
 

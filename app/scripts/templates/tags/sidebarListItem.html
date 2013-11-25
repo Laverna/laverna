@@ -1,0 +1,15 @@
+<a class="list-group-item" href="#/note/{{id}}/p1" data-id="{{id}}">
+    <i class="glyphicon glyphicon-book"></i>
+    {{ name }}
+    <span class="pull-right badge">{{count}}</span>
+</a>
+
+<div class="btn-group dropdown">
+    <button class="drop-edit btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu{{id}}">
+        <li><a href="#/notebook/edit/{{id}}">Edit</a></li>
+        <li><a href="#/notebook/remove/{{id}}">Remove</a></li>
+    </ul>
+</div>

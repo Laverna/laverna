@@ -30,6 +30,7 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             // Tags pages
             'tags/add'                          :  'tagAdd',
             'tags/edit/:id'                     :  'tagEdit',
+            'tags/remove/:id'                   :  'tagRemove'
         },
 
         controller: new Controller()

@@ -282,7 +282,14 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             this.showModal({
                 content: content
             });
+        },
+
+        tagRemove: function (id) {
+            var model = this.collectionTags.get(id);
+            model.destroy();
+            Backbone.history.navigate('/notebooks', true);
         }
+
         
     });
 

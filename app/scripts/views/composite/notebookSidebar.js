@@ -3,17 +3,15 @@ define([
     'underscore',
     'backbone',
     'marionette',
-    'sidebar',
     'notebookSidebarItem',
     'text!notebookSidebarTempl',
     'backbone.mousetrap'
-], function(_, Backbone, Marionette, Sidebar, notebookSidebarItem, Tmpl) {
+], function(_, Backbone, Marionette, notebookSidebarItem, Tmpl) {
     'use strict';
 
     _.extend(Marionette.CompositeView, Backbone.View);
-    Sidebar = _.clone(Sidebar);
 
-    var View = _.extend(Sidebar, {
+    var View = Marionette.CompositeView.extend({
         template: _.template(Tmpl),
 
         itemView: notebookSidebarItem,
@@ -22,20 +20,7 @@ define([
         className: 'sidebar-tags',
         id: 'sidebar',
 
-        events: {
-            'submit .search-form'    : 'toSearch',
-            'keypress #search-input' : 'escSearch'
-        },
-
-        ui: {
-            searchInput : '#search-input'
-        },
-
         initialize: function () {
-            this.keyboardEvents = _.extend(this.keyboardEvents, {
-                'o' : 'toNotes',
-                '/'   :  'focusSearch'
-            });
         },
 
         /**
@@ -108,10 +93,18 @@ define([
             note = this.collection.at(i);
             active.removeClass('active');
             this.$('[data-id=' + note.get('id') + ']').addClass('active');
+        },
+
+        serializeData: function () {
+            var viewData = {
+                collection  : this.collection.toJSON(),
+                tags        : this.options.tags
+            };
+            return viewData;
         }
+
     });
 
-    View = Marionette.CompositeView.extend(View);
     return View;
 
 });

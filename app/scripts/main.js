@@ -40,11 +40,13 @@ require.config({
         'noteSidebar'         : 'views/composite/noteSidebar',
         'noteSidebarItem'     : 'views/item/noteSidebarItem',
         'noteItem'            : 'views/item/noteItem',
+        'notebookLayout'      : 'views/layouts/notebook',
         'notebookSidebar'     : 'views/composite/notebookSidebar',
         'notebookSidebarItem' : 'views/item/notebookSidebarItem',
         'notebookForm'        : 'views/item/notebookForm',
         'tagForm'             : 'views/item/tagForm',
-        'shortcutView'        : 'views/shortcutView',
+        'tagsSidebar'         : 'views/composite/tags',
+        'tagSidebarItem'      : 'views/item/tagSidebarItem',
         // Templates          : here
         'modalTempl'          : 'templates/modal.html',
         'noteFormTempl'       : 'templates/notes/form.html',
@@ -52,10 +54,13 @@ require.config({
         'noteSidebarTempl'    : 'templates/notes/sidebarList.html',
         'noteSidebarItemTempl': 'templates/notes/sidebarListItem.html',
         'noteItemTempl'       : 'templates/notes/item.html',
+        'notebookLayoutTempl'    : 'templates/notebooks/layout.html',
         'notebookSidebarTempl'    : 'templates/notebooks/sidebarList.html',
         'notebookSidebarItemTempl': 'templates/notebooks/sidebarListItem.html',
         'notebookFormTempl': 'templates/notebooks/form.html',
         'tagFormTempl'        : 'templates/tags/form.html',
+        'tagsSidebarTempl'       : 'templates/tags/sidebarList',
+        'tagSidebarItemTempl'    : 'templates/tags/sidebarListItem',
     },
     shim: {
         underscore: {

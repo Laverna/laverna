@@ -13,12 +13,14 @@ define([
     'noteForm',
     'noteItem',
     'noteSidebar',
+    'notebookLayout',
     'notebookSidebar',
     'notebookForm',
+    'tagsSidebar',
     'tagForm',
     'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookSidebar, NotebookForm, TagForm, ModalTempl) {
+function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, ModalTempl) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -26,12 +28,15 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Initialization
          */
         initialize: function() {
+            // Fetch notes
             this.collectionNotes = new CollectionNotes();
             this.collectionNotes.fetch({reset: true});
 
+            // Fetch notebooks
             this.collectionNotebooks = new CollectionNotebooks();
             this.collectionNotebooks.fetch({reset: true});
 
+            // Fetch tags
             this.collectionTags = new CollectionTags();
             this.collectionTags.fetch({reset: true});
 
@@ -224,9 +229,22 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
          * Notebooks actions
          * ------------------------------ */
         notebooks: function () {
-            App.sidebar.show(new NotebookSidebar({
-                collection: this.collectionNotebooks
-            }));
+            var tags, notebook, sidebar;
+
+            notebook = new NotebookSidebar({
+                collection : this.collectionNotebooks
+            });
+
+            tags = new TagsSidebar({
+                collection : this.collectionTags
+            });
+
+            sidebar = new NotebookLayout();
+            App.sidebar.show(sidebar);
+
+            sidebar.notebooks.show(notebook);
+            sidebar.tags.show(tags);
+
         },
 
         // Add new notebook
@@ -290,7 +308,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             Backbone.history.navigate('/notebooks', true);
         }
 
-        
     });
 
     return Controller;

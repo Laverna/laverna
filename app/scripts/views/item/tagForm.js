@@ -23,7 +23,7 @@ define([
 
         initialize: function () {
             this.bind('ok', this.save);
-            this.bind('hidden.ms.modak', this.close);
+            this.bind('hidden.ms.modal', this.close);
             Mousetrap.reset();
         },
         

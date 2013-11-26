@@ -59,8 +59,8 @@ require.config({
         'notebookSidebarItemTempl': 'templates/notebooks/sidebarListItem.html',
         'notebookFormTempl': 'templates/notebooks/form.html',
         'tagFormTempl'        : 'templates/tags/form.html',
-        'tagsSidebarTempl'       : 'templates/tags/sidebarList',
-        'tagSidebarItemTempl'    : 'templates/tags/sidebarListItem',
+        'tagsSidebarTempl'       : 'templates/tags/sidebarList.html',
+        'tagSidebarItemTempl'    : 'templates/tags/sidebarListItem.html',
     },
     shim: {
         underscore: {

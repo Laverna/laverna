@@ -5297,56 +5297,61 @@ a.list-group-item.active:hover .list-group-item-text,
 a.list-group-item.active:focus .list-group-item-text {
   color: #f7f7f7;
 }
-#sidebar .notes-list .list-group {
+.notes-list .list-group {
   margin-bottom: 0;
 }
-#sidebar .notes-list .list-group:last-child .list-group-item {
+.notes-list .list-group:last-child .list-group-item {
   border-bottom-width: 1px;
   margin-bottom: 15px;
 }
-#sidebar .notes-list .list-group-item {
+.notes-list .list-group-item {
   min-height: 60px;
   padding-right: 15px;
   border-left-width: 5px;
   border-right-width: 0;
   border-left-color: transparent;
 }
-#sidebar .notes-list .list-group-item.active {
+.notes-list .list-group-item.active {
   margin-left: 0;
   border-left: 5px solid #007366;
 }
-#sidebar .notes-list .list-group-item.active .favorite {
+.notes-list .list-group-item.active .favorite {
   color: #005a4f;
 }
-#sidebar .notes-list .list-group-item .favorite {
+.notes-list .list-group-item .favorite {
   font-size: 22px;
   margin-right: -5px;
   color: #666666;
 }
-#sidebar .list-notebooks .list-group-item {
+.list-notebooks .list-group-item {
   border-right-width: 0;
 }
-#sidebar .list-notebooks .list-group-item .badge {
+.list-notebooks .list-group-item .badge {
   margin-right: 18px;
 }
-#sidebar .list-notebooks .list-group-tag {
+.list-notebooks .list-group-tag {
   position: relative;
 }
-#sidebar .list-notebooks .list-group-tag .tags {
+.list-notebooks .list-group-tag .tags {
   padding-left: 25px;
 }
-#sidebar .list-notebooks .list-group-tag .tags .list-group-item {
+.list-notebooks .list-group-tag .tags .list-group-item {
   margin-left: -50px;
   padding-left: 75px;
 }
-#sidebar .list-notebooks .list-group-tag .dropdown {
+.list-notebooks .list-group-tag .dropdown {
   position: absolute;
   top: 0;
   right: 4px;
   padding: 8px 4px 8px 0;
 }
-#sidebar .list-notebooks .list-group-tag .dropdown .dropdown-menu {
+.list-notebooks .list-group-tag .dropdown .dropdown-menu {
   top: 30px;
+}
+#tags .navbar {
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  border-top-width: 1px;
 }
 #content {
   padding-left: 0;

@@ -10,7 +10,7 @@ define([
     var Tag = Marionette.ItemView.extend({
         template: _.template(Tmpl) ,
 
-        className: 'list-group',
+        className: 'list-group-tag',
 
         initialize: function () {
         }

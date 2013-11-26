@@ -17,9 +17,6 @@ define([
         itemView: notebookSidebarItem,
         itemViewContainer: '.list-notebooks',
 
-        className: 'sidebar-tags',
-        id: 'sidebar',
-
         initialize: function () {
         },
 

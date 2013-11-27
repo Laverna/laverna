@@ -5278,18 +5278,18 @@ body {
   border-color: #d9534f;
   background: #c9302c;
 }
-.list-group-item {
+#sidebar .list-group-item {
   color: #202020;
   border-bottom-width: 0;
   transition: background-color 0.1s;
 }
-.list-group-item.active {
+#sidebar .list-group-item.active {
   color: #FFF;
 }
-.list-group-item.active .list-group-item-text {
+#sidebar .list-group-item.active .list-group-item-text {
   color: #f7f7f7;
 }
-.list-group-item:last-child .list-group-item {
+#sidebar .list-group-item:last-child .list-group-item {
   border-bottom-width: 1px;
 }
 a.list-group-item.active .list-group-item-text,

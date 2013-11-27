@@ -2,8 +2,9 @@
 define([
     'underscore',
     'backbone',
+    'modalRegion',
     'marionette'
-], function (_, Backbone) {
+], function (_, Backbone, ModalRegion) {
     'use strict';
 
     // Underscore template
@@ -17,7 +18,8 @@ define([
 
     App.addRegions({
         sidebar :  '#sidebar',
-        content :  '#content'
+        content :  '#content',
+        modal   :  ModalRegion
     });
 
     App.on('initialize:after', function() {

@@ -205,20 +205,28 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         notebooks: function () {
             var tags, notebook, sidebar;
 
+            // Notebooks list
             notebook = new NotebookSidebar({
                 collection : this.collectionNotebooks
             });
 
+            // Tags list
             tags = new TagsSidebar({
                 collection : this.collectionTags
             });
 
-            sidebar = new NotebookLayout();
+            // Show sidebar layout
+            sidebar = new NotebookLayout({
+                collectionNotebooks: this.collectionNotebooks,
+                collectionTags     : this.collectionTags
+            });
             App.sidebar.show(sidebar);
 
+            // Notebooks & tags list in sidebar
             sidebar.notebooks.show(notebook);
             sidebar.tags.show(tags);
 
+            App.content.reset();
         },
 
         // Add new notebook

@@ -4,7 +4,7 @@ define([
     'jquery',
     'backbone',
     'marionette',
-    'bootstrap',
+    'bootstrap'
 ], function (_, $, Backbone) {
     'use strict';
 

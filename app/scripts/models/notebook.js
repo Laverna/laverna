@@ -15,7 +15,7 @@ define([
             'id'       :  0,
             'parentId' :  0,
             'name'     :  '',
-            'notes'    :  '',
+            'notes'    :  [],
             'count'    :  0
         },
 

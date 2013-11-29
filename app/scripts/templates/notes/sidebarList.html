@@ -25,9 +25,12 @@
 <div class="ui-s-cont">
     <div class="ui-s-content">
         <form class="form-inline search-form" method="post">
-            <span class="glyphicon glyphicon-search input-append"></span>
-            <input type="text" id="search-input" placeholder="Search" class="input-append search-input"
-                value="{{ searchQuery }}" />
+            <div class="form-group">
+                <span class="glyphicon glyphicon-search"></span>
+            </div>
+            <div class="form-group search-group">
+                <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="{{ searchQuery }}" />
+            </div>
         </form>
 
         <div class="main notes-list">

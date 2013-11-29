@@ -4,9 +4,11 @@ define([
     'backbone',
     'models/notebook',
     'collections/notebooks',
+    'models/tag',
+    'collections/tags',
     'backbone.assosiations',
     'localStorage'
-], function (_, Backbone, Notebook, Notebooks) {
+], function (_, Backbone, Notebook, Notebooks, Tag, Tags) {
     'use strict';
 
     /**
@@ -25,7 +27,7 @@ define([
             'created'       :  null,
             'updated'       :  null,
             'notebookId'    :  0,
-            'tagsId'        :  [],
+            'tags'          :  [],
             'isFavorite'    :  0,
             'trash'         :  0
         },
@@ -36,7 +38,13 @@ define([
                 key            : 'notebookId',
                 collectionType : Notebooks,
                 relatedModel   : Notebook
-            }
+            },
+            {
+                type           : Backbone.Many,
+                key            : 'tags',
+                collectionType : Tags,
+                relatedModel   : Tag
+            },
         ],
 
         initialize: function () {

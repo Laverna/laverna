@@ -26,6 +26,22 @@ define([
         },
 
         initialize: function () {
+        },
+
+        navigate: function (id, direction) {
+            var tag,
+                i;
+
+            tag = this.get(id);
+            i = this.indexOf(tag);
+
+            if (direction === 'prev') {
+                i = (i > 0) ? i - 1 : 0;
+            } else {
+                i = (i === (this.length - 1)) ? i : i + 1;
+            }
+
+            return this.at(i);
         }
     });
 

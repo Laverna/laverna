@@ -3,7 +3,6 @@ define([
     'underscore',
     'backbone',
     'marionette',
-    'bootstrap-modal',
     'app',
     // collections
     'collections/notes',
@@ -18,9 +17,8 @@ define([
     'notebookForm',
     'tagsSidebar',
     'tagForm',
-    'text!modalTempl'
 ],
-function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, ModalTempl) {
+function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -56,29 +54,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 searchQuery: this.searchQuery,
                 filter     : this.notesFilter
             }));
-        },
-
-        /**
-         * Shows bootstrap modal window
-         */
-        showModal: function (options) {
-            var opt = _.extend({
-                template     :  _.template(ModalTempl),
-                okText       :  'Create',
-                allowCancel  :  true,
-                animate      :  false,
-                modalOptions :  {
-                    backdrop: 'static'
-                }
-            }, options);
-
-            var modal = new Backbone.BootstrapModal(opt).open();
-
-            $(window).bind('hashchange', function () {
-                modal.close();
-            });
-
-            return modal;
         },
 
         /**
@@ -221,7 +196,6 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 url = '/note/trashed/p' + this.pageN;
             }
 
-
             Backbone.history.navigate(url, true);
         },
 
@@ -231,20 +205,28 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
         notebooks: function () {
             var tags, notebook, sidebar;
 
+            // Notebooks list
             notebook = new NotebookSidebar({
                 collection : this.collectionNotebooks
             });
 
+            // Tags list
             tags = new TagsSidebar({
                 collection : this.collectionTags
             });
 
-            sidebar = new NotebookLayout();
+            // Show sidebar layout
+            sidebar = new NotebookLayout({
+                collectionNotebooks: this.collectionNotebooks,
+                collectionTags     : this.collectionTags
+            });
             App.sidebar.show(sidebar);
 
+            // Notebooks & tags list in sidebar
             sidebar.notebooks.show(notebook);
             sidebar.tags.show(tags);
 
+            App.content.reset();
         },
 
         // Add new notebook
@@ -253,9 +235,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 collection: this.collectionNotebooks
             });
 
-            this.showModal({
-                content: content
-            });
+            App.modal.show(content);
         },
 
         // Edit existing notebook
@@ -266,17 +246,14 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                     collection: this.collectionNotebooks
                 });
 
-            this.showModal({
-                content: content,
-                okText       :  'Update',
-            });
+            App.modal.show(content);
         },
 
         // Remove notebook
         notebookRemove: function (id) {
             var n = this.collectionNotebooks.get(id);
             n.destroy();
-            Backbone.history.navigate('/notebooks', true);
+            Backbone.history.navigate('#/notebooks', true);
         },
 
         /* ---------------------------------
@@ -287,9 +264,7 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 collection: this.collectionTags
             });
 
-            this.showModal({
-                content: content
-            });
+            App.modal.show(content);
         },
 
         tagEdit: function(id) {
@@ -297,15 +272,13 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
                 collection: this.collectionTags,
                 model: this.collectionTags.get(id)
             });
-            this.showModal({
-                content: content
-            });
+            App.modal.show(content);
         },
 
         tagRemove: function (id) {
             var model = this.collectionTags.get(id);
             model.destroy();
-            Backbone.history.navigate('/notebooks', true);
+            Backbone.history.navigate('#/notebooks', true);
         }
 
     });

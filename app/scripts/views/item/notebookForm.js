@@ -11,8 +11,13 @@ define([
 function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
     'use strict';
 
+    /**
+     * Notebook form
+     */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
+
+        className: 'modal-dialog',
 
         ui: {
             name     : 'input[name="name"]',
@@ -20,13 +25,19 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         events: {
-            'submit .form-horizontal': 'save'
+            'submit .form-horizontal' : 'save',
+            'click .ok'               : 'save',
+            'click .cancelBtn'        : 'close'
         },
 
         initialize: function () {
-            this.bind('ok', this.save);
-            this.bind('hidden.bs.modal', this.close);
+            this.on('hidden', this.redirect);
+            this.on('shown', this.onFormShown);
             Mousetrap.reset();
+        },
+
+        onFormShown: function () {
+            this.ui.name.focus();
         },
 
         serializeData: function () {
@@ -44,11 +55,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         save: function (e) {
-            if (e.$el === undefined) {
-                e.preventDefault();
-            } else {
-                e.preventClose();
-            }
+            e.preventDefault();
 
             var data = {
                 name     : this.ui.name.val(),
@@ -112,12 +119,14 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         redirect: function () {
-            Backbone.history.navigate('/notebooks', true);
+            Backbone.history.navigate('#/notebooks', true);
         },
 
-        close: function (m) {
-            m.preventClose();
-            this.redirect();
+        close: function (e) {
+            if (e !== undefined) {
+                e.preventDefault();
+            }
+            this.trigger('close');
         },
 
         templateHelpers: function () {

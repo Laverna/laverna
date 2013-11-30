@@ -10,23 +10,34 @@ define([
 ], function(_, $, Backbone, Marionette, Tag, Template, Mousetrap) {
     'use strict';
 
+    /**
+     * Tags form
+     */
     var View = Marionette.ItemView.extend({
         template: _.template(Template),
+
+        className: 'modal-dialog',
 
         ui: {
             name : 'input[name="name"]'
         },
 
         events: {
-            'submit .form-horizontal': 'save'
+            'submit .form-horizontal': 'save',
+            'click .ok'               : 'save',
+            'click .cancelBtn'        : 'close'
         },
 
         initialize: function () {
-            this.bind('ok', this.save);
-            this.bind('hidden.bs.modal', this.close);
+            this.on('hidden', this.redirect);
+            this.on('shown', this.onFormShown);
             Mousetrap.reset();
         },
-        
+
+        onFormShown: function () {
+            this.ui.name.focus();
+        },
+
         serializeData: function () {
             var model;
 
@@ -86,9 +97,8 @@ define([
 
             var tag = new Tag(data, {validate: true});
 
-            if (!tag.validationError) {
+            if ( !tag.validationError) {
                 this.collection.create(tag);
-                console.log(this.collection);
                 return this.redirect();
             } else {
                 this.showErrors(tag.validationError);
@@ -99,15 +109,17 @@ define([
          * Redirect
          */
         redirect: function () {
-            return Backbone.history.navigate('/notebooks', true);
+            return Backbone.history.navigate('#/notebooks', true);
         },
 
         /**
          * Close
          */
-        close: function (m) {
-            m.preventClose();
-            this.redirect();
+        close: function (e) {
+            if (e !== undefined) {
+                e.preventDefault();
+            }
+            this.trigger('close');
         },
 
         /**

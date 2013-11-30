@@ -36,15 +36,22 @@ define([
                 'o' : 'toNotes',
                 '/' : 'focusSearch'
             });
+
+            this.collectionNotebooks = this.options.collectionNotebooks;
+            this.collectionTags = this.options.collectionTags;
+
+            // Navigation events
+            this.on('notebooks:navigate', this.navigateNotebooks);
+            this.on('tags:navigate', this.navigateTags);
         },
 
         toNotes: function () {
             var active = this.$el.find('.list-group-item.active'),
-                id;
+                url;
 
             if (active.length !== 0) {
-                id = active.attr('data-id');
-                return Backbone.history.navigate('/note/' + id + '/p1', true);
+                url = active.attr('href');
+                return Backbone.history.navigate(url, true);
             }
         },
 
@@ -72,6 +79,72 @@ define([
             e.preventDefault();
             var text = this.ui.searchInput.val();
             return Backbone.history.navigate('/note/search/' + text + '/p1', true);
+        },
+
+        nextOrPrev: function (navigate) {
+            var active = this.$el.find('.list-group-item.active'),
+                activeParent,
+                activeId;
+
+            if (active.length === 0) {
+                this.trigger('notebooks:navigate', {active : 0});
+            } else {
+                activeParent = active.parent();
+                activeId = parseInt(active.attr('data-id'));
+
+                // Only notebooks has childrens
+                if (activeParent.children('.tags').length !== 0) {
+                    this.trigger('notebooks:navigate', {
+                        active: activeId,
+                        navigate: navigate
+                    });
+                } else {
+                    this.trigger('tags:navigate', {
+                        active: activeId,
+                        navigate: navigate
+                    });
+                }
+            }
+
+            active.removeClass('active');
+        },
+
+        /**
+         * Tags navigation
+         */
+        navigateTags: function (opts) {
+            var notebook,
+                el;
+
+            if (opts.active !== 0) {
+                notebook = this.collectionTags.navigate(opts.active, opts.navigate);
+            } else {
+                notebook = this.collectionTags.at(0);
+            }
+
+            el = this.$('#tags a[data-id=' + notebook.get('id') + ']');
+            el.addClass('active');
+        },
+
+        /**
+         * Notebooks navigation
+         */
+        navigateNotebooks: function (opts) {
+            var notebook,
+                el;
+
+            if (opts.active !== 0) {
+                notebook = this.collectionNotebooks.navigate(opts.active, opts.navigate);
+            } else {
+                notebook = this.collectionNotebooks.at(0);
+            }
+
+            if (notebook !== null) {
+                el = this.$('#notebooks a[data-id=' + notebook.get('id') + ']');
+                el.addClass('active');
+            } else {
+                this.trigger('tags:navigate', {active: 0});
+            }
         }
 
     });

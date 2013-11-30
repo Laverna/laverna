@@ -23,7 +23,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         ui: {
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
-            tagsId     :  'input[name="tags"]',
+            tagsId     :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content'
         },
@@ -44,23 +44,26 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         },
 
         onRender: function() {
-            var that = this;
+            var that = this,
+                values = [];
+
+            _.each(this.options.collectionTags.toJSON(), function (tag) {
+                values.push(tag.name);
+            });
 
             this.ui.tagsId.tagsinput({
-                itemText    : 'name',
-                itemValue   : 'id',
-                // confirmKeys : [13, 44],
-                freeInput   : true,
-                tagClass : function () {
+                freeInput   :  true,
+                confirmKeys :  [9, 13, 44, 188],
+                tagClass    :  function () {
                     return 'label label-default';
                 }
             });
 
             this.ui.tagsId.tagsinput('input').typeahead({
-                valueKey: 'name',
-                local   : this.options.collectionTags.toJSON(),
-            }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-                that.ui.tagsId.tagsinput('add', datum);
+                name  : 'tagsInput',
+                local : values,
+            }).on('typeahead:selected', $.proxy(function (obj, datum) {
+                that.ui.tagsId.tagsinput('add', datum.value);
                 that.ui.tagsId.tagsinput('input').typeahead('setQuery', '');
             },this.ui.tagsId));
         },

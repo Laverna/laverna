@@ -49,7 +49,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.ui.tagsId.tagsinput({
                 itemText    : 'name',
                 itemValue   : 'id',
-                confirmKeys : [13, 44],
+                // confirmKeys : [13, 44],
                 freeInput   : true,
                 tagClass : function () {
                     return 'label label-default';

@@ -5249,6 +5249,9 @@ body {
 .bootstrap-tagsinput {
   padding: 8px 15px;
 }
+.bootstrap-tagsinput input {
+  width: auto;
+}
 .bootstrap-tagsinput .tag {
   color: white;
 }

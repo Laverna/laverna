@@ -1,5 +1,4 @@
 @import "../bower_components/font-awesome/css/font-awesome.css";
-@import "../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css";
 /*!
  * Bootstrap v3.0.0
  *
@@ -5246,6 +5245,26 @@ body {
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(189, 189, 189, 0.6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(189, 189, 189, 0.6);
+}
+.bootstrap-tagsinput {
+  padding: 8px 15px;
+}
+.bootstrap-tagsinput .tag {
+  color: white;
+}
+.bootstrap-tagsinput .tag [data-role="remove"] {
+  margin-left: 8px;
+  cursor: pointer;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+  content: "x";
+  padding: 0px 2px;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 #sidebar {
   padding-left: 0;

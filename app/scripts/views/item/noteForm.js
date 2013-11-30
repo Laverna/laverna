@@ -44,22 +44,25 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         },
 
         onRender: function() {
+            var that = this;
+
             this.ui.tagsId.tagsinput({
-                itemText: 'name',
-                itemValue: 'id'
-            });
-            this.ui.tagsId.tagsinput('input').typeahead({
-                prefetch: function ( ) {
-                    return this.options.collectionTags.toJSON();
+                itemText    : 'name',
+                itemValue   : 'id',
+                confirmKeys : [13, 44],
+                freeInput   : true,
+                tagClass : function () {
+                    return 'label label-default';
                 }
+            });
+
+            this.ui.tagsId.tagsinput('input').typeahead({
+                valueKey: 'name',
+                local   : this.options.collectionTags.toJSON(),
             }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-                console.log(obj, datum);
-                this.tagsinput('add', datum.value);
-                this.tagsinput('input').typeahead('setQuery', '');
-            }, this.ui.tagsId));; 
-            this.ui.tagsId.tagsinput('add', {id: '3', name: 'bla bla lba'});
-            this.ui.tagsId.tagsinput('add', {id: '4', name: 'bla bla lba'});
-            this.ui.tagsId.tagsinput('add', {id: '5', name: 'bla bla lba'});
+                that.ui.tagsId.tagsinput('add', datum);
+                that.ui.tagsId.tagsinput('input').typeahead('setQuery', '');
+            },this.ui.tagsId));
         },
 
         serializeData: function () {

@@ -108,11 +108,10 @@ require.config({
     waitSeconds: 8
 });
 
-require(['jquery', 'router', 'app'],
-function ($, Router, App) {
+require(['jquery', 'router', 'app'], function ($, Router, App) {
     'use strict';
 
     // App starts here
     new Router();
     App.start();
-);
+});

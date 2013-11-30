@@ -63,7 +63,6 @@ require.config({
         'tagFormTempl'             :  'templates/tags/form.html',
         'tagsSidebarTempl'         :  'templates/tags/sidebarList.html',
         'tagSidebarItemTempl'      :  'templates/tags/sidebarListItem.html'
->>>>>>> master
     },
     shim: {
         underscore: {

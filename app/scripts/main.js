@@ -27,6 +27,7 @@ require.config({
         'pagedown.sanitizer'  : '../bower_components/pagedown-ace/Markdown.Sanitizer',
         checklist             : 'libs/checklist',
         'typeahead'           : '../bower_components/typeahead.js/dist/typeahead.min',
+        'tagsinput'           : '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min',
         // Other              : libraries
         'bootstrap'           : '../bower_components/bootstrap/dist/js/bootstrap.min',
         'prettify'            : '../bower_components/google-code-prettify/src/prettify',

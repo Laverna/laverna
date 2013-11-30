@@ -26,11 +26,10 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
     var Controller = Marionette.Controller.extend({
         /**
          * Initialization
-         */
-        initialize: function() {
+         */ initialize: function() {
             // Fetch notes
             this.collectionNotes = new CollectionNotes();
-            this.collectionNotes.fetch({reset: true});
+            this.collectionNotes.fetch({reset: true}); 
 
             // Fetch notebooks
             this.collectionNotebooks = new CollectionNotebooks();
@@ -170,7 +169,8 @@ function(_, Backbone, Marionette, Modal, App, CollectionNotes, CollectionNoteboo
             this.noteInit();
             var content = new NoteForm({
                 collection: this.collectionNotes,
-                notebooks : this.collectionNotebooks
+                notebooks : this.collectionNotebooks,
+                collectionTags: this.collectionTags
             });
 
             App.content.show(content);

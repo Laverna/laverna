@@ -50,7 +50,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             });
             this.ui.tagsId.tagsinput('input').typeahead({
                 prefetch: function ( ) {
-                    return this.options.collectionTags.toJSON();
+                    return this.options.collectionTags.toJSON()
                 }
             }).bind('typeahead:selected', $.proxy(function (obj, datum) {
                 console.log(obj, datum);

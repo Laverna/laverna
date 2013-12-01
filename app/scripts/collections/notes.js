@@ -46,6 +46,17 @@ define([
         },
 
         /**
+         * Show only tag's notes
+         */
+        getTagNotes: function ( tagId ) {
+            return this.filter(function (note) {
+                if (note.get('tags').length > 0) {
+                    return (_.indexOf(note.get('tags'), tagId) !== -1) && note.get('trash') === 0;
+                }
+            });
+        },
+
+        /**
          * Filter the list of notes that are removed to trash
          */
         getTrashed: function () {

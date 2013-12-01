@@ -69,7 +69,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Notes actions
          * ------------------------------ */
         noteInit: function (notebook, page) {
-            notebook = (notebook === undefined) ? 0 : parseInt(notebook);
+            notebook = (notebook === undefined) ? 0 : notebook;
             this.notebookId = notebook;
             this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;
@@ -139,6 +139,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             }));
         },
 
+        // Show note's content
+        noteTag: function (tag, page, id) {
+            this.notesFilter = 'tagged';
+            this.noteInit(tag, page, id);
+        },
+
         // Add a new note
         noteAdd: function () {
             this.noteInit();
@@ -160,7 +166,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var note = this.collectionNotes.get(id);
             var content = new NoteForm({
                 collection : this.collectionNotes,
-                notebooks  : this.collectionNotebooks,
+                notebooks : this.collectionNotebooks,
+                collectionTags: this.collectionTags,
                 model      : note
             });
 

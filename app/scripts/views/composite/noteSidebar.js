@@ -73,6 +73,10 @@ define([
                     notes = this.collection.search(this.options.searchQuery);
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
+                case 'tagged':
+                    notes = this.collection.getTagNotes(this.options.notebookId);
+                    this.urlPage = '/note/tag/' + this.options.notebookId;
+                    break;
                 default:
                     if (this.options.notebookId !== 0) {
                         notes = this.collection.getNotebookNotes(this.options.notebookId);

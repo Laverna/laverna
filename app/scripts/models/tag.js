@@ -1,14 +1,17 @@
 /*global define*/
 define([
     'underscore',
-    'backbone'
+    'backbone',
+    'backbone.assosiations'
 ], function (_, Backbone) {
     'use strict';
 
     /**
      * Tags model
      */
-    var Tag = Backbone.Model.extend({
+    //var Tag = Backbone.Model.extend({
+    //AssociatedModel
+    var Tag = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
         defaults: {

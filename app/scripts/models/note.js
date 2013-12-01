@@ -38,13 +38,13 @@ define([
                 key            : 'notebookId',
                 collectionType : Notebooks,
                 relatedModel   : Notebook
-            },
+            }/*,
             {
                 type           : Backbone.Many,
                 key            : 'tags',
                 collectionType : Tags,
                 relatedModel   : Tag
-            },
+            },*/
         ],
 
         initialize: function () {
@@ -74,24 +74,8 @@ define([
          */
         setUpdate: function () {
             this.set('updated', Date.now());
-            this.setTags();
+            //this.setTags();
         },
-
-        /**
-         * Generates tags for note
-         */
-        setTags: function () {
-            var tagsId = this.get('tagsId');
-
-            if ( _.isString(tagsId) ) {
-                tagsId = tagsId.split(',');
-                _.forEach(tagsId, function(item, index){
-                    tagsId[index] = $.trim(item);
-                });
-            }
-
-            return tagsId;
-        }
     });
 
     return Model;

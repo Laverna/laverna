@@ -102,7 +102,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             var data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
-                notebookId : parseInt(this.ui.notebookId.val())
+                notebookId : parseInt(this.ui.notebookId.val()),
+                tags       : this.ui.tagsId.tagsinput('items')
             };
 
             var checklist = new Checklist().count(data.content);

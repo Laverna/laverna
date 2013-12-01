@@ -24,10 +24,11 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
     var Controller = Marionette.Controller.extend({
         /**
          * Initialization
-         */ initialize: function() {
+         */
+        initialize: function() {
             // Fetch notes
             this.collectionNotes = new CollectionNotes();
-            this.collectionNotes.fetch({reset: true}); 
+            this.collectionNotes.fetch({reset: true});
 
             // Fetch notebooks
             this.collectionNotebooks = new CollectionNotebooks();
@@ -62,7 +63,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         index: function (notebook, page) {
             this.notesFilter = 'active';
             this.noteInit(notebook, page);
-            console.log('index page');
+            App.content.reset();
         },
 
         /* ------------------------------
@@ -70,7 +71,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * ------------------------------ */
         noteInit: function (notebook, page) {
             notebook = (notebook === undefined) ? 0 : notebook;
-            this.notebookId = notebook;
+            this.notebookId = parseInt(notebook);
             this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;
 

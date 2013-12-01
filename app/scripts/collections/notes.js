@@ -10,11 +10,11 @@ define([
     var Notes = Backbone.Collection.extend({
         model: Note,
 
+        localStorage: new Backbone.LocalStorage('vimarkable.notes'),
+
         comparator: function (model) {
             return - model.get('created');
         },
-
-        localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         /**
          * Filter the list of all notes that are favorite

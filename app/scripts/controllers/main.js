@@ -69,7 +69,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         /* ------------------------------
          * Notes actions
          * ------------------------------ */
-        noteInit: function (notebook, page) {
+        noteInit: function (notebook, page, id) {
             notebook = (notebook === undefined) ? 0 : notebook;
             this.notebookId = parseInt(notebook);
             this.pageN = (isNaN(page)) ? 1 : page;
@@ -80,7 +80,20 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 this.notesFilter = 'active';
             }
 
+            if (id !== undefined) {
+                App.content.show(new NoteItem({
+                    model: this.collectionNotes.get(id),
+                    collection: this.collectionNotes
+                }));
+            }
+
             this.trigger('notes.shown');
+        },
+
+        // Show note's content
+        noteShow: function (notebook, page, id) {
+            this.notesFilter = 'active';
+            this.noteInit(notebook, page, id);
         },
 
         // Search specific note
@@ -88,56 +101,18 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.notesFilter = 'search';
             this.searchQuery = query;
             this.noteInit(0, page, id);
-
-            if (id !== undefined) {
-                App.content.show(new NoteItem({
-                    model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes
-                }));
-            }
         },
 
         // Show favorite notes
         noteFavorite: function (page, id) {
             this.notesFilter = 'favorite';
             this.noteInit(0, page, id);
-
-            if (id !== undefined) {
-                App.content.show(new NoteItem({
-                    model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes
-                }));
-            }
         },
 
         // Show notes which is deleted
         noteTrashed: function (page, id) {
             this.notesFilter = 'trashed';
             this.noteInit(0, page, id);
-
-            if (id !== undefined) {
-                App.content.show(new NoteItem({
-                    model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes
-                }));
-            }
-        },
-
-        // Show note's content
-        noteShow: function (notebook, page, id) {
-            this.notesFilter = 'active';
-
-            if (id !== undefined) {
-                this.noteInit(notebook, page, id);
-            } else {
-                id = notebook;
-                this.noteInit(0, page, id);
-            }
-
-            App.content.show(new NoteItem({
-                model: this.collectionNotes.get(id),
-                collection: this.collectionNotes
-            }));
         },
 
         // Show note's content

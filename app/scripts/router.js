@@ -10,6 +10,9 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'note/edit/:id'                     :  'noteEdit',
             'note/remove/:id'                   :  'noteRemove',
             'note/show/:id'                     :  'noteShow',
+            // Tags notes                       :
+            'note/tag/:tag/p:page'              :  'noteTag',
+            'note/tag/:tag/p:page/show/:id'     :  'noteTag',
             // Search                           :
             'note/search/:query/p:page'         :  'noteSearch',
             'note/search/:query/p:page/show/:id':  'noteSearch',
@@ -19,9 +22,6 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             // Trashed notes                    :
             'note/trashed/p:page'               :  'noteTrashed',
             'note/trashed/p:page/show/:id'      :  'noteTrashed',
-            // Tags notes                       :
-            'note/tag/:tag/p:page'              :  'noteTag',
-            'note/tag/:tag/p:page/show/:id'     :  'noteTag',
             // Notes with pagination            :
             'note/:notebook/p:page/show/:id'    :  'noteShow',
             'note/:notebook/p:page'             :  'index',

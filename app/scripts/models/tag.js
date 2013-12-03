@@ -10,7 +10,6 @@ define([
      * Tags model
      */
     //var Tag = Backbone.Model.extend({
-    //AssociatedModel
     var Tag = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
@@ -29,6 +28,7 @@ define([
                 return errors;
             }
         }
+
     });
 
     return Tag;

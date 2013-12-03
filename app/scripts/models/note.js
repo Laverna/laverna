@@ -4,11 +4,10 @@ define([
     'backbone',
     'models/notebook',
     'collections/notebooks',
-    'models/tag',
     'collections/tags',
     'backbone.assosiations',
     'localStorage'
-], function (_, Backbone, Notebook, Notebooks, Tag, Tags) {
+], function (_, Backbone, Notebook, Notebooks, Tags) {
     'use strict';
 
     /**
@@ -38,13 +37,7 @@ define([
                 key            : 'notebookId',
                 collectionType : Notebooks,
                 relatedModel   : Notebook
-            }/*,
-            {
-                type           : Backbone.Many,
-                key            : 'tags',
-                collectionType : Tags,
-                relatedModel   : Tag
-            },*/
+            }
         ],
 
         initialize: function () {
@@ -55,6 +48,28 @@ define([
                 this.set('created', Date.now());
                 this.setUpdate();
             }
+        },
+
+        /**
+         * Tags
+         */
+        getTags: function () {
+            var tagsCollection = new Tags(),
+                tags = [];
+
+            tagsCollection.fetch();
+
+            if (this.get('tags').length === 0) {
+                return tags;
+            }
+
+            _.each(this.get('tags'), function (id) {
+                if (id !== undefined && id !== '') {
+                    tags.push(tagsCollection.get(id));
+                }
+            });
+
+            return tags;
         },
 
         updateNotebookCount: function (args) {
@@ -74,8 +89,8 @@ define([
          */
         setUpdate: function () {
             this.set('updated', Date.now());
-            //this.setTags();
-        },
+        }
+
     });
 
     return Model;

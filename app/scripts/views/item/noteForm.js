@@ -45,51 +45,42 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
         onRender: function() {
             var that = this,
-                values = [];
+                tagsNames,
+                tags,
+                tagNames;
 
-            _.each(this.options.collectionTags.toJSON(), function (tag) {
-                values.push(tag.name);
-            });
+            tagsNames = this.options.collectionTags.getNames();
 
+            // Tagsinput configuration
             this.ui.tagsId.tagsinput({
                 freeInput   :  true,
-                confirmKeys :  [9, 13, 44, 188],
+                confirmKeys :  [13, 44, 188],
                 tagClass    :  function () {
                     return 'label label-default';
                 }
             });
 
-            this.ui.tagsId.tagsinput('input').typeahead({
-                name  : 'tagsInput',
-                local : values,
-            }).on('typeahead:selected', $.proxy(function (obj, datum) {
-                that.ui.tagsId.tagsinput('add', datum.value);
-                that.ui.tagsId.tagsinput('input').typeahead('setQuery', '');
-            },this.ui.tagsId));
-        },
+            // Typeahead configs
+            this.ui.tagsId.tagsinput('input')
+                .typeahead({
+                    name  : 'tagsInput',
+                    local : tagsNames,
+                })
+                .on('typeahead:selected', $.proxy(function (obj, datum) {
+                    that.ui.tagsId.tagsinput('add', datum.value);
+                    that.ui.tagsId.tagsinput('input').typeahead('setQuery', '');
+                }, this.ui.tagsId));
 
-        serializeData: function () {
-            var data;
-            if (this.model === undefined) {
-                data = {
-                    title: null,
-                    content: null,
-                    notebookId: 0
-                };
-            } else {
-                data = this.model.toJSON();
+            // Tags from existing note
+            if (this.model !== undefined) {
+                tags = this.model.getTags();
+                tagNames = this.options.collectionTags.getNames(tags);
+
+                // Show tags
+                _.each(tagNames, function (tag) {
+                    that.ui.tagsId.tagsinput('add', tag);
+                });
             }
-
-            data.notebooks = this.options.notebooks.toJSON();
-            return data;
-        },
-
-        /**
-         * Save note and redirect
-         */
-        saveRedirect: function (e) {
-            this.save(e);
-            this.redirectToNote();
         },
 
         save: function (e) {
@@ -106,6 +97,10 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
                 tags       : this.ui.tagsId.tagsinput('items')
             };
 
+            // Get tags id
+            data.tags = this.options.collectionTags.getTagsId(data.tags);
+
+            // Tasks
             var checklist = new Checklist().count(data.content);
             data.taskAll = checklist.all;
             data.taskCompleted = checklist.completed;
@@ -155,6 +150,14 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         },
 
         /**
+         * Save note and redirect
+         */
+        saveRedirect: function (e) {
+            this.save(e);
+            this.redirectToNote();
+        },
+
+        /**
          * Redirect to note
          */
         redirect: function () {
@@ -175,23 +178,13 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             Backbone.history.navigate('/note/show/' + id, true);
         },
 
-        templateHelpers: function() {
-            return {
-                isActive: function (id, notebookId) {
-                    var selected = '';
-                    if (notebookId && id === notebookId.id) {
-                        selected = ' selected="selected"';
-                    }
-                    return selected;
-                }
-            };
-        },
-
         /**
          * Pagedown-ace editor
          */
         pagedownRender: function () {
-            var converter, editor;
+            var that = this,
+                converter,
+                editor;
 
             converter = new Markdown.Converter();
             editor = new Markdown.Editor(converter);
@@ -239,8 +232,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Whenever a change happens inside the ACE editor, update the note
             this.editor.on('change', function () {
-                if (this.model !== undefined) {
-                    this.$('.form-horizontal').trigger('submit');
+                if (that.model !== undefined) {
+                    that.$('.form-horizontal').trigger('submit');
                 }
             });
 
@@ -255,7 +248,33 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
                     wmdBar.removeClass('wmd-bar-fixed');
                 }
             });
+        },
+
+        serializeData: function () {
+            var data;
+            if (this.model === undefined) {
+                data = new this.collection.model().toJSON();
+            } else {
+                data = this.model.toJSON();
+                this.model.trigger('shown');
+            }
+
+            data.notebooks = this.options.notebooks.toJSON();
+            return data;
+        },
+
+        templateHelpers: function() {
+            return {
+                isActive: function (id, notebookId) {
+                    var selected = '';
+                    if (notebookId && id === notebookId.id) {
+                        selected = ' selected="selected"';
+                    }
+                    return selected;
+                }
+            };
         }
+
     });
 
     return View;

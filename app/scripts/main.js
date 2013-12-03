@@ -94,7 +94,7 @@ require.config({
         },
         'pagedown-ace': ['../bower_components/pagedown-ace/Markdown.Converter'],
         'pagedown-extra': [
-            '../bower_components/pagedown-ace/Markdown.Sanitizer',
+            // '../bower_components/pagedown-ace/Markdown.Sanitizer',
             'pagedown-ace'
         ],
         prettify: {

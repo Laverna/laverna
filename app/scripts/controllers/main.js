@@ -90,12 +90,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown');
         },
 
-        // Show note's content
-        noteShow: function (notebook, page, id) {
-            this.notesFilter = 'active';
-            this.noteInit(notebook, page, id);
-        },
-
         // Search specific note
         noteSearch: function (query, page, id) {
             this.notesFilter = 'search';
@@ -119,6 +113,23 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         noteTag: function (tag, page, id) {
             this.notesFilter = 'tagged';
             this.noteInit(tag, page, id);
+        },
+
+        // Show note's content
+        noteShow: function (notebook, page, id) {
+            this.notesFilter = 'active';
+
+            if (id !== undefined) {
+                this.noteInit(notebook, page);
+            } else {
+                id = notebook;
+                this.noteInit(0, page);
+            }
+
+            App.content.show(new NoteItem({
+                model: this.collectionNotes.get(id),
+                collection: this.collectionNotes
+            }));
         },
 
         // Add a new note

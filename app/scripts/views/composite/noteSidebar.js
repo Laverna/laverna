@@ -74,7 +74,6 @@ define([
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
                 case 'tagged':
-                    console.log('tagged');
                     notes = this.collection.getTagNotes(this.options.notebookId);
                     this.urlPage = '/note/tag/' + this.options.notebookId;
                     break;

@@ -252,6 +252,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             sidebar.tags.show(tags);
 
             App.content.reset();
+            document.title = 'List of notebooks and tags';
         },
 
         /**

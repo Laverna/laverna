@@ -10,7 +10,6 @@
     "backbone"             :  "~1.1.0",
     "marionette"           :  "~1.2.3",
     "backbone.localStorage":  "~1.1.7",
-    "backbone-relational"  :  "~0.8.6",
     "backbone-associations":  "~0.5.4",
     "mousetrap"            :  "~1.4.5",
     "backbone.mousetrap"   :  "git@github.com:elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",

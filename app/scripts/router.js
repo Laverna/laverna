@@ -9,7 +9,7 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'note/add'                          :  'noteAdd',
             'note/edit/:id'                     :  'noteEdit',
             'note/remove/:id'                   :  'noteRemove',
-            'note/show/:id'                     :  'noteShow',
+            'note/show/:id'                     :  'noteNotebook',
             // Search                           :
             'note/search/:query/p:page'         :  'noteSearch',
             'note/search/:query/p:page/show/:id':  'noteSearch',
@@ -23,8 +23,8 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             'note/tag/:tag/p:page'              :  'noteTag',
             'note/tag/:tag/p:page/show/:id'     :  'noteTag',
             // Notes with pagination            :
-            'note/:notebook/p:page/show/:id'    :  'noteShow',
             'note/:notebook/p:page'             :  'index',
+            'note/:notebook/p:page/show/:id'    :  'noteNotebook',
             // Notebooks routes                 :
             'notebooks'                         :  'notebooks',
             'notebook/add'                      :  'notebookAdd',

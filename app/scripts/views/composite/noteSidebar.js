@@ -74,10 +74,11 @@ define([
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
                 case 'tagged':
-                    notes = this.collection.getTagNotes(this.options.notebookId);
-                    this.urlPage = '/note/tag/' + this.options.notebookId;
+                    notes = this.collection.getTagNotes(parseInt(this.options.tagId));
+                    this.urlPage = '/note/tag/' + this.options.tagId;
                     break;
                 default:
+                    this.options.notebookId = parseInt(this.options.notebookId);
                     if (this.options.notebookId !== 0) {
                         notes = this.collection.getNotebookNotes(this.options.notebookId);
                     } else {

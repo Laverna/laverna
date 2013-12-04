@@ -52,6 +52,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             if (args.notebookId !== undefined) {
                 args.notebook = this.collectionNotebooks.get(args.notebookId);
+            } else {
+                args.notebookId = 0;
             }
 
             App.sidebar.show(new NoteSidebar(args));
@@ -154,7 +156,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Add a new note
          */
         noteAdd: function () {
-            this.noteInit();
+            this.showAllNotes({filter : 'active', page : 0});
+
             var content = new NoteForm({
                 collection: this.collectionNotes,
                 notebooks : this.collectionNotebooks,
@@ -170,10 +173,14 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Edit an existing note
          */
         noteEdit: function (id) {
-            this.noteInit();
+            var note, content;
 
-            var note = this.collectionNotes.get(id);
-            var content = new NoteForm({
+            // Show notes list in sidebar
+            this.showAllNotes({filter : 'active', page : 0});
+
+            // Edit form
+            note = this.collectionNotes.get(id);
+            content = new NoteForm({
                 collection : this.collectionNotes,
                 notebooks : this.collectionNotebooks,
                 collectionTags: this.collectionTags,

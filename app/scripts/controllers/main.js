@@ -16,7 +16,7 @@ define([
     'notebookSidebar',
     'notebookForm',
     'tagsSidebar',
-    'tagForm',
+    'tagForm'
 ],
 function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
@@ -85,7 +85,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         noteNotebook: function (notebook, page, id) {
             var title = 'Inbox';
-            notebook = parseInt(notebook);
+            notebook = Math.floor(notebook);
 
             if (id === undefined) {
                 id = notebook;

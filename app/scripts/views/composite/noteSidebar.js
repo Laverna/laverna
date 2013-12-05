@@ -82,7 +82,6 @@ define([
                     this.urlPage = '/note/tag/' + this.options.tagId;
                     break;
                 default:
-                    this.options.notebookId = parseInt(this.options.notebookId);
                     if (this.options.notebookId !== 0) {
                         notes = this.collection.getNotebookNotes(this.options.notebookId);
                     } else {

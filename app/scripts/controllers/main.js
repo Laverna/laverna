@@ -48,6 +48,10 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         showAllNotes: function (args) {
             var notes = this.collectionNotes.clone();
 
+            if (args.notebookId === undefined) {
+                args.notebookId = 0;
+            }
+
             args = _.extend(args, {
                 collection: notes
             });
@@ -164,7 +168,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Add a new note
          */
         noteAdd: function () {
-            this.showAllNotes({filter : 'active', page : 0});
+            this.showAllNotes({filter : 'active', page : 0, title : 'Inbox'});
 
             var content = new NoteForm({
                 collection: this.collectionNotes,
@@ -184,7 +188,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var note, content;
 
             // Show notes list in sidebar
-            this.showAllNotes({filter : 'active', page : 0});
+            this.showAllNotes({filter : 'active', page : 0, title : 'Inbox'});
 
             // Edit form
             note = this.collectionNotes.get(id);

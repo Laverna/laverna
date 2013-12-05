@@ -19,6 +19,7 @@ require.config({
         tagsCollection        :  '../../test/spec/Collection/tags',
         collectionTest        :  '../../test/spec/Collection/notes',
         configModel           :  '../../test/spec/Models/config',
+        configCollection      :  '../../test/spec/Collection/configs',
     },
     shim: {
         underscore: {
@@ -45,7 +46,8 @@ require([
     'collectionTest',
     'notebooksCollection',
     'tagsCollection',
-    'configModel'
+    'configModel',
+    'configCollection'
 ], function () {
     'use strict';
 });

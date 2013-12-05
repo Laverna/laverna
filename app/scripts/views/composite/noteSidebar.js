@@ -52,6 +52,10 @@ define([
         },
 
         initialize: function () {
+            // Set page title
+            document.title = this.options.title;
+
+            // Options to itemView
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
             this.itemViewOptions.filter = this.options.filter;
@@ -162,7 +166,7 @@ define([
 
         serializeData: function () {
             var viewData = {
-                notebook    : this.options.notebook,
+                title       : this.options.title,
                 nextPage    : this.nextPage,
                 nextNote    : this.nextNote,
                 prevPage    : this.prevPage,
@@ -185,20 +189,6 @@ define([
                     }
 
                     return '#' + url;
-                },
-                getTitle: function (notebook) {
-                    var title = 'Inbox';
-                    if (notebook) {
-                        title = notebook.get('name');
-                    }
-                    return title;
-                },
-                getLink: function (notebook) {
-                    var link = '/';
-                    if (notebook) {
-                        link += 'note/' + notebook.get('id') + '/p1';
-                    }
-                    return link;
                 }
             };
         }

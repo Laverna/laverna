@@ -40,9 +40,11 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.collectionTags.fetch({reset: true});
         },
 
-        /**
-         * Show list of notes
-         */
+        /* ------------------------------
+         * Notes actions
+         * ------------------------------ */
+
+        // Shows notes list in sidebar
         showAllNotes: function (args) {
             var notes = this.collectionNotes.clone();
 
@@ -50,20 +52,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 collection: notes
             });
 
-            if (args.notebookId !== undefined) {
-                args.notebook = this.collectionNotebooks.get(args.notebookId);
-            } else {
-                args.notebookId = 0;
-            }
-
             App.sidebar.show(new NoteSidebar(args));
         },
 
-        /* ------------------------------
-         * Notes actions
-         * ------------------------------ */
-
-        // Index page
+        /**
+         * Index page
+         */
         index: function (notebook, page) {
             this.noteNotebook(notebook, page, 0);
         },
@@ -86,16 +80,24 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show notes
          */
         noteNotebook: function (notebook, page, id) {
+            var title = 'Inbox';
+            notebook = parseInt(notebook);
+
             if (id === undefined) {
                 id = notebook;
                 notebook = 0;
+            }
+
+            if (notebook !== 0) {
+                title = this.collectionNotebooks.get(notebook).get('name');
             }
 
             // Show notes list in sidebar
             this.showAllNotes({
                 filter     : 'active',
                 page       : page,
-                notebookId : notebook
+                notebookId : notebook,
+                title      : title
             });
 
             // Show note
@@ -109,7 +111,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.showAllNotes({
                 filter     : 'search',
                 searchQuery: query,
-                page       : page
+                page       : page,
+                title      : 'Search'
             });
 
             this.showNote(id);
@@ -121,7 +124,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         noteFavorite: function (page, id) {
             this.showAllNotes({
                 filter     : 'favorite',
-                page       : page
+                page       : page,
+                title      : 'Favorite notes'
             });
 
             this.showNote(id);
@@ -133,7 +137,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         noteTrashed: function (page, id) {
             this.showAllNotes({
                 filter     : 'trashed',
-                page       : page
+                page       : page,
+                title      : 'Removed notes'
             });
 
             this.showNote(id);
@@ -143,10 +148,13 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show notes which is tagged with :tag
          */
         noteTag: function (tag, page, id) {
+            tag = this.collectionTags.get(tag);
+
             this.showAllNotes({
                 filter     : 'tagged',
-                tagId      : tag,
-                page       : page
+                tagId      : tag.get('id'),
+                page       : page,
+                title      : 'Tag - ' + tag.get('name')
             });
 
             this.showNote(id);

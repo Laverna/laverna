@@ -16,13 +16,12 @@ define([
     'notebookSidebar',
     'notebookForm',
     'tagsSidebar',
-    'tagForm'
+    'tagForm',
 ],
 function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
-
         /**
          * Initialization
          */
@@ -38,142 +37,104 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             // Fetch tags
             this.collectionTags = new CollectionTags();
             this.collectionTags.fetch({reset: true});
+
+            this.on('notes.shown', this.showAllNotes);
         },
 
-        /* ------------------------------
-         * Notes actions
-         * ------------------------------ */
-        // Shows notes list in sidebar
-        showAllNotes: function (args) {
+        /**
+         * Show list of notes
+         */
+        showAllNotes: function () {
             var notes = this.collectionNotes.clone();
 
-            if (args.notebookId === undefined) {
-                args.notebookId = 0;
-            }
-
-            args = _.extend(args, {
-                collection: notes
-            });
-
-            App.sidebar.show(new NoteSidebar(args));
+            App.sidebar.show(new NoteSidebar({
+                collection : notes,
+                lastPage   : this.pageN,
+                notebookId : this.notebookId,
+                notebook   : this.collectionNotebooks.get(this.notebookId),
+                searchQuery: this.searchQuery,
+                filter     : this.notesFilter
+            }));
         },
 
         /**
          * Index page
          */
         index: function (notebook, page) {
-            this.noteNotebook(notebook, page, 0);
+            this.notesFilter = 'active';
+            this.noteInit(notebook, page);
+            App.content.reset();
         },
 
-        /**
-         * Show notes content
-         */
-        showNote: function (id) {
-            if (id !== undefined && id !== 0) {
+        /* ------------------------------
+         * Notes actions
+         * ------------------------------ */
+        noteInit: function (notebook, page, id) {
+            notebook = (notebook === undefined) ? 0 : notebook;
+            this.notebookId = parseInt(notebook);
+            this.pageN = (isNaN(page)) ? 1 : page;
+            this.SidebarView = NoteSidebar;
+
+            // Default filter
+            if (this.notesFilter === undefined) {
+                this.notesFilter = 'active';
+            }
+
+            this.trigger('notes.shown');
+
+            if (id !== undefined) {
                 App.content.show(new NoteItem({
                     model: this.collectionNotes.get(id),
                     collection: this.collectionNotes
                 }));
-            } else {
-                App.content.reset();
             }
         },
 
-        /**
-         * Show notes
-         */
-        noteNotebook: function (notebook, page, id) {
-            var title = 'Inbox';
-
-            if (notebook === undefined) {
-                notebook = 0;
-            } else {
-                notebook = Math.floor(notebook);
-            }
-
-            if (id === undefined) {
-                id = notebook;
-                notebook = 0;
-            }
-
-            if (notebook !== 0) {
-                title = this.collectionNotebooks.get(notebook).get('name');
-            }
-
-            // Show notes list in sidebar
-            this.showAllNotes({
-                filter     : 'active',
-                page       : page,
-                notebookId : notebook,
-                title      : title
-            });
-
-            // Show note
-            this.showNote(id);
-        },
-
-        /**
-         * Search page
-         */
+        // Search specific note
         noteSearch: function (query, page, id) {
-            this.showAllNotes({
-                filter     : 'search',
-                searchQuery: query,
-                page       : page,
-                title      : 'Search'
-            });
-
-            this.showNote(id);
+            this.notesFilter = 'search';
+            this.searchQuery = query;
+            this.noteInit(0, page, id);
         },
 
-        /**
-         * Show only favorite notes
-         */
+        // Show favorite notes
         noteFavorite: function (page, id) {
-            this.showAllNotes({
-                filter     : 'favorite',
-                page       : page,
-                title      : 'Favorite notes'
-            });
-
-            this.showNote(id);
+            this.notesFilter = 'favorite';
+            this.noteInit(0, page, id);
         },
 
-        /**
-         * Show notes which is deleted
-         */
+        // Show notes which is deleted
         noteTrashed: function (page, id) {
-            this.showAllNotes({
-                filter     : 'trashed',
-                page       : page,
-                title      : 'Removed notes'
-            });
-
-            this.showNote(id);
+            this.notesFilter = 'trashed';
+            this.noteInit(0, page, id);
         },
 
-        /**
-         * Show notes which is tagged with :tag
-         */
+        // Show note's content
         noteTag: function (tag, page, id) {
-            tag = this.collectionTags.get(tag);
-
-            this.showAllNotes({
-                filter     : 'tagged',
-                tagId      : tag.get('id'),
-                page       : page,
-                title      : 'Tag - ' + tag.get('name')
-            });
-
-            this.showNote(id);
+            this.notesFilter = 'tagged';
+            this.noteInit(tag, page, id);
         },
 
-        /**
-         * Add a new note
-         */
-        noteAdd: function () {
-            this.showAllNotes({filter : 'active', page : 0, title : 'Inbox'});
+        // Show note's content
+        noteShow: function (notebook, page, id) {
+            this.notesFilter = 'active';
 
+            if (id !== undefined) {
+                this.noteInit(notebook, page);
+            } else {
+                id = notebook;
+                this.noteInit(0, page);
+            }
+
+            App.content.show(new NoteItem({
+                model: this.collectionNotes.get(id),
+                collection: this.collectionNotes
+            }));
+        },
+
+        // Add a new note
+        noteAdd: function () {
+            this.noteInit();
             var content = new NoteForm({
                 collection: this.collectionNotes,
                 notebooks : this.collectionNotebooks,
@@ -185,18 +146,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             content.trigger('shown');
         },
 
-        /**
-         * Edit an existing note
-         */
+        // Edit an existing note
         noteEdit: function (id) {
-            var note, content;
+            this.noteInit();
 
-            // Show notes list in sidebar
-            this.showAllNotes({filter : 'active', page : 0, title : 'Inbox'});
-
-            // Edit form
-            note = this.collectionNotes.get(id);
-            content = new NoteForm({
+            var note = this.collectionNotes.get(id);
+            var content = new NoteForm({
                 collection : this.collectionNotes,
                 notebooks : this.collectionNotebooks,
                 collectionTags: this.collectionTags,
@@ -208,9 +163,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             content.trigger('shown');
         },
 
-        /**
-         * Remove Note
-         */
+        // Remove Note
         noteRemove: function (id) {
             var note, result, i, prev;
             var url = '/note/' + this.notebookId + '/p' + this.pageN;
@@ -268,12 +221,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             sidebar.tags.show(tags);
 
             App.content.reset();
-            document.title = 'List of notebooks and tags';
         },
 
-        /**
-         * Add new notebook
-         */
+        // Add new notebook
         notebookAdd: function () {
             var content = new NotebookForm({
                 collection: this.collectionNotebooks
@@ -282,9 +232,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
-        /**
-         * Edit existing notebook
-         */
+        // Edit existing notebook
         notebookEdit: function (id) {
             var notebook = this.collectionNotebooks.get(id),
                 content = new NotebookForm({
@@ -295,9 +243,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
-        /**
-         * Remove notebook
-         */
+        // Remove notebook
         notebookRemove: function (id) {
             var n = this.collectionNotebooks.get(id);
             n.destroy();
@@ -315,9 +261,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
-        /**
-         * Edit tag
-         */
         tagEdit: function(id) {
             var content = new TagForm({
                 collection: this.collectionTags,
@@ -326,9 +269,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
-        /**
-         * Remove tag
-         */
         tagRemove: function (id) {
             var model = this.collectionTags.get(id);
             model.destroy();

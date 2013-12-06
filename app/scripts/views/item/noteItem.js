@@ -29,7 +29,8 @@ define([
 
         events: {
             'click .favorite': 'favorite',
-            'click .task :checkbox': 'toggleTask'
+            'click .task :checkbox': 'toggleTask',
+            'click #showSettings'  : 'showSettings'
         },
 
         keyboardEvents: {
@@ -112,6 +113,11 @@ define([
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
             this.ui.progress.css({width: percent + '%'});
             this.ui.percent.html(percent + '%');
+        },
+
+        showSettings: function (e) {
+            e.preventDefault();
+            this.options.app.execute('show settings');
         },
 
         templateHelpers: function() {

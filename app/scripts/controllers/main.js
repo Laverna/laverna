@@ -15,10 +15,8 @@ define([
     'notebookLayout',
     'notebookSidebar',
     'notebookForm',
-    'tagsSidebar',
-    'tagForm'
-],
-function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
+    'tagsSidebar', 'tagForm'
+], function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -73,7 +71,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             if (id !== undefined && id !== 0) {
                 App.content.show(new NoteItem({
                     model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes
+                    collection: this.collectionNotes,
+                    app: App
                 }));
             } else {
                 App.content.reset();
@@ -93,7 +92,10 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             }
 
             if (notebook !== 0) {
-                title = this.collectionNotebooks.get(notebook).get('name');
+                var notebookModel = this.collectionNotebooks.get(notebook);
+                if (notebookModel != undefined) {
+                    title = notebookModel.get('name');
+                }
             }
 
             // Show notes list in sidebar

@@ -49,6 +49,7 @@ require.config({
         'tagForm'                  :  'views/item/tagForm',
         'tagsSidebar'              :  'views/composite/tags',
         'tagSidebarItem'           :  'views/item/tagSidebarItem',
+        'configsView'              :  'views/item/configs',
         // Templates               :  here
         'modalTempl'               :  'templates/modal.html',
         'noteFormTempl'            :  'templates/notes/form.html',
@@ -62,7 +63,8 @@ require.config({
         'notebookFormTempl'        :  'templates/notebooks/form.html',
         'tagFormTempl'             :  'templates/tags/form.html',
         'tagsSidebarTempl'         :  'templates/tags/sidebarList.html',
-        'tagSidebarItemTempl'      :  'templates/tags/sidebarListItem.html'
+        'tagSidebarItemTempl'      :  'templates/tags/sidebarListItem.html',
+        'configsTempl'             :  'templates/configs/list.html'
     },
     shim: {
         underscore: {

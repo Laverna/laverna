@@ -56,7 +56,7 @@ define([
             document.title = this.options.title;
 
             // Options to itemView
-            this.itemViewOptions.page = this.options.lastPage;
+            this.itemViewOptions.page = this.options.page;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
             this.itemViewOptions.filter = this.options.filter;
             this.itemViewOptions.notebookId = this.options.notebookId;
@@ -128,8 +128,8 @@ define([
         pagination: function (notes) {
             this.pageCount = this.collection.length;
 
-            if (this.options.lastPage !== undefined) {
-                this.lastPage  = parseInt(this.options.lastPage, null);
+            if (this.options.page !== undefined) {
+                this.lastPage  = parseInt(this.options.page, null);
             } else {
                 this.lastPage = 1;
             }

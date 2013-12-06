@@ -175,7 +175,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          */
         redirectToNote: function () {
             var id = this.model.get('id');
-            Backbone.history.navigate('/note/show/' + id, true);
+            Backbone.history.navigate('/note/0/p0/show/' + id, true);
         },
 
         /**

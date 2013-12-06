@@ -1,5 +1,5 @@
 /*global define */
-define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Controller){
+define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Controller) {
     'use strict';
 
     var Router = Marionette.AppRouter.extend({

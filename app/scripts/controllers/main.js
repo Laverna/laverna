@@ -43,7 +43,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         /* ------------------------------
          * Notes actions
          * ------------------------------ */
-
         // Shows notes list in sidebar
         showAllNotes: function (args) {
             var notes = this.collectionNotes.clone();
@@ -85,7 +84,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         noteNotebook: function (notebook, page, id) {
             var title = 'Inbox';
-            notebook = Math.floor(notebook);
+
+            if (notebook === undefined) {
+                notebook = 0;
+            } else {
+                notebook = Math.floor(notebook);
+            }
 
             if (id === undefined) {
                 id = notebook;

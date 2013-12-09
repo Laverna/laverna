@@ -12,6 +12,7 @@
     // Navbar in sidebar
     .navbar .addlink {
         color: #FFF;
+        margin-right: 15px;
         &:hover, &:focus {
             border-color: lighten(@brand-danger, 5%);
             background: darken(@brand-danger, 5%);
@@ -47,7 +48,7 @@ a.list-group-item {
 //
 // Notes list
 //
-.notes-list {
+#sidebar .notes-list {
     .list-group {
         margin-bottom: 0;
         &:last-child .list-group-item {
@@ -61,7 +62,7 @@ a.list-group-item {
         border-left-width: 5px;
         border-right-width: 0;
         border-left-color: transparent;
-        &.active {
+        &.active, &.active:hover {
             margin-left: 0;
             border-left: 5px solid darken(#00A693, 10%);
             .favorite{

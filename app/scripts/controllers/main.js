@@ -16,7 +16,7 @@ define([
     'notebookSidebar',
     'notebookForm',
     'tagsSidebar',
-    'tagForm',
+    'tagForm'
 ],
 function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
@@ -71,7 +71,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * ------------------------------ */
         noteInit: function (notebook, page, id) {
             notebook = (notebook === undefined) ? 0 : notebook;
-            this.notebookId = parseInt(notebook);
+            this.notebookId = Math.floor(notebook);
             this.pageN = (isNaN(page)) ? 1 : page;
             this.SidebarView = NoteSidebar;
 
@@ -87,6 +87,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                     model: this.collectionNotes.get(id),
                     collection: this.collectionNotes
                 }));
+            } else {
+                App.content.reset();
             }
         },
 

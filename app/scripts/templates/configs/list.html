@@ -1,18 +1,14 @@
-<div class="modal-content">
+<div class="modal-content modal-settings">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">
-            <a class="btn btn-danger ok" href="#">Save</a>
-            <a class="btn btn-default cancelBtn" href="#">Cancel</a>
-        </h4>
+        <h3 class="modal-title">Settings</h3>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#basic" data-toggle="tab">Basic</a></li>
+            <li><a href="#shortcuts" data-toggle="tab">Shortcuts</a></li>
+        </ul>
     </div>
     <div class="modal-body">
-        <form action="#" class="form-horizontal pretty-form" method="post">
-            <ul class="nav nav-tabs">
-                <li><a href="#basic" data-toggle="tab">Basic</a></li>
-                <li><a href="#shortcuts" data-toggle="tab">Shortcuts</a></li>
-            </ul>
-
+        <form action="#" class="form-horizontal" method="post">
             <div class="tab-content">
                 <div class="tab-pane active" id="basic">
                     <div class="form-group">
@@ -44,61 +40,65 @@
                     <strong>Navigation</strong>
                     <div class="form-group">
                         <label class="control-label">Top</label>
-                        <input type="text" value="k" name="shortcuts-navigation-top"/>
+                        <input class="form-control" type="text" value="k" name="shortcuts-navigation-top"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Bottom</label>
-                        <input type="text" value="j" name="shortcuts-navigation-bottom"/>
+                        <input class="form-control" type="text" value="j" name="shortcuts-navigation-bottom"/>
                     </div>
                     <strong>Jumping</strong>
                     <div class="form-group">
                         <label class="control-label">Go to inbox</label>
-                        <input type="text" value="g i" name="shortcuts-jumping-inbox"/>
+                        <input class="form-control" type="text" value="g i" name="shortcuts-jumping-inbox"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Go to notebook list</label>
-                        <input type="text" value="g n" name="shortcuts-jumping-notebook-list"/>
+                        <input class="form-control" type="text" value="g n" name="shortcuts-jumping-notebook-list"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Go to favorite notes</label>
-                        <input type="text" value="g f" name="shortcuts-jumping-favorite-notes"/>
+                        <input class="form-control" type="text" value="g f" name="shortcuts-jumping-favorite-notes"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Go to removed notes</label>
-                        <input type="text" value="g t" name="shortcuts-jumping-removed-notes"/>
+                        <input class="form-control" type="text" value="g t" name="shortcuts-jumping-removed-notes"/>
                     </div>
                     <strong>Actions</strong>
                     <div class="form-group">
                         <label class="control-label">Edit</label>
-                        <input type="text" value="e" name="shortcuts-actions-edit"/>
+                        <input class="form-control" type="text" value="e" name="shortcuts-actions-edit"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Open</label>
-                        <input type="text" value="o" name="shortcuts-actions-open"/>
+                        <input class="form-control" type="text" value="o" name="shortcuts-actions-open"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Remove</label>
-                        <input type="text" value="#" name="shortcuts-actions-remove"/>
+                        <input class="form-control" type="text" value="#" name="shortcuts-actions-remove"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Rotate Star</label>
-                        <input type="text" value="f" name="shortcuts-actions-rotate-star"/>
+                        <input class="form-control" type="text" value="f" name="shortcuts-actions-rotate-star"/>
                     </div>
                     <strong>Application</strong>
                     <div class="form-group">
                         <label class="control-label">Create new note</label>
-                        <input type="text" value="c" name="shortcuts-application-create-new-note"/>
+                        <input class="form-control" type="text" value="c" name="shortcuts-application-create-new-note"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Search note</label>
-                        <input type="text" value="/" name="shortcuts-application-search-note"/>
+                        <input class="form-control" type="text" value="/" name="shortcuts-application-search-note"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Keyboard help</label>
-                        <input type="text" value="?" name="shortcuts-application-keyboard-help"/>
+                        <input class="form-control" type="text" value="?" name="shortcuts-application-keyboard-help"/>
                     </div>
                 </div>
             </div>
         </form>
+    </div><!-- /.modal-body -->
+    <div class="modal-footer">
+        <a class="btn btn-danger ok" href="#">Save</a>
+        <a class="btn btn-default cancelBtn" href="#">Cancel</a>
     </div>
 </div>

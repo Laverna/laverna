@@ -5104,11 +5104,21 @@ body {
 .modal-body {
   padding-top: 0;
 }
-.modal-body .form-group {
+.modal-body .pretty-form .form-group {
   margin-left: -19px;
   margin-right: -19px;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+.modal-settings .modal-header {
+  padding-bottom: 0;
+}
+.modal-settings .modal-header .nav-tabs {
+  margin: 10px 0 0;
+  border-bottom: none;
+}
+.modal-settings .modal-body {
+  padding-top: 20px;
 }
 .m0 {
   margin: 0;

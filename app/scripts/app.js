@@ -26,13 +26,5 @@ define([
     App.on('initialize:after', function() {
         Backbone.history.start({pushState: false});
     });
-
-    App.commands.setHandler('show settings', function () {
-        console.log(ConfigsView);
-        var configsView = new ConfigsView({
-        });
-        App.model.show(configsView);
-    });
-
     return App;
 });

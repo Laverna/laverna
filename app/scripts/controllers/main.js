@@ -8,6 +8,7 @@ define([
     'collections/notes',
     'collections/notebooks',
     'collections/tags',
+    'collections/configs',
     // Views
     'noteForm',
     'noteItem',
@@ -18,7 +19,7 @@ define([
     'tagsSidebar',
     'tagForm',
 ],
-function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
+function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -37,6 +38,10 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             // Fetch tags
             this.collectionTags = new CollectionTags();
             this.collectionTags.fetch({reset: true});
+
+            // Fetch configs
+            this.collectionConfigs = new CollectionConfigs();
+            this.collectionConfigs.fetch({reset: true});
 
             this.on('notes.shown', this.showAllNotes);
         },
@@ -88,7 +93,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                     collection: this.collectionNotes,
                     app: App
                 }));
-<<<<<<< HEAD
             } else {
                 App.content.reset();
             }
@@ -111,8 +115,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 if (notebookModel != undefined) {
                     title = notebookModel.get('name');
                 }
-=======
->>>>>>> master
             }
         },
 
@@ -154,7 +156,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             App.content.show(new NoteItem({
                 model: this.collectionNotes.get(id),
-                collection: this.collectionNotes
+                collection: this.collectionNotes,
+                configs: this.collectionConfigs
             }));
         },
 

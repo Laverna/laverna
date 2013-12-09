@@ -7,9 +7,11 @@ define([
     'text!noteItemTempl',
     'checklist',
     'prettify',
+    'app',
+    'configsView',
     'backbone.mousetrap',
     'pagedown-extra'
-], function (_, Backbone, Marionette, Template, Checklist, prettify) {
+], function (_, Backbone, Marionette, Template, Checklist, prettify, App, ConfigsView) {
     'use strict';
 
     // Intergrating backbone.mousetrap in marionette
@@ -117,7 +119,9 @@ define([
 
         showSettings: function (e) {
             e.preventDefault();
-            this.options.app.execute('show settings');
+            App.modal.show(new ConfigsView({
+                collection: this.options.configs
+            }));
         },
 
         templateHelpers: function() {

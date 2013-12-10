@@ -43,6 +43,10 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.collectionConfigs = new CollectionConfigs();
             this.collectionConfigs.fetch({reset: true});
 
+            if (this.collectionConfigs.length === 0) {
+                this.collectionConfigs.firstStart();
+            }
+
             this.on('notes.shown', this.showAllNotes);
         },
 

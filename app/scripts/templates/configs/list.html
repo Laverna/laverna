@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                              <label>
-                                 <input type="checkbox" name="encryption" value="0">
+                                 <input type="checkbox" name="encryption" <% if(models['encryption'] === 1) {%> checked<%}%> >
                                  Encryption
                              </label>
                         </div>
@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                              <label>
-                                 <input type="checkbox" name="cloud-storage" value="0">
+                                 <input type="checkbox" name="cloud-storage" <% if(models['cloud-storage'] === 1) {%> checked<%}%> >
                                  Cloud Storage
                              </label>
                         </div>
@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                              <label>
-                                 <input type="checkbox" name="pagination-configs" value="0">
+                                 <input type="checkbox" name="pagination-configs" <% if(models['pagination-configs'] === 1) {%> checked<%}%> >
                                  Pagination Configs
                              </label>
                         </div>
@@ -40,58 +40,58 @@
                     <strong>Navigation</strong>
                     <div class="form-group">
                         <label class="control-label">Top</label>
-                        <input class="form-control" type="text" value="k" name="shortcuts-navigation-top"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-navigation-top'] %>" name="shortcuts-navigation-top"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Bottom</label>
-                        <input class="form-control" type="text" value="j" name="shortcuts-navigation-bottom"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-navigation-bottom'] %>" name="shortcuts-navigation-bottom"/>
                     </div>
                     <strong>Jumping</strong>
                     <div class="form-group">
                         <label class="control-label">Go to inbox</label>
-                        <input class="form-control" type="text" value="g i" name="shortcuts-jumping-inbox"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-inbox'] %>" name="shortcuts-jumping-inbox"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Go to notebook list</label>
-                        <input class="form-control" type="text" value="g n" name="shortcuts-jumping-notebook-list"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-notebook-list'] %>" name="shortcuts-jumping-notebook-list"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Go to favorite notes</label>
-                        <input class="form-control" type="text" value="g f" name="shortcuts-jumping-favorite-notes"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-favorite-notes'] %>" name="shortcuts-jumping-favorite-notes"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Go to removed notes</label>
-                        <input class="form-control" type="text" value="g t" name="shortcuts-jumping-removed-notes"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-removed-notes'] %>" name="shortcuts-jumping-removed-notes"/>
                     </div>
                     <strong>Actions</strong>
                     <div class="form-group">
                         <label class="control-label">Edit</label>
-                        <input class="form-control" type="text" value="e" name="shortcuts-actions-edit"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-edit'] %>" name="shortcuts-actions-edit"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Open</label>
-                        <input class="form-control" type="text" value="o" name="shortcuts-actions-open"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-open'] %>" name="shortcuts-actions-open"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Remove</label>
-                        <input class="form-control" type="text" value="#" name="shortcuts-actions-remove"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-remove'] %>" name="shortcuts-actions-remove"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Rotate Star</label>
-                        <input class="form-control" type="text" value="f" name="shortcuts-actions-rotate-star"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-rotate-star'] %>" name="shortcuts-actions-rotate-star"/>
                     </div>
                     <strong>Application</strong>
                     <div class="form-group">
                         <label class="control-label">Create new note</label>
-                        <input class="form-control" type="text" value="c" name="shortcuts-application-create-new-note"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-application-create-new-note'] %>" name="shortcuts-application-create-new-note"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Search note</label>
-                        <input class="form-control" type="text" value="/" name="shortcuts-application-search-note"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-application-search-note'] %>" name="shortcuts-application-search-note"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Keyboard help</label>
-                        <input class="form-control" type="text" value="?" name="shortcuts-application-keyboard-help"/>
+                        <input class="form-control" type="text" value="<%- models['shortcuts-application-keyboard-help'] %>" name="shortcuts-application-keyboard-help"/>
                     </div>
                 </div>
             </div>

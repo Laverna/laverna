@@ -15,12 +15,16 @@ define([
 
         events: {
             'submit .form-horizontal' : 'save',
-            'click .ok'               : 'save',
-            'click .cancelBtn'        : 'close'
+            'click .ok'               : 'save'
         },
 
         initialize: function () {
+            this.on('hidden', this.redirect);
             Mousetrap.reset();
+        },
+
+        redirect: function () {
+            //Backbone.history.navigate('/#/', true);
         },
 
         serializeData: function () {

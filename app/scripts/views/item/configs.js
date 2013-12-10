@@ -52,8 +52,6 @@ define([
                 }
                 model.save('value', value);
             }, this);
-
-            e.preventDefault();
         }
     });
 

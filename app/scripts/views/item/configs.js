@@ -1,5 +1,5 @@
 /*global define*/
-/*global Mousetrap*/
+// /*global Mousetrap*/
 define([
     'underscore',
     'jquery',
@@ -20,7 +20,7 @@ define([
         },
 
         initialize: function () {
-            Mousetrap.reset();
+            // Mousetrap.reset();
         },
 
         serializeData: function () {

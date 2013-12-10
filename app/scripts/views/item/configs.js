@@ -1,4 +1,5 @@
-/*global define */
+/*global define*/
+/*global Mousetrap*/
 define([
     'underscore',
     'jquery',
@@ -7,7 +8,7 @@ define([
     'text!configsTempl'
 ], function (_, $, Backbone, Marionette, Tmpl) {
     'use strict';
-    
+
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
@@ -19,12 +20,7 @@ define([
         },
 
         initialize: function () {
-            this.on('hidden', this.redirect);
             Mousetrap.reset();
-        },
-
-        redirect: function () {
-            //Backbone.history.navigate('/#/', true);
         },
 
         serializeData: function () {
@@ -37,9 +33,10 @@ define([
             };
         },
 
-        save: function (e) {
-            var elem;
-            var value;
+        save: function () {
+            var elem,
+                value;
+
             _.forEach(this.collection.models, function (model) {
                 elem = this.$('[name="' + model.get('name') + '"]');
                 value = '';
@@ -52,6 +49,9 @@ define([
                 }
                 model.save('value', value);
             }, this);
+
+            this.trigger('close');
+            return false;
         }
     });
 

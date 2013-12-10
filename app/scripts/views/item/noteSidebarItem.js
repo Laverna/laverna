@@ -18,21 +18,6 @@ define([
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'change:trash', this.remove);
             this.listenTo(this.model, 'shown', this.changeFocus);
-
-            switch (this.options.filter) {
-                case 'favorite':
-                    this.url = '#/note/favorite';
-                    break;
-                case 'trashed':
-                    this.url = '#/note/trashed';
-                    break;
-                case 'search':
-                    this.url = '#/note/search/' + this.options.searchQuery;
-                    break;
-                default:
-                    this.url = '#/note/' + this.options.notebookId;
-                    break;
-            }
         },
 
         changeFocus: function () {
@@ -42,9 +27,7 @@ define([
         serializeData: function () {
             return _.extend(this.model.toJSON(), {
                 page          : this.options.page,
-                shownNotebook : this.options.notebookId,
-                filter        : this.options.filter,
-                url           : this.url
+                url           : this.options.url
             });
         },
 

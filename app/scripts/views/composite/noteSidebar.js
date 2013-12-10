@@ -52,13 +52,6 @@ define([
         },
 
         initialize: function () {
-            // Options to itemView
-            this.itemViewOptions.page = this.options.lastPage;
-            this.itemViewOptions.shownNotebook = this.options.notebookId;
-            this.itemViewOptions.filter = this.options.filter;
-            this.itemViewOptions.notebookId = this.options.notebookId;
-            this.itemViewOptions.searchQuery = this.options.searchQuery;
-
             // Filter
             var notes;
             switch (this.options.filter) {
@@ -94,6 +87,11 @@ define([
 
             // Set page title
             document.title = this.options.title;
+
+            // Options to itemView
+            this.itemViewOptions.page = this.options.lastPage;
+            this.itemViewOptions.searchQuery = this.options.searchQuery;
+            this.itemViewOptions.url = this.urlPage;
         },
 
         /**

@@ -23,6 +23,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
     'use strict';
 
     var Controller = Marionette.Controller.extend({
+
         /**
          * Initialization
          */
@@ -52,51 +53,49 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         },
 
         /**
-         * Show list of notes
+         * Show list of notes in sidebar
          */
-        showAllNotes: function () {
-            var notes = this.collectionNotes.clone();
+        showAllNotes: function (args) {
+            var notes = this.collectionNotes.clone(),
+                arg = _.extend({
+                    filter : 'active',
+                    title  : 'Inbox'
+                }, args),
+                notebookMod;
 
-            App.sidebar.show(new NoteSidebar({
-                collection : notes,
-                lastPage   : this.pageN,
-                notebookId : this.notebookId,
-                notebook   : this.collectionNotebooks.get(this.notebookId),
-                searchQuery: this.searchQuery,
-                filter     : this.notesFilter
-            }));
+            arg.notebookId = (isNaN(arg.notebookId)) ? 0 : arg.notebookId;
+            arg.tagId = (isNaN(arg.tagId)) ? 0 : arg.tagId;
+            arg.lastPage = (isNaN(arg.lastPage)) ? 1 : arg.lastPage;
+            arg.collection = notes;
+
+            if (arg.notebookId !== 0) {
+                notebookMod = this.collectionNotebooks.get(arg.notebookId);
+                arg.title = notebookMod.get('name');
+            }
+
+            App.sidebar.show(new NoteSidebar(arg));
         },
 
         /**
          * Index page
          */
         index: function (notebook, page) {
-            this.notesFilter = 'active';
-            this.noteInit(notebook, page);
             App.content.reset();
+            this.trigger('notes.shown', {
+                notebookId : Math.floor(notebook),
+                lastPage   : page
+            });
         },
 
         /* ------------------------------
          * Notes actions
          * ------------------------------ */
-        noteInit: function (notebook, page, id) {
-            notebook = (notebook === undefined) ? 0 : notebook;
-            this.notebookId = Math.floor(notebook);
-            this.pageN = (isNaN(page)) ? 1 : page;
-            this.SidebarView = NoteSidebar;
-
-            // Default filter
-            if (this.notesFilter === undefined) {
-                this.notesFilter = 'active';
-            }
-
-            this.trigger('notes.shown');
-
+        // Show notes content
+        showNoteContent: function (id) {
             if (id !== undefined) {
                 App.content.show(new NoteItem({
                     model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes,
-                    app: App
+                    collection: this.collectionNotes
                 }));
             } else {
                 App.content.reset();
@@ -104,71 +103,92 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         },
 
         /**
-         * Show notes
+         * Search specific note
          */
-        noteNotebook: function (notebook, page, id) {
-            var title = 'Inbox';
-            notebook = Math.floor(notebook);
+        noteSearch: function (query, page, id) {
+            this.trigger('notes.shown', {
+                filter      : 'search',
+                searchQuery : query,
+                title       : 'Search',
+                lastPage    : page
+            });
 
+            this.showNoteContent(id);
+        },
+
+        /**
+         * Show favorite notes
+         */
+        noteFavorite: function (page, id) {
+            this.trigger('notes.shown', {
+                filter   : 'favorite',
+                title    : 'Favorite notes',
+                lastPage : page
+            });
+
+            this.showNoteContent(id);
+        },
+
+        /**
+         * Show notes which is deleted
+         */
+        noteTrashed: function (page, id) {
+            this.trigger('notes.shown', {
+                filter   : 'trashed',
+                title    : 'Removed notes',
+                lastPage : page
+            });
+
+            this.showNoteContent(id);
+        },
+
+        /**
+         * Show list of notes which has been tagged with :tag
+         */
+        noteTag: function (tag, page, id) {
+            var tagModel = this.collectionTags.get(tag);
+            this.trigger('notes.shown', {
+                filter   : 'tagged',
+                tagId    : tag,
+                title    : 'Tag: ' + tagModel.get('name'),
+                lastPage : page
+            });
+
+            this.showNoteContent(id);
+        },
+
+        /**
+         * Show note's content
+         */
+        noteShow: function (notebook, page, id) {
             if (id === undefined) {
                 id = notebook;
                 notebook = 0;
             }
 
-            if (notebook !== 0) {
-                var notebookModel = this.collectionNotebooks.get(notebook);
-                if (notebookModel !== undefined) {
-                    title = notebookModel.get('name');
-                }
-            }
-        },
+            // Show sidebar
+            this.trigger('notes.shown', {
+                filter     : 'active',
+                page       : page,
+                notebookId : Math.floor(notebook)
+            });
 
-        // Search specific note
-        noteSearch: function (query, page, id) {
-            this.notesFilter = 'search';
-            this.searchQuery = query;
-            this.noteInit(0, page, id);
-        },
-
-        // Show favorite notes
-        noteFavorite: function (page, id) {
-            this.notesFilter = 'favorite';
-            this.noteInit(0, page, id);
-        },
-
-        // Show notes which is deleted
-        noteTrashed: function (page, id) {
-            this.notesFilter = 'trashed';
-            this.noteInit(0, page, id);
-        },
-
-        // Show note's content
-        noteTag: function (tag, page, id) {
-            this.notesFilter = 'tagged';
-            this.noteInit(tag, page, id);
-        },
-
-        // Show note's content
-        noteShow: function (notebook, page, id) {
-            this.notesFilter = 'active';
-
-            if (id !== undefined) {
-                this.noteInit(notebook, page);
-            } else {
-                id = notebook;
-                this.noteInit(0, page);
-            }
-
+            // Show content
             App.content.show(new NoteItem({
-                model: this.collectionNotes.get(id),
-                collection: this.collectionNotes,
-                configs: this.collectionConfigs
+                model      : this.collectionNotes.get(id),
+                collection : this.collectionNotes,
+                configs    : this.collectionConfigs
             }));
         },
 
-        // Add a new note
+        /**
+         * Add a new note
+         */
         noteAdd: function () {
-            this.noteInit();
+            // Show sidebar
+            this.trigger('notes.shown');
+
+            // Form
             var content = new NoteForm({
                 collection: this.collectionNotes,
                 notebooks : this.collectionNotebooks,
@@ -180,12 +200,17 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             content.trigger('shown');
         },
 
-        // Edit an existing note
+        /**
+         * Edit an existing note
+         */
         noteEdit: function (id) {
-            this.noteInit();
+            var note, content;
 
-            var note = this.collectionNotes.get(id);
-            var content = new NoteForm({
+            // Show Sidebar
+            this.trigger('notes.shown');
+
+            note = this.collectionNotes.get(id);
+            content = new NoteForm({
                 collection : this.collectionNotes,
                 notebooks : this.collectionNotebooks,
                 collectionTags: this.collectionTags,
@@ -197,10 +222,13 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             content.trigger('shown');
         },
 
-        // Remove Note
+        /**
+         * Remove Note
+         */
         noteRemove: function (id) {
-            var note, result, i, prev;
-            var url = '/note/' + this.notebookId + '/p' + this.pageN;
+            var note, result, i, prev, url;
+
+            url = '/note/' + this.notebookId + '/p' + this.pageN;
             note = this.collectionNotes.get(id);
 
             if (note.get('trash') === 0) {
@@ -257,7 +285,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.content.reset();
         },
 
-        // Add new notebook
+        /**
+         * Add new notebook
+         */
         notebookAdd: function () {
             var content = new NotebookForm({
                 collection: this.collectionNotebooks
@@ -266,7 +296,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
-        // Edit existing notebook
+        /**
+         * Edit existing notebook
+         */
         notebookEdit: function (id) {
             var notebook = this.collectionNotebooks.get(id),
                 content = new NotebookForm({
@@ -277,7 +309,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
-        // Remove notebook
+        /**
+         * Remove notebook
+         */
         notebookRemove: function (id) {
             var n = this.collectionNotebooks.get(id);
             n.destroy();
@@ -295,6 +329,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
+        /**
+         * Edit existing tag
+         */
         tagEdit: function(id) {
             var content = new TagForm({
                 collection: this.collectionTags,
@@ -303,6 +340,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.modal.show(content);
         },
 
+        /**
+         * Remove tag
+         */
         tagRemove: function (id) {
             var model = this.collectionTags.get(id);
             model.destroy();

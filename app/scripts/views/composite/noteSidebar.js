@@ -52,9 +52,6 @@ define([
         },
 
         initialize: function () {
-            // Set page title
-            document.title = this.options.title;
-
             // Options to itemView
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.shownNotebook = this.options.notebookId;
@@ -94,6 +91,9 @@ define([
             // Pagination
             this.collection.reset(notes);
             this.pagination(notes);
+
+            // Set page title
+            document.title = this.options.title;
         },
 
         /**

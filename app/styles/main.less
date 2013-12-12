@@ -9,6 +9,7 @@
  */
 
 @boot_dir: '../bower_components/bootstrap/less/';
+@fa-font-path: "../fonts";
 
 // Core variables and mixins
 @import "@{boot_dir}variables.less";
@@ -64,10 +65,13 @@
 @import "@{boot_dir}responsive-utilities.less";
 
 // Font awesome icons
-@import "../bower_components/font-awesome/css/font-awesome.css";
+@import "../bower_components/font-awesome/less/font-awesome.less";
 
 // App styles
 @import "styles.less";
 @import "code.less";
 @import "pagedown.less";
 // @import "responsive.less";
+
+// Glyphicon
+@icon-font-path: "../fonts/";

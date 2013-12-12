@@ -16,7 +16,12 @@ define([
 
         events: {
             'submit .form-horizontal' : 'save',
-            'click .ok'               : 'save'
+            'click .ok'               : 'save',
+            'click input[type="checkbox"]': 'clickCheckbox'
+        },
+
+        ui: {
+            encryptionPass: '#encryption-pass'
         },
 
         initialize: function () {
@@ -24,13 +29,19 @@ define([
         },
 
         serializeData: function () {
-            var models = [];
-            _.forEach(this.collection.models, function (model) {
-                models[model.get('name')] = model.get('value');
-            });
             return {
-                models: models
+                models: this.collection.getConfigs()
             };
+        },
+
+        clickCheckbox: function ( e ) {
+            if ( e.currentTarget === this.$('input[name="use-encryption"]')[0] ) {
+                if ( this.$('input[name="use-encryption"]').is(':checked') ) {
+                    this.ui.encryptionPass.css('display', 'block');
+                } else {
+                    this.ui.encryptionPass.css('display', 'none');
+                }
+            }
         },
 
         save: function () {

@@ -14,10 +14,14 @@
                     <div class="form-group">
                         <div class="checkbox">
                              <label>
-                                 <input type="checkbox" name="encryption" <% if(models['encryption'] === 1) {%> checked<%}%> >
-                                 Encryption
+                                 <input type="checkbox" name="use-encryption" <% if(models['use-encryption'] === 1) {%> checked<%}%> >
+                                 Use Encryption
                              </label>
                         </div>
+                    </div>
+                    <div class="form-group" id="encryption-pass" style="<% if(models['use-encryption'] === 0) {%>display:none;<%}%>">
+                        <label class="control-label">Encryption Password</label>
+                        <input type="text" name="encryption-pass" value="<%- models['encryption-pass'] %>" class="form-control" >
                     </div>
                     <div class="form-group">
                         <div class="checkbox">

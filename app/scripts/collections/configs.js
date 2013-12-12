@@ -15,7 +15,8 @@ define([
 
         firstStart: function () {
             // Basic
-            this.create(new Config({ name: 'encryption', value: 0 }));
+            this.create(new Config({ name: 'use-encryption', value: 0 }));
+            this.create(new Config({ name: 'encryption-pass', value: '' }));
             this.create(new Config({ name: 'cloud-storage', value: 0 }));
             this.create(new Config({ name: 'pagination-configs', value: 0 }));
             // Shortcuts. Navigation

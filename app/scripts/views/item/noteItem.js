@@ -36,12 +36,15 @@ define([
         },
 
         keyboardEvents: {
-            'e': 'editNote',
-            's': 'favorite',
-            'shift+3': 'deleteNote'
         },
 
         initialize: function() {
+            // Setting shortcuts
+            var configs = this.options.configs.getConfigs();
+            this.keyboardEvents[configs['shortcuts-actions-edit']] = 'editNote';
+            this.keyboardEvents[configs['shortcuts-actions-rotate-star']] = 'favorite';
+            this.keyboardEvents[configs['shortcuts-actions-remove']] = 'deleteNote';
+
             // this.model.on('change', this.render);
             this.model.trigger('shown');
             this.listenTo(this.model, 'change', this.changeFocus);
@@ -53,8 +56,7 @@ define([
         onRender: function () {
             // Google code prettify
             var code = null;
-            this.$('pre').addClass('prettyprint').each(function (idx, el) {
-                code = el.firstChild;
+            this.$('pre').addClass('prettyprint').each(function (idx, el) { code = el.firstChild;
                 code.innerHTML = prettify.prettyPrintOne(code.innerHTML);
             });
 

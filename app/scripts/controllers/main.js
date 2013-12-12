@@ -59,7 +59,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var notes = this.collectionNotes.clone(),
                 arg = _.extend({
                     filter : 'active',
-                    title  : 'Inbox'
+                    title  : 'Inbox',
+                    configs: this.collectionConfigs
                 }, args),
                 notebookMod;
 
@@ -95,7 +96,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             if (id !== undefined) {
                 App.content.show(new NoteItem({
                     model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes
+                    collection: this.collectionNotes,
+                    configs: this.collectionConfigs
                 }));
             } else {
                 App.content.reset();
@@ -274,7 +276,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             // Show sidebar layout
             sidebar = new NotebookLayout({
                 collectionNotebooks: this.collectionNotebooks,
-                collectionTags     : this.collectionTags
+                collectionTags     : this.collectionTags,
+                configs            : this.collectionConfigs
             });
             App.sidebar.show(sidebar);
 

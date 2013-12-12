@@ -41,17 +41,14 @@ define([
         },
 
         keyboardEvents: {
-            'j'   :  'navigateBottom',
-            'k'   :  'navigateTop',
-            'c'   :  'toCreate',
-            'g f' :  'showFavorites',
-            'g t' :  'showTrashed',
-            'g i' :  'showInbox',
-            'g n' :  'toNotebook',
-            '/'   :  'focusSearch'
         },
 
         initialize: function () {
+            // Setting keyboardEvents
+            var configs = this.options.configs.getConfigs();
+            this.setKeyboardEvents( configs );
+            this.keyboardEvents[configs['shortcuts-application-search-note']] = 'focusSearch';
+
             // Filter
             var notes;
             switch (this.options.filter) {

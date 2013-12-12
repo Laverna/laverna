@@ -32,10 +32,12 @@ define([
         },
 
         initialize: function () {
-            this.keyboardEvents = _.extend(this.keyboardEvents, {
-                'o' : 'toNotes',
-                '/' : 'focusSearch'
-            });
+            // Setting keyboardEvents
+            var configs = this.options.configs.getConfigs();
+            this.setKeyboardEvents( configs );
+
+            this.keyboardEvents[configs['shortcuts-actions-open']] = 'toNotes';
+            this.keyboardEvents[configs['shortcuts-application-search-note']] = 'focusSearch';
 
             this.collectionNotebooks = this.options.collectionNotebooks;
             this.collectionTags = this.options.collectionTags;

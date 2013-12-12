@@ -15,13 +15,27 @@ define([
         itemViewOptions: {},
 
         keyboardEvents: {
-            'j'   :  'navigateBottom',
-            'k'   :  'navigateTop',
-            'c'   :  'toCreate',
-            'g f' :  'showFavorites',
-            'g t' :  'showTrashed',
-            'g i' :  'showInbox',
-            'g n' :  'toNotebook'
+            //'j'   :  'navigateBottom',
+            //'k'   :  'navigateTop',
+            //'c'   :  'toCreate',
+            //'g f' :  'showFavorites',
+            //'g t' :  'showTrashed',
+            //'g i' :  'showInbox',
+            //'g n' :  'toNotebook'
+        },
+
+
+        /**
+         * Setting all keyboard events
+         */
+        setKeyboardEvents: function ( configs ) {
+            this.keyboardEvents[configs['shortcuts-navigation-bottom']] = 'navigateBottom';
+            this.keyboardEvents[configs['shortcuts-navigation-top']] = 'navigateTop';
+            this.keyboardEvents[configs['shortcuts-application-create-new-note']] = 'toCreate';
+            this.keyboardEvents[configs['shortcuts-jumping-favorite-notes']] = 'showFavorites';
+            this.keyboardEvents[configs['shortcuts-jumping-removed-notes']] = 'showTrashed';
+            this.keyboardEvents[configs['shortcuts-jumping-inbox']] = 'showInbox';
+            this.keyboardEvents[configs['shortcuts-jumping-notebook-list']] = 'toNotebook';
         },
 
         /**

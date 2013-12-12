@@ -22,19 +22,29 @@ define([
             this.create(new Config({ name: 'shortcuts-navigation-top', value: 'k' }));
             this.create(new Config({ name: 'shortcuts-navigation-bottom', value: 'j' }));
             // Shortcuts. Jumping
-            this.create(new Config({ name: 'shortcuts-jumping-inbox', value: 'g+i' }));
-            this.create(new Config({ name: 'shortcuts-jumping-notebook-list', value: 'g+n' }));
-            this.create(new Config({ name: 'shortcuts-jumping-favorite-notes', value: 'g+f' }));
-            this.create(new Config({ name: 'shortcuts-jumping-removed-notes', value: 'g+t' }));
+            this.create(new Config({ name: 'shortcuts-jumping-inbox', value: 'g i' }));
+            this.create(new Config({ name: 'shortcuts-jumping-notebook-list', value: 'g n' }));
+            this.create(new Config({ name: 'shortcuts-jumping-favorite-notes', value: 'g f' }));
+            this.create(new Config({ name: 'shortcuts-jumping-removed-notes', value: 'g t' }));
             // Shortcuts. Actions
             this.create(new Config({ name: 'shortcuts-actions-edit', value: 'e' }));
             this.create(new Config({ name: 'shortcuts-actions-open', value: 'o' }));
             this.create(new Config({ name: 'shortcuts-actions-remove', value: 'shift+3' }));
-            this.create(new Config({ name: 'shortcuts-actions-rotate-star', value: 'f' }));
+            this.create(new Config({ name: 'shortcuts-actions-rotate-star', value: 's' }));
             // Shortcuts. Application
             this.create(new Config({ name: 'shortcuts-application-create-new-note', value: 'c' }));
             this.create(new Config({ name: 'shortcuts-application-search-note', value: '/' }));
             this.create(new Config({ name: 'shortcuts-application-keyboard-help', value: '?' }));
+        },
+
+        getConfigs: function ( ) {
+            var data = {};
+
+            _.forEach(this.models, function ( model ) {
+                data[model.get('name')] = model.get('value');
+            });
+
+            return data;
         }
 
     });

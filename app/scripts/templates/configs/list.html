@@ -37,62 +37,96 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="shortcuts">
-                    <strong>Navigation</strong>
-                    <div class="form-group">
-                        <label class="control-label">Top</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-navigation-top'] %>" name="shortcuts-navigation-top"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Bottom</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-navigation-bottom'] %>" name="shortcuts-navigation-bottom"/>
-                    </div>
-                    <strong>Jumping</strong>
-                    <div class="form-group">
-                        <label class="control-label">Go to inbox</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-inbox'] %>" name="shortcuts-jumping-inbox"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Go to notebook list</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-notebook-list'] %>" name="shortcuts-jumping-notebook-list"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Go to favorite notes</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-favorite-notes'] %>" name="shortcuts-jumping-favorite-notes"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Go to removed notes</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-jumping-removed-notes'] %>" name="shortcuts-jumping-removed-notes"/>
-                    </div>
-                    <strong>Actions</strong>
-                    <div class="form-group">
-                        <label class="control-label">Edit</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-edit'] %>" name="shortcuts-actions-edit"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Open</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-open'] %>" name="shortcuts-actions-open"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Remove</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-remove'] %>" name="shortcuts-actions-remove"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Rotate Star</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-actions-rotate-star'] %>" name="shortcuts-actions-rotate-star"/>
-                    </div>
-                    <strong>Application</strong>
-                    <div class="form-group">
-                        <label class="control-label">Create new note</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-application-create-new-note'] %>" name="shortcuts-application-create-new-note"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Search note</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-application-search-note'] %>" name="shortcuts-application-search-note"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Keyboard help</label>
-                        <input class="form-control" type="text" value="<%- models['shortcuts-application-keyboard-help'] %>" name="shortcuts-application-keyboard-help"/>
-                    </div>
+                    <fieldset>
+                        <legend>Navigation</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Top</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-navigation-top'] %>" name="shortcuts-navigation-top"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Bottom</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-navigation-bottom'] %>" name="shortcuts-navigation-bottom"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Jumping</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Go to inbox</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-inbox'] %>" name="shortcuts-jumping-inbox"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Go to notebook list</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-notebook-list'] %>" name="shortcuts-jumping-notebook-list"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Go to favorite notes</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-favorite-notes'] %>" name="shortcuts-jumping-favorite-notes"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Go to removed notes</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-removed-notes'] %>" name="shortcuts-jumping-removed-notes"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Actions</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Edit</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-edit'] %>" name="shortcuts-actions-edit"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Open</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-open'] %>" name="shortcuts-actions-open"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remove</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-remove'] %>" name="shortcuts-actions-remove"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Rotate Star</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-rotate-star'] %>" name="shortcuts-actions-rotate-star"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Application</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Create new note</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-application-create-new-note'] %>" name="shortcuts-application-create-new-note"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Search note</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-application-search-note'] %>" name="shortcuts-application-search-note"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Keyboard help</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" value="<%- models['shortcuts-application-keyboard-help'] %>" name="shortcuts-application-keyboard-help"/>
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </form>

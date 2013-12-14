@@ -24,7 +24,8 @@
     "sinonjs"              :  "~1.7.1",
     "sinon-qunit"          :  "~1.0.0",
     "font-awesome"         :  "~4.0.3",
-    "bootstrap-tagsinput"  :  "master"
+    "bootstrap-tagsinput"  :  "master",
+    "sjcl"                 :  "~1.0.0"
   },
   "devDependencies": {}
 }

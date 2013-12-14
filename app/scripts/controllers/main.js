@@ -29,24 +29,24 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         initialize: function() {
             // Fetch notes
-            this.collectionNotes = new CollectionNotes();
-            this.collectionNotes.fetch({reset: true});
+            this.Notes = new CollectionNotes();
+            this.Notes.fetch({reset: true});
 
             // Fetch notebooks
-            this.collectionNotebooks = new CollectionNotebooks();
-            this.collectionNotebooks.fetch({reset: true});
+            this.Notebooks = new CollectionNotebooks();
+            this.Notebooks.fetch({reset: true});
 
             // Fetch tags
-            this.collectionTags = new CollectionTags();
-            this.collectionTags.fetch({reset: true});
+            this.Tags = new CollectionTags();
+            this.Tags.fetch({reset: true});
 
             // Fetch configs
-            this.collectionConfigs = new CollectionConfigs();
-            this.collectionConfigs.fetch({reset: true});
+            this.Configs = new CollectionConfigs();
+            this.Configs.fetch({reset: true});
 
             // Set default set of configs
-            if (this.collectionConfigs.length === 0) {
-                this.collectionConfigs.firstStart();
+            if (this.Configs.length === 0) {
+                this.Configs.firstStart();
             }
 
             this.on('notes.shown', this.showAllNotes);
@@ -56,11 +56,11 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show list of notes in sidebar
          */
         showAllNotes: function (args) {
-            var notes = this.collectionNotes.clone(),
+            var notes = this.Notes.clone(),
                 arg = _.extend({
                     filter : 'active',
                     title  : 'Inbox',
-                    configs: this.collectionConfigs
+                    configs: this.Configs
                 }, args),
                 notebookMod;
 
@@ -70,7 +70,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             arg.collection = notes;
 
             if (arg.notebookId !== 0) {
-                notebookMod = this.collectionNotebooks.get(arg.notebookId);
+                notebookMod = this.Notebooks.get(arg.notebookId);
                 arg.title = notebookMod.get('name');
             }
 
@@ -95,9 +95,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         showNoteContent: function (id) {
             if (id !== undefined) {
                 App.content.show(new NoteItem({
-                    model: this.collectionNotes.get(id),
-                    collection: this.collectionNotes,
-                    configs: this.collectionConfigs
+                    model: this.Notes.get(id),
+                    collection: this.Notes
                 }));
             } else {
                 App.content.reset();
@@ -148,7 +147,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show list of notes which has been tagged with :tag
          */
         noteTag: function (tag, page, id) {
-            var tagModel = this.collectionTags.get(tag);
+            var tagModel = this.Tags.get(tag);
             this.trigger('notes.shown', {
                 filter   : 'tagged',
                 tagId    : tag,
@@ -177,9 +176,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Show content
             App.content.show(new NoteItem({
-                model      : this.collectionNotes.get(id),
-                collection : this.collectionNotes,
-                configs    : this.collectionConfigs
+                model      : this.Notes.get(id),
+                collection : this.Notes,
+                configs    : this.Configs
             }));
         },
 
@@ -192,9 +191,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Form
             var content = new NoteForm({
-                collection: this.collectionNotes,
-                notebooks : this.collectionNotebooks,
-                collectionTags: this.collectionTags
+                collection: this.Notes,
+                notebooks : this.Notebooks,
+                collectionTags: this.Tags
             });
 
             App.content.show(content);
@@ -211,11 +210,11 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             // Show Sidebar
             this.trigger('notes.shown');
 
-            note = this.collectionNotes.get(id);
+            note = this.Notes.get(id);
             content = new NoteForm({
-                collection : this.collectionNotes,
-                notebooks : this.collectionNotebooks,
-                collectionTags: this.collectionTags,
+                collection : this.Notes,
+                notebooks : this.Notebooks,
+                collectionTags: this.Tags,
                 model      : note
             });
 
@@ -231,19 +230,19 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var note, result, i, prev, url;
 
             url = '/note/' + this.notebookId + '/p' + this.pageN;
-            note = this.collectionNotes.get(id);
+            note = this.Notes.get(id);
 
             if (note.get('trash') === 0) {
                 result = note.save({'trash': 1});
 
                 if (result === false) {
                     url += id;
-                } else if (this.collectionNotes.length > 1) {
-                    i = this.collectionNotes.indexOf(note);
+                } else if (this.Notes.length > 1) {
+                    i = this.Notes.indexOf(note);
                     i = (i === 0) ? i : i - 1;
 
-                    // this.collectionNotes.remove(note);
-                    prev = this.collectionNotes.at(i);
+                    // this.Notes.remove(note);
+                    prev = this.Notes.at(i);
 
                     url += prev.get('id');
                 } else {
@@ -265,19 +264,19 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Notebooks list
             notebook = new NotebookSidebar({
-                collection : this.collectionNotebooks
+                collection : this.Notebooks
             });
 
             // Tags list
             tags = new TagsSidebar({
-                collection : this.collectionTags
+                collection : this.Tags
             });
 
             // Show sidebar layout
             sidebar = new NotebookLayout({
-                collectionNotebooks: this.collectionNotebooks,
-                collectionTags     : this.collectionTags,
-                configs            : this.collectionConfigs
+                collectionNotebooks: this.Notebooks,
+                collectionTags     : this.Tags,
+                configs            : this.Configs
             });
             App.sidebar.show(sidebar);
 
@@ -293,7 +292,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         notebookAdd: function () {
             var content = new NotebookForm({
-                collection: this.collectionNotebooks
+                collection: this.Notebooks
             });
 
             App.modal.show(content);
@@ -303,10 +302,10 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Edit existing notebook
          */
         notebookEdit: function (id) {
-            var notebook = this.collectionNotebooks.get(id),
+            var notebook = this.Notebooks.get(id),
                 content = new NotebookForm({
                     model: notebook,
-                    collection: this.collectionNotebooks
+                    collection: this.Notebooks
                 });
 
             App.modal.show(content);
@@ -316,7 +315,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Remove notebook
          */
         notebookRemove: function (id) {
-            var n = this.collectionNotebooks.get(id);
+            var n = this.Notebooks.get(id);
             n.destroy();
             Backbone.history.navigate('#/notebooks', true);
         },
@@ -326,7 +325,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * --------------------------------- */
         tagAdd: function() {
             var content = new TagForm({
-                collection: this.collectionTags
+                collection: this.Tags
             });
 
             App.modal.show(content);
@@ -337,8 +336,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         tagEdit: function(id) {
             var content = new TagForm({
-                collection: this.collectionTags,
-                model: this.collectionTags.get(id)
+                collection: this.Tags,
+                model: this.Tags.get(id)
             });
             App.modal.show(content);
         },
@@ -347,7 +346,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Remove tag
          */
         tagRemove: function (id) {
-            var model = this.collectionTags.get(id);
+            var model = this.Tags.get(id);
             model.destroy();
             Backbone.history.navigate('#/notebooks', true);
         }

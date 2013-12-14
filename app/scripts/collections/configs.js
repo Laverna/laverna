@@ -13,29 +13,40 @@ define([
 
         model : Config,
 
+        /**
+         * Creates default set of configs
+         */
         firstStart: function () {
             // Basic
-            this.create(new Config({ name: 'use-encryption', value: 0 }));
-            this.create(new Config({ name: 'encryption-pass', value: '' }));
-            this.create(new Config({ name: 'cloud-storage', value: 0 }));
-            this.create(new Config({ name: 'pagination-configs', value: 0 }));
+            this.create(new Config({ name: 'cloudStorage', value: 0 }));
+            this.create(new Config({ name: 'pagination', value: 0 }));
+
+            // Encryption
+            this.create(new Config({ name: 'encrypt', value: 0 }));
+            this.create(new Config({ name: 'encryptPass', value: '' }));
+            this.create(new Config({ name: 'encryptSalt', value: '' }));
+            this.create(new Config({ name: 'encryptKeySize', value: '' }));
+
             // Shortcuts. Navigation
-            this.create(new Config({ name: 'shortcuts-navigation-top', value: 'k' }));
-            this.create(new Config({ name: 'shortcuts-navigation-bottom', value: 'j' }));
+            this.create(new Config({ name: 'navigateTop', value: 'k' }));
+            this.create(new Config({ name: 'navigateBottom', value: 'j' }));
+
             // Shortcuts. Jumping
-            this.create(new Config({ name: 'shortcuts-jumping-inbox', value: 'g i' }));
-            this.create(new Config({ name: 'shortcuts-jumping-notebook-list', value: 'g n' }));
-            this.create(new Config({ name: 'shortcuts-jumping-favorite-notes', value: 'g f' }));
-            this.create(new Config({ name: 'shortcuts-jumping-removed-notes', value: 'g t' }));
+            this.create(new Config({ name: 'jumpInbox', value: 'g i' }));
+            this.create(new Config({ name: 'jumpNotebook', value: 'g n' }));
+            this.create(new Config({ name: 'jumpFavorite', value: 'g f' }));
+            this.create(new Config({ name: 'jumpRemoved', value: 'g t' }));
+
             // Shortcuts. Actions
-            this.create(new Config({ name: 'shortcuts-actions-edit', value: 'e' }));
-            this.create(new Config({ name: 'shortcuts-actions-open', value: 'o' }));
-            this.create(new Config({ name: 'shortcuts-actions-remove', value: 'shift+3' }));
-            this.create(new Config({ name: 'shortcuts-actions-rotate-star', value: 's' }));
+            this.create(new Config({ name: 'actionsEdit', value: 'e' }));
+            this.create(new Config({ name: 'actionsOpen', value: 'o' }));
+            this.create(new Config({ name: 'actionsRemove', value: 'shift+3' }));
+            this.create(new Config({ name: 'actionsRotateStar', value: 's' }));
+
             // Shortcuts. Application
-            this.create(new Config({ name: 'shortcuts-application-create-new-note', value: 'c' }));
-            this.create(new Config({ name: 'shortcuts-application-search-note', value: '/' }));
-            this.create(new Config({ name: 'shortcuts-application-keyboard-help', value: '?' }));
+            this.create(new Config({ name: 'appCreateNote', value: 'c' }));
+            this.create(new Config({ name: 'appSearch', value: '/' }));
+            this.create(new Config({ name: 'appKeyboardHelp', value: '?' }));
         },
 
         getConfigs: function ( ) {

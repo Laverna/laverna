@@ -13,7 +13,7 @@ define([
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
         comparator: function (model) {
-            return - model.get('created');
+            return model.get('created');
         },
 
         /**

@@ -1,10 +1,12 @@
 /*global define*/
+// /*global sjcl*/
 define([
     'underscore',
     'backbone',
     'models/notebook',
     'collections/notebooks',
     'collections/tags',
+    // 'sjcl',
     'backbone.assosiations',
     'localStorage'
 ], function (_, Backbone, Notebook, Notebooks, Tags) {
@@ -89,6 +91,11 @@ define([
          */
         setUpdate: function () {
             this.set('updated', Date.now());
+
+            // Encrypt content
+            // console.log(sjcl);
+
+            // Encrypt title
         }
 
     });

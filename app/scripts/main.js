@@ -1,10 +1,20 @@
 require.config({
-    packages: [{
-        name     : 'ace',
-        location : '../bower_components/ace/lib/ace',
-        main     : 'ace'
-    }],
+    packages: [
+        // Ace editor
+        {
+            name     : 'ace',
+            location : '../bower_components/ace/lib/ace',
+            main     : 'ace'
+        },
+        // Stanford JavaScript crypto library
+        /*{
+            name     : 'sjcl',
+            location : '../bower_components/sjcl/core',
+            main     : 'sjcl'
+        }*/
+    ],
     paths: {
+        sjcl                       :  '../bower_components/sjcl/sjcl',
         // Dependencies            :  and libraries
         text                       :  '../bower_components/requirejs-text/text',
         jquery                     :  '../bower_components/jquery/jquery',
@@ -25,9 +35,9 @@ require.config({
         'pagedown.converter'       :  '../bower_components/pagedown-ace/Markdown.Converter',
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
         'pagedown.sanitizer'       :  '../bower_components/pagedown-ace/Markdown.Sanitizer',
-        checklist                  :  'libs/checklist',
+        'checklist'                :  'libs/checklist',
         'typeahead'                :  '../bower_components/typeahead.js/dist/typeahead.min',
-        'tagsinput'           : '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min',
+        'tagsinput'                :  '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min',
         // Other                   :  libraries
         'bootstrap'                :  '../bower_components/bootstrap/dist/js/bootstrap.min',
         'prettify'                 :  '../bower_components/google-code-prettify/src/prettify',
@@ -93,6 +103,9 @@ require.config({
         },
         ace: {
             exports: 'ace'
+        },
+        cjcl: {
+            exports: 'cjcl'
         },
         'pagedown-ace': ['../bower_components/pagedown-ace/Markdown.Converter'],
         'pagedown-extra': [

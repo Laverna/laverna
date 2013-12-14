@@ -1,11 +1,13 @@
 /*global define*/
+/*global sjcl*/
 // /*global Mousetrap*/
 define([
     'underscore',
     'jquery',
     'backbone',
     'marionette',
-    'text!configsTempl'
+    'text!configsTempl',
+    'sjcl'
 ], function (_, $, Backbone, Marionette, Tmpl) {
     'use strict';
 
@@ -17,11 +19,12 @@ define([
         events: {
             'submit .form-horizontal' : 'save',
             'click .ok'               : 'save',
-            'click input[type="checkbox"]': 'clickCheckbox'
+            'click .showField'        : 'clickCheckbox',
+            'click #randomize'        : 'randomize'
         },
 
         ui: {
-            encryptionPass: '#encryption-pass'
+            saltInput     : 'input[name=encryptSalt]'
         },
 
         initialize: function () {
@@ -34,16 +37,29 @@ define([
             };
         },
 
+        randomize: function () {
+            var random = sjcl.random.randomWords(2, 0);
+            this.ui.saltInput.val(random);
+            return false;
+        },
+
+        /**
+         * Shows fieldsets with aditional parameters
+         */
         clickCheckbox: function ( e ) {
-            if ( e.currentTarget === this.$('input[name="use-encryption"]')[0] ) {
-                if ( this.$('input[name="use-encryption"]').is(':checked') ) {
-                    this.ui.encryptionPass.css('display', 'block');
-                } else {
-                    this.ui.encryptionPass.css('display', 'none');
-                }
+            var input = $(e.currentTarget),
+                field = $(input.attr('data-field'));
+
+            if ( input.is(':checked') ) {
+                field.css('display', 'block');
+            } else {
+                field.css('display', 'none');
             }
         },
 
+        /**
+         * Save the configs
+         */
         save: function () {
             var elem,
                 value;
@@ -58,7 +74,11 @@ define([
                     default:
                         value = elem.val();
                 }
-                model.save('value', value);
+
+                // Save only if value is changed
+                if (value !== model.get('value')) {
+                    model.save('value', value);
+                }
             }, this);
 
             this.trigger('close');

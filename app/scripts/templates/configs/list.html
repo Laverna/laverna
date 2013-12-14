@@ -12,21 +12,44 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="basic">
                     <div class="form-group">
-                        <div class="checkbox">
-                             <label>
-                                 <input type="checkbox" name="use-encryption" <% if(models['use-encryption'] === 1) {%> checked<%}%> >
-                                 Use Encryption
+                        <label class="col-sm-2 control-label" for="useEncryption">Use encryption</label>
+                        <div class="col-sm-10 checkbox">
+                             <label class="control-label">
+                                 <input class="showField" data-field="#encryptOpt" type="checkbox" name="encrypt" <% if(models.encrypt === 1) { %> checked<% } %> >
+                                 yes
                              </label>
                         </div>
                     </div>
-                    <div class="form-group" id="encryption-pass" style="<% if(models['use-encryption'] === 0) {%>display:none;<%}%>">
-                        <label class="control-label">Encryption Password</label>
-                        <input type="text" name="encryption-pass" value="<%- models['encryption-pass'] %>" class="form-control" >
-                    </div>
+                    <fieldset id="encryptOpt" style="<% if(models.encrypt === 0) { %>display:none;<% } %>">
+                        <legend>Encryption parameters</legend>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Encryption Password</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="encryptPass" value="{{models.encryptPass}}" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Salt</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="encryptSalt" value="{{models.encryptSalt}}" class="form-control" >
+                                <a id="randomize" href="#">Random</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Key size</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="encryptKeySize">
+                                    <option value="128">128</option>
+                                    <option value="192">192</option>
+                                    <option value="256">256</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
                     <div class="form-group">
                         <div class="checkbox">
                              <label>
-                                 <input type="checkbox" name="cloud-storage" <% if(models['cloud-storage'] === 1) {%> checked<%}%> >
+                                 <input type="checkbox" name="cloudStorage" <% if(models.cloudStorage === 1) {%> checked<%}%> >
                                  Cloud Storage
                              </label>
                         </div>
@@ -34,7 +57,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                              <label>
-                                 <input type="checkbox" name="pagination-configs" <% if(models['pagination-configs'] === 1) {%> checked<%}%> >
+                                 <input type="checkbox" name="pagination" <% if(models.pagination === 1) {%> checked<%}%> >
                                  Pagination Configs
                              </label>
                         </div>
@@ -46,40 +69,40 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Top</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-navigation-top'] %>" name="shortcuts-navigation-top"/>
+                                <input class="form-control" type="text" value="{{models.navigateTop}}" name="navigateTop" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Bottom</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-navigation-bottom'] %>" name="shortcuts-navigation-bottom"/>
+                                <input class="form-control" type="text" value="{{models.navigateBottom}}" name="navigateBottom" />
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Jumping</legend>
+                        <legend>jump</legend>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Go to inbox</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-inbox'] %>" name="shortcuts-jumping-inbox"/>
+                                <input class="form-control" type="text" value="{{models.jumpInbox}}" name="jumpInbox"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Go to notebook list</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-notebook-list'] %>" name="shortcuts-jumping-notebook-list"/>
+                                <input class="form-control" type="text" value="{{models.jumpNotebook}}" name="jumpNotebook"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Go to favorite notes</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-favorite-notes'] %>" name="shortcuts-jumping-favorite-notes"/>
+                                <input class="form-control" type="text" value="{{models.jumpFavorite}}" name="jumpFavorite"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Go to removed notes</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-jumping-removed-notes'] %>" name="shortcuts-jumping-removed-notes"/>
+                                <input class="form-control" type="text" value="{{models.jumpRemoved}}" name="jumpRemoved"/>
                             </div>
                         </div>
                     </fieldset>
@@ -88,46 +111,46 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Edit</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-edit'] %>" name="shortcuts-actions-edit"/>
+                                <input class="form-control" type="text" value="{{models.actionsEdit}}" name="actionsEdit"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Open</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-open'] %>" name="shortcuts-actions-open"/>
+                                <input class="form-control" type="text" value="{{models.actionsOpen}}" name="actionsOpen"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Remove</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-remove'] %>" name="shortcuts-actions-remove"/>
+                                <input class="form-control" type="text" value="{{models.actionsRemove}}" name="actionsRemove"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Rotate Star</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-actions-rotate-star'] %>" name="shortcuts-actions-rotate-star"/>
+                                <input class="form-control" type="text" value="{{models.actionsRotateStar}}" name="actionsRotateStar"/>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Application</legend>
+                        <legend>app</legend>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Create new note</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-application-create-new-note'] %>" name="shortcuts-application-create-new-note"/>
+                                <input class="form-control" type="text" value="{{models.appCreateNote}}" name="appCreateNote"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Search note</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-application-search-note'] %>" name="shortcuts-application-search-note"/>
+                                <input class="form-control" type="text" value="{{models.appSearch}}" name="appSearch"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Keyboard help</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="<%- models['shortcuts-application-keyboard-help'] %>" name="shortcuts-application-keyboard-help"/>
+                                <input class="form-control" type="text" value="{{models.appKeyboardHelp}}" name="appKeyboardHelp"/>
                             </div>
                         </div>
                     </fieldset>

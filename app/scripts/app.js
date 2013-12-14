@@ -4,8 +4,7 @@ define([
     'backbone',
     'modalRegion',
     'marionette',
-    'configsView'
-], function (_, Backbone, ModalRegion, ConfigsView) {
+], function (_, Backbone, ModalRegion) {
     'use strict';
 
     // Underscore template
@@ -26,5 +25,6 @@ define([
     App.on('initialize:after', function() {
         Backbone.history.start({pushState: false});
     });
+
     return App;
 });

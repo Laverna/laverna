@@ -1,4 +1,6 @@
 /*global define*/
+/*global prompt*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -17,7 +19,8 @@ define([
     'notebookSidebar',
     'notebookForm',
     'tagsSidebar',
-    'tagForm'
+    'tagForm',
+    'sjcl'
 ],
 function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
     'use strict';
@@ -50,6 +53,20 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             }
 
             this.on('notes.shown', this.showAllNotes);
+
+            // Ask password
+            if (this.Configs.get('encrypt').get('value') === 1) {
+                var password = prompt('Please enter your password'),
+                    pwd = this.Configs.get('encryptPass').get('value');
+
+                if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
+                    this.secureKey = sjcl.misc.pbkdf2(
+                        password,
+                        this.Configs.get('encryptSalt').toString(),
+                        1000
+                    );
+                }
+            }
         },
 
         /**
@@ -58,9 +75,10 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         showAllNotes: function (args) {
             var notes = this.Notes.clone(),
                 arg = _.extend({
-                    filter : 'active',
-                    title  : 'Inbox',
-                    configs: this.Configs
+                    filter  : 'active',
+                    title   : 'Inbox',
+                    configs : this.Configs,
+                    key     : this.secureKey
                 }, args),
                 notebookMod;
 
@@ -178,7 +196,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.content.show(new NoteItem({
                 model      : this.Notes.get(id),
                 collection : this.Notes,
-                configs    : this.Configs
+                configs    : this.Configs,
+                key        : this.secureKey
             }));
         },
 
@@ -191,9 +210,11 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Form
             var content = new NoteForm({
-                collection: this.Notes,
-                notebooks : this.Notebooks,
-                collectionTags: this.Tags
+                collection     : this.Notes,
+                notebooks      : this.Notebooks,
+                collectionTags : this.Tags,
+                configs        : this.Configs,
+                key            : this.secureKey
             });
 
             App.content.show(content);
@@ -212,10 +233,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             note = this.Notes.get(id);
             content = new NoteForm({
-                collection : this.Notes,
-                notebooks : this.Notebooks,
-                collectionTags: this.Tags,
-                model      : note
+                collection     : this.Notes,
+                notebooks      : this.Notebooks,
+                collectionTags : this.Tags,
+                model          : note,
+                configs        : this.Configs,
+                key            : this.secureKey
             });
 
             App.content.show(content);

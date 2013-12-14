@@ -1,5 +1,6 @@
 /*global define*/
 /*global Markdown*/
+/*global sjcl*/
 define([
     'underscore',
     'jquery',
@@ -11,6 +12,7 @@ define([
     'Mousetrap',
     'ace',
     'pagedown-extra',
+    'sjcl',
     'typeahead',
     'tagsinput'
 ],
@@ -87,15 +89,22 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             e.preventDefault();
 
             var content = this.editor.getSession().getValue().trim(),
-                title   = this.ui.title.val().trim();
+                title   = this.ui.title.val().trim(),
+                data;
 
             // Get values
-            var data = {
+            data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
                 notebookId : parseInt(this.ui.notebookId.val()),
                 tags       : this.ui.tagsId.tagsinput('items')
             };
+
+            // Encrypting
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                data.content = sjcl.encrypt(this.options.key, data.content);
+                data.title = sjcl.encrypt(this.options.key, data.title);
+            }
 
             // Get tags id
             data.tags = this.options.collectionTags.getTagsId(data.tags);
@@ -182,8 +191,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Pagedown-ace editor
          */
         pagedownRender: function () {
-            var that = this,
-                converter,
+            // var that = this,
+            var converter,
                 editor;
 
             converter = new Markdown.Converter();
@@ -231,11 +240,11 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             this.ui.title.focus();
 
             // Whenever a change happens inside the ACE editor, update the note
-            this.editor.on('change', function () {
-                if (that.model !== undefined) {
-                    that.$('.form-horizontal').trigger('submit');
-                }
-            });
+            // this.editor.on('change', function () {
+            //     if (that.model !== undefined) {
+            //         that.$('.form-horizontal').trigger('submit');
+            //     }
+            // });
 
             // Editor bar spy your scrolls
             var wmdBar = this.$('#wmd-button-bar');

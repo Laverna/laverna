@@ -1,5 +1,6 @@
 /*global define*/
 /*global Markdown*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -9,6 +10,7 @@ define([
     'prettify',
     'app',
     'configsView',
+    'sjcl',
     'backbone.mousetrap',
     'pagedown-extra'
 ], function (_, Backbone, Marionette, Template, Checklist, prettify, App, ConfigsView) {
@@ -63,6 +65,16 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
+        },
+
+        /**
+         * Decrypt content and title
+         */
+        serializeData: function () {
+            var data = this.model.toJSON();
+            data.content = sjcl.decrypt(this.options.key, data.content);
+            data.title = sjcl.decrypt(this.options.key, data.title);
+            return data;
         },
 
         changeFocus: function() {

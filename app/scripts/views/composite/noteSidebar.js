@@ -87,6 +87,7 @@ define([
 
             // Options to itemView
             this.itemViewOptions.page = this.options.lastPage;
+            this.itemViewOptions.key = this.options.key;
             this.itemViewOptions.searchQuery = this.options.searchQuery;
             this.itemViewOptions.url = this.urlPage;
         },

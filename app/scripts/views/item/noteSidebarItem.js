@@ -1,10 +1,12 @@
 /*global define*/
 /*global Markdown*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
     'marionette',
     'text!noteSidebarItemTempl',
+    'sjcl',
     'pagedown-ace'
 ], function(_, Backbone, Marionette, Template) {
     'use strict';
@@ -25,10 +27,16 @@ define([
         },
 
         serializeData: function () {
-            return _.extend(this.model.toJSON(), {
-                page          : this.options.page,
-                url           : this.options.url
+            var data = _.extend(this.model.toJSON(), {
+                page    : this.options.page,
+                url     : this.options.url
             });
+
+            // Decryption
+            data.content = sjcl.decrypt(this.options.key, data.content);
+            data.title = sjcl.decrypt(this.options.key, data.title);
+
+            return data;
         },
 
         templateHelpers: function () {

@@ -42,6 +42,17 @@ define([
             }
         ],
 
+        validate: function (attrs) {
+            var errors = [];
+            if (attrs.title === '') {
+                errors.push('title');
+            }
+
+            if (errors.length > 0) {
+                return errors;
+            }
+        },
+
         initialize: function () {
             this.on('update.note', this.setUpdate);
             this.on('changed:notebookId', this.updateNotebookCount);

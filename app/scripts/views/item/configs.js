@@ -1,6 +1,6 @@
 /*global define*/
 /*global sjcl*/
-// /*global Mousetrap*/
+/*global Mousetrap*/
 define([
     'underscore',
     'jquery',
@@ -30,7 +30,7 @@ define([
 
         initialize: function () {
             this.on('hidden', this.redirect);
-            // Mousetrap.reset();
+            Mousetrap.reset();
         },
 
         serializeData: function () {
@@ -78,7 +78,7 @@ define([
                 }
 
                 // Save only if value is changed
-                if (value !== model.get('value')) {
+                if (value.toString() !== model.get('value')) {
                     model.save('value', value);
                 }
             }, this);

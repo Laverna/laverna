@@ -55,11 +55,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="checkbox">
-                             <label>
-                                 <input type="checkbox" name="pagination" <% if(models.pagination === 1) {%> checked<%}%> >
-                                 Pagination Configs
-                             </label>
+                        <label class="col-sm-2 control-label">Pagination</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="pagination" value="{{models.pagination}}" class="form-control" >
                         </div>
                     </div>
                 </div>

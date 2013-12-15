@@ -26,14 +26,13 @@ define([
 
         className: 'sidebar-notes',
 
-        // How many items should be shown
-        perPage : 8,
-
         ui: {
             prevPage    : '#prevPage',
             nextPage    : '#nextPage',
             searchInput : '#search-input'
         },
+
+        perPage: 8,
 
         events: {
             'submit .search-form'    : 'toSearch',
@@ -48,6 +47,8 @@ define([
             var configs = this.options.configs.getConfigs();
             this.setKeyboardEvents( configs );
             this.keyboardEvents[configs.appSearch] = 'focusSearch';
+
+            this.perPage = configs.pagination;
 
             // Filter
             var notes;

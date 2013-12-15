@@ -19,7 +19,7 @@ define([
         firstStart: function () {
             // Basic
             this.create(new Config({ name: 'cloudStorage', value: 0 }));
-            this.create(new Config({ name: 'pagination', value: 0 }));
+            this.create(new Config({ name: 'pagination', value: '10' }));
 
             // Encryption
             this.create(new Config({ name: 'encrypt', value: 0 }));

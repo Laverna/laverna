@@ -20,9 +20,10 @@ define([
     'notebookForm',
     'tagsSidebar',
     'tagForm',
+    'helpView',
     'sjcl'
 ],
-function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm) {
+function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -379,6 +380,16 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var model = this.Tags.get(id);
             model.destroy();
             Backbone.history.navigate('#/notebooks', true);
+        },
+
+        /**
+         * Help View Shortcuts
+         */
+        help: function () {
+            var content = new HelpView({
+                collection: this.Configs
+            });
+            App.modal.show(content);
         }
 
     });

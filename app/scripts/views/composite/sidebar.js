@@ -36,6 +36,11 @@ define([
             this.keyboardEvents[configs.jumpRemoved] = 'showTrashed';
             this.keyboardEvents[configs.jumpInbox] = 'showInbox';
             this.keyboardEvents[configs.jumpNotebook] = 'toNotebook';
+            this.keyboardEvents[configs.appKeyboardHelp] = 'toHelp';
+        },
+
+        toHelp: function (e) {
+            return Backbone.history.navigate('/help', {trigger: true});
         },
 
         /**

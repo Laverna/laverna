@@ -48,7 +48,8 @@ define([
             this.setKeyboardEvents( configs );
             this.keyboardEvents[configs.appSearch] = 'focusSearch';
 
-            this.perPage = configs.pagination;
+            // console.log(parseInt(configs.pagination));
+            this.perPage = parseInt(configs.pagination);
 
             // Filter
             var notes;

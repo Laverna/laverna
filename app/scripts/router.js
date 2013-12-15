@@ -5,6 +5,8 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
     var Router = Marionette.AppRouter.extend({
         appRoutes: {
             ''                                  :  'index',
+            'settings'                          :  'settings',
+            'help'                              :  'help',
             // Routes for notes                 :
             'note/add'                          :  'noteAdd',
             'note/edit/:id'                     :  'noteEdit',
@@ -33,8 +35,7 @@ define(['app', 'marionette', 'controllers/main'], function(App, Marionette, Cont
             // Tags pages
             'tags/add'                          :  'tagAdd',
             'tags/edit/:id'                     :  'tagEdit',
-            'tags/remove/:id'                   :  'tagRemove',
-            'help'                              :  'help'
+            'tags/remove/:id'                   :  'tagRemove'
         },
 
         controller: new Controller()

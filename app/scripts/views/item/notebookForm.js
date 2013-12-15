@@ -1,4 +1,5 @@
 /*global define*/
+/*global sjcl*/
 define([
     'underscore',
     'jquery',
@@ -63,7 +64,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
                 parentId : parseInt(this.ui.parentId.val())
             };
 
-            if (this.options.configs.get('encrypt').get('value') == 1 ) {
+            if (this.options.configs.get('encrypt').get('value') === 1 ) {
                 data.name = sjcl.encrypt(this.options.key, data.name);
             }
 

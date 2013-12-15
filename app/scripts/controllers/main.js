@@ -1,5 +1,5 @@
 /*global define*/
-/*global prompt*/
+// /*global prompt*/
 /*global sjcl*/
 define([
     'underscore',
@@ -21,9 +21,10 @@ define([
     'tagsSidebar',
     'tagForm',
     'helpView',
+    'configsView',
     'sjcl'
 ],
-function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView) {
+function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView, ConfigsView) {
     'use strict';
 
     var Controller = Marionette.Controller.extend({
@@ -53,20 +54,30 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 this.Configs.firstStart();
             }
 
-            this.on('notes.shown', this.showAllNotes);
-
             // Ask password
             if (this.Configs.get('encrypt').get('value') === 1) {
-                var password = prompt('Please enter your password'),
-                    pwd = this.Configs.get('encryptPass').get('value');
+                this.auth();
+            }
 
-                if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
-                    this.secureKey = sjcl.misc.pbkdf2(
-                        password,
-                        this.Configs.get('encryptSalt').toString(),
-                        1000
-                    );
-                }
+            this.on('notes.shown', this.showAllNotes);
+        },
+
+        /**
+         * Authorization
+         */
+        auth: function () {
+            // var password = prompt('Please enter your password'),
+            var password = '1',
+                pwd = this.Configs.get('encryptPass').get('value');
+
+            if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
+                this.secureKey = sjcl.misc.pbkdf2(
+                    password,
+                    this.Configs.get('encryptSalt').toString(),
+                    1000
+                );
+            } else {
+                this.auth();
             }
         },
 
@@ -103,6 +114,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.content.reset();
             this.trigger('notes.shown', {
                 notebookId : Math.floor(notebook),
+                key        : this.secureKey,
                 lastPage   : page
             });
         },
@@ -114,9 +126,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         showNoteContent: function (id) {
             if (id !== undefined) {
                 App.content.show(new NoteItem({
-                    model: this.Notes.get(id),
-                    collection: this.Notes,
-                    configs: this.Configs
+                    model      : this.Notes.get(id),
+                    collection : this.Notes,
+                    configs    : this.Configs
                 }));
             } else {
                 App.content.reset();
@@ -190,7 +202,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             // Show sidebar
             this.trigger('notes.shown', {
                 filter     : 'active',
-                page       : page,
+                lastPage   : page,
                 notebookId : Math.floor(notebook)
             });
 
@@ -303,7 +315,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             sidebar = new NotebookLayout({
                 collectionNotebooks: this.Notebooks,
                 collectionTags     : this.Tags,
-                configs            : this.Configs,
+                configs            : this.Configs
             });
             App.sidebar.show(sidebar);
 
@@ -386,10 +398,18 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Help View Shortcuts
          */
         help: function () {
-            var content = new HelpView({
+            App.modal.show(new HelpView({
                 collection: this.Configs
-            });
-            App.modal.show(content);
+            }));
+        },
+
+        /**
+         * Settings page
+         */
+        settings: function () {
+            App.modal.show(new ConfigsView({
+                collection: this.Configs
+            }));
         }
 
     });

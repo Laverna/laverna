@@ -1,4 +1,5 @@
-/* global define */
+/*global define*/
+/*global Mousetrap*/
 define([
     'underscore',
     'jquery',
@@ -6,16 +7,16 @@ define([
     'marionette',
     'text!helpTempl',
     'Mousetrap'
-], function ( _, $, Backbone, Marionette, Tmpl , Mousetrap) {
+], function ( _, $, Backbone, Marionette, Tmpl) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
-        
+
         className: 'modal-dialog',
 
         events: {
-            'click .cancelBtn'        : 'close'
+            'click .cancelBtn'  : 'close'
         },
 
         initialize: function () {
@@ -34,17 +35,25 @@ define([
          * Redirect
          */
         redirect: function () {
+            var url = window.history;
+            if (url.length === 0) {
+                Backbone.history.navigate('/', {trigger: true});
+            } else {
+                url.back();
+            }
+            return false;
         },
 
         /**
          * Close
          */
         close: function (e) {
-            /*if (e !== undefined) {
+            if (e !== undefined) {
                 e.preventDefault();
-            }*/
+            }
             this.trigger('close');
-        },
+        }
+
     });
 
     return View;

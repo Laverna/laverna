@@ -19,6 +19,7 @@ define([
         events: {
             'submit .form-horizontal' : 'save',
             'click .ok'               : 'save',
+            'click .close'            : 'close',
             'click .showField'        : 'clickCheckbox',
             'click #randomize'        : 'randomize'
         },
@@ -28,6 +29,7 @@ define([
         },
 
         initialize: function () {
+            this.on('hidden', this.redirect);
             // Mousetrap.reset();
         },
 
@@ -81,9 +83,20 @@ define([
                 }
             }, this);
 
-            this.trigger('close');
+            return this.redirect();
+        },
+
+        redirect: function () {
+            Backbone.history.navigate('/', true);
+            window.location.reload();
             return false;
+        },
+
+        close: function (e) {
+            e.preventDefault();
+            this.trigger('close');
         }
+
     });
 
     return View;

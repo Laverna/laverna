@@ -265,6 +265,12 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
                 data = new this.collection.model().toJSON();
             } else {
                 data = this.model.toJSON();
+
+                // Decrypt
+                if (this.options.configs.get('encrypt').get('value') === 1) {
+                    data.content = sjcl.decrypt(this.options.key, data.content);
+                    data.title = sjcl.decrypt(this.options.key, data.title);
+                }
                 this.model.trigger('shown');
             }
 

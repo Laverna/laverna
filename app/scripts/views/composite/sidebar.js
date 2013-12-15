@@ -39,8 +39,9 @@ define([
             this.keyboardEvents[configs.appKeyboardHelp] = 'toHelp';
         },
 
-        toHelp: function (e) {
-            return Backbone.history.navigate('/help', {trigger: true});
+        toHelp: function () {
+            Backbone.history.navigate('#/help');
+            return false;
         },
 
         /**

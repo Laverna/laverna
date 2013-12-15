@@ -16,6 +16,7 @@ define([
         el: '#modal',
 
         constructor: function() {
+            this.$window = $(window);
             _.bindAll(this);
             Backbone.Marionette.Region.prototype.constructor.apply(this, arguments);
             this.on('show', this.showModal, this);
@@ -28,8 +29,6 @@ define([
         },
 
         showModal: function(view) {
-            var $window = $(window);
-
             view.on('close', this.hideModal, this);
 
             // Trigger shown event
@@ -40,6 +39,7 @@ define([
             // Trigger hidden event
             this.$el.on('hidden.bs.modal', function () {
                 view.trigger('hidden');
+                view.remove();
             });
 
             // Show modal window
@@ -50,13 +50,13 @@ define([
             });
 
             // If url is changed we should close modal window
-            $window.on('hashchange.modal', function () {
-                $window.off('hashchange.modal');
+            this.$window.on('hashchange.modal', function () {
                 view.trigger('close');
             });
         },
 
         hideModal: function() {
+            this.$window.off('hashchange.modal');
             this.$el.modal('hide');
         }
     });

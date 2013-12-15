@@ -8,12 +8,10 @@ define([
     'text!noteItemTempl',
     'checklist',
     'prettify',
-    'app',
-    'configsView',
     'sjcl',
     'backbone.mousetrap',
     'pagedown-extra'
-], function (_, Backbone, Marionette, Template, Checklist, prettify, App, ConfigsView) {
+], function (_, Backbone, Marionette, Template, Checklist, prettify) {
     'use strict';
 
     // Intergrating backbone.mousetrap in marionette
@@ -25,16 +23,15 @@ define([
         className: 'content-notes',
 
         ui: {
-            editBtn: '.btn-edit',
-            favorite: '.favorite span',
-            progress: '.progress-bar',
-            percent : '.progress-percent'
+            editBtn  : '.btn-edit',
+            favorite : '.favorite span',
+            progress : '.progress-bar',
+            percent  : '.progress-percent'
         },
 
         events: {
-            'click .favorite': 'favorite',
-            'click .task :checkbox': 'toggleTask',
-            'click #showSettings'  : 'showSettings'
+            'click .favorite'     : 'favorite',
+            'click .task:checkbox': 'toggleTask'
         },
 
         keyboardEvents: {
@@ -51,8 +48,6 @@ define([
             this.model.trigger('shown');
             this.listenTo(this.model, 'change', this.changeFocus);
             this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
-
-            document.title = this.model.get('title');
         },
 
         onRender: function () {
@@ -76,6 +71,9 @@ define([
                 data.content = sjcl.decrypt(this.options.key, data.content);
                 data.title = sjcl.decrypt(this.options.key, data.title);
             }
+
+            // Show title
+            document.title = data.title;
             return data;
         },
 
@@ -132,13 +130,6 @@ define([
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
             this.ui.progress.css({width: percent + '%'});
             this.ui.percent.html(percent + '%');
-        },
-
-        showSettings: function (e) {
-            e.preventDefault();
-            App.modal.show(new ConfigsView({
-                collection: this.options.configs
-            }));
         },
 
         templateHelpers: function() {

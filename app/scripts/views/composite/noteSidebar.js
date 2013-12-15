@@ -47,7 +47,7 @@ define([
             // Setting keyboardEvents
             var configs = this.options.configs.getConfigs();
             this.setKeyboardEvents( configs );
-            this.keyboardEvents[configs['shortcuts-application-search-note']] = 'focusSearch';
+            this.keyboardEvents[configs.appSearch] = 'focusSearch';
 
             // Filter
             var notes;
@@ -88,6 +88,7 @@ define([
             // Options to itemView
             this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.key = this.options.key;
+            this.itemViewOptions.configs = this.options.configs;
             this.itemViewOptions.searchQuery = this.options.searchQuery;
             this.itemViewOptions.url = this.urlPage;
         },

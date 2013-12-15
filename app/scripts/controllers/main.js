@@ -114,7 +114,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             if (id !== undefined) {
                 App.content.show(new NoteItem({
                     model: this.Notes.get(id),
-                    collection: this.Notes
+                    collection: this.Notes,
+                    configs: this.Configs
                 }));
             } else {
                 App.content.reset();
@@ -287,7 +288,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Notebooks list
             notebook = new NotebookSidebar({
-                collection : this.Notebooks
+                collection : this.Notebooks,
+                configs            : this.Configs,
+                key                : this.secureKey
             });
 
             // Tags list
@@ -299,7 +302,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             sidebar = new NotebookLayout({
                 collectionNotebooks: this.Notebooks,
                 collectionTags     : this.Tags,
-                configs            : this.Configs
+                configs            : this.Configs,
             });
             App.sidebar.show(sidebar);
 
@@ -315,7 +318,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         notebookAdd: function () {
             var content = new NotebookForm({
-                collection: this.Notebooks
+                collection: this.Notebooks,
+                configs: this.Configs,
+                key: this.secureKey
             });
 
             App.modal.show(content);
@@ -328,7 +333,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var notebook = this.Notebooks.get(id),
                 content = new NotebookForm({
                     model: notebook,
-                    collection: this.Notebooks
+                    collection: this.Notebooks,
+                    configs: this.Configs,
+                    key: this.secureKey
                 });
 
             App.modal.show(content);

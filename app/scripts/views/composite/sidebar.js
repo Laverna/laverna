@@ -29,13 +29,13 @@ define([
          * Setting all keyboard events
          */
         setKeyboardEvents: function ( configs ) {
-            this.keyboardEvents[configs['shortcuts-navigation-bottom']] = 'navigateBottom';
-            this.keyboardEvents[configs['shortcuts-navigation-top']] = 'navigateTop';
-            this.keyboardEvents[configs['shortcuts-application-create-new-note']] = 'toCreate';
-            this.keyboardEvents[configs['shortcuts-jumping-favorite-notes']] = 'showFavorites';
-            this.keyboardEvents[configs['shortcuts-jumping-removed-notes']] = 'showTrashed';
-            this.keyboardEvents[configs['shortcuts-jumping-inbox']] = 'showInbox';
-            this.keyboardEvents[configs['shortcuts-jumping-notebook-list']] = 'toNotebook';
+            this.keyboardEvents[configs.navigateBottom] = 'navigateBottom';
+            this.keyboardEvents[configs.navigateTop] = 'navigateTop';
+            this.keyboardEvents[configs.appCreateNote] = 'toCreate';
+            this.keyboardEvents[configs.jumpFavorite] = 'showFavorites';
+            this.keyboardEvents[configs.jumpRemoved] = 'showTrashed';
+            this.keyboardEvents[configs.jumpInbox] = 'showInbox';
+            this.keyboardEvents[configs.jumpNotebook] = 'toNotebook';
         },
 
         /**

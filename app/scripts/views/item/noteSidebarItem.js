@@ -33,8 +33,10 @@ define([
             });
 
             // Decryption
-            data.content = sjcl.decrypt(this.options.key, data.content);
-            data.title = sjcl.decrypt(this.options.key, data.title);
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                data.content = sjcl.decrypt(this.options.key, data.content);
+                data.title = sjcl.decrypt(this.options.key, data.title);
+            }
 
             return data;
         },

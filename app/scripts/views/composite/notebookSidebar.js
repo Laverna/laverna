@@ -16,8 +16,11 @@ define([
 
         itemView: notebookSidebarItem,
         itemViewContainer: '.list-notebooks',
+        itemViewOptions: {},
 
         initialize: function () {
+            this.itemViewOptions.key = this.options.key;
+            this.itemViewOptions.configs = this.options.configs;
         },
 
         /**

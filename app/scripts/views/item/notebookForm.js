@@ -6,7 +6,8 @@ define([
     'marionette',
     'models/notebook',
     'text!notebookFormTempl',
-    'Mousetrap'
+    'Mousetrap',
+    'sjcl'
 ],
 function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
     'use strict';
@@ -61,6 +62,10 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
                 name     : this.ui.name.val(),
                 parentId : parseInt(this.ui.parentId.val())
             };
+
+            if (this.options.configs.get('encrypt').get('value') == 1 ) {
+                data.name = sjcl.encrypt(this.options.key, data.name);
+            }
 
             if (this.model !== undefined) {
                 return this.update(data);

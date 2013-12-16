@@ -10,8 +10,7 @@ define([
     'Mousetrap',
     'sjcl'
 ],
-function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
-    'use strict';
+function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) { 'use strict';
 
     /**
      * Notebook form
@@ -104,7 +103,12 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
             var notebook = new Notebook(data, {validate: true});
 
             if ( !notebook.validationError) {
-                this.collection.create(notebook);
+                var item = this.collection.create(notebook);
+
+                if (this.options.configs.get('encrypt').get('value') === 1 ) {
+                    item.set('name', sjcl.decrypt(this.options.key, item.get('name')));
+                }
+
                 return this.redirect();
             } else {
                 this.showErrors(notebook.validationError);

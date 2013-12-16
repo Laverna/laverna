@@ -33,18 +33,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Initialization
          */
         initialize: function() {
-            // Fetch notes
-            this.Notes = new CollectionNotes();
-            this.Notes.fetch({reset: true});
-
-            // Fetch notebooks
-            this.Notebooks = new CollectionNotebooks();
-            this.Notebooks.fetch({reset: true});
-
-            // Fetch tags
-            this.Tags = new CollectionTags();
-            this.Tags.fetch({reset: true});
-
             // Fetch configs
             this.Configs = new CollectionConfigs();
             this.Configs.fetch({reset: true});
@@ -59,7 +47,22 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 this.auth();
             }
 
+            // Fetch notes
+            this.Notes = new CollectionNotes();
+            this.Notes.setEncryptionData({configs: this.Configs, key: this.secureKey});
+            this.Notes.fetch({reset: true});
+
+            // Fetch notebooks
+            this.Notebooks = new CollectionNotebooks();
+            this.Notebooks.setEncryptionData({configs: this.Configs, key: this.secureKey});
+            this.Notebooks.fetch({reset: true});
+
+            // Fetch tags
+            this.Tags = new CollectionTags();
+            this.Tags.fetch({reset: true});
+
             this.on('notes.shown', this.showAllNotes);
+            console.log(this.Notes.length);
         },
 
         /**

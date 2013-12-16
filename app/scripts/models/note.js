@@ -6,9 +6,9 @@ define([
     'models/notebook',
     'collections/notebooks',
     'collections/tags',
-    // 'sjcl',
     'backbone.assosiations',
-    'localStorage'
+    'localStorage',
+    'sjcl'
 ], function (_, Backbone, Notebook, Notebooks, Tags) {
     'use strict';
 
@@ -56,6 +56,16 @@ define([
         initialize: function () {
             this.on('update.note', this.setUpdate);
             this.on('changed:notebookId', this.updateNotebookCount);
+
+            if (this.collection !== undefined) {
+                var encryptionData = this.collection.getEncryptionData();
+                if (encryptionData.configs.get('encrypt').get('value') === 1) {
+                    try {
+                        this.attributes.title = sjcl.decrypt(encryptionData.key, this.attributes.title);
+                        this.attributes.content = sjcl.decrypt(encryptionData.key, this.attributes.content);
+                    } catch (err) {}
+                }
+            }
 
             if (this.isNew()) {
                 this.set('created', Date.now());

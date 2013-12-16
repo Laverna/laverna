@@ -15,6 +15,14 @@ define([
 
         localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
 
+        setEncryptionData: function (data) {
+            return this.encryptionData = data;
+        },
+
+        getEncryptionData: function () {
+            return this.encryptionData;
+        },
+
         /**
          * Generates the next order number
          */

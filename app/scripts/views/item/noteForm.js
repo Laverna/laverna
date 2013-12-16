@@ -131,11 +131,17 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             note = new Note(data);
             this.model = note;
-            this.collection.create(note);
+            var item = this.collection.create(note);
+
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                item.set('title', sjcl.decrypt(this.options.key, item.get('title')));
+                item.set('content', sjcl.decrypt(this.options.key, item.get('content')));
+            }
 
             if (notebookId !== 0) {
                 notebookId = this.options.notebooks.get(notebookId);
                 this.model.save({notebookId: notebookId});
+
                 notebookId.trigger('add:note');
             }
 
@@ -154,6 +160,11 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Save changes
             this.model.save(data);
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                this.model.set('title', sjcl.decrypt(this.options.key, this.model.get('title')));
+                this.model.set('content', sjcl.decrypt(this.options.key, this.model.get('content')));
+            }
+
             this.model.trigger('update.note');
             this.model.trigger('changed:notebookId', {last: lastNotebook});
         },
@@ -266,22 +277,10 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             } else {
                 data = this.model.toJSON();
 
-                // Decrypt
-                if (this.options.configs.get('encrypt').get('value') === 1) {
-                    data.content = sjcl.decrypt(this.options.key, data.content);
-                    data.title = sjcl.decrypt(this.options.key, data.title);
-                }
                 this.model.trigger('shown');
             }
 
             data.notebooks = this.options.notebooks.toJSON();
-
-            // Decrypt
-            if (this.options.configs.get('encrypt').get('value') === 1) {
-                data.notebooks.forEach(function(model) {
-                    model.name = sjcl.decrypt(this.options.key, model.name);
-                }, this);
-            }
 
             return data;
         },

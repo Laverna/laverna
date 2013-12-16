@@ -164,12 +164,6 @@ define([
         },
 
         serializeData: function () {
-            if (this.options.configs.get('encrypt').get('value') === 1) {
-                try {
-                    this.options.title = sjcl.decrypt(this.options.key, this.options.title);
-                } catch (err) {
-                }
-            }
             var viewData = {
                 title       : this.options.title,
                 nextPage    : this.nextPage,

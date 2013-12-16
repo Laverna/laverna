@@ -13,8 +13,19 @@ define([
 
         localStorage: new Backbone.LocalStorage('vimarkable.notes'),
 
+        initialize: function () {
+        },
+
         comparator: function (model) {
             return model.get('created');
+        },
+
+        setEncryptionData: function (data) {
+            return this.encryptionData = data;
+        },
+
+        getEncryptionData: function () {
+            return this.encryptionData;
         },
 
         /**

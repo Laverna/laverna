@@ -21,9 +21,6 @@ define([
 
         serializeData: function ( ) {
             var data = this.model.toJSON();
-            if (this.options.configs.get('encrypt').get('value') === 1) {
-                data.name = sjcl.decrypt(this.options.key, data.name);
-            }
             return data;
         },
 

@@ -43,6 +43,8 @@ define([
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
             this.keyboardEvents[configs.actionsRemove] = 'deleteNote';
+            this.keyboardEvents['up'] = 'scrollTop';
+            this.keyboardEvents['down'] = 'scrollDown';
 
             // this.model.on('change', this.render);
             this.model.trigger('shown');
@@ -60,6 +62,10 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
+        },
+
+        afterRender: function () {
+            this.$('.ui-s-content').trigger('click');
         },
 
         /**
@@ -129,6 +135,16 @@ define([
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
             this.ui.progress.css({width: percent + '%'});
             this.ui.percent.html(percent + '%');
+        },
+
+        scrollTop: function () {
+            var Top = this.$('.ui-s-content').scrollTop();
+            this.$('.ui-s-content').scrollTop(Top - 50);
+        },
+
+        scrollDown: function () {
+            var Top = this.$('.ui-s-content').scrollTop();
+            this.$('.ui-s-content').scrollTop(Top + 50);
         },
 
         templateHelpers: function() {

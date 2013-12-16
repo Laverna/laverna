@@ -62,7 +62,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.Tags.fetch({reset: true});
 
             this.on('notes.shown', this.showAllNotes);
-            console.log(this.Notes.length);
         },
 
         /**

@@ -31,7 +31,7 @@ define([
 
         events: {
             'click .favorite'     : 'favorite',
-            'click .task:checkbox': 'toggleTask'
+            'click .task [type="checkbox"]': 'toggleTask'
         },
 
         keyboardEvents: {
@@ -118,9 +118,12 @@ define([
             var text = new Checklist().toggle(this.model.get('content'), taskId);
 
             // Save result
+            this.model.set('title', sjcl.encrypt(this.options.key, this.model.get('title')));
             this.model.set('content', text.content);
             this.model.set('taskCompleted', text.completed);
             this.model.save();
+
+            this.model.set('title', sjcl.decrypt(this.options.key, this.model.get('title')));
 
             // Status in progress bar
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));

@@ -100,6 +100,11 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
                 tags       : this.ui.tagsId.tagsinput('items')
             };
 
+            // Tasks
+            var checklist = new Checklist().count(data.content);
+            data.taskAll = checklist.all;
+            data.taskCompleted = checklist.completed;
+
             // Encrypting
             if (this.options.configs.get('encrypt').get('value') === 1) {
                 data.content = sjcl.encrypt(this.options.key, data.content);
@@ -108,11 +113,6 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Get tags id
             data.tags = this.options.collectionTags.getTagsId(data.tags);
-
-            // Tasks
-            var checklist = new Checklist().count(data.content);
-            data.taskAll = checklist.all;
-            data.taskCompleted = checklist.completed;
 
             // Existing note or new one?
             if (this.model !== undefined) {

@@ -17,7 +17,7 @@ define([
         },
 
         comparator: function (model) {
-            return model.get('created');
+            return -model.get('created');
         },
 
         setEncryptionData: function (data) {
@@ -84,16 +84,6 @@ define([
             if(letters === '') {
                 return this;
             }
-
-            console.log(key);
-            if (configs.get('encrypt').get('value') === 1) {
-                this.each(function (model) {
-                    try {
-                        model.set('title', sjcl.decrypt(key, model.get('title')));
-                    } catch (err) {}
-                });
-            }
-            console.log(this.models);
 
             var pattern = new RegExp(letters, 'gi');
             return this.filter(function(model) {

@@ -6,7 +6,8 @@ define([
     'sidebar',
     'noteSidebarItem',
     'text!noteSidebarTempl',
-    'backbone.mousetrap'
+    'backbone.mousetrap',
+    'sjcl'
 ], function(_, Backbone, Marionette, Sidebar, NoteSidebarItem, Template) {
     'use strict';
 
@@ -63,7 +64,7 @@ define([
                     this.urlPage = '/note/trashed';
                     break;
                 case 'search':
-                    notes = this.collection.search(this.options.searchQuery);
+                    notes = this.collection.search(this.options.searchQuery, this.options.key, this.options.configs);
                     this.urlPage = '/note/search/' + this.options.searchQuery;
                     break;
                 case 'tagged':
@@ -163,6 +164,12 @@ define([
         },
 
         serializeData: function () {
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                try {
+                    this.options.title = sjcl.decrypt(this.options.key, this.options.title);
+                } catch (err) {
+                }
+            }
             var viewData = {
                 title       : this.options.title,
                 nextPage    : this.nextPage,

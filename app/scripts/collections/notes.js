@@ -3,7 +3,8 @@ define([
     'underscore',
     'models/note',
     'backbone',
-    'localStorage'
+    'localStorage',
+    'sjcl'
 ], function (_, Note, Backbone) {
     'use strict';
 
@@ -68,10 +69,20 @@ define([
         /**
          * Search
          */
-        search : function(letters) {
+        search : function(letters, key, configs) {
             if(letters === '') {
                 return this;
             }
+
+            console.log(key);
+            if (configs.get('encrypt').get('value') === 1) {
+                this.each(function (model) {
+                    try {
+                        model.set('title', sjcl.decrypt(key, model.get('title')));
+                    } catch (err) {}
+                });
+            }
+            console.log(this.models);
 
             var pattern = new RegExp(letters, 'gi');
             return this.filter(function(model) {

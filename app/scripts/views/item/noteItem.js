@@ -68,8 +68,11 @@ define([
         serializeData: function () {
             var data = this.model.toJSON();
             if (this.options.configs.get('encrypt').get('value') === 1) {
-                data.content = sjcl.decrypt(this.options.key, data.content);
-                data.title = sjcl.decrypt(this.options.key, data.title);
+                try {
+                    data.content = sjcl.decrypt(this.options.key, data.content);
+                    data.title = sjcl.decrypt(this.options.key, data.title);
+                    data.notebookId.name = sjcl.decrypt(this.options.key, data.notebookId.name);
+                } catch (err) {}
             }
 
             // Show title

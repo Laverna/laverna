@@ -78,12 +78,24 @@ define([
                 }
 
                 // Save only if value is changed
-                if (value.toString() !== model.get('value')) {
-                    model.save('value', value);
+                if (value !== model.get('value')) {
+                    if (typeof model.get('value') === 'object') {
+                        var stringToCompare = '';
+                        _.forEach(model.get('value'), function( item ) { 
+                            stringToCompare += item + ',';
+                        });
+                        stringToCompare = stringToCompare.substring(0, stringToCompare.length - 1);
+
+                        if (stringToCompare !== value) {
+                            model.save('value', value);
+                        }
+                    } else {
+                        model.save('value', value);
+                    }
                 }
             }, this);
 
-            return this.redirect();
+            //return this.redirect();
         },
 
         redirect: function () {

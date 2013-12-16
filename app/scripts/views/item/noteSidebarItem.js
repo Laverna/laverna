@@ -32,11 +32,13 @@ define([
                 url     : this.options.url
             });
 
-            // Decryption
+/*            // Decryption
             if (this.options.configs.get('encrypt').get('value') === 1) {
-                data.content = sjcl.decrypt(this.options.key, data.content);
-                data.title = sjcl.decrypt(this.options.key, data.title);
-            }
+                try {
+                    data.content = sjcl.decrypt(this.options.key, data.content);
+                    data.title = sjcl.decrypt(this.options.key, data.title);
+                } catch (err) {}
+            }*/
 
             return data;
         },

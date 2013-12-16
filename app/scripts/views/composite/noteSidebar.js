@@ -159,7 +159,7 @@ define([
             }
 
             // Previous page
-            this.prevPage = (this.lastPage !== 1) ? this.lastPage - 1 : 1;
+            this.prevPage = (this.lastPage > 1) ? this.lastPage - 1 : 1;
         },
 
         serializeData: function () {

@@ -122,7 +122,7 @@ define([
 
             if ((i + 1) === this.perPage && n === 'next') {
                 url = this.ui.nextPage.attr('href');
-            } else if (i === 0 && n === 'prev') {
+            } else if (i === 0 && n === 'prev' && this.lastPage > 1) {
                 url = this.ui.prevPage.attr('href');
             } else {
                 if (n === 'prev') {

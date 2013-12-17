@@ -204,7 +204,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         pagedownRender: function () {
             // var that = this,
             var converter,
-                editor;
+                editor,
+                wmdBar,
+                scroll;
 
             converter = new Markdown.Converter();
             editor = new Markdown.Editor(converter);
@@ -227,6 +229,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
                 minLines: 40
             });
 
+            // this.editor.setKeyboardHandler('vim'); // vim
             editor.run(this.editor);
 
             // Hide default buttons
@@ -258,9 +261,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             // });
 
             // Editor bar spy your scrolls
-            var wmdBar = this.$('#wmd-button-bar');
+            wmdBar = this.$('#wmd-button-bar');
             this.ui.sCont.on('scroll', function () {
-                var scroll = $(this).scrollTop();
+                scroll = $(this).scrollTop();
                 if (scroll >= 260) {
                     wmdBar.addClass('wmd-bar-fixed')
                         .css({top: scroll-2 + 'px'});

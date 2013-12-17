@@ -24,41 +24,44 @@ define([
 
         getEl: function(selector) {
             var $el = $(selector);
-            $el.on('hidden', this.close);
+            $el.on('hidden', this.reset);
             return $el;
         },
 
         showModal: function(view) {
+            this.view = view;
             view.on('close', this.hideModal, this);
 
-            // Trigger shown event
-            this.$el.on('shown.bs.modal', function () {
-                view.trigger('shown');
-            });
-
-            // Trigger hidden event
-            this.$el.on('hidden.bs.modal', function () {
-                view.trigger('hidden');
-                view.remove();
-            });
-
             // Show modal window
-            this.$el.modal({
+            view.$el.modal({
                 show     : true,
                 backdrop : 'static',
                 keyboard : true
             });
 
-            // If url is changed we should close modal window
-            this.$window.on('hashchange.modal', function () {
-                view.trigger('close');
+            // Trigger shown event
+            view.$el.on('shown.bs.modal', function () {
+                view.trigger('shown.modal');
             });
+
+            // Trigger hidden event
+            view.$el.on('hidden.bs.modal', function () {
+                view.trigger('hidden.modal');
+            });
+
+            // If url is changed we should close modal window
+            if (view.hashChange === undefined && this.modalShown === true) {
+                this.$window.on('hashchange.modal', function () {
+                    view.trigger('close');
+                });
+            }
         },
 
-        hideModal: function() {
-            this.$window.off('hashchange.modal');
-            this.$el.modal('hide');
+        hideModal: function () {
+            this.modalShown = false;
+            this.view.$el.modal('hide');
         }
+
     });
 
     return ModalRegion;

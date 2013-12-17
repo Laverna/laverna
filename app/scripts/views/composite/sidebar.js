@@ -40,7 +40,7 @@ define([
         },
 
         toHelp: function () {
-            Backbone.history.navigate('#/help');
+            Backbone.history.navigate('/help', true);
             return false;
         },
 

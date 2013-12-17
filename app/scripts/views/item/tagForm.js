@@ -16,7 +16,7 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
-        className: 'modal-dialog',
+        className: 'modal fade',
 
         ui: {
             name : 'input[name="name"]'
@@ -29,8 +29,8 @@ define([
         },
 
         initialize: function () {
-            this.on('hidden', this.redirect);
-            this.on('shown', this.onFormShown);
+            this.on('hidden.modal', this.redirect);
+            this.on('shown.modal', this.onFormShown);
             Mousetrap.reset();
         },
 

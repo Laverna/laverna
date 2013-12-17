@@ -19,7 +19,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'modal-dialog',
+        className: 'modal fade',
 
         ui: {
             name     : 'input[name="name"]',
@@ -33,8 +33,8 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         initialize: function () {
-            this.on('hidden', this.redirect);
-            this.on('shown', this.onFormShown);
+            this.on('hidden.modal', this.redirect);
+            this.on('shown.modal', this.onFormShown);
             Mousetrap.reset();
         },
 
@@ -130,7 +130,8 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         redirect: function () {
-            Backbone.history.navigate('#/notebooks');
+            console.log('closed');
+            Backbone.history.navigate('#/notebooks', true);
         },
 
         close: function (e) {

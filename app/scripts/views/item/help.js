@@ -13,14 +13,16 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'modal-dialog',
+        hashChange: false,
+
+        className: 'modal fade',
 
         events: {
             'click .cancelBtn'  : 'close'
         },
 
         initialize: function () {
-            this.on('hidden', this.redirect);
+            this.on('hidden.modal', this.redirect);
             Mousetrap.reset();
         },
 
@@ -35,13 +37,12 @@ define([
          * Redirect
          */
         redirect: function () {
-            var url = window.history;
-            if (url.length === 0) {
-                Backbone.history.navigate('/', {trigger: true});
+            var history = window.history;
+            if (history.length !== 0) {
+                history.back();
             } else {
-                url.back();
+                Backbone.history.navigate('/', true);
             }
-            return false;
         },
 
         /**

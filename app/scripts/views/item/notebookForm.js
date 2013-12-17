@@ -10,7 +10,8 @@ define([
     'Mousetrap',
     'sjcl'
 ],
-function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) { 'use strict';
+function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
+    'use strict';
 
     /**
      * Notebook form
@@ -129,7 +130,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) { 'use strict';
         },
 
         redirect: function () {
-            Backbone.history.navigate('#/notebooks', true);
+            Backbone.history.navigate('#/notebooks');
         },
 
         close: function (e) {

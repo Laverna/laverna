@@ -14,7 +14,7 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'modal-dialog',
+        className: 'modal fade',
 
         events: {
             'submit .form-horizontal' : 'save',
@@ -29,7 +29,7 @@ define([
         },
 
         initialize: function () {
-            this.on('hidden', this.redirect);
+            this.on('hidden.modal', this.redirect);
             Mousetrap.reset();
         },
 
@@ -81,7 +81,7 @@ define([
                 if (value !== model.get('value')) {
                     if (typeof model.get('value') === 'object') {
                         var stringToCompare = '';
-                        _.forEach(model.get('value'), function( item ) { 
+                        _.forEach(model.get('value'), function( item ) {
                             stringToCompare += item + ',';
                         });
                         stringToCompare = stringToCompare.substring(0, stringToCompare.length - 1);
@@ -95,17 +95,22 @@ define([
                 }
             }, this);
 
-            //return this.redirect();
+            this.settingsChanged = true;
+            return this.redirect();
         },
 
         redirect: function () {
             Backbone.history.navigate('/', true);
-            window.location.reload();
+            if (this.settingsChanged) {
+                window.location.reload();
+            }
             return false;
         },
 
         close: function (e) {
-            e.preventDefault();
+            if (e !== undefined) {
+                e.preventDefault();
+            }
             this.trigger('close');
         }
 

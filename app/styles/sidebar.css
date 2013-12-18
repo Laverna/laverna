@@ -1,5 +1,0 @@
-NameError: variable @brand-danger is undefined in /home/greenstar/webserver/notes/app/styles/sidebar.less on line 14, column 35:
-13         &:hover, &:focus {
-14             border-color: lighten(@brand-danger, 5%);
-15             background: darken(@brand-danger, 5%);
-

@@ -1,5 +1,0 @@
-NameError: .box-shadow is undefined in /home/greenstar/webserver/notes/app/styles/forms.less on line 8, column 9:
-7         border-color: lighten(@baseGreenColor, 5%);
-8         .box-shadow(none);
-9         // .box-shadow(~"inset 0 1px 1px lighten(@baseGreenColor, 20%), 0 0 8px lighten(@baseGreenColor, 40%)");
-

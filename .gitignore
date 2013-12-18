@@ -4,6 +4,4 @@ dist
 .sass-cache
 app/bower_components
 .idea
-app/styles/responsive.css
-app/styles/styles.css
-app/styles/variables.css
+app/styles/*.css

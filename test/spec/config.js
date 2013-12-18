@@ -1,6 +1,7 @@
 require.config({
     baseUrl: '../app/scripts/',
     paths: {
+        sjcl                  :  '../bower_components/sjcl/sjcl',
         jquery                :  '../bower_components/jquery/jquery',
         text                  :  '../bower_components/requirejs-text/text',
         underscore            :  '../bower_components/underscore/underscore',

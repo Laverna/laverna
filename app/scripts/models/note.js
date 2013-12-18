@@ -1,5 +1,5 @@
 /*global define*/
-// /*global sjcl*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',

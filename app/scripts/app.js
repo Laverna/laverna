@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'modalRegion',
-    'marionette',
+    'marionette'
 ], function (_, Backbone, ModalRegion) {
     'use strict';
 

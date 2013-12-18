@@ -9,6 +9,8 @@
     "underscore"           :  "~1.4.4",
     "backbone"             :  "~1.1.0",
     "marionette"           :  "~1.2.3",
+    "backbone.babysitter"  :  "~0.0.6",
+    "backbone.wreqr"       :  "~0.2.0",
     "backbone.localStorage":  "~1.1.7",
     "backbone-associations":  "~0.5.4",
     "mousetrap"            :  "~1.4.5",

@@ -1,8 +1,10 @@
 /*global define*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
-    'backbone.assosiations'
+    'backbone.assosiations',
+    'sjcl'
 ], function (_, Backbone) {
     'use strict';
 
@@ -42,7 +44,7 @@ define([
                     } catch (err) {}
                 }
             }
-            
+
         },
 
         addCount: function () {

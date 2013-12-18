@@ -16,7 +16,7 @@ define([
         localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
 
         setEncryptionData: function (data) {
-            return this.encryptionData = data;
+            this.encryptionData = data;
         },
 
         getEncryptionData: function () {

@@ -21,7 +21,7 @@ define([
         },
 
         setEncryptionData: function (data) {
-            return this.encryptionData = data;
+            this.encryptionData = data;
         },
 
         getEncryptionData: function () {
@@ -80,7 +80,7 @@ define([
         /**
          * Search
          */
-        search : function(letters, key, configs) {
+        search : function(letters) {
             if(letters === '') {
                 return this;
             }

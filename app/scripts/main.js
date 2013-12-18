@@ -5,13 +5,7 @@ require.config({
             name     : 'ace',
             location : '../bower_components/ace/lib/ace',
             main     : 'ace'
-        },
-        // Stanford JavaScript crypto library
-        /*{
-            name     : 'sjcl',
-            location : '../bower_components/sjcl/core',
-            main     : 'sjcl'
-        }*/
+        }
     ],
     paths: {
         sjcl                       :  '../bower_components/sjcl/sjcl',
@@ -106,9 +100,9 @@ require.config({
         ace: {
             exports: 'ace'
         },
-        /*cjcl: {
+        cjcl: {
             exports: 'cjcl'
-        },*/
+        },
         'pagedown-ace': ['../bower_components/pagedown-ace/Markdown.Converter'],
         'pagedown-extra': [
             // '../bower_components/pagedown-ace/Markdown.Sanitizer',

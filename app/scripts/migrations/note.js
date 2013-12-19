@@ -15,6 +15,34 @@ define([
                     transaction.db.createObjectStore('notes');
                     next();
                 }
+            },
+            {
+                version: 2,
+                migrate: function (transaction, next) {
+                    var store;
+                    if ( !transaction.db.objectStoreNames.contains('notes')) {
+                        store = transaction.db.createObjectStore('notes');
+                    }
+                    store = transaction.objectStore('notes');
+                    store.createIndex('isFavorite', 'isFavorite', {
+                        unique: false
+                    });
+                    next();
+                }
+            },
+            {
+                version: 3,
+                migrate: function (transaction, next) {
+                    var store;
+                    if ( !transaction.db.objectStoreNames.contains('notes')) {
+                        store = transaction.db.createObjectStore('notes');
+                    }
+                    store = transaction.objectStore('notes');
+                    store.createIndex('trashIndex', 'trash', {
+                        unique: false
+                    });
+                    next();
+                }
             }
         ]
     };

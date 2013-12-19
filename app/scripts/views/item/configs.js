@@ -30,7 +30,7 @@ define([
 
         initialize: function () {
             this.on('hidden.modal', this.redirect);
-            Mousetrap.reset();
+            Mousetrap.pause();
         },
 
         serializeData: function () {
@@ -100,6 +100,7 @@ define([
         },
 
         redirect: function () {
+            Mousetrap.unpause();
             Backbone.history.navigate('/', true);
             if (this.settingsChanged) {
                 window.location.reload();

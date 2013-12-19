@@ -33,8 +33,6 @@ define([
             searchInput : '#search-input'
         },
 
-        perPage: 8,
-
         events: {
             'submit .search-form'    : 'toSearch',
             'keypress #search-input' : 'escSearch'
@@ -44,56 +42,23 @@ define([
         },
 
         initialize: function () {
+            this.options.page = parseInt(this.options.page);
+
+            // Options to itemView
+            this.itemViewOptions.url = this.options.url;
+            this.itemViewOptions.page = this.options.page;
+            this.itemViewOptions.configs = this.options.configs;
+
             // Setting keyboardEvents
-            var configs = this.options.configs.getConfigs();
-            this.setKeyboardEvents( configs );
-            this.keyboardEvents[configs.appSearch] = 'focusSearch';
-
-            // console.log(parseInt(configs.pagination));
-            this.perPage = parseInt(configs.pagination);
-
-            // Filter
-            var notes;
-            switch (this.options.filter) {
-                case 'favorite':
-                    notes = this.collection.getFavorites();
-                    this.urlPage = '/note/favorite';
-                    break;
-                case 'trashed':
-                    notes = this.collection.getTrashed();
-                    this.urlPage = '/note/trashed';
-                    break;
-                case 'search':
-                    notes = this.collection.search(this.options.searchQuery, this.options.key, this.options.configs);
-                    this.urlPage = '/note/search/' + this.options.searchQuery;
-                    break;
-                case 'tagged':
-                    notes = this.collection.getTagNotes(parseInt(this.options.tagId));
-                    this.urlPage = '/note/tag/' + this.options.tagId;
-                    break;
-                default:
-                    if (this.options.notebookId !== 0) {
-                        notes = this.collection.getNotebookNotes(this.options.notebookId);
-                    } else {
-                        notes = this.collection.getActive();
-                    }
-                    this.urlPage = '/note/' + this.options.notebookId;
-                    break;
-            }
-
-            // Pagination
-            this.collection.reset(notes);
-            this.pagination(notes);
+            this.configs = this.options.configs;
+            this.setKeyboardEvents(this.configs);
+            this.keyboardEvents[this.configs.appSearch] = 'focusSearch';
 
             // Set page title
             document.title = this.options.title;
+        },
 
-            // Options to itemView
-            this.itemViewOptions.page = this.options.lastPage;
-            this.itemViewOptions.key = this.options.key;
-            this.itemViewOptions.configs = this.options.configs;
-            this.itemViewOptions.searchQuery = this.options.searchQuery;
-            this.itemViewOptions.url = this.urlPage;
+        onRender: function () {
         },
 
         /**
@@ -122,70 +87,31 @@ define([
             return Backbone.history.navigate('/note/search/' + text + '/p1', true);
         },
 
-        /**
-         * Pagination
-         */
-        pagination: function (notes) {
-            this.pageCount = this.collection.length;
-
-            if (this.options.lastPage !== undefined) {
-                this.lastPage  = parseInt(this.options.lastPage, null);
-            } else {
-                this.lastPage = 1;
-            }
-
-            // Next note
-            var nextI = this.perPage * this.lastPage;
-            if (this.collection.length > nextI) {
-                var nextNote = this.collection.at(nextI);
-                this.nextNote = nextNote.get('id');
-            }
-
-            // Prev note
-            var prevI = (nextI - this.perPage) - 1;
-            if (prevI > 0) {
-                var prevNote = this.collection.at(prevI);
-                this.prevNote = prevNote.get('id');
-            }
-
-            // Limit
-            notes = this.collection.pagination(this.perPage, this.lastPage);
-            this.collection.reset(notes);
-
-            // Next page
-            if ( (this.pageCount / this.perPage) > this.lastPage) {
-                this.nextPage = this.lastPage + 1;
-            } else {
-                this.nextPage = this.lastPage;
-            }
-
-            // Previous page
-            this.prevPage = (this.lastPage > 1) ? this.lastPage - 1 : 1;
-        },
-
         serializeData: function () {
-            var viewData = {
+            var data = {
                 title       : this.options.title,
-                nextPage    : this.nextPage,
-                nextNote    : this.nextNote,
-                prevPage    : this.prevPage,
-                prevNote    : this.prevNote,
-                urlPage     : this.urlPage,
+                urlPage     : this.options.url,
                 searchQuery : this.options.searchQuery
             };
-            return viewData;
+
+            // Next pagination page
+            data.nextPage = this.options.page + parseInt(this.configs.pagination);
+
+            // Previous pagination page
+            data.prevPage = 1;
+            if (this.configs.pagination < this.options.page) {
+                data.prevPage = this.options.page - this.configs.pagination;
+            }
+
+            return data;
         },
 
         templateHelpers: function () {
             return {
                 // Generates the pagination url
-                pageUrl: function (page, noteId, urlPage) {
+                pageUrl: function (page, urlPage) {
                     var url;
                     url = urlPage + '/p' + page;
-
-                    if (noteId) {
-                        url += '/show/' + noteId;
-                    }
 
                     return '#' + url;
                 }

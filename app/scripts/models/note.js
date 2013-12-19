@@ -63,16 +63,6 @@ define([
             this.on('update.note', this.setUpdate);
             this.on('changed:notebookId', this.updateNotebookCount);
 
-            if (this.collection !== undefined) {
-                var encryptionData = this.collection.getEncryptionData();
-                if (encryptionData.configs.get('encrypt').get('value') === 1) {
-                    try {
-                        this.attributes.title = sjcl.decrypt(encryptionData.key, this.attributes.title);
-                        this.attributes.content = sjcl.decrypt(encryptionData.key, this.attributes.content);
-                    } catch (err) {}
-                }
-            }
-
             if (this.isNew()) {
                 this.set('created', Date.now());
                 this.setUpdate();
@@ -118,11 +108,22 @@ define([
          */
         setUpdate: function () {
             this.set('updated', Date.now());
+        },
 
-            // Encrypt content
-            // console.log(sjcl);
+        /**
+         * Decrypt content
+         * @var object configs
+         */
+        decrypt: function (configs) {
+            var data = this.toJSON();
 
-            // Encrypt title
+            // Decrypting
+            if (configs.encrypt === 1) {
+                data.title   = sjcl.decrypt(configs.secureKey, data.title);
+                data.content = sjcl.decrypt(configs.secureKey, data.content);
+            }
+
+            return data;
         }
 
     });

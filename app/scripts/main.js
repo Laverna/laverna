@@ -99,7 +99,11 @@ require.config({
         },
         'Mousetrap': {},
         'backbone.mousetrap': {
-            deps: ['Mousetrap']
+            deps: [
+                'Mousetrap',
+                '../bower_components/mousetrap/plugins/pause/mousetrap-pause'
+                // '../bower_components/mousetrap/plugins/bind-dictionary/mousetrap-bind-dictionary'
+            ]
         },
         ace: {
             exports: 'ace'

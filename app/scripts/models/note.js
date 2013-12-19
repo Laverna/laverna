@@ -3,13 +3,15 @@
 define([
     'underscore',
     'backbone',
+    'migrations/note',
     'models/notebook',
     'collections/notebooks',
     'collections/tags',
     'backbone.assosiations',
-    'localStorage',
+    'indexedDB',
+    // 'localStorage',
     'sjcl'
-], function (_, Backbone, Notebook, Notebooks, Tags) {
+], function (_, Backbone, NotesDB, Notebook, Notebooks, Tags) {
     'use strict';
 
     /**
@@ -18,6 +20,10 @@ define([
     // var Model = Backbone.Model.extend({
     var Model = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
+
+        // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
+        database  : NotesDB,
+        storeName : 'notes',
 
         defaults: {
             'id'            :  undefined,

@@ -87,8 +87,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show list of notes in sidebar
          */
         showAllNotes: function (args) {
-            var notes = this.Notes.clone(),
-                arg = _.extend({
+            // var notes = this.Notes.clone(),
+            var arg = _.extend({
                     filter  : 'active',
                     title   : 'Inbox',
                     configs : this.Configs,
@@ -99,14 +99,18 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             arg.notebookId = (isNaN(arg.notebookId)) ? 0 : arg.notebookId;
             arg.tagId = (isNaN(arg.tagId)) ? 0 : arg.tagId;
             arg.lastPage = (isNaN(arg.lastPage)) ? 1 : arg.lastPage;
-            arg.collection = notes;
+            arg.collection = this.Notes;
 
             if (arg.notebookId !== 0) {
                 notebookMod = this.Notebooks.get(arg.notebookId);
                 arg.title = notebookMod.get('name');
             }
 
-            App.sidebar.show(new NoteSidebar(arg));
+            this.Notes.fetch({
+                success: function () {
+                    App.sidebar.show(new NoteSidebar(arg));
+                }
+            });
         },
 
         /**
@@ -208,13 +212,20 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 notebookId : Math.floor(notebook)
             });
 
-            // Show content
-            App.content.show(new NoteItem({
-                model      : this.Notes.get(id),
-                collection : this.Notes,
-                configs    : this.Configs,
-                key        : this.secureKey
-            }));
+            var note = new this.Notes.model({id : id}),
+                that = this;
+
+            note.fetch({
+                success: function () {
+                    // Show content
+                    App.content.show(new NoteItem({
+                        model      : note,
+                        collection : that.Notes,
+                        configs    : that.Configs,
+                        key        : that.secureKey
+                    }));
+                }
+            });
         },
 
         /**

@@ -17,6 +17,7 @@ require.config({
         backbone                   :  '../bower_components/backbone/backbone',
         marionette                 :  '../bower_components/marionette/lib/core/amd/backbone.marionette',
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
+        indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'backbone.relational'      :  '../bower_components/backbone-relational/backbone-relational',
@@ -81,6 +82,9 @@ require.config({
             exports: 'Backbone'
         },
         localStorage: {
+            deps: ['underscore', 'backbone']
+        },
+        indexedDB: {
             deps: ['underscore', 'backbone']
         },
         'backbone.relational': {

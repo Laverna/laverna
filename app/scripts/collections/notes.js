@@ -1,17 +1,21 @@
 /*global define*/
 define([
     'underscore',
-    'models/note',
     'backbone',
-    'localStorage',
+    'migrations/note',
+    'models/note',
+    // 'localStorage',
+    'indexedDB',
     'sjcl'
-], function (_, Note, Backbone) {
+], function (_, Backbone, NotesDB, Note) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
         model: Note,
 
-        localStorage: new Backbone.LocalStorage('vimarkable.notes'),
+        // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
+        database  : NotesDB,
+        storeName : 'notes',
 
         initialize: function () {
         },

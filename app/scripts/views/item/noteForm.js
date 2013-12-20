@@ -130,9 +130,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Create note
             this.model = new Note(data);
-            this.collection.create(this.model, {
-                success: function () {
-                    return self.redirectToNote();
+            this.model = this.collection.create(this.model, {
+                success: function (model) {
+                    return self.redirectToNote(model);
                 }
             });
         },
@@ -150,8 +150,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Save changes
             this.model.save(data, {
-                success: function () {
-                    self.redirectToNote();
+                success: function (model) {
+                    self.redirectToNote(model);
                 }
             });
 
@@ -173,7 +173,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         redirect: function () {
             var url = window.history;
             if (url.length === 0) {
-                this.redirectToNote();
+                Backbone.history.navigate('/note/0/p1');
             } else {
                 url.back();
             }
@@ -183,8 +183,8 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         /**
          * Redirects to notes page
          */
-        redirectToNote: function () {
-            var id = this.model.get('id');
+        redirectToNote: function (model) {
+            var id = model.id;
             Backbone.history.navigate('/note/0/p1/show/' + id, true);
         },
 

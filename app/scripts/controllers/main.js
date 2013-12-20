@@ -24,8 +24,7 @@ define([
     'configsView',
     'sjcl'
 ],
-function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView, ConfigsView) {
-    'use strict';
+function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView, ConfigsView) { 'use strict';
 
     var Controller = Marionette.Controller.extend({
 
@@ -138,15 +137,23 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Search specific note
          */
         noteSearch: function (query, page, id) {
-            this.trigger('notes.shown', {
-                filter      : 'search',
-                searchQuery : query,
-                title       : 'Search',
-                lastPage    : page
-            });
+            var self = this;
 
-            // Show content
-            this.showNoteContent(id);
+            this.Notes.fetch({
+                conditions: {trash: 0},
+                limit: this.Configs.get('pagination').get('value'),
+                offset: page,
+                success: function () {
+                    App.sidebar.show(new NoteSidebar({
+                        collectoin: self.Notes,
+                        configs: self.Configs,
+                        page: page,
+                        url: '/note/search/' + query
+                    }));
+
+                    self.trigger('note:show', id);
+                }
+            });
         },
 
         /**

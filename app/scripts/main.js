@@ -99,11 +99,7 @@ require.config({
         },
         'Mousetrap': {},
         'backbone.mousetrap': {
-            deps: [
-                'Mousetrap',
-                '../bower_components/mousetrap/plugins/pause/mousetrap-pause'
-                // '../bower_components/mousetrap/plugins/bind-dictionary/mousetrap-bind-dictionary'
-            ]
+            deps: ['Mousetrap']
         },
         ace: {
             exports: 'ace'
@@ -124,10 +120,15 @@ require.config({
             exports: 'Backbone.BootstrapModal'
         }
     },
-    waitSeconds: 8
+    waitSeconds: 10
 });
 
-require(['jquery', 'router', 'app', 'bootstrap'], function ($, Router, App) {
+require([
+    'jquery',
+    'router',
+    'app',
+    'bootstrap'
+], function ($, Router, App) {
     'use strict';
 
     // App starts here

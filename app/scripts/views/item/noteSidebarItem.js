@@ -1,5 +1,6 @@
 /*global define*/
 /*global Markdown*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -16,17 +17,12 @@ define([
         className: 'list-group',
 
         initialize: function () {
-            this.configs = this.options.configs;
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'change:trash', this.remove);
-            this.listenTo(this.model, 'active', this.changeFocus);
+            this.listenTo(this.model, 'shown', this.changeFocus);
         },
 
-        /**
-         * Make note active
-         */
         changeFocus: function () {
-            $('.list-group-item.active').removeClass('active');
             this.$('.list-group-item').addClass('active');
 
             $('#sidebar .ui-s-content').scrollTop(
@@ -37,7 +33,7 @@ define([
         },
 
         serializeData: function () {
-            var data = _.extend(this.model.decrypt(this.configs), {
+            var data = _.extend(this.model.toJSON(), {
                 page    : this.options.page,
                 url     : this.options.url
             });

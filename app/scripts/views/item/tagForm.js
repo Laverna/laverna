@@ -31,7 +31,7 @@ define([
         initialize: function () {
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.onFormShown);
-            Mousetrap.pause();
+            Mousetrap.reset();
         },
 
         onFormShown: function () {
@@ -109,7 +109,6 @@ define([
          * Redirect
          */
         redirect: function () {
-            Mousetrap.unpause();
             return Backbone.history.navigate('#/notebooks', true);
         },
 

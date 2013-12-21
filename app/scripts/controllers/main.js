@@ -24,7 +24,8 @@ define([
     'configsView',
     'sjcl'
 ],
-function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView, ConfigsView) { 'use strict';
+function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, CollectionTags, CollectionConfigs, NoteForm, NoteItem, NoteSidebar, NotebookLayout, NotebookSidebar, NotebookForm, TagsSidebar, TagForm, HelpView, ConfigsView) {
+    'use strict';
 
     var Controller = Marionette.Controller.extend({
 
@@ -41,9 +42,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 this.Configs.firstStart();
             }
 
-            // Formating configs to JSON
-            this.configs = this.Configs.getConfigs();
-
             // Ask password
             if (this.Configs.get('encrypt').get('value') === 1) {
                 this.auth();
@@ -51,17 +49,19 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Fetch notes
             this.Notes = new CollectionNotes();
+            // this.Notes.setEncryptionData({configs: this.Configs, key: this.secureKey});
 
             // Fetch notebooks
             this.Notebooks = new CollectionNotebooks();
+            // this.Notebooks.setEncryptionData({configs: this.Configs, key: this.secureKey});
             this.Notebooks.fetch({reset: true});
 
             // Fetch tags
             this.Tags = new CollectionTags();
             this.Tags.fetch({reset: true});
 
-            // Show all notes in sidebar
-            this.on('note:show', this._showNote);
+            // Show all notes
+            this.on('notes.shown', this.showAllNotes);
         },
 
         /**
@@ -70,12 +70,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         auth: function () {
             // var password = prompt('Please enter your password'),
             var password = '1',
-                pwd = this.configs.encryptPass;
+                pwd = this.Configs.get('encryptPass').get('value');
 
             if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
-                this.configs.secureKey = sjcl.misc.pbkdf2(
+                this.secureKey = sjcl.misc.pbkdf2(
                     password,
-                    this.configs.encryptSalt.toString(),
+                    this.Configs.get('encryptSalt').toString(),
                     1000
                 );
             } else {
@@ -83,125 +83,108 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             }
         },
 
+        /**
+         * Index page
+         */
+        index: function (notebook, page) {
+            App.content.reset();
+            this.trigger('notes.shown', {
+                notebookId : Math.floor(notebook),
+                key        : this.secureKey,
+                lastPage   : page
+            });
+        },
+
         /* ------------------------------
          * Notes actions
          * ------------------------------ */
-        // Index page
-        index: function (notebook, page) {
-            var self = this;
+        // Show notes content
+        showNoteContent: function (id) {
+            var model = new this.Notes.model({id: id}),
+                content = new NoteItem({
+                    model      : model,
+                    collection : this.Notes,
+                    configs    : this.Configs
+                });
 
-            // Show sidebar
-            this.Notes.fetch({
-                conditions : {trash: 0},
-                limit   : this.configs.pagination,
-                offset  : (page === 1) ? 0 : page,
-                success : function () {
-                    // Show sidebar
-                    App.sidebar.show(new NoteSidebar({
-                        page       : (page === undefined) ? 0 : page,
-                        collection : self.Notes,
-                        configs    : self.configs,
-                        url        : '/note/' + notebook
-                    }));
+            model.fetch({
+                success: function () {
+                    App.content.show(content);
+                },
+                error: function () {
+                    App.content.reset();
                 }
             });
-
-            // Reset content
-            // App.content.reset();
-        },
-
-
-        /**
-         * Show list of notes
-         */
-        _showNotes: function () {
         },
 
         /**
-         * Show note's content
+         * Show list of notes in sidebar
          */
-        _showNote: function (id) {
-            if (id === undefined || !this.Notes.get(id)) {
-                return;
+        showAllNotes: function (args) {
+            var notes = this.Notes.clone(),
+                arg = _.extend({
+                    filter  : 'active',
+                    title   : 'Inbox',
+                    configs : this.Configs,
+                    key     : this.secureKey
+                }, args),
+                notebookMod;
+
+            arg.notebookId = (isNaN(arg.notebookId)) ? 0 : arg.notebookId;
+            arg.tagId = (isNaN(arg.tagId)) ? 0 : arg.tagId;
+            arg.lastPage = (isNaN(arg.lastPage)) ? 1 : arg.lastPage;
+            arg.collection = notes;
+
+            if (arg.notebookId !== 0) {
+                notebookMod = this.Notebooks.get(arg.notebookId);
+                arg.title = notebookMod.get('name');
             }
 
-            // Show content
-            App.content.show(new NoteItem({
-                model      : this.Notes.get(id),
-                collection : this.Notes,
-                configs    : this.configs
-            }));
+            notes.fetch({
+                success: function () {
+                    App.sidebar.show(new NoteSidebar(arg));
+                }
+            });
         },
 
         /**
          * Search specific note
          */
         noteSearch: function (query, page, id) {
-            var self = this;
-
-            this.Notes.fetch({
-                conditions: {trash: 0},
-                limit: this.Configs.get('pagination').get('value'),
-                offset: page,
-                success: function () {
-                    App.sidebar.show(new NoteSidebar({
-                        collectoin: self.Notes,
-                        configs: self.Configs,
-                        page: page,
-                        url: '/note/search/' + query
-                    }));
-
-                    self.trigger('note:show', id);
-                }
+            this.trigger('notes.shown', {
+                filter      : 'search',
+                searchQuery : query,
+                title       : 'Search',
+                lastPage    : page
             });
+
+            this.showNoteContent(id);
         },
 
         /**
-         * Show only favorite notes
+         * Show favorite notes
          */
         noteFavorite: function (page, id) {
-            var self = this;
-
-            // Fetch and show notes
-            this.Notes.fetch({
-                conditions : {isFavorite : 1, trash: 0},
-                limit      : this.Configs.get('pagination').get('value'),
-                offset     : page,
-                success : function () {
-                    App.sidebar.show(new NoteSidebar({
-                        collection : self.Notes,
-                        configs    : self.configs,
-                        page       : page,
-                        url        : '/note/favorite'
-                    }));
-
-                    self.trigger('note:show', id);
-                }
+            this.trigger('notes.shown', {
+                filter   : 'favorite',
+                title    : 'Favorite notes',
+                lastPage : page
             });
+
+            this.showNoteContent(id);
         },
 
         /**
          * Show notes which is deleted
          */
         noteTrashed: function (page, id) {
-            var self = this;
-
-            // Fetch and show notes
-            this.Notes.fetch({
-                conditions : {trash : 1},
-                limit      : this.Configs.get('pagination').get('value'),
-                offset     : (page > 1) ? page : 0,
-                success : function () {
-                    App.sidebar.show(new NoteSidebar({
-                        collection : self.Notes,
-                        configs    : self.configs,
-                        page       : page,
-                        url        : '/note/trashed'
-                    }));
-
-                    self.trigger('note:show', id);
-                }
+            this.trigger('notes.shown', {
+                filter   : 'trashed',
+                title    : 'Removed notes',
+                lastPage : page
             });
+
+            this.showNoteContent(id);
         },
 
         /**
@@ -224,38 +207,27 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         noteShow: function (notebook, page, id) {
             if (id === undefined) {
-                id       = notebook;
+                id = notebook;
                 notebook = 0;
             }
 
-            var self = this;
-
-            // Fetch
-            this.Notes.fetch({
-                conditions : {trash: 0},
-                limit   : this.configs.pagination,
-                offset  : (page === 1) ? 0 : page,
-                success : function () {
-                    // Show sidebar
-                    App.sidebar.show(new NoteSidebar({
-                        page       : (page === undefined) ? 0 : page,
-                        collection : self.Notes,
-                        configs    : self.configs,
-                        url        : '/note/' + notebook,
-                        title      : 'Inbox'
-                    }));
-
-                    // Show content
-                    self.trigger('note:show', id);
-                }
+            // Show sidebar
+            this.trigger('notes.shown', {
+                filter     : 'active',
+                lastPage   : page,
+                notebookId : Math.floor(notebook)
             });
+
+            // Show content
+            this.showNoteContent(id);
         },
 
         /**
          * Add a new note
          */
         noteAdd: function () {
-            var self = this;
+            // Show sidebar
+            this.trigger('notes.shown');
 
             // Form
             var content = new NoteForm({
@@ -263,61 +235,39 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 notebooks      : this.Notebooks,
                 collectionTags : this.Tags,
                 configs        : this.Configs,
-                key            : this.configs.secureKey
+                key            : this.secureKey
             });
 
-            // Fetch
-            this.Notes.fetch({
-                conditions : {trash: 0},
-                limit   : this.configs.pagination,
-                offset  : 0,
-                success : function () {
-                    // Show sidebar
-                    App.sidebar.show(new NoteSidebar({
-                        page       : 0,
-                        collection : self.Notes,
-                        configs    : self.configs,
-                        url        : '/note/' + 0,
-                        title      : 'Inbox'
-                    }));
-
-                    App.content.show(content);
-                    content.trigger('shown');
-                }
-            });
-
+            App.content.show(content);
             document.title = 'Creating new note';
+            content.trigger('shown');
         },
 
         /**
          * Edit an existing note
          */
         noteEdit: function (id) {
-            var note,
-                content;
+            // Show Sidebar
+            this.trigger('notes.shown');
 
-            // Notes list is not visible yet
-            if (this.Notes.length === 0) {
-                this.index();
-            }
+            var note = new this.Notes.model({id: id}),
+                content = new NoteForm({
+                    // collection     : this.Notes,
+                    notebooks      : this.Notebooks,
+                    collectionTags : this.Tags,
+                    model          : note,
+                    configs        : this.Configs,
+                    key            : this.secureKey
+                });
 
-            note = new this.Notes.model({id : id});
-            content = new NoteForm({
-                collection     : this.Notes,
-                notebooks      : this.Notebooks,
-                collectionTags : this.Tags,
-                model          : note,
-                configs        : this.Configs,
-                key            : this.secureKey
-            });
-
-            // Fetch notes from DB and show edit form
             note.fetch({
                 success: function () {
                     App.content.show(content);
                     content.trigger('shown');
                 }
             });
+
+            document.title = 'Editing note: ' + note.get('title');
         },
 
         /**

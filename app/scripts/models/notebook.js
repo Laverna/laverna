@@ -36,14 +36,14 @@ define([
             this.on('removed:note', this.removeCount);
             this.on('add:note', this.addCount);
 
-            /*if (this.collection !== undefined) {
-                var encryptionData = this.collection.getEncryptionData();
-                if (encryptionData.configs.encrypt === 1) {
-                    try {
-                        this.attributes.name = sjcl.decrypt(encryptionData.key, this.attributes.name);
-                    } catch (err) {}
-                }
-            }*/
+            // if (this.collection !== undefined) {
+            //     var encryptionData = this.collection.getEncryptionData();
+            //     if (encryptionData.configs.get('encrypt').get('value') === 1) {
+            //         try {
+            //             this.attributes.name = sjcl.decrypt(encryptionData.key, this.attributes.name);
+            //         } catch (err) {}
+            //     }
+            // }
 
         },
 

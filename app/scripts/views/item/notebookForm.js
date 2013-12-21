@@ -35,7 +35,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         initialize: function () {
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.onFormShown);
-            Mousetrap.pause();
+            Mousetrap.reset();
         },
 
         onFormShown: function () {
@@ -135,7 +135,6 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         close: function (e) {
-            Mousetrap.unpause();
             if (e !== undefined) {
                 e.preventDefault();
             }

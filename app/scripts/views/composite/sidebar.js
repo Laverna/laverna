@@ -112,13 +112,7 @@ define([
         },
 
         nextOrPrev: function (n) {
-            var url = '/',
-                pagination = parseInt(this.configs.pagination),
-                active,
-                id,
-                note,
-                i,
-                prev;
+            var active, url = '/', id, note, i, prev;
 
             // Active note
             active = this.$el.find('.list-group-item.active');
@@ -126,9 +120,9 @@ define([
             note = this.collection.get(id);
             i = this.collection.indexOf(note);
 
-            if ((i + 1) === pagination && n === 'next') {
+            if ((i + 1) === this.perPage && n === 'next') {
                 url = this.ui.nextPage.attr('href');
-            } else if (i === 0 && n === 'prev' && this.options.page >= pagination) {
+            } else if (i === 0 && n === 'prev' && this.lastPage > 1) {
                 url = this.ui.prevPage.attr('href');
             } else {
                 if (n === 'prev') {
@@ -138,7 +132,7 @@ define([
                 }
 
                 prev = this.collection.at(i);
-                url = this.options.url + '/p' + this.options.page + '/show/' + prev.get('id');
+                url = this.urlPage + '/p' + this.lastPage + '/show/' + prev.get('id');
             }
 
             Backbone.history.navigate(url, true);

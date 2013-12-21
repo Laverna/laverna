@@ -23,7 +23,7 @@ define([
 
         initialize: function () {
             this.on('hidden.modal', this.redirect);
-            Mousetrap.pause();
+            Mousetrap.reset();
         },
 
         serializeData: function() {
@@ -37,7 +37,6 @@ define([
          * Redirect
          */
         redirect: function () {
-            Mousetrap.unpause();
             var history = window.history;
             if (history.length !== 0) {
                 history.back();

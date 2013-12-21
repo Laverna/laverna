@@ -1,6 +1,6 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -30,8 +30,8 @@ define([
         },
 
         events: {
-            'click .favorite'               : 'favorite',
-            'click .task [type="checkbox"]' : 'toggleTask'
+            'click .favorite'     : 'favorite',
+            'click .task [type="checkbox"]': 'toggleTask'
         },
 
         keyboardEvents: {
@@ -39,19 +39,17 @@ define([
 
         initialize: function() {
             // Setting shortcuts
-            var configs = this.options.configs;
+            var configs = this.options.configs.getConfigs();
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
             this.keyboardEvents[configs.actionsRemove] = 'deleteNote';
-            this.keyboardEvents.up = 'scrollTop';
-            this.keyboardEvents.down = 'scrollDown';
+            this.keyboardEvents['up'] = 'scrollTop';
+            this.keyboardEvents['down'] = 'scrollDown';
 
-            // Favorite
+            // this.model.on('change', this.render);
+            this.model.trigger('shown');
+            this.listenTo(this.model, 'change', this.changeFocus);
             this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
-
-            // Make note active in sidebar
-            this.model.trigger('active');
-            this.listenTo(this.model, 'change', this.makeActive);
         },
 
         onRender: function () {
@@ -74,15 +72,15 @@ define([
          * Decrypt content and title
          */
         serializeData: function () {
-            var data = this.model.decrypt(this.options.configs);
+            var data = this.model.toJSON();
 
             // Show title
             document.title = data.title;
             return data;
         },
 
-        makeActive: function () {
-            this.model.trigger('active');
+        changeFocus: function() {
+            this.model.trigger('shown');
         },
 
         changeFavorite: function () {
@@ -126,9 +124,12 @@ define([
             var text = new Checklist().toggle(this.model.get('content'), taskId);
 
             // Save result
+            this.model.set('title', sjcl.encrypt(this.options.key, this.model.get('title')));
             this.model.set('content', text.content);
             this.model.set('taskCompleted', text.completed);
             this.model.save();
+
+            this.model.set('title', sjcl.decrypt(this.options.key, this.model.get('title')));
 
             // Status in progress bar
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));

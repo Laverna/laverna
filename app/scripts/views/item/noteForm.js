@@ -106,7 +106,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             data.taskCompleted = checklist.completed;
 
             // Encrypting
-            if (this.options.configs.encrypt === 1) {
+            if (this.options.configs.get('encrypt').get('value') === 1) {
                 data.content = sjcl.encrypt(this.options.key, data.content);
                 data.title = sjcl.encrypt(this.options.key, data.title);
             }
@@ -126,37 +126,48 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Create new note
          */
         createNote: function (data) {
-            var self = this;
+            var notebookId = data.notebookId,
+                note;
 
-            // Create note
-            this.model = new Note(data);
-            this.model = this.collection.create(this.model, {
-                success: function (model) {
-                    return self.redirectToNote(model);
-                }
-            });
+            note = new Note(data);
+            this.model = note;
+            var item = this.collection.create(note);
+            // item.success = this.redirect();
+
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                item.set('title', sjcl.decrypt(this.options.key, item.get('title')));
+                item.set('content', sjcl.decrypt(this.options.key, item.get('content')));
+            }
+
+            if (notebookId !== 0) {
+                notebookId = this.options.notebooks.get(notebookId);
+                this.model.save({notebookId: notebookId});
+
+                notebookId.trigger('add:note');
+            }
+
+            // return this.redirectToNote();
         },
 
         /**
          * Save changes
          */
         saveNote: function (data) {
-            // var lastNotebook = this.model.get('notebookId'),
-            var self = this;
+            var lastNotebook = this.model.get('notebookId');
 
             if (data.notebookId !== 0) {
                 data.notebookId = this.options.notebooks.get(data.notebookId);
             }
 
             // Save changes
-            this.model.save(data, {
-                success: function (model) {
-                    self.redirectToNote(model);
-                }
-            });
+            this.model.save(data);
+            if (this.options.configs.get('encrypt').get('value') === 1) {
+                this.model.set('title', sjcl.decrypt(this.options.key, this.model.get('title')));
+                this.model.set('content', sjcl.decrypt(this.options.key, this.model.get('content')));
+            }
 
-            // this.model.trigger('update.note');
-            // this.model.trigger('changed:notebookId', {last: lastNotebook});
+            this.model.trigger('update.note');
+            this.model.trigger('changed:notebookId', {last: lastNotebook});
         },
 
         /**
@@ -173,7 +184,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         redirect: function () {
             var url = window.history;
             if (url.length === 0) {
-                Backbone.history.navigate('/note/0/p1');
+                this.redirectToNote();
             } else {
                 url.back();
             }
@@ -183,9 +194,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         /**
          * Redirects to notes page
          */
-        redirectToNote: function (model) {
-            var id = model.id;
-            Backbone.history.navigate('/note/0/p1/show/' + id, true);
+        redirectToNote: function () {
+            var id = this.model.get('id');
+            Backbone.history.navigate('/note/show/' + id, true);
         },
 
         /**

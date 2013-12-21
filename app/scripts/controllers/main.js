@@ -309,30 +309,20 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Remove Note
          */
         noteRemove: function (id) {
-            var note, result, i, prev, url;
+            var note,
+                next,
+                url;
 
-            url = '/note/' + this.notebookId + '/p' + this.pageN;
-            note = this.Notes.get(id);
+            url = '/note/0/p1/';
 
-            if (note.get('trash') === 0) {
-                result = note.save({'trash': 1});
+            if (this.Notes.length !== 0) {
+                note = this.Notes.get(id);
+                note.toTrash();
+                next = note.prev();
 
-                if (result === false) {
-                    url += id;
-                } else if (this.Notes.length > 1) {
-                    i = this.Notes.indexOf(note);
-                    i = (i === 0) ? i : i - 1;
-
-                    // this.Notes.remove(note);
-                    prev = this.Notes.at(i);
-
-                    url += prev.get('id');
-                } else {
-                    url = '';
+                if (next) {
+                    url += 'show/' + next.get('id');
                 }
-            } else {
-                note.destroy();
-                url = '/note/trashed/p' + this.pageN;
             }
 
             Backbone.history.navigate(url, true);

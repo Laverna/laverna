@@ -116,11 +116,8 @@ define([
                 return model;
             });
         }
-    });
 
-    // Fetch all records
-    //var notes = new Notes();
-    //notes.fetch();
+    });
 
     return Notes;
 });

@@ -19,6 +19,7 @@ define([
      */
     // var Model = Backbone.Model.extend({
     var Model = Backbone.AssociatedModel.extend({
+
         idAttribute: 'id',
 
         // localStorage: new Backbone.LocalStorage('vimarkable.notes'),

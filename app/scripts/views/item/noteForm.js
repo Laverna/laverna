@@ -90,6 +90,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             var content = this.editor.getSession().getValue().trim(),
                 title   = this.ui.title.val().trim(),
+                configs = this.options.configs,
                 data;
 
             // Get values
@@ -109,9 +110,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             data.tags = this.options.collectionTags.getTagsId(data.tags);
 
             // Encrypting
-            if (this.options.configs.get('encrypt').get('value') === 1) {
-                data.content = sjcl.encrypt(this.options.key, data.content);
-                data.title = sjcl.encrypt(this.options.key, data.title);
+            if (configs.encrypt === 1) {
+                data.content = sjcl.encrypt(configs.secureKey, data.content);
+                data.title = sjcl.encrypt(configs.secureKey, data.title);
             }
 
             // Existing note or new one?
@@ -141,16 +142,18 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
          * Save changes
          */
         saveNote: function (data) {
-            var lastNotebook = this.model.get('notebookId');
-
-            if (data.notebookId !== 0) {
-                data.notebookId = this.options.notebooks.get(data.notebookId);
-            }
+            var that = this;
+            // var lastNotebook = this.model.get('notebookId');
 
             // Save changes
-            this.model.save(data);
-            this.model.trigger('update.note');
-            this.model.trigger('changed:notebookId', {last: lastNotebook});
+            this.model.save(data, {
+                success: function () {
+                    that.collection.trigger('change');
+                    that.redirectToNote();
+                }
+            });
+            // this.model.trigger('update.note');
+            // this.model.trigger('changed:notebookId', {last: lastNotebook});
         },
 
         /**
@@ -258,11 +261,18 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
         },
 
         serializeData: function () {
-            var data;
+            var configs = this.options.configs,
+                data;
             if (this.model === undefined) {
                 data = new this.collection.model().toJSON();
             } else {
                 data = this.model.toJSON();
+
+                // Decrypting
+                if (configs.encrypt === 1) {
+                    data.title   = sjcl.decrypt(configs.secureKey, data.title);
+                    data.content = sjcl.decrypt(configs.secureKey, data.content);
+                }
 
                 this.model.trigger('shown');
             }

@@ -1,6 +1,6 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -39,7 +39,7 @@ define([
 
         initialize: function() {
             // Setting shortcuts
-            var configs = this.options.configs.getConfigs();
+            var configs = this.options.configs;
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
             this.keyboardEvents[configs.actionsRemove] = 'deleteNote';
@@ -70,7 +70,15 @@ define([
          * Decrypt content and title
          */
         serializeData: function () {
-            var data = this.model.toJSON();
+            // Decrypting
+            var data = this.model.toJSON(),
+                configs = this.options.configs;
+
+            // Decrypting
+            if (configs.encrypt === 1) {
+                data.title   = sjcl.decrypt(configs.secureKey, data.title);
+                data.content = sjcl.decrypt(configs.secureKey, data.content);
+            }
 
             // Show title
             document.title = data.title;
@@ -117,9 +125,9 @@ define([
          * Toggle task status
          */
         toggleTask: function (e) {
-            var task = $(e.target);
-            var taskId = parseInt(task.attr('data-task'), null);
-            var text = new Checklist().toggle(this.model.get('content'), taskId);
+            var task = $(e.target),
+                taskId = parseInt(task.attr('data-task'), null),
+                text = new Checklist().toggle(this.model.get('content'), taskId);
 
             // Save result
             this.model.set('content', text.content);

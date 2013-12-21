@@ -5,4 +5,4 @@ dist
 app/bower_components
 .idea
 app/styles/*.css
-.swp
+*.swp

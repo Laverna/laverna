@@ -42,6 +42,9 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 this.Configs.firstStart();
             }
 
+            // Configs ToJSON
+            this.configs = this.Configs.getConfigs();
+
             // Ask password
             if (this.Configs.get('encrypt').get('value') === 1) {
                 this.auth();
@@ -62,6 +65,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             // Show all notes
             this.on('notes.shown', this.showAllNotes);
+            this.on('showNote', this.showNote);
+            this.on('noteEdit', this.noteEdit);
         },
 
         /**
@@ -73,7 +78,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 pwd = this.Configs.get('encryptPass').get('value');
 
             if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
-                this.secureKey = sjcl.misc.pbkdf2(
+                this.configs.secureKey = sjcl.misc.pbkdf2(
                     password,
                     this.Configs.get('encryptSalt').toString(),
                     1000
@@ -90,7 +95,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             App.content.reset();
             this.trigger('notes.shown', {
                 notebookId : Math.floor(notebook),
-                key        : this.secureKey,
                 lastPage   : page
             });
         },
@@ -98,35 +102,39 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         /* ------------------------------
          * Notes actions
          * ------------------------------ */
-        // Show notes content
-        showNoteContent: function (id) {
+        /**
+         * Fetching note's model
+         */
+        fetchNote: function (id, evt) {
             var that = this,
                 model;
+
+            evt = (evt === undefined) ? 'showNote' : evt;
 
             if (this.Notes.length === 0) {
                 model = new this.Notes.model({id : id});
                 model.fetch({
                     success: function () {
-                        that.showNote(model);
+                        that.trigger(evt, model);
                     },
                     error: function () {
-                        App.content.reset();
+                        that.trigger(evt);
                     }
                 });
             } else {
                 model = this.Notes.get(id);
-                this.showNote(model);
+                that.trigger(evt, model);
             }
         },
 
         /**
-         * Show content
+         * Show note's content
          */
         showNote: function (note) {
             var content = {
                     model      : note,
                     collection : this.Notes,
-                    configs    : this.Configs
+                    configs    : this.configs
                 };
 
             App.content.show(new NoteItem(content));
@@ -157,8 +165,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 arg = _.extend({
                     filter     : 'active',
                     title      : 'Inbox',
-                    configs    : this.Configs,
-                    key        : this.secureKey,
+                    configs    : this.configs,
                     collection : notes
                 }, args),
                 notebookMod;
@@ -183,12 +190,12 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown', {
                 filter      : 'search',
                 searchQuery : query,
-                activeNote : id,
+                activeNote  : id,
                 title       : 'Search',
                 lastPage    : page
             });
 
-            this.showNoteContent(id);
+            this.fetchNote(id);
         },
 
         /**
@@ -196,13 +203,13 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         noteFavorite: function (page, id) {
             this.trigger('notes.shown', {
-                filter   : 'favorite',
-                title    : 'Favorite notes',
+                filter     : 'favorite',
+                title      : 'Favorite notes',
                 activeNote : id,
-                lastPage : page
+                lastPage   : page
             });
 
-            this.showNoteContent(id);
+            this.fetchNote(id);
         },
 
         /**
@@ -210,13 +217,13 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          */
         noteTrashed: function (page, id) {
             this.trigger('notes.shown', {
-                filter   : 'trashed',
-                title    : 'Removed notes',
+                filter     : 'trashed',
+                title      : 'Removed notes',
                 activeNote : id,
-                lastPage : page
+                lastPage   : page
             });
 
-            this.showNoteContent(id);
+            this.fetchNote(id);
         },
 
         /**
@@ -225,14 +232,14 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         noteTag: function (tag, page, id) {
             var tagModel = this.Tags.get(tag);
             this.trigger('notes.shown', {
-                filter   : 'tagged',
-                tagId    : tag,
+                filter     : 'tagged',
+                tagId      : tag,
                 activeNote : id,
-                title    : 'Tag: ' + tagModel.get('name'),
-                lastPage : page
+                title      : 'Tag : ' + tagModel.get('name'),
+                lastPage   : page
             });
 
-            this.showNoteContent(id);
+            this.fetchNote(id);
         },
 
         /**
@@ -253,7 +260,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             });
 
             // Show content
-            this.showNoteContent(id);
+            this.fetchNote(id);
         },
 
         /**
@@ -268,8 +275,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
                 collection     : this.Notes,
                 notebooks      : this.Notebooks,
                 collectionTags : this.Tags,
-                configs        : this.Configs,
-                key            : this.secureKey
+                configs        : this.configs
             });
 
             App.content.show(content);
@@ -280,27 +286,27 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         /**
          * Edit an existing note
          */
-        noteEdit: function (id) {
+        noteEdit: function (note) {
+            // For first fetch this note
+            if (typeof(note) === 'string') {
+                return this.fetchNote(note, 'noteEdit');
+            }
+
             // Show Sidebar
             this.trigger('notes.shown');
 
-            var note = new this.Notes.model({id: id}),
-                content = {
-                    collection     : this.Notes,
-                    notebooks      : this.Notebooks,
-                    collectionTags : this.Tags,
-                    model          : note,
-                    configs        : this.Configs,
-                    key            : this.secureKey
-                };
+            var content = {
+                model          : note,
+                collection     : this.Notes,
+                notebooks      : this.Notebooks,
+                collectionTags : this.Tags,
+                configs        : this.configs
+            };
 
-            note.fetch({
-                success: function () {
-                    content = new NoteForm(content);
-                    App.content.show(content);
-                    content.trigger('shown');
-                }
-            });
+            // Show form
+            content = new NoteForm(content);
+            App.content.show(content);
+            content.trigger('shown');
 
             document.title = 'Editing note: ' + note.get('title');
         },

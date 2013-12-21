@@ -1,6 +1,6 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
+/*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -33,10 +33,17 @@ define([
         },
 
         serializeData: function () {
-            var data = _.extend(this.model.toJSON(), {
-                page    : this.options.page,
-                url     : this.options.url
-            });
+            var configs = this.options.configs,
+                data = _.extend(this.model.toJSON(), {
+                    page    : this.options.page,
+                    url     : this.options.url
+                });
+
+            // Decrypting
+            if (configs.encrypt === 1) {
+                data.title   = sjcl.decrypt(configs.secureKey, data.title);
+                data.content = sjcl.decrypt(configs.secureKey, data.content);
+            }
 
             return data;
         },

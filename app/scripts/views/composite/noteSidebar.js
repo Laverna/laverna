@@ -45,7 +45,7 @@ define([
 
         initialize: function () {
             // Setting keyboardEvents
-            var configs = this.options.configs.getConfigs();
+            var configs = this.options.configs;
             this.setKeyboardEvents( configs );
             this.keyboardEvents[configs.appSearch] = 'focusSearch';
 

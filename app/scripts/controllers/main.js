@@ -153,13 +153,6 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show list of notes in sidebar
          */
         showSidebarNotes: function (args) {
-            var page = args.filter + args.lastPage;
-
-            // if (this.page === page) {
-            //     return;
-            // }
-
-            this.page = page;
             var notes = this.Notes.clone(),
                 arg = _.extend({
                     filter     : 'active',
@@ -293,7 +286,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             var note = new this.Notes.model({id: id}),
                 content = {
-                    // collection     : this.Notes,
+                    collection     : this.Notes,
                     notebooks      : this.Notebooks,
                     collectionTags : this.Tags,
                     model          : note,
@@ -303,7 +296,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
             note.fetch({
                 success: function () {
-                    App.content.show(new NoteForm(content));
+                    content = new NoteForm(content);
+                    App.content.show(content);
                     content.trigger('shown');
                 }
             });

@@ -94,6 +94,16 @@ define([
             this.itemViewOptions.configs = this.options.configs;
             this.itemViewOptions.searchQuery = this.options.searchQuery;
             this.itemViewOptions.url = this.urlPage;
+
+            // Events
+            // this.listenTo(this.collection, 'changeFocus', this.changeFocus);
+        },
+
+        onRender: function () {
+            // Trigger active note
+            if (this.options.activeNote) {
+                this.changeFocus(this.options.activeNote);
+            }
         },
 
         /**
@@ -110,6 +120,16 @@ define([
         escSearch: function (e) {
             if (e.which === 0) {
                 this.ui.searchInput.trigger('blur');
+            }
+        },
+
+        /**
+         * Trigger model
+         */
+        changeFocus: function (id) {
+            var note = this.collection.get(id);
+            if (note) {
+                note.trigger('changeFocus');
             }
         },
 

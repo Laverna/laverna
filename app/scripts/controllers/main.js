@@ -100,51 +100,87 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * ------------------------------ */
         // Show notes content
         showNoteContent: function (id) {
-            var model = new this.Notes.model({id: id}),
-                content = new NoteItem({
-                    model      : model,
+            var that = this,
+                model;
+
+            if (this.Notes.length === 0) {
+                model = new this.Notes.model({id : id});
+                model.fetch({
+                    success: function () {
+                        that.showNote(model);
+                    },
+                    error: function () {
+                        App.content.reset();
+                    }
+                });
+            } else {
+                model = this.Notes.get(id);
+                this.showNote(model);
+            }
+        },
+
+        /**
+         * Show content
+         */
+        showNote: function (note) {
+            var content = {
+                    model      : note,
                     collection : this.Notes,
                     configs    : this.Configs
-                });
+                };
 
-            model.fetch({
-                success: function () {
-                    App.content.show(content);
-                },
-                error: function () {
-                    App.content.reset();
-                }
-            });
+            App.content.show(new NoteItem(content));
+        },
+
+        /**
+         * Fetch notes from DB
+         */
+        showAllNotes: function (args) {
+            var that = this;
+
+            if (this.Notes.length === 0) {
+                this.Notes.fetch({
+                    success: function () {
+                        that.showSidebarNotes(args);
+                    }
+                });
+            } else {
+                that.showSidebarNotes(args);
+            }
         },
 
         /**
          * Show list of notes in sidebar
          */
-        showAllNotes: function (args) {
+        showSidebarNotes: function (args) {
+            var page = args.filter + args.lastPage;
+
+            // if (this.page === page) {
+            //     return;
+            // }
+
+            this.page = page;
             var notes = this.Notes.clone(),
                 arg = _.extend({
-                    filter  : 'active',
-                    title   : 'Inbox',
-                    configs : this.Configs,
-                    key     : this.secureKey
+                    filter     : 'active',
+                    title      : 'Inbox',
+                    configs    : this.Configs,
+                    key        : this.secureKey,
+                    collection : notes
                 }, args),
                 notebookMod;
 
             arg.notebookId = (isNaN(arg.notebookId)) ? 0 : arg.notebookId;
             arg.tagId = (isNaN(arg.tagId)) ? 0 : arg.tagId;
             arg.lastPage = (isNaN(arg.lastPage)) ? 1 : arg.lastPage;
-            arg.collection = notes;
 
             if (arg.notebookId !== 0) {
                 notebookMod = this.Notebooks.get(arg.notebookId);
                 arg.title = notebookMod.get('name');
             }
 
-            notes.fetch({
-                success: function () {
-                    App.sidebar.show(new NoteSidebar(arg));
-                }
-            });
+            // Show sidebar
+            App.sidebar.show(new NoteSidebar(arg));
         },
 
         /**
@@ -154,6 +190,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown', {
                 filter      : 'search',
                 searchQuery : query,
+                activeNote : id,
                 title       : 'Search',
                 lastPage    : page
             });
@@ -168,6 +205,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown', {
                 filter   : 'favorite',
                 title    : 'Favorite notes',
+                activeNote : id,
                 lastPage : page
             });
 
@@ -181,6 +219,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown', {
                 filter   : 'trashed',
                 title    : 'Removed notes',
+                activeNote : id,
                 lastPage : page
             });
 
@@ -195,6 +234,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown', {
                 filter   : 'tagged',
                 tagId    : tag,
+                activeNote : id,
                 title    : 'Tag: ' + tagModel.get('name'),
                 lastPage : page
             });
@@ -215,6 +255,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown', {
                 filter     : 'active',
                 lastPage   : page,
+                activeNote : id,
                 notebookId : Math.floor(notebook)
             });
 
@@ -251,18 +292,18 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             this.trigger('notes.shown');
 
             var note = new this.Notes.model({id: id}),
-                content = new NoteForm({
+                content = {
                     // collection     : this.Notes,
                     notebooks      : this.Notebooks,
                     collectionTags : this.Tags,
                     model          : note,
                     configs        : this.Configs,
                     key            : this.secureKey
-                });
+                };
 
             note.fetch({
                 success: function () {
-                    App.content.show(content);
+                    App.content.show(new NoteForm(content));
                     content.trigger('shown');
                 }
             });

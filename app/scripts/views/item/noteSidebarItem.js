@@ -1,6 +1,6 @@
 /*global define*/
 /*global Markdown*/
-/*global sjcl*/
+// /*global sjcl*/
 define([
     'underscore',
     'backbone',
@@ -19,17 +19,17 @@ define([
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'change:trash', this.remove);
-            this.listenTo(this.model, 'shown', this.changeFocus);
+            this.listenTo(this.model, 'changeFocus', this.changeFocus);
         },
 
         changeFocus: function () {
             this.$('.list-group-item').addClass('active');
 
-            $('#sidebar .ui-s-content').scrollTop(
-                this.$('.list-group-item').offset().top -
-                $('#sidebar .ui-s-content').offset().top +
-                $('#sidebar .ui-s-content').scrollTop() - 100
-            );
+            // $('#sidebar .ui-s-content').scrollTop(
+            //     this.$('.list-group-item').offset().top -
+            //     $('#sidebar .ui-s-content').offset().top +
+            //     $('#sidebar .ui-s-content').scrollTop() - 100
+            // );
         },
 
         serializeData: function () {

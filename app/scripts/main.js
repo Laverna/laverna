@@ -17,6 +17,7 @@ require.config({
         backbone                   :  '../bower_components/backbone/backbone',
         marionette                 :  '../bower_components/marionette/lib/core/amd/backbone.marionette',
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
+        IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim.min',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
@@ -84,8 +85,13 @@ require.config({
         localStorage: {
             deps: ['underscore', 'backbone']
         },
+        IndexedDBShim: {},
         indexedDB: {
-            deps: ['underscore', 'backbone']
+            deps: [
+                // 'IndexedDBShim',
+                'underscore',
+                'backbone'
+            ]
         },
         'backbone.relational': {
             deps: ['backbone']
@@ -127,7 +133,8 @@ require([
     'jquery',
     'router',
     'app',
-    'bootstrap'
+    'bootstrap',
+    'IndexedDBShim'    // IndexedDB support in Safari and in old Chrome
 ], function ($, Router, App) {
     'use strict';
 

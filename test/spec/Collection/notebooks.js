@@ -2,8 +2,11 @@
 /*global test*/
 /*global equal*/
 // /*global notDeepEqual*/
-define(['models/notebook', 'collections/notebooks', 'backbone', 'localStorage'],
-function (Notebook, Notebooks, Backbone, Store) {
+define([
+    'models/notebook',
+    'collections/notebooks',
+    'migrations/notebook'
+], function (Notebook, Notebooks, DB) {
     'use strict';
 
     module('Notebooks collection', {
@@ -42,10 +45,8 @@ function (Notebook, Notebooks, Backbone, Store) {
         equal(this.notebooks.length, 2);
     });
 
-    test('Uses localStorage', function () {
-        var storage = new Store('vimarkable.notebooks');
-        equal(this.notebooks.localStorage.name, storage.name);
+    test('Uses indexedDB', function () {
+        equal(this.notebooks.database.id, DB.id);
     });
-
 
 });

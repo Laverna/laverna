@@ -34,18 +34,12 @@ define([
 
         serializeData: function () {
             var configs = this.options.configs,
-                data = _.extend(this.model.toJSON(), {
-                    page    : this.options.page,
-                    url     : this.options.url
-                });
+                data = this.model.decrypt(configs);
 
-            // Decrypting
-            if (configs.encrypt === 1) {
-                data.title   = sjcl.decrypt(configs.secureKey, data.title);
-                data.content = sjcl.decrypt(configs.secureKey, data.content);
-            }
-
-            return data;
+            return _.extend(data, {
+                page    : this.options.page,
+                url     : this.options.url
+            });
         },
 
         templateHelpers: function () {

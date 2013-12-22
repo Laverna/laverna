@@ -19,7 +19,6 @@ define([
         itemViewOptions: {},
 
         initialize: function () {
-            this.itemViewOptions.key = this.options.key;
             this.itemViewOptions.configs = this.options.configs;
         },
 

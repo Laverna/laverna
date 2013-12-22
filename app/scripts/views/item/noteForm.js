@@ -266,14 +266,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             if (this.model === undefined) {
                 data = new this.collection.model().toJSON();
             } else {
-                data = this.model.toJSON();
-
-                // Decrypting
-                if (configs.encrypt === 1) {
-                    data.title   = sjcl.decrypt(configs.secureKey, data.title);
-                    data.content = sjcl.decrypt(configs.secureKey, data.content);
-                }
-
+                data = this.model.decrypt(configs);
                 this.model.trigger('shown');
             }
 

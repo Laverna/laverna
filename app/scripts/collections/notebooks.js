@@ -2,9 +2,12 @@
 define([
     'underscore',
     'backbone',
+    'migrations/notebooks',
     'models/notebook',
-    'localStorage'
-], function (_, Backbone, Notebook) {
+    'localStorage',
+    'indexedDB',
+    'sjcl'
+], function (_, Backbone, NotebooksDB, Notebook) {
     'use strict';
 
     /**
@@ -13,15 +16,9 @@ define([
     var Notebooks = Backbone.Collection.extend({
         model: Notebook,
 
-        localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
-
-        setEncryptionData: function (data) {
-            this.encryptionData = data;
-        },
-
-        getEncryptionData: function () {
-            return this.encryptionData;
-        },
+        //localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
+        database: NotebooksDB,
+        storeName: 'notebooks',
 
         /**
          * Generates the next order number

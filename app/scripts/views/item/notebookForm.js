@@ -51,7 +51,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
                 model = this.model;
             }
 
-            return _.extend(model.toJSON(), {
+            return _.extend(model.decrypt(this.options.configs), {
                 notebooks: this.options.collection.toJSON()
             });
         },
@@ -64,8 +64,8 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
                 parentId : parseInt(this.ui.parentId.val())
             };
 
-            if (this.options.configs.get('encrypt').get('value') === 1 ) {
-                data.name = sjcl.encrypt(this.options.key, data.name);
+            if (this.options.configs.encrypt === 1 ) {
+                data.name = sjcl.encrypt(this.options.configs.secureKey, data.name);
             }
 
             if (this.model !== undefined) {
@@ -79,20 +79,25 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
          * Update existing notebook
          */
         update: function (data) {
-            var that = this;
+            var self = this;
 
             this.model.set('name', data.name);
             this.model.set('parentId', data.parentId);
 
             // Handle validation errors
             this.model.on('invalid', function (model, errors) {
-                that.showErrors(errors);
+                self.showErrors(errors);
             });
 
-            var result = this.model.save({}, {validate: true});
-            if (result) {
-                this.redirect();
-            }
+            var result = this.model.save({}, {
+                validate: true,
+                success: function (result) {
+                    if (result.validationError === null) {
+                        self.close();
+                        self.redirect();
+                    }
+                }
+            });
         },
 
         /**
@@ -100,17 +105,17 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
          */
         create: function (data) {
             data.id = this.collection.nextOrder();
+            var self = this;
 
             var notebook = new Notebook(data, {validate: true});
 
             if ( !notebook.validationError) {
-                var item = this.collection.create(notebook);
-
-                if (this.options.configs.get('encrypt').get('value') === 1 ) {
-                    item.set('name', sjcl.decrypt(this.options.key, item.get('name')));
-                }
-
-                return this.redirect();
+                var item = this.collection.create(notebook, {
+                    success: function(model) {
+                        self.redirect();
+                        self.close();
+                    }
+                });
             } else {
                 this.showErrors(notebook.validationError);
             }

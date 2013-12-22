@@ -3,15 +3,20 @@
 define([
     'underscore',
     'backbone',
+    'migrations/notebooks',
     'backbone.assosiations',
+    'indexedDB',
     'sjcl'
-], function (_, Backbone) {
+], function (_, Backbone, NotebooksDB) {
     'use strict';
 
     // var Model = Backbone.Model.extend({
     //AssociatedModel
     var Model = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
+
+        database: NotebooksDB,
+        storeName: 'notebooks',
 
         defaults: {
             'id'       :  0,
@@ -57,6 +62,19 @@ define([
             this.save({
                 'count': this.get('count') - 1
             });
+        },
+
+        /**
+         * Decrypting data
+         */
+        decrypt: function ( configs ) {
+            var data = this.toJSON();
+
+            if (configs.encrypt === 1 && data.name !== '') {
+                data.name = sjcl.decrypt(configs.secureKey, data.name);
+            }
+
+            return data;
         }
     });
 

@@ -127,6 +127,19 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             }
         },
 
+        fetchNotebooks: function (args, evt) {
+            var self = this;
+            this.Notebooks.fetch({
+                reset: true,
+                success: function () {
+                    self.trigger(evt, args);
+                },
+                error: function () {
+                    self.trigger(evt, args);
+                }
+            });
+        },
+
         /**
          * Show note's content
          */
@@ -161,6 +174,11 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show list of notes in sidebar
          */
         showSidebarNotes: function (args) {
+            if (this.Notebooks.length === 0) {
+                this.fetchNotebooks(args, 'notes.shown');
+                return;
+            }
+
             var notes = this.Notes.clone(),
                 arg = _.extend({
                     filter     : 'active',
@@ -175,8 +193,8 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             arg.lastPage = (isNaN(arg.lastPage)) ? 1 : arg.lastPage;
 
             if (arg.notebookId !== 0) {
-                notebookMod = this.Notebooks.get(arg.notebookId);
-                arg.title = notebookMod.get('name');
+                notebookMod = this.Notebooks.get(arg.notebookId).decrypt(this.configs);
+                arg.title = notebookMod.name;
             }
 
             // Show sidebar
@@ -341,28 +359,33 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var tags, notebook, sidebar;
 
             // Notebooks list
-            notebook = new NotebookSidebar({
+            notebook = {
                 collection : this.Notebooks,
-                configs            : this.Configs,
-                key                : this.secureKey
-            });
+                configs    : this.configs,
+            };
 
             // Tags list
-            tags = new TagsSidebar({
+            tags = {
                 collection : this.Tags
-            });
+            };
 
             // Show sidebar layout
-            sidebar = new NotebookLayout({
+            sidebar = {
                 collectionNotebooks: this.Notebooks,
                 collectionTags     : this.Tags,
                 configs            : this.Configs
-            });
-            App.sidebar.show(sidebar);
+            };
 
             // Notebooks & tags list in sidebar
-            sidebar.notebooks.show(notebook);
-            sidebar.tags.show(tags);
+            this.Notebooks.fetch({
+                success: function () {
+                    sidebar = new NotebookLayout(sidebar);
+                    App.sidebar.show(sidebar);
+
+                    sidebar.notebooks.show(new NotebookSidebar(notebook));
+                    sidebar.tags.show(new TagsSidebar(tags));
+                }
+            });
 
             App.content.reset();
         },
@@ -373,8 +396,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
         notebookAdd: function () {
             var content = new NotebookForm({
                 collection: this.Notebooks,
-                configs: this.Configs,
-                key: this.secureKey
+                configs: this.configs
             });
 
             App.modal.show(content);
@@ -384,24 +406,49 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Edit existing notebook
          */
         notebookEdit: function (id) {
-            var notebook = this.Notebooks.get(id),
-                content = new NotebookForm({
-                    model: notebook,
-                    collection: this.Notebooks,
-                    configs: this.Configs,
-                    key: this.secureKey
-                });
+            var notebook;
+            if (this.Notebooks.length === 0) {
+                notebook = new this.Notebooks.model({id: id});
+            }
+            else {
+                notebook = this.Notebooks.get(id);
+            }
 
-            App.modal.show(content);
+            var content = {
+                model: notebook,
+                collection: this.Notebooks,
+                configs: this.configs
+            };
+
+            notebook.fetch({
+                success: function () {
+                    App.modal.show(new NotebookForm(content));
+                }
+            });
         },
 
         /**
          * Remove notebook
          */
         notebookRemove: function (id) {
-            var n = this.Notebooks.get(id);
-            n.destroy();
-            Backbone.history.navigate('#/notebooks', true);
+            var notebook = undefined;
+
+            if (this.Notebooks.length === 0) {
+                notebook = new this.Notebooks.model({id: id});
+            } else {
+                notebook = this.Notebooks.get(id);
+            }
+
+            if (notebook !== undefined) {
+                notebook.destroy();
+            }
+
+            this.Notebooks.fetch({
+                reset: true,
+                success: function () {
+                    Backbone.history.navigate('#/notebooks', true);
+                }
+            });
         },
 
         /* ---------------------------------

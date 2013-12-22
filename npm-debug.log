@@ -1,0 +1,121 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@1.3.11
+3 info using node@v0.10.21
+4 warn package.json ofnote@0.0.0 No README data
+5 verbose readDependencies using package.json deps
+6 verbose install where, deps [ '/home/greenstar/webserver/ofnote',
+6 verbose install   [ 'grunt',
+6 verbose install     'grunt-contrib-copy',
+6 verbose install     'grunt-contrib-concat',
+6 verbose install     'grunt-contrib-coffee',
+6 verbose install     'grunt-contrib-uglify',
+6 verbose install     'grunt-contrib-compass',
+6 verbose install     'grunt-contrib-jshint',
+6 verbose install     'grunt-contrib-cssmin',
+6 verbose install     'grunt-contrib-connect',
+6 verbose install     'grunt-contrib-clean',
+6 verbose install     'grunt-contrib-htmlmin',
+6 verbose install     'grunt-bower-requirejs',
+6 verbose install     'grunt-contrib-requirejs',
+6 verbose install     'grunt-contrib-imagemin',
+6 verbose install     'grunt-contrib-watch',
+6 verbose install     'grunt-rev',
+6 verbose install     'grunt-usemin',
+6 verbose install     'grunt-mocha',
+6 verbose install     'grunt-open',
+6 verbose install     'grunt-svgmin',
+6 verbose install     'grunt-concurrent',
+6 verbose install     'matchdep',
+6 verbose install     'connect-livereload',
+6 verbose install     'grunt-recess' ] ]
+7 info preinstall ofnote@0.0.0
+8 verbose readDependencies using package.json deps
+9 verbose already installed skipping grunt-contrib-coffee@~0.6.5 /home/greenstar/webserver/ofnote
+10 verbose already installed skipping grunt@~0.4.1 /home/greenstar/webserver/ofnote
+11 verbose already installed skipping grunt-contrib-copy@~0.4.1 /home/greenstar/webserver/ofnote
+12 verbose already installed skipping grunt-contrib-uglify@~0.2.0 /home/greenstar/webserver/ofnote
+13 verbose already installed skipping grunt-contrib-concat@~0.1.3 /home/greenstar/webserver/ofnote
+14 verbose already installed skipping grunt-contrib-compass@~0.2.0 /home/greenstar/webserver/ofnote
+15 verbose already installed skipping grunt-contrib-jshint@~0.4.1 /home/greenstar/webserver/ofnote
+16 verbose already installed skipping grunt-contrib-cssmin@~0.6.0 /home/greenstar/webserver/ofnote
+17 verbose already installed skipping grunt-contrib-connect@~0.2.0 /home/greenstar/webserver/ofnote
+18 verbose already installed skipping grunt-contrib-clean@~0.4.0 /home/greenstar/webserver/ofnote
+19 verbose already installed skipping grunt-contrib-htmlmin@~0.1.3 /home/greenstar/webserver/ofnote
+20 verbose already installed skipping grunt-bower-requirejs@~0.4.1 /home/greenstar/webserver/ofnote
+21 verbose already installed skipping grunt-contrib-requirejs@~0.4.0 /home/greenstar/webserver/ofnote
+22 verbose already installed skipping grunt-contrib-imagemin@~0.1.3 /home/greenstar/webserver/ofnote
+23 verbose already installed skipping grunt-contrib-watch@~0.4.0 /home/greenstar/webserver/ofnote
+24 verbose already installed skipping grunt-rev@~0.1.0 /home/greenstar/webserver/ofnote
+25 verbose already installed skipping grunt-usemin@~0.1.10 /home/greenstar/webserver/ofnote
+26 verbose already installed skipping grunt-mocha@~0.3.0 /home/greenstar/webserver/ofnote
+27 verbose already installed skipping grunt-open@~0.2.0 /home/greenstar/webserver/ofnote
+28 verbose already installed skipping grunt-svgmin@~0.1.0 /home/greenstar/webserver/ofnote
+29 verbose already installed skipping grunt-concurrent@~0.1.0 /home/greenstar/webserver/ofnote
+30 verbose already installed skipping matchdep@~0.1.1 /home/greenstar/webserver/ofnote
+31 verbose already installed skipping connect-livereload@~0.2.0 /home/greenstar/webserver/ofnote
+32 verbose already installed skipping grunt-recess@~0.3.4 /home/greenstar/webserver/ofnote
+33 silly resolved []
+34 info build /home/greenstar/webserver/ofnote
+35 verbose linkStuff [ false, false, false, '/home/greenstar/webserver' ]
+36 info linkStuff ofnote@0.0.0
+37 verbose linkBins ofnote@0.0.0
+38 verbose linkMans ofnote@0.0.0
+39 verbose rebuildBundles ofnote@0.0.0
+40 verbose rebuildBundles [ '.bin',
+40 verbose rebuildBundles   'bower',
+40 verbose rebuildBundles   'connect-livereload',
+40 verbose rebuildBundles   'grunt',
+40 verbose rebuildBundles   'grunt-bower-requirejs',
+40 verbose rebuildBundles   'grunt-concurrent',
+40 verbose rebuildBundles   'grunt-contrib-clean',
+40 verbose rebuildBundles   'grunt-contrib-coffee',
+40 verbose rebuildBundles   'grunt-contrib-compass',
+40 verbose rebuildBundles   'grunt-contrib-concat',
+40 verbose rebuildBundles   'grunt-contrib-connect',
+40 verbose rebuildBundles   'grunt-contrib-copy',
+40 verbose rebuildBundles   'grunt-contrib-cssmin',
+40 verbose rebuildBundles   'grunt-contrib-htmlmin',
+40 verbose rebuildBundles   'grunt-contrib-imagemin',
+40 verbose rebuildBundles   'grunt-contrib-jshint',
+40 verbose rebuildBundles   'grunt-contrib-requirejs',
+40 verbose rebuildBundles   'grunt-contrib-uglify',
+40 verbose rebuildBundles   'grunt-contrib-watch',
+40 verbose rebuildBundles   'grunt-mocha',
+40 verbose rebuildBundles   'grunt-open',
+40 verbose rebuildBundles   'grunt-recess',
+40 verbose rebuildBundles   'grunt-rev',
+40 verbose rebuildBundles   'grunt-svgmin',
+40 verbose rebuildBundles   'grunt-usemin',
+40 verbose rebuildBundles   'matchdep' ]
+41 verbose rebuild bundle /home/greenstar/webserver/ofnote/node_modules/bower
+42 info build /home/greenstar/webserver/ofnote/node_modules/bower
+43 info preinstall bower@0.10.0
+44 verbose linkStuff [ false,
+44 verbose linkStuff   false,
+44 verbose linkStuff   false,
+44 verbose linkStuff   '/home/greenstar/webserver/ofnote/node_modules' ]
+45 info linkStuff bower@0.10.0
+46 warn prefer global bower@0.10.0 should be installed with -g
+47 verbose linkBins bower@0.10.0
+48 verbose link bins [ { bower: 'bin/bower' },
+48 verbose link bins   '/home/greenstar/webserver/ofnote/node_modules/.bin',
+48 verbose link bins   false ]
+49 verbose linkMans bower@0.10.0
+50 verbose rebuildBundles bower@0.10.0
+51 error Error: EACCES, unlink '/home/greenstar/webserver/ofnote/node_modules/.bin/bower'
+51 error  { [Error: EACCES, unlink '/home/greenstar/webserver/ofnote/node_modules/.bin/bower']
+51 error   errno: 3,
+51 error   code: 'EACCES',
+51 error   path: '/home/greenstar/webserver/ofnote/node_modules/.bin/bower' }
+52 error Please try running this command again as root/Administrator.
+53 error System Linux 3.2.0-4-amd64
+54 error command "/usr/local/bin/node" "/usr/local/bin/npm" "install"
+55 error cwd /home/greenstar/webserver/ofnote
+56 error node -v v0.10.21
+57 error npm -v 1.3.11
+58 error path /home/greenstar/webserver/ofnote/node_modules/.bin/bower
+59 error code EACCES
+60 error errno 3
+61 error stack Error: EACCES, unlink '/home/greenstar/webserver/ofnote/node_modules/.bin/bower'
+62 verbose exit [ 3, true ]

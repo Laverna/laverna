@@ -71,14 +71,8 @@ define([
          */
         serializeData: function () {
             // Decrypting
-            var data = this.model.toJSON(),
-                configs = this.options.configs;
-
-            // Decrypting
-            if (configs.encrypt === 1) {
-                data.title   = sjcl.decrypt(configs.secureKey, data.title);
-                data.content = sjcl.decrypt(configs.secureKey, data.content);
-            }
+            var configs = this.options.configs,
+                data = this.model.decrypt(configs);
 
             // Show title
             document.title = data.title;

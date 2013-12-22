@@ -2,8 +2,11 @@
 /*global test*/
 /*global equal*/
 // /*global notDeepEqual*/
-define(['models/note', 'collections/notes', 'backbone', 'localStorage'],
-function (Note, Notes, Backbone, Store) {
+define([
+    'models/note',
+    'collections/notes',
+    'migrations/note'
+], function (Note, Notes, DB) {
     'use strict';
 
     module('Notes collection', {
@@ -32,9 +35,8 @@ function (Note, Notes, Backbone, Store) {
         equal(this.notes.length, 2);
     });
 
-    test('Uses localStorage', function () {
-        var storage = new Store('vimarkable.notes');
-        equal(this.notes.localStorage.name, storage.name);
+    test('Uses indexedDB database', function () {
+        equal(this.notes.database.id, DB.id);
     });
 
     test('It return an array of the favorite notes', function () {

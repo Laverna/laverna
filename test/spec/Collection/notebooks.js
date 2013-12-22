@@ -5,7 +5,7 @@
 define([
     'models/notebook',
     'collections/notebooks',
-    'migrations/notebook'
+    'migrations/notebooks'
 ], function (Notebook, Notebooks, DB) {
     'use strict';
 

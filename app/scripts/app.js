@@ -5,7 +5,6 @@ define([
     'modalRegion',
     'collections/configs',
     'marionette',
-    'sjcl',
 ], function (_, Backbone, ModalRegion, Configs) {
     'use strict';
 

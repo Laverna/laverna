@@ -35,13 +35,14 @@ define([
         },
 
         serializeData: function () {
-            var configs = this.options.configs,
-                data = this.model.decrypt(configs);
+            var data = this.model.toJSON();
+
+            // Decrypting
+            data.title = App.Encryption.API.decrypt(data.title);
+            data.content = App.Encryption.API.decrypt(data.content);
 
             return _.extend(data, {
-                args    : this.options.args,
-                page    : this.options.page,
-                url     : this.options.url
+                args    : this.options.args
             });
         },
 

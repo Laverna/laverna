@@ -1,9 +1,10 @@
 /*global define*/
 /*global Markdown*/
-/*global sjcl*/
+// /*global sjcl*/
 define([
     'underscore',
     'jquery',
+    'app',
     'backbone',
     'marionette',
     'models/note',
@@ -16,7 +17,7 @@ define([
     'typeahead',
     'tagsinput'
 ],
-function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace) {
+function (_, $, App, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -47,9 +48,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
         onRender: function() {
             var that = this,
-                tagsNames,
-                tags,
-                tagNames;
+                // tagsNames,
+                // tags,
+                // tagNames;
 
             tagsNames = this.options.collectionTags.getNames();
 
@@ -92,7 +93,7 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             var content = this.editor.getSession().getValue().trim(),
                 title   = this.ui.title.val().trim(),
-                configs = this.options.configs,
+                // configs = App.configs,
                 data;
 
             // Get values
@@ -110,6 +111,10 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
 
             // Get tags id
             data.tags = this.options.collectionTags.getTagsId(data.tags);
+
+            // Encryption
+            data.title = App.Encryption.API.encrypt(data.title);
+            data.content = App.Encryption.API.encrypt(data.content);
 
             // Existing note or new one?
             this.model.trigger('save', data);
@@ -267,9 +272,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             var data = this.options.data;
 
             data.notebooks = this.options.notebooks.toJSON();
-            _.each(data.notebooks, function (n) {
-                n.name = sjcl.decrypt(configs.secureKey, n.name);
-            });
+            // _.each(data.notebooks, function (n) {
+            //     n.name = sjcl.decrypt(App.settings.secureKey, n.name);
+            // });
 
             return data;
         },

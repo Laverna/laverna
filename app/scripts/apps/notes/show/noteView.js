@@ -73,10 +73,9 @@ define([
          * Decrypt content and title
          */
         serializeData: function () {
-            // Decrypting
-            // var configs = this.options.configs,
-                // data = this.model.decrypt(configs);
             var data = this.model.toJSON();
+            data.title = App.Encryption.API.decrypt(data.title);
+            data.content = App.Encryption.API.decrypt(data.content);
 
             // Show title
             document.title = data.title;

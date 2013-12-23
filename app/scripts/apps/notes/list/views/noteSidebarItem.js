@@ -6,7 +6,7 @@ define([
     'app',
     'backbone',
     'marionette',
-    'text!apps/notes/list/templates/sidebarListItem',
+    'text!apps/notes/list/templates/sidebarListItem.html',
     'sjcl',
     'pagedown-ace'
 ], function(_, App, Backbone, Marionette, Template) {

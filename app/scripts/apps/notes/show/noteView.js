@@ -6,7 +6,7 @@ define([
     'app',
     'backbone',
     'marionette',
-    'text!apps/notes/show/templates/item',
+    'text!apps/notes/show/templates/item.html',
     'checklist',
     'prettify',
     'sjcl',
@@ -109,14 +109,14 @@ define([
          */
         editNote: function () {
             var uri = this.ui.editBtn.attr('href');
-            Backbone.history.navigate(uri);
+            App.navigate(uri);
         },
 
         /**
          * Redirect to deleting page
          */
         deleteNote: function() {
-            Backbone.history.navigate('/note/remove/' + this.model.get('id'), true);
+            App.navigate('/note/remove/' + this.model.get('id'), true);
         },
 
         /**

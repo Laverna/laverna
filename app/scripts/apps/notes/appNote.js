@@ -72,10 +72,16 @@ define([
 
         // Add new note
         addNote: function () {
+            require(['apps/notes/form/addController'], function (Add) {
+                executeAction(new Add().form);
+            });
         },
 
         // Edit an existing note
         editNote: function (id) {
+            require(['apps/notes/form/editController'], function (Edit) {
+                executeAction(new Edit().form, {id: id});
+            });
             App.log('edit note ' + id);
         }
     };

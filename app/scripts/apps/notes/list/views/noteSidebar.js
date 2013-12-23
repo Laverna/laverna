@@ -5,7 +5,7 @@ define([
     'marionette',
     'sidebar',
     'apps/notes/list/views/noteSidebarItem',
-    'text!apps/notes/list/templates/sidebarList',
+    'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap',
     'sjcl'
 ], function(_, Backbone, Marionette, Sidebar, NoteSidebarItem, Template) {
@@ -112,7 +112,7 @@ define([
         toSearch: function (e) {
             e.preventDefault();
             var text = this.ui.searchInput.val();
-            return Backbone.history.navigate('/note/search/' + text + '/p1', true);
+            return App.navigate('/note/search/' + text + '/p1', true);
         },
 
         /**

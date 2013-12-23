@@ -35,30 +35,14 @@ define([
         },
 
         initialize: function () {
-            console.log(App.settings);
-            console.log('collection length = ' + this.collection.length);
-
             // Options to itemView
             this.itemViewOptions.args = this.options.args;
-            this.itemViewOptions.configs = this.options.configs;
 
             // Events
             this.listenTo(this.collection, 'changeFocus', this.changeFocus);
         },
 
         onRender: function () {
-            // Trigger active note
-            // if (this.options.activeNote) {
-            //     this.changeFocus(this.options.activeNote);
-            // }
-        },
-
-        navigateBottom: function () {
-            console.log('bottom');
-        },
-
-        navigateTop: function () {
-            console.log('top');
         },
 
         /**
@@ -143,12 +127,7 @@ define([
         serializeData: function () {
             var viewData = {
                 title       : this.options.title,
-                nextPage    : this.nextPage,
-                nextNote    : this.nextNote,
-                prevPage    : this.prevPage,
-                prevNote    : this.prevNote,
                 urlPage     : this.urlPage,
-                searchQuery : this.options.searchQuery,
                 args        : this.options.args
             };
             return viewData;
@@ -156,6 +135,9 @@ define([
 
         templateHelpers: function () {
             return {
+                urlPage : function () {
+                    return '/notes';
+                },
                 // Generates the pagination url
                 pageUrl: function () {
                     var url = '/notes';

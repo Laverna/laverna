@@ -12,7 +12,7 @@
             </a>
         </li>
     </ul>
-    <a id="header-title" href="#{{ urlPage }}" class="btn-link navbar-brand">{{ title }}</a>
+    <a id="header-title" href="#{{ urlPage() }}" class="btn-link navbar-brand">{{ title }}</a>
     <ul class="nav navbar-nav navbar-right">
         <li>
             <a href="#/notes/add" class="btn btn-danger addlink">
@@ -29,7 +29,7 @@
                 <span class="glyphicon glyphicon-search"></span>
             </div>
             <div class="form-group search-group">
-                <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="{{ searchQuery }}" />
+                <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="{{ args.searchQuery }}" />
             </div>
         </form>
 
@@ -38,8 +38,8 @@
 
         <nav class="navbar navbar-static-top navbar-bottom">
             <div class="btn-group btn-group-justified">
-                <a class="btn btn-default" id="prevPage" href="{{ pageUrl(prevPage, prevNote, urlPage) }}">Prev</a>
-                <a class="btn btn-default" id="nextPage" href="{{ pageUrl(nextPage, nextNote, urlPage) }}">Next</a>
+                <a class="btn btn-default" id="prevPage" href="{{ pageUrl() }}">Prev</a>
+                <a class="btn btn-default" id="nextPage" href="{{ pageUrl() }}">Next</a>
             </div>
         </nav>
     </div>

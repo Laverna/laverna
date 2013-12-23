@@ -17,6 +17,12 @@ define([
         initialize: function () {
             _.bindAll(this, 'listNotes', 'showSidebar');
 
+            // Fetch events
+            this.on('controller:all', this.activeNotes, this);
+            this.on('controller:favorite', this.favoriteNotes, this);
+            this.on('controller:trashed', this.trashedNotes, this);
+
+            // Application events
             App.on('notes:show', this.changeFocus, this);
             App.on('navigateTop', this.toPrevNote, this);
             App.on('navigateBottom', this.toNextNote, this);
@@ -29,15 +35,60 @@ define([
             this.notes = new Notes();
             this.args = args;
 
-            $.when(this.notes.fetch()).done(this.showSidebar);
+            if (this.args.filter) {
+                this.trigger('controller:' + this.args.filter);
+            } else {
+                this.trigger('controller:all');
+            }
         },
 
+        /**
+         * Show only active notes
+         */
+        activeNotes: function () {
+            $.when(
+                this.notes.fetch({
+                    offset : 0,
+                    limit  : App.settings.pagination,
+                    conditions: {trash : 0}
+                })
+            ).done(this.showSidebar);
+        },
+
+        /**
+         * Show favorite notes
+         */
+        favoriteNotes: function () {
+            $.when(
+                this.notes.fetch({
+                    offset : 0,
+                    limit  : App.settings.pagination,
+                    conditions: {isFavorite : 1}
+                })
+            ).done(this.showSidebar);
+        },
+
+        /**
+         * Show only removed notes
+         */
+        trashedNotes: function () {
+            $.when(
+                this.notes.fetch({
+                    offset : 0,
+                    limit  : App.settings.pagination,
+                    conditions: {trash : 1}
+                })
+            ).done(this.showSidebar);
+        },
+
+        /**
+         * Show content
+         */
         showSidebar: function () {
-            var notes = this.filterNotes(),
-                View = new NotesView({
-                    collection : notes,
-                    args       : this.args
-                });
+            var View = new NotesView({
+                collection : this.notes,
+                args       : this.args
+            });
 
             App.sidebar.show(View);
 
@@ -45,36 +96,6 @@ define([
             if (this.args.id !== undefined) {
                 this.changeFocus(this.args);
             }
-        },
-
-        filterNotes: function () {
-            var notes = this.notes.clone();
-
-            // Filter
-            switch (this.args.filter) {
-                case 'favorite':
-                    notes = notes.getFavorites();
-                    break;
-                case 'trashed':
-                    notes = notes.getTrashed();
-                    break;
-                case 'search':
-                    notes = notes.search(this.options.searchQuery, this.options.key, this.options.configs);
-                    break;
-                case 'tagged':
-                    notes = notes.getTagNotes(parseInt(this.options.tagId));
-                    break;
-                default:
-                    if (0 !== 0) {
-                        notes = notes.getNotebookNotes(this.options.notebookId);
-                    } else {
-                        notes = notes.getActive();
-                    }
-                    break;
-            }
-
-            this.notes = new Notes(notes);
-            return this.notes;
         },
 
         changeFocus: function (args) {

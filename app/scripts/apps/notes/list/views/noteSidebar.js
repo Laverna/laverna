@@ -1,22 +1,16 @@
 /*global define */
 define([
     'underscore',
+    'app',
     'backbone',
     'marionette',
     'sidebar',
     'apps/notes/list/views/noteSidebarItem',
-    'text!apps/notes/list/templates/sidebarList.html',
-    'backbone.mousetrap',
-    'sjcl'
-], function(_, Backbone, Marionette, Sidebar, NoteSidebarItem, Template) {
+    'text!apps/notes/list/templates/sidebarList.html'
+], function(_, App, Backbone, Marionette, Sidebar, NoteSidebarItem, Template) {
     'use strict';
 
-    // Integrations backbone.mousetrap into marionette
-    _.extend(Marionette.CompositeView, Backbone.View);
-    Sidebar = _.clone(Sidebar);
-
-    var View = _.extend(Sidebar, {
-    // var View = Marionette.CompositeView.extend({
+    var View = Marionette.CompositeView.extend({
         template: _.template(Template),
 
         itemView: NoteSidebarItem,
@@ -40,31 +34,13 @@ define([
             'keypress #search-input' : 'escSearch'
         },
 
-        keyboardEvents: {
-        },
-
         initialize: function () {
+            console.log(App.settings);
             console.log('collection length = ' + this.collection.length);
-            // Setting keyboardEvents
-            var configs = this.options.configs;
-            this.setKeyboardEvents( configs );
-            this.keyboardEvents[configs.appSearch] = 'focusSearch';
-
-            // console.log(parseInt(configs.pagination));
-            this.perPage = parseInt(configs.pagination);
-
-            // Pagination
-            // this.pagination(this.collection);
-
-            // Set page title
-            // document.title = this.options.title;
 
             // Options to itemView
-            // this.itemViewOptions.page = this.options.lastPage;
             this.itemViewOptions.args = this.options.args;
-            this.itemViewOptions.key = this.options.key;
             this.itemViewOptions.configs = this.options.configs;
-            this.itemViewOptions.searchQuery = this.options.searchQuery;
 
             // Events
             this.listenTo(this.collection, 'changeFocus', this.changeFocus);
@@ -72,9 +48,17 @@ define([
 
         onRender: function () {
             // Trigger active note
-            if (this.options.activeNote) {
-                this.changeFocus(this.options.activeNote);
-            }
+            // if (this.options.activeNote) {
+            //     this.changeFocus(this.options.activeNote);
+            // }
+        },
+
+        navigateBottom: function () {
+            console.log('bottom');
+        },
+
+        navigateTop: function () {
+            console.log('top');
         },
 
         /**
@@ -190,6 +174,5 @@ define([
 
     });
 
-    View = Marionette.CompositeView.extend(View);
     return View;
 });

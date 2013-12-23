@@ -39,6 +39,14 @@ define([
         App.navigate('/notebooks', true);
     });
 
+    // Navigation - next & prev
+    Mousetrap.bind(App.settings.navigateTop, function () {
+        App.trigger('navigateTop');
+    });
+    Mousetrap.bind(App.settings.navigateBottom, function () {
+        App.trigger('navigateBottom');
+    });
+
     /**
      * API
      */

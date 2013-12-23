@@ -1,13 +1,11 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
 define([
     'underscore',
     'app',
     'backbone',
     'marionette',
     'text!apps/notes/list/templates/sidebarListItem.html',
-    'sjcl',
     'pagedown-ace'
 ], function(_, App, Backbone, Marionette, Template) {
     'use strict';

@@ -25,7 +25,7 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            ''          : 'showNotes',
+            ''       : 'showNotes',
             'notes/add'       : 'addNote',
             'notes/edit/:id'  : 'editNote',
             'notes(/f/:filter)(/p:page)'   : 'showNotes',

@@ -75,6 +75,7 @@ define([
     App.on('initialize:after', function () {
         require([
             'apps/encryption/encrypt',
+            'helpers/keybindings',
             'apps/notes/appNote'
         ], function () {
             Backbone.history.start({pushState: false});

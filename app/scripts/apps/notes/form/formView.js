@@ -1,6 +1,5 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
 define([
     'underscore',
     'jquery',
@@ -10,14 +9,13 @@ define([
     'models/note',
     'text!apps/notes/form/templates/form.html',
     'checklist',
-    'Mousetrap',
     'ace',
     'pagedown-extra',
     'sjcl',
     'typeahead',
     'tagsinput'
 ],
-function (_, $, App, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace) {
+function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -42,8 +40,12 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, Mousetrap,
         },
 
         initialize: function () {
+            App.mousetrap.API.pause();
             this.on('shown', this.pagedownRender);
-            Mousetrap.reset();
+        },
+
+        onClose: function () {
+            App.mousetrap.API.unpause();
         },
 
         onRender: function() {

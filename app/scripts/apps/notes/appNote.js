@@ -13,6 +13,7 @@ define([
         API;
 
     AppNote.on('start', function () {
+        App.mousetrap.API.restart();
         App.log('AppNote is started');
     });
 
@@ -25,7 +26,7 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            ''       : 'showNotes',
+            ''     : 'showNotes',
             'notes/add'       : 'addNote',
             'notes/edit/:id'  : 'editNote',
             'notes(/f/:filter)(/p:page)'   : 'showNotes',
@@ -98,6 +99,10 @@ define([
         if (!API.sidebarShown) {
             API.showNotes(args);
         }
+    });
+
+    AppNote.on('showForm', function () {
+        App.navigate('/notes/add', true);
     });
 
     /**

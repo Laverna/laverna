@@ -3,23 +3,23 @@ define([
     'underscore',
     'app',
     'backbone',
-    'marionette',
     'sidebar',
     'apps/notes/list/views/noteSidebarItem',
-    'text!apps/notes/list/templates/sidebarList.html'
-], function(_, App, Backbone, Marionette, Sidebar, NoteSidebarItem, Template) {
+    'text!apps/notes/list/templates/sidebarList.html',
+    'backbone.mousetrap',
+    'marionette',
+], function(_, App, Backbone, Sidebar, NoteSidebarItem, Template) {
     'use strict';
 
-    var View = Marionette.CompositeView.extend({
+    var View = Backbone.Marionette.CompositeView.extend({
         template: _.template(Template),
 
         itemView: NoteSidebarItem,
-
         itemViewContainer: '.main',
-
-        itemViewOptions: {},
-
         className: 'sidebar-notes',
+
+        itemViewOptions : { },
+        keyboardEvents  : { },
 
         ui: {
             prevPage    : '#prevPage',
@@ -27,14 +27,16 @@ define([
             searchInput : '#search-input'
         },
 
-        perPage: 8,
-
         events: {
             'submit .search-form'    : 'toSearch',
             'keypress #search-input' : 'escSearch'
         },
 
         initialize: function () {
+            // Navigation with keys
+            this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
+            this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
+
             // Options to itemView
             this.itemViewOptions.args = this.options.args;
 
@@ -43,6 +45,14 @@ define([
         },
 
         onRender: function () {
+        },
+
+        navigateBottom: function () {
+            this.collection.trigger('navigateBottom');
+        },
+
+        navigateTop: function () {
+            this.collection.trigger('navigateTop');
         },
 
         /**

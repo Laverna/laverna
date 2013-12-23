@@ -17,28 +17,32 @@ define([
         initialize: function () {
             _.bindAll(this, 'listNotes', 'showSidebar');
 
-            // Fetch events
-            this.on('controller:all', this.activeNotes, this);
-            this.on('controller:favorite', this.favoriteNotes, this);
-            this.on('controller:trashed', this.trashedNotes, this);
+            this.notes = new Notes();
 
             // Application events
             App.on('notes:show', this.changeFocus, this);
-            App.on('navigateTop', this.toPrevNote, this);
-            App.on('navigateBottom', this.toNextNote, this);
+
+            // Filter
+            this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
+            this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);
+            this.listenTo(this.notes, 'filter:trashed', this.trashedNotes, this);
+            this.listenTo(this.notes, 'filter:search', this.trashedNotes, this);
+
+            // Navigation with keys
+            this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
+            this.listenTo(this.notes, 'navigateBottom', this.toNextNote, this);
         },
 
         /**
          * Fetch notes, then show it
          */
         listNotes: function (args) {
-            this.notes = new Notes();
             this.args = args;
 
             if (this.args.filter) {
-                this.trigger('controller:' + this.args.filter);
+                this.notes.trigger('filter:' + this.args.filter);
             } else {
-                this.trigger('controller:all');
+                this.notes.trigger('filter:all');
             }
         },
 
@@ -79,6 +83,12 @@ define([
                     conditions: {trash : 1}
                 })
             ).done(this.showSidebar);
+        },
+
+        /**
+         * @TODO search notes
+         */
+        searchNotes: function () {
         },
 
         /**
@@ -151,8 +161,8 @@ define([
             }
 
             var note;
-            if ( !this.args.id && this.args.page > App.settings.pagination) {
-                note = this.notes.at(App.settings.pagination);
+            if ( !this.args.page && this.args.page > App.settings.pagination) {
+                note = null;
             } else {
                 note = this.notes.get(this.args.id);
                 note = note.prev();

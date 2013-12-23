@@ -25,6 +25,7 @@ require.config({
         'backbone.assosiations'    :  '../bower_components/backbone-associations/backbone-associations',
         // Keybindings             :
         'Mousetrap'                :  '../bower_components/mousetrap/mousetrap',
+        'mousetrap-pause'          :  '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
         'backbone.mousetrap'       :  '../bower_components/backbone.mousetrap/backbone.mousetrap',
         // Pagedown                :
         'pagedown-ace'             :  '../bower_components/pagedown-ace/Markdown.Editor',
@@ -103,9 +104,9 @@ require.config({
             deps: ['jquery'],
             exports: '$'
         },
-        'Mousetrap': {},
+        'Mousetrap': { },
         'backbone.mousetrap': {
-            deps: ['Mousetrap']
+            deps: ['Mousetrap', 'mousetrap-pause']
         },
         ace: {
             exports: 'ace'

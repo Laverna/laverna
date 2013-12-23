@@ -57,7 +57,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             // Fetch notebooks
             this.Notebooks = new CollectionNotebooks();
             // this.Notebooks.setEncryptionData({configs: this.Configs, key: this.secureKey});
-            this.Notebooks.fetch({reset: true});
+            // this.Notebooks.fetch({reset: true});
 
             // Fetch tags
             this.Tags = new CollectionTags();
@@ -129,6 +129,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
 
         fetchNotebooks: function (args, evt) {
             var self = this;
+            this.notebooksFetched = true;
             this.Notebooks.fetch({
                 reset: true,
                 success: function () {
@@ -147,6 +148,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
             var content = {
                     model      : note,
                     collection : this.Notes,
+                    notebooks  : this.Notebooks,
                     configs    : this.configs
                 };
 
@@ -174,7 +176,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Show list of notes in sidebar
          */
         showSidebarNotes: function (args) {
-            if (this.Notebooks.length === 0) {
+            if (this.Notebooks.length === 0 && !this.notebooksFetched) {
                 this.fetchNotebooks(args, 'notes.shown');
                 return;
             }
@@ -431,7 +433,7 @@ function(_, Backbone, Marionette, App, CollectionNotes, CollectionNotebooks, Col
          * Remove notebook
          */
         notebookRemove: function (id) {
-            var notebook = undefined;
+            var notebook;
 
             if (this.Notebooks.length === 0) {
                 notebook = new this.Notebooks.model({id: id});

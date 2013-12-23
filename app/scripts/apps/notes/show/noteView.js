@@ -3,15 +3,16 @@
 // /*global sjcl*/
 define([
     'underscore',
+    'app',
     'backbone',
     'marionette',
-    'text!noteItemTempl',
+    'text!apps/notes/show/templates/item',
     'checklist',
     'prettify',
     'sjcl',
     'backbone.mousetrap',
     'pagedown-extra'
-], function (_, Backbone, Marionette, Template, Checklist, prettify) {
+], function (_, App, Backbone, Marionette, Template, Checklist, prettify) {
     'use strict';
 
     // Intergrating backbone.mousetrap in marionette
@@ -40,28 +41,16 @@ define([
 
         initialize: function() {
             // Setting shortcuts
-            var configs = this.options.configs;
+            var configs = App.settings;
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
             this.keyboardEvents[configs.actionsRemove] = 'deleteNote';
             this.keyboardEvents.up = 'scrollTop';
             this.keyboardEvents.down = 'scrollDown';
 
-            // Model events
-            this.listenTo(this.model, 'change', this.changeFocus);
-            this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
-        },
-
-        showNotebook: function () {
-            // Fetch notebook
-            var notebook = this.model.get('notebookId'),
-                that = this;
-
-            console.log(notebook);
-            notebook.on('success', function () {
-                console.log(notebook.get('name'));
-                that.ui.notebook.text(notebook.get('name'));
-            });
+            // // Model events
+            // this.listenTo(this.model, 'change', this.changeFocus);
+            // this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
         },
 
         onRender: function () {
@@ -74,9 +63,6 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
-
-            // Show notebook
-            this.showNotebook();
         },
 
         afterRender: function () {
@@ -88,8 +74,9 @@ define([
          */
         serializeData: function () {
             // Decrypting
-            var configs = this.options.configs,
-                data = this.model.decrypt(configs);
+            // var configs = this.options.configs,
+                // data = this.model.decrypt(configs);
+            var data = this.model.toJSON();
 
             // Show title
             document.title = data.title;

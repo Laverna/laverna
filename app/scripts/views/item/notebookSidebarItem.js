@@ -20,7 +20,6 @@ define([
         },
 
         serializeData: function ( ) {
-            console.log(this.options.configs);
             var data = this.model.decrypt(this.options.configs);
             return data;
         },

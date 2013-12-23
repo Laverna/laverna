@@ -49,7 +49,7 @@ define([
             this.create(new Config({ name: 'appKeyboardHelp', value: '?' }));
         },
 
-        getConfigs: function ( ) {
+        getConfigs: function () {
             var data = {};
 
             _.forEach(this.models, function ( model ) {

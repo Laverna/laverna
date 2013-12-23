@@ -131,14 +131,14 @@ require.config({
 
 require([
     'jquery',
-    'router',
+    // 'router',
     'app',
     'bootstrap',
     'IndexedDBShim'    // IndexedDB support in Safari and in old Chrome
-], function ($, Router, App) {
+], function ($, App) {
     'use strict';
 
     // App starts here
-    new Router();
+    // new Router();
     App.start();
 });

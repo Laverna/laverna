@@ -271,6 +271,9 @@ function (_, $, Backbone, Marionette, Note, Template, Checklist, Mousetrap, ace)
             }
 
             data.notebooks = this.options.notebooks.toJSON();
+            _.each(data.notebooks, function (n) {
+                n.name = sjcl.decrypt(configs.secureKey, n.name);
+            });
 
             return data;
         },

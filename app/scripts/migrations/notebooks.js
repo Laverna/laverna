@@ -4,7 +4,7 @@ define([
 ], function () {
     'use strict';
 
-    var NoteDB = {
+    var NotebooksDB = {
         id : 'notebooks-db',
         description: 'The database for Notebooks',
         migrations : [
@@ -32,5 +32,5 @@ define([
         ]
     };
 
-    return NoteDB;
+    return NotebooksDB;
 });

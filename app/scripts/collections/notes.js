@@ -24,14 +24,6 @@ define([
             return -model.get('created');
         },
 
-        setEncryptionData: function (data) {
-            this.encryptionData = data;
-        },
-
-        getEncryptionData: function () {
-            return this.encryptionData;
-        },
-
         /**
          * Filter the list of all notes that are favorite
          */

@@ -17,7 +17,7 @@ define([
 
         constructor: function() {
             this.$window = $(window);
-            _.bindAll(this);
+            _.bindAll(this, 'showModal');
             Backbone.Marionette.Region.prototype.constructor.apply(this, arguments);
             this.on('show', this.showModal, this);
         },

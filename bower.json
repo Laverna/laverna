@@ -4,9 +4,9 @@
   "dependencies": {
     "requirejs"            :  "~2.1.9",
     "requirejs-text"       :  "~2.0.1",
-    "modernizr"            :  "~2.6.2",
-    "jquery"               :  "~1.9.1",
-    "underscore"           :  "~1.4.4",
+    "modernizr"            :  "~2.7.1",
+    "jquery"               :  "~1.10.2",
+    "underscore"           :  "~1.5.2",
     "backbone"             :  "~1.1.0",
     "marionette"           :  "~1.4.1",
     "backbone.babysitter"  :  "~0.0.6",

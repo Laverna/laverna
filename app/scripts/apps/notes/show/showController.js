@@ -23,16 +23,26 @@ define([
          */
         showNote: function (args) {
             this.note = new NoteModel({ id : args.id });
-            this.note.on('change', this.triggerChangeToSidebar, this);
             this.args = args;
+
+            this.note.on('change', this.triggerChangeToSidebar, this);
+            this.note.on('updateTaskProgress', this.updateTaskProgress, this);
 
             $.when(this.note.fetch()).done(this.showContent);
         },
 
         showContent: function () {
-            var args = {
-                model   : this.note,
-                args    : this.args
+            var decrypted, args;
+
+            decrypted = {
+                title   : App.Encryption.API.decrypt(this.note.get('title')),
+                content : App.Encryption.API.decrypt(this.note.get('content'))
+            };
+
+            args = {
+                model     : this.note,
+                decrypted : decrypted,
+                args      : this.args
             };
 
             App.content.show(new NoteView(args));
@@ -40,6 +50,15 @@ define([
 
         triggerChangeToSidebar: function () {
             App.trigger('notes:changeModel', this.note.get('id'));
+        },
+
+        updateTaskProgress: function (text) {
+            var content = App.Encryption.API.encrypt(text.content);
+
+            this.note.save({
+                content       : content,
+                taskCompleted : text.completed
+            });
         }
 
     });

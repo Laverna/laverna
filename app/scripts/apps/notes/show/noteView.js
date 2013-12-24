@@ -1,6 +1,5 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
 define([
     'underscore',
     'app',
@@ -37,6 +36,8 @@ define([
         },
 
         keyboardEvents: {
+            'up'   : 'scrollTop',
+            'down' : 'scrollDown'
         },
 
         initialize: function() {
@@ -45,11 +46,10 @@ define([
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
             this.keyboardEvents[configs.actionsRemove] = 'deleteNote';
-            this.keyboardEvents.up = 'scrollTop';
-            this.keyboardEvents.down = 'scrollDown';
 
             // Model events
             this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
+            this.listenTo(this.model, 'change:taskCompleted', this.taskProgress, this);
         },
 
         onRender: function () {
@@ -68,9 +68,7 @@ define([
          * Decrypt content and title
          */
         serializeData: function () {
-            var data = this.model.toJSON();
-            data.title = App.Encryption.API.decrypt(data.title);
-            data.content = App.Encryption.API.decrypt(data.content);
+            var data = _.extend(this.model.toJSON(), this.options.decrypted);
 
             // Show title
             document.title = data.title;
@@ -122,16 +120,17 @@ define([
         toggleTask: function (e) {
             var task = $(e.target),
                 taskId = parseInt(task.attr('data-task'), null),
-                text = new Checklist().toggle(this.model.get('content'), taskId);
+                content = App.Encryption.API.decrypt(this.model.get('content')),
+                text = new Checklist().toggle(content, taskId);
 
             // Save result
-            this.model.set('content', text.content);
-            this.model.set('taskCompleted', text.completed);
-            this.model.save();
+            this.model.trigger('updateTaskProgress', text);
+        },
 
+        taskProgress: function () {
             // Status in progress bar
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
-            this.ui.progress.css({width: percent + '%'});
+            this.ui.progress.css({width: percent + '%'}, this.render, this);
             this.ui.percent.html(percent + '%');
         },
 

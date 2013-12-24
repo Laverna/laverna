@@ -39,7 +39,7 @@ define([
         listNotes: function (args) {
             this.args = args;
 
-            if (this.args.filter) {
+            if (_.isNull(this.args) !== true && this.args.filter) {
                 this.notes.trigger('filter:' + this.args.filter);
             } else {
                 this.notes.trigger('filter:all');

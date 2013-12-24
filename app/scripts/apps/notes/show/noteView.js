@@ -4,20 +4,16 @@ define([
     'underscore',
     'app',
     'backbone',
-    'marionette',
     'text!apps/notes/show/templates/item.html',
     'checklist',
     'prettify',
-    'sjcl',
     'backbone.mousetrap',
+    'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Marionette, Template, Checklist, prettify) {
+], function (_, App, Backbone, Template, Checklist, prettify) {
     'use strict';
 
-    // Intergrating backbone.mousetrap in marionette
-    _.extend(Marionette.ItemView, Backbone.View);
-
-    var View = Marionette.ItemView.extend({
+    var View = Backbone.Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'content-notes',
@@ -68,7 +64,15 @@ define([
          * Decrypt content and title
          */
         serializeData: function () {
-            var data = _.extend(this.model.toJSON(), this.options.decrypted);
+            var data = _.extend(this.model.toJSON(), this.options.decrypted),
+                converter;
+
+            // Convert from markdown to HTML
+            data.content = new Checklist().toHtml(data.content);
+            // converter = Markdown.getSanitizingConverter();
+            converter = new Markdown.Converter();
+            Markdown.Extra.init(converter);
+            data.content = converter.makeHtml(data.content);
 
             // Show title
             document.title = data.title;
@@ -127,8 +131,10 @@ define([
             this.model.trigger('updateTaskProgress', text);
         },
 
+        /**
+         * Shows percentage of completed tasks
+         */
         taskProgress: function () {
-            // Status in progress bar
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
             this.ui.progress.css({width: percent + '%'}, this.render, this);
             this.ui.percent.html(percent + '%');
@@ -146,28 +152,12 @@ define([
 
         templateHelpers: function() {
             return {
-                getProgress: function(taskCompleted, taskAll) {
-                    return Math.floor(taskCompleted * 100 / taskAll);
+                getProgress: function() {
+                    return Math.floor(this.taskCompleted * 100 / this.taskAll);
                 },
 
-                getContent: function(text) {
-                    text = new Checklist().toHtml(text);
-                    // var converter = Markdown.getSanitizingConverter();
-                    var converter = new Markdown.Converter();
-                    Markdown.Extra.init(converter);
-                    return converter.makeHtml(text);
-                },
-
-                // Generate link
-                link: function (id, page, notebook) {
-                    var url = '/note/show/';
-                    notebook = (notebook === undefined) ? 0 : notebook;
-
-                    if (page !== undefined) {
-                        url += notebook + '/p' + page + '/show/';
-                    }
-
-                    return url + id;
+                getContent: function() {
+                    return this.content;
                 }
             };
         }

@@ -36,12 +36,12 @@
                 <div class="progress">
                     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
                         <span class="progress-percent">
-                            {{ getProgress(taskCompleted, taskAll) }}%
+                            {{ getProgress() }}%
                         </span>
                     </div>
                 </div>
                 <% } %>
-                {{ getContent(content) }}
+                {{ getContent() }}
             </div>
         </div>
     </div>

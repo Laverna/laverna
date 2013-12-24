@@ -10,10 +10,17 @@ define([
 ], function(_, App, Backbone, Marionette, Template) {
     'use strict';
 
-    var View = Marionette.ItemView.extend({
+    var View = Backbone.Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'list-group',
+
+        ui: {
+            favorite : '.favorite',
+        },
+
+        keyboardEvents: {
+        },
 
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);

@@ -48,9 +48,8 @@ define([
             this.keyboardEvents.up = 'scrollTop';
             this.keyboardEvents.down = 'scrollDown';
 
-            // // Model events
-            // this.listenTo(this.model, 'change', this.changeFocus);
-            // this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
+            // Model events
+            this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
         },
 
         onRender: function () {
@@ -63,10 +62,6 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
-        },
-
-        afterRender: function () {
-            this.$('.ui-s-content').trigger('click');
         },
 
         /**
@@ -87,10 +82,13 @@ define([
         },
 
         changeFavorite: function () {
+            var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
             if (this.model.get('isFavorite') === 1) {
                 this.ui.favorite.removeClass('glyphicon-star-empty');
+                sidebar.removeClass('glyphicon-star-empty');
             } else {
                 this.ui.favorite.addClass('glyphicon-star-empty');
+                sidebar.addClass('glyphicon-star-empty');
             }
         },
 

@@ -23,6 +23,7 @@ define([
          */
         showNote: function (args) {
             this.note = new NoteModel({ id : args.id });
+            this.note.on('change', this.triggerChangeToSidebar, this);
             this.args = args;
 
             $.when(this.note.fetch()).done(this.showContent);
@@ -31,12 +32,15 @@ define([
         showContent: function () {
             var args = {
                 model   : this.note,
-                args    : this.args,
-                configs : {}
+                args    : this.args
             };
 
             App.content.show(new NoteView(args));
         },
+
+        triggerChangeToSidebar: function () {
+            App.trigger('notes:changeModel', this.note.get('id'));
+        }
 
     });
 

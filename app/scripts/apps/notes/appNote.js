@@ -49,7 +49,9 @@ define([
         // Show list of notes
         showNotes: function (filter, page) {
             var args = { filter : filter, page : page };
-            if (typeof(filter) === 'object') { args = filter; }
+            if (_.isNull(filter) !== true && typeof(filter) === 'object') {
+                args = filter;
+            }
 
             require(['apps/notes/list/controller'], function (List) {
                 API.currentArgs = _.omit(args, 'id');

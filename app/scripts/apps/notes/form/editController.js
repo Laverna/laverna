@@ -29,13 +29,18 @@ define([
         },
 
         show: function () {
-            var view = new View({
-                model: this.model,
-                data: this.model.toJSON(),
-                collectionTags: this.tagsCollection,
-                notebooks: this.notebooksCollection
-            });
+            var decrypted = {
+                    title : App.Encryption.API.decrypt(this.model.get('title')),
+                    content : App.Encryption.API.decrypt(this.model.get('content')),
+                },
+                view = new View({
+                    model: this.model,
+                    decrypted: decrypted,
+                    collectionTags: this.tagsCollection,
+                    notebooks: this.notebooksCollection
+                });
 
+            console.log(decrypted);
             App.content.show(view);
 
             this.model.on('save', this.save, this);

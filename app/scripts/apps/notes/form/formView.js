@@ -114,10 +114,6 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
             // Get tags id
             data.tags = this.options.collectionTags.getTagsId(data.tags);
 
-            // Encryption
-            data.title = App.Encryption.API.encrypt(data.title);
-            data.content = App.Encryption.API.encrypt(data.content);
-
             // Existing note or new one?
             this.model.trigger('save', data);
         },
@@ -264,7 +260,7 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
         },
 
         serializeData: function () {
-            var data = this.options.data;
+            var data = _.extend(this.model.toJSON(), this.options.decrypted);
 
             data.notebooks = this.options.notebooks.toJSON();
             // _.each(data.notebooks, function (n) {

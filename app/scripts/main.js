@@ -105,6 +105,9 @@ require.config({
             exports: '$'
         },
         'Mousetrap': { },
+        'mousetrap-pause': {
+            deps: ['Mousetrap']
+        },
         'backbone.mousetrap': {
             deps: ['Mousetrap', 'mousetrap-pause']
         },

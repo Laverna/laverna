@@ -32,11 +32,11 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
         events: {
             'submit .form-horizontal' : 'save',
             'click #saveBtn'          : 'save',
-            //'click #cancelBtn'        : 'redirect'
+            'click #cancelBtn'        : 'redirect'
         },
 
         keyboardEvents: {
-            //'esc': 'redirect'
+            'esc': 'redirect'
         },
 
         initialize: function () {
@@ -172,17 +172,10 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
         /**
          * Redirect to note
          */
-        /*
-        redirect: function () {
-            var url = window.history;
-            if (url.length === 0) {
-                this.redirectToNote();
-            } else {
-                url.back();
-            }
-            return false;
+        redirect: function (e) {
+            e.preventDefault();
+            return this.trigger('redirect');
         },
-        */
         
 
         /**

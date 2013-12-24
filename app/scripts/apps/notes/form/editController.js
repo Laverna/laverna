@@ -16,6 +16,7 @@ define([
     Edit.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'form', 'show');
+            App.trigger('notes:show');
         },
 
         form: function (args) {
@@ -42,7 +43,12 @@ define([
         },
 
         save: function (data) {
-            this.model.save(data);
+            this.model.save(data, {
+                success: function (model) {
+                    var url = '/notes/show/' + model.get('id');
+                    App.navigate(url, {trigger: true});
+                }
+            });
         }
     });
 

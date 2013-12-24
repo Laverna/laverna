@@ -26,7 +26,6 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            ''     : 'showNotes',
             'notes/add'       : 'addNote',
             'notes/edit/:id'  : 'editNote',
             'notes(/f/:filter)(/p:page)'   : 'showNotes',
@@ -74,14 +73,14 @@ define([
         // Add new note
         addNote: function () {
             require(['apps/notes/form/addController'], function (Add) {
-                executeAction(new Add().form);
+                executeAction(new Add().addForm);
             });
         },
 
         // Edit an existing note
         editNote: function (id) {
-            require(['apps/notes/form/editController'], function (Edit) {
-                executeAction(new Edit().form, {id: id});
+            require(['apps/notes/form/addController'], function (Edit) {
+                executeAction(new Edit().editForm, {id: id});
             });
             App.log('edit note ' + id);
         }
@@ -92,13 +91,17 @@ define([
      */
     App.on('notes:list', function () {
         App.navigate('notes');
-        API.showNotes();
+        API.showNotes(null, null);
     });
 
     App.on('notes:show', function (args) {
         if (!API.sidebarShown) {
             API.showNotes(args);
         }
+    });
+
+    App.on('notes:added', function () {
+        API.showNotes(null, null);
     });
 
     AppNote.on('showForm', function () {

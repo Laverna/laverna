@@ -32,11 +32,11 @@ define([
             $('.list-group-item.active').removeClass('active');
             this.$('.list-group-item').addClass('active');
 
-            // $('#sidebar .ui-s-content').scrollTop(
-            //     this.$('.list-group-item').offset().top -
-            //     $('#sidebar .ui-s-content').offset().top +
-            //     $('#sidebar .ui-s-content').scrollTop() - 100
-            // );
+            $('#sidebar .ui-s-content').scrollTop(
+                this.$('.list-group-item').offset().top -
+                $('#sidebar .ui-s-content').offset().top +
+                $('#sidebar .ui-s-content').scrollTop() - 100
+            );
         },
 
         serializeData: function () {
@@ -73,7 +73,7 @@ define([
                         url += '/f/' + this.args.filter;
                     }
                     if (this.args.page !== null) {
-                        url += '/page' + this.args.page;
+                        url += '/p' + this.args.page;
                     }
                     return url + '/show/' + this.id;
                 }

@@ -38,8 +38,16 @@ define([
          */
         listNotes: function (args) {
             this.args = args;
+            App.settings.pagination = parseInt(App.settings.pagination);
 
-            if (this.args.filter) {
+            // Offset
+            if (_.isNull(this.args.page)) {
+                this.args.page = 0;
+            } else {
+                this.args.page = parseInt(this.args.page);
+            }
+
+            if (_.isNull(this.args) === false && this.args.filter) {
                 this.notes.trigger('filter:' + this.args.filter);
             } else {
                 this.notes.trigger('filter:all');
@@ -52,7 +60,7 @@ define([
         activeNotes: function () {
             $.when(
                 this.notes.fetch({
-                    offset : 0,
+                    offset : this.args.page,
                     limit  : App.settings.pagination,
                     conditions: {trash : 0}
                 })
@@ -65,7 +73,7 @@ define([
         favoriteNotes: function () {
             $.when(
                 this.notes.fetch({
-                    offset : 0,
+                    offset : this.args.page,
                     limit  : App.settings.pagination,
                     conditions: {isFavorite : 1}
                 })
@@ -78,7 +86,7 @@ define([
         trashedNotes: function () {
             $.when(
                 this.notes.fetch({
-                    offset : 0,
+                    offset : this.args.page,
                     limit  : App.settings.pagination,
                     conditions: {trash : 1}
                 })
@@ -95,6 +103,18 @@ define([
          * Show content
          */
         showSidebar: function () {
+            // Next page
+            if (this.notes.length >= App.settings.pagination) {
+                this.args.next = this.args.page + App.settings.pagination;
+            } else {
+                this.args.next = this.args.page;
+            }
+
+            // Previous page
+            if (this.args.page > App.settings.pagination) {
+                this.args.prev = this.args.page - App.settings.pagination;
+            }
+
             var View = new NotesView({
                 collection : this.notes,
                 args       : this.args
@@ -125,10 +145,14 @@ define([
                 url += '/f/' + this.args.filter;
             }
             if (this.args.page) {
-                url += '/page' + this.args.page;
+                url += '/p' + this.args.page;
             }
 
-            return App.navigate(url + '/show/' + note.get('id'), true);
+            if (_.isObject(note)) {
+                url += '/show/' + note.get('id');
+            }
+
+            return App.navigate(url, true);
         },
 
         /**
@@ -148,6 +172,10 @@ define([
                 note = note.next();
             }
 
+            if (this.notes.length >= App.settings.pagination && this.notes.indexOf(note) < 0) {
+                this.notes.trigger('nextPage');
+            }
+
             return this.toNote(note);
         },
 
@@ -161,11 +189,15 @@ define([
             }
 
             var note;
-            if ( !this.args.page && this.args.page > App.settings.pagination) {
-                note = null;
+            if ( !this.args.id) {
+                note = this.notes.last();
             } else {
                 note = this.notes.get(this.args.id);
                 note = note.prev();
+            }
+
+            if (this.args.page > 1 && this.notes.indexOf(note) < 0) {
+                this.notes.trigger('prevPage');
             }
 
             return this.toNote(note);

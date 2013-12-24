@@ -42,9 +42,20 @@ define([
 
             // Events
             this.listenTo(this.collection, 'changeFocus', this.changeFocus);
+            this.listenTo(this.collection, 'change', this.render);
+            this.listenTo(this.collection, 'nextPage', this.toNextPage);
+            this.listenTo(this.collection, 'prevPage', this.toPrevPage);
         },
 
         onRender: function () {
+        },
+
+        toNextPage: function () {
+            App.navigate(this.ui.nextPage.attr('href'));
+        },
+
+        toPrevPage: function () {
+            App.navigate(this.ui.prevPage.attr('href'));
         },
 
         navigateBottom: function () {
@@ -93,47 +104,6 @@ define([
             return App.navigate('/note/search/' + text + '/p1', true);
         },
 
-        /**
-         * Pagination
-         */
-        pagination: function (notes) {
-            this.pageCount = this.collection.length;
-
-            if (this.options.lastPage !== undefined) {
-                this.lastPage  = parseInt(this.options.lastPage, null);
-            } else {
-                this.lastPage = 1;
-            }
-
-            // Next note
-            var nextI = this.perPage * this.lastPage;
-            if (this.collection.length > nextI) {
-                var nextNote = this.collection.at(nextI);
-                this.nextNote = nextNote.get('id');
-            }
-
-            // Prev note
-            var prevI = (nextI - this.perPage) - 1;
-            if (prevI > 0) {
-                var prevNote = this.collection.at(prevI);
-                this.prevNote = prevNote.get('id');
-            }
-
-            // Limit
-            notes = this.collection.pagination(this.perPage, this.lastPage);
-            this.collection.reset(notes);
-
-            // Next page
-            if ( (this.pageCount / this.perPage) > this.lastPage) {
-                this.nextPage = this.lastPage + 1;
-            } else {
-                this.nextPage = this.lastPage;
-            }
-
-            // Previous page
-            this.prevPage = (this.lastPage > 1) ? this.lastPage - 1 : 1;
-        },
-
         serializeData: function () {
             var viewData = {
                 title       : this.options.title,
@@ -149,14 +119,14 @@ define([
                     return '/notes';
                 },
                 // Generates the pagination url
-                pageUrl: function () {
+                pageUrl: function (page) {
                     var url = '/notes';
 
                     if (this.args.filter !== null) {
                         url += '/f/' + this.args.filter;
                     }
-                    if (this.args.page !== null) {
-                        url += '/p' + this.args.page;
+                    if (page !== undefined) {
+                        url += '/p' + page;
                     }
 
                     return '#' + url;

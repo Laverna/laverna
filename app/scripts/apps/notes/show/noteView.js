@@ -1,24 +1,19 @@
 /*global define*/
 /*global Markdown*/
-// /*global sjcl*/
 define([
     'underscore',
     'app',
     'backbone',
-    'marionette',
     'text!apps/notes/show/templates/item.html',
     'checklist',
     'prettify',
-    'sjcl',
     'backbone.mousetrap',
+    'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Marionette, Template, Checklist, prettify) {
+], function (_, App, Backbone, Template, Checklist, prettify) {
     'use strict';
 
-    // Intergrating backbone.mousetrap in marionette
-    _.extend(Marionette.ItemView, Backbone.View);
-
-    var View = Marionette.ItemView.extend({
+    var View = Backbone.Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'content-notes',
@@ -37,6 +32,8 @@ define([
         },
 
         keyboardEvents: {
+            'up'   : 'scrollTop',
+            'down' : 'scrollDown'
         },
 
         initialize: function() {
@@ -45,12 +42,10 @@ define([
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
             this.keyboardEvents[configs.actionsRemove] = 'deleteNote';
-            this.keyboardEvents.up = 'scrollTop';
-            this.keyboardEvents.down = 'scrollDown';
 
-            // // Model events
-            // this.listenTo(this.model, 'change', this.changeFocus);
-            // this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
+            // Model events
+            this.listenTo(this.model, 'change:isFavorite', this.changeFavorite);
+            this.listenTo(this.model, 'change:taskCompleted', this.taskProgress, this);
         },
 
         onRender: function () {
@@ -65,17 +60,19 @@ define([
             this.$('table').addClass('table table-bordered');
         },
 
-        afterRender: function () {
-            this.$('.ui-s-content').trigger('click');
-        },
-
         /**
          * Decrypt content and title
          */
         serializeData: function () {
-            var data = this.model.toJSON();
-            data.title = App.Encryption.API.decrypt(data.title);
-            data.content = App.Encryption.API.decrypt(data.content);
+            var data = _.extend(this.model.toJSON(), this.options.decrypted),
+                converter;
+
+            // Convert from markdown to HTML
+            data.content = new Checklist().toHtml(data.content);
+            // converter = Markdown.getSanitizingConverter();
+            converter = new Markdown.Converter();
+            Markdown.Extra.init(converter);
+            data.content = converter.makeHtml(data.content);
 
             // Show title
             document.title = data.title;
@@ -87,10 +84,13 @@ define([
         },
 
         changeFavorite: function () {
+            var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
             if (this.model.get('isFavorite') === 1) {
                 this.ui.favorite.removeClass('glyphicon-star-empty');
+                sidebar.removeClass('glyphicon-star-empty');
             } else {
                 this.ui.favorite.addClass('glyphicon-star-empty');
+                sidebar.addClass('glyphicon-star-empty');
             }
         },
 
@@ -124,16 +124,19 @@ define([
         toggleTask: function (e) {
             var task = $(e.target),
                 taskId = parseInt(task.attr('data-task'), null),
-                text = new Checklist().toggle(this.model.get('content'), taskId);
+                content = App.Encryption.API.decrypt(this.model.get('content')),
+                text = new Checklist().toggle(content, taskId);
 
             // Save result
-            this.model.set('content', text.content);
-            this.model.set('taskCompleted', text.completed);
-            this.model.save();
+            this.model.trigger('updateTaskProgress', text);
+        },
 
-            // Status in progress bar
+        /**
+         * Shows percentage of completed tasks
+         */
+        taskProgress: function () {
             var percent = Math.floor(this.model.get('taskCompleted') * 100 / this.model.get('taskAll'));
-            this.ui.progress.css({width: percent + '%'});
+            this.ui.progress.css({width: percent + '%'}, this.render, this);
             this.ui.percent.html(percent + '%');
         },
 
@@ -149,28 +152,12 @@ define([
 
         templateHelpers: function() {
             return {
-                getProgress: function(taskCompleted, taskAll) {
-                    return Math.floor(taskCompleted * 100 / taskAll);
+                getProgress: function() {
+                    return Math.floor(this.taskCompleted * 100 / this.taskAll);
                 },
 
-                getContent: function(text) {
-                    text = new Checklist().toHtml(text);
-                    // var converter = Markdown.getSanitizingConverter();
-                    var converter = new Markdown.Converter();
-                    Markdown.Extra.init(converter);
-                    return converter.makeHtml(text);
-                },
-
-                // Generate link
-                link: function (id, page, notebook) {
-                    var url = '/note/show/';
-                    notebook = (notebook === undefined) ? 0 : notebook;
-
-                    if (page !== undefined) {
-                        url += notebook + '/p' + page + '/show/';
-                    }
-
-                    return url + id;
+                getContent: function() {
+                    return this.content;
                 }
             };
         }

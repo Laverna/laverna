@@ -38,10 +38,16 @@ define([
         },
 
         show: function () {
-            console.log(this.model);
-            var view = new View({
+            var view, decrypted;
+
+            decrypted = {
+                title : App.Encryption.API.decrypt(this.model.get('title')),
+                content : App.Encryption.API.decrypt(this.model.get('content')),
+            };
+
+            view = new View({
                 model: this.model,
-                data: this.model.toJSON(),
+                decrypted: decrypted,
                 collectionTags: this.tagsCollection,
                 notebooks: this.notebooksCollection
             });
@@ -64,6 +70,11 @@ define([
         },
 
         save: function (data) {
+            // Encryption
+            data.title = App.Encryption.API.encrypt(data.title);
+            data.content = App.Encryption.API.encrypt(data.content);
+
+            // Save
             this.model.save(data, {
                 success: function (model) {
                     var url = '/notes/show/' + model.get('id');

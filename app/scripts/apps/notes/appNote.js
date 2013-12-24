@@ -1,8 +1,9 @@
 /*global define*/
 define([
+    'underscore',
     'marionette',
     'app'
-], function (Marionette, App) {
+], function (_, Marionette, App) {
     'use strict';
 
     /**
@@ -48,11 +49,12 @@ define([
         // Show list of notes
         showNotes: function (filter, page) {
             var args = { filter : filter, page : page };
-            if (filter && typeof(filter) === 'object') {
+            if (_.isNull(filter) !== true && typeof(filter) === 'object') {
                 args = filter;
             }
+
             require(['apps/notes/list/controller'], function (List) {
-                API.sidebarShown = true;
+                API.currentArgs = _.omit(args, 'id');
                 executeAction(new List().listNotes, args);
             });
         },
@@ -95,7 +97,8 @@ define([
     });
 
     App.on('notes:show', function (args) {
-        if (!API.sidebarShown) {
+        var current = (API.currentArgs) ? API.currentArgs.toString() : null;
+        if (current !== _.omit(args, 'id').toString()) {
             API.showNotes(args);
         }
     });

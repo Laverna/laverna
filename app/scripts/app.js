@@ -5,8 +5,7 @@ define([
     'modalRegion',
     'collections/configs',
     'marionette',
-], function (_, Backbone, ModalRegion, Configs) {
-    'use strict';
+], function (_, Backbone, ModalRegion, Configs) { 'use strict';
 
     // Underscore template
     _.templateSettings = {
@@ -76,7 +75,8 @@ define([
         require([
             'apps/encryption/encrypt',
             'helpers/keybindings',
-            'apps/notes/appNote'
+            'apps/notes/appNote',
+            'apps/notebooks/appNotebooks'
         ], function () {
             Backbone.history.start({pushState: false});
 

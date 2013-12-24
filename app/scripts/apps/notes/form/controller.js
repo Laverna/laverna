@@ -13,7 +13,7 @@ define([
 
     var Form = App.module('AppNote.Form');
 
-    Form.controller = Marionette.Controller.extend({
+    Form.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'addForm', 'editForm', 'show');
             App.trigger('notes:show', {filter: null, page: null});
@@ -75,5 +75,5 @@ define([
         }
     });
 
-    return Form.controller;
+    return Form.Controller;
 });

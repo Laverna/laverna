@@ -43,18 +43,18 @@ define([
             // Events
             this.listenTo(this.collection, 'changeFocus', this.changeFocus);
             this.listenTo(this.collection, 'change', this.render);
-            this.listenTo(this.collection, 'nextPage', this.nextPage);
-            this.listenTo(this.collection, 'prevPage', this.prevPage);
+            this.listenTo(this.collection, 'nextPage', this.toNextPage);
+            this.listenTo(this.collection, 'prevPage', this.toPrevPage);
         },
 
         onRender: function () {
         },
 
-        nextPage: function () {
+        toNextPage: function () {
             App.navigate(this.ui.nextPage.attr('href'));
         },
 
-        prevPage: function () {
+        toPrevPage: function () {
             App.navigate(this.ui.prevPage.attr('href'));
         },
 

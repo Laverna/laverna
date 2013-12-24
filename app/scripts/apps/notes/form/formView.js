@@ -5,23 +5,23 @@ define([
     'jquery',
     'app',
     'backbone',
-    'marionette',
-    'models/note',
     'text!apps/notes/form/templates/form.html',
     'checklist',
     'ace',
     'pagedown-extra',
-    'sjcl',
+    'backbone.mousetrap',
+    'marionette',
     'typeahead',
     'tagsinput'
 ],
-function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
+function (_, $, App, Backbone, Template, Checklist, ace) {
     'use strict';
 
-    var View = Marionette.ItemView.extend({
+    var View = Backbone.Marionette.ItemView.extend({
         template: _.template(Template),
 
         ui: {
+            form       :  '#noteForm',
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
             tagsId     :  'select[name="tags"]',
@@ -30,9 +30,9 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
         },
 
         events: {
-            'submit .form-horizontal' : 'save',
-            'click #saveBtn'          : 'save',
-            'click #cancelBtn'        : 'redirect'
+            // 'submit #noteForm' : 'save',
+            'click #saveBtn'   : 'save',
+            'click #cancelBtn' : 'redirect'
         },
 
         keyboardEvents: {
@@ -49,6 +49,7 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
         },
 
         onRender: function() {
+            this.ui.form.on('submit', this.save, this);
             var that = this,
                 // tagsNames,
                 // tags,
@@ -91,6 +92,7 @@ function (_, $, App, Backbone, Marionette, Note, Template, Checklist, ace) {
         },
 
         save: function (e) {
+            console.log('submit');
             e.preventDefault();
 
             var content = this.editor.getSession().getValue().trim(),

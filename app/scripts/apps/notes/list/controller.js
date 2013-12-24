@@ -75,7 +75,7 @@ define([
                 this.notes.fetch({
                     offset : this.args.page,
                     limit  : App.settings.pagination,
-                    conditions: {isFavorite : 1}
+                    // conditions: {isFavorite : 1}
                 })
             ).done(this.showSidebar);
         },

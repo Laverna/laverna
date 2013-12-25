@@ -54,7 +54,6 @@ define([
             require(['apps/notebooks/list/controller'], function (List) {
                 executeAction(new List().list);
             });
-            App.log('list notebooks showed');
         },
 
         // Create notebook
@@ -62,7 +61,6 @@ define([
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
                 executeAction(new Form().addForm);
             });
-            App.log('add notebook form showed');
         },
 
         // Edit notebook
@@ -70,12 +68,13 @@ define([
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
                 executeAction(new Form().editForm, {id: id});
             });
-            App.log('edit notebook form showed');
         },
 
         // Delete notebook
         removeNotebook: function (id) {
-            App.log('remove notebook form showed');
+            require(['apps/notebooks/remove/notebook'], function (Controller) {
+                executeAction(new Controller().start, {id: id});
+            });
         },
 
         /**
@@ -93,7 +92,10 @@ define([
             });
         },
 
-        removeTag: function () {
+        removeTag: function (id) {
+            require(['apps/notebooks/remove/tag'], function (Controller) {
+                executeAction(new Controller().start, {id: id});
+            });
         }
     }
 

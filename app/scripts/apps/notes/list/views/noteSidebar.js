@@ -101,7 +101,7 @@ define([
         toSearch: function (e) {
             e.preventDefault();
             var text = this.ui.searchInput.val();
-            return App.navigate('/note/search/' + text + '/p1', true);
+            return App.navigate('/notes/f/search/' + text, true);
         },
 
         serializeData: function () {
@@ -121,9 +121,11 @@ define([
                 // Generates the pagination url
                 pageUrl: function (page) {
                     var url = '/notes';
-
                     if (this.args.filter !== null) {
                         url += '/f/' + this.args.filter;
+                    }
+                    if (this.args.query) {
+                        url += '/' + this.args.query;
                     }
                     if (page !== undefined) {
                         url += '/p' + page;

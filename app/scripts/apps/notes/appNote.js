@@ -29,6 +29,7 @@ define([
         appRoutes: {
             'notes/add'       : 'addNote',
             'notes/edit/:id'  : 'editNote',
+            'notes/f/search(/:query)(/p:page)(/show/:id)'  : 'searchNotes',
             'notes(/f/:filter)(/p:page)'   : 'showNotes',
             'notes(/f/:filter)(/p:page)(/show/:id)'  : 'showNote',
         }
@@ -56,6 +57,21 @@ define([
             require(['apps/notes/list/controller'], function (List) {
                 API.currentArgs = _.omit(args, 'id');
                 executeAction(new List().listNotes, args);
+            });
+        },
+
+        // Search
+        searchNotes: function (query, page, id) {
+            var args = { query : query, page : page, filter : 'search', id : id };
+            require([
+                'apps/notes/list/controller',
+                'apps/notes/show/showController'
+            ], function (List, Show) {
+                API.currentArgs = args;
+                executeAction(new List().listNotes, args);
+                // Show note content
+                executeAction(new Show().showNote, args);
+                App.trigger('notes:show', args);
             });
         },
 

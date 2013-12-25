@@ -72,6 +72,9 @@ define([
                     if (this.args.filter !== null) {
                         url += '/f/' + this.args.filter;
                     }
+                    if (this.args.query) {
+                        url += '/' + this.args.query;
+                    }
                     if (this.args.page !== null) {
                         url += '/p' + this.args.page;
                     }

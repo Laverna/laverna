@@ -164,7 +164,7 @@ define([
                 url += '/f/' + this.args.filter;
             }
             if (this.args.filter === 'search') {
-                url += '/' + this.args.query;
+                url += '/q/' + this.args.query;
             }
             if (this.args.page) {
                 url += '/p' + this.args.page;

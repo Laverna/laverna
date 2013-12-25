@@ -101,7 +101,7 @@ define([
         toSearch: function (e) {
             e.preventDefault();
             var text = this.ui.searchInput.val();
-            return App.navigate('/notes/f/search/' + text, true);
+            return App.navigate('/notes/f/search/q/' + text, true);
         },
 
         serializeData: function () {
@@ -125,7 +125,7 @@ define([
                         url += '/f/' + this.args.filter;
                     }
                     if (this.args.query) {
-                        url += '/' + this.args.query;
+                        url += '/q/' + this.args.query;
                     }
                     if (page !== undefined) {
                         url += '/p' + page;

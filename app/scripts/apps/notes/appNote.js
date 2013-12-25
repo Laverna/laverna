@@ -29,9 +29,8 @@ define([
         appRoutes: {
             'notes/add'       : 'addNote',
             'notes/edit/:id'  : 'editNote',
-            'notes/f/search(/:query)(/p:page)(/show/:id)'  : 'searchNotes',
-            'notes(/f/:filter)(/p:page)'   : 'showNotes',
-            'notes(/f/:filter)(/p:page)(/show/:id)'  : 'showNote',
+            'notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
+            'notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
         }
     });
 
@@ -48,8 +47,8 @@ define([
      */
     API = {
         // Show list of notes
-        showNotes: function (filter, page) {
-            var args = { filter : filter, page : page };
+        showNotes: function (filter, query, page) {
+            var args = { filter : filter, page : page, query : query };
             if (_.isNull(filter) !== true && typeof(filter) === 'object') {
                 args = filter;
             }
@@ -60,26 +59,12 @@ define([
             });
         },
 
-        // Search
-        searchNotes: function (query, page, id) {
-            var args = { query : query, page : page, filter : 'search', id : id };
-            require([
-                'apps/notes/list/controller',
-                'apps/notes/show/showController'
-            ], function (List, Show) {
-                API.currentArgs = args;
-                executeAction(new List().listNotes, args);
-                // Show note content
-                executeAction(new Show().showNote, args);
-                App.trigger('notes:show', args);
-            });
-        },
-
         // Show content of note
-        showNote: function (filter, page, id) {
+        showNote: function (filter, query, page, id) {
             var args = {
                 id     : id,
                 filter : filter,
+                query  : query,
                 page   : page
             };
             require(['apps/notes/show/showController'], function (Show) {

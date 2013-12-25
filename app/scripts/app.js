@@ -5,7 +5,8 @@ define([
     'modalRegion',
     'collections/configs',
     'marionette',
-], function (_, Backbone, ModalRegion, Configs) { 'use strict';
+], function (_, Backbone, ModalRegion, Configs) {
+    'use strict';
 
     // Underscore template
     _.templateSettings = {
@@ -28,6 +29,18 @@ define([
             options = {};
         }
         Backbone.history.navigate(route, options);
+    };
+
+    // Go back
+    App.navigateBack = function (i) {
+        if (i) { i = -1; }
+        var url = window.history;
+
+        if (url.length === 0) {
+            App.trigger('notes:list');
+        } else {
+            url.back(i);
+        }
     };
 
     // Debug

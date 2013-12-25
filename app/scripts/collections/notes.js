@@ -1,12 +1,13 @@
 /*global define*/
 define([
     'underscore',
+    'app',
     'backbone',
     'migrations/note',
     'models/note',
     // 'localStorage',
     'indexedDB'
-], function (_, Backbone, NotesDB, Note) {
+], function (_, App, Backbone, NotesDB, Note) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
@@ -80,9 +81,12 @@ define([
                 return this;
             }
 
-            var pattern = new RegExp(letters, 'gi');
+            var pattern = new RegExp(letters, 'gi'),
+                title;
+
             return this.filter(function(model) {
-                return pattern.test(model.get('title'));
+                title = App.Encryption.API.decrypt(model.get('title'));
+                return pattern.test(title);
             });
         },
 

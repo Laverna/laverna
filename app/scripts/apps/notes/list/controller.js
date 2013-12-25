@@ -26,7 +26,7 @@ define([
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
             this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);
             this.listenTo(this.notes, 'filter:trashed', this.trashedNotes, this);
-            this.listenTo(this.notes, 'filter:search', this.trashedNotes, this);
+            this.listenTo(this.notes, 'filter:search', this.searchNotes, this);
 
             // Navigation with keys
             this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
@@ -47,6 +47,7 @@ define([
                 this.args.page = parseInt(this.args.page);
             }
 
+            // Filter
             if (_.isNull(this.args) === false && this.args.filter) {
                 this.notes.trigger('filter:' + this.args.filter);
             } else {
@@ -69,6 +70,7 @@ define([
 
         /**
          * Show favorite notes
+         * @TODO At the time limit and offset do not work properly
          */
         favoriteNotes: function () {
             $.when(
@@ -92,9 +94,22 @@ define([
         },
 
         /**
-         * @TODO search notes
+         * Search notes
          */
         searchNotes: function () {
+            var self = this;
+            $.when(
+                // Fetch without limit, because with encryption, searching is impossible
+                this.notes.fetch({
+                    conditions: {trash : 0}
+                })
+            ).done(
+                function () {
+                    var notes = self.notes.search(self.args.query);
+                    self.notes.reset(notes);
+                    self.showSidebar();
+                }
+            );
         },
 
         /**
@@ -147,6 +162,9 @@ define([
 
             if (this.args.filter) {
                 url += '/f/' + this.args.filter;
+            }
+            if (this.args.filter === 'search') {
+                url += '/q/' + this.args.query;
             }
             if (this.args.page) {
                 url += '/p' + this.args.page;

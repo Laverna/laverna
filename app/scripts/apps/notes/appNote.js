@@ -27,10 +27,11 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'notes/add'       : 'addNote',
-            'notes/edit/:id'  : 'editNote',
-            'notes(/f/:filter)(/p:page)'   : 'showNotes',
-            'notes(/f/:filter)(/p:page)(/show/:id)'  : 'showNote',
+            'notes/add'        : 'addNote',
+            'notes/edit/:id'   : 'editNote',
+            'notes/remove/:id' : 'removeNote',
+            'notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
+            'notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
         }
     });
 
@@ -47,8 +48,8 @@ define([
      */
     API = {
         // Show list of notes
-        showNotes: function (filter, page) {
-            var args = { filter : filter, page : page };
+        showNotes: function (filter, query, page) {
+            var args = { filter : filter, page : page, query : query };
             if (_.isNull(filter) !== true && typeof(filter) === 'object') {
                 args = filter;
             }
@@ -60,10 +61,11 @@ define([
         },
 
         // Show content of note
-        showNote: function (filter, page, id) {
+        showNote: function (filter, query, page, id) {
             var args = {
                 id     : id,
                 filter : filter,
+                query  : query,
                 page   : page
             };
             require(['apps/notes/show/showController'], function (Show) {
@@ -85,6 +87,13 @@ define([
                 executeAction(new Form().editForm, {id: id});
             });
             App.log('edit note ' + id);
+        },
+
+        // Remove and existing note
+        removeNote: function (id) {
+            require(['apps/notes/remove/removeController'], function (Controller) {
+                executeAction(new Controller().remove, id);
+            });
         }
     };
 

@@ -15,7 +15,7 @@ define([
      */
     List.Controller = Marionette.Controller.extend({
         initialize: function () {
-            _.bindAll(this, 'listNotes', 'showSidebar');
+            _.bindAll(this, 'listNotes', 'showSidebar', 'favoriteNotes');
 
             this.notes = new Notes();
 
@@ -73,9 +73,9 @@ define([
         favoriteNotes: function () {
             $.when(
                 this.notes.fetch({
-                    offset : this.args.page,
-                    limit  : App.settings.pagination,
-                    // conditions: {isFavorite : 1}
+                    //offset : this.args.page,
+                    //limit  : App.settings.pagination,
+                    conditions: {isFavorite : 1}
                 })
             ).done(this.showSidebar);
         },
@@ -86,8 +86,6 @@ define([
         trashedNotes: function () {
             $.when(
                 this.notes.fetch({
-                    offset : this.args.page,
-                    limit  : App.settings.pagination,
                     conditions: {trash : 1}
                 })
             ).done(this.showSidebar);
@@ -103,8 +101,14 @@ define([
          * Show content
          */
         showSidebar: function () {
+            // Pagination
+            if (this.notes.length > App.settings.pagination) {
+                var notes = this.notes.pagination(this.args.page, App.settings.pagination);
+                this.notes.reset(notes);
+            }
+
             // Next page
-            if (this.notes.length >= App.settings.pagination) {
+            if (this.notes.length === App.settings.pagination) {
                 this.args.next = this.args.page + App.settings.pagination;
             } else {
                 this.args.next = this.args.page;

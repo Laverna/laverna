@@ -5,8 +5,7 @@ define([
     'migrations/note',
     'models/note',
     // 'localStorage',
-    'indexedDB',
-    'sjcl'
+    'indexedDB'
 ], function (_, Backbone, NotesDB, Note) {
     'use strict';
 
@@ -91,17 +90,11 @@ define([
          * Pagination
          * @var int perPage
          * @var int page
-         * @var string filter
          */
-        pagination : function (perPage, page, filter) {
-            if (filter === 'active') {
-                this.reset(this.getActive());
-            }
-
+        pagination : function (page, perPage) {
             var collection = this;
-            page = page - 1;
 
-            collection = _(collection.rest(perPage * page));
+            collection = _(collection.rest(page));
             collection = _(collection.first(perPage));
 
             return collection.map( function(model) {

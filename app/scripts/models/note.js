@@ -1,17 +1,15 @@
 /*global define*/
-/*global sjcl*/
 define([
     'underscore',
     'backbone',
+    'indexedDB',
     'migrations/note',
     'models/notebook',
     'collections/notebooks',
     'collections/tags',
-    'backbone.assosiations',
-    'indexedDB',
+    'backbone.assosiations'
     // 'localStorage',
-    'sjcl'
-], function (_, Backbone, NotesDB, Notebook, Notebooks, Tags) {
+], function (_, Backbone, IndexedDB, NotesDB, Notebook, Notebooks, Tags) {
     'use strict';
 
     /**
@@ -109,22 +107,6 @@ define([
          */
         setUpdate: function () {
             this.set('updated', Date.now());
-        },
-
-        /**
-         * Decrypt content
-         * @var object configs
-         */
-        decrypt: function (configs) {
-            var data = this.toJSON();
-
-            // Decrypting
-            if (configs.encrypt === 1) {
-                data.title   = sjcl.decrypt(configs.secureKey, data.title);
-                data.content = sjcl.decrypt(configs.secureKey, data.content);
-            }
-
-            return data;
         },
 
         toTrash: function () {

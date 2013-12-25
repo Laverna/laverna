@@ -27,6 +27,7 @@
                     <h1 class="page-header">
                         {{ title }}
                         <small id="notebook-name"><% if (notebookId !== null) { %>{{ notebookId.name }}<% } %></small>
+                        <small>{{created}}</small>
                         <a href="#" class="btn btn-link favorite pull-right">
                             <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
                         </a>

@@ -1,13 +1,12 @@
 /*global define*/
 define([
-    'indexedDB'
 ], function () {
     'use strict';
 
     var NoteDB = {
-        id : 'notes-db',
-        description: 'The database for Notes',
-        migrations : [
+        id:'notes-db',
+        description:'The database for the Notes',
+        migrations: [
             {
                 version: 1,
                 migrate: function (transaction, next) {
@@ -19,32 +18,21 @@ define([
                 version:2,
                 migrate:function (transaction, next) {
                     var store;
-                    if ( !transaction.db.objectStoreNames.contains('notes')) {
+                    if (!transaction.db.objectStoreNames.contains('notes')) {
                         store = transaction.db.createObjectStore('notes');
                     }
                     store = transaction.objectStore('notes');
-                    store.createIndex('createIndex', 'created', {
-                        unique : false
-                    });
-                    next();
-                }
-            },
-            {
-                version:3,
-                migrate:function (transaction, next) {
-                    var store;
-                    if ( !transaction.db.objectStoreNames.contains('notes')) {
-                        store = transaction.db.createObjectStore('notes');
-                    }
-                    store = transaction.objectStore('notes');
-                    store.createIndex('trash', 'trash', {
-                        unique : false
-                    });
                     store.createIndex('isFavorite', 'isFavorite', {
-                        unique : false
+                        unique:false
+                    });
+                    store.createIndex('trash', 'trash', {
+                        unique:false
+                    });
+                    store.createIndex('created', 'trash', {
+                        unique:false
                     });
                     next();
-                }
+                },
             }
         ]
     };

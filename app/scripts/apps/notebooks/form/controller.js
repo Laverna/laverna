@@ -4,9 +4,7 @@ define([
     'app',
     'marionette',
     'collections/notebooks',
-    'models/notebook',
-    'apps/notebooks/form/formView'
-], function (_, App, Marionette, Notebooks, Notebook, FormView) {
+    'models/notebook', 'apps/notebooks/form/formView' ], function (_, App, Marionette, Notebooks, Notebook, FormView) {
     'use strict';
 
     var Form = App.module('AppNotebooks.Form');
@@ -68,7 +66,7 @@ define([
 
         // Redirect
         redirect: function () {
-            return App.navigate('/notebooks');
+            return App.navigate('#/notebooks');
         }
     });
 

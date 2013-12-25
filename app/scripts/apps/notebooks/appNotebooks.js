@@ -45,6 +45,9 @@ define([
     API = {
         // Shows list of notebooks and tags
         listNotebooks: function () {
+            require(['apps/notebooks/list/controller'], function (List) {
+                executeAction(new List().list);
+            });
             App.log('list notebooks showed');
         },
 

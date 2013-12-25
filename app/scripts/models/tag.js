@@ -2,8 +2,9 @@
 define([
     'underscore',
     'backbone',
+    'migrations/tag',
     'backbone.assosiations'
-], function (_, Backbone) {
+], function (_, Backbone, TagsDB) {
     'use strict';
 
     /**
@@ -13,8 +14,11 @@ define([
     var Tag = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
+        database: TagsDB,
+        storeName: 'tags',
+
         defaults: {
-            'id'    : undefined,
+            'id'    : 0,
             'name'  : '',
             'count' : ''
         },

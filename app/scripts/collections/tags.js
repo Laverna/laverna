@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'models/tag',
+    'migrations/tag',
     'localStorage'
-], function (_, Backbone, Tag) {
+], function (_, Backbone, Tag, TagsDB) {
     'use strict';
 
     /**
@@ -13,7 +14,8 @@ define([
     var Tags = Backbone.Collection.extend({
         model: Tag,
 
-        localStorage: new Backbone.LocalStorage('vimarkable.tags'),
+        database: TagsDB,
+        storeName: 'tags',
 
         /**
          * Generates the next order number

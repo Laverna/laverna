@@ -6,13 +6,10 @@ define([
     'use strict';
 
     /**
-     * Submodule which shows notebooks
-     */ var AppNotebooks = App.module('AppNotebook', {startWithParent: false}),
-        executeAction, API;
+     * Submodule which shows notebooks */ var AppNotebooks = App.module('AppNotebook', {startWithParent: false}), executeAction, API;
 
     AppNotebooks.on('start', function () {
-        App.mousetrap.API.restart();
-        App.log('AppNotebook is started');
+        App.mousetrap.API.restart(); App.log('AppNotebook is started');
     });
 
     AppNotebooks.on('stop', function () {
@@ -24,10 +21,16 @@ define([
      */
     AppNotebooks.Router = Marionette.AppRouter.extend({
         appRoutes: {
+            // Notebooks
             'notebooks'     : 'listNotebooks',
             'notebooks/add' : 'addNotebook',
             'notebooks/edit/:id' : 'editNotebook',
-            'notebooks/remove/:id' : 'removeNotebook'
+            'notebooks/remove/:id' : 'removeNotebook',
+
+            // Tags
+            'tags/add'      : 'addTag',
+            'tags/edit/:id' : 'editTag',
+            'tags/remove/:id': 'removeTag'
         }
     });
 
@@ -39,10 +42,13 @@ define([
         action(args);
     };
 
-    /**
-     * Controller
+    /** * Controller
      */
     API = {
+        /**
+         * Methods for notebooks
+         */
+
         // Shows list of notebooks and tags
         listNotebooks: function () {
             require(['apps/notebooks/list/controller'], function (List) {
@@ -53,7 +59,7 @@ define([
 
         // Create notebook
         addNotebook: function () {
-            require(['apps/notebooks/form/controller'], function (Form) {
+            require(['apps/notebooks/notebooksForm/controller'], function (Form) {
                 executeAction(new Form().addForm);
             });
             App.log('add notebook form showed');
@@ -61,7 +67,7 @@ define([
 
         // Edit notebook
         editNotebook: function (id) {
-            require(['apps/notebooks/form/controller'], function (Form) {
+            require(['apps/notebooks/notebooksForm/controller'], function (Form) {
                 executeAction(new Form().editForm, {id: id});
             });
             App.log('edit notebook form showed');
@@ -70,6 +76,24 @@ define([
         // Delete notebook
         removeNotebook: function (id) {
             App.log('remove notebook form showed');
+        },
+
+        /**
+         * Methods for tags
+         */
+        addTag: function () {
+            require(['apps/notebooks/tagsForm/controller'], function (Form) {
+                executeAction(new Form().addForm);
+            });
+        },
+
+        editTag: function (id) {
+            require(['apps/notebooks/tagsForm/controller'], function (Form) {
+                executeAction(new Form().editForm, {id: id});
+            });
+        },
+
+        removeTag: function () {
         }
     }
 

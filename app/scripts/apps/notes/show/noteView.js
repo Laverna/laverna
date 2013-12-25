@@ -115,7 +115,7 @@ define([
          * Redirect to deleting page
          */
         deleteNote: function() {
-            App.navigate('/note/remove/' + this.model.get('id'), true);
+            App.navigate('/notes/remove/' + this.model.get('id'), true);
         },
 
         /**

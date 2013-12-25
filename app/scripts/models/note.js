@@ -109,15 +109,6 @@ define([
             this.set('updated', Date.now());
         },
 
-        toTrash: function () {
-            // Destroy if note is already in trash
-            if (this.get('trash') === 1) {
-                this.destroy();
-            } else {
-                this.save({'trash' : 1});
-            }
-        },
-
         next: function () {
             if (this.collection) {
                 return this.collection.at(this.collection.indexOf(this) + 1);

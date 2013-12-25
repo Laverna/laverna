@@ -27,8 +27,9 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'notes/add'       : 'addNote',
-            'notes/edit/:id'  : 'editNote',
+            'notes/add'        : 'addNote',
+            'notes/edit/:id'   : 'editNote',
+            'notes/remove/:id' : 'removeNote',
             'notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
             'notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
         }
@@ -86,6 +87,13 @@ define([
                 executeAction(new Form().editForm, {id: id});
             });
             App.log('edit note ' + id);
+        },
+
+        // Remove and existing note
+        removeNote: function (id) {
+            require(['apps/notes/remove/removeController'], function (Controller) {
+                executeAction(new Controller().remove, id);
+            });
         }
     };
 

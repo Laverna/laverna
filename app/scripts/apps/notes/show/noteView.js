@@ -158,6 +158,10 @@ define([
 
                 getContent: function() {
                     return this.content;
+                },
+
+                createdDate: function() {
+                    return new Date(this.created).toLocaleDateString();
                 }
             };
         }

@@ -28,7 +28,9 @@ define([
             this.note.on('change', this.triggerChangeToSidebar, this);
             this.note.on('updateTaskProgress', this.updateTaskProgress, this);
 
-            $.when(this.note.fetch()).done(this.showContent);
+            $.when(
+                this.note.fetch()
+            ).done(this.showContent);
         },
 
         showContent: function () {

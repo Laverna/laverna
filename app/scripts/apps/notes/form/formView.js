@@ -95,6 +95,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
                 notebookId : parseInt(this.ui.notebookId.val()),
                 tags       : this.ui.tags.tagsinput('items')
             };
+            console.log(data.notebookId);
 
             // Tasks
             var checklist = new Checklist().count(data.content);

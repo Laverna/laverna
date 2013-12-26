@@ -26,8 +26,7 @@
                 <header>
                     <h1 class="page-header">
                         {{ title }}
-                        <small id="notebook-name"><% if (notebookId !== null) { %>{{ notebookId.name }}<% } %></small>
-                        <small>{{created}}</small>
+                        <small>{{ createdDate() }}</small>
                         <a href="#" class="btn btn-link favorite pull-right">
                             <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
                         </a>
@@ -42,6 +41,12 @@
                     </div>
                 </div>
                 <% } %>
+                <% if (tags.length !== 0) { %>
+                    <% _.forEach(tags, function (tag) { %>
+                    <span class="label label-default">{{tag}}</span>
+                    <% }); %>
+                <% } %>
+                <p><% if (notebookId !== null) { %>{{ notebookId.name }}<% } %></p>
                 {{ getContent() }}
             </div>
         </div>

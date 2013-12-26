@@ -2,11 +2,7 @@
 define([
     'underscore',
     'backbone',
-<<<<<<< HEAD
-    'migrations/tag',
-=======
     'migrations/tags',
->>>>>>> wwebfor
     'backbone.assosiations'
 ], function (_, Backbone, TagsDB) {
     'use strict';
@@ -18,11 +14,7 @@ define([
     var Tag = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
-<<<<<<< HEAD
-        database: TagsDB,
-=======
         database : TagsDB,
->>>>>>> wwebfor
         storeName: 'tags',
 
         defaults: {

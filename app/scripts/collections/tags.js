@@ -3,12 +3,7 @@ define([
     'underscore',
     'backbone',
     'models/tag',
-<<<<<<< HEAD
-    'migrations/tag',
-    'localStorage'
-=======
     'migrations/tags'
->>>>>>> wwebfor
 ], function (_, Backbone, Tag, TagsDB) {
     'use strict';
 
@@ -18,10 +13,6 @@ define([
     var Tags = Backbone.Collection.extend({
         model: Tag,
 
-<<<<<<< HEAD
-        database: TagsDB,
-        storeName: 'tags',
-=======
         database : TagsDB,
         storeName: 'tags',
 
@@ -44,7 +35,6 @@ define([
                 });
             }, this);
         },
->>>>>>> wwebfor
 
         /**
          * Generates the next order number

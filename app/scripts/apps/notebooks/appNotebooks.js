@@ -6,10 +6,14 @@ define([
     'use strict';
 
     /**
-     * Submodule which shows notebooks */ var AppNotebooks = App.module('AppNotebook', {startWithParent: false}), executeAction, API;
+     * Submodule which shows notebooks */
+    var AppNotebooks = App.module('AppNotebook', {startWithParent: false}),
+        executeAction,
+        API;
 
     AppNotebooks.on('start', function () {
-        App.mousetrap.API.restart(); App.log('AppNotebook is started');
+        App.mousetrap.API.restart();
+        App.log('AppNotebook is started');
     });
 
     AppNotebooks.on('stop', function () {
@@ -97,7 +101,7 @@ define([
                 executeAction(new Controller().start, {id: id});
             });
         }
-    }
+    };
 
     /**
      * Router events

@@ -70,7 +70,7 @@ define([
 
         /**
          * Show favorite notes
-         * @TODO At the time limit and offset do not work properly
+         * @TODO At the time limit and offset didn't work properly
          */
         favoriteNotes: function () {
             $.when(

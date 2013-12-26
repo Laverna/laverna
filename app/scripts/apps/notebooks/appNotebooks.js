@@ -7,7 +7,8 @@ define([
 
     /**
      * Submodule which shows notebooks
-     */ var AppNotebooks = App.module('AppNotebook', {startWithParent: false}),
+     */
+    var AppNotebooks = App.module('AppNotebook', {startWithParent: false}),
         executeAction, API;
 
     AppNotebooks.on('start', function () {
@@ -69,9 +70,9 @@ define([
 
         // Delete notebook
         removeNotebook: function (id) {
-            App.log('remove notebook form showed');
+            App.log('remove notebook form showed ' + id);
         }
-    }
+    };
 
     /**
      * Router events

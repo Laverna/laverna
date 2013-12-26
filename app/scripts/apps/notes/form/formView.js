@@ -21,16 +21,15 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         template: _.template(Template),
 
         ui: {
-            form       :  '#noteForm',
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
-            tagsId     :  'select[name="tags"]',
+            tags       :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content'
         },
 
         events: {
-            // 'submit #noteForm' : 'save',
+            'submit #noteForm' : 'save',
             'click #saveBtn'   : 'save',
             'click #cancelBtn' : 'redirect'
         },
@@ -49,16 +48,13 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         },
 
         onRender: function() {
-            this.ui.form.on('submit', this.save, this);
             var that = this,
-                // tagsNames,
-                // tags,
-                // tagNames;
+                tagsNames;
 
-            tagsNames = this.options.collectionTags.getNames();
+            tagsNames = this.options.tags.getNames();
 
             // Tagsinput configuration
-            this.ui.tagsId.tagsinput({
+            this.ui.tags.tagsinput({
                 freeInput   :  true,
                 confirmKeys :  [13, 44, 188],
                 tagClass    :  function () {
@@ -67,37 +63,29 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             });
 
             // Typeahead configs
-            this.ui.tagsId.tagsinput('input')
+            this.ui.tags.tagsinput('input')
                 .typeahead({
                     name  : 'tagsInput',
                     local : tagsNames,
                 })
                 .on('typeahead:selected', $.proxy(function (obj, datum) {
-                    that.ui.tagsId.tagsinput('add', datum.value);
-                    that.ui.tagsId.tagsinput('input').typeahead('setQuery', '');
-                }, this.ui.tagsId));
+                    that.ui.tags.tagsinput('add', datum.value);
+                    that.ui.tags.tagsinput('input').typeahead('setQuery', '');
+                }, this.ui.tags));
 
-            // Tags from existing note
-            /*
+            // Show existing tags
             if (this.model !== undefined) {
-                tags = this.model.getTags();
-                tagNames = this.options.collectionTags.getNames(tags);
-
-                // Show tags
-                _.each(tagNames, function (tag) {
-                    that.ui.tagsId.tagsinput('add', tag);
-                });
+                _.each(this.model.get('tags'), function (tag) {
+                    this.ui.tags.tagsinput('add', tag);
+                }, this);
             }
-            */
         },
 
         save: function (e) {
-            console.log('submit');
             e.preventDefault();
 
             var content = this.editor.getSession().getValue().trim(),
                 title   = this.ui.title.val().trim(),
-                // configs = App.configs,
                 data;
 
             // Get values
@@ -105,7 +93,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
                 notebookId : parseInt(this.ui.notebookId.val()),
-                tags       : this.ui.tagsId.tagsinput('items')
+                tags       : this.ui.tags.tagsinput('items')
             };
 
             // Tasks
@@ -113,59 +101,9 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             data.taskAll = checklist.all;
             data.taskCompleted = checklist.completed;
 
-            // Get tags id
-            data.tags = this.options.collectionTags.getTagsId(data.tags);
-
-            // Existing note or new one?
+            // Trigger save
             this.model.trigger('save', data);
         },
-
-        /**
-         * Create new note
-         */
-        /*
-        createNote: function (data) {
-            var that = this;
-            this.model = new Note(data);
-
-            // Save the note
-            this.collection.create(this.model, {
-                success: function () {
-                    that.redirectToNote();
-                }
-            });
-        },
-        */
-
-        /**
-         * Save changes
-         */
-        /*
-        saveNote: function (data) {
-            var that = this;
-            // var lastNotebook = this.model.get('notebookId');
-
-            // Save changes
-            this.model.save(data, {
-                success: function () {
-                    that.collection.trigger('change');
-                    that.redirectToNote();
-                }
-            });
-            // this.model.trigger('update.note');
-            // this.model.trigger('changed:notebookId', {last: lastNotebook});
-        },
-        */
-
-        /**
-         * Save note and redirect
-         */
-        /*
-        saveRedirect: function (e) {
-            this.save(e);
-            this.redirectToNote();
-        },
-        */
 
         /**
          * Redirect to note
@@ -174,17 +112,6 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             e.preventDefault();
             return this.trigger('redirect');
         },
-        
-
-        /**
-         * Redirects to notes page
-         */
-        /*
-        redirectToNote: function () {
-            var id = this.model.get('id');
-            Backbone.history.navigate('/note/show/' + id, true);
-        },
-        */
 
         /**
          * Pagedown-ace editor
@@ -263,12 +190,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
 
         serializeData: function () {
             var data = _.extend(this.model.toJSON(), this.options.decrypted);
-
             data.notebooks = this.options.notebooks.toJSON();
-            // _.each(data.notebooks, function (n) {
-            //     n.name = sjcl.decrypt(App.settings.secureKey, n.name);
-            // });
-
             return data;
         },
 

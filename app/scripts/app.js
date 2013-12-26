@@ -32,14 +32,14 @@ define([
     };
 
     // Go back
-    App.navigateBack = function (i) {
-        if (i) { i = -1; }
+    App.navigateBack = function (defUrl) {
         var url = window.history;
+        defUrl = (defUrl) ? defUrl : '/notes';
 
         if (url.length === 0) {
-            App.trigger('notes:list');
+            App.navigate(defUrl, {trigger: true});
         } else {
-            url.back(i);
+            url.back();
         }
     };
 

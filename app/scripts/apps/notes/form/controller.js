@@ -19,21 +19,29 @@ define([
             App.trigger('notes:show', {filter: null, page: null});
         },
 
+        /**
+         * Add a new note
+         */
         addForm: function () {
-            this.tagsCollection = new TagsCollection();
-            this.notebooksCollection = new NotebooksCollection();
+            this.tags = new TagsCollection();
+            this.notebooks = new NotebooksCollection();
             this.model = new NoteModel();
 
-            $.when(this.tagsCollection.fetch(), this.notebooksCollection.fetch())
-                .done(this.show);
+            $.when(
+                this.tags.fetch({ limit : 100 }),
+                this.notebooks.fetch()
+            ).done(this.show);
         },
 
+        /**
+         * Edit an existing note
+         */
         editForm: function (args) {
-            this.tagsCollection = new TagsCollection();
-            this.notebooksCollection = new NotebooksCollection();
+            this.tags = new TagsCollection();
+            this.notebooks = new NotebooksCollection();
             this.model = new NoteModel({id: args.id});
 
-            $.when(this.tagsCollection.fetch(), this.notebooksCollection.fetch(),
+            $.when(this.tags.fetch(), this.notebooks.fetch(),
                    this.model.fetch()).done(this.show);
         },
 
@@ -46,10 +54,10 @@ define([
             };
 
             view = new View({
-                model: this.model,
-                decrypted: decrypted,
-                collectionTags: this.tagsCollection,
-                notebooks: this.notebooksCollection
+                model     : this.model,
+                decrypted : decrypted,
+                tags      : this.tags,
+                notebooks : this.notebooks
             });
 
             App.content.show(view);
@@ -60,12 +68,7 @@ define([
         },
 
         redirect: function () {
-            var url = window.history;
-            if (url.length === 0) {
-                this.redirectToNote();
-            } else {
-                url.back();
-            }
+            App.navigateBack();
             return false;
         },
 
@@ -73,6 +76,9 @@ define([
             // Encryption
             data.title = App.Encryption.API.encrypt(data.title);
             data.content = App.Encryption.API.encrypt(data.content);
+
+            // Add new tags
+            this.tags.saveAdd(data.tags);
 
             // Save
             this.model.save(data, {
@@ -84,6 +90,7 @@ define([
 
             App.trigger('notes:added');
         }
+
     });
 
     return Form.Controller;

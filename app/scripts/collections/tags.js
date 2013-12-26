@@ -3,8 +3,8 @@ define([
     'underscore',
     'backbone',
     'models/tag',
-    'localStorage'
-], function (_, Backbone, Tag) {
+    'migrations/tags'
+], function (_, Backbone, Tag, TagsDB) {
     'use strict';
 
     /**
@@ -13,7 +13,28 @@ define([
     var Tags = Backbone.Collection.extend({
         model: Tag,
 
-        localStorage: new Backbone.LocalStorage('vimarkable.tags'),
+        database : TagsDB,
+        storeName: 'tags',
+
+        initialize: function () {
+        },
+
+        /**
+         * Do not add if already exists
+         */
+        saveAdd: function (tags) {
+            var model;
+            _.each(tags, function (tag) {
+                tag = tag.trim();
+                model = new this.model({ name : tag });
+
+                model.fetch({
+                    error: function () {
+                        model.save();
+                    }
+                });
+            }, this);
+        },
 
         /**
          * Generates the next order number
@@ -23,9 +44,6 @@ define([
                 return 1;
             }
             return this.last().get('id') + 1;
-        },
-
-        initialize: function () {
         },
 
         navigate: function (id, direction) {

@@ -22,13 +22,16 @@ define([
                         store = transaction.db.createObjectStore('notes');
                     }
                     store = transaction.objectStore('notes');
+                    store.createIndex('created', 'created', {
+                        unique:false
+                    });
                     store.createIndex('isFavorite', 'isFavorite', {
                         unique:false
                     });
                     store.createIndex('trash', 'trash', {
                         unique:false
                     });
-                    store.createIndex('created', 'trash', {
+                    store.createIndex('notebookId', 'notebookId', {
                         unique:false
                     });
                     next();

@@ -38,10 +38,9 @@ define([
         },
 
         /**
-         * Prepare model 
+         * Prepare model
          */
         serializeData: function () {
-            console.log(this.options.data);
             return this.options.data;
         },
 

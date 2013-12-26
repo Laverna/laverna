@@ -4,8 +4,9 @@ define([
     'app',
     'marionette',
     'models/note',
+    'collections/notebooks',
     'apps/notes/show/noteView'
-], function (_, App, Marionette, NoteModel, NoteView) {
+], function (_, App, Marionette, NoteModel, NotebooksCollection, NoteView) {
     'use strict';
 
     var Show = App.module('AppNote.Show');
@@ -23,23 +24,29 @@ define([
          */
         showNote: function (args) {
             this.note = new NoteModel({ id : args.id });
+            this.notebooks = new NotebooksCollection();
             this.args = args;
 
             this.note.on('change', this.triggerChangeToSidebar, this);
             this.note.on('updateTaskProgress', this.updateTaskProgress, this);
 
-            $.when(
-                this.note.fetch()
-            ).done(this.showContent);
+            $.when(this.note.fetch(), this.notebooks.fetch()).done(this.showContent);
         },
 
         showContent: function () {
-            var decrypted, args;
+            var notebook = this.notebooks.get(this.note.get('notebookId')),
+                decrypted,
+                args;
 
             decrypted = {
                 title   : App.Encryption.API.decrypt(this.note.get('title')),
-                content : App.Encryption.API.decrypt(this.note.get('content'))
+                content : App.Encryption.API.decrypt(this.note.get('content')),
+                notebook: null
             };
+
+            if (notebook) {
+                decrypted.notebook = notebook.get('name');
+            }
 
             args = {
                 model     : this.note,

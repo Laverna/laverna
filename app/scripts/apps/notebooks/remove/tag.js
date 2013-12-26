@@ -15,14 +15,13 @@ define([
         },
 
         start: function (args) {
-            this.model = new Model({id: parseInt(args.id)});
+            this.model = new Model({id: args.id});
 
             $.when(this.model.fetch()).done(this.remove);
         },
 
         remove: function () {
             this.model.destroy();
-
             this.redirect();
         },
 

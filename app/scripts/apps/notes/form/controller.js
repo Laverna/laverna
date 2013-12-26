@@ -76,6 +76,7 @@ define([
             // Encryption
             data.title = App.Encryption.API.encrypt(data.title);
             data.content = App.Encryption.API.encrypt(data.content);
+            data.notebookId = this.notebooks.get(data.notebookId).get('id');
 
             // Add new tags
             this.tags.saveAdd(data.tags);

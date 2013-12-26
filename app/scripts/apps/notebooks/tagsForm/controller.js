@@ -8,7 +8,7 @@ define([
     'apps/notebooks/tagsForm/formView'
 ], function (_, App, Marionette, Collection, Model, FormView) {
     'use strict';
-    
+
     var Form = App.module('AppNotebooks.TagsForm');
 
     Form.Controller = Marionette.Controller.extend({
@@ -16,26 +16,19 @@ define([
             _.bindAll(this, 'addForm', 'editForm', 'show');
         },
 
+        // Add new tag
         addForm: function () {
-            this.collection = new Collection();
             this.model = new Model();
-
-            $.when(this.collection.fetch()).done(this.show);
+            this.show();
         },
 
+        // Edit an existing tag
         editForm: function (args) {
-            this.collection = new Collection();
-            this.model = new Model({id: parseInt(args.id)});
-            console.log(this.model);
-
-            $.when(this.collection.fetch(), this.model.fetch()).done(this.show);
+            this.model = new Model({id: args.id});
+            $.when(this.model.fetch()).done(this.show);
         },
 
         show: function () {
-            if (this.model.get('id') === 0) {
-                this.model.set('id', this.collection.nextOrder());
-            }
-
             this.view = new FormView({
                 model: this.model,
                 data: this.model.toJSON()
@@ -61,7 +54,7 @@ define([
                 this.view.showErrors(this.model.validationError);
             }
         },
-        
+
         redirect: function () {
             return App.navigate('#/notebooks');
         }

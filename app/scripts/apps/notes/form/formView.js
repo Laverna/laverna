@@ -92,10 +92,9 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
-                notebookId : parseInt(this.ui.notebookId.val()),
+                notebookId : this.ui.notebookId.val(),
                 tags       : this.ui.tags.tagsinput('items')
             };
-            console.log(data.notebookId);
 
             // Tasks
             var checklist = new Checklist().count(data.content);
@@ -199,7 +198,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             return {
                 isActive: function (id, notebookId) {
                     var selected = '';
-                    if (notebookId && id === notebookId.id) {
+                    if (notebookId && id === notebookId) {
                         selected = ' selected="selected"';
                     }
                     return selected;

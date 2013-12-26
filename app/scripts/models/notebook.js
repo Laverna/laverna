@@ -1,12 +1,10 @@
 /*global define*/
-// /*global sjcl*/
 define([
     'underscore',
     'backbone',
     'migrations/notebooks',
     'backbone.assosiations',
-    'indexedDB',
-    'sjcl'
+    'indexedDB'
 ], function (_, Backbone, NotebooksDB) {
     'use strict';
 
@@ -40,16 +38,6 @@ define([
         initialize: function () {
             this.on('removed:note', this.removeCount);
             this.on('add:note', this.addCount);
-
-            // if (this.collection !== undefined) {
-            //     var encryptionData = this.collection.getEncryptionData();
-            //     if (encryptionData.configs.get('encrypt').get('value') === 1) {
-            //         try {
-            //             this.attributes.name = sjcl.decrypt(encryptionData.key, this.attributes.name);
-            //         } catch (err) {}
-            //     }
-            // }
-
         },
 
         addCount: function () {
@@ -62,20 +50,8 @@ define([
             this.save({
                 'count': this.get('count') - 1
             });
-        },
-
-        /**
-         * Decrypting data
-         */
-        decrypt: function ( configs ) {
-            var data = this.toJSON();
-
-            if (configs.encrypt === 1 && data.name !== '') {
-                data.name = sjcl.decrypt(configs.secureKey, data.name);
-            }
-
-            return data;
         }
+
     });
 
     return Model;

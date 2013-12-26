@@ -10,7 +10,7 @@ define([
     'use strict';
 
     var Form = App.module('AppNotebooks.Form');
-    
+
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'addForm', 'editForm', 'show');

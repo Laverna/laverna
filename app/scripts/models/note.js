@@ -39,12 +39,12 @@ define([
         },
 
         relations: [
-            {
-                type           : Backbone.One,
-                key            : 'notebookId',
-                collectionType : Notebooks,
-                relatedModel   : Notebook
-            }
+            // {
+            //     type           : Backbone.One,
+            //     key            : 'notebookId',
+            //     collectionType : Notebooks,
+            //     relatedModel   : Notebook
+            // }
         ],
 
         validate: function (attrs) {

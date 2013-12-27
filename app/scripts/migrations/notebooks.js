@@ -23,7 +23,7 @@ define([
                         store = transaction.db.createObjectStore('notebooks');
                     }
                     store = transaction.objectStore('notebooks');
-                    store.createIndex('createIndex', 'created', {
+                    store.createIndex('parentIndex', 'parentId', {
                         unique : false
                     });
                     next();

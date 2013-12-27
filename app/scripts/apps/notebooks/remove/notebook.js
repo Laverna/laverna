@@ -18,14 +18,23 @@ define([
         },
 
         start: function (args) {
+            args.id = parseInt(args.id);
             this.model = new Model({id: parseInt(args.id)});
 
-            $.when(this.collection.fetch({}), this.model.fetch()).done(this.remove);
+            $.when(
+                this.collection.fetch({
+                    conditions: {parentId: args.id}
+                }),
+                this.model.fetch()
+            ).done(this.remove);
         },
 
         remove: function () {
-            this.model.destroy();
+            this.collection.each(function (child) {
+                child.save({parentId : 0});
+            });
 
+            this.model.destroy();
             this.redirect();
         },
 

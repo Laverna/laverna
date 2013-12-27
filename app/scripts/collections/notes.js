@@ -56,10 +56,10 @@ define([
         /**
          * Show only tag's notes
          */
-        getTagNotes: function ( tagId ) {
+        getTagged: function ( tagName ) {
             return this.filter(function (note) {
                 if (note.get('tags').length > 0) {
-                    return (_.indexOf(note.get('tags'), tagId) !== -1) && note.get('trash') === 0;
+                    return (_.indexOf(note.get('tags'), tagName) !== -1) && note.get('trash') === 0;
                 }
             });
         },

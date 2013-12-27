@@ -27,6 +27,8 @@ define([
             this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);
             this.listenTo(this.notes, 'filter:trashed', this.trashedNotes, this);
             this.listenTo(this.notes, 'filter:search', this.searchNotes, this);
+            this.listenTo(this.notes, 'filter:tag', this.taggedNotes, this);
+            this.listenTo(this.notes, 'filter:notebook', this.notebooksNotes, this);
 
             // Navigation with keys
             this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
@@ -94,10 +96,41 @@ define([
         },
 
         /**
+         * Notes with notebook
+         */
+        notebooksNotes: function () {
+            $.when(
+                this.notes.fetch({
+                    conditions: {notebookId : parseInt(this.args.query)}
+                })
+            ).done(this.showSidebar);
+        },
+
+        /**
+         * Notes which tagged with :tag
+         */
+        taggedNotes: function () {
+            var self = this,
+                notes;
+            $.when(
+                this.notes.fetch({
+                    conditions: {trash : 0}
+                })
+            ).done(
+                function () {
+                    notes = self.notes.getTagged(self.args.query);
+                    self.notes.reset(notes);
+                    self.showSidebar();
+                }
+            );
+        },
+
+        /**
          * Search notes
          */
         searchNotes: function () {
-            var self = this;
+            var self = this,
+                notes;
             $.when(
                 // Fetch without limit, because with encryption, searching is impossible
                 this.notes.fetch({
@@ -105,7 +138,7 @@ define([
                 })
             ).done(
                 function () {
-                    var notes = self.notes.search(self.args.query);
+                    notes = self.notes.search(self.args.query);
                     self.notes.reset(notes);
                     self.showSidebar();
                 }
@@ -163,7 +196,7 @@ define([
             if (this.args.filter) {
                 url += '/f/' + this.args.filter;
             }
-            if (this.args.filter === 'search') {
+            if (this.args.query) {
                 url += '/q/' + this.args.query;
             }
             if (this.args.page) {

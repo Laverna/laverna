@@ -2,7 +2,8 @@
 define([
     'underscore',
     'marionette',
-    'app'
+    'app',
+    'helpers/search'
 ], function (_, Marionette, App) {
     'use strict';
 

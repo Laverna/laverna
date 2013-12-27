@@ -28,6 +28,6 @@ define([
             }
         },
     });
-    
+
     return View;
 });

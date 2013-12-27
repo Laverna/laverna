@@ -13,6 +13,6 @@ define([
         itemView: ItemView,
         itemViewContainer: '.list-notebooks'
     });
-    
+
     return View;
 });

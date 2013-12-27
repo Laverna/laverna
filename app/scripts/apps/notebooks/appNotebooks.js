@@ -1,7 +1,8 @@
 /* global define */
 define([
     'marionette',
-    'app'
+    'app',
+    'helpers/search'
 ], function (Marionette, App) {
     'use strict';
 

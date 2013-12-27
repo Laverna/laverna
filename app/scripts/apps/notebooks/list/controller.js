@@ -15,7 +15,7 @@ define([
         initialize: function () {
             _.bindAll(this, 'list', 'show');
         },
-        
+
         list: function () {
             this.notebooks = new Notebooks();
             this.tags = new Tags();
@@ -38,6 +38,8 @@ define([
             this.layout.tags.show(new TagsComposite({
                 collection: this.tags
             }));
+
+            App.Search.start();
 
             this.layout.on('nextChild', this.toNextChild, this);
             this.layout.on('prevChild', this.toPrevChild, this);

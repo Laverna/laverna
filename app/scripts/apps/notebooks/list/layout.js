@@ -2,23 +2,21 @@
 define([
     'underscore',
     'app',
-    'marionette',
+    'backbone',
     'text!apps/notebooks/list/templates/layout.html',
-    'backbone.mousetrap'
-], function (_, App, Marionette, Templ) {
+    'backbone.mousetrap',
+    'marionette',
+], function (_, App, Backbone, Templ) {
     'use strict';
 
-    // Initializing mousetrap
-    _.extend(Marionette.Layout, Backbone.View);
-
-    var Layout = Marionette.Layout.extend({
+    var Layout = Backbone.Marionette.Layout.extend({
         template: _.template(Templ),
 
         regions: {
             notebooks :  '#notebooks',
             tags      :  '#tags'
         },
-        
+
         keyboardEvents: {
         },
 

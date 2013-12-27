@@ -4,7 +4,7 @@ define([
     'app',
     'marionette',
     'collections/notes',
-    'apps/notes/list/views/noteSidebar'
+    'apps/notes/list/views/noteSidebar',
 ], function (_, App, Marionette, Notes, NotesView) {
     'use strict';
 
@@ -173,6 +173,7 @@ define([
             });
 
             App.sidebar.show(View);
+            App.Search.start();
 
             // Active note
             if (this.args.id !== undefined) {

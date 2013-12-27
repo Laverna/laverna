@@ -23,20 +23,16 @@ define([
 
         ui: {
             prevPage    : '#prevPage',
-            nextPage    : '#nextPage',
-            searchInput : '#search-input'
+            nextPage    : '#nextPage'
         },
 
         events: {
-            'submit .search-form'    : 'toSearch',
-            'keypress #search-input' : 'escSearch'
         },
 
         initialize: function () {
             // Navigation with keys
             this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
             this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
-            this.keyboardEvents[App.settings.appSearch] = 'focusSearch';
 
             // Options to itemView
             this.itemViewOptions.args = this.options.args;
@@ -68,23 +64,6 @@ define([
         },
 
         /**
-         * Focus on search form
-         */
-        focusSearch: function(e) {
-            e.preventDefault();
-            this.ui.searchInput.focus();
-        },
-
-        /**
-         * Unfocus if pressed ESC
-         */
-        escSearch: function (e) {
-            if (e.which === 0) {
-                this.ui.searchInput.trigger('blur');
-            }
-        },
-
-        /**
          * Trigger model
          */
         changeFocus: function (note) {
@@ -94,15 +73,6 @@ define([
             if (note) {
                 note.trigger('changeFocus');
             }
-        },
-
-        /**
-         * Redirects to search page
-         */
-        toSearch: function (e) {
-            e.preventDefault();
-            var text = this.ui.searchInput.val();
-            return App.navigate('/notes/f/search/q/' + text, true);
         },
 
         serializeData: function () {

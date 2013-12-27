@@ -1,10 +1,11 @@
 /*global define*/
 /*global Mousetrap*/
 define([
+    'jquery',
     'app',
     'Mousetrap',
     'mousetrap-pause'
-], function (App) {
+], function ($, App) {
     'use strict';
 
     var Keybindings = App.module('mousetrap');
@@ -13,6 +14,12 @@ define([
         // Help
         Mousetrap.bind(App.settings.appKeyboardHelp, function () {
             App.log('help');
+            return false;
+        });
+
+        // Focus on search form
+        Mousetrap.bind(App.settings.appSearch, function () {
+            $('#search-input').focus();
             return false;
         });
 

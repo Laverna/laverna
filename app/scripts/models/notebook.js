@@ -55,6 +55,18 @@ define([
             this.save({
                 'count': this.get('count') - 1
             });
+        },
+
+        next: function () {
+            if (this.collection) {
+                return this.collection.at(this.collection.indexOf(this) + 1);
+            }
+        },
+
+        prev: function () {
+            if (this.collection) {
+                return this.collection.at(this.collection.indexOf(this) - 1);
+            }
         }
 
     });

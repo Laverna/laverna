@@ -11,6 +11,15 @@ define([
         template: _.template(Templ),
 
         className: 'list-group-tag',
+
+        initialize: function () {
+            this.model.on('active', this.changeFocus, this);
+        },
+
+        changeFocus: function () {
+            this.$('.list-group-item').addClass('active');
+        }
+
     });
 
     return View;

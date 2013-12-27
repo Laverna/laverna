@@ -9,7 +9,12 @@ define([
 ], function (_, App, Backbone, Templ) {
     'use strict';
 
-    var Layout = Backbone.Marionette.Layout.extend({
+    var Layout = App.module('AppNotebook.List.Layout');
+
+    /**
+     * Layout view
+     */
+    Layout.View = Backbone.Marionette.Layout.extend({
         template: _.template(Templ),
 
         regions: {
@@ -17,87 +22,39 @@ define([
             tags      :  '#tags'
         },
 
-        keyboardEvents: {
-        },
+        keyboardEvents: { },
 
         initialize: function () {
-            this.keyboardEvents[App.settings.navigateBottom] = 'nextOrPrev';
-            this.keyboardEvents[App.settings.navigateTop] = 'nextOrPrev';
-
-            // Navigation events
-            this.on('notebooks:navigate', this.navigateNotebooks);
-            this.on('tags:navigate', this.navigateTags);
-        },
-
-        nextOrPrev: function (navigate) {
-            var active = this.$el.find('.list-group-item.active'),
-                activeParent,
-                activeId;
-
-            if (active.length === 0) {
-                this.trigger('notebooks:navigate', {active : 0});
-            } else {
-                activeParent = active.parent();
-                activeId = parseInt(active.attr('data-id'));
-
-                // Only notebooks has childrens
-                if (activeParent.children('.tags').length !== 0) {
-                    console.log(activeParent.children('.tags'));
-                    this.trigger('notebooks:navigate', {
-                        active: activeId,
-                        navigate: navigate
-                    });
-                } else {
-                    this.trigger('tags:navigate', {
-                        active: activeId,
-                        navigate: navigate
-                    });
-                }
-            }
-
-            active.removeClass('active');
+            this.keyboardEvents[App.settings.navigateBottom] = 'next';
+            this.keyboardEvents[App.settings.navigateTop] = 'prev';
         },
 
         /**
-         * Tags navigation
+         * Navigation: next
          */
-        navigateTags: function (opts) {
-            console.log(opts);
-            var notebook,
-                el;
-
-            if (opts.active !== 0) {
-                notebook = this.options.tags.navigate(opts.active, opts.navigate);
-            } else {
-                notebook = this.options.tags.at(0);
+        next: function () {
+            if ( !this.activeRegion) {
+                this.activeRegion = 'notebooks';
             }
-
-            el = this.$('#tags a[data-id=' + notebook.get('id') + ']');
-            el.addClass('active');
+            this[this.activeRegion].currentView.trigger('next');
+            this[this.activeRegion].currentView.on('changeRegion', this.changeNext, this);
         },
 
         /**
-         * Notebooks navigation
+         * Navigation: prev
          */
-        navigateNotebooks: function (opts) {
-            var notebook,
-                el;
-
-            if (opts.active !== 0) {
-                notebook = this.options.notebooks.navigate(opts.active, opts.navigate);
-            } else {
-                notebook = this.options.notebooks.at(0);
+        prev: function () {
+            if ( !this.activeRegion) {
+                this.activeRegion = 'notebooks';
             }
+            this[this.activeRegion].currentView.trigger('prev');
+        },
 
-            if (notebook !== null) {
-                el = this.$('#notebooks a[data-id=' + notebook.get('id') + ']');
-                el.addClass('active');
-            } else {
-                this.trigger('tags:navigate', {active: 0});
-            }
+        changeNext: function (region) {
+            this.activeRegion = region;
         }
 
     });
 
-    return Layout;
+    return Layout.View;
 });

@@ -31,6 +31,18 @@ define([
             if (errors.length > 0) {
                 return errors;
             }
+        },
+
+        next: function () {
+            if (this.collection) {
+                return this.collection.at(this.collection.indexOf(this) + 1);
+            }
+        },
+
+        prev: function () {
+            if (this.collection) {
+                return this.collection.at(this.collection.indexOf(this) - 1);
+            }
         }
 
     });

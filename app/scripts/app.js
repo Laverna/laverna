@@ -89,7 +89,8 @@ define([
             'apps/encryption/encrypt',
             'helpers/keybindings',
             'apps/notes/appNote',
-            'apps/notebooks/appNotebooks'
+            'apps/notebooks/appNotebooks',
+            'apps/settings/appSettings'
         ], function () {
             Backbone.history.start({pushState: false});
 

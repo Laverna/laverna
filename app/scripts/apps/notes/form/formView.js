@@ -9,7 +9,6 @@ define([
     'checklist',
     'ace',
     'pagedown-extra',
-    'backbone.mousetrap',
     'marionette',
     'typeahead',
     'tagsinput'
@@ -29,22 +28,33 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         },
 
         events: {
-            'submit #noteForm' : 'save',
             'click #saveBtn'   : 'save',
-            'click #cancelBtn' : 'redirect'
-        },
-
-        keyboardEvents: {
-            'esc': 'redirect'
+            'click #cancelBtn' : 'redirect',
+            'keyup input[name=title]'  : 'keyupEvents'
         },
 
         initialize: function () {
-            App.mousetrap.API.pause();
             this.on('shown', this.pagedownRender);
+            App.mousetrap.API.pause();
         },
 
         onClose: function () {
             App.mousetrap.API.unpause();
+        },
+
+        keyupEvents: function (e) {
+            switch (e.which) {
+                // Close form when user hits Esc
+                case 27:
+                    this.redirect(e);
+                    break;
+                // Save when user hits Enter
+                case 13:
+                    this.save(e);
+                    break;
+                default:
+                    break;
+            }
         },
 
         onRender: function() {

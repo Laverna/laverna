@@ -92,7 +92,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
-                notebookId : this.ui.notebookId.val(),
+                notebookId : parseInt(this.ui.notebookId.val()),
                 tags       : this.ui.tags.tagsinput('items')
             };
 

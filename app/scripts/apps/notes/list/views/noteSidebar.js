@@ -36,6 +36,7 @@ define([
             // Navigation with keys
             this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
             this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
+            this.keyboardEvents[App.settings.appSearch] = 'focusSearch';
 
             // Options to itemView
             this.itemViewOptions.args = this.options.args;

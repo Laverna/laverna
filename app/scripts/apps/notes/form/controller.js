@@ -3,9 +3,7 @@ define([
     'underscore',
     'app',
     'marionette',
-    'collections/notes',
-    'collections/tags',
-    'collections/notebooks',
+    'collections/notes', 'collections/tags', 'collections/notebooks',
     'models/note',
     'apps/notes/form/formView'
 ], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, NoteModel, View) {
@@ -76,7 +74,10 @@ define([
             // Encryption
             data.title = App.Encryption.API.encrypt(data.title);
             data.content = App.Encryption.API.encrypt(data.content);
-            data.notebookId = this.notebooks.get(data.notebookId).get('id');
+            
+            if (data.notebookID) {
+                data.notebookId = this.notebooks.get(data.notebookId).get('id');
+            }
 
             // Add new tags
             this.tags.saveAdd(data.tags);

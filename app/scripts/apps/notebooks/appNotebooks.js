@@ -104,6 +104,11 @@ define([
         }
     };
 
+    // Add notebook
+    AppNotebooks.on('showForm', function () {
+        App.navigate('/notebooks/add', true);
+    });
+
     /**
      * Register the router
      */

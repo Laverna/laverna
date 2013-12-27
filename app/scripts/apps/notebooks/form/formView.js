@@ -33,7 +33,6 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
         initialize: function () {
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.onFormShown);
-            App.mousetrap.API.pause();
         },
 
         onFormShown: function () {
@@ -128,7 +127,6 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
         },
 
         redirect: function () {
-            App.mousetrap.API.unpause();
             this.trigger('redirect');
         },
 

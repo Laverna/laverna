@@ -27,6 +27,7 @@ define([
         },
 
         events: {
+            'click #restoreNote'  : 'restoreFromTrash',
             'click .favorite'  : 'favorite',
             'click .task [type="checkbox"]': 'toggleTask'
         },
@@ -77,6 +78,12 @@ define([
             // Show title
             document.title = data.title;
             return data;
+        },
+
+        restoreFromTrash: function (e) {
+            e.preventDefault();
+            this.model.save({'trash': 0});
+            App.navigateBack();
         },
 
         changeFocus: function () {

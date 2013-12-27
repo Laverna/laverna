@@ -13,6 +13,7 @@ define([
 
     AppNotebooks.on('start', function () {
         App.mousetrap.API.restart();
+        App.content.reset();
         App.log('AppNotebook is started');
     });
 
@@ -46,13 +47,13 @@ define([
         action(args);
     };
 
-    /** * Controller
+    /**
+     * Controller
      */
     API = {
         /**
          * Methods for notebooks
          */
-
         // Shows list of notebooks and tags
         listNotebooks: function () {
             require(['apps/notebooks/list/controller'], function (List) {
@@ -102,11 +103,6 @@ define([
             });
         }
     };
-
-    /**
-     * Router events
-     */
-
 
     /**
      * Register the router

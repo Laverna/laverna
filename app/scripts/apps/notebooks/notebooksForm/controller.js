@@ -9,7 +9,7 @@ define([
 ], function (_, App, Marionette, Notebooks, Notebook, FormView) {
     'use strict';
 
-    var Form = App.module('AppNotebooks.Form');
+    var Form = App.module('AppNotebooks.NotebookForm');
 
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {

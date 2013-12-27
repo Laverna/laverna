@@ -1,16 +1,14 @@
 /*global define*/
-/*global sjcl*/
 define([
     'underscore',
     'jquery',
+    'app',
     'backbone',
     'marionette',
     'models/notebook',
-    'text!apps/notebooks/form/templates/form.html',
-    'Mousetrap',
-    'sjcl'
+    'text!apps/notebooks/form/templates/form.html'
 ],
-function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
+function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
     'use strict';
 
     /**
@@ -35,7 +33,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         initialize: function () {
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.onFormShown);
-            Mousetrap.reset();
+            App.mousetrap.API.pause();
         },
 
         onFormShown: function () {
@@ -130,6 +128,7 @@ function (_, $, Backbone, Marionette, Notebook, Tmpl, Mousetrap) {
         },
 
         redirect: function () {
+            App.mousetrap.API.unpause();
             this.trigger('redirect');
         },
 

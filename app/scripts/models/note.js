@@ -4,12 +4,9 @@ define([
     'backbone',
     'indexedDB',
     'migrations/note',
-    'models/notebook',
-    'collections/notebooks',
-    'collections/tags',
     'backbone.assosiations'
     // 'localStorage',
-], function (_, Backbone, IndexedDB, NotesDB, Notebook, Notebooks, Tags) {
+], function (_, Backbone, IndexedDB, NotesDB) {
     'use strict';
 
     /**
@@ -65,40 +62,6 @@ define([
             if (this.isNew()) {
                 this.set('created', Date.now());
                 this.setUpdate();
-            }
-        },
-
-        /**
-         * Tags
-         */
-        getTags: function () {
-            var tagsCollection = new Tags(),
-                tags = [];
-
-            tagsCollection.fetch();
-
-            if (this.get('tags').length === 0) {
-                return tags;
-            }
-
-            _.each(this.get('tags'), function (id) {
-                if (id !== undefined && id !== '') {
-                    tags.push(tagsCollection.get(id));
-                }
-            });
-
-            return tags;
-        },
-
-        updateNotebookCount: function (args) {
-            var notebook = this.get('notebookId');
-
-            if (args.last !== 0) {
-                args.last.trigger('removed:note');
-            }
-
-            if (notebook !== 0) {
-                notebook.trigger('add:note');
             }
         },
 

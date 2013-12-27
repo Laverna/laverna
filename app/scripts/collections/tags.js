@@ -37,32 +37,6 @@ define([
         },
 
         /**
-         * Generates the next order number
-         */
-        nextOrder: function () {
-            if ( !this.length) {
-                return 1;
-            }
-            return this.last().get('id') + 1;
-        },
-
-        navigate: function (id, direction) {
-            var tag,
-                i;
-
-            tag = this.get(id);
-            i = this.indexOf(tag);
-
-            if (direction === 'prev') {
-                i = (i > 0) ? i - 1 : 0;
-            } else {
-                i = (i === (this.length - 1)) ? i : i + 1;
-            }
-
-            return this.at(i);
-        },
-
-        /**
          * Find tag by name and return id's
          */
         getTagsId: function (tagNames) {
@@ -94,6 +68,18 @@ define([
             _.each(tags, function (tag) {
                 if (tag !== undefined) {
                     names.push(tag.get('name'));
+                }
+            });
+
+            return names;
+        },
+
+        checkExist: function (tagNames) {
+            var names = [];
+
+            _.each(tagNames, function (name) {
+                if (this.get({name : name})) {
+                    names.push(name);
                 }
             });
 

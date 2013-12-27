@@ -4,9 +4,8 @@ define([
     'backbone',
     'migrations/notebooks',
     'models/notebook',
-    'localStorage',
     'indexedDB',
-    'sjcl'
+    // 'localStorage',
 ], function (_, Backbone, NotebooksDB, Notebook) {
     'use strict';
 
@@ -44,32 +43,6 @@ define([
          */
         getRoots:  function () {
             return this.without.apply(this, this.getChildrens());
-        },
-
-        /**
-         * Get next or previous notebook
-         */
-        navigate: function (id, direction) {
-            var notebooks = this.getRoots(),
-                notebook,
-                i;
-
-            notebook = this.get(id);
-            i = _.indexOf(notebooks, notebook);
-
-            if (direction === 'prev') {
-                i = (i > 0) ? i - 1 : 0;
-            } else {
-                i = (i === (notebooks.length - 1)) ? i : i + 1;
-            }
-
-            notebook = notebooks[i];
-
-            if (direction === 'next' && notebook.get('id') === id) {
-                return null;
-            } else {
-                return notebook;
-            }
         }
 
     });

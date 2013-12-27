@@ -4,11 +4,13 @@ define([
     'app',
     'marionette',
     'collections/notebooks',
-    'models/notebook', 'apps/notebooks/form/formView' ], function (_, App, Marionette, Notebooks, Notebook, FormView) {
+    'models/notebook',
+    'apps/notebooks/form/formView'
+], function (_, App, Marionette, Notebooks, Notebook, FormView) {
     'use strict';
 
-    var Form = App.module('AppNotebooks.Form');
-    
+    var Form = App.module('App.NotebookForm');
+
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'addForm', 'editForm', 'show');

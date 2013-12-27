@@ -9,7 +9,6 @@ define([
     'use strict';
 
     // var Model = Backbone.Model.extend({
-    //AssociatedModel
     var Model = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
@@ -41,12 +40,18 @@ define([
         },
 
         addCount: function () {
+            if (this.get('id') === 0) {
+                return;
+            }
             this.save({
                 'count': this.get('count') + 1
             });
         },
 
         removeCount: function () {
+            if (this.get('id') === 0) {
+                return;
+            }
             this.save({
                 'count': this.get('count') - 1
             });

@@ -5,9 +5,16 @@
                 <span class="fa fa-pencil"></span> Edit
             </a>
         </li>
+        <% if (trash === 1) { %>
+        <li>
+            <a id="restoreNote" href="#" class="btn btn-default">
+                <span class="fa fa-undo"></span> Restore
+            </a>
+        </li>
+        <% } %>
         <li>
             <a href="#/notes/remove/{{id}}" class="btn btn-default">
-                <span class="fa fa-trash-o"></span> Delete
+                <span class="fa fa-trash-o"></span> <% if (trash === 0) { %>Delete<% } else { %> Forever<% } %>
             </a>
         </li>
         <li>

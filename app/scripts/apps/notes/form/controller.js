@@ -3,7 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
-    'collections/notes', 'collections/tags', 'collections/notebooks',
+    'collections/notes',
+    'collections/tags',
+    'collections/notebooks',
     'models/note',
     'apps/notes/form/formView'
 ], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, NoteModel, View) {
@@ -15,14 +17,15 @@ define([
         initialize: function () {
             _.bindAll(this, 'addForm', 'editForm', 'show');
             App.trigger('notes:show', {filter: null, page: null});
+
+            this.tags = new TagsCollection();
+            this.notebooks = new NotebooksCollection();
         },
 
         /**
          * Add a new note
          */
         addForm: function () {
-            this.tags = new TagsCollection();
-            this.notebooks = new NotebooksCollection();
             this.model = new NoteModel();
 
             $.when(
@@ -35,12 +38,13 @@ define([
          * Edit an existing note
          */
         editForm: function (args) {
-            this.tags = new TagsCollection();
-            this.notebooks = new NotebooksCollection();
             this.model = new NoteModel({id: args.id});
 
-            $.when(this.tags.fetch(), this.notebooks.fetch(),
-                   this.model.fetch()).done(this.show);
+            $.when(
+                this.tags.fetch({ limit : 100 }),
+                this.notebooks.fetch(),
+                this.model.fetch()
+            ).done(this.show);
         },
 
         show: function () {
@@ -71,12 +75,22 @@ define([
         },
 
         save: function (data) {
+            var notebook;
+
             // Encryption
             data.title = App.Encryption.API.encrypt(data.title);
             data.content = App.Encryption.API.encrypt(data.content);
-            
-            if (data.notebookID) {
-                data.notebookId = this.notebooks.get(data.notebookId).get('id');
+
+            // New notebook
+            notebook = this.model.get('notebookId');
+            if (data.notebookId !== notebook) {
+                notebook = this.notebooks.get(data.notebookId);
+                data.notebookId = notebook.get('id');
+                notebook.addCount();
+
+                // Remove counts
+                notebook = this.notebooks.get(notebook);
+                notebook.removeCount();
             }
 
             // Add new tags

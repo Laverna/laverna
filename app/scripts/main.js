@@ -40,40 +40,8 @@ require.config({
         'prettify'                 :  '../bower_components/google-code-prettify/src/prettify',
         'bootstrap-modal'          :  'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // 'bootstrap-modal'       :  '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
-        // Collections             :  scripts
-        'notesCollection'          :  'collections/notes',
         // View                    :  scripts here
-        'modalRegion'              :  'views/modal',
-        'sidebar'                  :  'views/composite/sidebar',
-        'noteForm'                 :  'views/item/noteForm',
-        'noteSidebar'              :  'views/composite/noteSidebar',
-        'noteSidebarItem'          :  'views/item/noteSidebarItem',
-        'noteItem'                 :  'views/item/noteItem',
-        'notebookLayout'           :  'views/layouts/notebook',
-        'notebookSidebar'          :  'views/composite/notebookSidebar',
-        'notebookSidebarItem'      :  'views/item/notebookSidebarItem',
-        'notebookForm'             :  'views/item/notebookForm',
-        'tagForm'                  :  'views/item/tagForm',
-        'tagsSidebar'              :  'views/composite/tags',
-        'tagSidebarItem'           :  'views/item/tagSidebarItem',
-        'configsView'              :  'views/item/configs',
-        'helpView'                 :  'views/item/help',
-        // Templates               :  here
-        'modalTempl'               :  'templates/modal.html',
-        'noteFormTempl'            :  'templates/notes/form.html',
-        'noteAddTempl'             :  'templates/notes/add.html',
-        //'noteSidebarTempl'         :  'templates/notes/sidebarList.html',
-        //'noteSidebarItemTempl'     :  'templates/notes/sidebarListItem.html',
-        'noteItemTempl'            :  'templates/notes/item.html',
-        'notebookLayoutTempl'      :  'templates/notebooks/layout.html',
-        'notebookSidebarTempl'     :  'templates/notebooks/sidebarList.html',
-        'notebookSidebarItemTempl' :  'templates/notebooks/sidebarListItem.html',
-        'notebookFormTempl'        :  'templates/notebooks/form.html',
-        'tagFormTempl'             :  'templates/tags/form.html',
-        'tagsSidebarTempl'         :  'templates/tags/sidebarList.html',
-        'tagSidebarItemTempl'      :  'templates/tags/sidebarListItem.html',
-        'configsTempl'             :  'templates/configs/list.html',
-        'helpTempl'                :  'templates/help.html'
+        'modalRegion'              :  'views/modal'
     },
     shim: {
         underscore: {
@@ -143,6 +111,5 @@ require([
     'use strict';
 
     // App starts here
-    // new Router();
     App.start();
 });

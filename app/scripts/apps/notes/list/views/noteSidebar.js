@@ -3,12 +3,11 @@ define([
     'underscore',
     'app',
     'backbone',
-    'sidebar',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap',
     'marionette'
-], function(_, App, Backbone, Sidebar, NoteSidebarItem, Template) {
+], function(_, App, Backbone, NoteSidebarItem, Template) {
     'use strict';
 
     var View = Backbone.Marionette.CompositeView.extend({

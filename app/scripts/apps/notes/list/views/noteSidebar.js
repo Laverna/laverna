@@ -88,6 +88,18 @@ define([
                 urlPage : function () {
                     return '/notes';
                 },
+                pageTitle: function () {
+                    if (this.args.filter) {
+                        return this.args.filter;
+                    } else {
+                        return 'Inbox';
+                    }
+                },
+                pageNumber: function () {
+                    if (this.args.page) {
+                        return this.args.page;
+                    }
+                },
                 // Generates the pagination url
                 pageUrl: function (page) {
                     var url = '/notes';

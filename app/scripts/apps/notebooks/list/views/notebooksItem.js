@@ -17,7 +17,7 @@ define([
         },
 
         changeFocus: function () {
-            this.$('.list-group-item').addClass('active');
+            this.$('.list-group-item[data-id=' + this.model.get('id') + ']').addClass('active');
 
             $('#sidebar .ui-s-content').scrollTop(
                 this.$('.list-group-item').offset().top -

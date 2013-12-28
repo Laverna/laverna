@@ -41,8 +41,6 @@ define([
                 elActive.removeClass('active');
                 return this.collection.get(idActive);
             }
-
-            //this.model.trigger('changeFocus');
         },
 
         next: function () {

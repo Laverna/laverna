@@ -13,7 +13,7 @@ define([
     Keybindings.bind = function () {
         // Help
         Mousetrap.bind(App.settings.appKeyboardHelp, function () {
-            App.log('help');
+            App.navigate('/help', true);
             return false;
         });
 

@@ -33,7 +33,6 @@ define([
             // Navigation with keys
             this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
             this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
-            this.keyboardEvents[App.settings.appKeyboardHelp] = 'toHelp';
 
             // Options to itemView
             this.itemViewOptions.args = this.options.args;
@@ -46,10 +45,6 @@ define([
         },
 
         onRender: function () {
-        },
-
-        toHelp: function () {
-            App.navigate('#/help');
         },
 
         toNextPage: function () {

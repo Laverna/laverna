@@ -27,12 +27,6 @@ define([
         initialize: function () {
             this.keyboardEvents[App.settings.navigateBottom] = 'next';
             this.keyboardEvents[App.settings.navigateTop] = 'prev';
-            this.keyboardEvents[App.settings.appKeyboardHelp] = 'toHelp';
-        },
-
-        // Show Shortcuts Help
-        toHelp: function () {
-            App.navigate('#/help');
         },
 
         /**

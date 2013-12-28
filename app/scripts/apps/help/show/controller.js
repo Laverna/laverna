@@ -15,10 +15,15 @@ define([
         },
 
         show: function () {
-            App.modal.show(new View({
-                collection: App.settings
-            }));
+            var view = new View({ collection: App.settings });
+            App.modal.show(view);
+            view.on('redirect', this.redirect, this);
+        },
+
+        redirect: function () {
+            App.navigateBack('/notes', true);
         }
+
     });
 
     return Show.Controller;

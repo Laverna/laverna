@@ -23,6 +23,11 @@ define([
         modal   :  ModalRegion
     });
 
+    // Modal region events
+    App.modal.on('close', function () {
+        App.notesArg = null; // Re render sidebar
+    });
+
     // Backbone history navigate
     App.navigate = function (route, options) {
         if (!options) {

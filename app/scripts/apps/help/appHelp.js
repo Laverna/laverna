@@ -16,7 +16,7 @@ define([
 
     Help.on('stop', function () {
         App.mousetrap.API.unpause();
-        App.log('AppHelp is stoped'); 
+        App.log('AppHelp is stoped');
     });
 
     // Router

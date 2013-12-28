@@ -36,7 +36,7 @@ define([
             view.$el.modal({
                 show     : true,
                 backdrop : 'static',
-                keyboard : true
+                // keyboard : true
             });
 
             // Trigger shown event

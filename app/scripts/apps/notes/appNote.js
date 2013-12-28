@@ -56,7 +56,7 @@ define([
             }
 
             require(['apps/notes/list/controller'], function (List) {
-                API.currentArgs = _.omit(args, 'id');
+                App.notesArg = _.omit(args, 'id');
                 executeAction(new List().listNotes, args);
             });
         },
@@ -107,7 +107,7 @@ define([
     });
 
     App.on('notes:show', function (args) {
-        var current = (API.currentArgs) ? API.currentArgs.toString() : null;
+        var current = (App.notesArg) ? App.notesArg.toString() : null;
         if (current !== _.omit(args, 'id').toString()) {
             API.showNotes(args);
         }

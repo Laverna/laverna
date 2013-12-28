@@ -1,12 +1,10 @@
 /*global define*/
-/*global Mousetrap*/
 define([
     'underscore',
     'jquery',
     'backbone',
     'marionette',
-    'text!apps/help/show/template.html',
-    'Mousetrap'
+    'text!apps/help/show/template.html'
 ], function ( _, $, Backbone, Marionette, Tmpl) {
     'use strict';
 
@@ -23,7 +21,6 @@ define([
 
         initialize: function () {
             this.on('hidden.modal', this.redirect);
-            Mousetrap.reset();
         },
 
         serializeData: function() {
@@ -36,12 +33,7 @@ define([
          * Redirect
          */
         redirect: function () {
-            var history = window.history;
-            if (history.length !== 0) {
-                history.back();
-            } else {
-                Backbone.history.navigate('/', true);
-            }
+            this.trigger('redirect');
         },
 
         /**

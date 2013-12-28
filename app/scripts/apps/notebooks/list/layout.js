@@ -22,11 +22,20 @@ define([
             tags      :  '#tags'
         },
 
-        keyboardEvents: { },
+        keyboardEvents: {
+            'o' : 'openActiveLink'
+        },
 
         initialize: function () {
             this.keyboardEvents[App.settings.navigateBottom] = 'next';
             this.keyboardEvents[App.settings.navigateTop] = 'prev';
+        },
+
+        openActiveLink: function () {
+            var a = this.$('.list-group-item.active');
+            if (a.length) {
+                App.navigate(a.attr('href'), true);
+            }
         },
 
         /**

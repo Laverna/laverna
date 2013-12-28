@@ -28,7 +28,6 @@ define([
         initialize: function () {
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.onFormShown);
-            App.mousetrap.API.pause();
         },
 
         /**
@@ -76,7 +75,6 @@ define([
          * Redirect
          */
         redirect: function () {
-            App.mousetrap.API.unpause();
             this.trigger('redirect');
         },
 

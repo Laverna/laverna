@@ -179,6 +179,9 @@ define([
             if (this.args.id !== undefined) {
                 this.changeFocus(this.args);
             }
+
+            // Show document.title
+            document.title = (this.args.filter) ? this.args.filter : 'Inbox';
         },
 
         changeFocus: function (args) {

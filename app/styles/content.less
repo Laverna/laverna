@@ -41,3 +41,42 @@
     background: #FFF;
     padding: 15px;
 }
+
+// Brand layer
+#brand-layer {
+    background-color: darken(@brand-success, 8%);
+    background: -moz-linear-gradient(center top , darken(@brand-success, 8%) 0%, darken(@brand-success, 15%) 100%) repeat scroll 0% 0% transparent;
+    height: 100%;
+    color: #FFF;
+}
+#brand-layer h1 {
+    text-align: center;
+    text-shadow: 4px 3px 0px darken(@brand-success, 8%), 9px 8px 0px rgba(0, 0, 0, 0.15);
+    font-size: 62px;
+    margin-bottom: 25px;
+}
+.form-wrapper {
+    max-width: 330px;
+    padding: 15px;
+    padding-top: 10%;
+    margin: 0 auto;
+    .form-control {
+        margin-bottom: 10px;
+    }
+    .btn-success {
+        border-color: darken(@brand-success, 20%);
+    }
+    .form-password {
+        position: relative;
+    }
+    .icon {
+        position: absolute;
+        top: 12px;
+        left: 10px;
+        font-size: 20px;
+        color: #CCC;
+    }
+    input {
+        padding-left: 30px;
+    }
+}

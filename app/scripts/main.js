@@ -39,9 +39,9 @@ require.config({
         'bootstrap'                :  '../bower_components/bootstrap/dist/js/bootstrap.min',
         'prettify'                 :  '../bower_components/google-code-prettify/src/prettify',
         'bootstrap-modal'          :  'libs/bootstrap-modal/src/backbone.bootstrap-modal',
-        // 'bootstrap-modal'       :  '../bower_components/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         // View                    :  scripts here
-        'modalRegion'              :  'views/modal'
+        'modalRegion'              :  'views/modal',
+        'brandRegion'              :  'views/brand'
     },
     shim: {
         underscore: {

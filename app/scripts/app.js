@@ -3,9 +3,10 @@ define([
     'underscore',
     'backbone',
     'modalRegion',
+    'brandRegion',
     'collections/configs',
     'marionette',
-], function (_, Backbone, ModalRegion, Configs) {
+], function (_, Backbone, ModalRegion, BrandRegion, Configs) {
     'use strict';
 
     // Underscore template
@@ -20,6 +21,7 @@ define([
     App.addRegions({
         sidebar :  '#sidebar',
         content :  '#content',
+        brand   :  BrandRegion,
         modal   :  ModalRegion
     });
 

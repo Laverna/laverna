@@ -30,7 +30,7 @@ define([
             var notebookView, tagsView;
 
             // Show layout
-            this.layout = new Layout({ notebooks: this.notebooks, tags: this.tags });
+            this.layout = new Layout({ notebooks: this.notebooks.length, tags: this.tags.length });
             App.sidebar.show(this.layout);
 
             // Start search events

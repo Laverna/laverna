@@ -51,7 +51,9 @@ define([
         },
 
         changeNext: function (region) {
-            this.activeRegion = region;
+            if (this.options[region] !== 0) {
+                this.activeRegion = region;
+            }
         }
 
     });

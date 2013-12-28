@@ -7,7 +7,7 @@ define([
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap',
-    'marionette',
+    'marionette'
 ], function(_, App, Backbone, Sidebar, NoteSidebarItem, Template) {
     'use strict';
 

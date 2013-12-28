@@ -69,10 +69,16 @@ define([
          * Save the configs changes
          */
         save: function () {
-            var value;
+            var value, el;
 
             _.each(this.changedSettings, function (settingName) {
-                value = this.$('[name=' + settingName + ']').val();
+                el = this.$('[name=' + settingName + ']');
+
+                if (el.attr('type') !== 'checkbox') {
+                    value = el.val();
+                } else {
+                    value = (el.is(':checked')) ? 1 : 0;
+                }
 
                 this.collection.trigger('changeSetting', {
                     name : settingName,

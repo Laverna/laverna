@@ -2,11 +2,12 @@
 define([
     'underscore',
     'backbone',
+    'app',
     'migrations/notebooks',
     'models/notebook',
     'indexedDB',
     // 'localStorage',
-], function (_, Backbone, NotebooksDB, Notebook) {
+], function (_, Backbone, App, NotebooksDB, Notebook) {
     'use strict';
 
     /**
@@ -43,6 +44,16 @@ define([
          */
         getRoots:  function () {
             return this.without.apply(this, this.getChildrens());
+        },
+
+        decrypt: function () {
+            var data = this.toJSON();
+
+            _.forEach(data, function (model) {
+                model.name = App.Encryption.API.decrypt(model.name);
+            });
+
+            return data;
         }
 
     });

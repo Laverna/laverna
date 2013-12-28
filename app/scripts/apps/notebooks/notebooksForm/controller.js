@@ -52,6 +52,9 @@ define([
         // Saving data or shows validation errors
         save: function (data) {
             var self = this;
+
+            data.name = App.Encryption.API.encrypt(data.name);
+
             this.model.set(data, {validate: true});
 
             if (this.model.isValid()) {

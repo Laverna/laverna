@@ -40,8 +40,12 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
         },
 
         serializeData: function () {
-            return _.extend(this.options.data, {
-                notebooks: this.collection.toJSON()
+            var data = this.model.toJSON();
+
+            data.name = App.Encryption.API.decrypt(data.name);
+
+            return _.extend(data, {
+                notebooks: this.collection.decrypt()
             });
         },
 
@@ -55,56 +59,6 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
 
             this.model.trigger('save', data);
         },
-
-        /**
-         * Update existing notebook
-         */
-        /*
-        update: function (data) {
-            var self = this;
-
-            this.model.set('name', data.name);
-            this.model.set('parentId', data.parentId);
-
-            // Handle validation errors
-            this.model.on('invalid', function (model, errors) {
-                self.showErrors(errors);
-            });
-
-            var result = this.model.save({}, {
-                validate: true,
-                success: function (result) {
-                    if (result.validationError === null) {
-                        self.close();
-                        self.redirect();
-                    }
-                }
-            });
-        },
-        */
-
-        /**
-         * Create new notebook
-         */
-        /*
-        create: function (data) {
-            data.id = this.collection.nextOrder();
-            var self = this;
-
-            var notebook = new Notebook(data, {validate: true});
-
-            if ( !notebook.validationError) {
-                var item = this.collection.create(notebook, {
-                    success: function(model) {
-                        self.redirect();
-                        self.close();
-                    }
-                });
-            } else {
-                this.showErrors(notebook.validationError);
-            }
-        },
-        */
 
         /**
          * Shows validation errors

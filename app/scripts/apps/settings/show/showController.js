@@ -32,7 +32,7 @@ define([
         save: function (setting) {
             var model = this.configs.get(setting.name);
             model.save({
-                value : setting.value.trim()
+                value : setting.value
             });
         },
 

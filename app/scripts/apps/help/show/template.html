@@ -1,0 +1,74 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">
+                <a class="cancelBtn btn btn-danger" href="#">Close</a>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Shortcut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Navigate Top</td>
+                        <td>{{ collection.navigateTop }}</td>
+                    </tr>
+                    <tr>
+                        <td>Navigate Bottom</td>
+                        <td>{{ collection.navigateBottom }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jump to Inbox</td>
+                        <td>{{ collection.jumpInbox }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jump to Notebook list</td>
+                        <td>{{ collection.jumpNotebook }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jump to favorite notes list</td>
+                        <td>{{ collection.jumpFavorite }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jump to removed notes list</td>
+                        <td>{{ collection.jumpRemoved }}</td>
+                    </tr>
+                    <tr>
+                        <td>Edit</td>
+                        <td>{{ collection.actionsEdit }}</td>
+                    </tr>
+                    <tr>
+                        <td>Open</td>
+                        <td>{{ collection.actionsOpen }}</td>
+                    </tr>
+                    <tr>
+                        <td>Remove</td>
+                        <td>{{ collection.actionsRemove }}</td>
+                    </tr>
+                    <tr>
+                        <td>Rotate star</td>
+                        <td>{{ collection.actionsRotateStar }}</td>
+                    </tr>
+                    <tr>
+                        <td>Create Note</td>
+                        <td>{{ collection.appCreateNote }}</td>
+                    </tr>
+                    <tr>
+                        <td>Search</td>
+                        <td>{{ collection.appSearch }}</td>
+                    </tr>
+                    <tr>
+                        <td>Show Keyboard Help</td>
+                        <td>{{ collection.appKeyboardHelp }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

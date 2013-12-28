@@ -75,6 +75,8 @@ define([
             Markdown.Extra.init(converter);
             data.content = converter.makeHtml(data.content);
 
+            data.notebook = App.Encryption.API.decrypt(data.notebook);
+
             // Show title
             document.title = data.title;
             return data;

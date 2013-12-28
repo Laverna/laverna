@@ -18,6 +18,19 @@ define([
 
         changeFocus: function () {
             this.$('.list-group-item').addClass('active');
+
+            $('#sidebar .ui-s-content').scrollTop(
+                this.$('.list-group-item').offset().top -
+                $('#sidebar .ui-s-content').offset().top +
+                $('#sidebar .ui-s-content').scrollTop() - 100
+            );
+        },
+
+        serializeData: function ( ) {
+            var data = this.model.toJSON();
+            data.name = App.Encryption.API.decrypt(data.name);
+
+            return data;
         }
 
     });

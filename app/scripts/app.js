@@ -90,7 +90,8 @@ define([
             'helpers/keybindings',
             'apps/notes/appNote',
             'apps/notebooks/appNotebooks',
-            'apps/settings/appSettings'
+            'apps/settings/appSettings',
+            'apps/help/appHelp'
         ], function () {
             Backbone.history.start({pushState: false});
 

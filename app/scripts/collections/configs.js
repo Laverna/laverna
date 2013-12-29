@@ -25,7 +25,9 @@ define([
             this.create(new Config({ name: 'encrypt', value: 0 }));
             this.create(new Config({ name: 'encryptPass', value: '' }));
             this.create(new Config({ name: 'encryptSalt', value: '' }));
-            this.create(new Config({ name: 'encryptKeySize', value: '' }));
+            this.create(new Config({ name: 'encryptIter', value: '1000' }));
+            this.create(new Config({ name: 'encryptTag', value: '64' }));
+            this.create(new Config({ name: 'encryptKeySize', value: '128' }));
 
             // Shortcuts. Navigation
             this.create(new Config({ name: 'navigateTop', value: 'k' }));

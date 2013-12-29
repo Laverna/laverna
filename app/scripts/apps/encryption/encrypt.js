@@ -47,26 +47,41 @@ define([
 
     // API
     Encryption.API = {
-        checkKey: function () {
+        checkAuth: function () {
             if (App.settings.encrypt === 1 && !App.settings.secureKey) {
                 App.notesArg = null;
                 App.navigate('/auth', true);
+                return false;
             }
+            return true;
         },
 
         encrypt: function (content) {
-            this.checkKey();
-            if (App.settings.encrypt === 1) {
-                content = sjcl.encrypt(App.settings.secureKey.toString(), content);
+            if (!content || content === '') {
+                return content;
+            }
+
+            if (App.settings.encrypt === 1 && App.settings.secureKey) {
+                var conf = App.settings,
+                    p = {
+                        iter : conf.encryptIter,
+                        ts   : parseInt(conf.encryptTag),
+                        ks   : parseInt(conf.encryptKeySize)
+                    };
+
+                content = sjcl.encrypt(App.settings.secureKey.toString(), content, p);
             }
             return content;
         },
 
         decrypt: function (content) {
-            this.checkKey();
-            if (App.settings.encrypt === 1) {
+            if ( !content || content.length === 0) {
+                return content;
+            }
+
+            if (App.settings.encrypt === 1 && App.settings.secureKey) {
                 try {
-                    content = sjcl.decrypt(App.settings.secureKey, content);
+                    content = sjcl.decrypt(App.settings.secureKey.toString(), content);
                 } catch(e) {
                     App.log('Can\'t decrypt ' + e);
                 }

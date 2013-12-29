@@ -27,14 +27,15 @@ define([
 
         login: function (password) {
             // password = '1',
-            var pwd = App.settings.encryptPass;
+            var pwd = App.settings.encryptPass,
+                p = {};
 
             if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
-                App.settings.secureKey = sjcl.misc.pbkdf2(
-                    password,
-                    App.settings.encryptSalt.toString(),
-                    1000
-                ).toString();
+                p.iter = App.settings.encryptIter;
+                p.salt = App.settings.encryptSalt;
+
+                p = sjcl.misc.cachedPbkdf2(password, p);
+                App.settings.secureKey = p.key.slice(0, App.settings.encryptKeySize/32);
                 App.navigateBack('/notes', true);
             }
         }

@@ -31,11 +31,11 @@ define([
                 p = {};
 
             if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
-                p.iter = App.settings.encryptIter;
+                p.iter = parseInt(App.settings.encryptIter);
                 p.salt = App.settings.encryptSalt;
 
                 p = sjcl.misc.cachedPbkdf2(password, p);
-                App.settings.secureKey = p.key.slice(0, App.settings.encryptKeySize/32);
+                App.settings.secureKey = p.key.slice(0, parseInt(App.settings.encryptKeySize)/32);
                 App.navigateBack('/notes', true);
             }
         }

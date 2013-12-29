@@ -66,7 +66,9 @@ define([
                     p = {
                         iter : conf.encryptIter,
                         ts   : parseInt(conf.encryptTag),
-                        ks   : parseInt(conf.encryptKeySize)
+                        ks   : parseInt(conf.encryptKeySize),
+                        // Random initialization vector every time
+                        iv   : sjcl.random.randomWords(4, 0)
                     };
 
                 content = sjcl.encrypt(App.settings.secureKey.toString(), content, p);

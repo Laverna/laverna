@@ -5,7 +5,7 @@ define([
     'app',
     'migrations/notebooks',
     'models/notebook',
-    'indexedDB',
+    'indexedDB'
     // 'localStorage',
 ], function (_, Backbone, App, NotebooksDB, Notebook) {
     'use strict';

@@ -19,9 +19,10 @@ require.config({
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
         IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim.min',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
+        dropbox                    :  'libs/dropbox',
+        'dropbox-backbone'         :  '../bower_components/backbone-dropbox/src/backbone-dropbox',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
-        'backbone.relational'      :  '../bower_components/backbone-relational/backbone-relational',
         'backbone.assosiations'    :  '../bower_components/backbone-associations/backbone-associations',
         // Keybindings             :
         'Mousetrap'                :  '../bower_components/mousetrap/mousetrap',
@@ -62,8 +63,12 @@ require.config({
                 'backbone'
             ]
         },
-        'backbone.relational': {
-            deps: ['backbone']
+        dropbox: {
+            exports: 'Dropbox'
+        },
+        'dropbox-backbone': {
+            deps: ['dropbox'],
+            exports: 'DropboxSync'
         },
         'backbone.assosiations': {
             deps: ['backbone']

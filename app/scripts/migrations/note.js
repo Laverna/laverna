@@ -35,7 +35,7 @@ define([
                         unique:false
                     });
                     next();
-                },
+                }
             }
         ]
     };

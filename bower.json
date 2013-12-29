@@ -28,7 +28,8 @@
     "sinon-qunit"          :  "~1.0.0",
     "font-awesome"         :  "~4.0.3",
     "bootstrap-tagsinput"  :  "master",
-    "sjcl"                 :  "~1.0.0"
+    "sjcl"                 :  "~1.0.0",
+    "backbone-dropbox"     :  "git@github.com:jay-doubleyou/backbone-dropbox.js.git#230e50cb95289b368c0a4e8d1aa4ef5c28c1558f"
   },
   "devDependencies": {}
 }

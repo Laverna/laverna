@@ -11,11 +11,31 @@
         <form action="#" class="form-horizontal" method="post">
             <div class="tab-content">
                 <div class="tab-pane active" id="basic">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="cloudStorage">
+                            <i class="fa fa-cloud"></i> Cloud storage
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="cloudStorage" id="cloudStorage">
+                                <option value="0">No</option>
+                                <option value="dropbox">Dropbox</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="pagination">Notes per page</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="pagination" name="pagination" value="{{models.pagination}}" class="form-control" >
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="useEncryption">Use encryption</label>
                         <div class="col-sm-10 checkbox">
                              <label class="control-label">
-                                 <input class="showField" data-field="#encryptOpt" type="checkbox" name="encrypt" <% if(models.encrypt === 1) { %> checked<% } %> >
+                                 <input id="useEncryption" class="showField" data-field="#encryptOpt" type="checkbox" name="encrypt" <% if(models.encrypt === 1) { %> checked<% } %> >
                                  yes
                              </label>
                         </div>
@@ -62,20 +82,6 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div class="form-group">
-                        <div class="checkbox">
-                             <label>
-                                 <input type="checkbox" name="cloudStorage" <% if(models.cloudStorage === 1) {%> checked<%}%> >
-                                 Cloud Storage
-                             </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Pagination</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="pagination" value="{{models.pagination}}" class="form-control" >
-                        </div>
-                    </div>
                 </div>
                 <div class="tab-pane" id="shortcuts">
                     <fieldset>
@@ -173,7 +179,7 @@
         </form>
     </div><!-- /.modal-body -->
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger ok">Save</button>
+        <button type="button" class="btn btn-success ok">Save</button>
         <button type="button" class="btn btn-default cancelBtn" data-dismiss="modal">Cancel</button>
     </div>
 </div></div>

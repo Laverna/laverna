@@ -5,7 +5,7 @@ define([
     'modalRegion',
     'brandRegion',
     'collections/configs',
-    'marionette',
+    'marionette'
 ], function (_, Backbone, ModalRegion, BrandRegion, Configs) {
     'use strict';
 
@@ -16,7 +16,8 @@ define([
         evaluate: /<%([\s\S]+?)%>/g
     };
 
-    var App = new Backbone.Marionette.Application();
+    var App = new Backbone.Marionette.Application(),
+        modules = [];
 
     App.addRegions({
         sidebar :  '#sidebar',
@@ -92,18 +93,23 @@ define([
         }
 
         App.settings = configs.getConfigs();
+
+        // Cloud storage
+        if (App.settings.cloudStorage !== 0) {
+            modules.push('helpers/' + App.settings.cloudStorage);
+        }
     });
 
     // Start default module
     App.on('initialize:after', function () {
-        require([
+        require(_.union([
             'apps/encryption/encrypt',
             'helpers/keybindings',
             'apps/notes/appNote',
             'apps/notebooks/appNotebooks',
             'apps/settings/appSettings',
             'apps/help/appHelp'
-        ], function () {
+        ], modules), function () {
             Backbone.history.start({pushState: false});
 
             if (App.getCurrentRoute() === '') {

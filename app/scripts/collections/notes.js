@@ -5,17 +5,17 @@ define([
     'backbone',
     'migrations/note',
     'models/note',
-    // 'localStorage',
-    'indexedDB'
+    'indexedDB',
+    'helpers/dropbox',
 ], function (_, App, Backbone, NotesDB, Note) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
         model: Note,
 
-        // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
         database  : NotesDB,
         storeName : 'notes',
+        store     : 'notes',
 
         initialize: function () {
         },

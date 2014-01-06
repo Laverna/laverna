@@ -8,7 +8,6 @@ define([
     'use strict';
 
     var Config = Backbone.Model.extend({
-
         idAttribute: 'name',
 
         defaults: {

@@ -36,6 +36,20 @@ define([
                     });
                     next();
                 }
+            },
+            {
+                version:3,
+                migrate:function (transaction, next) {
+                    var store;
+                    if (!transaction.db.objectStoreNames.contains('notes')) {
+                        store = transaction.db.createObjectStore('notes');
+                    }
+                    store = transaction.objectStore('notes');
+                    store.createIndex('synchronized', 'synchronized', {
+                        unique:false
+                    });
+                    next();
+                }
             }
         ]
     };

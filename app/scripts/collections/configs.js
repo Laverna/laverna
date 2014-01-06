@@ -10,6 +10,7 @@ define([
     var Configs = Backbone.Collection.extend({
 
         localStorage: new Backbone.LocalStorage('vimarkable.configs'),
+        store : 'configs',
 
         model : Config,
 

@@ -2,24 +2,23 @@
 define([
     'underscore',
     'backbone',
-    'indexedDB',
     'migrations/note',
-    'backbone.assosiations'
-    // 'localStorage',
-], function (_, Backbone, IndexedDB, NotesDB) {
+    'indexedDB',
+    'helpers/dropbox',
+], function (_, Backbone, NotesDB) {
     'use strict';
 
     /**
      * Notes model
      */
-    // var Model = Backbone.Model.extend({
-    var Model = Backbone.AssociatedModel.extend({
+    var Model = Backbone.Model.extend({
 
         idAttribute: 'id',
 
         // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
         database  : NotesDB,
         storeName : 'notes',
+        store     : 'notes',
 
         defaults: {
             'id'            :  undefined,
@@ -32,17 +31,9 @@ define([
             'notebookId'    :  0,
             'tags'          :  [],
             'isFavorite'    :  0,
-            'trash'         :  0
+            'trash'         :  0,
+            'synchronized'  :  0
         },
-
-        relations: [
-            //{
-            //    type           : Backbone.One,
-            //    key            : 'notebookId',
-            //    collectionType : Notebooks,
-            //    relatedModel   : Notebook
-            //}
-        ],
 
         validate: function (attrs) {
             var errors = [];
@@ -56,8 +47,10 @@ define([
         },
 
         initialize: function () {
-            this.on('update.note', this.setUpdate);
-            this.on('changed:notebookId', this.updateNotebookCount);
+            this.on('change:content', this.setUpdate);
+            this.on('change:title', this.setUpdate);
+            this.on('change:isFavorite', this.setSync);
+            this.on('change:trash', this.setSync);
 
             if (this.isNew()) {
                 this.set('created', Date.now());
@@ -70,6 +63,7 @@ define([
          */
         setUpdate: function () {
             this.set('updated', Date.now());
+            this.setSync();
         },
 
         next: function () {
@@ -82,6 +76,10 @@ define([
             if (this.collection) {
                 return this.collection.at(this.collection.indexOf(this) - 1);
             }
+        },
+
+        setSync: function () {
+            this.set('synchronized', 0);
         }
 
     });

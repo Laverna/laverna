@@ -1,4 +1,4 @@
-/*global define */
+/*global define*/
 define([
     'underscore',
     'app',
@@ -22,7 +22,8 @@ define([
 
         ui: {
             prevPage    : '#prevPage',
-            nextPage    : '#nextPage'
+            nextPage    : '#nextPage',
+            syncStatus  : '#syncStatus'
         },
 
         events: {
@@ -41,9 +42,10 @@ define([
             this.listenTo(this.collection, 'change', this.render);
             this.listenTo(this.collection, 'nextPage', this.toNextPage);
             this.listenTo(this.collection, 'prevPage', this.toPrevPage);
-        },
 
-        onRender: function () {
+            // Sync
+            this.listenTo(this.collection, 'sync:before', this.syncStatus);
+            this.listenTo(this.collection, 'sync:after', this.syncStatus);
         },
 
         toNextPage: function () {
@@ -60,6 +62,14 @@ define([
 
         navigateTop: function () {
             this.collection.trigger('navigateTop');
+        },
+
+        syncStatus: function () {
+            if (this.ui.syncStatus.hasClass('fa-spin')) {
+                this.ui.syncStatus.removeClass('fa-spin');
+            } else {
+                this.ui.syncStatus.addClass('fa-spin');
+            }
         },
 
         /**

@@ -15,6 +15,7 @@ define([
 
         database : TagsDB,
         storeName: 'tags',
+        store: 'tags',
 
         initialize: function () {
         },

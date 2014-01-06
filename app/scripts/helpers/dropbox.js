@@ -2,10 +2,10 @@
 define([
     'underscore',
     'app',
-    'dropbox',
     'backbone',
-    'dropbox-backbone',
-], function (_, App, Dropbox, Backbone, DropboxSync) {
+    'dropbox',
+    'dropbox-backbone'
+], function (_, App, Backbone, Dropbox, DropboxSync) {
     'use strict';
 
     var Adapter = function () { };
@@ -16,10 +16,10 @@ define([
         // ---------------------
         auth: function () {
             var client = new Dropbox.Client({
-                key    : 'j4xpefzl2jmn142',
-                secret : '0uy343fvb6dc4ch',
-                sandbox: true
-            });
+                    key    : 'fql0agn2cbsap7g',
+                    // secret : 'bv7r5h7c6joo1gv',
+                    sandbox: true
+                });
 
             client.authDriver(new Dropbox.AuthDriver.Popup({
                 receiverUrl: 'http://localhost/ofnote/app/dropbox.html',
@@ -29,15 +29,14 @@ define([
             // Override backbone sync method
             Backbone.cloud = new DropboxSync(client);
 
-            client.authenticate({interactive: true}, function(error, clt) {
-                if (error) {
-                    App.log(error);
-                }
-                App.log(clt);
-            });
+            client.authenticate({interactive: false});
+
+            if ( !client.isAuthenticated()) {
+                client.authenticate();
+            }
         }
 
     });
 
-    return Adapter.auth();
+    return Adapter;
 });

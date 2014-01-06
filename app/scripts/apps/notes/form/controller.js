@@ -38,7 +38,7 @@ define([
          * Edit an existing note
          */
         editForm: function (args) {
-            this.model = new NoteModel({id: args.id});
+            this.model = new NoteModel({ id : args.id });
 
             $.when(
                 this.tags.fetch({ limit : 100 }),

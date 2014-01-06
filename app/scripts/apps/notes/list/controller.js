@@ -2,10 +2,11 @@
 define([
     'underscore',
     'app',
+    'backbone',
     'marionette',
     'collections/notes',
     'apps/notes/list/views/noteSidebar',
-], function (_, App, Marionette, Notes, NotesView) {
+], function (_, App, Backbone, Marionette, Notes, NotesView) {
     'use strict';
 
     var List = App.module('AppNote.List');
@@ -55,6 +56,9 @@ define([
             } else {
                 this.notes.trigger('filter:all');
             }
+
+            // Synchronize with cloud storage
+            this.notes.pullCloud(true);
         },
 
         /**

@@ -16,8 +16,7 @@ define([
         evaluate: /<%([\s\S]+?)%>/g
     };
 
-    var App = new Backbone.Marionette.Application(),
-        modules = [];
+    var App = new Backbone.Marionette.Application();
 
     App.addRegions({
         sidebar :  '#sidebar',
@@ -93,23 +92,19 @@ define([
         }
 
         App.settings = configs.getConfigs();
-
-        // Cloud storage
-        if (App.settings.cloudStorage !== 0) {
-            modules.push('helpers/' + App.settings.cloudStorage);
-        }
     });
 
     // Start default module
     App.on('initialize:after', function () {
-        require(_.union([
+        require([
             'apps/encryption/encrypt',
+            'helpers/dualstorage',
             'helpers/keybindings',
             'apps/notes/appNote',
             'apps/notebooks/appNotebooks',
             'apps/settings/appSettings',
             'apps/help/appHelp'
-        ], modules), function () {
+        ], function () {
             Backbone.history.start({pushState: false});
 
             if (App.getCurrentRoute() === '') {

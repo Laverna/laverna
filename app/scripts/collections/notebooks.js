@@ -19,6 +19,7 @@ define([
         //localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
         database: NotebooksDB,
         storeName: 'notebooks',
+        store: 'notebooks',
 
         /**
          * Generates the next order number

@@ -11,43 +11,42 @@ define([
                 version: 1,
                 migrate: function (transaction, next) {
                     transaction.db.createObjectStore('notes');
+                    transaction.db.createObjectStore('notebooks');
+                    transaction.db.createObjectStore('tags');
                     next();
                 }
             },
+            // Notes store
+            // ----------------
             {
-                version:2,
-                migrate:function (transaction, next) {
-                    var store;
-                    if (!transaction.db.objectStoreNames.contains('notes')) {
-                        store = transaction.db.createObjectStore('notes');
-                    }
-                    store = transaction.objectStore('notes');
-                    store.createIndex('created', 'created', {
-                        unique:false
-                    });
-                    store.createIndex('isFavorite', 'isFavorite', {
-                        unique:false
-                    });
-                    store.createIndex('trash', 'trash', {
-                        unique:false
-                    });
-                    store.createIndex('notebookId', 'notebookId', {
-                        unique:false
-                    });
+                version: 2,
+                migrate: function(transaction, next) {
+                    var store = transaction.objectStore('notes');
+                    store.createIndex('createdIndex', 'created', { unique: false});
+                    store.createIndex('favoriteIndex', 'isFavorite', { unique: false});
+                    store.createIndex('trashIndex', 'trash', { unique: false});
+                    store.createIndex('notebookIndex', 'notebookId', { unique: false});
+                    store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
             },
+            // Notebooks store
+            // ----------------
             {
-                version:3,
-                migrate:function (transaction, next) {
-                    var store;
-                    if (!transaction.db.objectStoreNames.contains('notes')) {
-                        store = transaction.db.createObjectStore('notes');
-                    }
-                    store = transaction.objectStore('notes');
-                    store.createIndex('synchronized', 'synchronized', {
-                        unique:false
-                    });
+                version: 3,
+                migrate: function(transaction, next) {
+                    var store = transaction.objectStore('notebooks');
+                    store.createIndex('parentIndex', 'parentId', { unique: false});
+                    next();
+                }
+            },
+            // Tags store
+            // ----------------
+            {
+                version: 4,
+                migrate: function(transaction, next) {
+                    var store = transaction.objectStore('tags');
+                    store.createIndex('nameIndex', 'name', { unique: true});
                     next();
                 }
             }

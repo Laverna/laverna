@@ -3,11 +3,11 @@ define([
     'underscore',
     'backbone',
     'app',
-    'migrations/notebooks',
+    'migrations/note',
     'models/notebook',
     'indexedDB'
     // 'localStorage',
-], function (_, Backbone, App, NotebooksDB, Notebook) {
+], function (_, Backbone, App, NotesDB, Notebook) {
     'use strict';
 
     /**
@@ -17,7 +17,7 @@ define([
         model: Notebook,
 
         //localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
-        database: NotebooksDB,
+        database: NotesDB,
         storeName: 'notebooks',
         store: 'notebooks',
 

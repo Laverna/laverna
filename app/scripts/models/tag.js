@@ -2,7 +2,7 @@
 define([
     'underscore',
     'backbone',
-    'migrations/tags',
+    'migrations/note',
     'backbone.assosiations'
 ], function (_, Backbone, TagsDB) {
     'use strict';

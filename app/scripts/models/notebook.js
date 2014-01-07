@@ -2,17 +2,17 @@
 define([
     'underscore',
     'backbone',
-    'migrations/notebooks',
+    'migrations/note',
     'backbone.assosiations',
     'indexedDB'
-], function (_, Backbone, NotebooksDB) {
+], function (_, Backbone, NotesDB) {
     'use strict';
 
     // var Model = Backbone.Model.extend({
     var Model = Backbone.AssociatedModel.extend({
         idAttribute: 'id',
 
-        database: NotebooksDB,
+        database: NotesDB,
         storeName: 'notebooks',
         store: 'notebooks',
 

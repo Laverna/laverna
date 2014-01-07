@@ -40,6 +40,8 @@ define([
 
         if (pushCloud === true) {
             this.on('sync:toCloud', this.pushCloud, this);
+        } else {
+            this.trigger('sync:after');
         }
     };
 
@@ -54,8 +56,10 @@ define([
             conditions : {synchronized : 0},
             success    : function () {
                 console.log(collection.length + ' objects to sync');
-                self.trigger('sync:before');
                 self._syncToCloud(collection, collectionCloud);
+            },
+            error: function () {
+                self.trigger('sync:after');
             }
         });
     };
@@ -65,33 +69,36 @@ define([
      */
     Backbone.Collection.prototype._syncFromCloud = function (collectionCloud) {
         var cloudModels = collectionCloud.models,
-            self = this,
-            model,
-            newModel;
-
-        var onSuccess = function () {
-            console.log('Model ' + model.get('id') + ' already exists');
-        };
+            data,
+            model;
 
         // Check existence in default storage
         _.each(cloudModels, function (m) {
             model = new this.model({ id : m.get('id') });
             model.fetch({
-                success: onSuccess,
+                success: function (model) {
+                    var needUpdate = model.get('updated') < m.get('updated');
+                    if (model.get('synchronized') === 1 && needUpdate) {
+                        data = _.extend(m.toJSON(), {'synchronized' : 1});
+                        model.save(data, {
+                            success: function () {
+                                console.log('Model ' + model.get('id') + ' updated');
+                            }
+                        });
+                    }
+                },
+                // Object isn't exist -- create new
                 error  : function () {
-                    newModel = new self.model();
-                    var data = _.extend(m.toJSON(), {'synchronized' : 1});
-
-                    newModel.save(data, {
+                    data = _.extend(m.toJSON(), {'synchronized' : 1});
+                    model.save(data, {
                         success: function () {
-                            console.log('created model ' + newModel.get('id'));
+                            console.log('created model ' + model.get('id'));
                         }
                     });
                 }
             });
         }, this);
 
-        this.trigger('sync:after');
         this.trigger('sync:toCloud', collectionCloud);
     };
 

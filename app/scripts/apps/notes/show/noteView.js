@@ -108,6 +108,7 @@ define([
          */
         favorite: function () {
             var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
+            this.model.trigger('update:any');
             this.model.save({'isFavorite': isFavorite});
             return false;
         },

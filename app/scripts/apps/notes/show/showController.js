@@ -63,6 +63,7 @@ define([
 
         updateTaskProgress: function (text) {
             var content = App.Encryption.API.encrypt(text.content);
+            this.note.trigger('update:any');
 
             this.note.save({
                 content       : content,

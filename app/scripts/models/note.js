@@ -47,10 +47,7 @@ define([
         },
 
         initialize: function () {
-            this.on('change:content', this.setUpdate);
-            this.on('change:title', this.setUpdate);
-            this.on('change:isFavorite', this.setSync);
-            this.on('change:trash', this.setSync);
+            this.on('update:any', this.setUpdate);
 
             if (this.isNew()) {
                 this.set('created', Date.now());

@@ -75,7 +75,7 @@ define([
                     if (this.args.query) {
                         url += '/q/' + this.args.query;
                     }
-                    if (this.args.page !== null) {
+                    if (this.args.page) {
                         url += '/p' + this.args.page;
                     }
                     return url + '/show/' + this.id;

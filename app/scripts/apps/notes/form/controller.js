@@ -97,6 +97,7 @@ define([
             this.tags.saveAdd(data.tags);
 
             // Save
+            this.model.trigger('update:any');
             this.model.save(data, {
                 success: function (model) {
                     var url = '/notes/show/' + model.get('id');

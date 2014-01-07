@@ -138,3 +138,52 @@
         }
     }
 }
+
+//
+// Distraction free mode
+//
+.distraction-free {
+    background-color: #FFF;
+    #sidebar, .navbar-static-top {
+        display: none;
+    }
+    #content {
+        width: 100%;
+    }
+    #content .article {
+        width: 70%;
+        margin: 0 auto;
+    }
+    #wmd-button-bar {
+        margin: 0;
+        text-align: center;
+        padding: 0;
+    }
+    .pretty-form .form-group {
+        border: 1px dashed rgba(0, 0, 0, .1);
+        margin-bottom: 10px;
+    }
+}
+//
+// Two column mode
+//
+.distraction-free.two-column {
+    #content .article {
+        width: 100%;
+        padding-top: 0;
+    }
+    #noteForm, .preview-col {
+        padding-top: 20px;
+    }
+    .article.row #wmd-input {
+    }
+    .article.row #noteForm {
+        box-shadow: 6px 0px 6px -6px lighten(#999, 10%);
+    }
+    .article.row .preview-col {
+        box-shadow:  -6px 0px 6px -6px lighten(#999, 10%);
+    }
+    .article.row #wmd-preview {
+        margin-top: 110px;
+    }
+}

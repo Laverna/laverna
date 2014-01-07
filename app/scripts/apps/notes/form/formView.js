@@ -24,10 +24,16 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             content    :  '.wmd-input',
             tags       :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
-            sCont      :  '.ui-s-content'
+            sCont      :  '.ui-s-content',
+            // Mode stuff
+            article    :  '.article',
+            form       :  '#noteForm',
+            wmdBar     :  '#wmd-button-bar',
+            preview    :  '.preview-col',
         },
 
         events: {
+            'click #modeMenu a': 'switchMode',
             'click #saveBtn'   : 'save',
             'click #cancelBtn' : 'redirect',
             'keyup input[name=title]'  : 'keyupEvents'
@@ -36,10 +42,12 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         initialize: function () {
             this.on('shown', this.pagedownRender);
             App.mousetrap.API.pause();
+            this.$body = $('body');
         },
 
         onClose: function () {
             App.mousetrap.API.unpause();
+            this.switchMode();
         },
 
         keyupEvents: function (e) {
@@ -190,12 +198,67 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             this.ui.sCont.on('scroll', function () {
                 scroll = $(this).scrollTop();
                 if (scroll >= 260) {
-                    wmdBar.addClass('wmd-bar-fixed')
-                        .css({top: scroll-2 + 'px'});
+                    // wmdBar.addClass('wmd-bar-fixed')
+                    //     .css({top: scroll-2 + 'px'});
                 } else {
                     wmdBar.removeClass('wmd-bar-fixed');
                 }
             });
+        },
+
+        /**
+         * Switch edit mode
+         */
+        switchMode: function (e) {
+            var mode = null;
+            if (e !== undefined) {
+                mode = $(e.target).attr('data-mode');
+            }
+            switch (mode) {
+                case 'fullscreen':
+                    this.distractionFreeMode();
+                    break;
+                case 'preview':
+                    this.previewMode();
+                    break;
+                default:
+                    this.normalMode();
+                    break;
+            }
+            return false;
+        },
+
+        /**
+         * Edit text in distraction free mode
+         */
+        distractionFreeMode: function () {
+            this.normalMode();  // Reset everything
+            this.$body.addClass('distraction-free');
+            this.ui.wmdBar.addClass('navbar navbar-fixed-top');
+        },
+
+        /**
+         * Edit text with preview
+         */
+        previewMode: function () {
+            this.$body.addClass('distraction-free two-column');
+            this.ui.wmdBar.addClass('navbar navbar-fixed-top');
+            // Two panels
+            this.ui.article.addClass('row');
+            this.ui.form.addClass('col-xs-6 col-sm-6 col-lg-6');
+            this.ui.preview.addClass('col-xs-6 col-sm-6 col-lg-6').removeClass('hide');
+        },
+
+        /**
+         * Edit text in normal mode
+         */
+        normalMode: function () {
+            this.$body.removeClass('distraction-free two-column');
+            this.ui.wmdBar.removeClass('navbar navbar-fixed-top');
+            // Disable two panels
+            this.ui.article.removeClass('row');
+            this.ui.form.removeClass('col-xs-6 col-sm-6 col-lg-6');
+            this.ui.preview.removeClass('col-xs-6 col-sm-6 col-lg-6').addClass('hide');
         },
 
         serializeData: function () {

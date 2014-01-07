@@ -6,6 +6,14 @@
         <li class="btn-group">
             <a id="cancelBtn" href="#" class="pull-right btn btn-danger">Cancel</a>
         </li>
+        <li class="btn-group dropdown">
+            <a href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-arrows-alt"></i> <b class="caret"></b></a>
+            <ul id="modeMenu" class="dropdown-menu pull-right" role="menu" aria-labelledby="switchMode">
+                <li><a href="#" data-mode="fullscreen"><i class="fa fa-arrows-alt"></i> Fullscreen</a></li>
+                <li><a href="#" data-mode="preview"><i class="fa fa-eye"></i> Preview</a></li>
+                <li><a href="#" data-mode="normal"><i class="fa fa-square"></i> Normal</a></li>
+            </ul>
+        </li>
     </ul>
 </nav>
 
@@ -30,10 +38,15 @@
                     </div>
                     <div id="wmd-button-bar"></div>
                     <div class="form-group wmd-group">
-                        <div class="wmd-input mousetrap" id="wmd-input">{{content}}</div>
-                        <!-- <div id="wmd&#45;preview" class="wmd&#45;panel wmd&#45;preview"></div> -->
+                        <div class="wmd-input" id="wmd-input">{{content}}</div>
                     </div>
                 </form>
+                <div class="preview-col hide">
+                    <header>
+                        <h2>Preview</h2>
+                    </header>
+                    <div id="wmd-preview"></div>
+                </div>
             </div>
         </div>
     </div>

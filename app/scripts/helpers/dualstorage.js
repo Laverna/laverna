@@ -16,10 +16,10 @@ define([
     /**
      * Fetch collection from the cloud storage
      */
-    Backbone.Collection.prototype.pullCloud = function (pushCloud) {
+    Backbone.Collection.prototype.pullCloud = function (pushCloud, forceSync) {
         // @TODO check online status
         // -------------------------
-        if (this.localCacheActive === true || !Backbone.cloud) {
+        if (this.localCacheActive && forceSync === true || !Backbone.cloud) {
             return;
         }
 
@@ -77,7 +77,7 @@ define([
             model = new this.model({ id : m.get('id') });
             model.fetch({
                 success: function (model) {
-                    var needUpdate = model.get('updated') < m.get('updated');
+                    var needUpdate = model.get('updated') !== m.get('updated');
                     if (model.get('synchronized') === 1 && needUpdate) {
                         data = _.extend(m.toJSON(), {'synchronized' : 1});
                         model.save(data, {

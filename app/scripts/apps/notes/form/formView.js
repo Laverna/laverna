@@ -193,7 +193,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             //     }
             // });
 
-            // Editor bar spy your scrolls
+            // Editor bar always follows
             wmdBar = this.$('#wmd-button-bar');
             this.ui.sCont.on('scroll', function () {
                 scroll = $(this).scrollTop();
@@ -213,6 +213,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             var mode = null;
             if (e !== undefined) {
                 mode = $(e.target).attr('data-mode');
+                this.$body.hide();
             }
             switch (mode) {
                 case 'fullscreen':
@@ -224,6 +225,9 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
                 default:
                     this.normalMode();
                     break;
+            }
+            if (mode !== null) {
+                this.$body.fadeIn('slowly');
             }
             return false;
         },

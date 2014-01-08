@@ -43,8 +43,8 @@ define(['underscore'], function (_) {
                 } else {
                     content = match;
                 }
-
-                tags.push(tagName);
+                // tags.push(tagName);
+                tags = _.union([tagName], tags); // No duplicates
                 return content;
             });
 

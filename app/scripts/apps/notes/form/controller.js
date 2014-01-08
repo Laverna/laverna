@@ -29,7 +29,7 @@ define([
             this.model = new NoteModel();
 
             $.when(
-                this.tags.fetch({ limit : 100 }),
+                this.tags.fetch(),
                 this.notebooks.fetch()
             ).done(this.show);
         },

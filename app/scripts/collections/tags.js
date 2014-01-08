@@ -25,15 +25,14 @@ define([
          */
         saveAdd: function (tags) {
             var model;
+
             _.each(tags, function (tag) {
                 tag = tag.trim();
-                model = new this.model({ name : tag });
-
-                model.fetch({
-                    error: function () {
-                        model.save();
-                    }
-                });
+                model = this.findWhere({name : tag});
+                if (tag !== '' && model === undefined) {
+                    model = new this.model({ name : tag });
+                    model.save();
+                }
             }, this);
         },
 

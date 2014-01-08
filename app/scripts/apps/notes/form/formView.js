@@ -132,6 +132,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
 
             converter = new Markdown.Converter();
             Markdown.Extra.init(converter);
+
             // Customize markdown converter
             converter.hooks.chain('postNormalization', function (text) {
                 return new Checklist().toHtml(text);

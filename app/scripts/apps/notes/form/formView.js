@@ -137,9 +137,9 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         pagedownRender: function () {
             // var that = this,
             var converter,
-                editor,
-                wmdBar,
-                scroll;
+                editor;
+                // wmdBar,
+                // scroll;
 
             converter = new Markdown.Converter();
             editor = new Markdown.Editor(converter);
@@ -194,16 +194,16 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             // });
 
             // Editor bar always follows
-            wmdBar = this.$('#wmd-button-bar');
-            this.ui.sCont.on('scroll', function () {
-                scroll = $(this).scrollTop();
-                if (scroll >= 260) {
-                    // wmdBar.addClass('wmd-bar-fixed')
-                    //     .css({top: scroll-2 + 'px'});
-                } else {
-                    wmdBar.removeClass('wmd-bar-fixed');
-                }
-            });
+            // wmdBar = this.$('#wmd-button-bar');
+            // this.ui.sCont.on('scroll', function () {
+            //     scroll = $(this).scrollTop();
+            //     if (scroll >= 260) {
+            //         // wmdBar.addClass('wmd-bar-fixed')
+            //         //     .css({top: scroll-2 + 'px'});
+            //     } else {
+            //         wmdBar.removeClass('wmd-bar-fixed');
+            //     }
+            // });
         },
 
         /**

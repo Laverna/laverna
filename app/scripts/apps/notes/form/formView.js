@@ -40,6 +40,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         },
 
         initialize: function () {
+            _.bindAll(this, 'scrollPagedownBar');
             this.on('shown', this.pagedownRender);
             App.mousetrap.API.pause();
             this.$body = $('body');
@@ -50,24 +51,12 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             this.switchMode();
         },
 
-        keyupEvents: function (e) {
-            switch (e.which) {
-                // Close form when user hits Esc
-                case 27:
-                    this.redirect(e);
-                    break;
-                // Save when user hits Enter
-                case 13:
-                    this.save(e);
-                    break;
-                default:
-                    break;
-            }
-        },
-
         onRender: function() {
             var that = this,
                 tagsNames;
+
+            // Pagedown scroll bar always visible
+            this.ui.sCont.on('scroll', this.scrollPagedownBar);
 
             tagsNames = this.options.tags.getNames();
 
@@ -99,6 +88,9 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             }
         },
 
+        /**
+         * Save note to storage
+         */
         save: function (e) {
             e.preventDefault();
 
@@ -135,19 +127,24 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
          * Pagedown-ace editor
          */
         pagedownRender: function () {
-            // var that = this,
             var converter,
-                editor,
-                wmdBar,
-                scroll;
+                editor;
 
             converter = new Markdown.Converter();
+            Markdown.Extra.init(converter);
+            // Customize markdown converter
+            converter.hooks.chain('postNormalization', function (text) {
+                return new Checklist().toHtml(text);
+            });
+
+            // Initialize pagedown
             editor = new Markdown.Editor(converter);
 
             // ACE
             this.editor = ace.edit('wmd-input');
             this.editor.getSession().setMode('ace/mode/markdown');
             this.editor.setTheme('ace/theme/github');
+            this.editor.setFontSize(16);
 
             // Ace configs
             // this.editor.setOption('spellcheck', true);
@@ -192,28 +189,55 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             //         that.$('.form-horizontal').trigger('submit');
             //     }
             // });
+        },
 
-            // Editor bar always follows
-            wmdBar = this.$('#wmd-button-bar');
-            this.ui.sCont.on('scroll', function () {
-                scroll = $(this).scrollTop();
-                if (scroll >= 260) {
-                    // wmdBar.addClass('wmd-bar-fixed')
-                    //     .css({top: scroll-2 + 'px'});
-                } else {
-                    wmdBar.removeClass('wmd-bar-fixed');
-                }
-            });
+        /**
+         * WMD bar always follows you
+         */
+        scrollPagedownBar: function (e) {
+            // Not in distraction free mode
+            if ( !e || this.ui.wmdBar.hasClass('navbar-fixed-top')) {
+                this.ui.wmdBar.removeClass('wmd-bar-fixed');
+                this.ui.wmdBar.css({top: 0});
+                return;
+            }
+            var scroll = $(e.target).scrollTop();
+            if (scroll >= 260) {
+                this.ui.wmdBar.addClass('wmd-bar-fixed')
+                    .css({top: scroll-2 + 'px'});
+            } else {
+                this.ui.wmdBar.removeClass('wmd-bar-fixed');
+            }
+        },
+
+        /**
+         * Close page when user hits ESC in inputs
+         */
+        keyupEvents: function (e) {
+            switch (e.which) {
+                // Close form when user hits Esc
+                case 27:
+                    this.redirect(e);
+                    break;
+                // Save when user hits Enter
+                case 13:
+                    this.save(e);
+                    break;
+                default:
+                    break;
+            }
         },
 
         /**
          * Switch edit mode
          */
         switchMode: function (e) {
-            var mode = null;
+            var mode;
             if (e !== undefined) {
                 mode = $(e.target).attr('data-mode');
                 this.$body.hide();
+                // Fix WMD bar
+                this.scrollPagedownBar();
             }
             switch (mode) {
                 case 'fullscreen':
@@ -226,7 +250,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
                     this.normalMode();
                     break;
             }
-            if (mode !== null) {
+            if (mode) {
                 this.$body.fadeIn('slowly');
             }
             return false;

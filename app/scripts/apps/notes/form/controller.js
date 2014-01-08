@@ -96,16 +96,17 @@ define([
             // Add new tags
             this.tags.saveAdd(data.tags);
 
+            App.trigger('notes:added');
+
             // Save
             this.model.trigger('update:any');
             this.model.save(data, {
                 success: function (model) {
+                    // Sync with cloud
                     var url = '/notes/show/' + model.get('id');
                     App.navigate(url, {trigger: true});
                 }
-            });
-
-            App.trigger('notes:added');
+            } );
         }
 
     });

@@ -22,6 +22,7 @@ define([
 
             // Application events
             App.on('notes:show', this.changeFocus, this);
+            App.on('notes:added', this.listNotes, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -40,7 +41,7 @@ define([
          * Fetch notes, then show it
          */
         listNotes: function (args) {
-            this.args = args;
+            this.args = args || this.args;
             App.settings.pagination = parseInt(App.settings.pagination);
 
             // Offset
@@ -58,7 +59,7 @@ define([
             }
 
             // Synchronize with cloud storage
-            this.notes.pullCloud(true);
+            this.notes.pullCloud(true, true);
         },
 
         /**

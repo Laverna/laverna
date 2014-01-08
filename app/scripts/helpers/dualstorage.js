@@ -16,10 +16,10 @@ define([
     /**
      * Fetch collection from the cloud storage
      */
-    Backbone.Collection.prototype.pullCloud = function (pushCloud, forceSync) {
+    Backbone.Collection.prototype.pullCloud = function (pushCloud) {
         // @TODO check online status
         // -------------------------
-        if (this.localCacheActive && forceSync === true || !Backbone.cloud) {
+        if (/*this.localCacheActive && !forceSync ||*/ !Backbone.cloud) {
             return;
         }
 
@@ -53,6 +53,7 @@ define([
             self = this;
 
         collection.fetch({
+            reset: true,
             conditions : {synchronized : 0},
             success    : function () {
                 console.log(collection.length + ' objects to sync');
@@ -72,6 +73,7 @@ define([
             data,
             model;
 
+        console.log('sync is there');
         // Check existence in default storage
         _.each(cloudModels, function (m) {
             model = new this.model({ id : m.get('id') });

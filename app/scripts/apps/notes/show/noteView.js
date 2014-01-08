@@ -6,11 +6,12 @@ define([
     'backbone',
     'text!apps/notes/show/templates/item.html',
     'checklist',
+    'tags',
     'prettify',
     'backbone.mousetrap',
     'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Template, Checklist, prettify) {
+], function (_, App, Backbone, Template, Checklist, Tags, prettify) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -69,12 +70,16 @@ define([
                 converter;
 
             // Convert from markdown to HTML
-            data.content = new Checklist().toHtml(data.content);
-            // converter = Markdown.getSanitizingConverter();
             converter = new Markdown.Converter();
             Markdown.Extra.init(converter);
-            data.content = converter.makeHtml(data.content);
 
+            // Customize markdown converter
+            converter.hooks.chain('postNormalization', function (text) {
+                text = new Checklist().toHtml(text);
+                return new Tags().toHtml(text);
+            });
+
+            data.content = converter.makeHtml(data.content);
             data.notebook = App.Encryption.API.decrypt(data.notebook);
 
             // Show title

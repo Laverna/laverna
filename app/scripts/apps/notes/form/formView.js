@@ -7,13 +7,12 @@ define([
     'backbone',
     'text!apps/notes/form/templates/form.html',
     'checklist',
+    'tags',
     'ace',
     'pagedown-extra',
-    'marionette',
-    'typeahead',
-    'tagsinput'
+    'marionette'
 ],
-function (_, $, App, Backbone, Template, Checklist, ace) {
+function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -33,6 +32,7 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         },
 
         events: {
+            'submit #noteForm' : 'save',
             'click #modeMenu a': 'switchMode',
             'click #saveBtn'   : 'save',
             'click #cancelBtn' : 'redirect',
@@ -52,40 +52,8 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
         },
 
         onRender: function() {
-            var that = this,
-                tagsNames;
-
-            // Pagedown scroll bar always visible
+            // Pagedown bar always visible
             this.ui.sCont.on('scroll', this.scrollPagedownBar);
-
-            tagsNames = this.options.tags.getNames();
-
-            // Tagsinput configuration
-            this.ui.tags.tagsinput({
-                freeInput   :  true,
-                confirmKeys :  [13, 44, 188],
-                tagClass    :  function () {
-                    return 'label label-default';
-                }
-            });
-
-            // Typeahead configs
-            this.ui.tags.tagsinput('input')
-                .typeahead({
-                    name  : 'tagsInput',
-                    local : tagsNames,
-                })
-                .on('typeahead:selected', $.proxy(function (obj, datum) {
-                    that.ui.tags.tagsinput('add', datum.value);
-                    that.ui.tags.tagsinput('input').typeahead('setQuery', '');
-                }, this.ui.tags));
-
-            // Show existing tags
-            if (this.model !== undefined) {
-                _.each(this.model.get('tags'), function (tag) {
-                    this.ui.tags.tagsinput('add', tag);
-                }, this);
-            }
         },
 
         /**
@@ -102,14 +70,16 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : content,
-                notebookId : parseInt(this.ui.notebookId.val()),
-                tags       : this.ui.tags.tagsinput('items')
+                notebookId : parseInt(this.ui.notebookId.val())
             };
 
             // Tasks
             var checklist = new Checklist().count(data.content);
             data.taskAll = checklist.all;
             data.taskCompleted = checklist.completed;
+
+            // Tags
+            data.tags = new Tags().getTags(data.content);
 
             // Trigger save
             this.model.trigger('save', data);
@@ -135,7 +105,8 @@ function (_, $, App, Backbone, Template, Checklist, ace) {
 
             // Customize markdown converter
             converter.hooks.chain('postNormalization', function (text) {
-                return new Checklist().toHtml(text);
+                text = new Checklist().toHtml(text);
+                return new Tags().toHtml(text);
             });
 
             // Initialize pagedown

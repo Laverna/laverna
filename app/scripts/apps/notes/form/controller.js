@@ -15,7 +15,7 @@ define([
 
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {
-            _.bindAll(this, 'addForm', 'editForm', 'show');
+            _.bindAll(this, 'addForm', 'editForm', 'show', 'redirectToNote');
             App.trigger('notes:show', {filter: null, page: null});
 
             this.tags = new TagsCollection();
@@ -69,11 +69,6 @@ define([
             view.trigger('shown');
         },
 
-        redirect: function () {
-            App.navigateBack();
-            return false;
-        },
-
         save: function (data) {
             var notebook;
 
@@ -93,20 +88,27 @@ define([
                 notebook.removeCount();
             }
 
-            // Add new tags
-            this.tags.saveAdd(data.tags);
-
             App.trigger('notes:added');
 
             // Save
             this.model.trigger('update:any');
-            this.model.save(data, {
-                success: function (model) {
-                    // Sync with cloud
-                    var url = '/notes/show/' + model.get('id');
-                    App.navigate(url, {trigger: true});
-                }
-            } );
+
+            $.when(
+                // Save changes
+                this.model.save(data),
+                // Add new tags
+                this.tags.saveAdd(data.tags)
+            ).done(this.redirectToNote);
+        },
+
+        redirect: function () {
+            App.navigateBack();
+            return false;
+        },
+
+        redirectToNote: function () {
+            var url = '/notes/show/' + this.model.get('id');
+            App.navigate(url, {trigger: true});
         }
 
     });

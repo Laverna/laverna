@@ -35,6 +35,7 @@ require.config({
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
         'pagedown.sanitizer'       :  '../bower_components/pagedown-ace/Markdown.Sanitizer',
         'checklist'                :  'libs/checklist',
+        'tags'                     :  'libs/tags',
         'typeahead'                :  '../bower_components/typeahead.js/dist/typeahead.min',
         'tagsinput'                :  '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min',
         // Other                   :  libraries

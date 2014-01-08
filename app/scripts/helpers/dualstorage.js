@@ -73,7 +73,6 @@ define([
             data,
             model;
 
-        console.log('sync is there');
         // Check existence in default storage
         _.each(cloudModels, function (m) {
             model = new this.model({ id : m.get('id') });

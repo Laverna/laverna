@@ -19,7 +19,7 @@
     "backbone.mousetrap"   :  "git@github.com:elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
     "bootstrap"            :  "~3.0.3",
     "typeahead.js"         :  "~0.9.3",
-    "ace"                  :  "master",
+    "ace"                  :  "#142761d86fe994f5b44075a3ac4a4ef02af0300a",
     "pagedown-ace"         :  "git@github.com:benweet/pagedown-ace.git#84d5e1b7ff233a1c8cafa9716e825228d275120c",
     "pagedown-extra"       :  "git@github.com:jmcmanus/pagedown-extra.git#f22ee6af21c0048d80a5d2328fd79745c802acda",
     "google-code-prettify" :  "master",

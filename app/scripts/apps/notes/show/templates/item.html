@@ -48,11 +48,6 @@
                     </div>
                 </div>
                 <% } %>
-                <% if (tags.length !== 0) { %>
-                    <% _.forEach(tags, function (tag) { %>
-                    <span class="label label-default">{{tag}}</span>
-                    <% }); %>
-                <% } %>
                 <p><% if (notebook !== null) { %>{{ notebook }}<% } %></p>
                 {{ getContent() }}
             </div>

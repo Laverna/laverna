@@ -152,6 +152,21 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.$('#wmd-undo-button').append($('<i class="fa fa-reply">'));
             this.$('#wmd-redo-button').append($('<i class="fa fa-share">'));
 
+            this.$('.wmd-button-row').append($('<li class="wmb-button btn btn-success" id="wmd-save-button" title="Save note" style="left: 0px;">Save </li>'));
+            this.$('#wmd-save-button').append($('<span style="display: none; background-position: -240px -20px;"></span>'));
+            this.$('#wmd-save-button').append($('<i class="fa fa-save">'));
+            this.$('#wmd-save-button').css('display', 'none');
+
+            // Dropdown mode for changing modes
+            this.$('.wmd-button-row').prepend($('<li class="btn-group dropdown" id="wmd-mode-button" title="Change mode" style="left: 0px;"></li>'));
+            this.$('#wmd-mode-button').append($('<a href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-arrows-alt"></i> <b class="caret"></b></a>'));
+            this.$('#wmd-mode-button').append($('<ul id="modeMenu" class="dropdown-menu pull-right" role="menu" aria-labelledby="switchMode"></ul>'));
+            this.$('#wmd-mode-button #modeMenu').append($('<li><a href="#" data-mode="fullscreen"><i class="fa fa-arrows-alt"></i> Fullscreen</a></li>'));
+            this.$('#wmd-mode-button #modeMenu').append($('<li><a href="#" data-mode="preview"><i class="fa fa-eye"></i> Preview</a></li>'));
+            this.$('#wmd-mode-button #modeMenu').append($('<li><a href="#" data-mode="normal"><i class="fa fa-square"></i> Normal</a></li>'));
+            this.$('#wmd-mode-button').css('display', 'none');
+            
+
             // Focus to input[title]
             this.ui.title.focus();
 
@@ -214,12 +229,21 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             switch (mode) {
                 case 'fullscreen':
                     this.distractionFreeMode();
+                    this.$('#wmd-save-button').css('display', 'block');
+                    this.$('#wmd-mode-button').css('display', 'block');
+                    this.$('#wmd-mode-button').removeClass('open');
                     break;
                 case 'preview':
                     this.previewMode();
+                    this.$('#wmd-save-button').css('display', 'block');
+                    this.$('#wmd-mode-button').css('display', 'block');
+                    this.$('#wmd-mode-button').removeClass('open');
                     break;
                 default:
                     this.normalMode();
+                    this.$('#wmd-save-button').css('display', 'none');
+                    this.$('#wmd-mode-button').css('display', 'none');
+                    this.$('#wmd-mode-button').removeClass('open');
                     break;
             }
             if (mode) {

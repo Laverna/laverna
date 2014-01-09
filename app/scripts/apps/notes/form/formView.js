@@ -35,6 +35,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             'submit #noteForm' : 'save',
             'click #modeMenu a': 'switchMode',
             'click #saveBtn'   : 'save',
+            'click .saveBtn'   : 'save',
             'click #cancelBtn' : 'redirect',
             'keyup input[name=title]'  : 'keyupEvents'
         },
@@ -152,7 +153,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.$('#wmd-undo-button').append($('<i class="fa fa-reply">'));
             this.$('#wmd-redo-button').append($('<i class="fa fa-share">'));
 
-            this.$('.wmd-button-row').append($('<li class="wmb-button btn btn-success" id="wmd-save-button" title="Save note" style="left: 0px;">Save </li>'));
+            this.$('.wmd-button-row').append($('<li class="wmb-button btn btn-success saveBtn" id="wmd-save-button" title="Save note" style="left: 0px;">Save </li>'));
             this.$('#wmd-save-button').append($('<span style="display: none; background-position: -240px -20px;"></span>'));
             this.$('#wmd-save-button').append($('<i class="fa fa-save">'));
             this.$('#wmd-save-button').css('display', 'none');

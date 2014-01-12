@@ -64,7 +64,7 @@ define([
                         }
                         // If last model from cloud - save synchronized time
                         if (iter === self.collectionCloud.length-1) {
-                            self.saveSyncTime(model.get('updated'));
+                            self.saveSyncTime();
                             self.collection.trigger('sync:cloudPull');
                         }
                     });
@@ -185,8 +185,8 @@ define([
 
         // Save synchronized time
         // ----------------------
-        saveSyncTime: function (date) {
-            return localStorage.setItem('dropbox:syncTime', new Date(date).getTime());
+        saveSyncTime: function () {
+            return localStorage.setItem('dropbox:syncTime', new Date().getTime());
         }
 
     });

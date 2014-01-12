@@ -93,12 +93,11 @@ define([
             // Save
             this.model.trigger('update:any');
 
-            $.when(
-                // Save changes
-                this.model.save(data),
-                // Add new tags
-                this.tags.saveAdd(data.tags)
-            ).done(this.redirectToNote);
+            // Add new tags
+            this.tags.saveAdd(data.tags);
+
+            // Save changes
+            $.when(this.model.save(data)).done(this.redirectToNote);
         },
 
         redirect: function () {

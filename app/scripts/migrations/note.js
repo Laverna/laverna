@@ -37,6 +37,7 @@ define([
                 migrate: function(transaction, next) {
                     var store = transaction.objectStore('notebooks');
                     store.createIndex('parentIndex', 'parentId', { unique: false});
+                    store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
             },

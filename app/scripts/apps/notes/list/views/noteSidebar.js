@@ -43,7 +43,7 @@ define([
             this.listenTo(this.collection, 'nextPage', this.toNextPage);
             this.listenTo(this.collection, 'prevPage', this.toPrevPage);
 
-            // Sync
+            // Sync status
             this.listenTo(this.collection, 'sync:before', this.syncStatus);
             this.listenTo(this.collection, 'sync:after', this.syncStatus);
         },

@@ -22,7 +22,10 @@ define([
 
             // Application events
             App.on('notes:show', this.changeFocus, this);
-            App.on('notes:added', this.listNotes, this);
+            App.on('notes:changeModel', this.needSync, this);
+
+            // Reload sidebar after every sync
+            // this.notes.on('sync:after', this.listReload, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -35,6 +38,14 @@ define([
             // Navigation with keys
             this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
             this.listenTo(this.notes, 'navigateBottom', this.toNextNote, this);
+        },
+
+        /**
+         * Reload sidebar
+         */
+        listReload: function () {
+            this.args.id = null;
+            this.listNotes();
         },
 
         /**
@@ -59,7 +70,7 @@ define([
             }
 
             // Synchronize with cloud storage
-            this.notes.pullCloud(true, true);
+            this.syncWithCloud();
         },
 
         /**
@@ -187,6 +198,11 @@ define([
 
             // Show document.title
             document.title = (this.args.filter) ? this.args.filter : 'Inbox';
+        },
+
+        syncWithCloud: function () {
+            var forceSync = (this.args.id) ? true : false;
+            this.notes.syncWithCloud(forceSync);
         },
 
         changeFocus: function (args) {

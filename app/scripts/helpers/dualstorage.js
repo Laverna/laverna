@@ -194,7 +194,7 @@ define([
     /**
      * Fetch collection from the cloud storage
      */
-    Backbone.Collection.prototype.pullCloud = function (forceSync) {
+    Backbone.Collection.prototype.syncWithCloud = function (forceSync) {
         // No cloud storage or user is offline
         if (navigator.onLine === false || !Backbone.cloud) {
             App.log('You are offline');

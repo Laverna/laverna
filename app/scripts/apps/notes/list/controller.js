@@ -24,7 +24,8 @@ define([
             App.on('notes:show', this.changeFocus, this);
             App.on('notes:changeModel', this.needSync, this);
 
-            // this.notes.on('sync:after', this.listNotes, this);
+            // Reload sidebar after every sync
+            // this.notes.on('sync:after', this.listReload, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -37,6 +38,14 @@ define([
             // Navigation with keys
             this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
             this.listenTo(this.notes, 'navigateBottom', this.toNextNote, this);
+        },
+
+        /**
+         * Reload sidebar
+         */
+        listReload: function () {
+            this.args.id = null;
+            this.listNotes();
         },
 
         /**
@@ -192,7 +201,8 @@ define([
         },
 
         syncWithCloud: function () {
-            this.notes.pullCloud();
+            var forceSync = (this.args.id) ? true : false;
+            this.notes.syncWithCloud(forceSync);
         },
 
         changeFocus: function (args) {

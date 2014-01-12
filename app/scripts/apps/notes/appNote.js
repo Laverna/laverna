@@ -113,8 +113,8 @@ define([
         }
     });
 
-    App.on('notes:added', function () {
-        API.showNotes(App.notesArg);
+    App.on('notes:added', function (id) {
+        API.showNotes(_.extend(App.notesArg, {id: id}));
     });
 
     AppNote.on('showForm', function () {

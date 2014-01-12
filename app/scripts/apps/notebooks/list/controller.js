@@ -20,6 +20,9 @@ define([
             // Collections of notebooks and tags
             this.notebooks = new Notebooks();
             this.tags = new Tags();
+
+            // Synchronize
+            this.notebooks.syncWithCloud();
         },
 
         list: function () {

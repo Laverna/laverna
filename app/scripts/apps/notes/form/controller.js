@@ -88,16 +88,15 @@ define([
                 notebook.removeCount();
             }
 
-            App.trigger('notes:added');
-
             // Save
             this.model.trigger('update:any');
 
-            // Add new tags
-            this.tags.saveAdd(data.tags);
-
-            // Save changes
-            $.when(this.model.save(data)).done(this.redirectToNote);
+            $.when(
+                // Save changes
+                this.model.save(data),
+                // Add new tags
+                this.tags.saveAdd(data.tags)
+            ).done(this.redirectToNote);
         },
 
         redirect: function () {
@@ -105,8 +104,12 @@ define([
             return false;
         },
 
+        /**
+         * Trigger event and redirect
+         */
         redirectToNote: function () {
             var url = '/notes/show/' + this.model.get('id');
+            App.trigger('notes:added', this.model.get('id'));
             App.navigate(url, {trigger: true});
         }
 

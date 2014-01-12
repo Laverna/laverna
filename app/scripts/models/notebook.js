@@ -21,7 +21,8 @@ define([
             'parentId' :  0,
             'name'     :  '',
             'notes'    :  [],
-            'count'    :  0
+            'count'    :  0,
+            'synchronized' : 0
         },
 
         validate: function (attrs) {

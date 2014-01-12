@@ -114,7 +114,7 @@ define([
     });
 
     App.on('notes:added', function () {
-        // API.showNotes(null, null);
+        API.showNotes(App.notesArg);
     });
 
     AppNote.on('showForm', function () {

@@ -27,8 +27,8 @@ define([
             this.notebooks = new NotebooksCollection();
             this.args = args;
 
-            this.note.on('change', this.triggerChangeToSidebar, this);
             this.note.on('updateTaskProgress', this.updateTaskProgress, this);
+            this.note.on('change', this.triggerChangeToSidebar, this);
 
             $.when(this.note.fetch(), this.notebooks.fetch()).done(this.showContent);
         },

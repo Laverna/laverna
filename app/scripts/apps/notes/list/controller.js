@@ -22,7 +22,9 @@ define([
 
             // Application events
             App.on('notes:show', this.changeFocus, this);
-            App.on('notes:added', this.listNotes, this);
+            App.on('notes:changeModel', this.needSync, this);
+
+            // this.notes.on('sync:after', this.listNotes, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -59,7 +61,7 @@ define([
             }
 
             // Synchronize with cloud storage
-            this.notes.pullCloud(true, true);
+            this.syncWithCloud();
         },
 
         /**
@@ -187,6 +189,10 @@ define([
 
             // Show document.title
             document.title = (this.args.filter) ? this.args.filter : 'Inbox';
+        },
+
+        syncWithCloud: function () {
+            this.notes.pullCloud();
         },
 
         changeFocus: function (args) {

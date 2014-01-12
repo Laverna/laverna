@@ -171,7 +171,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.$('#wmd-mode-button #modeMenu').append($('<li><a href="#" data-mode="preview"><i class="fa fa-eye"></i> Preview</a></li>'));
             this.$('#wmd-mode-button #modeMenu').append($('<li><a href="#" data-mode="normal"><i class="fa fa-square"></i> Normal</a></li>'));
             this.$('#wmd-mode-button').css('display', 'none');
-            
 
             // Focus to input[title]
             this.ui.title.focus();

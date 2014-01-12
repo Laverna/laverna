@@ -43,6 +43,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         initialize: function () {
             _.bindAll(this, 'scrollPagedownBar');
             this.on('shown', this.pagedownRender);
+            this.on('shown', this.changeMode);
             App.mousetrap.API.pause();
             this.$body = $('body');
         },
@@ -55,6 +56,10 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         onRender: function() {
             // Pagedown bar always visible
             this.ui.sCont.on('scroll', this.scrollPagedownBar);
+        },
+
+        changeMode: function () {
+            this.$('#modeMenu a[data-mode="' + App.settings.editMode + '"]').trigger('click');
         },
 
         /**

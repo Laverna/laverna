@@ -46,7 +46,8 @@ define([
         // -----------------------
         pull: function () {
             var time = this.getSyncTime(),
-                self = this;
+                self = this,
+                isLast;
 
             self.collection.trigger('sync:before');
             this.collectionCloud.fetch({
@@ -56,19 +57,19 @@ define([
                         self.collection.trigger('sync:cloudPull');
                     }
                     self.collectionCloud.each(function (model, iter) {
+                        isLast = iter === self.collectionCloud.length-1;
                         if (time === null || time < model.get('updated')) {
                             Backbone.cloud('read', model, {
                                 success: function (modelCloud) {
                                     model.set(modelCloud);
-                                    self.saveToLocal(model);
+                                    self.saveToLocal(model, isLast);
                                 },
                                 error: function () {
                                     throw new Error('Dropbox pull error');
                                 }
                             });
-                        }
-                        // If last model from cloud - save synchronized time
-                        if (iter === self.collectionCloud.length-1) {
+                        } else if(isLast) {
+                            // If last model from cloud - save synchronized time
                             self.saveSyncTime();
                             self.collection.trigger('sync:cloudPull');
                         }
@@ -109,7 +110,7 @@ define([
 
         // Save changes from the cloud to local Database
         // --------------------------------------------
-        saveToLocal: function (modelCloud) {
+        saveToLocal: function (modelCloud, isLast) {
             var self = this,
                 needUpdate,
                 model;
@@ -121,12 +122,12 @@ define([
                 success: function () {
                     needUpdate = model.get('updated') !== modelCloud.get('updated');
                     if (model.get('synchronized') === 1 && needUpdate) {
-                        self.saveLocalModel(model, modelCloud);
+                        self.saveLocalModel(model, modelCloud, isLast);
                     }
                 },
                 // Probably not exist
                 error: function () {
-                    self.saveLocalModel(model, modelCloud);
+                    self.saveLocalModel(model, modelCloud, isLast);
                 }
             });
         },
@@ -134,11 +135,13 @@ define([
         // Update model in local Database
         // ------------------------------
         saveLocalModel: function (model, modelCloud) {
-            var data = _.extend(modelCloud.toJSON(), {'synchronized' : 1});
-            App.log('sync of model ' + model.get('id'));
+            var data = _.extend(modelCloud.toJSON(), {'synchronized' : 1}),
+                self = this;
+
             model.save(data, {
                 success: function () {
                     App.log('Synchronized model ' + model.get('id'));
+                    self.collection.trigger('sync:cloudPull');
                 },
                 error: function () {
                     App.log('Can\'t synchronize model ' + model.get('id'));

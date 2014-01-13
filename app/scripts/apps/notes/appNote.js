@@ -3,7 +3,8 @@ define([
     'underscore',
     'marionette',
     'app',
-    'helpers/search'
+    'helpers/search',
+    'helpers/syncStatus'
 ], function (_, Marionette, App) {
     'use strict';
 

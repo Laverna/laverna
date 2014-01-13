@@ -190,6 +190,7 @@ define([
 
             App.sidebar.show(View);
             App.Search.start();
+            App.SyncStatus.start();
 
             // Active note
             if (this.args.id !== undefined) {

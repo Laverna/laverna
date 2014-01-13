@@ -48,6 +48,7 @@ define([
                 migrate: function(transaction, next) {
                     var store = transaction.objectStore('tags');
                     store.createIndex('nameIndex', 'name', { unique: true});
+                    store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
             }

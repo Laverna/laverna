@@ -21,7 +21,8 @@ define([
         defaults: {
             'id'    : 0,
             'name'  : '',
-            'count' : ''
+            'count' : '',
+            'synchronized' : 0
         },
 
         validate: function (attrs) {

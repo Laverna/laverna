@@ -181,6 +181,9 @@ define([
                 if (error) {
                     d.reject(error);
                 } else {
+                    if (entries.length === 0) {
+                        d.resolve(entries);
+                    }
                     data = fileStat.json();
                     _.each(data.contents, function (item, iter) {
                         id = item.path.replace('/' + self.store + '/', '');

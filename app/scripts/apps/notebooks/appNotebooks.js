@@ -2,7 +2,8 @@
 define([
     'marionette',
     'app',
-    'helpers/search'
+    'helpers/search',
+    'helpers/syncStatus'
 ], function (Marionette, App) {
     'use strict';
 

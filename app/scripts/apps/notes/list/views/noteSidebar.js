@@ -22,8 +22,7 @@ define([
 
         ui: {
             prevPage    : '#prevPage',
-            nextPage    : '#nextPage',
-            syncStatus  : '#syncStatus'
+            nextPage    : '#nextPage'
         },
 
         events: {
@@ -42,10 +41,6 @@ define([
             this.listenTo(this.collection, 'change', this.render);
             this.listenTo(this.collection, 'nextPage', this.toNextPage);
             this.listenTo(this.collection, 'prevPage', this.toPrevPage);
-
-            // Sync status
-            this.listenTo(this.collection, 'sync:before', this.syncStatus);
-            this.listenTo(this.collection, 'sync:after', this.syncStatus);
         },
 
         toNextPage: function () {
@@ -62,14 +57,6 @@ define([
 
         navigateTop: function () {
             this.collection.trigger('navigateTop');
-        },
-
-        syncStatus: function () {
-            if (this.ui.syncStatus.hasClass('fa-spin')) {
-                this.ui.syncStatus.removeClass('fa-spin');
-            } else {
-                this.ui.syncStatus.addClass('fa-spin');
-            }
         },
 
         /**

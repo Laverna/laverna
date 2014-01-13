@@ -30,9 +30,11 @@ define([
 
             // Synchronize status
             this.collection.on('sync:before', function () {
+                App.trigger('sync:before');
                 collection.trigger('sync:before');
             });
             this.collection.on('sync:after', function () {
+                App.trigger('sync:after');
                 collection.trigger('sync:after');
             });
 
@@ -50,6 +52,9 @@ define([
             this.collectionCloud.fetch({
                 reset : true,
                 success: function () {
+                    if (self.collectionCloud.length === 0) {
+                        self.collection.trigger('sync:cloudPull');
+                    }
                     self.collectionCloud.each(function (model, iter) {
                         if (time === null || time < model.get('updated')) {
                             Backbone.cloud('read', model, {
@@ -201,13 +206,14 @@ define([
             return;
         }
 
-        if (App.cachedWithCloud === true && forceSync !== true) {
+        // If this controller already synchronized
+        if (App.cachedWithCloud === this.storeName && forceSync !== true) {
             App.log('Already synchronized');
             return;
         }
 
         var that = this;
-        App.cachedWithCloud = true;
+        App.cachedWithCloud = this.storeName;
 
         // Test connection even if navigator.onLine == true
         $.ajax({

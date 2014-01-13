@@ -23,6 +23,11 @@ define([
 
             // Synchronize
             this.notebooks.syncWithCloud();
+
+            // After notebooks synchronize tags
+            this.notebooks.on('sync:after', function () {
+                this.tags.syncWithCloud();
+            }, this);
         },
 
         list: function () {
@@ -33,11 +38,12 @@ define([
             var notebookView, tagsView;
 
             // Show layout
-            this.layout = new Layout({ notebooks: this.notebooks.length, tags: this.tags.length });
+            this.layout = new Layout({ notebooks: this.notebooks.length, tags: this.tags.length});
             App.sidebar.show(this.layout);
 
-            // Start search events
+            // Start search and sync events
             App.Search.start();
+            App.SyncStatus.start();
 
             // Show notebooks list
             notebookView = new NotebooksComposite({

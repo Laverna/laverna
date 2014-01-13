@@ -41,10 +41,11 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
         initialize: function () {
             _.bindAll(this, 'scrollPagedownBar');
-            this.on('shown', this.pagedownRender);
-            this.on('shown', this.changeMode);
             App.mousetrap.API.pause();
             this.$body = $('body');
+
+            this.on('shown', this.pagedownRender);
+            this.on('shown', this.changeMode);
         },
 
         onClose: function () {
@@ -58,7 +59,9 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         },
 
         changeMode: function () {
-            this.$('.modeMenu a[data-mode="' + App.settings.editMode + '"]').trigger('click');
+            if (App.settings.editMode !== 'normal') {
+                this.$('.modeMenu a[data-mode="' + App.settings.editMode + '"]').trigger('click');
+            }
         },
 
         /**
@@ -222,8 +225,9 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             if (e !== undefined) {
                 mode = $(e.target).attr('data-mode');
                 this.$body.hide();
-                // Fix WMD bar
+                // Fix Pagedown bugs
                 this.scrollPagedownBar();
+                this.editor.resize();
             }
             switch (mode) {
                 case 'fullscreen':
@@ -240,7 +244,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 this.$body.fadeIn('slowly');
             }
             this.$('.wmd-mode-button').removeClass('open');
-            this.editor.resize();
             return false;
         },
 

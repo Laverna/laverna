@@ -19,7 +19,7 @@
                         <div class="col-sm-10">
                             <select class="form-control" name="cloudStorage" id="cloudStorage">
                                 <option value="0">No</option>
-                                <option value="dropbox">Dropbox</option>
+                                <option value="dropbox"<%if(models.cloudStorage === 'dropbox'){ %> selected<% } %>>Dropbox</option>
                             </select>
                         </div>
                     </div>
@@ -28,6 +28,16 @@
                         <label class="col-sm-2 control-label" for="pagination">Notes per page</label>
                         <div class="col-sm-10">
                             <input type="text" id="pagination" name="pagination" value="{{models.pagination}}" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Default edit mode</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="editMode" checked="{{models.editMode}}">
+                                <option value="normal">Normal</option>
+                                <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>Fullscreen</option>
+                                <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>Fullscreen with preview</option>
+                            </select>
                         </div>
                     </div>
 
@@ -65,9 +75,9 @@
                             <label class="col-sm-2 control-label">Key size</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="encryptKeySize">
-                                    <option value="128">128</option>
-                                    <option value="192">192</option>
-                                    <option value="256">256</option>
+                                    <option value="128"<%if(models.encryptKeySize === '128'){ %> selected<% } %>>128</option>
+                                    <option value="192"<%if(models.encryptKeySize === '192'){ %> selected<% } %>>192</option>
+                                    <option value="256"<%if(models.encryptKeySize === '256'){ %> selected<% } %>>256</option>
                                 </select>
                             </div>
                         </div>
@@ -75,23 +85,13 @@
                             <label class="col-sm-2 control-label">Authentication strength</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="encryptTag">
-                                    <option value="64">64</option>
-                                    <option value="96">96</option>
-                                    <option value="128">128</option>
+                                    <option value="64"<%if(models.encryptTag === '64'){ %> selected<% } %>>64</option>
+                                    <option value="96"<%if(models.encryptTag === '96'){ %> selected<% } %>>96</option>
+                                    <option value="128"<%if(models.encryptTag === '128'){ %> selected<% } %>>128</option>
                                 </select>
                             </div>
                         </div>
                     </fieldset>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Default edit mode</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" name="editMode" checked="{{models.editMode}}">
-                                <option value="normal">Normal</option>
-                                <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>Fullscreen</option>
-                                <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>Fullscreen with preview</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <div class="tab-pane" id="shortcuts">
                     <fieldset>

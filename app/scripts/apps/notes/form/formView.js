@@ -126,10 +126,13 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
             // Ace configs
             // this.editor.setOption('spellcheck', true);
+            this.editor.setHighlightActiveLine(true);
             this.editor.renderer.setShowGutter(false);
-            this.editor.renderer.setPrintMarginColumn(false);
             this.editor.session.setUseWrapMode(true);
+            this.editor.session.setUseSoftTabs(true);
             this.editor.session.setNewLineMode('unix');
+            this.editor.renderer.setPrintMarginColumn(false);
+            this.editor.setShowPrintMargin(false);
 
             // Auto expand: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
             this.editor.setOptions({
@@ -158,6 +161,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.$('#wmd-undo-button').append($('<i class="fa fa-reply">'));
             this.$('#wmd-redo-button').append($('<i class="fa fa-share">'));
 
+            // Save button
             this.$('.wmd-button-row').append($('<li class="wmb-button btn btn-success saveBtn" id="wmd-save-button" title="Save note" style="left: 0px;">Save </li>'));
             this.$('#wmd-save-button').append($('<span style="display: none; background-position: -240px -20px;"></span>'));
             this.$('#wmd-save-button').append($('<i class="fa fa-save">'));
@@ -254,6 +258,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             if (mode) {
                 this.$body.fadeIn('slowly');
             }
+            this.editor.resize();
             return false;
         },
 

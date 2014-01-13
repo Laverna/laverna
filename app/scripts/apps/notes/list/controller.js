@@ -25,7 +25,7 @@ define([
             App.on('notes:changeModel', this.needSync, this);
 
             // Reload sidebar after every sync
-            // this.notes.on('sync:after', this.listReload, this);
+            this.notes.on('sync:after', this.listReload, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);

@@ -139,6 +139,13 @@
     }
 }
 
+// Do not show save button in pagedown bar
+.wmd-button-row {
+    .wmd-save-button, .wmd-mode-button {
+        display: none;
+    }
+}
+
 //
 // Distraction free mode
 //
@@ -168,6 +175,11 @@
     #inputTitle {
         height: 40px;
         font-size: @font-size-h3;
+    }
+    .wmd-button-row {
+        .wmd-save-button, .wmd-mode-button {
+            display: block;
+        }
     }
 }
 //

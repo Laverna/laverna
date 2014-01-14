@@ -219,7 +219,7 @@ define([
             return;
         }
 
-        // If this controller already synchronized
+        // If this collection already synchronized
         if (App.cachedWithCloud === this.storeName && forceSync !== true) {
             App.log('Already synchronized');
             return;

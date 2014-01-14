@@ -17,16 +17,21 @@ define([
     Show.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'showNote', 'showContent');
+
+            // Re render note's content after sync event
+            App.on('sync:after', this.showNote, this);
         },
 
         /**
          * Fetch note, then show it
          */
         showNote: function (args) {
-            this.note = new NoteModel({ id : args.id });
-            this.notebooks = new NotebooksCollection();
-            this.args = args;
+            this.args = args || this.args;
 
+            this.note = new NoteModel({ id : this.args.id });
+            this.notebooks = new NotebooksCollection();
+
+            // Events
             this.note.on('updateTaskProgress', this.updateTaskProgress, this);
             this.note.on('change', this.triggerChangeToSidebar, this);
 

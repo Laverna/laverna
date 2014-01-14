@@ -57,10 +57,10 @@ define([
                         self.collection.trigger('sync:cloudPull');
                     }
                     self.collectionCloud.each(function (model, iter) {
-                        isLast = iter === self.collectionCloud.length-1;
                         if (time === null || time < model.get('updated')) {
                             Backbone.cloud('read', model, {
                                 success: function (modelCloud) {
+                                    isLast = (iter === (self.collectionCloud.length-1));
                                     model.set(modelCloud);
                                     self.saveToLocal(model, isLast);
                                 },
@@ -68,7 +68,7 @@ define([
                                     throw new Error('Dropbox pull error');
                                 }
                             });
-                        } else if(isLast) {
+                        } else if(iter === self.collectionCloud.length-1) {
                             // If last model from cloud - save synchronized time
                             self.saveSyncTime();
                             self.collection.trigger('sync:cloudPull');
@@ -127,7 +127,7 @@ define([
                         self.collection.trigger('sync:cloudPull');
                     }
                 },
-                // Probably not exist
+                // Probably not exist - create
                 error: function () {
                     self.saveLocalModel(model, modelCloud, isLast);
                 }
@@ -177,8 +177,8 @@ define([
                         model.save({ synchronized: 1 });
                     },
                     error   : function () {
-                        throw new Error('Dropbox push error');
                         App.log('error');
+                        throw new Error('Dropbox push error');
                     }
                 });
                 if (models.length-1 === i) {

@@ -123,6 +123,8 @@ define([
                     needUpdate = model.get('updated') !== modelCloud.get('updated');
                     if (model.get('synchronized') === 1 && needUpdate) {
                         self.saveLocalModel(model, modelCloud, isLast);
+                    } else if (isLast === true) {
+                        self.collection.trigger('sync:cloudPull');
                     }
                 },
                 // Probably not exist
@@ -175,6 +177,7 @@ define([
                         model.save({ synchronized: 1 });
                     },
                     error   : function () {
+                        throw new Error('Dropbox push error');
                         App.log('error');
                     }
                 });

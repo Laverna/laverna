@@ -23,7 +23,7 @@ define([
         },
 
         syncRender: function (collectionName) {
-            if (collectionName !== 'notes') {
+            if (collectionName === 'notes') {
                 this.showNote();
             }
         },

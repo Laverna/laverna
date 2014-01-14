@@ -74,6 +74,7 @@ define([
 
         syncWithCloud: function () {
             this.trigger('syncWithCloud');
+            return false;
         },
 
         serializeData: function () {

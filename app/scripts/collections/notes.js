@@ -5,8 +5,7 @@ define([
     'backbone',
     'migrations/note',
     'models/note',
-    'indexedDB',
-    'helpers/dropbox',
+    'indexedDB'
 ], function (_, App, Backbone, NotesDB, Note) {
     'use strict';
 
@@ -15,7 +14,6 @@ define([
 
         database  : NotesDB,
         storeName : 'notes',
-        store     : 'notes',
 
         initialize: function () {
         },

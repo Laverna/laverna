@@ -3,8 +3,7 @@ define([
     'underscore',
     'backbone',
     'migrations/note',
-    'indexedDB',
-    'helpers/dropbox',
+    'indexedDB'
 ], function (_, Backbone, NotesDB) {
     'use strict';
 
@@ -18,7 +17,6 @@ define([
         // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
         database  : NotesDB,
         storeName : 'notes',
-        store     : 'notes',
 
         defaults: {
             'id'            :  undefined,

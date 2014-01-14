@@ -24,9 +24,6 @@ define([
             App.on('notes:show', this.changeFocus, this);
             App.on('notes:changeModel', this.needSync, this);
 
-            // Reload sidebar after every sync
-            this.notes.on('sync:after', this.listReload, this);
-
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
             this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);
@@ -38,14 +35,6 @@ define([
             // Navigation with keys
             this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
             this.listenTo(this.notes, 'navigateBottom', this.toNextNote, this);
-        },
-
-        /**
-         * Reload sidebar
-         */
-        listReload: function () {
-            this.args.id = null;
-            this.listNotes();
         },
 
         /**

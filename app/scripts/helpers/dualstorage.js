@@ -134,14 +134,18 @@ define([
 
         // Update model in local Database
         // ------------------------------
-        saveLocalModel: function (model, modelCloud) {
+        saveLocalModel: function (model, modelCloud, isLast) {
             var data = _.extend(modelCloud.toJSON(), {'synchronized' : 1}),
                 self = this;
 
             model.save(data, {
                 success: function () {
                     App.log('Synchronized model ' + model.get('id'));
-                    self.collection.trigger('sync:cloudPull');
+                    if (isLast === true) {
+                        // If last model from the cloud - save synchronized time
+                        self.saveSyncTime();
+                        self.collection.trigger('sync:cloudPull');
+                    }
                 },
                 error: function () {
                     App.log('Can\'t synchronize model ' + model.get('id'));
@@ -186,7 +190,7 @@ define([
             var time = null;
             // If indexedDB is empty, we should pull all data from the cloud
             if (this.collection.length !== 0) {
-                time = localStorage.getItem('dropbox:syncTime');
+                time = localStorage.getItem('dropbox:syncTime:' + this.collection.storeName);
             }
             return time;
         },
@@ -194,7 +198,10 @@ define([
         // Save synchronized time
         // ----------------------
         saveSyncTime: function () {
-            return localStorage.setItem('dropbox:syncTime', new Date().getTime());
+            return localStorage.setItem(
+                'dropbox:syncTime:' + this.collection.storeName,
+                new Date().getTime()
+            );
         }
 
     });

@@ -34,9 +34,9 @@ define([
                 collection.trigger('sync:before');
             });
             this.collection.on('sync:after', function () {
-                App.trigger('sync:after');
+                App.trigger('sync:after', this.collection.storeName);
                 collection.trigger('sync:after');
-            });
+            }, this);
 
             // Fetch any data from indexeddb
             $.when(this.collection.fetch({ limit : 1 } )).done(this.pull);

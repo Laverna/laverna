@@ -192,6 +192,8 @@ define([
             App.Search.start();
             App.SyncStatus.start();
 
+            View.bind('syncWithCloud', this.syncWithCloud, this);
+
             // Active note
             if (this.args.id !== undefined) {
                 this.changeFocus(this.args);

@@ -26,6 +26,7 @@ define([
         },
 
         events: {
+            'click syncStatus': 'syncWithCloud',
         },
 
         initialize: function () {
@@ -69,6 +70,10 @@ define([
             if (note) {
                 note.trigger('changeFocus');
             }
+        },
+
+        syncWithCloud: function () {
+            this.trigger('syncWithCloud');
         },
 
         serializeData: function () {

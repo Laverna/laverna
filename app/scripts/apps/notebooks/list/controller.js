@@ -28,6 +28,9 @@ define([
             this.notebooks.on('sync:after', function () {
                 this.tags.syncWithCloud();
             }, this);
+
+            // Sync is completed - re render everything
+            this.listenTo(this.tags, 'sync:after', this.list);
         },
 
         list: function () {

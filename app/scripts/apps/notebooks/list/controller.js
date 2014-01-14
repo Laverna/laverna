@@ -22,15 +22,20 @@ define([
             this.tags = new Tags();
 
             // Synchronize
-            this.notebooks.syncWithCloud();
-
-            // After notebooks synchronize tags
-            this.notebooks.on('sync:after', function () {
-                this.tags.syncWithCloud();
-            }, this);
+            this.syncWithCloud(false);
 
             // Sync is completed - re render everything
             this.listenTo(this.tags, 'sync:after', this.list);
+        },
+
+        syncWithCloud: function (forced) {
+            // Synchronize notebooks
+            this.notebooks.syncWithCloud(forced);
+
+            // After notebooks synchronize tags
+            this.notebooks.on('sync:after', function () {
+                this.tags.syncWithCloud(forced);
+            }, this);
         },
 
         list: function () {
@@ -61,6 +66,9 @@ define([
             // Render lists in layout
             this.layout.notebooks.show(notebookView);
             this.layout.tags.show(tagsView);
+
+            // View events
+            this.layout.on('syncWithCloud', this.syncWithCloud, this);
         }
 
     });

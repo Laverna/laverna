@@ -26,7 +26,7 @@ define([
         },
 
         events: {
-            'click syncStatus': 'syncWithCloud',
+            'click .sync-button': 'syncWithCloud',
         },
 
         initialize: function () {
@@ -72,9 +72,9 @@ define([
             }
         },
 
-        syncWithCloud: function () {
+        syncWithCloud: function (e) {
+            e.preventDefault();
             this.trigger('syncWithCloud');
-            return false;
         },
 
         serializeData: function () {

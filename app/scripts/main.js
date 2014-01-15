@@ -41,7 +41,8 @@ require.config({
         'bootstrap-modal'          :  'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // View                    :  scripts here
         'modalRegion'              :  'views/modal',
-        'brandRegion'              :  'views/brand'
+        'brandRegion'              :  'views/brand',
+        'apps'                     :  'apps/'
     },
     shim: {
         underscore: {
@@ -98,12 +99,12 @@ require.config({
             exports: 'Backbone.BootstrapModal'
         }
     },
+    findNestedDependencies: true,
     waitSeconds: 10
 });
 
 require([
     'jquery',
-    // 'router',
     'app',
     'bootstrap',
     'IndexedDBShim'    // IndexedDB support in Safari and in old Chrome

@@ -16,7 +16,6 @@ define([
 
         database : TagsDB,
         storeName: 'tags',
-        store: 'tags',
 
         defaults: {
             'id'    : 0,

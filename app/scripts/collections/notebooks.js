@@ -16,10 +16,8 @@ define([
     var Notebooks = Backbone.Collection.extend({
         model: Notebook,
 
-        //localStorage: new Backbone.LocalStorage('vimarkable.notebooks'),
         database: NotesDB,
         storeName: 'notebooks',
-        store: 'notebooks',
 
         /**
          * Generates the next order number

@@ -1,8 +1,9 @@
 /*global define*/
 define([
     'jquery',
+    'backbone',
     'app'
-], function ($, App) {
+], function ($, Backbone, App) {
     'use strict';
 
     /**

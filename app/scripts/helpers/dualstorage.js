@@ -34,9 +34,9 @@ define([
                 collection.trigger('sync:before');
             });
             this.collection.on('sync:after', function () {
-                App.trigger('sync:after');
+                App.trigger('sync:after', this.collection.storeName);
                 collection.trigger('sync:after');
-            });
+            }, this);
 
             // Fetch any data from indexeddb
             $.when(this.collection.fetch({ limit : 1 } )).done(this.pull);
@@ -57,10 +57,10 @@ define([
                         self.collection.trigger('sync:cloudPull');
                     }
                     self.collectionCloud.each(function (model, iter) {
-                        isLast = iter === self.collectionCloud.length-1;
                         if (time === null || time < model.get('updated')) {
                             Backbone.cloud('read', model, {
                                 success: function (modelCloud) {
+                                    isLast = (iter === (self.collectionCloud.length-1));
                                     model.set(modelCloud);
                                     self.saveToLocal(model, isLast);
                                 },
@@ -68,7 +68,7 @@ define([
                                     throw new Error('Dropbox pull error');
                                 }
                             });
-                        } else if(isLast) {
+                        } else if(iter === self.collectionCloud.length-1) {
                             // If last model from cloud - save synchronized time
                             self.saveSyncTime();
                             self.collection.trigger('sync:cloudPull');
@@ -127,7 +127,7 @@ define([
                         self.collection.trigger('sync:cloudPull');
                     }
                 },
-                // Probably not exist
+                // Probably not exist - create
                 error: function () {
                     self.saveLocalModel(model, modelCloud, isLast);
                 }
@@ -136,14 +136,18 @@ define([
 
         // Update model in local Database
         // ------------------------------
-        saveLocalModel: function (model, modelCloud) {
+        saveLocalModel: function (model, modelCloud, isLast) {
             var data = _.extend(modelCloud.toJSON(), {'synchronized' : 1}),
                 self = this;
 
             model.save(data, {
                 success: function () {
                     App.log('Synchronized model ' + model.get('id'));
-                    self.collection.trigger('sync:cloudPull');
+                    if (isLast === true) {
+                        // If last model from the cloud - save synchronized time
+                        self.saveSyncTime();
+                        self.collection.trigger('sync:cloudPull');
+                    }
                 },
                 error: function () {
                     App.log('Can\'t synchronize model ' + model.get('id'));
@@ -173,8 +177,8 @@ define([
                         model.save({ synchronized: 1 });
                     },
                     error   : function () {
-                        throw new Error('Dropbox push error');
                         App.log('error');
+                        throw new Error('Dropbox push error');
                     }
                 });
                 if (models.length-1 === i) {
@@ -189,7 +193,7 @@ define([
             var time = null;
             // If indexedDB is empty, we should pull all data from the cloud
             if (this.collection.length !== 0) {
-                time = localStorage.getItem('dropbox:syncTime');
+                time = localStorage.getItem('dropbox:syncTime:' + this.collection.storeName);
             }
             return time;
         },
@@ -197,7 +201,10 @@ define([
         // Save synchronized time
         // ----------------------
         saveSyncTime: function () {
-            return localStorage.setItem('dropbox:syncTime', new Date().getTime());
+            return localStorage.setItem(
+                'dropbox:syncTime:' + this.collection.storeName,
+                new Date().getTime()
+            );
         }
 
     });
@@ -212,7 +219,7 @@ define([
             return;
         }
 
-        // If this controller already synchronized
+        // If this collection already synchronized
         if (App.cachedWithCloud === this.storeName && forceSync !== true) {
             App.log('Already synchronized');
             return;

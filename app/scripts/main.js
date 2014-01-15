@@ -20,8 +20,6 @@ require.config({
         IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim.min',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         dropbox                    :  'libs/dropbox',
-        'dropbox-backbone'         :  'libs/backbone.dropbox',
-        // 'dropbox-backbone'         :  '../bower_components/backbone-dropbox/src/backbone-dropbox',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         'backbone.assosiations'    :  '../bower_components/backbone-associations/backbone-associations',
@@ -34,6 +32,7 @@ require.config({
         'pagedown.converter'       :  '../bower_components/pagedown-ace/Markdown.Converter',
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
         'pagedown.sanitizer'       :  '../bower_components/pagedown-ace/Markdown.Sanitizer',
+        // Markdown helpers        :
         'checklist'                :  'libs/checklist',
         'tags'                     :  'libs/tags',
         // Other                   :  libraries
@@ -42,7 +41,8 @@ require.config({
         'bootstrap-modal'          :  'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // View                    :  scripts here
         'modalRegion'              :  'views/modal',
-        'brandRegion'              :  'views/brand'
+        'brandRegion'              :  'views/brand',
+        'apps'                     :  'apps/'
     },
     shim: {
         underscore: {
@@ -65,10 +65,6 @@ require.config({
         },
         dropbox: {
             exports: 'Dropbox'
-        },
-        'dropbox-backbone': {
-            deps: ['dropbox'],
-            exports: 'DropboxSync'
         },
         'backbone.assosiations': {
             deps: ['backbone']
@@ -103,12 +99,12 @@ require.config({
             exports: 'Backbone.BootstrapModal'
         }
     },
+    findNestedDependencies: true,
     waitSeconds: 10
 });
 
 require([
     'jquery',
-    // 'router',
     'app',
     'bootstrap',
     'IndexedDBShim'    // IndexedDB support in Safari and in old Chrome

@@ -14,7 +14,6 @@ define([
 
         database: NotesDB,
         storeName: 'notebooks',
-        store: 'notebooks',
 
         defaults: {
             'id'       :  0,

@@ -26,9 +26,21 @@ define([
             'o' : 'openActiveLink'
         },
 
+        events: {
+            'click .sync-button': 'syncWithCloud'
+        },
+
         initialize: function () {
             this.keyboardEvents[App.settings.navigateBottom] = 'next';
             this.keyboardEvents[App.settings.navigateTop] = 'prev';
+        },
+
+        /**
+         * Force sync
+         */
+        syncWithCloud: function (e) {
+            e.preventDefault();
+            this.trigger('syncWithCloud', true);
         },
 
         openActiveLink: function () {

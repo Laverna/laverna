@@ -2,25 +2,25 @@
     <ul class="nav navbar-nav pull-right">
         <li>
             <a href="#/notes/edit/{{id}}" class="btn btn-default btn-edit">
-                <span class="fa fa-pencil"></span> Edit
+                <span class="icon-pencil"></span> Edit
             </a>
         </li>
         <% if (trash === 1) { %>
         <li>
             <a id="restoreNote" href="#" class="btn btn-default">
-                <span class="fa fa-undo"></span> Restore
+                <span class="icon-undo"></span> Restore
             </a>
         </li>
         <% } %>
         <li>
             <a href="#/notes/remove/{{id}}" class="btn btn-default">
-                <span class="fa fa-trash-o"></span> <% if (trash === 0) { %>Delete<% } else { %> Forever<% } %>
+                <span class="icon-trash"></span> <% if (trash === 0) { %>Delete<% } else { %> Forever<% } %>
             </a>
         </li>
         <li>
             <a href="#/settings" class="btn btn-default" id="showSettings">
-                <span class="hidden-sm"><span class="fa fa-cog"></span> Settings</span>
-                <span class="visible-sm"><span class="fa fa-cog"></span></span>
+                <span class="hidden-sm"><span class="icon-cog"></span> Settings</span>
+                <span class="visible-sm"><span class="icon-cog"></span></span>
             </a>
         </li>
     </ul>
@@ -35,7 +35,7 @@
                         {{ title }}
                         <small>{{ createdDate() }}</small>
                         <a href="#" class="btn btn-link favorite pull-right">
-                            <span class="glyphicon glyphicon-star <% if (isFavorite === 0) {%>glyphicon-star-empty<% } %>"></span>
+                            <span class="icon-star <% if (isFavorite === 0) {%>icon-star-empty<% } %>"></span>
                         </a>
                     </h1>
                 </header>

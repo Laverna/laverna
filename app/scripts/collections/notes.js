@@ -108,6 +108,8 @@ define([
             App.settings = configs;
             App.Encryption.API.encryptKey(key);
 
+            var self = this;
+
             this.forEach(function (model) {
                 try {
                     JSON.parse(model.get('title'));
@@ -115,22 +117,29 @@ define([
                     model.save({
                         title: App.Encryption.API.encrypt(model.get('title')),
                         content: App.Encryption.API.encrypt(model.get('content'))
+                    }, {
+                        success: function () {
+                            self.trigger('progressEncryption');
+                        }
                     });
                 }
             });
         },
 
         decrypt: function (configs, key) {
-            //App.settings = configs;
-            //App.Encryption.API.encryptKey(key);
-
             return this.filter(function (model) {
                 var state;
+                var self = this;
                 try {
                     model.set({
                         title: App.Encryption.API.decrypt(model.get('title')),
                         content: App.Encryption.API.decrypt(model.get('content'))
+                    }, {
+                        success: function () {
+                            self.trigger('progressEncryption');
+                        }
                     });
+
                     state = true;
                 } catch (e) {
                     state = false;

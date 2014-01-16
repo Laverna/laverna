@@ -100,15 +100,14 @@ define([
                 encryptChange = true;
             }
 
+            this.close();
+            
             this.trigger('encryption', {
                 setChange: encryptSetChange,
-                encryptChange: encryptChange,
                 encrypt: this.$('[name="encrypt"]').is(':checked'),
                 oldConfigs: oldConfigs,
                 secureKey: this.$('[name="encryptPass"]').val()
             });
-
-            this.close();
             return false;
         },
 

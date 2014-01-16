@@ -31,7 +31,6 @@ define([
             e.preventDefault();
             this.trigger('login', this.ui.password.val());
         }
-
     });
 
     return View;

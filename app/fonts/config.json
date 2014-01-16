@@ -19,9 +19,39 @@
       "src": "fontawesome"
     },
     {
+      "uid": "12f4ece88e46abd864e40b35e05b11cd",
+      "css": "ok",
+      "code": 59427,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "1400d5103edd2fa6d2d61688fee79a5a",
+      "css": "ok-squared",
+      "code": 59428,
+      "src": "fontawesome"
+    },
+    {
       "uid": "861ab06e455e2de3232ebef67d60d708",
       "css": "minus",
       "code": 59410,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c1f1975c885aa9f3dad7810c53b82074",
+      "css": "lock",
+      "code": 59421,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "657ab647f6248a6b57a5b893beaf35a9",
+      "css": "lock-open",
+      "code": 59422,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "05376be04a27d5a46e855a233d6e8508",
+      "css": "lock-open-alt",
+      "code": 59423,
       "src": "fontawesome"
     },
     {
@@ -52,6 +82,12 @@
       "uid": "178053298e3e5b03551d754d4b9acd8b",
       "css": "file",
       "code": 59420,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "98d9c83c1ee7c2c25af784b518c522c5",
+      "css": "block",
+      "code": 59424,
       "src": "fontawesome"
     },
     {
@@ -133,9 +169,27 @@
       "src": "fontawesome"
     },
     {
+      "uid": "dd6c6b221a1088ff8a9b9cd32d0b3dd5",
+      "css": "check",
+      "code": 59429,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "4b900d04e8ab8c82f080c1cfbac5772c",
+      "css": "check-empty",
+      "code": 59430,
+      "src": "fontawesome"
+    },
+    {
       "uid": "f4445feb55521283572ee88bc304f928",
       "css": "save",
       "code": 59413,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0f6a2573a7b6df911ed199bb63717e27",
+      "css": "github-circled",
+      "code": 59425,
       "src": "fontawesome"
     },
     {
@@ -154,6 +208,12 @@
       "uid": "2626e3a1bbcd90e45849af3b58a1d594",
       "css": "trash",
       "code": 59397,
+      "src": "entypo"
+    },
+    {
+      "uid": "8beac4a5fd5bed9f82ca7a96cc8ba218",
+      "css": "key",
+      "code": 59426,
       "src": "entypo"
     },
     {

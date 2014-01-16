@@ -1,0 +1,129 @@
+//
+// Welcome page styles
+//
+body.welcome-body {
+    overflow: auto;
+    position: relative;
+    background-color: #FFF;
+}
+
+.welcome-body .container {
+    // max-width: 1100px;
+}
+
+// Navbar
+.welcome-body .navbar-inverse {
+    background-color: darken(@brand-success, 4%);
+    border-color: darken(@brand-success, 8%);
+    margin-bottom: 0;
+    .navbar-brand {
+        color: #FFF;
+        font-size: 20px;
+    }
+    &, a, li > a {
+        color: #B0DDCE;
+    }
+    li.active a,
+    li.active a:hover {
+        background-color: darken(@brand-success, 1%);
+    }
+    .navbar-collapse {
+        border-color: darken(@brand-success, 8%);
+    }
+    .navbar-toggle {
+        color: #FFF;
+        border-color: lighten(@brand-success, 60%);
+        &:hover, &:focus {
+            background-color: lighten(@brand-success, 80%);
+            border-color: lighten(@brand-success, 80%);
+            color: darken(@brand-success, 1%);
+        }
+    }
+}
+
+.welcome-main {
+    position: relative;
+    padding: 40px 0;
+    background-color: @brand-success;
+    text-shadow: 4px 3px 0px darken(@brand-success, 8%);
+    border-top: 1px solid lighten(@brand-success, 6%);
+}
+
+.welcome-signup {
+    background: darken(@brand-success, 4%);
+    min-height: 50px;
+    padding: 20px 0;
+}
+
+.welcome-main, .welcome-main .page-headline,
+.welcome-signup, .welcome-signup .page-headline {
+    color: #FFF;
+}
+
+.welcome-content {
+    padding-top: 70px;
+    padding-bottom: 20px;
+}
+
+.welcome-footer {
+    text-align: center;
+    padding: 70px 0 20px 0;
+}
+
+#why {
+    h3, h3 i {
+    }
+    .centered {
+        text-align: center;
+    }
+    .page-headline {
+        margin-bottom: 40px;
+    }
+}
+
+// Headlines
+.page-headline {
+    text-align: center;
+    &.large h1 {
+        font-size: 82px;
+        padding-bottom: 42px;
+        position: relative;
+        text-shadow: 4px 3px 0px darken(@brand-success, 8%), 9px 8px 0px rgba(0, 0, 0, 0.15);
+    }
+    small {
+        color: #FFF;
+        font-size: 24px;
+        position: absolute;
+        top: 8px;
+    }
+}
+.welcome-body .btn-success {
+    background: darken(@brand-success, 6%);
+    border-radius: 0;
+    padding: 10px 12px;
+    font-weight: 400;
+    font-size: 17px;
+    &:hover {
+        background: darken(@brand-success, 10%);
+    }
+}
+.btn-centered {
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+}
+
+ul.big-list {
+    list-style: none;
+    font-size: 25px;
+    font-weight: 300;
+    li {
+        line-height: 35px;
+        height: 50px;
+        margin: 10px;
+    }
+    i {
+        font-size: 40px;
+        margin-right: 20px;
+    }
+}

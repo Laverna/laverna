@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Laverna - store your notes anonymously and encrypted</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+        <!-- build:css({.tmp,app}) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
+    </head>
+    <body class="welcome-body">
+        <!--[if lt IE 8]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <header class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand" href="#">Laverna</a>
+                </div>
+                <div id="nav-collapse" class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li class="active"><a title="Home page" class="scroll brand-1" href="#home">Home</a></li>
+                        <li><a title="Why should you use Laverna" href="#why">Features</a></li>
+                        <li><a title="Themes assets" href="#assets" class="scroll brand-3">Assets</a></li>
+                        <li><a title="Who we are" href="#about" class="scroll fadeto brand-4"> About us</a></li>
+                        <li><a title="Get in touch!" href="#contact" class="scroll brand-2">Contact</a></li>
+                    </ul>
+                </div>
+            </div><!-- /.navbar-container -->
+        </header>
+
+        <main class="welcome-main" role="main">
+            <div class="container">
+                <header class="page-headline large">
+                    <h1>Laverna <small>Beta</small></h1>
+                </header>
+            </div>
+            <div class="container">
+                <div class="col-md-4">
+                    <ul class="big-list">
+                        <li><i class="fa fa-lock"></i> Encryption</li>
+                        <li><i class="fa fa-ban"></i> No registration</li>
+                        <li><i class="fa fa-github"></i> Open source</li>
+                        <li><i class="fa fa-cloud"></i> Synchronizing</li>
+                        <li><i class="fa fa-star"></i> Markdown</li>
+                    </ul>
+                    <a class="btn btn-success btn-centered" href="index.html">
+                        Start using now
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <div id="screenshot" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <img class="img-responsive" src="img/laptop-edit.png" alt="Normal edit mode">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="img/laptop-tasks.png" alt="Tasks in Laverna">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="img/laptop-edit-preview.png" alt="Preview edit mode">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="img/laptop-edit-fullscreen.png" alt="Distraction free or fullscreen mode">
+                            </div>
+                            <div class="item">
+                                <img class="img-responsive" src="img/laptop-locked.png" alt="Encryption">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="welcome-signup">
+            <h3 class="page-headline">You can start using it right now, no registration is required.</h3>
+        </div>
+
+        <div class="container welcome-content">
+            <section id="why">
+                <h1 class="page-headline">Why should you use Laverna as note taking application</h1>
+                <div class="row">
+                    <div class="col-md-4 col-sm-6">
+                        <h3>
+                            <i class="fa fa-ban"></i> No registration required
+                        </h3>
+                        Laverna is webapp written on JavaScript which means it requires no installation and no registration.
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <h3>
+                            <i class="fa fa-lock"></i> Encryption
+                        </h3>
+                        Laverna can encrypt all your notes on client side with SJCL library and no one, except you can get access to it.
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <h3>
+                            <i class="fa fa-star"></i> Markdown
+                        </h3>
+                        Laverna webapp uses pagedown and ace editor. Also we support several editing modes: distraction free mode, preview mode and normal.
+                    </div>
+
+                    <div class="col-md-4 col-sm-6">
+                        <h3>
+                            <i class="fa fa-key"></i> Privacy
+                        </h3>
+                        None of us can get access to your personal data because we are using IndexedDB and localStorage. In fact all your information will be stored only on client side.
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <h3>
+                            <i class="fa fa-cloud"></i> Synchronizing
+                        </h3>
+                        In settings page you can enable synchronizing with cloud storages. After that all your informations can be accessed from anywhere.
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                        <h3>
+                            <i class="fa fa-check-square"></i> Tasks
+                        </h3>
+                        Application also supports tasks. Adding tasks as easy as in Github.
+                    </div>
+                    <div class="col-md-12 col-sm-12 centered">
+                        <h3><i class="fa fa-github"></i> Open source</h3>
+                        And most importantly all of our codes is open source and available on Github.
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="welcome-footer">
+            <div class="container">
+                <a href="#">Github Project</a> | 
+                <a href="#">Issues</a> | 
+                <a href="#">Contacts</a>
+            </div>
+        </footer>
+
+        <script src="bower_components/jquery/jquery.min.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="scripts/welcome.js"></script>
+    </body>
+</html>

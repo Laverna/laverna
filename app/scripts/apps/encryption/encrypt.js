@@ -56,6 +56,22 @@ define([
             return true;
         },
 
+        encryptKey: function (password) {
+            var pwd = App.settings.encryptPass,
+                p = {};
+
+            if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
+                p.iter = parseInt(App.settings.encryptIter);
+                p.salt = App.settings.encryptSalt;
+
+                p = sjcl.misc.cachedPbkdf2(password, p);
+                App.settings.secureKey = p.key.slice(0, parseInt(App.settings.encryptKeySize)/32);
+                return true;
+            } else {
+                return false;
+            }
+        },
+
         encrypt: function (content) {
             if (!content || content === '') {
                 return content;

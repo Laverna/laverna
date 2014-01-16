@@ -2,12 +2,13 @@
 /*global sjcl*/
 define([
     'underscore',
+    'app',
     'jquery',
     'backbone',
     'marionette',
     'text!apps/settings/show/showTemplate.html',
     'sjcl'
-], function (_, $, Backbone, Marionette, Tmpl) {
+], function (_, App, $, Backbone, Marionette, Tmpl) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -69,10 +70,19 @@ define([
          * Save the configs changes
          */
         save: function () {
-            var value, el;
+            var value, el; 
+            var encryptSetChange = false;
+            var encryptChange = false;
+            var encrSet = [ 'encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize' ];
+
+            var oldConfigs = App.settings;
 
             _.each(this.changedSettings, function (settingName) {
                 el = this.$('[name=' + settingName + ']');
+
+                if (_.contains(encrSet, settingName)) {
+                    encryptSetChange = true;
+                }
 
                 if (el.attr('type') !== 'checkbox') {
                     value = el.val();
@@ -85,6 +95,18 @@ define([
                     value: value
                 });
             }, this);
+
+            if (_.contains(this.changedSettings, 'encrypt') && oldConfigs.encrypt === false) {
+                encryptChange = true;
+            }
+
+            this.trigger('encryption', {
+                setChange: encryptSetChange,
+                encryptChange: encryptChange,
+                encrypt: this.$('[name="encrypt"]').is(':checked'),
+                oldConfigs: oldConfigs,
+                secureKey: this.$('[name="encryptPass"]').val()
+            });
 
             this.close();
             return false;

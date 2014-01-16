@@ -102,8 +102,43 @@ define([
             return collection.map( function(model) {
                 return model;
             });
-        }
+        },
 
+        encrypt: function (configs, key) {
+            App.settings = configs;
+            App.Encryption.API.encryptKey(key);
+
+            this.forEach(function (model) {
+                try {
+                    JSON.parse(model.get('title'));
+                } catch (e) {
+                    model.save({
+                        title: App.Encryption.API.encrypt(model.get('title')),
+                        content: App.Encryption.API.encrypt(model.get('content'))
+                    });
+                }
+            });
+        },
+
+        decrypt: function (configs, key) {
+            //App.settings = configs;
+            //App.Encryption.API.encryptKey(key);
+
+            return this.filter(function (model) {
+                var state;
+                try {
+                    model.set({
+                        title: App.Encryption.API.decrypt(model.get('title')),
+                        content: App.Encryption.API.decrypt(model.get('content'))
+                    });
+                    state = true;
+                } catch (e) {
+                    state = false;
+                } finally {
+                    return state;
+                }
+            });
+        }
     });
 
     return Notes;

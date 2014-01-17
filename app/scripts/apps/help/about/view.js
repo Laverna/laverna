@@ -38,7 +38,14 @@ define([
                 e.preventDefault();
             }
             this.trigger('close');
+        },
+
+        serializeData: function () {
+            return {
+                appVersion : this.options.appVersion
+            };
         }
+
     });
 
     return View;

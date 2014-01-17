@@ -97,6 +97,7 @@ define([
     // Start default module
     App.on('initialize:after', function () {
         require([
+            'constants',
             'apps/encryption/encrypt',
             'helpers/dualstorage',
             'helpers/keybindings',
@@ -104,8 +105,10 @@ define([
             'apps/notebooks/appNotebooks',
             'apps/settings/appSettings',
             'apps/help/appHelp'
-        ], function () {
+        ], function (constants) {
             Backbone.history.start({pushState: false});
+
+            App.constants = constants;
 
             if (App.getCurrentRoute() === '') {
                 App.trigger('notes:list');

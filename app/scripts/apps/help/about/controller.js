@@ -15,7 +15,9 @@ define([
         },
 
         show: function () {
-            var view = new View();
+            var view = new View({
+                appVersion : App.constants.VERSION
+            });
             App.modal.show(view);
 
             view.on('redirect', this.redirect, this);

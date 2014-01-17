@@ -9,8 +9,12 @@ define([
     'checklist',
     'tags',
     'ace',
-    'pagedown-extra',
-    'marionette'
+    'marionette',
+    'ace/mode/markdown',
+    'ace/theme/github',
+    'ace/requirejs/text!ace/css/editor.css',
+    'ace/requirejs/text!ace/theme/github.css',
+    'ace/requirejs/text!ace/theme/textmate.css',
 ],
 function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
     'use strict';

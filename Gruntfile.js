@@ -175,13 +175,14 @@ module.exports = function (grunt) {
                 compile: true
             },
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/styles',
-                    src: '{,*/}*.less',
-                    dest: '.tmp/styles/',
-                    ext: '.css'
-                }]
+                src : ['<%= yeoman.app %>/styles/man.less']
+                // files: [{
+                //     expand: true,
+                //     cwd: '<%= yeoman.app %>/styles',
+                //     src: '{,*/}*.less',
+                //     dest: '.tmp/styles/',
+                //     ext: '.css'
+                // }]
             }
         },
         // not used since Uglify task does concat,
@@ -304,6 +305,16 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
                         'fonts/*'
+                    ]
+                },
+                {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.dist %>',
+                    src: [
+                        'bower_components/ace/lib/ace/css/editor.css',
+                        'bower_components/ace/lib/ace/theme/textmate.css',
+                        'bower_components/ace/lib/ace/theme/github.css'
                     ]
                 },
                 {

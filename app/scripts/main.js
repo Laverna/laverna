@@ -93,7 +93,7 @@ require.config({
             '../bower_components/pagedown-ace/Markdown.Converter'
         ],
         'pagedown-extra': [
-            'pagedown-ace',
+            'pagedown-ace'
         ],
         prettify: {
             exports: 'prettify'

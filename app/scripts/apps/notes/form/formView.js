@@ -11,7 +11,8 @@ define([
     'ace',
     'marionette',
     'ace/mode/markdown',
-    'ace/theme/github'
+    'ace/theme/github',
+    'pagedown-extra'
 ],
 function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
     'use strict';

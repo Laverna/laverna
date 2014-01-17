@@ -81,11 +81,6 @@ define([
             if (data.notebookId !== notebook) {
                 notebook = this.notebooks.get(data.notebookId);
                 data.notebookId = notebook.get('id');
-                notebook.addCount();
-
-                // Remove counts
-                notebook = this.notebooks.get(notebook);
-                notebook.removeCount();
             }
 
             // Save

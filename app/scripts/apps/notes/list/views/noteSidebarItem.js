@@ -6,7 +6,8 @@ define([
     'backbone',
     'marionette',
     'text!apps/notes/list/templates/sidebarListItem.html',
-    'pagedown-ace'
+    'pagedown-ace',
+    'pagedown.sanitizer'
 ], function(_, App, Backbone, Marionette, Template) {
     'use strict';
 
@@ -55,10 +56,11 @@ define([
             return {
                 getContent: function (text) {
                     // Pagedown
-                    var converter = new Markdown.Converter();
-                    // var safeConverter = pagedown.getSanitizingConverter();
-                    var content = converter.makeHtml(text);
-                    content = content.substring(0, 50).replace(/<(?:.|\n)*?>/gm, '');
+                    //var pagedown = new Markdown.Converter();
+                    var safeConverter = Markdown.getSanitizingConverter();
+                    var content = safeConverter.makeHtml(text);
+                    content = content.replace(/<(?:.|\n)*?>/gm, '').substring(0, 50);
+
                     return content;
                 },
 

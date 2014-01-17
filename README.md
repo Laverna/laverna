@@ -5,6 +5,8 @@ Laverna is a web application written on JavaScript. It's built to be an open sou
 
 Laverna stores notes in indexedDB and personal settings in local storage.
 
+Try it here: http://laverna.cc/
+
 ## Features
 -----------------------
 

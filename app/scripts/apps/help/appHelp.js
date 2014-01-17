@@ -22,7 +22,8 @@ define([
     // Router
     Help.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'help': 'showHelp'
+            'help': 'showHelp',
+            'about': 'about'
         }
     });
 
@@ -36,6 +37,12 @@ define([
     API = {
         showHelp: function () {
             require(['apps/help/show/controller'], function (Controller) {
+                executeAction(new Controller().show);
+            });
+        },
+
+        about: function () {
+            require(['apps/help/about/controller'], function (Controller) {
                 executeAction(new Controller().show);
             });
         }

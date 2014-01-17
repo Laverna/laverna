@@ -292,6 +292,35 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        manifest: {
+            generate: {
+                options: {
+                    basePath: '<%= yeoman.app %>',
+                    // cache: ['scripts/main.js', 'styles/main.css'],
+                    network: ['http://*', 'https://*'],
+                    preferOnline: true,
+                    verbose: true,
+                    timestamp: true,
+                    hash: true,
+                    master: ['index.html']
+                },
+                src: [
+                    '*.html',
+                    'favicon.ico',
+                    'robots.txt',
+                    'bower_components/requirejs/require.js',
+                    // 'bower_components/ace/lib/ace/{,*/}*.css',
+                    'bower_components/ace/lib/ace/css/editor.css',
+                    'bower_components/ace/lib/ace/theme/textmate.css',
+                    'bower_components/ace/lib/ace/theme/github.css',
+                    'scrypts/*main.js',
+                    'styles/*main.css',
+                    'images/{,*/}*.{webp,gif,png}',
+                    'fonts/*'
+                ],
+                dest: '<%= yeoman.dist %>/manifest.appcache'
+            }
+        },
         // Put files not handled in other tasks here
         copy: {
             dist: {
@@ -331,6 +360,7 @@ module.exports = function (grunt) {
             server: [
                 // 'compass',
                 'recess',
+                'manifest',
                 'coffee:dist'
             ],
             test: [
@@ -340,6 +370,7 @@ module.exports = function (grunt) {
                 'coffee',
                 // 'compass',
                 'recess',
+                'manifest',
                 'imagemin',
                 'svgmin',
                 'htmlmin'

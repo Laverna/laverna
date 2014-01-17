@@ -100,11 +100,11 @@ define([
         changeFavorite: function () {
             var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
             if (this.model.get('isFavorite') === 1) {
-                this.ui.favorite.removeClass('glyphicon-star-empty');
-                sidebar.removeClass('glyphicon-star-empty');
+                this.ui.favorite.removeClass('icon-star-empty');
+                sidebar.removeClass('icon-star-empty');
             } else {
-                this.ui.favorite.addClass('glyphicon-star-empty');
-                sidebar.addClass('glyphicon-star-empty');
+                this.ui.favorite.addClass('icon-star-empty');
+                sidebar.addClass('icon-star-empty');
             }
         },
 

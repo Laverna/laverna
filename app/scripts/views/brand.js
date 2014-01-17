@@ -12,6 +12,7 @@ define([
 
         open: function (view) {
             $('#wrapper').hide();
+
             this.$el.html(view.el);
             this.$el.addClass('in');
         },

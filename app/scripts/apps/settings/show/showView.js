@@ -70,19 +70,10 @@ define([
          * Save the configs changes
          */
         save: function () {
-            var value, el; 
-            var encryptSetChange = false;
-            var encryptChange = false;
-            var encrSet = [ 'encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize' ];
-
-            var oldConfigs = App.settings;
+            var value, el;
 
             _.each(this.changedSettings, function (settingName) {
                 el = this.$('[name=' + settingName + ']');
-
-                if (_.contains(encrSet, settingName)) {
-                    encryptSetChange = true;
-                }
 
                 if (el.attr('type') !== 'checkbox') {
                     value = el.val();
@@ -94,25 +85,20 @@ define([
                     name : settingName,
                     value: value
                 });
+
             }, this);
 
-            if (_.contains(this.changedSettings, 'encrypt') && oldConfigs.encrypt === false) {
-                encryptChange = true;
-            }
-
+            this.somethingChanged = true;
             this.close();
-            
-            this.trigger('encryption', {
-                setChange: encryptSetChange,
-                encrypt: this.$('[name="encrypt"]').is(':checked'),
-                oldConfigs: oldConfigs,
-                secureKey: this.$('[name="encryptPass"]').val()
-            });
             return false;
         },
 
         redirect: function () {
-            this.trigger('redirect', this.changedSettings);
+            var args = [];
+            if (this.somethingChanged === true) {
+                args = this.changedSettings;
+            }
+            this.trigger('redirect', args);
         },
 
         close: function (e) {

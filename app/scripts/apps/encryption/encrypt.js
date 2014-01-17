@@ -26,7 +26,8 @@ define([
     // Router
     Encryption.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'auth': 'showAuth'
+            'auth': 'showAuth',
+            'encrypt/all': 'showEncryptAll',
         }
     });
 
@@ -42,6 +43,12 @@ define([
             require(['apps/encryption/auth/controller'], function (Controller) {
                 executeAction(new Controller().showForm);
             });
+        },
+
+        showEncryptAll: function () {
+            require(['apps/encryption/encrypt/controller'], function (Controller) {
+                executeAction(new Controller().showEncrypt);
+            });
         }
     };
 
@@ -56,6 +63,8 @@ define([
             return true;
         },
 
+        // Cache encryption key within application
+        // -----------------------------------
         encryptKey: function (password) {
             var pwd = App.settings.encryptPass,
                 p = {};
@@ -65,8 +74,9 @@ define([
                 p.salt = App.settings.encryptSalt;
 
                 p = sjcl.misc.cachedPbkdf2(password, p);
-                App.settings.secureKey = p.key.slice(0, parseInt(App.settings.encryptKeySize)/32);
-                return true;
+                password = p.key.slice(0, parseInt(App.settings.encryptKeySize)/32);
+
+                return password;
             } else {
                 return false;
             }

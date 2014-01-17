@@ -1,11 +1,9 @@
 /*global define*/
-/*global sjcl*/
 define([
     'underscore',
     'app',
     'marionette',
-    'apps/encryption/auth/authView',
-    'sjcl'
+    'apps/encryption/auth/authView'
 ], function (_, App, Marionette, View) {
     'use strict';
 
@@ -26,16 +24,10 @@ define([
         },
 
         login: function (password) {
-            // password = '1',
-            var pwd = App.settings.encryptPass,
-                p = {};
-
-            if (pwd.toString() === sjcl.hash.sha256.hash(password).toString()) {
-                p.iter = parseInt(App.settings.encryptIter);
-                p.salt = App.settings.encryptSalt;
-
-                p = sjcl.misc.cachedPbkdf2(password, p);
-                App.settings.secureKey = p.key.slice(0, parseInt(App.settings.encryptKeySize)/32);
+            // var pwd = App.settings.encryptPass;
+            var pwd = App.Encryption.API.encryptKey(password);
+            if (pwd !== false) {
+                App.settings.secureKey = pwd;
                 App.navigateBack('/notes', true);
             }
         }

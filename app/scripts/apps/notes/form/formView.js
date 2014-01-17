@@ -208,10 +208,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 case 27:
                     this.redirect(e);
                     break;
-                // Save when user hits Enter
-                case 13:
-                    this.save(e);
-                    break;
                 default:
                     break;
             }

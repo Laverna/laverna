@@ -45,6 +45,20 @@ define([
             return this.without.apply(this, this.getChildrens());
         },
 
+        /**
+         * Filter: only unencrypted, JSON data probably encrypted data
+         */
+        getUnEncrypted: function () {
+            return this.filter(function (notebook) {
+                try {
+                    JSON.parse(notebook.get('name'));
+                    return false;
+                } catch (e) {
+                    return true;
+                }
+            });
+        },
+
         decrypt: function () {
             var data = this.toJSON();
 
@@ -53,45 +67,6 @@ define([
             });
 
             return data;
-        },
-
-        settingsEncrypt: function (configs, key) {
-            self = this;
-            this.forEach(function (model) {
-                try {
-                    JSON.parse(model.get('name'));
-                } catch (e) {
-                    model.save({
-                        name: App.Encryption.API.encrypt(model.get('name'))
-                    }, {
-                        success: function () {
-                            self.trigger('progressEncryption');
-                        }
-                    });
-                }
-            });
-        },
-
-        settingsDecrypt: function () {
-            var self = this;
-            return this.filter(function (model) {
-                var state;
-                try {
-                    model.set({
-                        name: App.Encryption.API.decrypt(model.get('name'))
-                    }, {
-                        success: function () {
-                            self.trigger('progressEncryption');
-                        }
-                    });
-
-                    state = true;
-                } catch (e) {
-                    state = false;
-                } finally {
-                    return state;
-                }
-            });
         }
 
     });

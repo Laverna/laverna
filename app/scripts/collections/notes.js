@@ -72,6 +72,20 @@ define([
         },
 
         /**
+         * Filter: only unencrypted, JSON data probably encrypted data
+         */
+        getUnEncrypted: function () {
+            return this.filter(function (note) {
+                try {
+                    JSON.parse(note.get('title'));
+                    return false;
+                } catch (e) {
+                    return true;
+                }
+            });
+        },
+
+        /**
          * Search
          */
         search : function(letters) {
@@ -102,52 +116,8 @@ define([
             return collection.map( function(model) {
                 return model;
             });
-        },
-
-        encrypt: function (configs, key) {
-            App.settings = configs;
-            App.Encryption.API.encryptKey(key);
-
-            var self = this;
-
-            this.forEach(function (model) {
-                try {
-                    JSON.parse(model.get('title'));
-                } catch (e) {
-                    model.save({
-                        title: App.Encryption.API.encrypt(model.get('title')),
-                        content: App.Encryption.API.encrypt(model.get('content'))
-                    }, {
-                        success: function () {
-                            self.trigger('progressEncryption');
-                        }
-                    });
-                }
-            });
-        },
-
-        decrypt: function (configs, key) {
-            return this.filter(function (model) {
-                var state;
-                var self = this;
-                try {
-                    model.set({
-                        title: App.Encryption.API.decrypt(model.get('title')),
-                        content: App.Encryption.API.decrypt(model.get('content'))
-                    }, {
-                        success: function () {
-                            self.trigger('progressEncryption');
-                        }
-                    });
-
-                    state = true;
-                } catch (e) {
-                    state = false;
-                } finally {
-                    return state;
-                }
-            });
         }
+
     });
 
     return Notes;

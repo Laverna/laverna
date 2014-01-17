@@ -10,7 +10,8 @@ define([
     'prettify',
     'backbone.mousetrap',
     'marionette',
-    'pagedown-extra'
+    'pagedown-extra',
+    'pagedown.sanitizer'
 ], function (_, App, Backbone, Template, Checklist, Tags, prettify) {
     'use strict';
 
@@ -70,6 +71,7 @@ define([
                 converter;
 
             // Convert from markdown to HTML
+            // converter = Markdown.getSanitizingConverter();
             converter = new Markdown.Converter();
             Markdown.Extra.init(converter);
 

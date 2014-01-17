@@ -217,7 +217,7 @@ module.exports = function (grunt) {
                         '<%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%= yeoman.dist %>/styles/{,*/}*.css',
                         '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
-                        '<%= yeoman.dist %>/styles/fonts/*'
+                        '<%= yeoman.dist %>/styles/font/*'
                     ]
                 }
             }
@@ -316,7 +316,7 @@ module.exports = function (grunt) {
                     'scrypts/*main.js',
                     'styles/*main.css',
                     'images/{,*/}*.{webp,gif,png}',
-                    'fonts/*'
+                    'font/*'
                 ],
                 dest: '<%= yeoman.dist %>/manifest.appcache'
             }
@@ -333,7 +333,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
-                        'fonts/*'
+                        'font/*'
                     ]
                 },
                 {

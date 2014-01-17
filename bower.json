@@ -1,5 +1,5 @@
 {
-  "name": "ofnote",
+  "name": "laverna",
   "version": "0.0.0",
   "dependencies": {
     "requirejs"            :  "~2.1.10",
@@ -8,7 +8,7 @@
     "jquery"               :  "~1.10.2",
     "underscore"           :  "~1.5.2",
     "backbone"             :  "~1.1.0",
-    "marionette"           :  "~1.4.1",
+    "marionette"           :  "~1.5.1",
     "backbone.babysitter"  :  "~0.0.6",
     "backbone.wreqr"       :  "~0.2.0",
     "backbone.localStorage":  "~1.1.7",
@@ -26,8 +26,7 @@
     "sinonjs"              :  "~1.7.1",
     "sinon-qunit"          :  "~1.0.0",
     "font-awesome"         :  "~4.0.3",
-    "sjcl"                 :  "~1.0.0",
-    "backbone-dropbox"     :  "git@github.com:jay-doubleyou/backbone-dropbox.js.git#230e50cb95289b368c0a4e8d1aa4ef5c28c1558f"
+    "sjcl"                 :  "~1.0.0"
   },
   "devDependencies": {}
 }

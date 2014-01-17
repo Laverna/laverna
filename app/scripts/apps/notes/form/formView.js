@@ -11,10 +11,7 @@ define([
     'ace',
     'marionette',
     'ace/mode/markdown',
-    'ace/theme/github',
-    'ace/requirejs/text!ace/css/editor.css',
-    'ace/requirejs/text!ace/theme/github.css',
-    'ace/requirejs/text!ace/theme/textmate.css',
+    'ace/theme/github'
 ],
 function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
     'use strict';

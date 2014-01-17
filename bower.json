@@ -25,7 +25,6 @@
     "qunit"                :  "~1.12.0",
     "sinonjs"              :  "~1.7.1",
     "sinon-qunit"          :  "~1.0.0",
-    "font-awesome"         :  "~4.0.3",
     "sjcl"                 :  "~1.0.0"
   },
   "devDependencies": {}

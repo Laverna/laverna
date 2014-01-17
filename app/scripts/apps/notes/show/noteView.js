@@ -10,8 +10,7 @@ define([
     'prettify',
     'backbone.mousetrap',
     'marionette',
-    'pagedown-extra',
-    'pagedown.sanitizer'
+    'pagedown-extra'
 ], function (_, App, Backbone, Template, Checklist, Tags, prettify) {
     'use strict';
 

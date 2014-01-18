@@ -41,7 +41,7 @@ define([
                 }));
             }, {
                 success: function () {
-                    App.trigger('notes:list');
+                    App.trigger('notes:added');
                 }
             });
         }

@@ -8,7 +8,7 @@ define([
 ], function (_, $, App, Backbone, Notes) {
     'use strict';
 
-    var Install = App.module('App.Install');
+    var Install = App.module('App.Install', {startWithParent: false});
 
     Install.on('start', function () {
         Install.API.start();

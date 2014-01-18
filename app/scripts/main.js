@@ -121,8 +121,9 @@ require([
     if (window.applicationCache) {
         var appCache = window.applicationCache;
 
-        appCache.addEventListener('cached', handleCacheEvent, false);
-        appCache.addEventListener('noupdate', handleCacheEvent, false);
+        appCache.addEventListener('cached', handleCacheEvent);
+        appCache.addEventListener('updateready', handleCacheEvent);
+        appCache.addEventListener('idle', handleCacheEvent);
     } else {
         App.start();
     }

@@ -114,11 +114,11 @@ require([
 ], function ($, App) {
     'use strict';
 
-    if (window.applicationcache) {
+    if (window.applicationCache) {
         var appCache = window.applicationCache;
 
         switch (appCache.status) {
-        case appCache.UPDATEREADY:
+        case appCache.oncached:
             App.start();
             break;
         }

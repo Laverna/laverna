@@ -7,7 +7,7 @@ define([ ], function () {
 
     constants.URL = 'https://laverna.cc/';
     constants.DROPBOX_KEY = '10iirspliqts95d';
-    constants.DROPBOX_SECRET = null;
+    // constants.DROPBOX_SECRET = null;
 
     // On localhost
     if (location.hostname.indexOf('localhost') === 0) {

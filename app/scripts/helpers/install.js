@@ -25,7 +25,8 @@ define([
                 note;
 
             $.ajax({
-                url: App.constants.URL + 'docs/README.md'
+                url: App.constants.URL + 'docs/README.md',
+                dataType: 'text'
             }).done(function (text) {
                 note = new notes.model();
                 note.save({
@@ -35,7 +36,8 @@ define([
             });
 
             $.ajax({
-                url: App.constants.URL + 'docs/howto.md'
+                url: App.constants.URL + 'docs/howto.md',
+                dataType: 'text'
             }).done(function (text) {
                 note = new notes.model();
 

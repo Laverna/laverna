@@ -21,28 +21,35 @@ define([
         },
 
         install: function () {
-            var notes = new Notes();
+            var notes = new Notes(),
+                note;
 
             $.ajax({
                 url: App.constants.URL + 'docs/README.md'
             }).done(function (text) {
-                notes.create(new notes.model({
+                note = new notes.model();
+                note.save({
                     title: 'About Laverna',
                     content: text
-                }));
+                });
             });
 
             $.ajax({
                 url: App.constants.URL + 'docs/howto.md'
             }).done(function (text) {
-                notes.create(new notes.model({
-                    title: 'How to use tags and tasks',
-                    content: text
-                }));
-            }, {
-                success: function () {
-                    App.trigger('notes:added');
-                }
+                note = new notes.model();
+
+                $.when(
+                    note.save({
+                        title: 'How to use tags and tasks',
+                        content: text,
+                    })
+                ).done(
+                    // Reload notes list
+                    function () {
+                        App.trigger('notes:list');
+                    }
+                );
             });
         }
 

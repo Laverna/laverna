@@ -129,6 +129,8 @@ require([
         }
         else if(appCache.status === window.applicationCache.CACHED) {
             appCached();
+        } else {
+            appCache.addEventListener('cached', appCached, false);
         }
     } else {
         App.start();

@@ -88,6 +88,7 @@ define([
 
         // Set default set of configs
         if (configs.length === 0) {
+            App.firstStart = true;
             configs.firstStart();
         }
 
@@ -97,6 +98,7 @@ define([
     // Start default module
     App.on('initialize:after', function () {
         require([
+            'helpers/install',
             'apps/encryption/encrypt',
             'helpers/dualstorage',
             'helpers/keybindings',

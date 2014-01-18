@@ -86,9 +86,12 @@ require.config({
         cjcl: {
             exports: 'cjcl'
         },
-        'pagedown-ace': ['../bower_components/pagedown-ace/Markdown.Converter'],
+        'pagedown-ace': [
+            '../bower_components/pagedown-ace/Markdown.Converter'
+        ],
+        'pagedown.sanitizer': [
+        ],
         'pagedown-extra': [
-            // '../bower_components/pagedown-ace/Markdown.Sanitizer',
             'pagedown-ace'
         ],
         prettify: {

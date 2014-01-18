@@ -16,11 +16,11 @@ define([
         $syncStatus = $('#syncStatus');
 
         App.on('sync:before', function () {
-            $syncStatus.addClass('fa-spin');
+            $syncStatus.addClass('animate-spin');
         });
 
         App.on('sync:after', function () {
-            $syncStatus.removeClass('fa-spin');
+            $syncStatus.removeClass('animate-spin');
         });
     };
 

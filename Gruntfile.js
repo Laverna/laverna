@@ -24,15 +24,8 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         yeoman: yeomanConfig,
+        pkg: grunt.file.readJSON('package.json'),
         watch: {
-            coffee: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
-                tasks: ['coffee:dist']
-            },
-            coffeeTest: {
-                files: ['test/spec/{,*/}*.coffee'],
-                tasks: ['coffee:test']
-            },
             // compass: {
             //     files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
             //     tasks: ['compass:server']
@@ -128,26 +121,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        coffee: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/scripts',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
-                    ext: '.js'
-                }]
-            },
-            test: {
-                files: [{
-                    expand: true,
-                    cwd: 'test/spec',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/spec',
-                    ext: '.js'
-                }]
-            }
-        },
         compass: {
             options: {
                 sassDir: '<%= yeoman.app %>/styles',
@@ -217,7 +190,7 @@ module.exports = function (grunt) {
                         '<%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%= yeoman.dist %>/styles/{,*/}*.css',
                         '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
-                        '<%= yeoman.dist %>/styles/fonts/*'
+                        '<%= yeoman.dist %>/styles/font/*'
                     ]
                 }
             }
@@ -292,13 +265,14 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        // Web Application cache manifest
         manifest: {
             generate: {
                 options: {
-                    basePath: '<%= yeoman.app %>',
+                    basePath: '<%= yeoman.dist %>',
                     // cache: ['scripts/main.js', 'styles/main.css'],
                     network: ['http://*', 'https://*'],
-                    preferOnline: true,
+                    // preferOnline: true,
                     verbose: true,
                     timestamp: true,
                     hash: true,
@@ -309,16 +283,44 @@ module.exports = function (grunt) {
                     'favicon.ico',
                     'robots.txt',
                     'bower_components/requirejs/require.js',
-                    // 'bower_components/ace/lib/ace/{,*/}*.css',
-                    'bower_components/ace/lib/ace/css/editor.css',
-                    'bower_components/ace/lib/ace/theme/textmate.css',
-                    'bower_components/ace/lib/ace/theme/github.css',
-                    'scrypts/*main.js',
-                    'styles/*main.css',
+                    'bower_components/ace/lib/ace/{,*/}*.css',
+                    'scripts/{,*/}*.js',
+                    'styles/{,*/}*.css',
                     'images/{,*/}*.{webp,gif,png}',
-                    'fonts/*'
+                    'font/*'
                 ],
                 dest: '<%= yeoman.dist %>/manifest.appcache'
+            }
+        },
+        // Replace string
+        'string-replace': {
+            constants: {
+                files: {
+                    '<%= yeoman.app %>/scripts/constants.js': '<%= yeoman.app %>/scripts/constants.js'
+                },
+                options: {
+                    replacements: [
+                        {
+                            pattern: /constants\.VERSION = .*/,
+                            replacement: 'constants.VERSION = \'<%= pkg.version %>\';'
+                        }
+                    ]
+                }
+            },
+            manifest: {
+                files : {
+                    '<%= yeoman.dist %>/index.html' : '<%= yeoman.dist %>/index.html',
+                    '<%= yeoman.dist %>/welcome.html' : '<%= yeoman.dist %>/welcome.html',
+                    '<%= yeoman.dist %>/404.html' : '<%= yeoman.dist %>/404.html'
+                },
+                options: {
+                    replacements: [
+                        {
+                            pattern: /<html class="no-js/,
+                            replacement: '<html manifest="manifest.appcache" class="no-js'
+                        }
+                    ]
+                }
             }
         },
         // Put files not handled in other tasks here
@@ -333,7 +335,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
-                        'fonts/*'
+                        'font/*'
                     ]
                 },
                 {
@@ -359,18 +361,13 @@ module.exports = function (grunt) {
         concurrent: {
             server: [
                 // 'compass',
-                'recess',
-                'manifest',
-                'coffee:dist'
+                'recess'
             ],
             test: [
-                'coffee'
             ],
             dist: [
-                'coffee',
                 // 'compass',
                 'recess',
-                'manifest',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
@@ -408,6 +405,7 @@ module.exports = function (grunt) {
     ]);*/
 
     grunt.registerTask('build', [
+        'string-replace:constants',
         'clean:dist',
         'useminPrepare',
         'concurrent:dist',
@@ -417,6 +415,8 @@ module.exports = function (grunt) {
         'uglify',
         'copy:dist',
         'rev',
+        'string-replace:manifest',
+        'manifest',
         'usemin'
     ]);
 

@@ -98,6 +98,7 @@ define([
     // Start default module
     App.on('initialize:after', function () {
         require([
+            'constants',
             'helpers/install',
             'apps/encryption/encrypt',
             'helpers/dualstorage',
@@ -106,8 +107,11 @@ define([
             'apps/notebooks/appNotebooks',
             'apps/settings/appSettings',
             'apps/help/appHelp'
-        ], function () {
+        ], function (constants, Install) {
             Backbone.history.start({pushState: false});
+
+            App.constants = constants;
+            Install.start();
 
             if (App.getCurrentRoute() === '') {
                 App.trigger('notes:list');

@@ -70,6 +70,7 @@ define([
                 converter;
 
             // Convert from markdown to HTML
+            // converter = Markdown.getSanitizingConverter();
             converter = new Markdown.Converter();
             Markdown.Extra.init(converter);
 

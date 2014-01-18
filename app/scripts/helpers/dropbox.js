@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'backbone',
-    'dropbox'
-], function (_, App, Backbone, Dropbox) {
+    'dropbox',
+    'constants'
+], function (_, App, Backbone, Dropbox, constants) {
     'use strict';
 
     var Adapter = function () { };
@@ -17,13 +18,12 @@ define([
             _.bindAll(this, 'sync');
 
             this.client = new Dropbox.Client({
-                key    : 'io5vfg4w33jx9o4',
-                // secret : 'u4rt9wf6id9xbi5',
-                sandbox: true
+                key    : constants.DROPBOX_KEY,
+                secret : constants.DROPBOX_SECRET
             });
 
             this.client.authDriver(new Dropbox.AuthDriver.Popup({
-                receiverUrl: 'http://localhost/ofnote/app/dropbox.html',
+                receiverUrl: constants.URL + 'dropbox.html',
                 rememberUser: true
             }));
 

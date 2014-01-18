@@ -228,15 +228,8 @@ define([
         var that = this;
         App.cachedWithCloud = this.storeName;
 
-        // Test connection even if navigator.onLine == true
-        $.ajax({
-            url      : '//www.google.com/jsapi',
-            timeout  : 1000,
-            dataType : 'script'
-        }).done(function () {
-            App.log('sync started');
-            return new Cloud().initialize(that);
-        });
+        App.log('sync started');
+        return new Cloud().initialize(that);
     };
 
 });

@@ -32,7 +32,7 @@ define([
                     content: text
                 }));
             });
-            
+
             $.ajax({
                 url:App.constants.URL + 'docs/howto.md'
             }).done(function (text) {

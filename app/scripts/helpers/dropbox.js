@@ -18,7 +18,7 @@ define([
             _.bindAll(this, 'sync');
 
             this.client = new Dropbox.Client({
-                key    : constants.DROPBOX_KEY,
+                key    : constants.DROPBOX_KEY
                 // secret : constants.DROPBOX_SECRET
             });
 
@@ -28,8 +28,15 @@ define([
             }));
 
             this.client.authenticate({interactive: false});
+
             if ( !this.client.isAuthenticated()) {
-                this.client.authenticate();
+                var self = this;
+                App.Confirm.start({
+                    content : 'Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.',
+                    success : function () {
+                        self.client.authenticate();
+                    }
+                });
             }
 
             // Override backbone sync method

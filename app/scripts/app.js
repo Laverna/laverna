@@ -100,6 +100,7 @@ define([
         require([
             'constants',
             'helpers/install',
+            'apps/confirm/appConfirm',
             'apps/encryption/encrypt',
             'helpers/dualstorage',
             'helpers/keybindings',

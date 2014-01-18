@@ -42,7 +42,7 @@ define([
                 $.when(
                     note.save({
                         title: 'How to use tags and tasks',
-                        content: text,
+                        content: text
                     })
                 ).done(
                     // Reload notes list

@@ -114,6 +114,15 @@ require([
 ], function ($, App) {
     'use strict';
 
-    // App starts here
-    App.start();
+    if (window.applicationcache) {
+        var appCache = window.applicationCache;
+
+        switch (appCache.status) {
+        case appCache.UPDATEREADY:
+            App.start();
+            break;
+        }
+    } else {
+        App.start();
+    }
 });

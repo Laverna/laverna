@@ -41,7 +41,7 @@ define([
                 }));
             }, {
                 success: function () {
-                    App.navigate('/notes', true);
+                    App.trigger('notes:list');
                 }
             });
         }

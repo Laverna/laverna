@@ -262,10 +262,12 @@ module.exports = function (grunt) {
                 options: {
                     basePath: '<%= yeoman.dist %>',
                     cache: [
-                        '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
-                        '//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
                     ],
-                    network: ['http://*', 'https://*'],
+                    network: [
+                        'https://*dropbox.com*',
+                        '*//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
+                        '*//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
+                    ],
                     // fallback: ['/ /404.html'],
                     preferOnline: true,
                     verbose: true,

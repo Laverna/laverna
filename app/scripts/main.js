@@ -118,9 +118,6 @@ require([
         var appCache = window.applicationCache;
 
         if(appCache.status === appCache.UNCACHED) {
-            appCache.addEventListener('progress', function () {
-                App.log('cached item');
-            });
             appCache.addEventListener('updateready', function () {
                 App.start();
             });

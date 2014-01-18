@@ -1,5 +1,5 @@
 # Laverna
---------------
+=============
 
 Laverna is a web application written on JavaScript. It's built to be an open source alternative to Evernote.
 
@@ -24,7 +24,7 @@ Try it here: http://laverna.cc/
 -----------------
 If you're like this open source project please support it by donating to:
 
-Bitcoin: 18JpeKeSaoryHCkfV63XcvLZUgeuuATp86
+[Bitcoin: 18JpeKeSaoryHCkfV63XcvLZUgeuuATp86] [3]
 
 ## Licence
 Published under GNU GPL v.3
@@ -33,3 +33,4 @@ Also Laverna uses a lot of other libraries and each of this [libraries uses diff
 
 [1]: http://bitwiseshiftleft.github.io/sjcl/
 [2]: bower.json
+[3]: bitcoin:18JpeKeSaoryHCkfV63XcvLZUgeuuATp86

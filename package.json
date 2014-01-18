@@ -1,5 +1,5 @@
 {
-  "name": "ofnote",
+  "name": "laverna",
   "version": "0.1.1",
   "dependencies": {},
   "devDependencies": {
@@ -24,9 +24,9 @@
     "grunt-concurrent": "~0.1.0",
     "matchdep": "~0.1.1",
     "connect-livereload": "~0.2.0",
-    "grunt-recess": "~0.3.4",
     "grunt-manifest": "~0.4.0",
-    "grunt-string-replace": "~0.2.7"
+    "grunt-string-replace": "~0.2.7",
+    "grunt-contrib-less": "~0.9.0"
   },
   "engines": {
     "node": ">=0.8.0"

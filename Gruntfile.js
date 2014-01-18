@@ -30,10 +30,6 @@ module.exports = function (grunt) {
             //     files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
             //     tasks: ['compass:server']
             // },
-            recess: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
-                tasks: ['recess:dist']
-            },
             livereload: {
                 options: {
                     livereload: LIVERELOAD_PORT
@@ -143,19 +139,14 @@ module.exports = function (grunt) {
             }
         },
         // Less file compiling
-        recess: {
-            options: {
-                compile: true
-            },
-            dist: {
-                src : ['<%= yeoman.app %>/styles/man.less']
-                // files: [{
-                //     expand: true,
-                //     cwd: '<%= yeoman.app %>/styles',
-                //     src: '{,*/}*.less',
-                //     dest: '.tmp/styles/',
-                //     ext: '.css'
-                // }]
+        less: {
+            compile: {
+                options: {
+                    compress: true
+                },
+                files : {
+                    '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'
+                }
             }
         },
         // not used since Uglify task does concat,
@@ -370,13 +361,11 @@ module.exports = function (grunt) {
         concurrent: {
             server: [
                 // 'compass',
-                'recess'
             ],
             test: [
             ],
             dist: [
-                // 'compass',
-                'recess',
+                'less',
                 'imagemin',
                 'svgmin',
                 'htmlmin'

@@ -118,7 +118,10 @@ require([
         var appCache = window.applicationCache;
 
         switch (appCache.status) {
-        case appCache.oncached:
+        case appCache.UPDATEREADY:
+            App.start();
+            break;
+        case appCache.IDLE:
             App.start();
             break;
         }

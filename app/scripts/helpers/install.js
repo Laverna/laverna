@@ -3,9 +3,8 @@ define([
     'underscore',
     'jquery',
     'app',
-    'backbone',
     'collections/notes'
-], function (_, $, App, Backbone, Notes) {
+], function (_, $, App, Notes) {
     'use strict';
 
     var Install = App.module('App.Install', {startWithParent: false});

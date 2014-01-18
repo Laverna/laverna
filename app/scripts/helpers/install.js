@@ -37,11 +37,14 @@ define([
             }).done(function (text) {
                 notes.create(new notes.model({
                     title: 'How to use tags and tasks',
-                    content: text
+                    content: text,
+                    success : function () {
+                        App.navigate('/notes', true);
+                    }
                 }));
-                App.navigate('/notes', true);
             });
         }
+
     };
 
     return Install.API;

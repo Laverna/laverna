@@ -39,6 +39,7 @@ define([
                     title: 'How to use tags and tasks',
                     content: text
                 }));
+                App.navigate('/notes', true);
             });
         }
     };

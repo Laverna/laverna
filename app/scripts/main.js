@@ -131,6 +131,7 @@ require([
             appCached();
         } else {
             appCache.addEventListener('cached', appCached, false);
+            appCache.addEventListener('updateready', appCached, false);
         }
     } else {
         App.start();

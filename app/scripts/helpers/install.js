@@ -24,16 +24,16 @@ define([
             var notes = new Notes();
 
             $.ajax({
-                url:App.constants.URL + 'docs/README.md'
+                url: App.constants.URL + 'docs/README.md'
             }).done(function (text) {
                 notes.create(new notes.model({
-                    title: 'About Laravel',
+                    title: 'About Laverna',
                     content: text
                 }));
             });
 
             $.ajax({
-                url:App.constants.URL + 'docs/howto.md'
+                url: App.constants.URL + 'docs/howto.md'
             }).done(function (text) {
                 notes.create(new notes.model({
                     title: 'How to use tags and tasks',

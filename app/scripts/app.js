@@ -108,10 +108,11 @@ define([
             'apps/settings/appSettings',
             'apps/help/appHelp'
         ], function (constants, Install) {
-            Backbone.history.start({pushState: false});
 
             App.constants = constants;
             Install.start();
+
+            Backbone.history.start({pushState: false});
 
             if (App.getCurrentRoute() === '') {
                 App.trigger('notes:list');

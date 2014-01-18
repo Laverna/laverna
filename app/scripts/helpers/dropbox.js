@@ -19,7 +19,7 @@ define([
 
             this.client = new Dropbox.Client({
                 key    : constants.DROPBOX_KEY,
-                secret : constants.DROPBOX_SECRET
+                // secret : constants.DROPBOX_SECRET
             });
 
             this.client.authDriver(new Dropbox.AuthDriver.Popup({

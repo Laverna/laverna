@@ -270,9 +270,15 @@ module.exports = function (grunt) {
             generate: {
                 options: {
                     basePath: '<%= yeoman.dist %>',
-                    // cache: ['scripts/main.js', 'styles/main.css'],
+                    cache: [
+                        'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
+                        'http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js',
+                        'https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
+                        'https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
+                    ],
                     network: ['http://*', 'https://*'],
-                    // preferOnline: true,
+                    fallback: ['404.html'],
+                    preferOnline: true,
                     verbose: true,
                     timestamp: true,
                     hash: true,
@@ -284,6 +290,7 @@ module.exports = function (grunt) {
                     'robots.txt',
                     'bower_components/requirejs/require.js',
                     'bower_components/ace/lib/ace/{,*/}*.css',
+                    'docs/*.md',
                     'scripts/{,*/}*.js',
                     'styles/{,*/}*.css',
                     'images/{,*/}*.{webp,gif,png}',
@@ -335,7 +342,8 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
-                        'font/*'
+                        'font/*',
+                        'docs/*.md'
                     ]
                 },
                 {
@@ -343,6 +351,7 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.app %>',
                     dest: '<%= yeoman.dist %>',
                     src: [
+                        'scripts/welcome.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',
                         'bower_components/ace/lib/ace/theme/github.css'

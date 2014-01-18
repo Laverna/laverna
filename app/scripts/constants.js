@@ -11,7 +11,7 @@ define([ ], function () {
 
     // On localhost
     if (location.hostname.indexOf('localhost') === 0) {
-        constants.URL = location.origin + location.pathname;
+        constants.URL = location.origin + location.pathname.replace('index.html', '');
     }
 
     return constants;

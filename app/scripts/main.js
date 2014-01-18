@@ -114,17 +114,15 @@ require([
 ], function ($, App) {
     'use strict';
 
+    function handleCacheEvent () {
+        App.start();
+    }
+
     if (window.applicationCache) {
         var appCache = window.applicationCache;
 
-        switch (appCache.status) {
-        case appCache.UPDATEREADY:
-            App.start();
-            break;
-        case appCache.IDLE:
-            App.start();
-            break;
-        }
+        appCache.addEventListener('cached', handleCacheEvent, false);
+        appCache.addEventListener('noupdate', handleCacheEvent, false);
     } else {
         App.start();
     }

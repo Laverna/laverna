@@ -117,8 +117,10 @@ require([
     if (window.applicationCache) {
         var appCache = window.applicationCache;
 
-        if(appCache.status === 'cached') {
-            App.start();
+        if(appCache.status === appCache.UNCACHED) {
+            appCache.addEventListener('updateready', function () {
+                App.start();
+            });
         }
         else {
             App.start();

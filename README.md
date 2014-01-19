@@ -1,5 +1,4 @@
 # Laverna
-=============
 
 Laverna is a web application written on JavaScript. It's built to be an open source alternative to Evernote.
 

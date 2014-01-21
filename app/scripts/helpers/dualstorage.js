@@ -21,6 +21,9 @@ define([
         initialize: function (collection) {
             _.bindAll(this, 'pull', 'saveToLocal');
 
+            // Syncrhonized objects
+            this.synced = [];
+
             this.collectionCloud = new collection.constructor();
             this.collectionCloud.sync = Backbone.cloud;
             this.collection = collection.clone();
@@ -28,15 +31,16 @@ define([
             // When synchronizing with server is done
             this.collection.on('sync:cloudPull', this.push, this);
 
-            // Synchronize status
+            // Trigger synchronize events
             this.collection.on('sync:before', function () {
                 App.trigger('sync:before');
                 collection.trigger('sync:before');
             });
+
             this.collection.on('sync:after', function () {
                 this.saveSyncTime();
-                App.trigger('sync:after', this.collection.storeName);
-                collection.trigger('sync:after');
+                App.trigger('sync:after');
+                collection.trigger('sync:after', this.synced);
             }, this);
 
             // Fetch any data from indexeddb
@@ -139,6 +143,8 @@ define([
         saveLocalModel: function (model, modelCloud, isLast) {
             var data = _.extend(modelCloud.toJSON(), {'synchronized' : 1}),
                 self = this;
+
+            this.synced.push(model.get('id'));
 
             model.save(data, {
                 success: function () {

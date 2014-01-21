@@ -98,9 +98,11 @@ define([
             });
         },
 
-        // Useful when notes created or collection has been synchronized
-        renderAgain: function () {
-            API.showNotes(API.notesArg);
+        // Update note's content again after synchronizing
+        showNoteSync: function (args) {
+            require(['apps/notes/show/showController'], function (Show) {
+                executeAction(new Show().showNote, args);
+            });
         }
     };
 
@@ -112,8 +114,9 @@ define([
         API.showNotes(null, null);
     });
 
+    // Re render
     App.on('notes:rerender', function () {
-        API.showNotes(null, null);
+        API.showNotes(API.notesArg);
     });
 
     App.on('notes:show', function (args) {
@@ -121,11 +124,6 @@ define([
         if (current !== _.omit(args, 'id').toString()) {
             API.showNotes(args);
         }
-    });
-
-    // Re render
-    App.on('notes:rerender', function () {
-        API.renderAgain();
     });
 
     App.on('notes:added', function (id) {
@@ -138,11 +136,8 @@ define([
     });
 
     // Reload note's content after sync event
-    App.on('sync:after', function (controller) {
-        if (controller !== 'notes' || App.currentApp !== 'AppNote') {
-            return;
-        }
-        API.renderAgain();
+    AppNote.on('sync:after', function (args) {
+        API.showNoteSync(args);
     });
 
     /**

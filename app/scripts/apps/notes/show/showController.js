@@ -17,15 +17,6 @@ define([
     Show.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'showNote', 'showContent');
-
-            // Re render note's content after sync event
-            App.on('sync:after', this.syncRender, this);
-        },
-
-        syncRender: function (collectionName) {
-            if (collectionName === 'notes') {
-                this.showNote();
-            }
         },
 
         /**

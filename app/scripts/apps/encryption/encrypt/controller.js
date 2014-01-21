@@ -94,6 +94,11 @@ define([
                 }
             }
 
+            if (_.difference(oldConfigs.secureKey, newKey).length === 0) {
+                App.navigate('/notes', true);
+                return false;
+            }
+
             if (newKey !== false && App.settings.secureKey !== false) {
                 this.encrypt();
             }

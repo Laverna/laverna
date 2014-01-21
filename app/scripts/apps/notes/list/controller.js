@@ -24,9 +24,6 @@ define([
             App.on('notes:show', this.changeFocus, this);
             App.on('notes:changeModel', this.needSync, this);
 
-            // Re render sidebar after sync
-            this.listenTo(this.notes, 'sync:after', this.listNotes);
-
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
             this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);

@@ -96,6 +96,11 @@ define([
             require(['apps/notes/remove/removeController'], function (Controller) {
                 executeAction(new Controller().remove, id);
             });
+        },
+
+        // Useful when notes created or collection has been synchronized
+        renderAgain: function () {
+            API.showNotes(API.notesArg);
         }
     };
 
@@ -114,12 +119,26 @@ define([
         }
     });
 
+    // Re render
+    App.on('notes:rerender', function () {
+        API.renderAgain();
+    });
+
     App.on('notes:added', function (id) {
         API.showNotes(_.extend(App.notesArg, {id: id}));
     });
 
+    // Show form
     AppNote.on('showForm', function () {
         App.navigate('/notes/add', true);
+    });
+
+    // Reload note's content after sync event
+    App.on('sync:after', function (controller) {
+        if (controller !== 'notes' || App.currentApp !== 'AppNote') {
+            return;
+        }
+        API.renderAgain();
     });
 
     /**

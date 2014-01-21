@@ -61,9 +61,10 @@ define([
             options         = options           || {};
             options.success = options.success   || function() {};
             options.error   = options.error     || function() {};
+            options.store = this.getStore(model);
 
             // Store every collection in different places
-            this.createDir( this.getStore(model) )
+            this.createDir( options.store )
                 .fail(options.error)
                 .done(function () {
                     resp = self.query(method, model, options);
@@ -82,13 +83,13 @@ define([
                 resp = model.id !== undefined ? this.find(model, options) : this.findAll(options);
                 break;
             case 'create':
-                resp = this.create(model);
+                resp = this.create(model, options);
                 break;
             case 'update':
-                resp = this.update(model);
+                resp = this.update(model, options);
                 break;
             case 'delete':
-                resp = this.destroy(model);
+                resp = this.destroy(model, options);
                 break;
             }
 
@@ -128,24 +129,24 @@ define([
 
         // Add a new model
         // ---------------
-        create: function (model) {
-            return this.writeFile(model);
+        create: function (model, options) {
+            return this.writeFile(model, options);
         },
 
         // Update a model by replacing its copy in dropbox
         // -----------------------
-        update: function (model) {
-            return this.writeFile(model);
+        update: function (model, options) {
+            return this.writeFile(model, options);
         },
 
         // Delete a model from Dropbox
         // ------------------------
-        destroy: function (model) {
+        destroy: function (model, options) {
             if (model.id) {
                 return;
             }
             var d = $.Deferred();
-            this.client.remove(this.store + '/' + model.id + '.json', function (error, stat) {
+            this.client.remove(options.store + '/' + model.id + '.json', function (error, stat) {
                 if (error) {
                     d.reject(error);
                 } else {
@@ -157,11 +158,11 @@ define([
 
         // Retrieve a model from dropbox
         // ----------------------------
-        find: function (model) {
+        find: function (model, options) {
             var d = $.Deferred();
 
             this.client.readFile(
-                this.store + '/' + model.get('id') + '.json',
+                options.store + '/' + model.get('id') + '.json',
                 function (error, data) {
                     if (error) {
                         d.reject(error);
@@ -177,14 +178,13 @@ define([
 
         // Collection of files - no content, just id and modified time
         // -------------------
-        findAll: function () {
+        findAll: function (options) {
             var d = $.Deferred(),
-                self = this,
                 items = [],
                 data,
                 id;
 
-            this.client.readdir(this.store, function (error, entries, fileStat) {
+            this.client.readdir(options.store, function (error, entries, fileStat) {
                 if (error) {
                     d.reject(error);
                 } else {
@@ -193,7 +193,7 @@ define([
                     }
                     data = fileStat.json();
                     _.each(data.contents, function (item, iter) {
-                        id = item.path.replace('/' + self.store + '/', '');
+                        id = item.path.replace('/' + options.store + '/', '');
                         id = id.replace('.json', '');
 
                         items.push({
@@ -214,14 +214,14 @@ define([
 
         // Write model's content to file
         // -----------------------------
-        writeFile: function (model) {
+        writeFile: function (model, options) {
             var d = $.Deferred();
             if ( !model.id) {
                 return;
             }
 
             this.client.writeFile(
-                this.store + '/' + model.id + '.json',
+                options.store + '/' + model.id + '.json',
                 JSON.stringify(model),
                 function (error, stat) {
                     if (error) {
@@ -239,8 +239,7 @@ define([
         // Directory name
         // --------------
         getStore: function (model) {
-            this.store = model.storeName || model.collection.storeName;
-            return this.store;
+            return model.storeName || model.collection.storeName;
         }
 
     });

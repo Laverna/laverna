@@ -32,7 +32,7 @@ define([
             // Synchronize notebooks
             this.notebooks.syncWithCloud(forced);
 
-            // After notebooks synchronize tags
+            // After notebooks - synchronize tags
             this.notebooks.on('sync:after', function () {
                 this.tags.syncWithCloud(forced);
             }, this);

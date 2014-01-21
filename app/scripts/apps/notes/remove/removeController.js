@@ -24,6 +24,7 @@ define([
 
         doRemove: function () {
             // Destroy if note is already in trash
+            console.log(this.note.get('trash'));
             if (this.note.get('trash') === 1) {
                 $.when(this.note.destroy()).done(this.redirect);
             } else {
@@ -33,6 +34,7 @@ define([
 
         redirect: function () {
             App.navigateBack(-1);
+            App.trigger('notes:rerender');
         }
     });
 

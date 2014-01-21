@@ -112,6 +112,10 @@ define([
         API.showNotes(null, null);
     });
 
+    App.on('notes:rerender', function () {
+        API.showNotes(null, null);
+    });
+
     App.on('notes:show', function (args) {
         var current = (App.notesArg) ? App.notesArg.toString() : null;
         if (current !== _.omit(args, 'id').toString()) {

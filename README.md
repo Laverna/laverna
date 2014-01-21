@@ -7,7 +7,7 @@ Laverna stores notes in indexedDB and personal settings in local storage.
 Try it here: http://laverna.cc/
 
 ## Features
------------------------
+-----------
 
 * Markdown editor based on Pagedown
 * Manage your notes even if you're offline
@@ -18,9 +18,10 @@ Try it here: http://laverna.cc/
 * Syntax highlighting
 * No registration required
 * Web based
+* Keybindings
 
 ## Donate
------------------
+---------------
 If you're like this open source project please support it by donating to:
 
 [Bitcoin: 18JpeKeSaoryHCkfV63XcvLZUgeuuATp86] [3]

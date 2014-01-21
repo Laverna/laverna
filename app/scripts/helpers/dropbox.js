@@ -145,7 +145,7 @@ define([
                 return;
             }
             var d = $.Deferred();
-            this.client.remove(this.store + '/' + model.id, function (error, stat) {
+            this.client.remove(this.store + '/' + model.id + '.json', function (error, stat) {
                 if (error) {
                     d.reject(error);
                 } else {

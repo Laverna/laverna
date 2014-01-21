@@ -162,6 +162,7 @@ module.exports = function (grunt) {
                     baseUrl: yeomanConfig.app + '/scripts',
                     mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
                     optimize: 'none',
+                    exclude : ['dropbox'],
                     // TODO: Figure out how to make sourcemaps work with grunt-usemin
                     // https://github.com/yeoman/grunt-usemin/issues/30
                     //generateSourceMaps: true,
@@ -190,7 +191,10 @@ module.exports = function (grunt) {
             options: {
                 dest: '<%= yeoman.dist %>'
             },
-            html: '<%= yeoman.app %>/index.html'
+            html: [
+                '<%= yeoman.app %>/index.html',
+                '<%= yeoman.app %>/welcome.html'
+            ]
         },
         usemin: {
             options: {
@@ -263,11 +267,7 @@ module.exports = function (grunt) {
                     basePath: '<%= yeoman.dist %>',
                     cache: [
                     ],
-                    network: [
-                        'https://*dropbox.com*',
-                        '*//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
-                        '*//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
-                    ],
+                    network: ['*'],
                     // fallback: ['/ /404.html'],
                     preferOnline: true,
                     verbose: true,
@@ -342,7 +342,7 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.app %>',
                     dest: '<%= yeoman.dist %>',
                     src: [
-                        'scripts/welcome.js',
+                        'scripts/libs/dropbox.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',
                         'bower_components/ace/lib/ace/theme/github.css'
@@ -411,8 +411,8 @@ module.exports = function (grunt) {
         'concat',
         'cssmin',
         'uglify',
-        'copy:dist',
         'rev',
+        'copy:dist',
         'string-replace:manifest',
         'manifest',
         'usemin'

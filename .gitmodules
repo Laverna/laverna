@@ -1,3 +1,0 @@
-[submodule "app/scripts/libs/backbone-autocomplete"]
-	path = app/scripts/libs/backbone-autocomplete
-	url = https://github.com/fatiherikli/backbone-autocomplete.git

@@ -34,6 +34,7 @@ define([
                 collection.trigger('sync:before');
             });
             this.collection.on('sync:after', function () {
+                this.saveSyncTime();
                 App.trigger('sync:after', this.collection.storeName);
                 collection.trigger('sync:after');
             }, this);
@@ -70,7 +71,6 @@ define([
                             });
                         } else if(iter === self.collectionCloud.length-1) {
                             // If last model from cloud - save synchronized time
-                            self.saveSyncTime();
                             self.collection.trigger('sync:cloudPull');
                         }
                     });
@@ -145,7 +145,6 @@ define([
                     App.log('Synchronized model ' + model.get('id'));
                     if (isLast === true) {
                         // If last model from the cloud - save synchronized time
-                        self.saveSyncTime();
                         self.collection.trigger('sync:cloudPull');
                     }
                 },

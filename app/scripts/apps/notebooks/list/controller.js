@@ -25,18 +25,24 @@ define([
             this.syncWithCloud(false);
 
             // Sync is completed - re render everything
-            this.listenTo(this.notebooks, 'sync:after', this.fetchAfterCloud);
+            this.listenTo(this.notebooks, 'sync:after', this.fetchAfterSync);
+        },
+
+        fetchAfterSync: function (notebooks) {
+            if (notebooks.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
+                return;
+            }
+            this.notebooks.fetch();
         },
 
         syncWithCloud: function (forced) {
             // Synchronize notebooks
-            $.when(this.tags.syncWithCloud(forced)).done(this.notebooks.syncWithCloud(forced));
-        },
+            this.notebooks.syncWithCloud(forced);
 
-        fetchAfterCloud: function (param1) {
-            if (param1.length > 0 && App.currentApp.moduleName === 'AppNotebook') {
-                $.when(this.notebooks.fetch(), this.tags.fetch()).done(this.list);
-            }
+            // After notebooks synchronize tags
+            this.notebooks.on('sync:after', function () {
+                this.tags.syncWithCloud(forced);
+            }, this);
         },
 
         list: function () {

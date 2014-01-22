@@ -80,6 +80,7 @@ define([
                 return new Tags().toHtml(text);
             });
 
+            data.content = $('<p>' + data.content + '</p>').text();
             data.content = converter.makeHtml(data.content);
             data.notebook = App.Encryption.API.decrypt(data.notebook);
 

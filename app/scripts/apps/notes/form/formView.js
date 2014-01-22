@@ -79,7 +79,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             // Get values
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
-                content    : content,
+                content    : _.unescape(content),
                 notebookId : parseInt(this.ui.notebookId.val())
             };
 

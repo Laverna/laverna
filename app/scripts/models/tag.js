@@ -24,6 +24,14 @@ define([
             'synchronized' : 0
         },
 
+        initialize: function () {
+            this.on('update:name', this.doEscape());
+        },
+
+        doEscape: function () {
+            this.set('name', _.escape(this.get('name')));
+        },
+
         validate: function (attrs) {
             var errors = [];
             if (attrs.name === '') {

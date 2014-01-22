@@ -25,14 +25,8 @@ define([
             this.syncWithCloud(false);
 
             // Sync is completed - re render everything
-            this.listenTo(this.notebooks, 'sync:after', this.fetchAfterSync);
-        },
-
-        fetchAfterSync: function (notebooks) {
-            if (notebooks.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
-                return;
-            }
-            this.notebooks.fetch();
+            this.listenTo(this.notebooks, 'sync:after', this.fetchNotebooksSync);
+            this.listenTo(this.tags, 'sync:after', this.fetchTagsSync);
         },
 
         syncWithCloud: function (forced) {
@@ -76,6 +70,26 @@ define([
 
             // View events
             this.layout.on('syncWithCloud', this.syncWithCloud, this);
+        },
+
+        fetchNotebooksSync: function (notebooks) {
+            if (this.isAnyNeedsToFetch(notebooks)) {
+                this.notebooks.fetch();
+            }
+        },
+
+        fetchTagsSync: function (tags) {
+            if (this.isAnyNeedsToFetch(tags)) {
+                this.tags.fetch();
+            }
+        },
+
+        isAnyNeedsToFetch: function (objects) {
+            if (objects.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
+                return false;
+            } else {
+                return true;
+            }
         }
 
     });

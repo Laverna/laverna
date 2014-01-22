@@ -73,7 +73,7 @@ define([
             var notebook;
 
             // Encryption
-            data.title = App.Encryption.API.encrypt(data.title);
+            data.title = App.Encryption.API.encrypt(_.escape(data.title));
             data.content = App.Encryption.API.encrypt(data.content);
 
             // New notebook

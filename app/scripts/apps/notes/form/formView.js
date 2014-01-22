@@ -280,6 +280,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
         serializeData: function () {
             var data = _.extend(this.model.toJSON(), this.options.decrypted);
+            data.content = _.escape(data.content);
             data.notebooks = this.options.notebooks.decrypt();
             return data;
         },

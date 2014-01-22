@@ -53,7 +53,7 @@ define([
         save: function (data) {
             var self = this;
 
-            data.name = App.Encryption.API.encrypt(data.name);
+            data.name = App.Encryption.API.encrypt(_.escape(data.name));
 
             this.model.set(data, {validate: true});
 

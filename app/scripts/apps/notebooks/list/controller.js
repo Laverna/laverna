@@ -25,7 +25,14 @@ define([
             this.syncWithCloud(false);
 
             // Sync is completed - re render everything
-            this.listenTo(this.tags, 'sync:after', this.list);
+            this.listenTo(this.notes, 'sync:after', this.fetchAfterSync, this);
+        },
+
+        fetchAfterSync: function (notebooks) {
+            if (notebooks.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
+                return;
+            }
+            this.notebooks.fetch();
         },
 
         syncWithCloud: function (forced) {

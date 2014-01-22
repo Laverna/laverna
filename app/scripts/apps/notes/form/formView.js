@@ -9,12 +9,13 @@ define([
     'checklist',
     'tags',
     'ace',
+    'to-markdown',
     'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
+function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -79,7 +80,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             // Get values
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
-                content    : _.unescape(content),
+                content    : this.toMarkdown(_.unescape(content)),
                 notebookId : parseInt(this.ui.notebookId.val())
             };
 
@@ -104,10 +105,20 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         },
 
         /**
+         * Convert html to markdown and clean text
+         */
+        toMarkdown: function (text) {
+            var toMark = new toMarkdown.converter();
+            text = toMark.makeMd(this.editor.getSession().getValue());
+            return $('<p>' + text + '</p>').text();
+        },
+
+        /**
          * Pagedown-ace editor
          */
         pagedownRender: function () {
             var converter,
+                self = this,
                 editor;
 
             converter = new Markdown.Converter();
@@ -117,6 +128,11 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             converter.hooks.chain('postNormalization', function (text) {
                 text = new Checklist().toHtml(text);
                 return new Tags().toHtml(text);
+            });
+
+            // XSS free preview
+            converter.hooks.chain('preConversion', function (text) {
+                return self.toMarkdown(text);
             });
 
             // Initialize pagedown
@@ -173,13 +189,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
             // Focus to input[title]
             this.ui.title.focus();
-
-            // Whenever a change happens inside the ACE editor, update the note
-            // this.editor.on('change', function () {
-            //     if (that.model !== undefined) {
-            //         that.$('.form-horizontal').trigger('submit');
-            //     }
-            // });
         },
 
         /**

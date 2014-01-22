@@ -32,6 +32,7 @@ require.config({
         'pagedown.converter'       :  '../bower_components/pagedown-ace/Markdown.Converter',
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
         'pagedown.sanitizer'       :  '../bower_components/pagedown-ace/Markdown.Sanitizer',
+        'to-markdown'              :  '../bower_components/to-markdown/src/to-markdown',
         // Markdown helpers        :
         'checklist'                :  'libs/checklist',
         'tags'                     :  'libs/tags',
@@ -94,6 +95,9 @@ require.config({
         'pagedown-extra': [
             'pagedown-ace'
         ],
+        'to-markdown': {
+            exports: 'toMarkdown'
+        },
         prettify: {
             exports: 'prettify'
         },

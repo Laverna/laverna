@@ -4,7 +4,7 @@ Laverna is a web application written on JavaScript. It's built to be an open sou
 
 Laverna stores notes in indexedDB and personal settings in local storage.
 
-Try it here: http://laverna.cc/
+Try it here: https://laverna.cc/
 
 ## Features
 -----------
@@ -24,6 +24,7 @@ Try it here: http://laverna.cc/
 ---------------
 If you're like this open source project please support it by donating to:
 
+[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/master/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
 [Bitcoin: 18JpeKeSaoryHCkfV63XcvLZUgeuuATp86] [3]
 
 ## Licence
@@ -32,5 +33,6 @@ Published under GNU GPL v.3
 Also Laverna uses a lot of other libraries and each of this [libraries uses different licences] [2].
 
 [1]: http://bitwiseshiftleft.github.io/sjcl/
-[2]: bower.json
+[2]: https://github.com/Laverna/laverna/blob/master/bower.json
 [3]: bitcoin:18JpeKeSaoryHCkfV63XcvLZUgeuuATp86
+[4]: https://www.gittip.com/Laverna/

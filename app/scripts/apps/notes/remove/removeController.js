@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
-    'models/note'
-], function (_, App, Marionette, NoteModel) {
+    'models/note',
+    'collections/notes',
+], function (_, App, Marionette, NoteModel, NoteCollection) {
     'use strict';
 
     var Remove = App.module('AppNote.Remove');
@@ -24,18 +25,27 @@ define([
 
         doRemove: function () {
             // Destroy if note is already in trash
-            console.log(this.note.get('trash'));
             if (this.note.get('trash') === 1) {
-                $.when(this.note.destroy()).done(this.redirect);
+                var self = this;
+                $.when(this.note.destroy()).done(function () {
+                    self.syncDistroy();
+                });
             } else {
                 $.when(this.note.save({'trash' : 1})).done(this.redirect);
             }
+        },
+
+        syncDistroy: function () {
+            var notes = new NoteCollection();
+            notes.syncDistroy(this.note);
+            this.redirect();
         },
 
         redirect: function () {
             App.navigateBack(-1);
             App.trigger('notes:rerender');
         }
+
     });
 
     return Remove.Controller;

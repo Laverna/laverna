@@ -51,6 +51,7 @@ define([
         // -----------------------
         pull: function () {
             var time = this.getSyncTime(),
+                dirty = this.collection.getDistroyed(),
                 self = this,
                 isLast;
 
@@ -62,7 +63,8 @@ define([
                         self.collection.trigger('sync:cloudPull');
                     }
                     self.collectionCloud.each(function (model, iter) {
-                        if (time === null || time < model.get('updated')) {
+                        if (time === null || (time < model.get('updated') &&
+                            _.indexOf(dirty, model.get('id')) === -1) ) {
                             Backbone.cloud('read', model, {
                                 success: function (modelCloud) {
                                     isLast = (iter === (self.collectionCloud.length-1));
@@ -90,6 +92,7 @@ define([
         // ---------------------------------------
         push: function () {
             var conditions = {synchronized : 0},
+                dirty = this.collection.getDistroyed(),
                 self = this;
 
             // If cloud storage is empty, synchronize all data
@@ -98,6 +101,7 @@ define([
                 conditions = null;
             }
 
+            // Save local changes
             this.collection.fetch({
                 reset: true,
                 conditions : conditions,
@@ -107,8 +111,38 @@ define([
                 },
                 error: function () {
                     App.log('error');
-                    self.collection.trigger('sync:after');
+                    if (dirty.length === 0) {
+                        self.collection.trigger('sync:after');
+                    }
                 }
+            });
+
+            if (dirty.length !== 0) {
+                this.syncDistroy(dirty);
+            }
+        },
+
+        // Remove removed models from the cloud
+        // ------------------------------------
+        syncDistroy: function (dirty) {
+            var self = this,
+                model;
+
+            _.each(dirty, function (id, iter) {
+                model = new self.collectionCloud.model({id : id});
+                Backbone.cloud('delete', model, {
+                    success : function () {
+                        App.log('Model removed the cloud model ' + id);
+                        if (iter === dirty.length-1) {
+                            self.collection.trigger('sync:after');
+                            self.collection.resetDistroy();
+                        }
+                    },
+                    error   : function () {
+                        App.log('error');
+                        throw new Error('Dropbox push error');
+                    }
+                });
             });
         },
 
@@ -165,6 +199,7 @@ define([
         // --------------------------------------------
         saveToCloud: function () {
             var models = this.collection.models,
+                dirty = this.collection.getDistroyed(),
                 method = 'create';
 
             if (this.collection.length === 0) {
@@ -186,7 +221,7 @@ define([
                         throw new Error('Dropbox push error');
                     }
                 });
-                if (models.length-1 === i) {
+                if (models.length-1 === i && dirty.length === 0) {
                     this.collection.trigger('sync:after');
                 }
             }, this);
@@ -235,6 +270,24 @@ define([
 
         App.log('sync started');
         return new Cloud().initialize(that);
+    };
+
+    Backbone.Collection.prototype.syncDistroy = function (model) {
+        var dirty = this.getDistroyed();
+        dirty.push(model.get('id'));
+        localStorage.setItem(this.storeName + '_dirty', dirty.join());
+    };
+
+    Backbone.Collection.prototype.resetDistroy = function () {
+        localStorage.setItem(this.storeName + '_dirty', '');
+    };
+
+    /**
+     * Return models id that needs to be removed from the cloud storage
+     */
+    Backbone.Collection.prototype.getDistroyed = function () {
+        var dirty = localStorage.getItem(this.storeName + '_dirty');
+        return (_.isString(dirty) && dirty !== '') ? dirty.split(',') : [];
     };
 
 });

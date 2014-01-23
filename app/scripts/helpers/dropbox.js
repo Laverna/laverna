@@ -142,7 +142,7 @@ define([
         // Delete a model from Dropbox
         // ------------------------
         destroy: function (model, options) {
-            if (model.id) {
+            if ( !model.id) {
                 return;
             }
             var d = $.Deferred();

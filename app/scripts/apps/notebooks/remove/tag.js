@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
-    'models/tag'
-], function (_, App, Marionette, Model) {
+    'models/tag',
+    'collections/tags'
+], function (_, App, Marionette, Model, Tags) {
     'use strict';
 
     var Tag = App.module('AppNotebooks.RemoveTag');
@@ -22,6 +23,7 @@ define([
 
         remove: function () {
             this.model.destroy();
+            new Tags().syncDistroy(this.model);
             this.redirect();
         },
 

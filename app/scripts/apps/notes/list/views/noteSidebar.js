@@ -92,11 +92,14 @@ define([
                     return '/notes';
                 },
                 pageTitle: function () {
+                    var title = 'Inbox';
                     if (this.args.filter) {
-                        return this.args.filter;
-                    } else {
-                        return 'Inbox';
+                        title = this.args.filter;
                     }
+                    if (this.args.query) {
+                        title += ': ' + this.args.query;
+                    }
+                    return title;
                 },
                 pageNumber: function () {
                     if (this.args.page) {

@@ -37,7 +37,7 @@ define([
         showProgress: function () {
             // User just disabled encryption
             if (this.configs.encrypt !== 1) {
-                App.navigate('/notes', true);
+                this.redirect();
                 return;
             }
 
@@ -94,8 +94,9 @@ define([
                 }
             }
 
-            if (_.difference(oldConfigs.secureKey, newKey).length === 0) {
-                App.navigate('/notes', true);
+            // If no encryption settings changed
+            if (_.difference(oldConfigs.secureKey, newKey).length === 0 && oldConfigs.encryptPass !== '') {
+                this.redirect();
                 return false;
             }
 

@@ -22,8 +22,10 @@ Try it here: https://laverna.cc/
 
 ## Installation
 If you want to install Laverna on your machine, just do the following:
+
 1. Install dependencies: node.js, bower, grunt.
 2. Run **npm install**, then **bower install** and **grunt**
+
 You can change storages API keys in app/scripts/constants.js
 
 ## Donate

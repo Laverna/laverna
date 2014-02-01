@@ -24,6 +24,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
         ui: {
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
+            clipContent :  '#clipContent',
             tags       :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content',
@@ -36,6 +37,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
 
         events: {
             'submit #noteForm' : 'save',
+            'blur #inputTitle' : 'noteClipped',
             'click .modeMenu a': 'switchMode',
             'click .saveBtn'   : 'save',
             'click .cancelBtn' : 'redirect',
@@ -65,6 +67,16 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
             if (App.settings.editMode !== 'normal') {
                 this.$('.modeMenu a[data-mode="' + App.settings.editMode + '"]').trigger('click');
             }
+        },
+
+        /**
+         * When content is clipped
+         */
+        noteClipped: function () {
+            if (this.ui.clipContent.val() === '') {
+                return;
+            }
+            this.editor.setValue(this.ui.clipContent.val());
         },
 
         /**

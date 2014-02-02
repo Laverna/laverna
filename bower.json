@@ -29,5 +29,6 @@
     "to-markdown": "#jquery"
   },
   "devDependencies": {
+    "bootstrap": "3.1.0"
   }
 }

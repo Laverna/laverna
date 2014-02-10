@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "bootstrap": "3.1.0",
-    "hammer": "https://github.com/EightMedia/hammer.js"
+    "hammer": "https://github.com/EightMedia/hammer.js",
+    "device": "git@github.com:matthewhudson/device.js"
   }
 }

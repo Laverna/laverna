@@ -35,17 +35,16 @@
                     </div>
                     <div id="wmd-button-bar"></div>
                     <div class="form-group wmd-group">
-                        <div class="wmd-input" id="wmd-input">{{content}}</div>
+                        <div class="markdown-col">
+                            <div class="wmd-input" id="wmd-input">{{content}}</div>
+                        </div>
+                        <div class="preview-col">
+                            <div id="wmd-preview"></div>
+                        </div>
                         <!-- For clipper -->
                         <textarea id="clipContent" class="hidden" name="clipContent"></textarea>
                     </div>
                 </form>
-                <div class="preview-col hide">
-                    <header>
-                        <h2>Preview</h2>
-                    </header>
-                    <div id="wmd-preview"></div>
-                </div>
             </div>
         </div>
     </div>

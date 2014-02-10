@@ -29,10 +29,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content',
             // Mode stuff
-            article    :  '.article',
             form       :  '#noteForm',
             wmdBar     :  '#wmd-button-bar',
-            preview    :  '.preview-col',
         },
 
         events: {
@@ -281,10 +279,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
         previewMode: function () {
             this.$body.addClass('distraction-free two-column');
             this.ui.wmdBar.addClass('navbar navbar-fixed-top');
-            // Two panels
-            this.ui.article.addClass('row');
-            this.ui.form.addClass('col-xs-6 col-sm-6 col-lg-6');
-            this.ui.preview.addClass('col-xs-6 col-sm-6 col-lg-6').removeClass('hide');
         },
 
         /**
@@ -293,10 +287,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
         normalMode: function () {
             this.$body.removeClass('distraction-free two-column');
             this.ui.wmdBar.removeClass('navbar navbar-fixed-top');
-            // Disable two panels
-            this.ui.article.removeClass('row');
-            this.ui.form.removeClass('col-xs-6 col-sm-6 col-lg-6');
-            this.ui.preview.removeClass('col-xs-6 col-sm-6 col-lg-6').addClass('hide');
         },
 
         serializeData: function () {

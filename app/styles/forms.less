@@ -146,6 +146,9 @@
 //
 // Distraction free mode
 //
+.preview-col {
+    display: none; // For default hide preview
+}
 .distraction-free {
     background-color: #FFF;
     #sidebar, .navbar-static-top {
@@ -164,14 +167,13 @@
         padding: 0;
     }
     .pretty-form .form-group {
-        margin-bottom: 10px;
         padding-right: 10px;
         border: 0;
-        box-shadow: 0 0 2px darken(#FFF, 6%);
+        // box-shadow: 0 0 2px darken(#FFF, 6%);
     }
     #inputTitle {
-        height: 40px;
-        font-size: @font-size-h3;
+        height: auto;
+        font-size: @font-size-h1;
     }
     // Save button
     .wmd-button-row {
@@ -183,23 +185,43 @@
 //
 // Two column mode
 //
+.make-pagedown-column(@columns) {
+    .make-lg-column(@columns);
+    .make-md-column(@columns);
+    .make-sm-column(@columns);
+    .make-xs-column(@columns);
+}
 .distraction-free.two-column {
+    background-color: #EDECE4;
     #content .article {
         width: 100%;
         padding-top: 0;
+        background: transparent;
     }
-    #noteForm, .preview-col {
+    #noteForm {
         padding-top: 20px;
     }
-    .article.row #wmd-input {
+    .markdown-col, .preview-col {
+        background-color: #FFF;
+        padding-top: 15px;
     }
-    .article.row #noteForm {
-        box-shadow: 6px 0px 6px -6px lighten(#999, 10%);
+    // Make two columns
+    .wmd-group {
+        .make-row();
     }
-    .article.row .preview-col {
-        // box-shadow:  -6px 0px 6px -6px lighten(#999, 10%);
+    .markdown-col, .preview-col {
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
-    .article.row #wmd-preview {
-        margin-top: 60px;
+    .markdown-col {
+        .make-pagedown-column(6);
+        min-height: @pagedown-min-height + 14px;
+    }
+    .preview-col {
+        display: inline-block;
+        .make-pagedown-column(5.9);
+        .make-lg-column-offset(0.1);
+        .make-md-column-offset(0.1);
+        .make-sm-column-offset(0.1);
     }
 }

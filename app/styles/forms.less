@@ -136,18 +136,17 @@
     }
 }
 
-// Do not show save button in pagedown bar
-.wmd-button-row {
-    .wmd-save-button, .wmd-mode-button {
-        display: none;
-    }
-}
-
 //
 // Distraction free mode
 //
 .preview-col {
     display: none; // For default hide preview
+}
+// Do not show save button in pagedown bar
+#wmd-button-bar {
+    .wmd-save-button, .wmd-mode-button {
+        display: none;
+    }
 }
 .distraction-free {
     background-color: #FFF;
@@ -176,7 +175,7 @@
         font-size: @font-size-h1;
     }
     // Save button
-    .wmd-button-row {
+    #wmd-button-bar {
         .wmd-save-button, .wmd-mode-button {
             display: inline-block;
         }
@@ -223,5 +222,50 @@
         .make-lg-column-offset(0.1);
         .make-md-column-offset(0.1);
         .make-sm-column-offset(0.1);
+    }
+}
+
+//
+// Responsive pagedown buttons
+//
+@media (max-width: @screen-sm-min) {
+    .distraction-free {
+        padding-top: @navbar-height;
+    }
+}
+.invisible-wmd-btn (@max-width) {
+    .responsive-visibility();
+    @media (max-width: @max-width) {
+        .responsive-invisibility();
+    }
+}
+// Hide buttons one by one
+.distraction-free {
+    #wmd-undo-button,
+    #wmd-redo-button,
+    .wmd-spacer3 {
+        .invisible-wmd-btn(920px);
+    }
+    #wmd-hr-button,
+    #wmd-heading-button {
+        .invisible-wmd-btn(836px);
+    }
+    #wmd-ulist-button,
+    #wmd-olist-button,
+    .wmd-spacer2 {
+        .invisible-wmd-btn(752px);
+    }
+    #wmd-image-button,
+    #wmd-code-button {
+        .invisible-wmd-btn(668px);
+    }
+    #wmd-quote-button,
+    #wmd-link-button,
+    .wmd-spacer1 {
+        .invisible-wmd-btn(584px);
+    }
+    #wmd-bold-button,
+    #wmd-italic-button {
+        .invisible-wmd-btn(440px);
     }
 }

@@ -19,10 +19,12 @@ define([
 
     var App = new Backbone.Marionette.Application();
 
-    if (Device.mobile() === true || Device.tablet() === true)
+    if (Device.mobile() === true || Device.tablet() === true) {
         App.isPc = false;
-    else
+    }
+    else {
         App.isPc = true;
+    }
 
     App.addRegions({
         sidebar :  '#sidebar',

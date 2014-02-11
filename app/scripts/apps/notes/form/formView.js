@@ -159,22 +159,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             editor.run(this.editor);
 
             // Hide default buttons
-            this.$('.wmd-button-row li').addClass('btn').css('left', 0).find('span').hide();
+            this.$('.wmd-button-row li').addClass('btn').css('left', 0);
             this.$('.wmd-button-row').addClass('btn-group');
-
-            // Font-awesome buttons
-            this.$('#wmd-italic-button').append($('<i class="icon-italic">'));
-            this.$('#wmd-bold-button').append($('<i class="icon-bold">'));
-            this.$('#wmd-link-button').append($('<i class="icon-globe">'));
-            this.$('#wmd-quote-button').append($('<i class="icon-indent">'));
-            this.$('#wmd-code-button').append($('<i class="icon-code">'));
-            this.$('#wmd-image-button').append($('<i class="icon-picture">'));
-            this.$('#wmd-olist-button').append($('<i class="icon-list-numbered">'));
-            this.$('#wmd-ulist-button').append($('<i class="icon-list-bullet">'));
-            this.$('#wmd-heading-button').append($('<i class="icon-font">'));
-            this.$('#wmd-hr-button').append($('<i class="icon-minus">'));
-            this.$('#wmd-undo-button').append($('<i class="icon-reply">'));
-            this.$('#wmd-redo-button').append($('<i class="icon-share">'));
 
             // Save button
             this.$('.wmd-button-row').append(this.$('.saveBtn').clone().addClass('wmd-save-button'));

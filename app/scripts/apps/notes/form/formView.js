@@ -118,7 +118,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
          */
         pagedownRender: function () {
             var converter,
-                self = this,
                 editor;
 
             converter = new Markdown.Converter();

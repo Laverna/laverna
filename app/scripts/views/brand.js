@@ -14,11 +14,11 @@ define([
             $('#wrapper').hide();
 
             this.$el.html(view.el);
-            this.$el.addClass('in');
+            this.$el.slideDown('fast');
         },
 
         onClose: function () {
-            this.$el.removeClass('in');
+            this.$el.slideUp('fast');
             $('#wrapper').show();
         }
 

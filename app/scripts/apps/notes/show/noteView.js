@@ -8,8 +8,7 @@ define([
     'checklist',
     'tags',
     'prettify',
-    'backbone.mousetrap',
-    'marionette',
+    'backbone.mousetrap', 'marionette',
     'pagedown-extra'
 ], function (_, App, Backbone, Template, Checklist, Tags, prettify) {
     'use strict';
@@ -30,7 +29,8 @@ define([
         events: {
             'click #restoreNote'  : 'restoreFromTrash',
             'click .favorite'  : 'favorite',
-            'click .task [type="checkbox"]': 'toggleTask'
+            'click .task [type="checkbox"]': 'toggleTask',
+            'click .btn-toggle-sidebar': 'toggleSidebar'
         },
 
         keyboardEvents: {
@@ -165,6 +165,12 @@ define([
         scrollDown: function () {
             var Top = this.$('.ui-s-content').scrollTop();
             this.$('.ui-s-content').scrollTop(Top + 50);
+        },
+
+        toggleSidebar: function (e) {
+            e.preventDefault();
+            $('#sidebar').toggleClass('hidden')
+            $('#content').toggleClass('hidden')
         },
 
         templateHelpers: function() {

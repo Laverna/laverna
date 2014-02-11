@@ -36,11 +36,6 @@ define([
         },
 
         showContent: function () {
-            $('#content').removeClass('hidden');
-            if ( !$('#sidebar').hasClass('hidden') ) {
-                $('#sidebar').addClass('hidden');
-            }
-
             var notebook = this.notebooks.get(this.note.get('notebookId')),
                 decrypted,
                 args;

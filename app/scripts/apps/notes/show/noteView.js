@@ -51,6 +51,13 @@ define([
         },
 
         onRender: function () {
+            if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
+                $('#content').removeClass('hidden');
+                if (!$('#sidebar').hasClass('hidden')) {
+                    $('#sidebar').addClass('hidden');
+                }
+            }
+
             // Google code prettify
             var code = null;
             this.$('pre').addClass('prettyprint').each(function (idx, el) {
@@ -80,7 +87,6 @@ define([
                 return new Tags().toHtml(text);
             });
 
-            data.content = $('<p>' + data.content + '</p>').text();
             data.content = converter.makeHtml(data.content);
             data.notebook = App.Encryption.API.decrypt(data.notebook);
 

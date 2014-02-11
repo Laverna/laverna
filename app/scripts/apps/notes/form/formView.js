@@ -9,13 +9,12 @@ define([
     'checklist',
     'tags',
     'ace',
-    'to-markdown',
     'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
+function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -90,7 +89,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
             // Get values
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
-                content    : this.toMarkdown(_.unescape(content)),
+                content    : _.unescape(content),
                 notebookId : parseInt(this.ui.notebookId.val())
             };
 
@@ -115,15 +114,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
         },
 
         /**
-         * Convert html to markdown and clean text
-         */
-        toMarkdown: function (text) {
-            var toMark = new toMarkdown.converter();
-            text = toMark.makeMd(this.editor.getSession().getValue());
-            return $('<p>' + text + '</p>').text();
-        },
-
-        /**
          * Pagedown-ace editor
          */
         pagedownRender: function () {
@@ -138,11 +128,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, toMarkdown) {
             converter.hooks.chain('postNormalization', function (text) {
                 text = new Checklist().toHtml(text);
                 return new Tags().toHtml(text);
-            });
-
-            // XSS free preview
-            converter.hooks.chain('preConversion', function (text) {
-                return self.toMarkdown(text);
             });
 
             // Initialize pagedown

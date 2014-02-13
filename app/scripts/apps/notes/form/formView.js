@@ -214,7 +214,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 this.$body.hide();
                 // Fix Pagedown bugs
                 this.scrollPagedownBar();
-                this.editor.resize();
             }
             switch (mode) {
                 case 'fullscreen':
@@ -229,6 +228,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             }
             if (mode) {
                 this.$body.fadeIn('slowly');
+                this.editor.resize();
             }
             this.$('.wmd-mode-button').removeClass('open');
             return false;

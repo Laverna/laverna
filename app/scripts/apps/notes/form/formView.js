@@ -1,5 +1,4 @@
 /*global define*/
-/*global Markdown*/
 define([
     'underscore',
     'jquery',
@@ -46,8 +45,10 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             App.mousetrap.API.pause();
             this.$body = $('body');
 
+            // Pagedown editor
             this.on('shown', this.pagedownRender);
             this.on('shown', this.changeMode);
+            this.on('pagedown:ready', this.onPagedownReady);
         },
 
         onClose: function () {
@@ -82,9 +83,15 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         save: function (e) {
             e.preventDefault();
 
-            var content = this.editor.getSession().getValue().trim(),
-                title   = this.ui.title.val().trim(),
+            var title   = this.ui.title.val().trim(),
+                content,
                 data;
+
+            if (this.editor) {
+                content = this.editor.getSession().getValue().trim();
+            } else {
+                content = this.$('#wmd-input').val();
+            }
 
             // Get values
             data = {
@@ -113,25 +120,64 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             return this.trigger('redirect');
         },
 
+        onPagedownReady: function () {
+            // Hide default buttons
+            this.$('.wmd-button-row li').addClass('btn').css('left', 0);
+            this.$('.wmd-button-row').addClass('btn-group');
+
+            // Save button
+            this.$('.wmd-button-row').append(this.$('.saveBtn').clone().addClass('wmd-save-button'));
+
+            // Dropdown menu for changing modes
+            this.$('.wmd-button-row').prepend(this.$('.switch-mode').clone().addClass('wmd-mode-button'));
+
+            // Focus to input[title]
+            this.ui.title.focus();
+        },
+
+        /**
+         * Render pagedown
+         */
+        pagedownRender: function () {
+            var pagedown = (document.body.clientWidth < 768) ? 'pagedown' : 'pagedown-ace',
+                self = this,
+                converter,
+                editor;
+
+            require([pagedown], function runPagedown(Markdown) {
+                converter = new Markdown.Converter();
+                Markdown.Extra.init(converter);
+
+                // Customize markdown converter
+                converter.hooks.chain('postNormalization', function (text) {
+                    text = new Checklist().toHtml(text);
+                    return new Tags().toHtml(text);
+                });
+
+                // Initialize pagedown
+                editor = new Markdown.Editor(converter);
+
+                // Pagedown with textarea
+                if (pagedown === 'pagedown') {
+                    self.$('#wmd-input').replaceWith(function () {
+                        return $('<textarea id="wmd-input">').addClass(this.className).addClass('form-control');
+                    });
+                    self.$('#wmd-input').val(self.model.get('content'));
+                    editor.run();
+                }
+                // Pagedown with ace editor
+                else {
+                    self.aceRender(editor);
+                }
+
+                self.trigger('pagedown:ready');
+            });
+        },
+
         /**
          * Pagedown-ace editor
          */
-        pagedownRender: function () {
-            var converter,
-                editor;
-
-            converter = new Markdown.Converter();
-            Markdown.Extra.init(converter);
-
-            // Customize markdown converter
-            converter.hooks.chain('postNormalization', function (text) {
-                text = new Checklist().toHtml(text);
-                return new Tags().toHtml(text);
-            });
-
-            // Initialize pagedown
-            editor = new Markdown.Editor(converter);
-
+        aceRender: function (editor) {
             // ACE
             this.editor = ace.edit('wmd-input');
             this.editor.getSession().setMode('ace/mode/markdown');
@@ -156,19 +202,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
             // this.editor.setKeyboardHandler('vim'); // vim
             editor.run(this.editor);
-
-            // Hide default buttons
-            this.$('.wmd-button-row li').addClass('btn').css('left', 0);
-            this.$('.wmd-button-row').addClass('btn-group');
-
-            // Save button
-            this.$('.wmd-button-row').append(this.$('.saveBtn').clone().addClass('wmd-save-button'));
-
-            // Dropdown menu for changing modes
-            this.$('.wmd-button-row').prepend(this.$('.switch-mode').clone().addClass('wmd-mode-button'));
-
-            // Focus to input[title]
-            this.ui.title.focus();
         },
 
         /**

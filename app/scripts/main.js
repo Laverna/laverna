@@ -29,6 +29,7 @@ require.config({
         'mousetrap-pause'          :  '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
         'backbone.mousetrap'       :  '../bower_components/backbone.mousetrap/backbone.mousetrap',
         // Pagedown                :
+        'pagedown'                 :  '../bower_components/pagedown/Markdown.Editor',
         'pagedown-ace'             :  '../bower_components/pagedown-ace/Markdown.Editor',
         'pagedown.converter'       :  '../bower_components/pagedown-ace/Markdown.Converter',
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
@@ -91,9 +92,14 @@ require.config({
         cjcl: {
             exports: 'cjcl'
         },
-        'pagedown-ace': [
-            '../bower_components/pagedown-ace/Markdown.Converter'
-        ],
+        'pagedown': {
+            exports: 'Markdown',
+            deps: [ '../bower_components/pagedown-ace/Markdown.Converter' ]
+        },
+        'pagedown-ace': {
+            exports: 'Markdown',
+            deps: [ '../bower_components/pagedown-ace/Markdown.Converter' ]
+        },
         'pagedown.sanitizer': [
         ],
         'pagedown-extra': [

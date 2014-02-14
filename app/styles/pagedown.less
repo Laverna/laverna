@@ -52,11 +52,11 @@
 }
 
 #wmd-input, #wmd-preview {
-    min-height: @pagedown-min-height;
+    // min-height: @pagedown-min-height;
     width: 100%;
 }
 
-.wmd-input, #wmd-input {
+.wmd-input {
     overflow: hidden;
     font-weight: 400;
     font-size: 14px;
@@ -64,6 +64,11 @@
     margin-left: 0;
     border: none;
     transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+textarea.wmd-input {
+    overflow: auto;
+    height: 300px;
 }
 
 .ace_active-line {

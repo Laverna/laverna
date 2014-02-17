@@ -49,6 +49,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.on('shown', this.pagedownRender);
             this.on('shown', this.changeMode);
             this.on('pagedown:ready', this.onPagedownReady);
+            this.on('pagedown:ready', this.changePagedownMode);
+            this.on('pagedown:mode',  this.changePagedownMode);
         },
 
         onClose: function () {
@@ -195,19 +197,48 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.editor.renderer.setPrintMarginColumn(false);
             this.editor.renderer.setShowGutter(false);
 
-            // Margin: top bottom
-            this.editor.renderer.setScrollMargin(20, 100);
-            this.editor.renderer.setPadding(20);
-            this.editor.session.setScrollTop(1);
+            // this.editor.setKeyboardHandler('vim'); // vim
+            editor.run(this.editor);
+        },
+
+        /**
+         * Individual pagedown settings for preview mode and default
+         */
+        changePagedownMode: function (mode) {
+            if ( !this.editor) {
+                return;
+            }
+
+            mode = mode || App.settings.editMode;
+            var options = {
+                maxLines     : Infinity,
+                minLines     : 40,
+                marginTop    : 20,
+                marginBottom : 100
+            };
+
+            if (mode === 'preview') {
+                // Editor with scrolls again
+                options.maxLines = this.editor.renderer.lineHeight;
+                options.minLines = 1;
+            }
+            else {
+                options.marginTop = 0;
+                options.marginBottom = 0;
+            }
 
             // Auto expand: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
             this.editor.setOptions({
-                maxLines: Infinity,
-                minLines: 40
+                maxLines: options.maxLines,
+                minLines: options.minLines
             });
 
-            // this.editor.setKeyboardHandler('vim'); // vim
-            editor.run(this.editor);
+            // Margin: top bottom
+            this.editor.renderer.setScrollMargin(options.marginTop, options.marginBottom);
+            this.editor.renderer.setPadding(options.marginTop);
+            this.editor.session.setScrollTop(1);
+
+            this.editor.resize();
         },
 
         /**
@@ -267,9 +298,9 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             }
             if (mode) {
                 this.$body.fadeIn('slowly');
-                this.editor.resize();
             }
             this.$('.wmd-mode-button').removeClass('open');
+            this.trigger('pagedown:mode', mode);
             return false;
         },
 

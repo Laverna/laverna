@@ -1,5 +1,5 @@
 <!-- Sidebars header -->
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="ui-row navbar navbar-default navbar-static-top">
     <ul class="nav navbar-nav navbar-left">
         <li>
             <div class="btn-group">
@@ -39,19 +39,17 @@
 </nav>
 
 <!-- Notebooks list -->
-<div class="ui-s-cont">
-    <div class="ui-s-content">
-        <form class="form-inline search-form" method="post">
-            <div class="form-group">
-                <span class="icon-search"></span>
-            </div>
-            <div class="form-group search-group">
-                <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="" />
-            </div>
-        </form>
-        <div class="main">
-            <div id="notebooks"></div>
-            <div id="tags"></div>
+<div class="ui-row ui-scroll-y ui-body">
+    <form class="form-inline search-form" method="post">
+        <div class="form-group">
+            <span class="icon-search"></span>
         </div>
+        <div class="form-group search-group">
+            <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="" />
+        </div>
+    </form>
+    <div class="main">
+        <div id="notebooks"></div>
+        <div id="tags"></div>
     </div>
 </div>

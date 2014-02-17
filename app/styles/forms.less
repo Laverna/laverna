@@ -181,13 +181,6 @@
     .ui-scroll-y {
         overflow: hidden;
     }
-    .markdown-col {
-        left: 1%;
-    }
-    .preview-col {
-        right: 1%;
-        display: block;
-    }
     .markdown-col, .preview-col {
         .make-pagedown-column(5.84);
         min-height: 1px;
@@ -196,13 +189,25 @@
         bottom: 0;
         overflow: hidden;
     }
+    .markdown-col {
+        left: 1%;
+    }
+    .preview-col {
+        right: 1%;
+        display: block;
+    }
     .wmd-preview, .wmd-input {
         background-color: #FFF;
         width: 100%;
+        min-height: 1px;
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
+    }
+    textarea.wmd-input {
+        height: 100%;
+        padding-left: 15px;
     }
     .wmd-preview {
         overflow: auto;
@@ -213,11 +218,6 @@
 //
 // Responsive pagedown buttons
 //
-@media (max-width: @screen-sm-min) {
-    .distraction-free {
-        padding-top: @navbar-height;
-    }
-}
 .invisible-wmd-btn (@max-width) {
     .responsive-visibility();
     @media (max-width: @max-width) {

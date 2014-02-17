@@ -4,27 +4,6 @@
 
 // Make sidebar and content scrollable
 @media (min-width: @screen-xs-max) {
-    // html, body {
-    //     overflow: hidden;
-    // }
-    // #sidebar, #content {
-    //     position: relative;
-    //     height: 100%;
-    // }
-    .ui-s-cont {
-        width: 100%;
-        position: absolute;
-        top: @navbar-height;
-        left: 0;
-        height: 100%;
-    }
-    .ui-s-content {
-        position: absolute;
-        top: 0;
-        bottom: @navbar-height;
-        width: 100%;
-        overflow-y: scroll;
-    }
     .navbar-bottom {
         z-index: inherit;
         padding-bottom: 25px;
@@ -73,8 +52,5 @@
         margin-bottom: 0;
         vertical-align: middle;
         display: inline-block;
-    }
-    #sidebar {
-        border-bottom: 1px solid lighten(#CCC, 2%);
     }
 }

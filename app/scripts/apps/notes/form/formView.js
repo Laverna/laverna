@@ -162,7 +162,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 // Pagedown with textarea
                 if (pagedown === 'pagedown') {
                     self.$('#wmd-input').replaceWith(function () {
-                        return $('<textarea id="wmd-input">').addClass(this.className).addClass('form-control');
+                        return $('<textarea id="wmd-input">').addClass(this.className);
                     });
                     self.$('#wmd-input').val(self.model.get('content'));
                     editor.run();

@@ -17,35 +17,33 @@
     </ul>
 </nav>
 
-<div class="ui-s-cont">
-    <div class="ui-s-content">
-        <div class="main">
-            <div class="article">
-                <form id="noteForm" class="form-horizontal pretty-form" action="#" method="post">
-                    <div class="form-group">
-                        <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="Title" />
+<div class="ui-row ui-body ui-scroll-y">
+    <div class="main">
+        <div class="article">
+            <form id="noteForm" class="form-horizontal pretty-form" action="#" method="post">
+                <div class="form-group">
+                    <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="Title" />
+                </div>
+                <div class="form-group border-0">
+                    <select class="form-control" name="notebookId">
+                        <option value="0">Select notebook</option>
+                        <% _.forEach(notebooks, function (notebook) { %>
+                        <option value="{{notebook.id}}" {{ isActive(notebook.id, notebookId) }}>{{notebook.name}}</option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div id="wmd-button-bar"></div>
+                <div class="form-group wmd-group">
+                    <div class="markdown-col">
+                        <div class="wmd-input" id="wmd-input">{{content}}</div>
                     </div>
-                    <div class="form-group border-0">
-                        <select class="form-control" name="notebookId">
-                            <option value="0">Select notebook</option>
-                            <% _.forEach(notebooks, function (notebook) { %>
-                            <option value="{{notebook.id}}" {{ isActive(notebook.id, notebookId) }}>{{notebook.name}}</option>
-                            <% }); %>
-                        </select>
+                    <div class="preview-col">
+                        <div class="wmd-preview" id="wmd-preview"></div>
                     </div>
-                    <div id="wmd-button-bar"></div>
-                    <div class="form-group wmd-group">
-                        <div class="markdown-col">
-                            <div class="wmd-input" id="wmd-input">{{content}}</div>
-                        </div>
-                        <div class="preview-col">
-                            <div id="wmd-preview"></div>
-                        </div>
-                        <!-- For clipper -->
-                        <textarea id="clipContent" class="hidden" name="clipContent"></textarea>
-                    </div>
-                </form>
-            </div>
+                    <!-- For clipper -->
+                    <textarea id="clipContent" class="hidden" name="clipContent"></textarea>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -144,7 +144,8 @@
     }
     #inputTitle {
         height: auto;
-        font-size: @font-size-h1;
+        font-size: @font-size-h3;
+        font-weight: bold;
     }
     // Save button
     #wmd-button-bar {
@@ -166,6 +167,7 @@
     background-color: #EDECE4;
     #content .article {
         width: 100%;
+        min-height: 1px;
         padding-top: 0;
         background: transparent;
     }
@@ -176,21 +178,35 @@
     .wmd-group {
         .make-row();
     }
-    .markdown-col, .preview-col {
-        padding-top: 15px;
-        padding-bottom: 15px;
-        background-color: #FFF;
+    .ui-scroll-y {
+        overflow: hidden;
     }
     .markdown-col {
-        .make-pagedown-column(6);
-        min-height: @pagedown-min-height + 14px;
+        left: 1%;
     }
     .preview-col {
-        display: inline-block;
-        .make-pagedown-column(5.9);
-        .make-lg-column-offset(0.1);
-        .make-md-column-offset(0.1);
-        .make-sm-column-offset(0.1);
+        right: 1%;
+        display: block;
+    }
+    .markdown-col, .preview-col {
+        .make-pagedown-column(5.84);
+        min-height: 1px;
+        position: absolute;
+        top: @navbar-height * 2.4;
+        bottom: 0;
+        overflow: hidden;
+    }
+    .wmd-preview, .wmd-input {
+        background-color: #FFF;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+    .wmd-preview {
+        overflow: auto;
+        padding: 15px 20px;
     }
 }
 

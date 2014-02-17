@@ -187,12 +187,18 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             // Ace configs
             // this.editor.setOption('spellcheck', true);
             this.editor.setHighlightActiveLine(true);
-            this.editor.renderer.setShowGutter(false);
             this.editor.session.setUseWrapMode(true);
             this.editor.session.setUseSoftTabs(true);
             this.editor.session.setNewLineMode('unix');
-            this.editor.renderer.setPrintMarginColumn(false);
             this.editor.setShowPrintMargin(false);
+
+            this.editor.renderer.setPrintMarginColumn(false);
+            this.editor.renderer.setShowGutter(false);
+
+            // Margin: top bottom
+            this.editor.renderer.setScrollMargin(20, 100);
+            this.editor.renderer.setPadding(20);
+            this.editor.session.setScrollTop(1);
 
             // Auto expand: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
             this.editor.setOptions({

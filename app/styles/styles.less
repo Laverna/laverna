@@ -20,6 +20,46 @@ body {
 }
 
 //
+// Scrollable ui layout
+//
+#sidebar, #content {
+    position: relative;
+    height: 100%;
+}
+.ui-row {
+    overflow: hidden;
+    position: absolute;
+}
+.ui-scroll {
+    overflow: auto;
+}
+.ui-scroll-y {
+    overflow-y: scroll;
+}
+.ui-scroll-x {
+    overflow-x: scroll;
+}
+// UI with navbar
+.ui-body {
+    width: 100%;
+    bottom: 0;
+    top: @navbar-height;
+}
+.ui-row.navbar {
+    width: 100%;
+    height: @navbar-height;
+    overflow: visible;
+}
+// Scrollable grid
+.ui-left,
+.ui-right {
+    top: 0;
+    bottom: 0;
+}
+.ui-left { left: 0; }
+.ui-right { right: 0; }
+
+//
 // Basic styles for all navbars
 //
 .navbar {

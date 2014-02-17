@@ -1,5 +1,5 @@
 <!-- Sidebars header -->
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="ui-row navbar navbar-default navbar-static-top">
     <ul class="nav navbar-nav navbar-left">
         <li>
             <div class="btn-group">
@@ -40,25 +40,23 @@
     </ul>
 </nav>
 <!-- List of notes here -->
-<div class="ui-s-cont">
-    <div class="ui-s-content">
-        <form class="form-inline search-form" action="#" method="post">
-            <div class="form-group">
-                <span class="icon-search"></span>
-            </div>
-            <div class="form-group search-group">
-                <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="{{ args.searchQuery }}" />
-            </div>
-        </form>
-
-        <div class="main notes-list">
+<div class="ui-row ui-scroll-y ui-body">
+    <form class="form-inline search-form" action="#" method="post">
+        <div class="form-group">
+            <span class="icon-search"></span>
         </div>
+        <div class="form-group search-group">
+            <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="{{ args.searchQuery }}" />
+        </div>
+    </form>
 
-        <nav class="navbar navbar-static-top navbar-bottom">
-            <div class="btn-group btn-group-justified">
-                <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">Prev</a>
-                <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">Next</a>
-            </div>
-        </nav>
+    <div class="main notes-list">
     </div>
+
+    <nav class="navbar navbar-static-top navbar-bottom">
+        <div class="btn-group btn-group-justified">
+            <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">Prev</a>
+            <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">Next</a>
+        </div>
+    </nav>
 </div>

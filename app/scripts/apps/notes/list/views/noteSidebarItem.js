@@ -33,10 +33,10 @@ define([
             $('.list-group-item.active').removeClass('active');
             this.$('.list-group-item').addClass('active');
 
-            $('#sidebar .ui-s-content').scrollTop(
+            $('#sidebar .ui-scroll-y').scrollTop(
                 this.$('.list-group-item').offset().top -
-                $('#sidebar .ui-s-content').offset().top +
-                $('#sidebar .ui-s-content').scrollTop() - 100
+                $('#sidebar .ui-scroll-y').offset().top +
+                $('#sidebar .ui-scroll-y').scrollTop() - 100
             );
         },
 

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-static-top">
+<nav class="ui-row navbar navbar-static-top">
     <ul class="nav navbar-nav pull-left">
         <li>
             <a href="#" class="btn btn-default btn-toggle-sidebar visible-xs">
@@ -33,31 +33,29 @@
     </ul>
 </nav>
 
-<div class="ui-s-cont">
-    <div class="ui-s-content">
-        <div class="main">
-            <div class="article">
-                <header>
-                    <h1 class="page-header">
-                        {{ title }}
-                        <small>{{ createdDate() }}</small>
-                        <a href="#" class="btn btn-link favorite pull-right">
-                            <span class="icon-star <% if (isFavorite === 0) {%>icon-star-empty<% } %>"></span>
-                        </a>
-                    </h1>
-                </header>
-                <% if (taskAll !== 0) { %>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
-                        <span class="progress-percent">
-                            {{ getProgress() }}%
-                        </span>
-                    </div>
+<div class="ui-row ui-scroll-y ui-body">
+    <div class="main">
+        <div class="article">
+            <header>
+                <h1 class="page-header">
+                    {{ title }}
+                    <small>{{ createdDate() }}</small>
+                    <a href="#" class="btn btn-link favorite pull-right">
+                        <span class="icon-star <% if (isFavorite === 0) {%>icon-star-empty<% } %>"></span>
+                    </a>
+                </h1>
+            </header>
+            <% if (taskAll !== 0) { %>
+            <div class="progress">
+                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
+                    <span class="progress-percent">
+                        {{ getProgress() }}%
+                    </span>
                 </div>
-                <% } %>
-                <p><% if (notebook !== null) { %>{{ notebook }}<% } %></p>
-                {{ getContent() }}
             </div>
+            <% } %>
+            <p><% if (notebook !== null) { %>{{ notebook }}<% } %></p>
+            {{ getContent() }}
         </div>
     </div>
 </div>

@@ -219,12 +219,13 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
             if (mode === 'preview') {
                 // Editor with scrolls again
-                options.maxLines = this.editor.renderer.lineHeight;
-                options.minLines = 1;
+                this.$('#wmd-input').css('height', 'auto');
+                options.maxLines = null;
+                options.minLines = 2;
             }
             else {
-                options.marginTop = 0;
-                options.marginBottom = 0;
+                options.marginTop = 4;
+                options.marginBottom = 20;
             }
 
             // Auto expand: http://stackoverflow.com/questions/11584061/automatically-adjust-height-to-contents-in-ace-cloud9-editor
@@ -238,6 +239,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             this.editor.renderer.setPadding(options.marginTop);
             this.editor.session.setScrollTop(1);
 
+            // Update settings && resize
+            this.editor.renderer.updateFull(true);
             this.editor.resize();
         },
 

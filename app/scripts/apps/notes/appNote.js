@@ -1,11 +1,13 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'marionette',
     'app',
+    'enquire',
     'helpers/search',
     'helpers/syncStatus'
-], function (_, Marionette, App) {
+], function (_, $,  Marionette, App) {
     'use strict';
 
     /**
@@ -120,9 +122,15 @@ define([
     });
 
     App.on('notes:show', function (args) {
+        $(App.content.el).addClass('active-row');
+
         var current = (App.notesArg) ? App.notesArg.toString() : null;
         if (current !== _.omit(args, 'id').toString()) {
-            API.showNotes(args);
+            enquire.register("screen and (min-width:768px)", {
+                match: function () {
+                    API.showNotes(args);
+                }
+            });
         }
     });
 

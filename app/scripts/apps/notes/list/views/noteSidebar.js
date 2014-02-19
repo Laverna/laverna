@@ -44,6 +44,13 @@ define([
             this.listenTo(this.collection, 'prevPage', this.toPrevPage);
         },
 
+        onRender: function () {
+            // Make sidebar active
+            if ( !this.options.args.id) {
+                $(App.content.el).removeClass('active-row');
+            }
+        },
+
         toNextPage: function () {
             App.navigate(this.ui.nextPage.attr('href'));
         },

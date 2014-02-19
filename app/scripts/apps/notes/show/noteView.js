@@ -51,14 +51,6 @@ define([
         },
 
         onRender: function () {
-
-            //if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
-            //    $('#content').removeClass('hidden');
-            //    if (!$('#sidebar').hasClass('hidden')) {
-            //        $('#sidebar').addClass('hidden');
-            //    }
-            //}
-
             // Google code prettify
             var code = null;
             this.$('pre').addClass('prettyprint').each(function (idx, el) {

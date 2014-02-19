@@ -146,7 +146,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 converter,
                 editor;
 
-            require([pagedown], function runPagedown(Markdown) {
+            require([pagedown], function (Markdown) {
                 converter = new Markdown.Converter();
                 Markdown.Extra.init(converter);
 
@@ -165,10 +165,14 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                         return $('<textarea id="wmd-input">').addClass(this.className);
                     });
                     self.$('#wmd-input').val(self.model.get('content'));
+                    self.$('#wmd-input').on('scroll', function () {
+                        self.syncScrollTop($(this).scrollTop());
+                    });
                     editor.run();
                 }
                 // Pagedown with ace editor
                 else {
+                    _.bindAll(self, 'aceRender');
                     self.aceRender(editor);
                 }
 
@@ -215,7 +219,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 minLines     : 40,
                 marginTop    : 20,
                 marginBottom : 100
-            };
+            },
+            self = this;
 
             if (mode === 'preview') {
                 // Editor with scrolls again
@@ -242,6 +247,19 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             // Update settings && resize
             this.editor.renderer.updateFull(true);
             this.editor.resize();
+
+            // Sync scrollTop
+            this.editor.session.on('changeScrollTop', function () {
+                self.syncScrollTop(self.editor.renderer.getScrollTop());
+            });
+        },
+
+        /**
+         * Sync scrollTop of editor and preview
+         */
+        syncScrollTop: function (scrollTop) {
+            var $preview = this.$('.wmd-preview');
+            $preview.scrollTop(scrollTop);
         },
 
         /**

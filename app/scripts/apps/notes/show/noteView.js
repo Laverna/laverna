@@ -51,12 +51,13 @@ define([
         },
 
         onRender: function () {
-            // if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
-            //     $('#content').removeClass('hidden');
-            //     if (!$('#sidebar').hasClass('hidden')) {
-            //         $('#sidebar').addClass('hidden');
-            //     }
-            // }
+
+            //if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
+            //    $('#content').removeClass('hidden');
+            //    if (!$('#sidebar').hasClass('hidden')) {
+            //        $('#sidebar').addClass('hidden');
+            //    }
+            //}
 
             // Google code prettify
             var code = null;
@@ -175,8 +176,8 @@ define([
 
         toggleSidebar: function (e) {
             e.preventDefault();
-            $('#sidebar').toggleClass('hidden');
-            $('#content').toggleClass('hidden');
+            App.navigate('#/notes', true);
+            $(App.content.el).removeClass('active-row');
         },
 
         templateHelpers: function() {

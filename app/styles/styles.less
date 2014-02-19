@@ -22,6 +22,15 @@ body {
 //
 // Scrollable ui layout
 //
+@media (max-width: @screen-xs-max) {
+    #sidebar {
+        z-index: @zindex-tooltip;
+    }
+    .active-row {
+        z-index: @zindex-navbar-fixed;
+        background: #fff;
+    }
+}
 .ui-row {
     overflow: hidden;
     position: absolute;

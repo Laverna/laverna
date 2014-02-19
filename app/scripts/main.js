@@ -20,6 +20,7 @@ require.config({
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
         IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim.min',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
+        enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',

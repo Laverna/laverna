@@ -31,7 +31,6 @@
   "devDependencies": {
     "bootstrap": "3.1.0",
     "hammer": "https://github.com/EightMedia/hammer.js",
-    "device": "git@github.com:matthewhudson/device.js",
     "pagedown": "git@github.com:ujifgc/pagedown.git",
     "enquire": "~2.1.0"
   }

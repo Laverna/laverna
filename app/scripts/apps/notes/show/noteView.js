@@ -168,7 +168,8 @@ define([
 
         toggleSidebar: function (e) {
             e.preventDefault();
-            App.navigate('#/notes', true);
+            App.navigate('/notes/p1', {trigger: false});
+            App.trigger('notes:show', this.options.args);
             $(App.content.el).removeClass('active-row');
         },
 

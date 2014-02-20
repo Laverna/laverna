@@ -2,9 +2,10 @@
 define([
     'marionette',
     'app',
+    'jquery',
     'helpers/search',
     'helpers/syncStatus'
-], function (Marionette, App) {
+], function (Marionette, App, $) {
     'use strict';
 
     /**
@@ -16,6 +17,7 @@ define([
     AppNotebooks.on('start', function () {
         App.mousetrap.API.restart();
         App.content.reset();
+        $(App.content.el).removeClass('active-row');
         App.log('AppNotebook is started');
     });
 

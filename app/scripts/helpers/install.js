@@ -18,6 +18,9 @@ define([
             if (App.firstStart  === true) {
                 this.install();
             }
+            else if (App.settings.appVersion !== App.constants.VERSION) {
+                App.log('New version of application is available');
+            }
         },
 
         install: function () {

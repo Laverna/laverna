@@ -305,6 +305,19 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+            settingsAppVersion: {
+                files: {
+                    '<%= yeoman.app %>/scripts/collections/configs.js': '<%= yeoman.app %>/scripts/collections/configs.js'
+                },
+                options: {
+                    replacements: [
+                        {
+                            pattern: /\'appVersion\', .*/,
+                            replacement: '\'appVersion\', value: \'<%= pkg.version %>\' }));'
+                        }
+                    ]
+                }
+            },
             manifest: {
                 files : {
                     '<%= yeoman.dist %>/index.html' : '<%= yeoman.dist %>/index.html',
@@ -404,6 +417,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'string-replace:constants',
+        'string-replace:settingsAppVersion',
         'clean:dist',
         'useminPrepare',
         'concurrent:dist',

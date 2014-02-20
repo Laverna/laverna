@@ -123,15 +123,18 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         },
 
         onPagedownReady: function () {
+            var $wmdButton = this.$('.wmd-button-row');
+
             // Hide default buttons
             this.$('.wmd-button-row li').addClass('btn').css('left', 0);
-            this.$('.wmd-button-row').addClass('btn-group');
+            $wmdButton.addClass('btn-group');
 
-            // Save button
-            this.$('.wmd-button-row').append(this.$('.saveBtn').clone().addClass('wmd-save-button'));
+            // Save & cancel buttons
+            $wmdButton.append(this.$('.saveBtn').clone().addClass('wmd-save-button wmd-hidden'));
+            $wmdButton.append(this.$('.cancelBtn').clone().addClass('wmd-cancel-button wmd-hidden'));
 
             // Dropdown menu for changing modes
-            this.$('.wmd-button-row').prepend(this.$('.switch-mode').clone().addClass('wmd-mode-button'));
+            $wmdButton.prepend(this.$('.switch-mode').clone().addClass('wmd-mode-button wmd-hidden'));
 
             // Focus to input[title]
             this.ui.title.focus();

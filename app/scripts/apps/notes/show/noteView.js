@@ -157,13 +157,13 @@ define([
         },
 
         scrollTop: function () {
-            var Top = this.$('.ui-s-content').scrollTop();
-            this.$('.ui-s-content').scrollTop(Top - 50);
+            var Top = this.$('.ui-body').scrollTop();
+            this.$('.ui-body').scrollTop(Top - 50);
         },
 
         scrollDown: function () {
-            var Top = this.$('.ui-s-content').scrollTop();
-            this.$('.ui-s-content').scrollTop(Top + 50);
+            var Top = this.$('.ui-body').scrollTop();
+            this.$('.ui-body').scrollTop(Top + 50);
         },
 
         toggleSidebar: function (e) {

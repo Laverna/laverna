@@ -48,7 +48,7 @@ define([
 
             // Shortcuts. Application
             this.create(new Config({ name: 'appCreateNote', value: 'c' }));
-            this.create(new Config({ name: 'editMode', value: 'normal' }));
+            this.create(new Config({ name: 'editMode', value: 'preview' }));
             this.create(new Config({ name: 'appSearch', value: '/' }));
             this.create(new Config({ name: 'appKeyboardHelp', value: '?' }));
         },

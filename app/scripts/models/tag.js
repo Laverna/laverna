@@ -2,16 +2,14 @@
 define([
     'underscore',
     'backbone',
-    'migrations/note',
-    'backbone.assosiations'
+    'migrations/note'
 ], function (_, Backbone, TagsDB) {
     'use strict';
 
     /**
      * Tags model
      */
-    //var Tag = Backbone.Model.extend({
-    var Tag = Backbone.AssociatedModel.extend({
+    var Tag = Backbone.Model.extend({
         idAttribute: 'id',
 
         database : TagsDB,

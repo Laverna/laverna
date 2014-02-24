@@ -5,6 +5,12 @@ require.config({
             name     : 'ace',
             location : '../bower_components/ace/lib/ace',
             main     : 'ace'
+        },
+        // Pagedown-ace editor
+        {
+            name     : 'pagedown-ace',
+            location : '../bower_components/pagedown-ace',
+            main     : 'Markdown.Editor'
         }
     ],
     paths: {
@@ -29,10 +35,7 @@ require.config({
         'backbone.mousetrap'       :  '../bower_components/backbone.mousetrap/backbone.mousetrap',
         // Pagedown                :
         'pagedown'                 :  '../bower_components/pagedown/Markdown.Editor',
-        'pagedown-ace'             :  '../bower_components/pagedown-ace/Markdown.Editor',
-        'pagedown.converter'       :  '../bower_components/pagedown-ace/Markdown.Converter',
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
-        'pagedown.sanitizer'       :  '../bower_components/pagedown-ace/Markdown.Sanitizer',
         'to-markdown'              :  '../bower_components/to-markdown/src/to-markdown',
         // Markdown helpers        :
         'checklist'                :  'libs/checklist',
@@ -40,7 +43,6 @@ require.config({
         // Other                   :  libraries
         'bootstrap'                :  '../bower_components/bootstrap/dist/js/bootstrap.min',
         'prettify'                 :  '../bower_components/google-code-prettify/src/prettify',
-        'bootstrap-modal'          :  'libs/bootstrap-modal/src/backbone.bootstrap-modal',
         // View                    :  scripts here
         'modalRegion'              :  'views/modal',
         'brandRegion'              :  'views/brand',
@@ -57,56 +59,44 @@ require.config({
         localStorage: {
             deps: ['underscore', 'backbone']
         },
-        IndexedDBShim: {},
         indexedDB: {
-            deps: [
-                // 'IndexedDBShim',
-                'underscore',
-                'backbone'
-            ]
+            deps: ['underscore', 'backbone']
         },
-        dropbox: {
-            exports: 'Dropbox'
-        },
-        bootstrap: {
-            deps: ['jquery'],
-            exports: '$'
-        },
+        // Mousetrap
         'Mousetrap': { },
         'mousetrap-pause': {
             deps: ['Mousetrap']
         },
         'backbone.mousetrap': {
-            deps: ['Mousetrap', 'mousetrap-pause']
+            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
         },
+        // Ace && pagedown editor
         ace: {
             exports: 'ace'
         },
-        cjcl: {
-            exports: 'cjcl'
-        },
         'pagedown': {
             exports: 'Markdown',
-            deps: [ '../bower_components/pagedown-ace/Markdown.Converter' ]
+            deps: [ 'pagedown-ace' ]
         },
-        'pagedown-ace': {
+        'pagedown-extra': [ 'pagedown-ace' ],
+        'pagedown-ace/Markdown.Editor': {
             exports: 'Markdown',
-            deps: [ '../bower_components/pagedown-ace/Markdown.Converter' ]
+            deps: [ 'pagedown-ace/Markdown.Converter' ]
         },
-        'pagedown.sanitizer': [
-        ],
-        'pagedown-extra': [
-            'pagedown-ace'
-        ],
+        'pagedown-ace/Markdown.Sanitizer': {
+            deps: [ 'pagedown-ace/Markdown.Converter' ]
+        },
         'to-markdown': {
             exports: 'toMarkdown'
         },
+        bootstrap: {
+            deps: ['jquery']
+        },
+        sjcl: {
+            exports: 'sjcl'
+        },
         prettify: {
             exports: 'prettify'
-        },
-        'bootstrap-modal': {
-            deps: ['bootstrap', 'underscore', 'jquery'],
-            exports: 'Backbone.BootstrapModal'
         }
     },
     findNestedDependencies: true,

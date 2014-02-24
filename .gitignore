@@ -4,6 +4,7 @@ dist
 .tmp
 .sass-cache
 app/bower_components
+test/bower_components
 .idea
 app/styles/*.css
 *.swp

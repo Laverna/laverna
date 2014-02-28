@@ -9,25 +9,24 @@
     <ul class="nav navbar-nav pull-right">
         <li>
             <a href="#/notes/edit/{{id}}" class="btn btn-default btn-edit">
-                <span class="icon-pencil"></span> Edit
+                <span class="icon-pencil"></span> <span class="hidden-xxs">Edit</span>
             </a>
         </li>
         <% if (trash === 1) { %>
         <li>
             <a id="restoreNote" href="#" class="btn btn-default">
-                <span class="icon-undo"></span> Restore
+                <span class="icon-undo"></span> <span class="hidden-xxs">Restore</span>
             </a>
         </li>
         <% } %>
         <li>
             <a href="#/notes/remove/{{id}}" class="btn btn-default">
-                <span class="icon-trash"></span> <% if (trash === 0) { %>Delete<% } else { %> Forever<% } %>
+                <span class="icon-trash"></span> <span class="hidden-xxs"><% if (trash === 0) { %>Delete<% } else { %> Forever<% } %></span>
             </a>
         </li>
         <li>
             <a href="#/settings" class="btn btn-default" id="showSettings">
-                <span class="hidden-sm"><span class="icon-cog"></span> Settings</span>
-                <span class="visible-sm"><span class="icon-cog"></span></span>
+                <span class="icon-cog"></span> <span class="hidden-xxs">Settings</span>
             </a>
         </li>
     </ul>

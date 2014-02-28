@@ -2,6 +2,13 @@
 // Responsive.less
 //
 
+.hidden-xxs {
+  @media (max-width: @screen-xxs-max) {
+    .responsive-invisibility();
+  }
+}
+
+// Make sidebar and content scrollable
 @media (min-width: @screen-xs-max) {
     .navbar-bottom {
         z-index: inherit;

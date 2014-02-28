@@ -3,7 +3,7 @@ define([ ], function () {
     'use strict';
 
     var constants = {};
-    constants.VERSION = '0.1.2';
+    constants.VERSION = '0.2.0';
 
     constants.URL = 'https://laverna.cc/';
     constants.DROPBOX_KEY = '10iirspliqts95d';

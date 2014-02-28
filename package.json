@@ -1,6 +1,6 @@
 {
   "name": "laverna",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",

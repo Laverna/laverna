@@ -330,11 +330,12 @@ module.exports = function (grunt) {
                     cache: [
                     ],
                     network: ['*'],
-                    // fallback: ['/ /404.html'],
+                    fallback: ['/ /404.html'],
                     preferOnline: true,
                     verbose: true,
                     timestamp: true,
                     hash: true,
+                    exclude: ['welcome.html', 'dropbox.html'],
                     master: ['index.html']
                 },
                 src: [
@@ -465,9 +466,9 @@ module.exports = function (grunt) {
         'uglify',
         'rev',
         'copy:dist',
-        // 'string-replace:manifest',
-        'usemin'
-        // 'manifest'
+        'string-replace:manifest',
+        'usemin',
+        'manifest'
     ]);
 
     grunt.registerTask('default', [

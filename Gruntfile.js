@@ -309,7 +309,7 @@ module.exports = function (grunt) {
             manifest: {
                 files : {
                     '<%= yeoman.dist %>/index.html' : '<%= yeoman.dist %>/index.html',
-                    '<%= yeoman.dist %>/welcome.html' : '<%= yeoman.dist %>/welcome.html',
+                    // '<%= yeoman.dist %>/welcome.html' : '<%= yeoman.dist %>/welcome.html',
                     '<%= yeoman.dist %>/404.html' : '<%= yeoman.dist %>/404.html'
                 },
                 options: {

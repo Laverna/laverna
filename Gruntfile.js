@@ -403,7 +403,7 @@ module.exports = function (grunt) {
                 'jst',
                 'connect:test',
                 'open:test',
-                'watch:livereload'
+                // 'watch:livereload'
             ]);
         }
 
@@ -422,12 +422,12 @@ module.exports = function (grunt) {
         isConnected = Boolean(isConnected);
         var testTasks = [
                 'clean:server',
-                'coffee',
+                // 'coffee',
                 'createDefaultTemplate',
                 'jst',
                 'connect:test',
                 'mocha',
-                'watch:test'
+                // 'watch:test'
             ];
 
         if(!isConnected) {

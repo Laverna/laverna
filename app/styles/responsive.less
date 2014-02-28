@@ -2,7 +2,6 @@
 // Responsive.less
 //
 
-// Make sidebar and content scrollable
 @media (min-width: @screen-xs-max) {
     .navbar-bottom {
         z-index: inherit;
@@ -13,25 +12,23 @@
     }
 }
 
+@media (max-width: 368px) {
+    #sidebar .navbar-brand {
+        display: none;
+    }
+}
+
 // Tablets and small screens only
 @media (max-width: @screen-xs-max) {
+    .pull-right {
+        float: right;
+        width: auto;
+        margin-bottom: 15px;
+    }
     // Navbar
     .navbar {
         .nav, .navbar-brand {
             float: left;
-        }
-        .navbar-brand {
-            padding: 15px;
-            font-size: 18px;
-            line-height: 20px;
-            max-height: @font-size-base + 30px;
-            max-width: 320px - 170px;
-            overflow: hidden;
-        }
-        .pull-right {
-            float: right;
-            width: auto;
-            margin-bottom: 15px;
         }
         .nav {
             > li {

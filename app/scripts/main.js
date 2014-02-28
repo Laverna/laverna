@@ -95,6 +95,9 @@ require.config({
         sjcl: {
             exports: 'sjcl'
         },
+        dropbox: {
+            exports: 'Dropbox'
+        },
         prettify: {
             exports: 'prettify'
         }

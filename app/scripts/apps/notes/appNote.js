@@ -7,7 +7,7 @@ define([
     'enquire',
     'helpers/search',
     'helpers/syncStatus'
-], function (_, $,  Marionette, App) {
+], function (_, $,  Marionette, App, enquire) {
     'use strict';
 
     /**
@@ -105,6 +105,14 @@ define([
             require(['apps/notes/show/showController'], function (Show) {
                 executeAction(new Show().showNote, args);
             });
+        },
+
+        // Re-render sidebar only if necessary
+        checkShowSidebar: function (args) {
+            var current = (App.notesArg) ? App.notesArg.toString() : null;
+            if (current !== _.omit(args, 'id').toString()) {
+                API.showNotes(args);
+            }
         }
     };
 
@@ -116,24 +124,28 @@ define([
         API.showNotes(null, null);
     });
 
+    // Show sidebar with notes list only on big screen
+    App.on('notes:show', function (args) {
+        $(App.content.el).addClass('active-row');
+        enquire.register('screen and (min-width:768px)', {
+            match: function () {
+                API.checkShowSidebar(args);
+            }
+        });
+    });
+
+    // Toggle to sidebar
+    App.on('notes:toggle', function (args) {
+        $(App.content.el).removeClass('active-row');
+        API.checkShowSidebar(args);
+    });
+
     // Re render
     App.on('notes:rerender', function () {
         API.showNotes(API.notesArg);
     });
 
-    App.on('notes:show', function (args) {
-        $(App.content.el).addClass('active-row');
-
-        var current = (App.notesArg) ? App.notesArg.toString() : null;
-        if (current !== _.omit(args, 'id').toString()) {
-            enquire.register("screen and (min-width:768px)", {
-                match: function () {
-                    API.showNotes(args);
-                }
-            });
-        }
-    });
-
+    // Re-render sidebar if new note has been added
     App.on('notes:added', function (id) {
         API.showNotes(_.extend(App.notesArg, {id: id}));
     });

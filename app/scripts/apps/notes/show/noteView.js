@@ -156,21 +156,29 @@ define([
             this.ui.percent.html(percent + '%');
         },
 
+        /**
+         * Scroll page to top when user hits up button
+         */
         scrollTop: function () {
             var Top = this.$('.ui-body').scrollTop();
             this.$('.ui-body').scrollTop(Top - 50);
         },
 
+        /**
+         * Scroll page down when user hits down button
+         */
         scrollDown: function () {
             var Top = this.$('.ui-body').scrollTop();
             this.$('.ui-body').scrollTop(Top + 50);
         },
 
+        /**
+         * Show sidebar
+         */
         toggleSidebar: function (e) {
             e.preventDefault();
             App.navigate('/notes/p1', {trigger: false});
-            App.trigger('notes:show', this.options.args);
-            $(App.content.el).removeClass('active-row');
+            App.trigger('notes:toggle', this.options.args);
         },
 
         templateHelpers: function() {

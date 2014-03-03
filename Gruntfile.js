@@ -476,7 +476,7 @@ module.exports = function (grunt) {
         'uglify',
         'rev',
         'copy',
-        // 'string-replace:manifest',
+        'string-replace:manifest',
         'usemin',
         'manifest'
     ]);

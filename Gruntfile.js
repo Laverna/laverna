@@ -247,6 +247,16 @@ module.exports = function (grunt) {
             }
         },
         copy: {
+            readme: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/../',
+                    dest: '<%= yeoman.app %>/docs/',
+                    src: [
+                        'README.md'
+                    ]
+                }]
+            },
             dist: {
                 files: [{
                     expand: true,
@@ -465,8 +475,8 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'rev',
-        'copy:dist',
-        'string-replace:manifest',
+        'copy',
+        // 'string-replace:manifest',
         'usemin',
         'manifest'
     ]);

@@ -94,10 +94,9 @@ define([
 
         App.settings = configs.getConfigs();
 
+        i18n.init({ lng: App.settings.appLang });
         if (App.settings.appLang === '') {
-            i18n.init({debug: true});
-        } else {
-            i18n.init({lng: App.settings.appLang, debug: true});
+            configs.get('appLang').save({ 'value': i18n.lng() });
         }
     });
 

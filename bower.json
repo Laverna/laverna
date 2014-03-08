@@ -24,7 +24,8 @@
     "sinonjs": "~1.7.3",
     "sinon-qunit": "~1.0.0",
     "sjcl": "~1.0.0",
-    "to-markdown": "#jquery"
+    "to-markdown": "#jquery",
+    "i18next": "~1.7.2"
   },
   "devDependencies": {
     "bootstrap": "3.1.0",

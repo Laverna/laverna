@@ -362,6 +362,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
         templateHelpers: function() {
             return {
+                i18n: $.t,
+
                 isActive: function (id, notebookId) {
                     var selected = '';
                     if (notebookId && id === notebookId) {

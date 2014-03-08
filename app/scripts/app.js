@@ -3,9 +3,9 @@ define([
     'underscore',
     'backbone',
     'modalRegion',
-    'brandRegion',
-    'collections/configs',
-    'marionette'
+    'brandRegion', 'collections/configs',
+    'marionette',
+    'i18next'
 ], function (_, Backbone, ModalRegion, BrandRegion, Configs) {
     'use strict';
 
@@ -93,6 +93,12 @@ define([
         }
 
         App.settings = configs.getConfigs();
+
+        if (App.settings.appLang === '') {
+            i18n.init({debug: true});
+        } else {
+            i18n.init({lng: App.settings.appLang, debug: true});
+        }
     });
 
     // Start default module

@@ -24,8 +24,13 @@ define([
                 $('#sidebar .ui-s-content').offset().top +
                 $('#sidebar .ui-s-content').scrollTop() - 100
             );
-        }
+        },
 
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
+        }
     });
 
     return View;

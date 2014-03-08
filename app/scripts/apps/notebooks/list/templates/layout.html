@@ -12,12 +12,12 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#/notes"><i class="icon-file"></i> Inbox</a></li>
-                        <li><a href="#/notes/f/favorite"><i class="icon-star"></i> Favorites</a></li>
-                        <li><a href="#/notes/f/trashed"><i class="icon-trash"></i> Trash</a></li>
-                        <li><a href="#/notebooks"><i class="icon-book"></i> Notebooks</a></li>
-                        <li><a href="#/settings"><i class="icon-cog"></i> Settings</a></li>
-                        <li><a href="#/about"><i class="icon-help-circled"></i> About</a></li>
+                        <li><a href="#/notes"><i class="icon-file"></i> {{ i18n('Inbox') }}</a></li>
+                        <li><a href="#/notes/f/favorite"><i class="icon-star"></i>  {{ i18n('Favorites') }}</a></li>
+                        <li><a href="#/notes/f/trashed"><i class="icon-trash"></i>  {{ i18n('Trash') }}</a></li>
+                        <li><a href="#/notebooks"><i class="icon-book"></i>  {{ i18n('Notebooks') }}</a></li>
+                        <li><a href="#/settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
+                        <li><a href="#/about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -28,7 +28,7 @@
             </a>
         </li>
     </ul>
-    <a href="#/notebooks" class="btn-link navbar-brand">Notebooks & tags</a>
+    <a href="#/notebooks" class="btn-link navbar-brand">{{ i18n('Notebooks & tags') }}</a>
     <ul class="nav navbar-nav navbar-right">
         <li>
             <a href="#/notebooks/add" class="btn btn-danger addlink">
@@ -45,7 +45,7 @@
             <span class="icon-search"></span>
         </div>
         <div class="form-group search-group">
-            <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="" />
+            <input class="form-control search-input" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value=""/>
         </div>
     </form>
     <div class="main">

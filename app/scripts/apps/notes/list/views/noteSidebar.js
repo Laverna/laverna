@@ -2,9 +2,7 @@
 define([
     'underscore',
     'app',
-    'backbone',
-    'apps/notes/list/views/noteSidebarItem',
-    'text!apps/notes/list/templates/sidebarList.html',
+    'backbone', 'apps/notes/list/views/noteSidebarItem', 'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap',
     'marionette'
 ], function(_, App, Backbone, NoteSidebarItem, Template) {
@@ -88,21 +86,26 @@ define([
             var viewData = {
                 title       : this.options.title,
                 urlPage     : this.urlPage,
-                args        : this.options.args
+                args        : this.options.args,
             };
             return viewData;
         },
 
         templateHelpers: function () {
             return {
+                i18n: $.t,
+
                 urlPage : function () {
                     return '/notes';
                 },
+
                 pageTitle: function () {
                     var title = 'Inbox';
                     if (this.args.filter) {
                         title = this.args.filter;
                     }
+                    title = $.t(title.substr(0,1).toUpperCase() + title.substr(1));
+
                     if (this.args.query) {
                         title += ': ' + this.args.query;
                     }

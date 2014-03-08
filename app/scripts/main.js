@@ -19,6 +19,7 @@ require.config({
         text                       :  '../bower_components/requirejs-text/text',
         jquery                     :  '../bower_components/jquery/jquery',
         underscore                 :  '../bower_components/underscore/underscore',
+        i18next                    :  '../bower_components/i18next/i18next.min',
         // Backbone &              :  Marionette
         backbone                   :  '../bower_components/backbone/backbone',
         marionette                 :  '../bower_components/marionette/lib/core/amd/backbone.marionette',
@@ -115,5 +116,4 @@ require([
     'use strict';
 
     App.start();
-
 });

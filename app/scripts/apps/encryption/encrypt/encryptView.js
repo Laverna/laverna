@@ -71,8 +71,13 @@ define([
                 max: this.max,
                 oldPass: this.options.oldPass,
             };
-        }
+        },
 
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
+        }
     });
 
     return View;

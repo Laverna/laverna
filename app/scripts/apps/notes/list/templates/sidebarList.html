@@ -11,13 +11,13 @@
                         <i class="icon-align-justify visible-xs pull-left"></i>
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#/notes"><i class="icon-file"></i> Inbox</a></li>
-                        <li><a href="#/notes/f/favorite"><i class="icon-star"></i> Favorites</a></li>
-                        <li><a href="#/notes/f/trashed"><i class="icon-trash"></i> Trash</a></li>
-                        <li><a href="#/notebooks"><i class="icon-book"></i> Notebooks</a></li>
-                        <li><a href="#/settings"><i class="icon-cog"></i> Settings</a></li>
-                        <li><a href="#/about"><i class="icon-help-circled"></i> About</a></li>
+                    <ul class="dropdown-menu" >
+                        <li><a href="#/notes"><i class="icon-file"></i> {{ i18n('Inbox') }}</a></li>
+                        <li><a href="#/notes/f/favorite"><i class="icon-star"></i>  {{ i18n('Favorites') }}</a></li>
+                        <li><a href="#/notes/f/trashed"><i class="icon-trash"></i>  {{ i18n('Trash') }}</a></li>
+                        <li><a href="#/notebooks"><i class="icon-book"></i>  {{ i18n('Notebooks') }}</a></li>
+                        <li><a href="#/settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
+                        <li><a href="#/about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -46,7 +46,7 @@
             <span class="icon-search"></span>
         </div>
         <div class="form-group search-group">
-            <input class="form-control search-input" type="text" id="search-input" placeholder="Search" value="{{ args.searchQuery }}" />
+            <input class="form-control search-input" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value="{{ args.searchQuery }}" />
         </div>
     </form>
 
@@ -55,8 +55,8 @@
 
     <nav class="navbar navbar-static-top navbar-bottom">
         <div class="btn-group btn-group-justified">
-            <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">Prev</a>
-            <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">Next</a>
+            <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">{{ i18n('Previous') }}</a>
+            <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">{{ i18n('Next') }}</a>
         </div>
     </nav>
 </div>

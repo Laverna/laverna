@@ -1,17 +1,17 @@
 <nav class="ui-row navbar navbar-static-top">
     <ul class="m0 pull-right">
         <li class="btn-group">
-            <span class="saveBtn pull-right btn btn-success"><i class="icon-save"></i> Save</span>
+        <span class="saveBtn pull-right btn btn-success"><i class="icon-save"></i> {{ i18n('Save') }}</span>
         </li>
         <li class="btn-group">
-            <span class="cancelBtn pull-right btn btn-default">Cancel</span>
+            <span class="cancelBtn pull-right btn btn-default">{{ i18n('Cancel') }}</span>
         </li>
         <li class="btn-group dropdown switch-mode">
             <a href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="icon-fullscreen"></i> <b class="caret"></b></a>
             <ul class="modeMenu dropdown-menu pull-right" role="menu" aria-labelledby="switchMode">
-                <li><a href="#" data-mode="fullscreen"><i class="icon-fullscreen"></i> Fullscreen</a></li>
-                <li><a href="#" data-mode="preview"><i class="icon-eye"></i> Preview</a></li>
-                <li><a href="#" data-mode="normal"><i class="icon-squares"></i> Normal</a></li>
+                <li><a href="#" data-mode="fullscreen"><i class="icon-fullscreen"></i> {{ i18n('Fullscreen') }}</a></li>
+                <li><a href="#" data-mode="preview"><i class="icon-eye"></i> {{ i18n('Preview') }}</a></li>
+                <li><a href="#" data-mode="normal"><i class="icon-squares"></i> {{ i18n('Normal') }}</a></li>
             </ul>
         </li>
     </ul>
@@ -22,11 +22,11 @@
         <div class="article">
             <form id="noteForm" class="form-horizontal pretty-form" action="#" method="post">
                 <div class="form-group">
-                    <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="Title" />
+                    <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="{{ i18n('Title') }}" />
                 </div>
                 <div class="form-group border-0">
                     <select class="form-control" name="notebookId">
-                        <option value="0">Select notebook</option>
+                        <option value="0">{{ i18n('Select notebook') }}</option>
                         <% _.forEach(notebooks, function (notebook) { %>
                         <option value="{{notebook.id}}" {{ isActive(notebook.id, notebookId) }}>{{notebook.name}}</option>
                         <% }); %>

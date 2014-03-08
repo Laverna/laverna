@@ -183,6 +183,8 @@ define([
 
         templateHelpers: function() {
             return {
+                i18n: $.t,
+
                 getProgress: function() {
                     return Math.floor(this.taskCompleted * 100 / this.taskAll);
                 },

@@ -9,24 +9,24 @@
     <ul class="nav navbar-nav pull-right">
         <li>
             <a href="#/notes/edit/{{id}}" class="btn btn-default btn-edit">
-                <span class="icon-pencil"></span> <span class="hidden-xxs">Edit</span>
+                <span class="icon-pencil"></span> <span class="hidden-xxs">{{ i18n('Edit') }}</span>
             </a>
         </li>
         <% if (trash === 1) { %>
         <li>
             <a id="restoreNote" href="#" class="btn btn-default">
-                <span class="icon-undo"></span> <span class="hidden-xxs">Restore</span>
+                <span class="icon-undo"></span> <span class="hidden-xxs">{{ i18n('Restore') }}</span>
             </a>
         </li>
         <% } %>
         <li>
             <a href="#/notes/remove/{{id}}" class="btn btn-default">
-                <span class="icon-trash"></span> <span class="hidden-xxs"><% if (trash === 0) { %>Delete<% } else { %> Forever<% } %></span>
+                <span class="icon-trash"></span> <span class="hidden-xxs"><% if (trash === 0) { %>{{ i18n('Delete') }}<% } else { %> {{ i18n('Forever') }}<% } %></span>
             </a>
         </li>
         <li>
             <a href="#/settings" class="btn btn-default" id="showSettings">
-                <span class="icon-cog"></span> <span class="hidden-xxs">Settings</span>
+                <span class="icon-cog"></span> <span class="hidden-xxs">{{ i18n('Settings') }}</span>
             </a>
         </li>
     </ul>

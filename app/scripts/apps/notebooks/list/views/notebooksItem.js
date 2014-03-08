@@ -31,8 +31,13 @@ define([
             data.name = App.Encryption.API.decrypt(data.name);
 
             return data;
-        }
+        },
 
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
+        }
     });
 
     return View;

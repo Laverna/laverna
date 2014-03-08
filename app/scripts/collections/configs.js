@@ -3,8 +3,7 @@ define([
     'underscore',
     'backbone',
     'models/config',
-    'localStorage'
-], function (_, Backbone, Config) {
+    'localStorage' ], function (_, Backbone, Config) {
     'use strict';
 
     var Configs = Backbone.Collection.extend({
@@ -20,6 +19,7 @@ define([
         firstStart: function () {
             // Basic
             this.create(new Config({ name: 'appVersion', value: '0.2.0' }));
+            this.create(new Config({ name: 'appLang', value: '' }));
             this.create(new Config({ name: 'cloudStorage', value: 0 }));
             this.create(new Config({ name: 'pagination', value: '10' }));
             this.create(new Config({ name: 'editMode', value: 'preview' }));

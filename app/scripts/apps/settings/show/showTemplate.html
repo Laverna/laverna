@@ -1,10 +1,10 @@
 <div class="modal-dialog"><div class="modal-content modal-settings">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 class="modal-title">Settings</h3>
+        <h3 class="modal-title">{{ i18n('Settings') }}</h3>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#basic" data-toggle="tab">Basic</a></li>
-            <li><a href="#shortcuts" data-toggle="tab">Shortcuts</a></li>
+            <li class="active"><a href="#basic" data-toggle="tab">{{ i18n('Basic') }}</a></li>
+            <li><a href="#shortcuts" data-toggle="tab">{{ i18n('Shortcuts') }}</a></li>
         </ul>
     </div>
     <div class="modal-body">
@@ -14,65 +14,65 @@
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="cloudStorage">
-                            <i class="fa fa-cloud"></i> Cloud storage
+                            <i class="fa fa-cloud"></i> {{ i18n('Cloud storage') }}
                         </label>
                         <div class="col-sm-10">
                             <select class="form-control" name="cloudStorage" id="cloudStorage">
-                                <option value="0">No</option>
+                                <option value="0">{{ i18n('No') }}</option>
                                 <option value="dropbox"<%if(models.cloudStorage === 'dropbox'){ %> selected<% } %>>Dropbox</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="pagination">Notes per page</label>
+                        <label class="col-sm-2 control-label" for="pagination">{{ i18n('Notes per page') }}</label>
                         <div class="col-sm-10">
                             <input type="text" id="pagination" name="pagination" value="{{models.pagination}}" class="form-control" >
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Default edit mode</label>
+                        <label class="col-sm-2 control-label">{{ i18n('Default edit mode') }}</label>
                         <div class="col-sm-10">
                             <select class="form-control" name="editMode" checked="{{models.editMode}}">
-                                <option value="normal">Normal</option>
-                                <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>Fullscreen</option>
-                                <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>Fullscreen with preview</option>
+                                <option value="normal">{{ i18n('Normal') }}</option>
+                                <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>{{ i18n('Fullscreen') }}</option>
+                                <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>{{ i18n('Fullscreen with preview') }}</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="useEncryption">Use encryption</label>
+                        <label class="col-sm-2 control-label" for="useEncryption">{{ i18n('Use encryption') }}</label>
                         <div class="col-sm-10 checkbox">
                              <label class="control-label">
                                  <input id="useEncryption" class="showField" data-field="#encryptOpt" type="checkbox" name="encrypt" <% if(models.encrypt === 1) { %> checked<% } %> >
-                                 yes
+                                 {{ i18n('Yes') }}
                              </label>
                         </div>
                     </div>
                     <fieldset id="encryptOpt" style="<% if(models.encrypt === 0) { %>display:none;<% } %>">
-                        <legend>Encryption parameters</legend>
+                        <legend>{{ i18n('Encryption parameters') }}</legend>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Encryption Password</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Encryption Password') }}</label>
                             <div class="col-sm-10">
                                 <input type="text" name="encryptPass" value="{{models.encryptPass}}" class="form-control" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Salt</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Salt') }}</label>
                             <div class="col-sm-10">
                                 <input type="text" name="encryptSalt" value="{{models.encryptSalt}}" class="form-control" >
-                                <a id="randomize" href="#">Random</a>
+                                <a id="randomize" href="#">{{ i18n('Random') }}</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Strengthen by a factor of</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Strengthen by a factor of') }}</label>
                             <div class="col-sm-10">
                                 <input type="text" name="encryptIter" value="{{models.encryptIter}}" class="form-control" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Key size</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Key size') }}</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="encryptKeySize">
                                     <option value="128"<%if(models.encryptKeySize === '128'){ %> selected<% } %>>128</option>
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Authentication strength</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Authentication strength') }}</label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="encryptTag">
                                     <option value="64"<%if(models.encryptTag === '64'){ %> selected<% } %>>64</option>
@@ -95,90 +95,90 @@
                 </div>
                 <div class="tab-pane" id="shortcuts">
                     <fieldset>
-                        <legend>Navigation</legend>
+                        <legend>{{ i18n('Navigation') }}</legend>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Top</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Top') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.navigateTop}}" name="navigateTop" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Bottom</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Bottom') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.navigateBottom}}" name="navigateBottom" />
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>jump</legend>
+                        <legend>{{ i18n('Jump') }}</legend>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Go to inbox</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Go to inbox') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.jumpInbox}}" name="jumpInbox"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Go to notebook list</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Go to notebook list') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.jumpNotebook}}" name="jumpNotebook"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Go to favorite notes</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Go to favorite notes') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.jumpFavorite}}" name="jumpFavorite"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Go to removed notes</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Go to removed notes') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.jumpRemoved}}" name="jumpRemoved"/>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Actions</legend>
+                        <legend>{{ i18n('Actions') }}</legend>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Edit</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Edit') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.actionsEdit}}" name="actionsEdit"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Open</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Open') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.actionsOpen}}" name="actionsOpen"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Remove</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Remove') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.actionsRemove}}" name="actionsRemove"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Rotate Star</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Rotate Star') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.actionsRotateStar}}" name="actionsRotateStar"/>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>app</legend>
+                        <legend>{{ i18n('App') }}</legend>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Create new note</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Create new note') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.appCreateNote}}" name="appCreateNote"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Search note</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Search note') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.appSearch}}" name="appSearch"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Keyboard help</label>
+                            <label class="col-sm-2 control-label">{{ i18n('Keyboard help') }}</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="text" value="{{models.appKeyboardHelp}}" name="appKeyboardHelp"/>
                             </div>
@@ -189,7 +189,7 @@
         </form>
     </div><!-- /.modal-body -->
     <div class="modal-footer">
-        <button type="button" class="btn btn-success ok">Save</button>
-        <button type="button" class="btn btn-default cancelBtn" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success ok">{{ i18n('Save') }}</button>
+        <button type="button" class="btn btn-default cancelBtn" data-dismiss="modal">{{ i18n('Cancel') }}</button>
     </div>
 </div></div>

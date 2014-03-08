@@ -53,8 +53,13 @@ define([
             } else {
                 this.collection.at(0).trigger('active');
             }
-        }
+        },
 
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
+        }
     });
 
     return View;

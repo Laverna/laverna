@@ -106,8 +106,13 @@ define([
                 e.preventDefault();
             }
             this.trigger('close');
-        }
+        },
 
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
+        }
     });
 
     return View;

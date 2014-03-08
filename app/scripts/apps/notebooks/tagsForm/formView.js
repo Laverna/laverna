@@ -89,6 +89,12 @@ define([
                     that.ui.name.attr('placeholder', 'Tag name is required');
                 }
             });
+        },
+
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
         }
     });
 

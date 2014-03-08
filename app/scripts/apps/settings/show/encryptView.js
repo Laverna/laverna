@@ -42,6 +42,12 @@ define([
             return {
                 max: this.max
             };
+        },
+
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
         }
     });
 

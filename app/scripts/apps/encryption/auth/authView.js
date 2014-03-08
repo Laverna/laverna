@@ -30,6 +30,12 @@ define([
         login: function (e) {
             e.preventDefault();
             this.trigger('login', this.ui.password.val());
+        },
+
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
         }
     });
 

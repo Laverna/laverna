@@ -75,8 +75,13 @@ define([
             if (this.options[region] !== 0) {
                 this.activeRegion = region;
             }
-        }
+        },
 
+        templateHelpers: function () {
+            return {
+                i18n: $.t
+            };
+        }
     });
 
     return Layout.View;

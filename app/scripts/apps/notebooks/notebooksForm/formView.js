@@ -82,6 +82,8 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
 
         templateHelpers: function () {
             return {
+                i18n: $.t,
+
                 isParent: function (notebookId, parentId) {
                     var selected = '';
                     if (parseInt(notebookId) === parseInt(parentId)) {

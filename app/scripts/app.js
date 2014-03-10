@@ -3,10 +3,11 @@ define([
     'underscore',
     'backbone',
     'modalRegion',
-    'brandRegion', 'collections/configs',
-    'marionette',
-    'i18next'
-], function (_, Backbone, ModalRegion, BrandRegion, Configs) {
+    'brandRegion',
+    'collections/configs',
+    'i18next',
+    'marionette'
+], function (_, Backbone, ModalRegion, BrandRegion, Configs, i18n) {
     'use strict';
 
     // Underscore template

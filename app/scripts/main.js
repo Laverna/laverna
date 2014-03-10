@@ -99,6 +99,10 @@ require.config({
         dropbox: {
             exports: 'Dropbox'
         },
+        i18next: {
+            deps: ['jquery'],
+            exports: 'i18n'
+        },
         prettify: {
             exports: 'prettify'
         }

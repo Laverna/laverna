@@ -4,7 +4,7 @@ Laverna is a JavaScript note taking web application with Markdown editor and enc
 
 Application stores all your notes in your browser storages such as indexedDB or localStorage, which is good for security reasons, because only you can get access to them.
 
-**Demo**: https://laverna.cc/
+**Demo**: https://laverna.cc/ OR http://laverna.github.io/static-laverna/dist
 
 ## Features
 -----------
@@ -44,6 +44,7 @@ You can change storages API keys in app/scripts/constants.js
 ---------------
 1. Hit star button on [github][6]
 2. Like us on [alternativeto.net][5]
+3. [Contribute][7]
 
 ### Tips:
 [![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/master/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
@@ -61,3 +62,4 @@ Also Laverna uses a lot of other libraries and each of this [libraries uses diff
 [4]: https://www.gittip.com/Laverna/
 [5]: http://alternativeto.net/software/laverna/
 [6]: https://github.com/Laverna/laverna
+[7]: https://github.com/Laverna/laverna/CONTRIBUTE.md

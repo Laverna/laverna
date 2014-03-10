@@ -62,4 +62,4 @@ Also Laverna uses a lot of other libraries and each of this [libraries uses diff
 [4]: https://www.gittip.com/Laverna/
 [5]: http://alternativeto.net/software/laverna/
 [6]: https://github.com/Laverna/laverna
-[7]: https://github.com/Laverna/laverna/CONTRIBUTE.md
+[7]: https://github.com/Laverna/laverna/blob/master/CONTRIBUTE.md

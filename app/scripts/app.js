@@ -17,7 +17,8 @@ define([
         evaluate: /<%([\s\S]+?)%>/g
     };
 
-    var App = new Backbone.Marionette.Application();
+    var App = new Backbone.Marionette.Application(),
+        configs = new Configs();
 
     App.addRegions({
         sidebar :  '#sidebar',
@@ -84,7 +85,6 @@ define([
 
     // Initialize settings
     App.on('initialize:before', function () {
-        var configs = new Configs();
         configs.fetch();
 
         // Set default set of configs
@@ -94,11 +94,6 @@ define([
         }
 
         App.settings = configs.getConfigs();
-
-        i18n.init({ lng: App.settings.appLang });
-        if (App.settings.appLang === '') {
-            configs.get('appLang').save({ 'value': i18n.lng() });
-        }
     });
 
     // Start default module
@@ -115,15 +110,20 @@ define([
             'apps/settings/appSettings',
             'apps/help/appHelp'
         ], function (constants, Install) {
+            i18n.init({ lng: App.settings.appLang }, function () {
+                if (App.settings.appLang === '') {
+                    configs.get('appLang').save({ 'value': i18n.lng() });
+                }
 
-            App.constants = constants;
-            Install.start();
+                App.constants = constants;
+                Install.start();
 
-            Backbone.history.start({pushState: false});
+                Backbone.history.start({pushState: false});
 
-            if (App.getCurrentRoute() === '') {
-                App.trigger('notes:list');
-            }
+                if (App.getCurrentRoute() === '') {
+                    App.trigger('notes:list');
+                }
+            });
         });
     });
 

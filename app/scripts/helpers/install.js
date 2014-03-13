@@ -3,8 +3,9 @@ define([
     'underscore',
     'jquery',
     'app',
-    'collections/notes'
-], function (_, $, App, Notes) {
+    'collections/notes',
+    'collections/configs',
+], function (_, $, App, Notes, Configs) {
     'use strict';
 
     var Install = App.module('App.Install', {startWithParent: false});
@@ -15,11 +16,21 @@ define([
 
     Install.API = {
         start: function () {
+            var configs = new Configs();
+
             if (App.firstStart  === true) {
                 this.install();
             }
             else if (App.settings.appVersion !== App.constants.VERSION) {
                 App.log('New version of application is available');
+
+                // Increase appVersion
+                configs.create(new configs.model({ name: 'appVersion', value: App.constants.VERSION }));
+
+                // Locales in 0.3.0 version
+                if (App.constants.VERSION === '0.3.0') {
+                    configs.create(new configs.model({ name: 'appLang', value: '' }));
+                }
             }
         },
 

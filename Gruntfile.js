@@ -353,6 +353,7 @@ module.exports = function (grunt) {
                     '*.html',
                     'favicon.ico',
                     'robots.txt',
+                    'locales/dev/translation.json',
                     'bower_components/requirejs/require.js',
                     'bower_components/ace/lib/ace/{,*/}*.css',
                     'docs/*.md',

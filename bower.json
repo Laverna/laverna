@@ -1,6 +1,6 @@
 {
   "name": "laverna",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "dependencies": {
     "requirejs": "~2.1.11",
     "requirejs-text": "~2.0.10",

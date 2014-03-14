@@ -110,7 +110,14 @@ define([
             'apps/settings/appSettings',
             'apps/help/appHelp'
         ], function (constants, Install) {
-            i18n.init({ lng: App.settings.appLang }, function () {
+            var lng = {
+                lng             : App.settings.appLang,
+                fallbackLng     : 'en',
+                useCookie       : false,
+                useLocalStorage : false
+            };
+
+            i18n.init(lng, function () {
                 if (App.settings.appLang === '') {
                     configs.get('appLang').save({ 'value': i18n.lng() });
                 }

@@ -316,6 +316,27 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+            // i18next cache to localStorage in production
+            i18nextLocal: {
+                files: {
+                    '<%= yeoman.app %>/scripts/app.js': '<%= yeoman.app %>/scripts/app.js'
+                },
+                options: {
+                    replacements: [
+                        {
+                            pattern: /useLocalStorage\ :\ (true|false)/ig,
+                            replacement: function (str, status) {
+                                if (status === 'false') {
+                                    return 'useLocalStorage : true';
+                                }
+                                else {
+                                    return 'useLocalStorage : false';
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
             // Cache manifest <html manifest=
             manifest: {
                 files : {
@@ -353,7 +374,6 @@ module.exports = function (grunt) {
                     '*.html',
                     'favicon.ico',
                     'robots.txt',
-                    'locales/dev/translation.json',
                     'bower_components/requirejs/require.js',
                     'bower_components/ace/lib/ace/{,*/}*.css',
                     'docs/*.md',
@@ -465,6 +485,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'string-replace:i18nextLocal',
         // 'coffee',
         'createDefaultTemplate',
         'jst',
@@ -480,6 +501,7 @@ module.exports = function (grunt) {
         'copy',
         'string-replace:manifest',
         'usemin',
+        'string-replace:i18nextLocal',
         'manifest'
     ]);
 

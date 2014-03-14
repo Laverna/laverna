@@ -36,6 +36,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             'blur #inputTitle' : 'noteClipped',
             'click .modeMenu a': 'switchMode',
             'click .saveBtn'   : 'save',
+            'click .saveExitBtn': 'save',
             'click .cancelBtn' : 'redirect',
             'keyup input[name=title]'  : 'keyupEvents'
         },
@@ -85,7 +86,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         save: function (e) {
             e.preventDefault();
 
-            var title   = this.ui.title.val().trim(),
+            var title = this.ui.title.val().trim(),
                 content,
                 data;
 
@@ -110,6 +111,10 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             // Tags
             data.tags = new Tags().getTags(data.content);
 
+            if (!$(e.currentTarget).hasClass('saveBtn')) {
+                data.redirect = true;
+            }
+
             // Trigger save
             this.model.trigger('save', data);
         },
@@ -130,7 +135,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             $wmdButton.addClass('btn-group');
 
             // Save & cancel buttons
-            $wmdButton.append(this.$('.saveBtn').clone().addClass('wmd-save-button wmd-hidden'));
+            $wmdButton.append(this.$('.saveBtnGroup').clone().addClass('wmd-save-button wmd-hidden'));
             $wmdButton.append(this.$('.cancelBtn').clone().addClass('wmd-cancel-button wmd-hidden'));
 
             // Dropdown menu for changing modes

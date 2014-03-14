@@ -85,6 +85,7 @@ define([
 
             // Save
             this.model.trigger('update:any');
+            this.redirect = data.redirect;
 
             $.when(
                 // Save changes
@@ -95,7 +96,13 @@ define([
         },
 
         redirect: function () {
-            App.navigateBack();
+            if (typeof(this.model.get('id')) === 'undefined') {
+                App.navigateBack();
+            } else {
+                var url = '/notes/show/' + this.model.get('id');
+                App.navigate(url, {trigger: true});
+                App.trigger('notes:added', this.model.get('id'));
+            }
             return false;
         },
 
@@ -103,9 +110,15 @@ define([
          * Trigger event and redirect
          */
         redirectToNote: function () {
-            var url = '/notes/show/' + this.model.get('id');
-            App.trigger('notes:added', this.model.get('id'));
+            var url;
+            if (this.redirect === true) {
+                url = '/notes/show/' + this.model.get('id');
+            } else {
+                url = '/notes/edit/' + this.model.get('id');
+            }
+
             App.navigate(url, {trigger: true});
+            App.trigger('notes:added', this.model.get('id'));
         }
 
     });

@@ -13,6 +13,19 @@
                 <div class="tab-pane active" id="basic">
 
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="appLang">
+                            <i class="fa fa-cloud"></i> {{ i18n('Language') }}
+                        </label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="appLang" id="appLang">
+                                <option value="en"<%if(models.appLang === 'en'){ %> selected<% } %>>{{ i18n('en') }}</option>
+                                <option value="ru"<%if(models.appLang === 'ru'){ %> selected<% } %>>{{ i18n('ru') }}</option>
+                                <option value="nl"<%if(models.appLang === 'nl'){ %> selected<% } %>>{{ i18n('nl') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="cloudStorage">
                             <i class="fa fa-cloud"></i> {{ i18n('Cloud storage') }}
                         </label>

@@ -1,6 +1,6 @@
 ### How to use tags in Laverna
 
-When you are editing or creating notes write "@" before any word and this word will be considered as a tag.
+When you are editing or creating notes, write "@" before any word to create a tag.
 
 ### How to use tasks in Laverna
 

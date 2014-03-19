@@ -15,11 +15,11 @@ define([
         executeAction, API;
 
     Encryption.on('start', function () {
-        App.log('Encryption module is started');
+        App.log('Encryption module has started');
     });
 
     Encryption.on('stop', function () {
-        App.log('Encryption module is stoped');
+        App.log('Encryption module has stopped');
         App.brand.close();
     });
 

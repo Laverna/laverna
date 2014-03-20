@@ -27,7 +27,7 @@ define([
             remoteStorage.access.claim('tags', 'rw');
 
             // Display the widget
-            remoteStorage.displayWidget('remotestorage-connect');
+            remoteStorage.displayWidget();
 
             remoteStorage.on('ready', this.triggerConnected);
             remoteStorage.on('disconnected', this.triggerDisconnected);

@@ -4,13 +4,17 @@ define([
     'app',
     'backbone',
     'helpers/dropbox',
+    'helpers/backbone.rssync',
     'indexedDB'
-], function (_, App, Backbone, Dropbox) {
+], function (_, App, Backbone, Dropbox, Rssync) {
     'use strict';
 
     // Dropbox OAuth
     if (App.settings.cloudStorage === 'dropbox') {
         Dropbox.auth();
+    }
+    else if (App.settings.cloudStorage === 'remotestorage') {
+        Rssync.auth();
     }
 
     var Cloud = function () {

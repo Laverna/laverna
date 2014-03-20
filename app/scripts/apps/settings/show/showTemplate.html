@@ -33,6 +33,7 @@
                             <select class="form-control" name="cloudStorage" id="cloudStorage">
                                 <option value="0">{{ i18n('No') }}</option>
                                 <option value="dropbox"<%if(models.cloudStorage === 'dropbox'){ %> selected<% } %>>Dropbox</option>
+                                <option value="remotestorage"<%if(models.cloudStorage === 'remotestorage'){ %> selected<% } %>>RemoteStorage</option>
                             </select>
                         </div>
                     </div>

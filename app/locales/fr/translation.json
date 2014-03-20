@@ -20,8 +20,8 @@
     "Normal": "Normal",
     "Title": "Titre",
     "Submit": "Envoyer",
-    "Tags": "Tags",
-    "Tag": "Tag",
+    "Tags": "Étiquettes",
+    "Tag": "Étiquette",
     "Parent": "Parent",
     "Root": "Racine",
     "Notebooks & tags": "Bloc-notes & tags",
@@ -50,7 +50,7 @@
     "Unlock": "Déverrouiller",
     "Your new encryption password": "Votre nouveau mot de passe de cryptage",
     "Your old encryption password": "Votre ancien mot de passe de cryptage",
-    "Please wait until the encryption will be completed": "Veuillez attendre que le cryptage soit finit.",
+    "Please wait until the encryption will be completed": "Veuillez attendre que le cryptage soit fini",
     "Shortcuts": "Raccourcis",
     "Previous": "Précédent",
     "Next": "Suivant",
@@ -64,9 +64,9 @@
     "Go to removed notes": "Aller aux notes supprimées",
     "Actions": "Actions",
     "Open": "Ouvrir",
-    "Rotate Star": "Mettre en favoris",
+    "Rotate Star": "Ajouter/Supprimer des favoris",
     "App": "App",
     "Create new note": "Créer une nouvelle note",
-    "Search note": "Rechercher une notre",
-    "Keyboard help": "Aide au clavier"
+    "Search note": "Rechercher une note",
+    "Keyboard help": "Afficher les raccourcis clavier"
 }

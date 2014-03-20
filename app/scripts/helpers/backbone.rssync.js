@@ -1,45 +1,51 @@
 /*global define*/
+/*global RemoteStorage*/
 define([
     'underscore',
     'app',
+    'backbone',
     'remotestorage'
-], function (_, App, remoteStorage) {
+], function (_, App, Backbone, remoteStorage) {
     'use strict';
 
     /**
      * Remote Storage Sync adapter for Backbone.js
      * Credits: https://github.com/litewrite/litewrite/blob/gh-pages/lib/backbone.remoteStorage-documents.js
      */
-    var Rssync = function () { };
+    var Rssync = function () { },
+        remoteAdapter;
+
     Rssync = _.extend(Rssync.prototype, {
 
         auth: function () {
-            _.bindAll(this, 'sync');
+            _.bindAll(this, 'sync', 'triggerConnected', 'triggerDisconnected');
 
-            // var access = remoteStorage.access.claim({
-            //     'laverna'     : 'rw'
-            //     // 'notebooks' : 'rw',
-            //     // 'tags'      : 'rw'
-            // });
+            // Get access
+            remoteStorage.access.claim('notes', 'rw');
+            remoteStorage.access.claim('notebooks', 'rw');
+            remoteStorage.access.claim('tags', 'rw');
+
+            // Display the widget
             remoteStorage.displayWidget('remotestorage-connect');
 
-            remoteStorage.on('ready', this.triggerConnected, this);
-            remoteStorage.on('ready', this.triggerDisconnected, this);
+            remoteStorage.on('ready', this.triggerConnected);
+            remoteStorage.on('disconnected', this.triggerDisconnected);
         },
 
         triggerConnected: function () {
-            console.log('connected');
-            this.trigger('connected');
+            App.log('RemoteStorage has been connected');
+            Backbone.cloud = this.sync;
         },
 
         triggerDisconnected: function () {
-            console.log('disc');
-            this.trigger('disconnected');
+            App.log('RemoteStorage has been disconnected');
         },
 
         sync : function (method, model, options) {
             var resp;
             var done = $.Deferred();
+
+            this.rssync = remoteAdapter(model).privateList();
 
             switch (method) {
                 case 'read':
@@ -74,45 +80,45 @@ define([
         },
 
         find : function (model) {
-            return model.collection.remote.get(model.id);
+            return this.rssync.get(model.id);
         },
 
-        findAll: function (collection) {
-            return collection.remote.getAll().then(function(objMap) {
+        findAll: function (/*collection*/) {
+            return this.rssync.getAll().then(function(objMap) {
                 return _.values(objMap);
             });
         },
 
         set : function (model) {
-            return model.collection.remote.set(model.id, model.toJSON()).then(function() {
+            return this.rssync.set(model.id, model.toJSON()).then(function() {
                 return model.toJSON();
             });
         },
 
         destroy: function (model) {
-            return model.collection.remote.remove(model.id.toString()).then(function() {
+            return this.rssync.remove(model.id.toString()).then(function() {
                 return model.toJSON();
             });
         }
 
     });
 
-    Rssync.remote = function (model) {
+    /**
+     * Defines the module
+     */
+    remoteAdapter = function (model) {
         var moduleName = model.storeName || model.collection.storeName;
 
-        remoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
+        RemoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
             var remoteModule, listMethods;
 
-            privateClient.cache(moduleName + '/', false);
-            publicClient.cache(moduleName + '/', false);
-
             remoteModule = {
-                privateList: function (path) {
-                    return privateClient.scope(path + '/').extend(listMethods).cache('');
+                privateList: function () {
+                    return privateClient.scope().extend(listMethods).cache('', false);
                 },
 
                 publicList: function (path) {
-                    return publicClient.scope(path + '/').extend(listMethods).cache('');
+                    return publicClient.scope(path + '/').extend(listMethods).cache('', false);
                 }
             };
 

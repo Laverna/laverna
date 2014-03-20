@@ -81,6 +81,7 @@ define([
             });
 
             data.content = converter.makeHtml(data.content);
+            data.title = converter.makeHtml(data.title);
             data.notebook = App.Encryption.API.decrypt(data.notebook);
 
             // Show title

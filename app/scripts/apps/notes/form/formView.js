@@ -109,7 +109,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             data.taskCompleted = checklist.completed;
 
             // Tags
-            data.tags = new Tags().getTags(data.content);
+            data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
 
             if (!$(e.currentTarget).hasClass('saveBtn')) {
                 data.redirect = true;

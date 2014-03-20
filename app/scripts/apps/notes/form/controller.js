@@ -82,6 +82,7 @@ define([
                 notebook = this.notebooks.get(data.notebookId);
                 data.notebookId = notebook.get('id');
             }
+            console.log(data.tags);
 
             // Save
             this.model.trigger('update:any');

@@ -2,8 +2,8 @@
 define([
     'underscore',
     'app',
-    'remoteStorage'
-], function (_, App, RemoteStorage) {
+    'remotestorage'
+], function (_, App, remoteStorage) {
     'use strict';
 
     /**
@@ -16,11 +16,25 @@ define([
         auth: function () {
             _.bindAll(this, 'sync');
 
-            RemoteStorage.access.claim({
-                'notes'     : 'rw',
-                'notebooks' : 'rw',
-                'tags'      : 'rw'
-            });
+            // var access = remoteStorage.access.claim({
+            //     'laverna'     : 'rw'
+            //     // 'notebooks' : 'rw',
+            //     // 'tags'      : 'rw'
+            // });
+            remoteStorage.displayWidget('remotestorage-connect');
+
+            remoteStorage.on('ready', this.triggerConnected, this);
+            remoteStorage.on('ready', this.triggerDisconnected, this);
+        },
+
+        triggerConnected: function () {
+            console.log('connected');
+            this.trigger('connected');
+        },
+
+        triggerDisconnected: function () {
+            console.log('disc');
+            this.trigger('disconnected');
         },
 
         sync : function (method, model, options) {
@@ -83,10 +97,10 @@ define([
 
     });
 
-    Rssync.prototype.remote = function (model) {
+    Rssync.remote = function (model) {
         var moduleName = model.storeName || model.collection.storeName;
 
-        RemoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
+        remoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
             var remoteModule, listMethods;
 
             privateClient.cache(moduleName + '/', false);
@@ -152,7 +166,7 @@ define([
 
         });
 
-        return RemoteStorage[moduleName];
+        return remoteStorage[moduleName];
 
     };
 

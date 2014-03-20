@@ -28,6 +28,7 @@ require.config({
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
+        remotestorage              :  'libs/remotestorage.min',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Keybindings             :
@@ -98,6 +99,9 @@ require.config({
         },
         dropbox: {
             exports: 'Dropbox'
+        },
+        remotestorage: {
+            exports: 'remoteStorage'
         },
         i18next: {
             deps: ['jquery'],

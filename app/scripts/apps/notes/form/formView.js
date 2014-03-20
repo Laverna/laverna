@@ -149,7 +149,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
          * Render pagedown
          */
         pagedownRender: function () {
-            var pagedown = (document.body.clientWidth < 768) ? 'pagedown' : 'pagedown-ace',
+            var pagedown = (App.isMobile === true) ? 'pagedown' : 'pagedown-ace',
                 self = this,
                 converter,
                 editor;

@@ -6,8 +6,9 @@ define([
     'brandRegion',
     'collections/configs',
     'i18next',
+    'devicejs',
     'marionette'
-], function (_, Backbone, ModalRegion, BrandRegion, Configs, i18n) {
+], function (_, Backbone, ModalRegion, BrandRegion, Configs, i18n, Device) {
     'use strict';
 
     // Underscore template
@@ -19,6 +20,8 @@ define([
 
     var App = new Backbone.Marionette.Application(),
         configs = new Configs();
+
+    App.isMobile = Device.mobile() === true || Device.tablet() === true;
 
     App.addRegions({
         sidebar :  '#sidebar',

@@ -19,6 +19,7 @@ require.config({
         text                       :  '../bower_components/requirejs-text/text',
         jquery                     :  '../bower_components/jquery/jquery',
         underscore                 :  '../bower_components/underscore/underscore',
+        devicejs                   :  '../bower_components/device.js/lib/device.min',
         i18next                    :  '../bower_components/i18next/i18next.min',
         // Backbone &              :  Marionette
         backbone                   :  '../bower_components/backbone/backbone',
@@ -56,6 +57,9 @@ require.config({
         backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
+        },
+        devicejs: {
+            exports: 'device'
         },
         localStorage: {
             deps: ['underscore', 'backbone']

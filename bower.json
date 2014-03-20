@@ -25,7 +25,8 @@
     "sinon-qunit": "~1.0.0",
     "sjcl": "~1.0.0",
     "to-markdown": "#jquery",
-    "i18next": "~1.7.2"
+    "i18next": "~1.7.2",
+    "device.js": "git@github.com:matthewhudson/device.js"
   },
   "devDependencies": {
     "bootstrap": "3.1.0",

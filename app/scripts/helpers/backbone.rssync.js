@@ -2,10 +2,11 @@
 /*global RemoteStorage*/
 define([
     'underscore',
+    'jquery',
     'app',
     'backbone',
     'remotestorage'
-], function (_, App, Backbone, remoteStorage) {
+], function (_, $, App, Backbone, remoteStorage) {
     'use strict';
 
     /**

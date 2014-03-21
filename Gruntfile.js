@@ -180,12 +180,13 @@ module.exports = function (grunt) {
                     mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
                     optimize: 'none',
                     exclude : ['dropbox', 'remotestorage'],
+                    include : [ 'helpers/dropbox', 'helpers/backbone.rssync' ],
                     // TODO: Figure out how to make sourcemaps work with grunt-usemin
                     // https://github.com/yeoman/grunt-usemin/issues/30
                     //generateSourceMaps: true,
                     // required to support SourceMaps
                     // http://requirejs.org/docs/errors.html#sourcemapcomments
-                    preserveLicenseComments: true,
+                    findNestedDependencies: true,
                     useStrict: true,
                     wrapShim: true,
                     wrap: true

@@ -51,18 +51,18 @@ define([
             this.rssync = remoteAdapter(model).privateList();
 
             switch (method) {
-                case 'read':
-                    resp = model.id !== undefined ? this.find(model) : this.findAll(model);
-                    break;
-                case 'create':
-                    resp = this.set(model);
-                    break;
-                case 'update':
-                    resp = this.set(model);
-                    break;
-                case 'delete':
-                    resp = this.destroy(model);
-                    break;
+            case 'read':
+                resp = model.id !== undefined ? this.find(model) : this.findAll(model);
+                break;
+            case 'create':
+                resp = this.set(model);
+                break;
+            case 'update':
+                resp = this.set(model);
+                break;
+            case 'delete':
+                resp = this.destroy(model);
+                break;
             }
 
             resp.then(function(res) {

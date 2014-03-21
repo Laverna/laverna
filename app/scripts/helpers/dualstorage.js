@@ -11,12 +11,12 @@ define([
         adapter = 'helpers/';
 
     switch (App.settings.cloudStorage) {
-        case 'dropbox':
-            adapter += App.settings.cloudStorage;
-            break;
-        case 'remotestorage':
-            adapter += 'backbone.rssync';
-            break;
+    case 'dropbox':
+        adapter += App.settings.cloudStorage;
+        break;
+    case 'remotestorage':
+        adapter += 'backbone.rssync';
+        break;
     }
 
     // CloudStorage: auth

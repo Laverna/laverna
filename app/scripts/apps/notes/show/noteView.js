@@ -81,11 +81,12 @@ define([
             });
 
             data.content = converter.makeHtml(data.content);
-            data.title = converter.makeHtml(data.title);
             data.notebook = App.Encryption.API.decrypt(data.notebook);
 
             // Show title
             document.title = data.title;
+
+            data.title = converter.makeHtml(data.title);
             return data;
         },
 

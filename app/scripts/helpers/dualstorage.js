@@ -3,22 +3,28 @@ define([
     'underscore',
     'app',
     'backbone',
-    'helpers/dropbox',
-    'helpers/backbone.rssync',
     'indexedDB'
-], function (_, App, Backbone, Dropbox, Rssync) {
+], function (_, App, Backbone) {
     'use strict';
 
-    // Dropbox OAuth
-    if (App.settings.cloudStorage === 'dropbox') {
-        Dropbox.auth();
-    }
-    else if (App.settings.cloudStorage === 'remotestorage') {
-        Rssync.auth();
+    var Cloud = function () { },
+        adapter = 'helpers/';
+
+    switch (App.settings.cloudStorage) {
+        case 'dropbox':
+            adapter += App.settings.cloudStorage;
+            break;
+        case 'remotestorage':
+            adapter += 'backbone.rssync';
+            break;
     }
 
-    var Cloud = function () {
-    };
+    // CloudStorage: auth
+    if (adapter !== 'helpers/') {
+        require([adapter], function (cloudStorage) {
+            return cloudStorage.auth();
+        });
+    }
 
     _.extend(Cloud.prototype, {
 

@@ -2,11 +2,10 @@
 /*global RemoteStorage*/
 define([
     'underscore',
-    'jquery',
     'app',
     'backbone',
     'remotestorage'
-], function (_, $, App, Backbone, remoteStorage) {
+], function (_, App, Backbone, remoteStorage) {
     'use strict';
 
     /**
@@ -20,6 +19,9 @@ define([
 
         auth: function () {
             _.bindAll(this, 'sync', 'triggerConnected', 'triggerDisconnected');
+
+            // Because RemoteStorage.js keeps changing history fragment to #/
+            App.navigateBack();
 
             // Get access
             remoteStorage.access.claim('notes', 'rw');

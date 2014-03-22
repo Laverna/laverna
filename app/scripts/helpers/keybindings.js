@@ -65,11 +65,13 @@ define([
 
         reset: function () {
             Mousetrap.reset();
+            App.log('Keybindings has been reseted');
         },
 
         restart: function () {
             Keybindings.API.reset();
             Keybindings.bind();
+            App.log('Keybindings has been restarted');
         }
     };
 

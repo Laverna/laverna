@@ -3,9 +3,10 @@ define([
     'underscore',
     'jquery',
     'backbone',
+    'Mousetrap',
     'marionette',
     'bootstrap'
-], function (_, $, Backbone) {
+], function (_, $, Backbone, Mousetrap) {
     'use strict';
 
     /**
@@ -30,13 +31,19 @@ define([
 
         showModal: function(view) {
             this.view = view;
+
             view.on('close', this.hideModal, this);
+
+            Mousetrap.bind('esc', function () {
+                view.trigger('close');
+                return false;
+            });
 
             // Show modal window
             view.$el.modal({
                 show     : true,
                 backdrop : 'static',
-                keyboard : true
+                keyboard : false
             });
 
             // Trigger shown event

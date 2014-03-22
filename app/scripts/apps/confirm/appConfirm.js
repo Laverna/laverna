@@ -14,11 +14,13 @@ define([
 
     Confirm.on('start', function (options) {
         showConfirm(options);
-        App.log('AppConfirm is started');
+        App.mousetrap.API.reset();
+        App.log('AppConfirm has been started');
     });
 
     Confirm.on('stop', function () {
-        App.log('AppConfirm is stoped');
+        App.mousetrap.API.restart();
+        App.log('AppConfirm has been stoped');
     });
 
     showConfirm = function (options) {

@@ -10,13 +10,13 @@ define([
         executeAction, API;
 
     Help.on('start', function () {
-        App.mousetrap.API.pause();
-        App.log('AppHelp is started');
+        App.mousetrap.API.reset();
+        App.log('AppHelp has been started');
     });
 
     Help.on('stop', function () {
-        App.mousetrap.API.unpause();
-        App.log('AppHelp is stoped');
+        App.mousetrap.API.restart();
+        App.log('AppHelp has been stoped');
     });
 
     // Router

@@ -1,6 +1,6 @@
 {
   "name": "laverna",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "dependencies": {
     "requirejs": "~2.1.11",
     "requirejs-text": "~2.0.10",
@@ -15,10 +15,10 @@
     "indexeddb-backbonejs-adapter": "master",
     "IndexedDBShim": "master",
     "mousetrap": "~1.4.6",
-    "backbone.mousetrap": "git@github.com:elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
+    "backbone.mousetrap": "git://github.com/elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
     "ace": "#bfba4f1efd6e6a8b2b8e1478c10daecfbe64e784",
-    "pagedown-ace": "git@github.com:benweet/pagedown-ace.git#84d5e1b7ff233a1c8cafa9716e825228d275120c",
-    "pagedown-extra": "git@github.com:jmcmanus/pagedown-extra.git#bd0870e3e871e15bde1fa5a427e3e10028a09789",
+    "pagedown-ace": "git://github.com/benweet/pagedown-ace.git#84d5e1b7ff233a1c8cafa9716e825228d275120c",
+    "pagedown-extra": "git://github.com/jmcmanus/pagedown-extra.git#bd0870e3e871e15bde1fa5a427e3e10028a09789",
     "google-code-prettify": "master",
     "qunit": "~1.14.0",
     "sinonjs": "~1.7.3",
@@ -26,12 +26,12 @@
     "sjcl": "~1.0.0",
     "to-markdown": "#jquery",
     "i18next": "~1.7.2",
-    "device.js": "git@github.com:matthewhudson/device.js"
+    "device.js": "git://github.com/matthewhudson/device.js"
   },
   "devDependencies": {
     "bootstrap": "3.1.0",
-    "hammer": "https://github.com/EightMedia/hammer.js",
-    "pagedown": "git@github.com:ujifgc/pagedown.git",
+    "hammer": "git://github.com/EightMedia/hammer.js",
+    "pagedown": "git://github.com/ujifgc/pagedown.git",
     "enquire": "~2.1.0"
   }
 }

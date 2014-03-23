@@ -35,12 +35,6 @@ define([
         },
 
         showProgress: function () {
-            // User just disabled encryption
-            if (this.configs.encrypt !== 1) {
-                this.redirect();
-                return;
-            }
-
             this.oldPassNull = true;
             if ( !App.settings.secureKey && App.settings.encryptPass !== '') {
                 this.oldPassNull = false;
@@ -95,7 +89,7 @@ define([
             }
 
             // If no encryption settings changed
-            if (_.difference(oldConfigs.secureKey, newKey).length === 0 && oldConfigs.encryptPass !== '') {
+            if (_.difference(oldConfigs, this.configs).length === 0 && oldConfigs.encryptPass !== '') {
                 this.redirect();
                 return false;
             }

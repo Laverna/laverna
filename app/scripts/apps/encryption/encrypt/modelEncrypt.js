@@ -28,6 +28,9 @@ define([
             } else if (this.isSettingsChanged() === true) {
                 // Some (or all) of encryption's settings has been changed
                 this.reEncryption();
+            } else if (this.oldConfigs.encrypt === 1 && this.configs.encrypt === 0) {
+                // User disabled encryption - unencrypt all data
+                this.decryption();
             } else if (this.oldConfigs.encrypt === 0) {
                 // User just re enabled encryption
                 this.encryptOnlyNew();
@@ -83,6 +86,14 @@ define([
             this.encryptNotebooks();
         },
 
+        // No need of encryption - decrypt all the data
+        // ----------------------
+        decryption: function () {
+            App.log('Decryption');
+            this.encryptNotes();
+            this.encryptNotebooks();
+        },
+
         encryptNotes: function () {
             var self = this,
                 data;
@@ -101,6 +112,7 @@ define([
                 data.content = App.Encryption.API.encrypt(data.content);
 
                 // Save
+                note.trigger('update:any');
                 note.save(data, {
                     success: function () {
                         self.notes.trigger('progressEncryption');

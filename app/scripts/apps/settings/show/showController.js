@@ -61,7 +61,7 @@ define([
         // Check is any of encryption settings is changed
         // -------------------------------
         isEncryptionChanged: function (changedSettings) {
-            var encrSet = ['encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize'],
+            var encrSet = ['encrypt', 'encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize'],
                 changed = false;
 
             _.each(encrSet, function (set) {
@@ -69,12 +69,6 @@ define([
                     changed = true;
                 }
             });
-
-            // User enabled encryption
-            if (App.settings.encrypt === 0 &&
-                _.contains(changedSettings, 'encrypt')) {
-                changed = true;
-            }
 
             return changed;
         }

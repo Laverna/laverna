@@ -28,12 +28,21 @@ define([
         },
 
         confirmFocus: function () {
+            if (typeof this.options.text === 'object') {
+                this.options.text.trigger('shown.modal');
+            }
             this.$('.confirm').trigger('focus');
         },
 
         serializeData: function () {
             var converter = new Markdown.Converter(),
-                content = converter.makeHtml(this.options.text);
+                content = this.options.text;
+
+            if (typeof content === 'object') {
+                content = content.render().$el.html();
+            } else {
+                content = converter.makeHtml(content);
+            }
 
             return {
                 text: content

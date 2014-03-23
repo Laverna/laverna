@@ -8,12 +8,13 @@ define([
     'checklist',
     'tags',
     'ace',
+    'apps/notes/form/dropareaView',
     'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
+function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -154,6 +155,11 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 converter,
                 editor;
 
+            var View = new DropareaView();
+            App.Confirm.start({
+                content : View
+            });
+
             require([pagedown], function (Markdown) {
                 converter = new Markdown.Converter();
                 Markdown.Extra.init(converter);
@@ -166,6 +172,13 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
                 // Initialize pagedown
                 editor = new Markdown.Editor(converter);
+
+                editor.hooks.set("insertImageDialog", function (callback) {
+                    var View = new DropareaView();
+                    App.modal.show(View);
+
+                    return true;
+                });
 
                 // Pagedown with textarea
                 if (pagedown === 'pagedown') {
@@ -186,6 +199,9 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
                 self.trigger('pagedown:ready');
             });
+        },
+
+        showDroparea: function (e) {
         },
 
         /**

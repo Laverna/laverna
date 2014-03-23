@@ -26,7 +26,9 @@
     "sjcl": "~1.0.0",
     "to-markdown": "#jquery",
     "i18next": "~1.7.2",
-    "device.js": "git://github.com/matthewhudson/device.js"
+    "device.js": "git://github.com/matthewhudson/device.js",
+    "droparea": "git://github.com/gokercebeci/droparea#~1.1.1",
+    "dropzone": "git://github.com/enyo/dropzone#~3.8.4"
   },
   "devDependencies": {
     "bootstrap": "3.1.0",

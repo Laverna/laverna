@@ -8,12 +8,12 @@
     "jquery": "~1.10.2",
     "underscore": "~1.6.0",
     "backbone": "~1.1.2",
-    "marionette": "~1.6.2",
-    "backbone.babysitter": "~0.0.6",
-    "backbone.wreqr": "~0.2.0",
+    "marionette": "1.7.1",
+    "backbone.babysitter": "0.1.0",
+    "backbone.wreqr": "1.0.0",
     "backbone.localStorage": "~1.1.7",
-    "indexeddb-backbonejs-adapter": "master",
-    "IndexedDBShim": "master",
+    "indexeddb-backbonejs-adapter": "git://github.com/superfeedr/indexeddb-backbonejs-adapter.git#master",
+    "IndexedDBShim": "git://github.com/axemclion/IndexedDBShim.git#master",
     "mousetrap": "~1.4.6",
     "backbone.mousetrap": "git://github.com/elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
     "ace": "#bfba4f1efd6e6a8b2b8e1478c10daecfbe64e784",
@@ -26,12 +26,11 @@
     "sjcl": "~1.0.0",
     "to-markdown": "#jquery",
     "i18next": "~1.7.2",
-    "device.js": "git://github.com/matthewhudson/device.js"
-  },
-  "devDependencies": {
-    "bootstrap": "3.1.0",
-    "hammer": "git://github.com/EightMedia/hammer.js",
+    "device.js": "git://github.com/matthewhudson/device.js",
+    "hammerjs": "git://github.com/EightMedia/hammer.js#1.0.9",
+    "bootstrap": "~3.1.1",
     "pagedown": "git://github.com/ujifgc/pagedown.git",
     "enquire": "~2.1.0"
-  }
+  },
+  "devDependencies": {}
 }

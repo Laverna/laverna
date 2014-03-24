@@ -16,9 +16,10 @@ define([
         storeName: 'files',
 
         defaults: {
-            id: 0,
+            id: undefined,
             src: '',
-            type: ''
+            type: '',
+            synchronized: 0
         },
 
         validate: function (attrs) {

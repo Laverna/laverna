@@ -157,7 +157,13 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
 
             var View = new DropareaView();
             App.Confirm.start({
-                content : View
+                title: $.t('Image'),
+                content : View,
+                success: function () {
+                    if (View.images.length > 0) {
+                        self.trigger('uploadImages', View.images);
+                    }
+                }
             });
 
             require([pagedown], function (Markdown) {

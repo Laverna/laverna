@@ -6,9 +6,10 @@ define([
     'collections/notes',
     'collections/tags',
     'collections/notebooks',
+    'collections/files',
     'models/note',
     'apps/notes/form/formView'
-], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, NoteModel, View) {
+], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View) {
     'use strict';
 
     var Form = App.module('AppNote.Form');
@@ -20,6 +21,7 @@ define([
 
             this.tags = new TagsCollection();
             this.notebooks = new NotebooksCollection();
+            this.files = new FilesCollection();
         },
 
         /**
@@ -66,7 +68,16 @@ define([
 
             this.model.on('save', this.save, this);
             view.on('redirect', this.redirect, this);
+            view.on('uploadImages', this.uploadImages, this);
             view.trigger('shown');
+        },
+
+        // Uploading images to indexDB
+        uploadImages: function (imgs) {
+            var self = this;
+            $.when(this.files.uploadImages(imgs)).done(function (data) {
+                self.model.trigger('attachImages', data);
+            });
         },
 
         save: function (data) {

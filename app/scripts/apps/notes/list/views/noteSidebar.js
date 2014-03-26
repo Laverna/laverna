@@ -100,7 +100,7 @@ define([
                 },
 
                 pageTitle: function () {
-                    var title = 'Inbox';
+                    var title = 'All notes';
                     if (this.args.filter) {
                         title = this.args.filter;
                     }

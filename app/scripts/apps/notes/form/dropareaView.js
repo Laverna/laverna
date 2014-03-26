@@ -7,7 +7,7 @@ define([
     'marionette',
     'text!apps/notes/form/templates/droparea.html',
     'dropzone'
-], function (_, $, App, Backbone, Marionette, Templ, dropzone) {
+], function (_, $, App, Backbone, Marionette, Templ, Dropzone) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -27,12 +27,16 @@ define([
             var reader = new FileReader(),
                 self = this;
 
+            if (App.isMobile && this.images.length >= 1) {
+                this.images = [];
+                $('.dz-preview')[0].remove();
+            }
+
             reader.onload = function (event) {
                 self.images.push({
                     src: event.target.result,
                     type: file.type
                 });
-                console.log(self.images);
                 var image = new Image();
                 image.src = event.target.result;
                 image.width = 250; // a fake resize
@@ -43,12 +47,13 @@ define([
 
         showDroparea: function () {
             _.bindAll(this, 'getImage');
-            $('.dropzone').dropzone({
+            var dropzone =  new Dropzone('.dropzone', {
                 url: '/#notes',
+                maxFiles: (App.isMobile) ? 1 : undefined,
                 accept: this.getImage,
                 thumbnailWidth: 100,
                 thumbnailHeight: 100,
-                previewTemplate: '<div class=\"dz-preview dz-file-preview\">\n <div class=\"dz-details\">\n <img data-dz-thumbnail class="img-responsive img-thumbnail" />\n  </div>\n </div>\n'
+                previewTemplate: '<div class=\"dz-preview dz-file-preview\">\n <div class=\"dz-details\">\n <img data-dz-thumbnail class="img-responsive img-thumbnail" />\n  </div>\n </div>\n',
             });
         },
 

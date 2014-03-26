@@ -16,7 +16,7 @@
     "IndexedDBShim": "master",
     "mousetrap": "~1.4.6",
     "backbone.mousetrap": "git://github.com/elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
-    "ace": "#bfba4f1efd6e6a8b2b8e1478c10daecfbe64e784",
+    "ace": "#fbc546032090752664aaea13c8f9489dea43490a",
     "pagedown-ace": "git://github.com/benweet/pagedown-ace.git#84d5e1b7ff233a1c8cafa9716e825228d275120c",
     "pagedown-extra": "git://github.com/jmcmanus/pagedown-extra.git#bd0870e3e871e15bde1fa5a427e3e10028a09789",
     "google-code-prettify": "master",
@@ -28,7 +28,8 @@
     "i18next": "~1.7.2",
     "device.js": "git://github.com/matthewhudson/device.js",
     "droparea": "git://github.com/gokercebeci/droparea#~1.1.1",
-    "dropzone": "git://github.com/enyo/dropzone#~3.8.4"
+    "dropzone": "git://github.com/enyo/dropzone#~3.8.4",
+    "blueimp-canvas-to-blob": "git://github.com/blueimp/JavaScript-Canvas-to-Blob#~2.1.0"
   },
   "devDependencies": {
     "bootstrap": "3.1.0",

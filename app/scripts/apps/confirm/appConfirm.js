@@ -13,13 +13,13 @@ define([
         showConfirm;
 
     Confirm.on('start', function (options) {
-        showConfirm(options);
-        App.mousetrap.API.reset();
+        //App.mousetrap.API.reset();
         App.log('AppConfirm has been started');
+        showConfirm(options);
     });
 
     Confirm.on('stop', function () {
-        App.mousetrap.API.restart();
+        //App.mousetrap.API.restart();
         App.log('AppConfirm has been stoped');
     });
 

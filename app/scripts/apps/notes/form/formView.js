@@ -9,12 +9,13 @@ define([
     'tags',
     'ace',
     'apps/notes/form/dropareaView',
+    'toBlob',
     'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
+function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dataURLtoBlob) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -46,6 +47,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
             _.bindAll(this, 'scrollPagedownBar');
             App.mousetrap.API.pause();
             this.$body = $('body');
+
+            this.model.on('attachImages', this.attachImages, this);
 
             // Pagedown editor
             this.on('shown', this.pagedownRender);
@@ -146,25 +149,32 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
             this.ui.title.focus();
         },
 
+        attachImages: function (models) {
+            var self = this;
+            _.forEach(models, function (model) {
+                var imgFile = model.get('src'),
+                    url = window.URL || window.webkitURL,
+                    blob = dataURLtoBlob(imgFile),
+                    imgURL = url.createObjectURL(blob);
+
+                URL.revokeObjectURL(imgURL);
+
+                //self.editor.hooks.set("insertImageDialog", function (callback) {
+                //    callback(imgURL);
+                //    return true;
+                //});
+            });
+        },
+
         /**
          * Render pagedown
          */
         pagedownRender: function () {
             var pagedown = (App.isMobile === true) ? 'pagedown' : 'pagedown-ace',
+            //var pagedown = 'pagedown-ace',
                 self = this,
                 converter,
                 editor;
-
-            var View = new DropareaView();
-            App.Confirm.start({
-                title: $.t('Image'),
-                content : View,
-                success: function () {
-                    if (View.images.length > 0) {
-                        self.trigger('uploadImages', View.images);
-                    }
-                }
-            });
 
             require([pagedown], function (Markdown) {
                 converter = new Markdown.Converter();
@@ -178,13 +188,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
 
                 // Initialize pagedown
                 editor = new Markdown.Editor(converter);
-
-                editor.hooks.set("insertImageDialog", function (callback) {
-                    var View = new DropareaView();
-                    App.modal.show(View);
-
-                    return true;
-                });
 
                 // Pagedown with textarea
                 if (pagedown === 'pagedown') {
@@ -202,6 +205,32 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView) {
                     _.bindAll(self, 'aceRender');
                     self.aceRender(editor);
                 }
+
+                editor.hooks.set('insertImageDialog', function (callback) {
+                    var View = new DropareaView();
+                    App.Confirm.start({
+                        title: $.t('Image'),
+                        content : View,
+                        success: function () {
+                            switch (View.images.length) {
+                                case 0:
+                                    callback(null);
+                                    break;
+                                case 1:
+                                    callback(View.images[0].src);
+                                    break;
+                                default:
+                                    self.trigger('uploadsImages', View.images);
+                                    callback(null);
+                                    break;
+                            }
+                        },
+                        error: function () {
+                            callback(null);
+                        }
+                    });
+                    return true;
+                });
 
                 self.trigger('pagedown:ready');
             });

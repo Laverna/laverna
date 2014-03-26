@@ -28,6 +28,7 @@ require.config({
         IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim.min',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         dropzone                   :  '../bower_components/dropzone/downloads/dropzone.min',
+        toBlob                     :  '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
         remotestorage              :  'libs/remotestorage',

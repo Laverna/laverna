@@ -13,17 +13,18 @@ define([
         showConfirm;
 
     Confirm.on('start', function (options) {
-        //App.mousetrap.API.reset();
+        App.mousetrap.API.reset();
         App.log('AppConfirm has been started');
-        showConfirm(options);
+        //Confirm.show(options);
     });
 
     Confirm.on('stop', function () {
-        //App.mousetrap.API.restart();
+        App.mousetrap.API.restart();
         App.log('AppConfirm has been stoped');
     });
 
-    showConfirm = function (options) {
+    App.Confirm.show = function (options) {
+        App.Confirm.start();
         require(['apps/confirm/show/controller'], function (Controller) {
             new Controller().show(options);
         });

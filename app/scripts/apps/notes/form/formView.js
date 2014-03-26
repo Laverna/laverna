@@ -216,7 +216,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
 
                 editor.hooks.set('insertImageDialog', function (callback) {
                     var View = new DropareaView();
-                    App.Confirm.start({
+                    App.Confirm.show({
                         title: $.t('Image'),
                         content : View,
                         success: function () {

@@ -75,8 +75,11 @@ define([
         // Uploading images to indexDB
         uploadImages: function (imgs) {
             var self = this;
-            $.when(this.files.uploadImages(imgs)).done(function (data) {
-                self.model.trigger('attachImages', data);
+            $.when(this.files.uploadImages(imgs.images)).done(function (data) {
+                self.model.trigger('attachImages', {
+                    images: data,
+                    callback: imgs.callback
+                });
             });
         },
 

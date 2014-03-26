@@ -22,15 +22,14 @@ define([
 
         uploadImages: function (imgs) {
             var d = $.Deferred(),
+                self = this,
                 models = [],
                 model;
 
-            console.log('before foreach');
             _.forEach(imgs, function (img, index) {
                 model = new File();
                 model.set(img);
-                console.log(model);
-                $.when(model.save()).done(function () {
+                $.when(self.create(model)).done(function () {
                     models.push(model);
                     if (index === ( imgs.length - 1 )) {
                         d.resolve(models);

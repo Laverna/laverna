@@ -149,21 +149,29 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
             this.ui.title.focus();
         },
 
-        attachImages: function (models) {
-            var self = this;
-            _.forEach(models, function (model) {
+        attachImages: function (data) {
+            var self = this,
+                imgURL,
+                images = '';
+
+            console.log(data.images);
+            _.forEach(data.images, function (model) {
                 var imgFile = model.get('src'),
                     url = window.URL || window.webkitURL,
-                    blob = dataURLtoBlob(imgFile),
-                    imgURL = url.createObjectURL(blob);
+                    blob = dataURLtoBlob(imgFile);
 
-                URL.revokeObjectURL(imgURL);
+                imgURL = url.createObjectURL(blob);
 
-                //self.editor.hooks.set("insertImageDialog", function (callback) {
-                //    callback(imgURL);
-                //    return true;
-                //});
+                //URL.revokeObjectURL(imgURL);
+                console.log(imgURL);
+                images += '![] (' + imgURL + ')\n';
             });
+
+            if (data.images.length > 1) {
+                this.editor.insert(images);
+                imgURL = null;
+            }
+            data.callback(imgURL);
         },
 
         /**
@@ -212,17 +220,14 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
                         title: $.t('Image'),
                         content : View,
                         success: function () {
-                            switch (View.images.length) {
-                                case 0:
-                                    callback(null);
-                                    break;
-                                case 1:
-                                    callback(View.images[0].src);
-                                    break;
-                                default:
-                                    self.trigger('uploadsImages', View.images);
-                                    callback(null);
-                                    break;
+                            if (View.images.length > 0) {
+                                self.trigger('uploadImages', {
+                                    images: View.images,
+                                    callback: callback
+                                });
+                            }
+                            else {
+                                callback(null);
                             }
                         },
                         error: function () {

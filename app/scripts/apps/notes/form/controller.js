@@ -7,8 +7,10 @@ define([
     'collections/tags',
     'collections/notebooks',
     'models/note',
-    'apps/notes/form/formView'
-], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, NoteModel, View) {
+    'apps/notes/form/formView',
+    'checklist',
+    'tags'
+], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, NoteModel, View, Checklist, Tags) {
     'use strict';
 
     var Form = App.module('AppNote.Form');
@@ -48,33 +50,33 @@ define([
         },
 
         show: function () {
-            var view, decrypted;
+            var decrypted;
 
             decrypted = {
                 title : App.Encryption.API.decrypt(this.model.get('title')),
                 content : App.Encryption.API.decrypt(this.model.get('content')),
             };
 
-            view = new View({
+            this.view = new View({
                 model     : this.model,
                 decrypted : decrypted,
                 tags      : this.tags,
                 notebooks : this.notebooks
             });
 
-            App.content.show(view);
+            App.content.show(this.view);
 
             this.model.on('save', this.save, this);
-            view.on('redirect', this.redirect, this);
-            view.trigger('shown');
+            this.view.on('redirect', this.redirect, this);
+            this.view.trigger('shown');
         },
 
         save: function (data) {
             var notebook;
 
-            // Encryption
-            data.title = App.Encryption.API.encrypt(_.escape(data.title));
-            data.content = App.Encryption.API.encrypt(data.content);
+            // Get new data
+            data.title = this.view.ui.title.val().trim();
+            data.notebookId = parseInt(this.view.ui.notebookId.val().trim());
 
             // New notebook
             notebook = this.model.get('notebookId');
@@ -82,7 +84,18 @@ define([
                 notebook = this.notebooks.get(data.notebookId);
                 data.notebookId = notebook.get('id');
             }
-            console.log(data.tags);
+
+            // Tasks
+            var checklist = new Checklist().count(data.content);
+            data.taskAll = checklist.all;
+            data.taskCompleted = checklist.completed;
+
+            // Tags
+            data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
+
+            // Encryption
+            data.title = App.Encryption.API.encrypt(_.escape(data.title));
+            data.content = App.Encryption.API.encrypt(data.content);
 
             // Save
             this.model.trigger('update:any');

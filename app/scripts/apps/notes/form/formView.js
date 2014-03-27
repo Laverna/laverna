@@ -26,19 +26,19 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             tags       :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content',
+            saveBtn    :  '.saveBtn',
             // Mode stuff
             form       :  '#noteForm',
             wmdBar     :  '#wmd-button-bar',
         },
 
         events: {
-            'submit #noteForm' : 'save',
-            'blur #inputTitle' : 'noteClipped',
+            'submit @ui.form' : 'save',
+            'blur @ui.title' : 'noteClipped',
             'click .modeMenu a': 'switchMode',
-            'click .saveBtn'   : 'save',
-            'click .saveExitBtn': 'save',
+            'click @ui.saveBtn': 'save',
             'click .cancelBtn' : 'redirect',
-            'keyup input[name=title]'  : 'keyupEvents'
+            'keyup @ui.title'  : 'keyupEvents'
         },
 
         initialize: function () {
@@ -49,6 +49,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             // Pagedown editor
             this.on('shown', this.pagedownRender);
             this.on('shown', this.changeMode);
+            this.on('autoSave', this.autoSave, this);
             this.on('pagedown:ready', this.onPagedownReady);
             this.on('pagedown:ready', this.changePagedownMode);
             this.on('pagedown:mode',  this.changePagedownMode);
@@ -83,12 +84,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         /**
          * Save note to storage
          */
-        save: function (e) {
-            e.preventDefault();
-
-            var title = this.ui.title.val().trim(),
-                content,
-                data;
+        save: function (redirect) {
+            var content;
 
             if (this.editor) {
                 content = this.editor.getSession().getValue().trim();
@@ -96,35 +93,64 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 content = this.$('#wmd-input').val();
             }
 
-            // Get values
-            data = {
-                title      : (title !== '') ? title : 'Unnamed',
-                content    : _.unescape(content),
-                notebookId : parseInt(this.ui.notebookId.val())
-            };
-
-            // Tasks
-            var checklist = new Checklist().count(data.content);
-            data.taskAll = checklist.all;
-            data.taskCompleted = checklist.completed;
-
-            // Tags
-            data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
-
-            if (!$(e.currentTarget).hasClass('saveBtn')) {
-                data.redirect = true;
-            }
-
             // Trigger save
-            this.model.trigger('save', data);
+            this.model.trigger('save', {
+                content : _.unescape(content),
+                redirect: (redirect === false) ? false : true
+            });
+
+            return false;
+        },
+
+        autoSave: function () {
+            if (this.isUnchanged() === true) {
+                return;
+            }
+            App.log('Note has been automatically saved');
+            return this.save(false);
         },
 
         /**
          * Redirect to note
          */
-        redirect: function (e) {
-            e.preventDefault();
-            return this.trigger('redirect');
+        redirect: function () {
+            var canCancel = this.isUnchanged(),
+                self = this;
+
+            if (canCancel === false) {
+                App.Confirm.start({
+                    content : $.t('Are you sure? You have unsaved changes'),
+                    success : function () {
+                        self.trigger('redirect');
+                    }
+                });
+            }
+            else {
+                this.trigger('redirect');
+            }
+
+            return false;
+        },
+
+        /**
+         * Is there any unsaved changes?
+         */
+        isUnchanged: function () {
+            var content;
+
+            if (this.editor) {
+                content = this.editor.getSession().getValue().trim();
+            } else {
+                content = this.$('#wmd-input').val();
+            }
+
+            if (this.ui.title.val() === this.model.get('title') &&
+                parseInt(this.ui.notebookId.val()) === this.model.get('notebookId') &&
+                content === this.model.get('content') ) {
+                return true;
+            }
+
+            return false;
         },
 
         onPagedownReady: function () {
@@ -152,6 +178,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             var pagedown = (App.isMobile === true) ? 'pagedown' : 'pagedown-ace',
                 self = this,
                 converter,
+                timeOut,
                 editor;
 
             require([pagedown], function (Markdown) {
@@ -185,6 +212,16 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 }
 
                 self.trigger('pagedown:ready');
+
+                // Save content automatically if user stoped typing for 5 second
+                editor.hooks.chain('onPreviewRefresh', function () {
+                    if (typeof timeOut === 'number') {
+                        clearTimeout(timeOut);
+                    }
+                    timeOut = setTimeout(function () {
+                        self.trigger('autoSave');
+                    }, 5000);
+                });
             });
         },
 

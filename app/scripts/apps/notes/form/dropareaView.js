@@ -13,13 +13,12 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Templ),
 
-        images: [],
-
         ui: {
             'input': 'input[type="file"]'
         },
 
         initialize: function () {
+            this.images = [];
             this.on('shown.modal', this.showDroparea, this);
         },
 

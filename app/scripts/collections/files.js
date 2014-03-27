@@ -29,14 +29,17 @@ define([
             _.forEach(imgs, function (img, index) {
                 model = new File();
                 model.set(img);
-                $.when(self.create(model)).done(function () {
-                    models.push(model);
-                    if (index === ( imgs.length - 1 )) {
-                        d.resolve(models);
+                self.create(model, {
+                    success: function (m) {
+                        models.push(m);
+                        if (index === ( imgs.length - 1 )) {
+                            d.resolve(models);
+                        }
+                    },
+                    error: function () {
+                        console.log(e);
+                        d.reject(e);
                     }
-                }).fail(function (e) {
-                    console.log(e);
-                    d.reject(e);
                 });
 
             });

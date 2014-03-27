@@ -7,6 +7,7 @@ define([
     'text!apps/notes/form/templates/form.html',
     'checklist',
     'tags',
+    'libs/images',
     'ace',
     'apps/notes/form/dropareaView',
     'toBlob',
@@ -15,7 +16,7 @@ define([
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dataURLtoBlob) {
+function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView, dataURLtoBlob) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -49,6 +50,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
             this.$body = $('body');
 
             this.model.on('attachImages', this.attachImages, this);
+            this.images = [];
 
             // Pagedown editor
             this.on('shown', this.pagedownRender);
@@ -154,16 +156,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
                 imgURL,
                 images = '';
 
-            console.log(data.images);
             _.forEach(data.images, function (model) {
-                var imgFile = model.get('src'),
-                    url = window.URL || window.webkitURL,
-                    blob = dataURLtoBlob(imgFile);
-
-                imgURL = url.createObjectURL(blob);
-
-                //URL.revokeObjectURL(imgURL);
-                console.log(imgURL);
+                imgURL = '#' + model.get('id');
                 images += '![] (' + imgURL + ')\n';
             });
 
@@ -171,6 +165,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
                 this.editor.insert(images);
                 imgURL = null;
             }
+
+            this.images = _.extend(this.images, data.images);
             data.callback(imgURL);
         },
 
@@ -191,7 +187,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace, DropareaView, dat
                 // Customize markdown converter
                 converter.hooks.chain('postNormalization', function (text) {
                     text = new Checklist().toHtml(text);
-                    return new Tags().toHtml(text);
+                    text = new Tags().toHtml(text);
+                    return new Img().toHtml(text, self.images);
                 });
 
                 // Initialize pagedown

@@ -5,8 +5,9 @@ define([
     'marionette',
     'models/note',
     'collections/notebooks',
+    'collections/files',
     'apps/notes/show/noteView'
-], function (_, App, Marionette, NoteModel, NotebooksCollection, NoteView) {
+], function (_, App, Marionette, NoteModel, NotebooksCollection, FilesCollection, NoteView) {
     'use strict';
 
     var Show = App.module('AppNote.Show');
@@ -16,7 +17,7 @@ define([
      */
     Show.Controller = Marionette.Controller.extend({
         initialize: function () {
-            _.bindAll(this, 'showNote', 'showContent');
+            _.bindAll(this, 'showNote', 'showContent', 'fetchImages');
         },
 
         /**
@@ -27,12 +28,20 @@ define([
 
             this.note = new NoteModel({ id : this.args.id });
             this.notebooks = new NotebooksCollection();
+            this.files = new FilesCollection();
 
             // Events
             this.note.on('updateTaskProgress', this.updateTaskProgress, this);
             this.note.on('change', this.triggerChangeToSidebar, this);
 
-            $.when(this.note.fetch(), this.notebooks.fetch()).done(this.showContent);
+            $.when(this.note.fetch(), this.notebooks.fetch())
+                .done(this.fetchImages);
+        },
+
+        fetchImages: function () {
+            $.when(
+                this.files.fetchImages(this.note.get('images'))
+            ).done(this.showContent);
         },
 
         showContent: function () {
@@ -53,7 +62,8 @@ define([
             args = {
                 model     : this.note,
                 decrypted : decrypted,
-                args      : this.args
+                args      : this.args,
+                files     : this.files
             };
 
             App.content.show(new NoteView(args));

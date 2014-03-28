@@ -48,9 +48,9 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
             _.bindAll(this, 'scrollPagedownBar');
             App.mousetrap.API.pause();
             this.$body = $('body');
+            this.imgHelper = new Img();
 
             this.model.on('attachImages', this.attachImages, this);
-            this.images = [];
 
             // Pagedown editor
             this.on('shown', this.pagedownRender);
@@ -62,6 +62,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
 
         onClose: function () {
             App.mousetrap.API.unpause();
+            this.imgHelper.clean();
             this.switchMode();
         },
 
@@ -106,8 +107,13 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
             data = {
                 title      : (title !== '') ? title : 'Unnamed',
                 content    : _.unescape(content),
-                notebookId : parseInt(this.ui.notebookId.val())
+                notebookId : parseInt(this.ui.notebookId.val()),
+                images     : []
             };
+
+            this.options.files.forEach(function (img) {
+                data.images.push(img.get('id'));
+            });
 
             // Tasks
             var checklist = new Checklist().count(data.content);
@@ -166,7 +172,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                 imgURL = null;
             }
 
-            this.images = _.extend(this.images, data.images);
+            this.options.files = _.extend(this.options.files, data.images);
             data.callback(imgURL);
         },
 
@@ -175,7 +181,6 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
          */
         pagedownRender: function () {
             var pagedown = (App.isMobile === true) ? 'pagedown' : 'pagedown-ace',
-            //var pagedown = 'pagedown-ace',
                 self = this,
                 converter,
                 editor;
@@ -188,7 +193,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                 converter.hooks.chain('postNormalization', function (text) {
                     text = new Checklist().toHtml(text);
                     text = new Tags().toHtml(text);
-                    return new Img().toHtml(text, self.images);
+                    self.imgHelper.clean();
+                    return self.imgHelper.toHtml(text, self.options.files);
                 });
 
                 // Initialize pagedown
@@ -211,6 +217,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                     self.aceRender(editor);
                 }
 
+                // Custom image dialog
                 editor.hooks.set('insertImageDialog', function (callback) {
                     var View = new DropareaView();
                     App.Confirm.show({

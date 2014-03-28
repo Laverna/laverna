@@ -16,7 +16,7 @@ define([
 
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {
-            _.bindAll(this, 'addForm', 'editForm', 'show', 'redirectToNote');
+            _.bindAll(this, 'addForm', 'editForm', 'show', 'redirectToNote', 'fetchImages');
             App.trigger('notes:show', {filter: null, page: null});
 
             this.tags = new TagsCollection();
@@ -46,6 +46,12 @@ define([
                 this.tags.fetch({ limit : 100 }),
                 this.notebooks.fetch(),
                 this.model.fetch()
+            ).done(this.fetchImages);
+        },
+
+        fetchImages: function () {
+            $.when(
+                this.files.fetchImages(this.model.get('images'))
             ).done(this.show);
         },
 
@@ -61,7 +67,8 @@ define([
                 model     : this.model,
                 decrypted : decrypted,
                 tags      : this.tags,
-                notebooks : this.notebooks
+                notebooks : this.notebooks,
+                files     : this.files
             });
 
             App.content.show(view);
@@ -96,7 +103,6 @@ define([
                 notebook = this.notebooks.get(data.notebookId);
                 data.notebookId = notebook.get('id');
             }
-            console.log(data.tags);
 
             // Save
             this.model.trigger('update:any');

@@ -58,7 +58,7 @@ define([
                 version: 5,
                 migrate: function(transaction, next) {
                     var store = transaction.db.createObjectStore('files');
-                    //var store = transaction.objectStore('files');
+                    store = transaction.objectStore('files');
                     store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }

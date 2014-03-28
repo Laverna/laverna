@@ -20,6 +20,34 @@ define([
         initialize: function () {
         },
 
+        fetchImages: function (images) {
+            var d = $.Deferred(),
+                self = this,
+                model;
+
+            if (!images || images.length === 0) {
+                d.resolve();
+            }
+
+            _.forEach(images, function (img, index) {
+                model = new File({id: img});
+                model.fetch({
+                    success: function (model) {
+                        self.add(model);
+                        if (index === (images.length - 1) ) {
+                            d.resolve(self);
+                        }
+                    },
+
+                    error: function (e) {
+                        d.error(e);
+                    }
+                });
+            });
+
+            return d;
+        },
+
         uploadImages: function (imgs) {
             var d = $.Deferred(),
                 self = this,
@@ -37,7 +65,6 @@ define([
                         }
                     },
                     error: function () {
-                        console.log(e);
                         d.reject(e);
                     }
                 });

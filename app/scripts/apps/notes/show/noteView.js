@@ -7,10 +7,11 @@ define([
     'text!apps/notes/show/templates/item.html',
     'checklist',
     'tags',
+    'libs/images',
     'prettify',
     'backbone.mousetrap', 'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Template, Checklist, Tags, prettify) {
+], function (_, App, Backbone, Template, Checklist, Tags, Img, prettify) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -39,6 +40,8 @@ define([
         },
 
         initialize: function() {
+            this.imgHelper = new Img();
+
             // Setting shortcuts
             var configs = App.settings;
             this.keyboardEvents[configs.actionsEdit] = 'editNote';
@@ -62,11 +65,16 @@ define([
             this.$('table').addClass('table table-bordered');
         },
 
+        onClose: function () {
+            this.imgHelper.clean();
+        },
+
         /**
          * Decrypt content and title
          */
         serializeData: function () {
             var data = _.extend(this.model.toJSON(), this.options.decrypted),
+                self = this,
                 converter;
 
             // Convert from markdown to HTML
@@ -77,7 +85,8 @@ define([
             // Customize markdown converter
             converter.hooks.chain('postNormalization', function (text) {
                 text = new Checklist().toHtml(text);
-                return new Tags().toHtml(text);
+                text = new Tags().toHtml(text);
+                return self.imgHelper.toHtml(text, self.options.files);
             });
 
             data.content = converter.makeHtml(data.content);

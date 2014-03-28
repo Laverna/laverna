@@ -30,7 +30,8 @@ define([
             'tags'          :  [],
             'isFavorite'    :  0,
             'trash'         :  0,
-            'synchronized'  :  0
+            'synchronized'  :  0,
+            'images'        :  []
         },
 
         validate: function (attrs) {

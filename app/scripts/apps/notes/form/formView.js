@@ -34,6 +34,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
         events: {
             'submit @ui.form' : 'save',
+            'change @ui.form' : 'enableSubmitButton',
             'blur @ui.title' : 'noteClipped',
             'click .modeMenu a': 'switchMode',
             'click @ui.saveBtn': 'save',
@@ -46,10 +47,13 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
             App.mousetrap.API.pause();
             this.$body = $('body');
 
+            // Model
+            this.listenTo(this.model, 'sync', this.disableSubmitButton);
+            this.on('autoSave', this.autoSave, this);
+
             // Pagedown editor
             this.on('shown', this.pagedownRender);
             this.on('shown', this.changeMode);
-            this.on('autoSave', this.autoSave, this);
             this.on('pagedown:ready', this.onPagedownReady);
             this.on('pagedown:ready', this.changePagedownMode);
             this.on('pagedown:mode',  this.changePagedownMode);
@@ -63,6 +67,14 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
         onRender: function() {
             // Pagedown bar always visible
             this.ui.sCont.on('scroll', this.scrollPagedownBar);
+        },
+
+        enableSubmitButton: function () {
+            this.ui.saveBtnText.text($.t('Save'));
+        },
+
+        disableSubmitButton: function () {
+            this.ui.saveBtnText.text($.t('Saved'));
         },
 
         changeMode: function () {
@@ -107,6 +119,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
                 return;
             }
             App.log('Note has been automatically saved');
+            this.ui.saveBtnText.text($.t('Saving'));
             return this.save(false);
         },
 
@@ -162,7 +175,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
             // Save & cancel buttons
             $wmdButton.append(this.$('.saveBtnGroup').clone().addClass('wmd-save-button wmd-hidden'));
-            $wmdButton.append(this.$('.cancelBtn').clone().addClass('wmd-cancel-button wmd-hidden'));
+            $wmdButton.append(this.$('.cancelBtnGroup').clone().addClass('wmd-cancel-button wmd-hidden'));
+            this.ui.saveBtnText = this.$('.saveBtn .save-btn-text');
 
             // Dropdown menu for changing modes
             $wmdButton.prepend(this.$('.switch-mode').clone().addClass('wmd-mode-button wmd-hidden'));
@@ -215,6 +229,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, ace) {
 
                 // Save content automatically if user stoped typing for 5 second
                 editor.hooks.chain('onPreviewRefresh', function () {
+                    self.enableSubmitButton();
                     if (typeof timeOut === 'number') {
                         clearTimeout(timeOut);
                     }

@@ -9,14 +9,12 @@ define([
     /**
      * Confirm modal window
      */
-    var Confirm = App.module('Confirm', {startWithParent: false}),
-        showConfirm;
+    var Confirm = App.module('Confirm', {startWithParent: false});
 
-    Confirm.on('start', function (options) {
+    Confirm.on('start', function () {
         App.mousetrap.API.reset();
         App.log('AppConfirm has been started');
         App.Confirm.active = true;
-        //Confirm.show(options);
     });
 
     Confirm.on('stop', function () {

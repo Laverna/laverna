@@ -28,7 +28,7 @@
     "i18next": "~1.7.2",
     "device.js": "git://github.com/matthewhudson/device.js",
     "dropzone": "git://github.com/enyo/dropzone#~3.8.4",
-    "blueimp-canvas-to-blob": "git://github.com/blueimp/JavaScript-Canvas-to-Blob#~2.1.0"
+    "blueimp-canvas-to-blob": "git://github.com/blueimp/JavaScript-Canvas-to-Blob#~2.1.0",
     "hammerjs": "git://github.com/EightMedia/hammer.js#1.0.9",
     "bootstrap": "~3.1.1",
     "pagedown": "git://github.com/ujifgc/pagedown.git",

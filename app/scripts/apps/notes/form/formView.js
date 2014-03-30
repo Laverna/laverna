@@ -16,7 +16,7 @@ define([
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView, dataURLtoBlob) {
+function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -105,11 +105,15 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
         /**
          * Save note to storage
          */
-        save: function () {
+        save: function (e) {
             var self = this,
+                mayRedirect = (typeof e === 'boolean') ? e : true,
                 content;
 
             clearTimeout(this.timeOut);
+            if (typeof e === 'object') {
+                e.preventDefault();
+            }
 
             if (this.editor) {
                 content = this.editor.getSession().getValue().trim();
@@ -123,14 +127,9 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
             ).done(function () {
                 self.model.trigger('save', {
                     content : _.unescape(content),
-                    redirect: true
+                    redirect: mayRedirect
                 });
             });
-            //console.log(this.options.files);
-            //this.model.trigger('save', {
-            //    content : _.unescape(content),
-            //    redirect: true
-            //});
 
             return false;
         },
@@ -152,6 +151,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
             var canCancel = this.isUnchanged(),
                 self = this;
 
+            clearTimeout(this.timeOut);
             if (canCancel === false) {
                 App.Confirm.show({
                     content : $.t('Are you sure? You have unsaved changes'),
@@ -208,8 +208,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
         },
 
         attachImages: function (data) {
-            var self = this,
-                imgURL,
+            var imgURL,
                 images = '';
 
             _.forEach(data.images, function (model) {

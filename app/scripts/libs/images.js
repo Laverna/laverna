@@ -1,3 +1,4 @@
+/*global define*/
 /**
  * Replaces MD code like ![](#image-id) to ![](base64://image-code)
  */
@@ -12,7 +13,6 @@ define(['underscore', 'jquery', 'toBlob'], function (_, $, toBlob) {
         toHtml: function (text, images) {
             var url = window.URL || window.webkitURL,
                 self = this,
-                urlImage,
                 blob;
 
             this.urls = [];
@@ -27,8 +27,7 @@ define(['underscore', 'jquery', 'toBlob'], function (_, $, toBlob) {
         },
 
         attachedImages: function (text, images) {
-            var self = this,
-                d = $.Deferred(),
+            var d = $.Deferred(),
                 toDelete = [],
                 pattern;
 
@@ -36,7 +35,7 @@ define(['underscore', 'jquery', 'toBlob'], function (_, $, toBlob) {
                 d.resolve();
             }
 
-            $.when(_.forEach(images.models, function (img, index) {
+            $.when(_.forEach(images.models, function (img) {
                 pattern = new RegExp('#' + img.get('id'));
                 if (pattern.test(text) === false) {
                     toDelete.push(img.get('id'));

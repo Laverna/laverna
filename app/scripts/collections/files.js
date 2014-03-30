@@ -64,7 +64,7 @@ define([
                             d.resolve(models);
                         }
                     },
-                    error: function () {
+                    error: function (e) {
                         d.reject(e);
                     }
                 });

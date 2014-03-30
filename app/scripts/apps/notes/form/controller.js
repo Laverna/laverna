@@ -94,7 +94,6 @@ define([
         },
 
         save: function (data) {
-            console.log('Saving ....................');
             var notebook;
 
             // Get new data
@@ -143,11 +142,10 @@ define([
             } else {
                 if (showNote === true) {
                     url = '/notes/show/' + this.model.get('id');
+                    App.trigger('notes:added', this.model.get('id'));
                 } else {
-                    console.log('edit page');
                     url = '/notes/edit/' + this.model.get('id');
                 }
-                App.trigger('notes:added', this.model.get('id'));
                 App.navigate(url, true);
             }
         }

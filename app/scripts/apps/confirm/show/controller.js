@@ -13,6 +13,7 @@ define([
 
         initialize: function () {
             _.bindAll(this, 'show');
+            this.options = null;
         },
 
         show: function (options) {
@@ -21,31 +22,31 @@ define([
             }
             this.options = options;
 
-            var view = new View({
+            this.view = new View({
                 text : options.content
             });
 
-            App.modal.show(view);
+            App.modal.show(this.view);
 
             // Events
-            view.on('confirm', this.confirmed, this);
-            view.on('refuse', this.refused, this);
+            this.view.on('confirm', this.confirmed, this);
+            this.view.on('refuse', this.refused, this);
         },
 
         confirmed: function () {
-            App.trigger('confirm');
             if (this.options.success) {
                 this.options.success();
             }
-            App.Confirm.trigger('stop');
+            App.Confirm.trigger('confirm');
+            App.Confirm.stop();
         },
 
         refused: function () {
-            App.trigger('refuse');
             if (this.options.error) {
                 this.options.error();
             }
-            App.Confirm.trigger('stop');
+            App.Confirm.trigger('refuse');
+            App.Confirm.stop();
         }
 
     });

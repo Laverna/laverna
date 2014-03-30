@@ -209,7 +209,7 @@ define([
             }
 
             // Show document.title
-            document.title = (this.args.filter) ? this.args.filter : 'Inbox';
+            document.title = (this.args.filter) ? this.args.filter : 'All notes';
         },
 
         /**

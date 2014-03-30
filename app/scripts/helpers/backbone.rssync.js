@@ -20,13 +20,8 @@ define([
         auth: function () {
             _.bindAll(this, 'sync', 'triggerConnected', 'triggerDisconnected');
 
-            // Because RemoteStorage.js keeps changing history fragment to #/
-            App.navigateBack();
-
             // Get access
-            remoteStorage.access.claim('notes', 'rw');
-            remoteStorage.access.claim('notebooks', 'rw');
-            remoteStorage.access.claim('tags', 'rw');
+            remoteStorage.access.claim('laverna', 'rw');
 
             // Display the widget
             remoteStorage.displayWidget();
@@ -38,6 +33,9 @@ define([
         triggerConnected: function () {
             App.log('RemoteStorage has been connected');
             Backbone.cloud = this.sync;
+
+            // Because RemoteStorage.js keeps changing history fragment to #/
+            App.navigateBack();
         },
 
         triggerDisconnected: function () {
@@ -110,17 +108,18 @@ define([
      * Defines the module
      */
     remoteAdapter = function (model) {
-        var moduleName = model.storeName || model.collection.storeName;
+        var path = model.storeName || model.collection.storeName,
+            moduleName = 'laverna';
 
         RemoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
             var remoteModule, listMethods;
 
             remoteModule = {
                 privateList: function () {
-                    return privateClient.scope().extend(listMethods).cache('', false);
+                    return privateClient.scope(path + '/').extend(listMethods).cache('', true);
                 },
 
-                publicList: function (path) {
+                publicList: function () {
                     return publicClient.scope(path + '/').extend(listMethods).cache('', false);
                 }
             };

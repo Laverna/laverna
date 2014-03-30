@@ -29,19 +29,20 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
             tags       :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content',
+            saveBtn    :  '.saveBtn',
             // Mode stuff
             form       :  '#noteForm',
             wmdBar     :  '#wmd-button-bar',
         },
 
         events: {
-            'submit #noteForm' : 'save',
-            'blur #inputTitle' : 'noteClipped',
+            'submit @ui.form' : 'save',
+            'change @ui.form' : 'enableSubmitButton',
+            'blur @ui.title' : 'noteClipped',
             'click .modeMenu a': 'switchMode',
-            'click .saveBtn'   : 'save',
-            'click .saveExitBtn': 'save',
+            'click @ui.saveBtn': 'save',
             'click .cancelBtn' : 'redirect',
-            'keyup input[name=title]'  : 'keyupEvents'
+            'keyup @ui.title'  : 'keyupEvents'
         },
 
         initialize: function () {
@@ -51,6 +52,10 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
             this.imgHelper = new Img();
 
             this.model.on('attachImages', this.attachImages, this);
+
+            // Model
+            this.listenTo(this.model, 'sync', this.disableSubmitButton);
+            this.on('autoSave', this.autoSave, this);
 
             // Pagedown editor
             this.on('shown', this.pagedownRender);
@@ -69,6 +74,16 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
         onRender: function() {
             // Pagedown bar always visible
             this.ui.sCont.on('scroll', this.scrollPagedownBar);
+        },
+
+        enableSubmitButton: function () {
+            this.ui.saveBtnText.text($.t('Save'));
+        },
+
+        disableSubmitButton: function () {
+            if (this.ui.saveBtnText) {
+                this.ui.saveBtnText.text($.t('Saved'));
+            }
         },
 
         changeMode: function () {
@@ -90,12 +105,11 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
         /**
          * Save note to storage
          */
-        save: function (e) {
-            e.preventDefault();
+        save: function () {
+            var self = this,
+                content;
 
-            var title = this.ui.title.val().trim(),
-                content,
-                data;
+            clearTimeout(this.timeOut);
 
             if (this.editor) {
                 content = this.editor.getSession().getValue().trim();
@@ -103,40 +117,75 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                 content = this.$('#wmd-input').val();
             }
 
-            // Get values
-            data = {
-                title      : (title !== '') ? title : 'Unnamed',
-                content    : _.unescape(content),
-                notebookId : parseInt(this.ui.notebookId.val()),
-                images     : []
-            };
-
-            this.options.files.forEach(function (img) {
-                data.images.push(img.get('id'));
-            });
-
-            // Tasks
-            var checklist = new Checklist().count(data.content);
-            data.taskAll = checklist.all;
-            data.taskCompleted = checklist.completed;
-
-            // Tags
-            data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
-
-            if (!$(e.currentTarget).hasClass('saveBtn')) {
-                data.redirect = true;
-            }
-
             // Trigger save
-            this.model.trigger('save', data);
+            $.when(
+                this.imgHelper.attachedImages(content, this.options.files)
+            ).done(function () {
+                self.model.trigger('save', {
+                    content : _.unescape(content),
+                    redirect: true
+                });
+            });
+            //console.log(this.options.files);
+            //this.model.trigger('save', {
+            //    content : _.unescape(content),
+            //    redirect: true
+            //});
+
+            return false;
+        },
+
+        autoSave: function () {
+            if (this.isUnchanged() === true || App.Confirm.active === true) {
+                clearTimeout(this.timeOut);
+                return;
+            }
+            App.log('Note has been automatically saved');
+            this.ui.saveBtnText.text($.t('Saving'));
+            return this.save(false);
         },
 
         /**
          * Redirect to note
          */
-        redirect: function (e) {
-            e.preventDefault();
-            return this.trigger('redirect');
+        redirect: function () {
+            var canCancel = this.isUnchanged(),
+                self = this;
+
+            if (canCancel === false) {
+                App.Confirm.show({
+                    content : $.t('Are you sure? You have unsaved changes'),
+                    success : function () {
+                        self.trigger('redirect', true);
+                    }
+                });
+            }
+            else {
+                this.trigger('redirect', true);
+            }
+
+            return false;
+        },
+
+        /**
+         * Is there any unsaved changes?
+         */
+        isUnchanged: function () {
+            var content;
+
+            if (this.editor) {
+                content = this.editor.getSession().getValue().trim();
+            } else {
+                content = this.$('#wmd-input').val();
+            }
+
+            if (this.ui.title.val() === this.model.get('title') &&
+                parseInt(this.ui.notebookId.val()) === this.model.get('notebookId') &&
+                content === this.model.get('content') ) {
+                return true;
+            }
+
+            return false;
         },
 
         onPagedownReady: function () {
@@ -148,7 +197,8 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
 
             // Save & cancel buttons
             $wmdButton.append(this.$('.saveBtnGroup').clone().addClass('wmd-save-button wmd-hidden'));
-            $wmdButton.append(this.$('.cancelBtn').clone().addClass('wmd-cancel-button wmd-hidden'));
+            $wmdButton.append(this.$('.cancelBtnGroup').clone().addClass('wmd-cancel-button wmd-hidden'));
+            this.ui.saveBtnText = this.$('.saveBtn .save-btn-text');
 
             // Dropdown menu for changing modes
             $wmdButton.prepend(this.$('.switch-mode').clone().addClass('wmd-mode-button wmd-hidden'));
@@ -242,10 +292,18 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                 });
 
                 self.trigger('pagedown:ready');
-            });
-        },
 
-        showDroparea: function (e) {
+                // Save content automatically if user stoped typing for 5 second
+                editor.hooks.chain('onPreviewRefresh', function () {
+                    self.enableSubmitButton();
+                    if (typeof self.timeOut === 'number') {
+                        clearTimeout(self.timeOut);
+                    }
+                    self.timeOut = setTimeout(function () {
+                        self.trigger('autoSave');
+                    }, 8000);
+                });
+            });
         },
 
         /**

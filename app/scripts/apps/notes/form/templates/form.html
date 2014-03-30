@@ -1,18 +1,11 @@
 <nav class="ui-row navbar navbar-static-top">
     <ul class="m0 pull-right">
         <li class="btn-group saveBtnGroup">
-            <span class="saveBtn btn btn-success"><i class="icon-save"></i> {{ i18n('Save') }}</span>
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-align-justify visible-xs pull-left"></i>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" >
-                <li>
-                    <a class="saveExitBtn" href="#"><i class="icon-save"></i> {{ i18n('Save & Exit') }}</a>
-                </li>
-            </ul>
+            <span class="saveBtn btn btn-success">
+                <i class="icon-save"></i> <span class="save-btn-text">{{ i18n('Save') }}</span>
+            </span>
         </li>
-        <li class="btn-group">
+        <li class="btn-group cancelBtnGroup">
             <span class="cancelBtn pull-right btn btn-default">{{ i18n('Cancel') }}</span>
         </li>
         <li class="btn-group dropdown switch-mode">

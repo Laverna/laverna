@@ -31,7 +31,7 @@ define([
 
             if ( !this.client.isAuthenticated()) {
                 var self = this;
-                App.Confirm.start({
+                App.Confirm.show({
                     content : 'Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.',
                     success : function () {
                         self.client.authenticate();

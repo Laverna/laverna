@@ -1,35 +1,26 @@
 <!-- Sidebars header -->
 <nav class="ui-row navbar navbar-default navbar-static-top">
     <ul class="nav navbar-nav navbar-left">
-        <li>
-            <div class="btn-group">
-                <a href="#/notes" class="btn btn-default notes hidden-xs">
-                    <span class="icon-align-justify"></span>
-                </a>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-align-justify visible-xs pull-left"></i>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#/notes"><i class="icon-file"></i> {{ i18n('Inbox') }}</a></li>
-                        <li><a href="#/notes/f/favorite"><i class="icon-star"></i>  {{ i18n('Favorites') }}</a></li>
-                        <li><a href="#/notes/f/trashed"><i class="icon-trash"></i>  {{ i18n('Trash') }}</a></li>
-                        <li><a href="#/notebooks"><i class="icon-book"></i>  {{ i18n('Notebooks') }}</a></li>
-                        <li><a href="#/settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
-                        <li><a href="#/about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
-                    </ul>
-                </div>
-            </div>
-        </li>
+    </ul>
+    <a id="header-title" href="#/notebooks" class="btn-link navbar-brand dropdown-toggle" data-toggle="dropdown">
+        <i id="location-icon" class="icon-notebook"></i>
+        {{ i18n('Notebooks & tags') }}
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu location-dropdown" >
+        <li><a href="#notes"><i class="icon-note"></i> {{ i18n('All notes') }}</a></li>
+        <li><a href="#notes/f/favorite"><i class="icon-favorite"></i>  {{ i18n('Favourites') }}</a></li>
+        <li><a href="#notes/f/trashed"><i class="icon-trashed"></i>  {{ i18n('Trash') }}</a></li>
+        <li><a href="#notebooks"><i class="icon-notebook"></i>  {{ i18n('Notebooks') }}</a></li>
+        <li><a href="#settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
+        <li><a href="#about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
         <li class="{{ syncButton }}">
             <a href="#" class="btn sync-button">
                 <span id="syncStatus" class="icon-arrows"></span>
             </a>
         </li>
-    </ul>
-    <a href="#/notebooks" class="btn-link navbar-brand">{{ i18n('Notebooks & tags') }}</a>
-    <ul class="nav navbar-nav navbar-right">
         <li>
             <a href="#/notebooks/add" class="btn btn-danger addlink">
                 <span class="icon-pencil"></span>

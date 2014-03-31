@@ -19,10 +19,10 @@ define([
         changeFocus: function () {
             this.$('.list-group-item').addClass('active');
 
-            $('#sidebar .ui-s-content').scrollTop(
+            $('#sidebar .ui-body').scrollTop(
                 this.$('.list-group-item').offset().top -
-                $('#sidebar .ui-s-content').offset().top +
-                $('#sidebar .ui-s-content').scrollTop() - 100
+                $('#sidebar .ui-body').offset().top +
+                $('#sidebar .ui-body').scrollTop() - 100
             );
         },
 

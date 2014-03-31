@@ -20,7 +20,8 @@ define([
 
         ui: {
             prevPage    : '#prevPage',
-            nextPage    : '#nextPage'
+            nextPage    : '#nextPage',
+            locationIcon: '#location-icon'
         },
 
         events: {
@@ -47,6 +48,10 @@ define([
             if ( !this.options.args.id) {
                 $(App.content.el).removeClass('active-row');
             }
+
+            var iconClass = (this.options.args.filter === null) ? 'note' : this.options.args.filter;
+            this.ui.locationIcon.removeClass();
+            this.ui.locationIcon.addClass('icon-' + iconClass);
         },
 
         toNextPage: function () {
@@ -110,6 +115,7 @@ define([
                     if (this.args.query) {
                         title += ': ' + this.args.query;
                     }
+
                     return title;
                 },
                 pageNumber: function () {

@@ -87,6 +87,7 @@ define([
                 title       : this.options.title,
                 urlPage     : this.urlPage,
                 args        : this.options.args,
+                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : ''
             };
             return viewData;
         },

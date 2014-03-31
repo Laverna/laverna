@@ -77,6 +77,14 @@ define([
             }
         },
 
+        serializeData: function () {
+            var data = {
+                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : ''
+            };
+
+            return data;
+        },
+
         templateHelpers: function () {
             return {
                 i18n: $.t

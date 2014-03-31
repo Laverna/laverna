@@ -92,7 +92,8 @@ define([
                 title       : this.options.title,
                 urlPage     : this.urlPage,
                 args        : this.options.args,
-                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : ''
+                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
+                pagination  : this.collection.length >= App.settings.pagination
             };
             return viewData;
         },

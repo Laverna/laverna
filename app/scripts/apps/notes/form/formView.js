@@ -148,21 +148,12 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
          * Redirect to note
          */
         redirect: function () {
-            var canCancel = this.isUnchanged(),
-                self = this;
-
             clearTimeout(this.timeOut);
-            if (canCancel === false) {
-                App.Confirm.show({
-                    content : $.t('Are you sure? You have unsaved changes'),
-                    success : function () {
-                        self.trigger('redirect', true);
-                    }
-                });
-            }
-            else {
-                this.trigger('redirect', true);
-            }
+
+            this.trigger('redirect', {
+                mayRedirect : true,
+                isUnchanged : this.isUnchanged()
+            });
 
             return false;
         },

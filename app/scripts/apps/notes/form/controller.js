@@ -18,7 +18,7 @@ define([
 
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {
-            _.bindAll(this, 'addForm', 'editForm', 'show', 'fetchImages', 'redirect');
+            _.bindAll(this, 'addForm', 'editForm', 'show', 'fetchImages', 'redirect', 'confirmRedirect');
             App.trigger('notes:show', {filter: null, page: null});
 
             this.tags = new TagsCollection();
@@ -135,8 +135,27 @@ define([
             ).done(this.redirect(data.redirect));
         },
 
+        confirmRedirect: function (args) {
+            var self = this;
+            if (args.isUnchanged === true) {
+                this.redirect(args.mayRedirect);
+            } else {
+                App.Confirm.show({
+                    content : $.t('Are you sure? You have unsaved changes'),
+                    success : function () {
+                        self.redirect(args.mayRedirect);
+                    }
+                });
+            }
+        },
+
         redirect: function (showNote) {
             var url;
+
+            if (typeof showNote === 'object') {
+                return this.confirmRedirect(showNote);
+            }
+
             if (typeof this.model === 'undefined') {
                 App.navigateBack();
             } else {

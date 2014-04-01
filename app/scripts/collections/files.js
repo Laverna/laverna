@@ -4,8 +4,9 @@ define([
     'jquery',
     'backbone',
     'models/file',
-    'migrations/note'
-], function (_, $, Backbone, File, FileDB) {
+    'migrations/note',
+    'toBlob'
+], function (_, $, Backbone, File, FileDB, toBlob) {
     'use strict';
 
     /**
@@ -56,7 +57,9 @@ define([
 
             _.forEach(imgs, function (img, index) {
                 model = new File();
+                img.src = toBlob(img.src);
                 model.set(img);
+
                 self.create(model, {
                     success: function (m) {
                         models.push(m);

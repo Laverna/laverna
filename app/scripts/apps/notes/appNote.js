@@ -31,6 +31,7 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
+            'notes'            : 'showNotes',
             'notes/add'        : 'addNote',
             'notes/edit/:id'   : 'editNote',
             'notes/remove/:id' : 'removeNote',
@@ -120,7 +121,7 @@ define([
      * Router events
      */
     App.on('notes:list', function () {
-        App.navigate('notes');
+        App.navigate('notes', { trigger : false });
         API.showNotes(null, null);
     });
 

@@ -156,8 +156,9 @@ define([
                 return this.confirmRedirect(showNote);
             }
 
-            if (typeof this.model === 'undefined') {
-                App.navigateBack();
+            App.content.reset();
+            if (typeof this.model.get('id') === 'undefined') {
+                App.navigateBack('notes', true);
             } else {
                 if (showNote === true) {
                     url = '/notes/show/' + this.model.get('id');

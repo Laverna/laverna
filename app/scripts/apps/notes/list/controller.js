@@ -54,6 +54,8 @@ define([
                 this.args.page = parseInt(this.args.page);
             }
 
+            this.query = {};
+
             // Filter
             if (_.isNull(this.args) === false && this.args.filter) {
                 this.notes.trigger('filter:' + this.args.filter);
@@ -88,23 +90,20 @@ define([
         activeNotes: function () {
             $.when(
                 this.notes.fetch({
-                    offset : this.args.page,
-                    limit  : App.settings.pagination,
-                    conditions: {trash : 0}
+                    // offset : this.args.page,
+                    // limit  : App.settings.pagination,
+                    conditions: ( App.shimDB ? null : {'trash' : 0} )
                 })
             ).done(this.showSidebar);
         },
 
         /**
          * Show favorite notes
-         * @TODO At the time limit and offset didn't work properly
          */
         favoriteNotes: function () {
             $.when(
                 this.notes.fetch({
-                    //offset : this.args.page,
-                    //limit  : App.settings.pagination,
-                    conditions: {isFavorite : 1}
+                    conditions: ( App.shimDB ? null : {isFavorite : 1} )
                 })
             ).done(this.showSidebar);
         },
@@ -115,7 +114,7 @@ define([
         trashedNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: {trash : 1}
+                    conditions: ( App.shimDB ? null : {trash : 1} )
                 })
             ).done(this.showSidebar);
         },
@@ -126,7 +125,7 @@ define([
         notebooksNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: {notebookId : parseInt(this.args.query)}
+                    conditions: ( App.shimDB ? null : {notebookId : parseInt(this.args.query)} )
                 })
             ).done(this.showSidebar);
         },
@@ -139,7 +138,7 @@ define([
                 notes;
             $.when(
                 this.notes.fetch({
-                    conditions: {trash : 0}
+                    conditions: ( App.shimDB ? null : {trash : 0} )
                 })
             ).done(
                 function () {
@@ -174,10 +173,18 @@ define([
          * Show content
          */
         showSidebar: function () {
+            // IndexedDBShim doesn't support indexes - filter with backbone.js
+            if (App.shimDB === true) {
+                this.notes.filterList(this.args.filter);
+            }
+
             // Pagination
             if (this.notes.length > App.settings.pagination) {
                 var notes = this.notes.pagination(this.args.page, App.settings.pagination);
                 this.notes.reset(notes);
+            }
+            else if (this.args.page > 1) {
+                this.notes.reset([]);
             }
 
             // Next page

@@ -150,22 +150,19 @@ define([
         },
 
         redirect: function (showNote) {
-            var url;
-
+            var url = 'notes';
             if (typeof showNote === 'object') {
                 return this.confirmRedirect(showNote);
             }
 
             App.content.reset();
+            App.trigger('notes:added', this.model);
+
             if (typeof this.model.get('id') === 'undefined') {
-                App.navigateBack('notes', true);
+                App.navigateBack(url, true);
             } else {
-                if (showNote === true) {
-                    url = '/notes/show/' + this.model.get('id');
-                    App.trigger('notes:added', this.model.get('id'));
-                } else {
-                    url = '/notes/edit/' + this.model.get('id');
-                }
+                url += showNote === true ? '/show/' : '/edit/';
+                url += this.model.get('id');
                 App.navigate(url, true);
             }
         }

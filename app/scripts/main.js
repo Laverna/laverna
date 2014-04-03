@@ -25,7 +25,7 @@ require.config({
         backbone                   :  '../bower_components/backbone/backbone',
         marionette                 :  '../bower_components/marionette/lib/core/amd/backbone.marionette',
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
-        IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim.min',
+        IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         dropzone                   :  '../bower_components/dropzone/downloads/dropzone.min',
         toBlob                     :  '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
@@ -69,6 +69,9 @@ require.config({
         },
         indexedDB: {
             deps: ['underscore', 'backbone']
+        },
+        'IndexedDBShim': {
+            exports: 'shimIndexedDB'
         },
         // Mousetrap
         'Mousetrap': { },
@@ -124,10 +127,44 @@ require.config({
 require([
     'jquery',
     'app',
-    'bootstrap',
-    'IndexedDBShim'    // IndexedDB support in Safari and in old Chrome
+    'bootstrap'
 ], function ($, App) {
     'use strict';
+    /*global alert*/
 
-    App.start();
+    function startApp () {
+        var request;
+
+        if ( !window.indexedDB || !window.localStorage) {
+            alert('Your browser outdated and does not support IndexedDB and/or LocalStorage.');
+            return;
+        }
+
+        request = window.indexedDB.open('MyTestDatabase');
+        request.onerror = function() {
+            alert('It seems like you refused Laverna to use IndexedDB or you are in Private browsing mode.');
+        };
+
+        App.start();
+    }
+
+    // prevent error in Firefox
+    if( !('indexedDB' in window)) {
+        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
+    }
+
+    if (window.indexedDB) {
+        startApp();
+    }
+    // IndexedDB support in Safari and in old Chrome
+    else {
+        require(['IndexedDBShim'], function () {
+            if (window.shimIndexedDB) {
+                App.shimDB = true;
+                window.shimIndexedDB.__useShim(true);
+            }
+            startApp();
+        });
+    }
+
 });

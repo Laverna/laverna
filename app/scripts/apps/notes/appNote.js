@@ -31,7 +31,6 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'notes'            : 'showNotes',
             'notes/add'        : 'addNote',
             'notes/edit/:id'   : 'editNote',
             'notes/remove/:id' : 'removeNote',
@@ -147,8 +146,8 @@ define([
     });
 
     // Re-render sidebar if new note has been added
-    App.on('notes:added', function (id) {
-        API.showNotes(_.extend(App.notesArg || {}, {id: id}));
+    App.on('notes:added', function (model) {
+        API.showNotes(_.extend(App.notesArg || {}, {id: model.get('id')}));
     });
 
     // Show form

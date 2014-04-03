@@ -22,6 +22,22 @@ define([
             return -model.get('created');
         },
 
+        filterList: function (filter) {
+            var res;
+            switch (filter) {
+            case 'favorite':
+                res = this.getFavorites();
+                break;
+            case 'trashed':
+                res = this.getTrashed();
+                break;
+            default:
+                res = this.getActive();
+                break;
+            }
+            return this.reset(res);
+        },
+
         /**
          * Filter the list of all notes that are favorite
          */

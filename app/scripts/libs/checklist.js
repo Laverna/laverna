@@ -11,7 +11,7 @@ define(['underscore'], function (_) {
     };
 
     _.extend(Checklist.prototype, {
-        pattern: /^\[([ Xx])\]/mg,
+        pattern: /\[([ Xx])\]/mg,
 
         /**
          * Count checkboxes

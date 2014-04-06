@@ -26,13 +26,21 @@ define([
             'o' : 'openActiveLink'
         },
 
+        ui: {
+            navbarSearchForm : '.search-form'
+        },
+
         events: {
-            'click .sync-button': 'syncWithCloud'
+            'click .sync-button': 'syncWithCloud',
+            'click .btn-search'  : 'showSearch',
+            'blur .search-input' : 'hideSearch'
         },
 
         initialize: function () {
             this.keyboardEvents[App.settings.navigateBottom] = 'next';
             this.keyboardEvents[App.settings.navigateTop] = 'prev';
+            this.keyboardEvents[App.settings.appSearch] = 'showSearch';
+            this.keyboardEvents['esc'] = 'hideSearch';
         },
 
         /**
@@ -48,6 +56,25 @@ define([
             if (a.length) {
                 App.navigate(a.attr('href'), true);
             }
+        },
+
+        showSearch: function (e) {
+            if (typeof (e) !== 'undefined') {
+                e.preventDefault();
+            }
+
+            this.ui.navbarSearchForm.removeClass('hidden');
+            this.ui.navbarSearchForm.find('input').focus().select();
+            $('.navbar-nav').addClass('hidden');
+        },
+
+        hideSearch: function (e) {
+            if (typeof (e) !== 'undefined') {
+                e.preventDefault();
+            }
+
+            this.ui.navbarSearchForm.addClass('hidden');
+            $('.navbar-nav').removeClass('hidden');
         },
 
         /**

@@ -19,19 +19,24 @@ define([
         keyboardEvents  : { },
 
         ui: {
-            prevPage    : '#prevPage',
-            nextPage    : '#nextPage',
-            locationIcon: '#location-icon'
+            prevPage         : '#prevPage',
+            nextPage         : '#nextPage',
+            locationIcon     : '#location-icon',
+            navbarSearchForm : '.search-form'
         },
 
         events: {
-            'click .sync-button': 'syncWithCloud',
+            'click .sync-button' : 'syncWithCloud',
+            'click .btn-search'  : 'showSearch',
+            'blur .search-input' : 'hideSearch'
         },
 
         initialize: function () {
             // Navigation with keys
             this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
             this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
+            this.keyboardEvents[App.settings.appSearch] = 'showSearch';
+            this.keyboardEvents['esc'] = 'hideSearch';
 
             // Options to itemView
             this.itemViewOptions.args = this.options.args;
@@ -68,6 +73,25 @@ define([
 
         navigateTop: function () {
             this.collection.trigger('navigateTop');
+        },
+
+        showSearch: function (e) {
+            if (typeof (e) !== 'undefined') {
+                e.preventDefault();
+            }
+
+            this.ui.navbarSearchForm.removeClass('hidden');
+            this.ui.navbarSearchForm.find('input').focus().select();
+            $('.navbar-nav').addClass('hidden');
+        },
+
+        hideSearch: function (e) {
+            if (typeof (e) !== 'undefined') {
+                e.preventDefault();
+            }
+
+            this.ui.navbarSearchForm.addClass('hidden');
+            $('.navbar-nav').removeClass('hidden');
         },
 
         /**

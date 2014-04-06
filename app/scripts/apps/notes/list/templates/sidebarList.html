@@ -16,7 +16,15 @@
                 <li><a href="#about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
             </ul>
         </li>
+        <li>
+            <a href="#" class="btn btn-search" title="{{ i18n('Search') }}">
+                <i class="icon-search"></i>
+            </a>
+        </li>
     </ul>
+    <form class="navbar-form search-form hidden">
+        <input class="form-control search-input col-12" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value="{{ args.query }}" />
+    </form>
     <ul class="nav navbar-nav navbar-right">
         <li class="{{ syncButton }}">
             <a href="#" class="btn sync-button">
@@ -32,15 +40,6 @@
 </nav>
 <!-- List of notes here -->
 <div class="ui-row ui-scroll-y ui-body">
-    <form class="form-inline search-form" action="#" method="post">
-        <div class="form-group">
-            <span class="icon-search"></span>
-        </div>
-        <div class="form-group search-group">
-            <input class="form-control search-input" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value="{{ args.searchQuery }}" />
-        </div>
-    </form>
-
     <div class="main notes-list">
     </div>
 

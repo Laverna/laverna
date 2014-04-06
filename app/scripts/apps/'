@@ -1,0 +1,54 @@
+<!-- Sidebars header -->
+<!-- <nav class="ui&#45;row navbar navbar&#45;default navbar&#45;static&#45;top"> -->
+<!--     <ul class="nav navbar&#45;nav navbar&#45;left"> -->
+<!--         <li class="dropdown"> -->
+<!--             <a id="header&#45;title" href="#{{ urlPage() }}" class="btn&#45;link navbar&#45;brand dropdown&#45;toggle" data&#45;toggle="dropdown"> -->
+<!--                 <i id="location&#45;icon" class="icon&#45;file"></i> -->
+<!--                 {{ pageTitle() }} {{ pageNumber() }} -->
+<!--                 <span class="caret"></span> -->
+<!--             </a> -->
+<!--             <ul class="dropdown&#45;menu location&#45;dropdown" > -->
+<!--                 <li><a href="#notes"><i class="icon&#45;note"></i> {{ i18n('All notes') }}</a></li> -->
+<!--                 <li><a href="#notes/f/favorite"><i class="icon&#45;favorite"></i>  {{ i18n('Favourites') }}</a></li> -->
+<!--                 <li><a href="#notes/f/trashed"><i class="icon&#45;trashed"></i>  {{ i18n('Trash') }}</a></li> -->
+<!--                 <li><a href="#notebooks"><i class="icon&#45;notebook"></i>  {{ i18n('Notebooks') }}</a></li> -->
+<!--                 <li><a href="#settings"><i class="icon&#45;cog"></i>  {{ i18n('Settings') }}</a></li> -->
+<!--                 <li><a href="#about"><i class="icon&#45;help&#45;circled"></i>  {{ i18n('About') }}</a></li> -->
+<!--             </ul> -->
+<!--         </li> -->
+<!--         <li> -->
+<!--             <a href="#" class="btn btn&#45;search" title="{{ i18n('Search') }}"> -->
+<!--                 <i class="icon&#45;search"></i> -->
+<!--             </a> -->
+<!--         </li> -->
+<!--     </ul> -->
+<!--     <form class="navbar&#45;form search&#45;form hidden"> -->
+<!--         <input class="form&#45;control search&#45;input col&#45;12" type="text" id="search&#45;input" placeholder="{{ i18n('Search') }}" value="{{ args.query }}" /> -->
+<!--     </form> -->
+<!--     <ul class="nav navbar&#45;nav navbar&#45;right"> -->
+<!--         <li class="{{ syncButton }}"> -->
+<!--             <a href="#" class="btn sync&#45;button"> -->
+<!--                 <span id="syncStatus" class="icon&#45;arrows"></span> -->
+<!--             </a> -->
+<!--         </li> -->
+<!--         <li> -->
+<!--             <a href="#/notes/add" class="btn btn&#45;danger addlink"> -->
+<!--                 <span class="icon&#45;pencil"></span> -->
+<!--             </a> -->
+<!--         </li> -->
+<!--     </ul> -->
+<!-- </nav> -->
+<!-- List of notes here -->
+<div class="ui-row ui-scroll-y ui-body">
+    <div class="main notes-list">
+    </div>
+
+    <% if (pagination === true || args.page > 0) { %>
+    <nav class="navbar navbar-static-top navbar-bottom">
+        <div class="btn-group btn-group-justified">
+            <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">{{ i18n('Previous') }}</a>
+            <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">{{ i18n('Next') }}</a>
+        </div>
+    </nav>
+    <% } %>
+</div>

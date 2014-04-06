@@ -26,10 +26,6 @@ define([
             'o' : 'openActiveLink'
         },
 
-        events: {
-            'click .sync-button': 'syncWithCloud'
-        },
-
         initialize: function () {
             this.keyboardEvents[App.settings.navigateBottom] = 'next';
             this.keyboardEvents[App.settings.navigateTop] = 'prev';
@@ -75,14 +71,6 @@ define([
             if (this.options[region] !== 0) {
                 this.activeRegion = region;
             }
-        },
-
-        serializeData: function () {
-            var data = {
-                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : ''
-            };
-
-            return data;
         },
 
         templateHelpers: function () {

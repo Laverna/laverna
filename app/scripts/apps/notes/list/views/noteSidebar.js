@@ -2,7 +2,9 @@
 define([
     'underscore',
     'app',
-    'backbone', 'apps/notes/list/views/noteSidebarItem', 'text!apps/notes/list/templates/sidebarList.html',
+    'backbone',
+    'apps/notes/list/views/noteSidebarItem',
+    'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap',
     'marionette'
 ], function(_, App, Backbone, NoteSidebarItem, Template) {
@@ -19,13 +21,11 @@ define([
         keyboardEvents  : { },
 
         ui: {
-            prevPage    : '#prevPage',
-            nextPage    : '#nextPage',
-            locationIcon: '#location-icon'
+            prevPage         : '#prevPage',
+            nextPage         : '#nextPage'
         },
 
         events: {
-            'click .sync-button': 'syncWithCloud',
         },
 
         initialize: function () {
@@ -48,10 +48,6 @@ define([
             if ( !this.options.args.id) {
                 $(App.content.el).removeClass('active-row');
             }
-
-            var iconClass = (this.options.args.filter === null) ? 'note' : this.options.args.filter;
-            this.ui.locationIcon.removeClass();
-            this.ui.locationIcon.addClass('icon-' + iconClass);
         },
 
         toNextPage: function () {
@@ -82,17 +78,10 @@ define([
             }
         },
 
-        syncWithCloud: function (e) {
-            e.preventDefault();
-            this.trigger('syncWithCloud');
-        },
-
         serializeData: function () {
             var viewData = {
                 title       : this.options.title,
-                urlPage     : this.urlPage,
                 args        : this.options.args,
-                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
                 pagination  : this.collection.length >= App.settings.pagination
             };
             return viewData;
@@ -102,28 +91,6 @@ define([
             return {
                 i18n: $.t,
 
-                urlPage : function () {
-                    return '/notes';
-                },
-
-                pageTitle: function () {
-                    var title = 'All notes';
-                    if (this.args.filter) {
-                        title = this.args.filter;
-                    }
-                    title = $.t(title.substr(0,1).toUpperCase() + title.substr(1));
-
-                    if (this.args.query) {
-                        title += ': ' + this.args.query;
-                    }
-
-                    return title;
-                },
-                pageNumber: function () {
-                    if (this.args.page) {
-                        return this.args.page;
-                    }
-                },
                 // Generates the pagination url
                 pageUrl: function (page) {
                     var url = '/notes';

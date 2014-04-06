@@ -19,6 +19,7 @@ define([
 
     AppNote.on('start', function () {
         App.mousetrap.API.restart();
+        App.AppNavbar.start();
         App.log('AppNote is started');
     });
 

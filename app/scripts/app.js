@@ -24,10 +24,11 @@ define([
     App.isMobile = Device.mobile() === true || Device.tablet() === true;
 
     App.addRegions({
-        sidebar :  '#sidebar',
-        content :  '#content',
-        brand   :  BrandRegion,
-        modal   :  ModalRegion
+        sidebarNavbar : '#sidebar-navbar',
+        sidebar       : '#sidebar-content',
+        content       : '#content',
+        brand         : BrandRegion,
+        modal         : ModalRegion
     });
 
     // Modal region events
@@ -108,6 +109,7 @@ define([
             'apps/encryption/encrypt',
             'helpers/dualstorage',
             'helpers/keybindings',
+            'apps/navbar/appNavbar',
             'apps/notes/appNote',
             'apps/notebooks/appNotebooks',
             'apps/settings/appSettings',

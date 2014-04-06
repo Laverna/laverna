@@ -85,6 +85,13 @@ define([
         },
 
         /**
+         * Forced sync
+         */
+        syncWithCloud: function () {
+            this.notes.syncWithCloud(true);
+        },
+
+        /**
          * Show only active notes
          */
         activeNotes: function () {
@@ -205,25 +212,16 @@ define([
             });
 
             App.sidebar.show(View);
-            App.Search.start();
-            App.SyncStatus.start();
-
-            View.on('syncWithCloud', this.syncWithCloud, this);
 
             // Active note
             if (this.args.id !== undefined) {
                 this.changeFocus(this.args);
             }
 
+            View.on('syncWithCloud', this.syncWithCloud, this);
+            App.AppNavbar.trigger('titleChange', this.args);
             // Show document.title
             document.title = (this.args.filter) ? this.args.filter : 'All notes';
-        },
-
-        /**
-         * Forced sync
-         */
-        syncWithCloud: function () {
-            this.notes.syncWithCloud(true);
         },
 
         changeFocus: function (args) {

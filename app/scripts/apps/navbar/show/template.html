@@ -1,0 +1,41 @@
+<!-- Sidebars header -->
+<nav class="ui-row navbar navbar-default navbar-static-top">
+    <ul class="nav navbar-nav navbar-left">
+        <li class="dropdown">
+            <a id="header-title" href="#{{ urlPage() }}" class="btn-link navbar-brand dropdown-toggle" data-toggle="dropdown">
+                <i id="location-icon" class="icon-file"></i>
+                {{ pageTitle() }} {{ pageNumber() }}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu location-dropdown" >
+                <li><a href="#notes"><i class="icon-note"></i> {{ i18n('All notes') }}</a></li>
+                <li><a href="#notes/f/favorite"><i class="icon-favorite"></i>  {{ i18n('Favourites') }}</a></li>
+                <li><a href="#notes/f/trashed"><i class="icon-trashed"></i>  {{ i18n('Trash') }}</a></li>
+                <li><a href="#notebooks"><i class="icon-notebook"></i>  {{ i18n('Notebooks') }}</a></li>
+                <li class="divider"></li>
+                <li><a href="#settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
+                <li><a href="#about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" class="btn btn-search" title="{{ i18n('Search') }}">
+                <i class="icon-search"></i>
+            </a>
+        </li>
+    </ul>
+    <form class="navbar-form search-form hidden">
+        <input class="form-control search-input col-12" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value="{{ args.query }}" />
+    </form>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="{{ syncButton }}">
+            <a href="#" class="btn sync-button">
+                <span id="syncStatus" class="icon-arrows"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#{{ urlPage() }}/add" class="btn btn-danger addlink">
+                <span class="icon-pencil"></span>
+            </a>
+        </li>
+    </ul>
+</nav>

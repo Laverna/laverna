@@ -50,10 +50,6 @@ define([
             this.layout = new Layout({ notebooks: this.notebooks.length, tags: this.tags.length});
             App.sidebar.show(this.layout);
 
-            // Start search and sync events
-            App.Search.start();
-            App.SyncStatus.start();
-
             // Show notebooks list
             notebookView = new NotebooksComposite({
                 collection: this.notebooks
@@ -69,6 +65,9 @@ define([
             this.layout.tags.show(tagsView);
 
             // View events
+            App.AppNavbar.trigger('titleChange', {
+                filter: 'Notebooks & Tags'
+            });
             this.layout.on('syncWithCloud', this.syncWithCloud, this);
         },
 

@@ -23,7 +23,7 @@ define([
 
         remove: function () {
             this.model.destroy();
-            new Tags().syncDistroy(this.model);
+            new Tags().syncDirty(this.model);
             this.redirect();
         },
 

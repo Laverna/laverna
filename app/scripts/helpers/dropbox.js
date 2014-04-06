@@ -10,11 +10,14 @@ define([
 
     var Adapter = function () { };
 
-    Adapter = _.extend(Adapter.prototype, {
+    _.extend(Adapter.prototype, {
 
         // OAuth authentification
         // ---------------------
         auth: function () {
+            var d = $.Deferred(),
+                self = this;
+
             _.bindAll(this, 'sync');
 
             this.client = new Dropbox.Client({
@@ -30,7 +33,6 @@ define([
             this.client.authenticate({interactive: false});
 
             if ( !this.client.isAuthenticated()) {
-                var self = this;
                 App.Confirm.show({
                     content : 'Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.',
                     success : function () {
@@ -42,6 +44,7 @@ define([
             // Override backbone sync method
             if (this.client.isAuthenticated()) {
                 Backbone.cloud = this.sync;
+                d.resolve(true);
             }
         },
 
@@ -49,6 +52,7 @@ define([
         // -----------
         sync: function (method, model, options) {
             var self = this,
+                done = $.Deferred(),
                 resp;
 
             if (this.client === void 0) {
@@ -58,46 +62,48 @@ define([
                 throw new Error('invalid dropbox client');
             }
 
-            options         = options           || {};
-            options.success = options.success   || function() {};
-            options.error   = options.error     || function() {};
+            options = options || {};
             options.store = this.getStore(model);
+
+            function query () {
+                switch (method) {
+                case 'read':
+                    resp = model.id !== undefined ? self.find(model, options) : self.findAll(options);
+                    break;
+                case 'create':
+                    resp = self.create(model, options);
+                    break;
+                case 'update':
+                    resp = self.update(model, options);
+                    break;
+                case 'delete':
+                    resp = self.destroy(model, options);
+                    break;
+                }
+
+                resp.then(function(res) {
+                    options.success(res);
+                    if (options.complete) {
+                        options.complete(res);
+                    }
+                    done.resolve(res);
+                }, function(res) {
+                    options.error(res);
+                    if (options.complete) {
+                        options.complete(res);
+                    }
+                    done.reject(res);
+                });
+            }
 
             // Store every collection in different places
             this.createDir( options.store )
-                .fail(options.error)
-                .done(function () {
-                    resp = self.query(method, model, options);
+                .done(query)
+                .fail(function () {
+                    done.fail('Directory');
                 });
 
-            return resp;
-        },
-
-        // Process request
-        // ---------------
-        query: function (method, model, options) {
-            var resp;
-
-            switch (method) {
-            case 'read':
-                resp = model.id !== undefined ? this.find(model, options) : this.findAll(options);
-                break;
-            case 'create':
-                resp = this.create(model, options);
-                break;
-            case 'update':
-                resp = this.update(model, options);
-                break;
-            case 'delete':
-                resp = this.destroy(model, options);
-                break;
-            }
-
-            if (resp) {
-                resp.fail(options.error).done(options.success);
-            }
-
-            return resp;
+            return done;
         },
 
         // Create directory for files

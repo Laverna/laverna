@@ -8,3 +8,4 @@ test/bower_components
 .idea
 app/styles/*.css
 *.swp
+app/scripts/libs/remotestorage.js

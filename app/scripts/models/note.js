@@ -14,7 +14,6 @@ define([
 
         idAttribute: 'id',
 
-        // localStorage: new Backbone.LocalStorage('vimarkable.notes'),
         database  : NotesDB,
         storeName : 'notes',
 

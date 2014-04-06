@@ -35,7 +35,7 @@ define([
             });
 
             this.model.destroy();
-            this.collection.syncDistroy(this.model);
+            this.collection.syncDirty(this.model);
             this.redirect();
         },
 

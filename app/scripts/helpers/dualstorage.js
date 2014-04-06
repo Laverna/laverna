@@ -7,7 +7,8 @@ define([
 ], function (_, App, Backbone) {
     'use strict';
 
-    var Cloud = function () { },
+    var Sync = App.module('App.Sync', {startWithParent: false}),
+        done = $.Deferred(),
         adapter = 'helpers/';
 
     switch (App.settings.cloudStorage) {
@@ -21,238 +22,253 @@ define([
 
     // CloudStorage: auth
     if (adapter !== 'helpers/') {
-        require([adapter], function (cloudStorage) {
-            return cloudStorage.auth();
+        require([adapter], function (CloudStorage) {
+            $.when(new CloudStorage().auth()).done(function () {
+                done.resolve(true);
+            });
         });
     }
 
-    _.extend(Cloud.prototype, {
+    /**
+     * When sync module starts - sync all collections
+     */
+    Sync.on('start', function () {
+        var collections = ['notes', 'notebooks', 'tags'],
+            collection;
 
-        initialize: function (collection) {
-            _.bindAll(this, 'pull', 'saveToLocal');
+        App.log('Synchronize all collections');
 
-            // Syncrhonized objects
+        // Synchronize all collections
+        _.each(collections, function (col) {
+            require(['collections/' + col], function (Col) {
+                collection = new Col();
+                collection.syncWithCloud();
+            });
+        });
+    });
+
+    Sync.Model = function () { };
+    _.extend(Sync.Model.prototype, {
+
+        init: function (collection) {
+            _.bindAll(this, 'start', 'syncFromCloud', 'toLocal');
+
+            // No cloud storage or user is offline
+            if (navigator.onLine === false || !Backbone.cloud) {
+                App.log('You are offline');
+                return false;
+            }
+
+            $.when(adapter).done(this.start(collection));
+        },
+
+        start: function (collection) {
+            // Synchronized objects
             this.synced = [];
 
             this.collectionCloud = new collection.constructor();
             this.collectionCloud.sync = Backbone.cloud;
             this.collection = collection.clone();
 
-            // When synchronizing with server is done
-            this.collection.on('sync:cloudPull', this.push, this);
+            // Sync events
+            this.collectionCloud.on('sync:after', this.syncToCloud, this);
+            this.collection.on('sync:local', this.syncDirty, this);
 
-            // Trigger synchronize events
-            this.collection.on('sync:before', function () {
-                App.trigger('sync:before');
-                collection.trigger('sync:before');
-            });
+            // Trigger event - before
+            App.trigger('sync:before');
+            collection.trigger('sync:before');
 
+            // Trigger event - after
             this.collection.on('sync:after', function () {
                 this.saveSyncTime();
                 App.trigger('sync:after');
                 collection.trigger('sync:after', this.synced);
             }, this);
 
-            // Fetch any data from indexeddb
-            $.when(this.collection.fetch({ limit : 1 } )).done(this.pull);
+            // Fetch data from local database and cloud
+            $.when(this.collection.fetch(), this.collectionCloud.fetch())
+                .done(this.syncFromCloud);
         },
 
-        // From cloud to indexedDB
-        // -----------------------
-        pull: function () {
-            var time = this.getSyncTime(),
-                dirty = this.collection.getDistroyed(),
-                self = this,
+        /**
+         * Synchronize cloud data
+         */
+        syncFromCloud: function () {
+            var self = this,
+                dirty = this.collection.getDirty(),
+                time = this.getSyncTime(),
+                notRemoved,
                 isLast;
 
-            self.collection.trigger('sync:before');
-            this.collectionCloud.fetch({
-                reset : true,
-                success: function () {
-                    if (self.collectionCloud.length === 0) {
-                        self.collection.trigger('sync:cloudPull');
-                    }
-                    self.collectionCloud.each(function (model, iter) {
-                        if (time === null || (time < model.get('updated') &&
-                            _.indexOf(dirty, model.get('id')) === -1) ) {
-                            Backbone.cloud('read', model, {
-                                success: function (modelCloud) {
-                                    isLast = (iter === (self.collectionCloud.length-1));
-                                    model.set(modelCloud);
-                                    self.saveToLocal(model, isLast);
-                                },
-                                error: function () {
-                                    throw new Error('Dropbox pull error');
-                                }
-                            });
-                        } else if(iter === self.collectionCloud.length-1) {
-                            // If last model from cloud - save synchronized time
-                            self.collection.trigger('sync:cloudPull');
+            // No data in the cloud storage
+            if (this.collectionCloud.length === 0) {
+                this.collectionCloud.trigger('sync:after');
+                return;
+            }
+
+            this.collectionCloud.each(function (model, iter) {
+                isLast = (iter === self.collectionCloud.length-1);
+                notRemoved = (_.indexOf(dirty, model.get('id')) === -1);
+
+                if (model.get('title') && notRemoved === true) {
+                    self.toLocal(model, isLast);
+                }
+                // This is not object just ID - fetch model
+                else if (time === null || (time < model.get('updated') && notRemoved)) {
+                    Backbone.cloud('read', model, {
+                        success: function (modelCloud) {
+                            model.set(modelCloud);
+                            self.toLocal(model, isLast);
+                        },
+
+                        error  : function () {
+                            throw new Error('Error occured while trying to fetch data from the cloud');
                         }
                     });
-                },
-                error: function () {
-                    App.log('Error happened with cloud storage API');
-                    self.collection.trigger('sync:after');
+                }
+                else if (isLast === true) {
+                    self.collectionCloud.trigger('sync:after');
                 }
             });
         },
 
-        // Save local changes to the cloud storage
-        // ---------------------------------------
-        push: function () {
-            var conditions = {synchronized : 0},
-                dirty = this.collection.getDistroyed(),
-                self = this;
-
-            // If cloud storage is empty, synchronize all data
-            if (this.collectionCloud.length === 0 && this.collection.length > 0) {
-                App.log('Cloud storage is empty');
-                conditions = null;
-            }
-
-            // Save local changes
-            this.collection.fetch({
-                reset: true,
-                conditions : conditions,
-                success    : function () {
-                    App.log(self.collection.length + ' objects to sync');
-                    self.saveToCloud();
-                },
-                error: function () {
-                    App.log('error');
-                    if (dirty.length === 0) {
-                        self.collection.trigger('sync:after');
-                    }
-                }
-            });
-
-            if (dirty.length !== 0) {
-                this.syncDistroy(dirty);
-            }
-        },
-
-        // Remove removed models from the cloud
-        // ------------------------------------
-        syncDistroy: function (dirty) {
+        /**
+         * Save to local storage (indexedDB)
+         */
+        toLocal: function (model, isLast) {
             var self = this,
-                model;
+                local = this.collection.get(model.get('id')),
+                needUpdate;
 
-            _.each(dirty, function (id, iter) {
-                model = new self.collectionCloud.model({id : id});
-                Backbone.cloud('delete', model, {
-                    success : function () {
-                        App.log('Model removed the cloud model ' + id);
-                        if (iter === dirty.length-1) {
-                            self.collection.trigger('sync:after');
-                            self.collection.resetDistroy();
+            function saveToLocal () {
+                self.synced.push(model.get('id'));
+
+                local.save(_.extend(model.toJSON(), {'synchronized': 1 }), {
+                    success: function () {
+                        if (isLast === true) {
+                            self.collectionCloud.trigger('sync:after');
                         }
                     },
-                    error   : function () {
-                        App.log('error');
-                        throw new Error('Dropbox push error');
+                    error : function () {
+                        throw new Error('Error occured while trying to save to indexeddb');
                     }
                 });
-            });
-        },
-
-        // Save changes from the cloud to local Database
-        // --------------------------------------------
-        saveToLocal: function (modelCloud, isLast) {
-            var self = this,
-                needUpdate,
-                model;
-
-            // Check existence in local database
-            model = new this.collection.model({ id : modelCloud.get('id') });
-            model.fetch({
-                // Model exists, but needs to be upgraded
-                success: function () {
-                    needUpdate = model.get('updated') !== modelCloud.get('updated');
-                    if (model.get('synchronized') === 1 && needUpdate) {
-                        self.saveLocalModel(model, modelCloud, isLast);
-                    } else if (isLast === true) {
-                        self.collection.trigger('sync:cloudPull');
-                    }
-                },
-                // Probably not exist - create
-                error: function () {
-                    self.saveLocalModel(model, modelCloud, isLast);
-                }
-            });
-        },
-
-        // Update model in local Database
-        // ------------------------------
-        saveLocalModel: function (model, modelCloud, isLast) {
-            var data = _.extend(modelCloud.toJSON(), {'synchronized' : 1}),
-                self = this;
-
-            this.synced.push(model.get('id'));
-
-            model.save(data, {
-                success: function () {
-                    App.log('Synchronized model ' + model.get('id'));
-                    if (isLast === true) {
-                        // If last model from the cloud - save synchronized time
-                        self.collection.trigger('sync:cloudPull');
-                    }
-                },
-                error: function () {
-                    App.log('Can\'t synchronize model ' + model.get('id'));
-                    throw new Error('Dropbox pull error');
-                }
-            });
-        },
-
-        // Save local changes to the cloud storage
-        // --------------------------------------------
-        saveToCloud: function () {
-            var models = this.collection.models,
-                dirty = this.collection.getDistroyed(),
-                method = 'create';
-
-            if (this.collection.length === 0) {
-                this.collection.trigger('sync:after');
             }
 
-            this.collection.each(function (model, i) {
-                model = models[i];
-                if (this.collectionCloud.get(model.get('id')) ) {
+            // Model does not exist - create
+            if ( !local) {
+                local = new this.collection.model({ id : model.get('id') });
+                saveToLocal();
+            }
+            // Model exists - check to updates
+            else {
+                needUpdate = local.get('updated') !== model.get('updated');
+
+                // User does not changed data localy
+                if (local.get('synchronized') === 1 && needUpdate) {
+                    saveToLocal();
+                }
+                else if (isLast === true) {
+                    this.collectionCloud.trigger('sync:after');
+                }
+            }
+        },
+
+        /**
+         * Synchonize local changes to the cloud
+         */
+        syncToCloud: function () {
+            var self = this,
+                method = 'create',
+                collection,
+                isLast;
+
+            // Synchronize only new or changed data
+            if (this.collectionCloud.length !== 0) {
+                collection = this.collection.where({'synchronized': 0});
+                this.collection.reset(collection);
+            }
+
+            if (this.collection.length === 0) {
+                this.collection.trigger('sync:local');
+                return;
+            }
+
+            this.collection.each(function (model, iter) {
+                isLast = (iter === self.collection.length);
+                if (self.collectionCloud.get(model.get('id'))) {
                     method = 'update';
                 }
+
                 Backbone.cloud(method, model, {
-                    success : function () {
-                        App.log('Uploaded to the cloud model ' + model.get('id'));
-                        model.save({ synchronized: 1 });
+                    success: function () {
+                        App.log('Model #' + model.get('id') + ' synchronized');
+                        model.save({ 'synchronized' : 1 });
+
+                        if (isLast === true) {
+                            self.collection.trigger('sync:local');
+                        }
                     },
-                    error   : function () {
-                        App.log('error');
-                        throw new Error('Dropbox push error');
+
+                    error  : function () {
+                        throw new Error('Synchronizing error');
                     }
                 });
-                if (models.length-1 === i && dirty.length === 0) {
-                    this.collection.trigger('sync:after');
-                }
+            });
+        },
+
+        /**
+         * Remove from the cloud models that has been removed from indexedDB
+         */
+        syncDirty: function () {
+            var self = this,
+                dirty = this.collection.getDirty(),
+                model;
+
+            if (dirty.length === 0) {
+                this.collection.trigger('sync:after');
+                return;
+            }
+
+            _.each(dirty, function (id, iter) {
+                model = new this.collectionCloud.model({ id: id });
+
+                Backbone.cloud('delete', model, {
+                    success: function () {
+                        App.log('Model #' + id + ' has been removed');
+
+                        if (iter === dirty.length-1) {
+                            self.collection.trigger('sync:after');
+                            self.collection.resetDirty();
+                        }
+                    },
+
+                    error : function () {
+                        throw new Error('Error occured while trying to remove data from the cloud');
+                    }
+                });
+
             }, this);
         },
 
-        // Last synchronized time
-        // ----------------------
+        /**
+         * Last synchronized timestamp
+         */
         getSyncTime: function () {
             var time = null;
             // If indexedDB is empty, we should pull all data from the cloud
             if (this.collection.length !== 0) {
-                time = localStorage.getItem('dropbox:syncTime:' + this.collection.storeName);
+                time = localStorage.getItem(App.settings.cloudStorage + ':syncTime:' + this.collection.storeName);
             }
             return time;
         },
 
-        // Save synchronized time
-        // ----------------------
+        /**
+         * Save synchronized time
+         */
         saveSyncTime: function () {
             return localStorage.setItem(
-                'dropbox:syncTime:' + this.collection.storeName,
+                App.settings.cloudStorage + ':syncTime:' + this.collection.storeName,
                 new Date().getTime()
             );
         }
@@ -260,44 +276,30 @@ define([
     });
 
     /**
-     * Fetch collection from the cloud storage
+     * Sync wrapper for Backbone collections
      */
-    Backbone.Collection.prototype.syncWithCloud = function (forceSync) {
-        // No cloud storage or user is offline
-        if (navigator.onLine === false || !Backbone.cloud) {
-            App.log('You are offline');
-            return;
-        }
-
-        // If this collection already synchronized
-        if (App.cachedWithCloud === this.storeName && forceSync !== true) {
-            App.log('Already synchronized');
-            return;
-        }
-
-        var that = this;
-        App.cachedWithCloud = this.storeName;
-
-        App.log('sync started');
-        return new Cloud().initialize(that);
-    };
-
-    Backbone.Collection.prototype.syncDistroy = function (model) {
-        var dirty = this.getDistroyed();
-        dirty.push(model.get('id'));
-        localStorage.setItem(this.storeName + '_dirty', dirty.join());
-    };
-
-    Backbone.Collection.prototype.resetDistroy = function () {
-        localStorage.setItem(this.storeName + '_dirty', '');
+    Backbone.Collection.prototype.syncWithCloud = function () {
+        new Sync.Model().init(this);
     };
 
     /**
      * Return models id that needs to be removed from the cloud storage
      */
-    Backbone.Collection.prototype.getDistroyed = function () {
+    Backbone.Collection.prototype.getDirty = function () {
         var dirty = localStorage.getItem(this.storeName + '_dirty');
         return (_.isString(dirty) && dirty !== '') ? dirty.split(',') : [];
     };
+
+    Backbone.Collection.prototype.syncDirty = function (model) {
+        var dirty = this.getDirty();
+        dirty.push(model.get('id'));
+        localStorage.setItem(this.storeName + '_dirty', dirty.join());
+    };
+
+    Backbone.Collection.prototype.resetDirty = function () {
+        localStorage.setItem(this.storeName + '_dirty', '');
+    };
+
+    return Sync;
 
 });

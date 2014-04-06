@@ -28,16 +28,16 @@ define([
             if (this.note.get('trash') === 1) {
                 var self = this;
                 $.when(this.note.destroy()).done(function () {
-                    self.syncDistroy();
+                    self.syncDirty();
                 });
             } else {
                 $.when(this.note.save({'trash' : 1})).done(this.redirect);
             }
         },
 
-        syncDistroy: function () {
+        syncDirty: function () {
             var notes = new NoteCollection();
-            notes.syncDistroy(this.note);
+            notes.syncDirty(this.note);
             this.redirect();
         },
 

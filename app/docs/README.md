@@ -12,7 +12,7 @@ Application stores all your notes in your browser storages such as indexedDB or 
 * Markdown editor based on Pagedown
 * Manage your notes even if you're offline
 * Secure - client side encryption with [SJCL] [1] and AES algotithm.
-* Synchronizing with cloud storages. At the time only with Dropbox.
+* Synchronizing with cloud storages. At the time only with Dropbox and RemoteStorage.
 * Three editing modes: distraction free, preview and normal mode
 * WYSIWYG control buttons
 * Syntax highlighting

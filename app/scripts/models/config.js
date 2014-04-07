@@ -33,13 +33,18 @@ define([
 
         initialize: function () {
             this.on('change', this.hashPassword);
+
+            if (this.get('name') === 'encrypt') {
+                this.set('value', parseInt(this.get('value')));
+            }
         },
 
         /**
          * Password should be saved only in hashed form
          */
         hashPassword: function () {
-            if (this.get('name') !== 'encryptPass' || this.pwdHashed) {
+            if (this.get('name') !== 'encryptPass' || this.pwdHashed ||
+                typeof this.get('value') === 'object') {
                 this.pwdHashed = false;
                 return;
             }

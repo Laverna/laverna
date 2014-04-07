@@ -127,7 +127,6 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/scripts/{,*/}*.js',
                 '!<%= yeoman.app %>/scripts/vendor/*',
                 '!<%= yeoman.app %>/scripts/libs/dropbox.js',
-                '!<%= yeoman.app %>/scripts/libs/remotestorage.js',
                 'test/spec/{,*/}*.js'
             ]
         },
@@ -280,7 +279,8 @@ module.exports = function (grunt) {
                     dest: '<%= yeoman.dist %>',
                     src: [
                         'scripts/libs/dropbox.js',
-                        'scripts/libs/remotestorage.js',
+                        // 'scripts/libs/remotestorage.js',
+                        'bower_components/remotestorage.js/release/0.10.0-beta/remotestorage.amd.js',
                         'bower_components/pagedown/Markdown.Editor.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',

@@ -9,3 +9,5 @@ test/bower_components
 app/styles/*.css
 *.swp
 app/scripts/libs/remotestorage.js
+app/scripts/apps/settings/show/encryptView.js
+app/scripts/apps/settings/show/encryptTemplate.html

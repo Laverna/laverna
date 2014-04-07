@@ -33,7 +33,8 @@
     "bootstrap": "~3.1.1",
     "pagedown": "git://github.com/ujifgc/pagedown.git",
     "enquire": "~2.1.0",
-    "remotestorage.js": "git@github.com:remotestorage/remotestorage.js.git#0.10.0-beta"
+    "remotestorage.js": "git@github.com:remotestorage/remotestorage.js.git#0.10.0-beta",
+    "FileSaver": "*"
   },
   "devDependencies": {}
 }

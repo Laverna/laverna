@@ -1,5 +1,4 @@
 /*global define*/
-/*global sjcl*/
 define([
     'underscore',
     'app',
@@ -8,7 +7,7 @@ define([
     'marionette',
     'text!apps/settings/show/showTemplate.html',
     'sjcl'
-], function (_, App, $, Backbone, Marionette, Tmpl) {
+], function (_, App, $, Backbone, Marionette, Tmpl, sjcl) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -16,17 +15,23 @@ define([
 
         className: 'modal fade',
 
+        ui: {
+            saltInput : 'input[name=encryptSalt]',
+            importBtn : '#do-import',
+            exportBtn : '#do-export',
+            importFile: '#import-file'
+        },
+
         events: {
-            'submit .form-horizontal' : 'save',
             'click .ok'               : 'save',
             'click .close'            : 'close',
             'click .showField'        : 'clickCheckbox',
             'click #randomize'        : 'randomize',
-            'change input, select, textarea' : 'triggerChange'
-        },
-
-        ui: {
-            saltInput     : 'input[name=encryptSalt]'
+            'submit .form-horizontal' : 'save',
+            'change input, select, textarea' : 'triggerChange',
+            'click @ui.importBtn'     : 'importTrigger',
+            'click @ui.exportBtn'     : 'exportTrigger',
+            'change @ui.importFile'   : 'importFile'
         },
 
         initialize: function () {
@@ -45,6 +50,18 @@ define([
             };
         },
 
+        importFile: function (e) {
+            this.trigger('import', e.target);
+        },
+
+        exportTrigger: function () {
+            this.trigger('export');
+        },
+
+        importTrigger: function () {
+            this.ui.importFile.click();
+        },
+
         randomize: function () {
             var random = sjcl.random.randomWords(2, 0);
             this.ui.saltInput.val(random);
@@ -60,9 +77,9 @@ define([
                 field = $(input.attr('data-field'));
 
             if ( input.is(':checked') ) {
-                field.css('display', 'block');
+                field.removeClass('hidden');
             } else {
-                field.css('display', 'none');
+                field.addClass('hidden');
             }
         },
 

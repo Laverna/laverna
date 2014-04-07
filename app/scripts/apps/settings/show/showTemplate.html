@@ -5,6 +5,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#basic" data-toggle="tab">{{ i18n('Basic') }}</a></li>
             <li><a href="#shortcuts" data-toggle="tab">{{ i18n('Shortcuts') }}</a></li>
+            <li><a href="#other" data-toggle="tab">{{ i18n('Other') }}</a></li>
         </ul>
     </div>
     <div class="modal-body">
@@ -66,7 +67,7 @@
                              </label>
                         </div>
                     </div>
-                    <fieldset id="encryptOpt" style="<% if(models.encrypt === 0) { %>display:none;<% } %>">
+                    <fieldset id="encryptOpt" class="<% if(models.encrypt === 0) { %>hidden<% } %>">
                         <legend>{{ i18n('Encryption parameters') }}</legend>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ i18n('Encryption Password') }}</label>
@@ -109,7 +110,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="tab-pane" id="shortcuts">
+                <div class="tab-pane" id="shortcuts"><!-- {{ shortcuts -->
                     <fieldset>
                         <legend>{{ i18n('Navigation') }}</legend>
                         <div class="form-group">
@@ -200,7 +201,18 @@
                             </div>
                         </div>
                     </fieldset>
-                </div>
+                </div><!-- }} shortcuts -->
+                <div class="tab-pane" id="other"><!-- {{ other -->
+                    <div class="center-block">
+                        <input id="import-file" class="hide" type="file">
+                        <button id="do-import" type="button" class="btn btn-default btn-block">
+                            <i class="icon-cog"></i> {{ i18n('Import settings') }}
+                        </button>
+                        <button id="do-export" type="button" class="btn btn-default btn-block">
+                            <i class="icon-cog"></i> {{ i18n('Export settings') }}
+                        </button>
+                    </div>
+                </div><!-- }} other -->
             </div>
         </form>
     </div><!-- /.modal-body -->

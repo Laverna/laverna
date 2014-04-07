@@ -26,7 +26,7 @@ define([
             this.create(new Config({ name: 'editMode', value: 'preview' }));
 
             // Encryption
-            this.create(new Config({ name: 'encrypt', value: 0 }));
+            this.create(new Config({ name: 'encrypt', value: '0' }));
             this.create(new Config({ name: 'encryptPass', value: '' }));
             this.create(new Config({ name: 'encryptSalt', value: '' }));
             this.create(new Config({ name: 'encryptIter', value: '1000' }));

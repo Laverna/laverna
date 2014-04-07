@@ -67,13 +67,9 @@ define([
         serializeData: function () {
             return {
                 args: this.options.args,
+                notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
                 syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
             };
-        },
-
-        changeArgs: function (args) {
-            this.options.args = args;
-            this.render();
         },
 
         templateHelpers: function () {

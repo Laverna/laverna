@@ -12,6 +12,11 @@
                 <li><a href="#notes/f/favorite"><i class="icon-favorite"></i>  {{ i18n('Favourites') }}</a></li>
                 <li><a href="#notes/f/trashed"><i class="icon-trashed"></i>  {{ i18n('Trash') }}</a></li>
                 <li><a href="#notebooks"><i class="icon-notebook"></i>  {{ i18n('Notebooks') }}</a></li>
+                <% if (notebooks !== null) { %>
+                <li class="divider"></li>
+                <% notebooks.forEach(function (model) { %>
+                <li><a href="#notes/f/notebook/q/{{ model.id }}"><i class="icon-notebook"></i>  {{ model.get('name') }}</a></li>
+                <% }); } %>
                 <li class="divider"></li>
                 <li><a href="#settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
                 <li><a href="#about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>

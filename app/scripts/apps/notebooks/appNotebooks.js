@@ -112,6 +112,16 @@ define([
         App.navigate('/notebooks/add', true);
     });
 
+    // Re-render
+    App.on('sync:after', function (sync) {
+        if (sync.objects.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
+            return;
+        }
+        else if (sync.collection === 'notebooks' || sync.collection === 'tags') {
+            API.listNotebooks();
+        }
+    });
+
     /**
      * Register the router
      */

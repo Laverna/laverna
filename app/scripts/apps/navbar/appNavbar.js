@@ -5,8 +5,7 @@ define([
     'marionette',
     'app',
     'apps/navbar/show/controller',
-    'helpers/search',
-    'helpers/syncStatus'
+    'helpers/search'
 ], function (_, $, Marionette, App, Show) {
     'use strict';
 
@@ -18,7 +17,7 @@ define([
 
     function showNavbar (args) {
         controller.show(args || {});
-    };
+    }
 
     AppNavbar.on('start', function () {
         App.log('AppNavbar has been started');

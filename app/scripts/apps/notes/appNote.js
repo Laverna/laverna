@@ -4,9 +4,7 @@ define([
     'jquery',
     'marionette',
     'app',
-    'enquire',
-    'helpers/search',
-    'helpers/syncStatus'
+    'enquire'
 ], function (_, $,  Marionette, App, enquire) {
     'use strict';
 
@@ -20,6 +18,7 @@ define([
     AppNote.on('start', function () {
         App.mousetrap.API.restart();
         App.AppNavbar.start();
+
         App.log('AppNote is started');
     });
 
@@ -55,12 +54,13 @@ define([
         // Show list of notes
         showNotes: function (filter, query, page) {
             var args = { filter : filter, page : page, query : query };
-            if (_.isNull(filter) !== true && typeof(filter) === 'object') {
+
+            if (arguments.length === 1 && typeof filter === 'object') {
                 args = filter;
             }
 
             require(['apps/notes/list/controller'], function (List) {
-                App.notesArg = _.omit(args, 'id');
+                API.notesArg = args;
                 executeAction(new List().listNotes, args);
             });
         },
@@ -68,11 +68,14 @@ define([
         // Show content of note
         showNote: function (filter, query, page, id) {
             var args = {
-                id     : id,
-                filter : filter,
-                query  : query,
-                page   : page
+                id    : id    , filter : filter,
+                query : query , page   : page
             };
+
+            if (arguments.length === 1 && typeof filter === 'object') {
+                args = filter;
+            }
+
             require(['apps/notes/show/showController'], function (Show) {
                 App.trigger('notes:show', args);
                 executeAction(new Show().showNote, args);
@@ -94,24 +97,18 @@ define([
             App.log('edit note ' + id);
         },
 
-        // Remove and existing note
+        // Remove an existing note
         removeNote: function (id) {
             require(['apps/notes/remove/removeController'], function (Controller) {
                 executeAction(new Controller().remove, id);
             });
         },
 
-        // Update note's content again after synchronizing
-        showNoteSync: function (args) {
-            require(['apps/notes/show/showController'], function (Show) {
-                executeAction(new Show().showNote, args);
-            });
-        },
-
         // Re-render sidebar only if necessary
         checkShowSidebar: function (args) {
-            var current = (App.notesArg) ? App.notesArg.toString() : null;
-            if (current !== _.omit(args, 'id').toString()) {
+            var current = _.omit(App.notesArg || {}, 'id');
+
+            if (current !== _.omit(args, 'id')) {
                 API.showNotes(args);
             }
         }
@@ -143,7 +140,7 @@ define([
 
     // Re render
     App.on('notes:rerender', function () {
-        API.showNotes(API.notesArg);
+        API.showNotes(API.notesArg || {});
     });
 
     // Re-render sidebar if new note has been added
@@ -156,9 +153,15 @@ define([
         App.navigate('/notes/add', true);
     });
 
-    // Reload note's content after sync event
-    AppNote.on('sync:after', function (args) {
-        API.showNoteSync(args);
+    // Re-render sidebar's and note's content after sync:after event
+    App.on('sync:after', function (args) {
+        if (args.objects.length === 0 || App.currentApp.moduleName !== 'AppNote') {
+            return;
+        }
+        else if (args.collection === 'notes' || args.collection === 'files') {
+            API.showNotes(API.notesArg || {});
+            API.showNote(API.notesArg  || {});
+        }
     });
 
     /**

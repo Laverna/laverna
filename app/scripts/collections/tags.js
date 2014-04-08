@@ -39,7 +39,6 @@ define([
                     model.save();
                 }
 
-                console.log(iter === (tags.length - 1));
                 if (iter === (tags.length - 1)) {
                     done.resolve(true);
                 }

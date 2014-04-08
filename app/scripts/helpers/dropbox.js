@@ -46,6 +46,8 @@ define([
                 Backbone.cloud = this.sync;
                 d.resolve(true);
             }
+
+            return d;
         },
 
         // Sync method

@@ -34,7 +34,9 @@ define([
                 model = new File({id: img});
                 model.fetch({
                     success: function (model) {
+                        model.set('src', toBlob(model.get('src')));
                         self.add(model);
+
                         if (index === (images.length - 1) ) {
                             d.resolve(self);
                         }
@@ -57,7 +59,6 @@ define([
 
             _.forEach(imgs, function (img, index) {
                 model = new File();
-                img.src = toBlob(img.src);
                 model.set(img);
 
                 self.create(model, {

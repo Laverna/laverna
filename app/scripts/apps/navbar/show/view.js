@@ -13,21 +13,29 @@ define([
     var View = Backbone.Marionette.ItemView.extend({
         template                 : _.template(Tmpl),
 
-        keyboardEvents           : { },
+        keyboardEvents       :  { },
 
-        ui                       : {
-            locationIcon         : '#location-icon',
-            navbarSearchForm     : '.search-form'
+        ui                   :  {
+            locationIcon     :  '#location-icon',
+            navbarSearchForm :  '.search-form',
+            syncBtn          :  '.sync-button',
+            syncStatus       :  '#syncStatus'
         },
 
-        events                   : {
-            'click .sync-button' : 'syncWithCloud',
-            'click .btn-search'  : 'showSearch',
-            'blur .search-input' : 'hideSearch'
+        events                   :  {
+            'click @ui.syncBtn'  :  'syncWithCloud',
+            'click .btn-search'  :  'showSearch',
+            'blur .search-input' :  'hideSearch'
         },
 
         initialize: function () {
+            _.bindAll(this, 'syncBefore', 'syncAfter');
+
             this.keyboardEvents[App.settings.appSearch] = 'showSearch';
+
+            // Show sync status
+            this.listenTo(App, 'sync:before', this.syncBefore);
+            this.listenTo(App, 'sync:after', this.syncAfter);
         },
 
         onRender: function () {
@@ -38,7 +46,15 @@ define([
 
         syncWithCloud: function (e) {
             e.preventDefault();
-            App.sidebar.currentView.trigger('syncWithCloud');
+            this.trigger('syncWithCloud');
+        },
+
+        syncBefore: function () {
+            this.ui.syncStatus.addClass('animate-spin');
+        },
+
+        syncAfter: function () {
+            this.ui.syncStatus.removeClass('animate-spin');
         },
 
         showSearch: function (e) {

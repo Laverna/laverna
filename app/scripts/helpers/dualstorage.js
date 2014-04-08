@@ -7,8 +7,8 @@ define([
 ], function (_, App, Backbone) {
     'use strict';
 
-    var Sync = App.module('App.Sync', {startWithParent: false}),
-        done = $.Deferred(),
+    var Sync = App.module('Sync', {startWithParent: false}),
+        auth = $.Deferred(),
         adapter = 'helpers/';
 
     switch (App.settings.cloudStorage) {
@@ -24,7 +24,7 @@ define([
     if (adapter !== 'helpers/') {
         require([adapter], function (CloudStorage) {
             $.when(new CloudStorage().auth()).done(function () {
-                done.resolve(true);
+                auth.resolve(Backbone.cloud);
             });
         });
     }
@@ -33,16 +33,33 @@ define([
      * When sync module starts - sync all collections
      */
     Sync.on('start', function () {
-        var collections = ['notes', 'notebooks', 'tags'],
-            collection;
+        var names = ['notes', 'notebooks', 'tags', 'files'],
+            collections = [];
 
         App.log('Synchronize all collections');
 
         // Synchronize all collections
-        _.each(collections, function (col) {
+        _.each(names, function (col, i) {
             require(['collections/' + col], function (Col) {
-                collection = new Col();
-                collection.syncWithCloud();
+                collections[i] = new Col();
+
+                if (i > 0 && collections[i - 1]) {
+                    collections[i - 1].on('sync:after', function () {
+                        App.log('Syncing:' + col);
+                        collections[i].syncWithCloud();
+                    });
+                }
+                else {
+                    App.log('Syncing:' + col);
+                    collections[i].syncWithCloud();
+                }
+
+                // Stop Sync module
+                if (i === (names.length -1)) {
+                    collections[i].on('sync:after', function () {
+                        Sync.stop();
+                    });
+                }
             });
         });
     });
@@ -51,18 +68,30 @@ define([
     _.extend(Sync.Model.prototype, {
 
         init: function (collection) {
+            var self = this;
             _.bindAll(this, 'start', 'syncFromCloud', 'toLocal');
 
-            // No cloud storage or user is offline
-            if (navigator.onLine === false || !Backbone.cloud) {
+            // User is offline
+            if (navigator.onLine === false) {
                 App.log('You are offline');
                 return false;
             }
 
-            $.when(adapter).done(this.start(collection));
+            if ( !Backbone.cloud) {
+                $.when(auth).done(function (cloud) {
+                    self.start(collection, cloud);
+                });
+            }
+            else {
+                this.start(collection);
+            }
         },
 
-        start: function (collection) {
+        start: function (collection, cloud) {
+            if ( !Backbone.cloud) {
+                Backbone.cloud = cloud;
+            }
+
             // Synchronized objects
             this.synced = [];
 
@@ -81,8 +110,12 @@ define([
             // Trigger event - after
             this.collection.on('sync:after', function () {
                 this.saveSyncTime();
-                App.trigger('sync:after');
+
                 collection.trigger('sync:after', this.synced);
+                App.trigger('sync:after', {
+                    collection : this.collection.storeName,
+                    objects    : this.synced
+                });
             }, this);
 
             // Fetch data from local database and cloud
@@ -110,7 +143,7 @@ define([
                 isLast = (iter === self.collectionCloud.length-1);
                 notRemoved = (_.indexOf(dirty, model.get('id')) === -1);
 
-                if (model.get('title') && notRemoved === true) {
+                if (model.get('synchronized') && notRemoved === true) {
                     self.toLocal(model, isLast);
                 }
                 // This is not object just ID - fetch model
@@ -162,7 +195,8 @@ define([
             }
             // Model exists - check to updates
             else {
-                needUpdate = local.get('updated') !== model.get('updated');
+                // needUpdate = local.get('updated') !== model.get('updated');
+                needUpdate = true;
 
                 // User does not changed data localy
                 if (local.get('synchronized') === 1 && needUpdate) {
@@ -202,7 +236,7 @@ define([
 
                 Backbone.cloud(method, model, {
                     success: function () {
-                        App.log('Model #' + model.get('id') + ' synchronized');
+                        App.log('Model ' + model.storeName + ' #' + model.get('id') + ' synchronized');
                         model.save({ 'synchronized' : 1 });
 
                         if (isLast === true) {

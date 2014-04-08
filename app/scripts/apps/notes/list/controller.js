@@ -20,12 +20,8 @@ define([
 
             this.notes = new Notes();
 
-            // Re render sidebar after sync.
-            this.listenTo(this.notes, 'sync:after', this.renderAfterSync, this);
-
             // Application events
             App.on('notes:show', this.changeFocus, this);
-            App.on('notes:changeModel', this.needSync, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -62,33 +58,6 @@ define([
             } else {
                 this.notes.trigger('filter:all');
             }
-
-            // Synchronize with cloud storage
-            this.notes.syncWithCloud();
-        },
-
-        /**
-         * Rerender note's list after synchronizing
-         */
-        renderAfterSync: function (notes) {
-            if (notes.length === 0 || App.currentApp.moduleName !== 'AppNote') {
-                return;
-            }
-
-            // Fetch notes
-            this.listNotes();
-
-            // Current note also synchronized
-            if (this.args && _.indexOf(notes, this.args.id)) {
-                App.AppNote.trigger('sync:after', this.args);
-            }
-        },
-
-        /**
-         * Forced sync
-         */
-        syncWithCloud: function () {
-            this.notes.syncWithCloud(true);
         },
 
         /**
@@ -218,7 +187,6 @@ define([
                 this.changeFocus(this.args);
             }
 
-            View.on('syncWithCloud', this.syncWithCloud, this);
             App.AppNavbar.trigger('titleChange', this.args);
             // Show document.title
             document.title = (this.args.filter) ? this.args.filter : 'All notes';

@@ -11,3 +11,4 @@ app/styles/*.css
 app/scripts/libs/remotestorage.js
 app/scripts/apps/settings/show/encryptView.js
 app/scripts/apps/settings/show/encryptTemplate.html
+app/scripts/helpers/syncStatus.js

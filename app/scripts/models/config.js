@@ -1,10 +1,9 @@
 /*global define*/
-/*global sjcl*/
 define([
     'underscore',
     'backbone',
     'sjcl'
-], function (_, Backbone) {
+], function (_, Backbone, sjcl) {
     'use strict';
 
     var Config = Backbone.Model.extend({
@@ -35,7 +34,7 @@ define([
             this.on('change', this.hashPassword);
 
             if (this.get('name') === 'encrypt') {
-                this.set('value', parseInt(this.get('value')));
+                this.set('value', parseInt(this.get('value'), 10));
             }
         },
 
@@ -43,13 +42,14 @@ define([
          * Password should be saved only in hashed form
          */
         hashPassword: function () {
+            var hash;
             if (this.get('name') !== 'encryptPass' || this.pwdHashed ||
                 typeof this.get('value') === 'object') {
                 this.pwdHashed = false;
                 return;
             }
 
-            var hash = sjcl.hash.sha256.hash(this.get('value'));
+            hash = sjcl.hash.sha256.hash(this.get('value'));
             this.set('value', hash);
             this.pwdHashed = true;
         }

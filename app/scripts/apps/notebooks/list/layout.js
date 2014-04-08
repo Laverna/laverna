@@ -31,14 +31,6 @@ define([
             this.keyboardEvents[App.settings.navigateTop] = 'prev';
         },
 
-        /**
-         * Force sync
-         */
-        syncWithCloud: function (e) {
-            e.preventDefault();
-            this.trigger('syncWithCloud', true);
-        },
-
         openActiveLink: function () {
             var a = this.$('.list-group-item.active');
             if (a.length) {

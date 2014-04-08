@@ -38,6 +38,8 @@ define([
                 App.log('RemoteStorage has been disconnected');
                 d.fail(e);
             });
+
+            return d;
         },
 
         triggerConnected: function () {
@@ -53,8 +55,6 @@ define([
         sync : function (method, model, options) {
             var resp,
                 done = $.Deferred();
-
-            this.rssync = remoteAdapter(model).privateList();
 
             switch (method) {
             case 'read':
@@ -88,24 +88,28 @@ define([
             return done;
         },
 
-        find : function (model) {
-            return this.rssync.get(model.id);
+        rssync: function (model) {
+            return remoteAdapter().privateList(model);
         },
 
-        findAll: function (/*collection*/) {
-            return this.rssync.getAll().then(function(objMap) {
+        find : function (model) {
+            return this.rssync(model).get(model.id);
+        },
+
+        findAll: function (collection) {
+            return this.rssync(collection).getAll().then(function(objMap) {
                 return _.values(objMap);
             });
         },
 
         set : function (model) {
-            return this.rssync.set(model.id, model.toJSON()).then(function() {
+            return this.rssync(model).set(model.id, model.toJSON()).then(function() {
                 return model.toJSON();
             });
         },
 
         destroy: function (model) {
-            return this.rssync.remove(model.id.toString()).then(function() {
+            return this.rssync(model).remove(model.id.toString()).then(function() {
                 return model.toJSON();
             });
         }
@@ -115,15 +119,16 @@ define([
     /**
      * Defines the module
      */
-    remoteAdapter = function (model) {
-        var path = model.storeName || model.collection.storeName,
-            moduleName = 'laverna';
+    remoteAdapter = function () {
+        var moduleName = 'laverna',
+            path;
 
         RemoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
             var remoteModule, listMethods;
 
             remoteModule = {
-                privateList: function () {
+                privateList: function (model) {
+                    path = model.storeName || model.collection.storeName;
                     return privateClient.scope(path + '/').extend(listMethods).cache('');
                 },
 
@@ -143,7 +148,7 @@ define([
                 // Update or create a document for a specified id.
                 // --------------------
                 set: function(id, doc) {
-                    return this.storeObject('text', id, doc).then(function() {
+                    return this.storeObject('text', id.toString(), doc).then(function() {
                         doc.id = id;
                         return    doc;
                     });

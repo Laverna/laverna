@@ -2,7 +2,7 @@
 /**
  * Replaces MD code like ![](#image-id) to ![](base64://image-code)
  */
-define(['underscore', 'jquery'], function (_, $) {
+define(['underscore', 'jquery', 'toBlob'], function (_, $, toBlob) {
     'use strict';
 
     var Images = function () { };
@@ -12,13 +12,18 @@ define(['underscore', 'jquery'], function (_, $) {
 
         toHtml: function (text, images) {
             var url = window.URL || window.webkitURL,
-                self = this;
+                self = this,
+                pattern,
+                src;
 
             this.urls = [];
 
             images.forEach(function (img, index) {
-                self.urls[index] = url.createObjectURL(img.get('src'));
-                var pattern = new RegExp('#' + img.get('id'));
+                src = img.get('src');
+                src = (typeof src === 'object') ? src : toBlob(src);
+
+                self.urls[index] = url.createObjectURL(src);
+                pattern = new RegExp('#' + img.get('id'));
                 text = text.replace(pattern, self.urls[index]);
             });
             return text;

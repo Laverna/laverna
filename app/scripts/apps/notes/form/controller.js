@@ -1,6 +1,7 @@
 /* global define */
 define([
     'underscore',
+    'jquery',
     'app',
     'marionette',
     'collections/notes',
@@ -11,7 +12,7 @@ define([
     'apps/notes/form/formView',
     'checklist',
     'tags'
-], function (_, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
+], function (_, $, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
     'use strict';
 
     var Form = App.module('AppNote.Form');
@@ -94,11 +95,17 @@ define([
         },
 
         save: function (data) {
-            var notebook;
+            var self = this,
+                checklist,
+                notebook;
 
             // Get new data
             data.title = this.view.ui.title.val().trim();
             data.notebookId = parseInt(this.view.ui.notebookId.val().trim());
+
+            if (data.title === '') {
+                data.title = $.t('Unnamed');
+            }
 
             // New notebook
             notebook = this.model.get('notebookId');
@@ -113,7 +120,7 @@ define([
             });
 
             // Tasks
-            var checklist = new Checklist().count(data.content);
+            checklist = new Checklist().count(data.content);
             data.taskAll = checklist.all;
             data.taskCompleted = checklist.completed;
 
@@ -132,7 +139,9 @@ define([
                 this.model.save(data),
                 // Add new tags
                 this.tags.saveAdd(data.tags)
-            ).done(this.redirect(data.redirect));
+            ).done(function () {
+                self.redirect(data.redirect);
+            });
         },
 
         confirmRedirect: function (args) {
@@ -155,15 +164,20 @@ define([
                 return this.confirmRedirect(showNote);
             }
 
-            App.content.reset();
-            App.trigger('notes:added', this.model);
+            // Redirect to edit page
+            if (showNote === false) {
+                url += '/edit/' + this.model.get('id');
+            }
+            // Redirect to list
+            else if (typeof this.model.get('id') !== 'undefined') {
+                url += '/show/' + this.model.get('id');
+            }
 
-            if (typeof this.model.get('id') === 'undefined') {
-                App.navigateBack(url, true);
-            } else {
-                url += showNote === true ? '/show/' : '/edit/';
-                url += this.model.get('id');
-                App.navigate(url, true);
+            App.trigger('notes:added', this.model);
+            App.navigate(url, {trigger: true});
+
+            if (showNote !== false) {
+                App.content.reset();
             }
         }
 

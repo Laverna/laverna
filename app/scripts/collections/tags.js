@@ -1,10 +1,11 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'backbone',
     'models/tag',
     'migrations/note'
-], function (_, Backbone, Tag, TagsDB) {
+], function (_, $, Backbone, Tag, TagsDB) {
     'use strict';
 
     /**
@@ -23,16 +24,28 @@ define([
          * Do not add if already exists
          */
         saveAdd: function (tags) {
-            var model;
+            var done = $.Deferred(),
+                model;
 
-            _.each(tags, function (tag) {
+            if (tags.length === 0) {
+                done.resolve(true);
+            }
+
+            _.each(tags, function (tag, iter) {
                 tag = tag.trim();
                 model = this.findWhere({name : tag});
                 if (tag !== '' && model === undefined) {
                     model = new this.model({ name : tag });
                     model.save();
                 }
+
+                console.log(iter === (tags.length - 1));
+                if (iter === (tags.length - 1)) {
+                    done.resolve(true);
+                }
             }, this);
+
+            return done;
         },
 
         /**

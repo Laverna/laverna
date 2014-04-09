@@ -271,7 +271,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                                 });
                             }
                             else {
-                                callback(null);
+                                callback(View.imageLink);
                             }
                         },
                         error: function () {

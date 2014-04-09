@@ -14,12 +14,28 @@ define([
         template: _.template(Templ),
 
         ui: {
-            'input': 'input[type="file"]'
+            'input': 'input[type="file"]',
+            'imageLink': '#imageLink'
         },
 
         initialize: function () {
             this.images = [];
+            this.imageLink = null;
             this.on('shown.modal', this.showDroparea, this);
+            this.on('shown.modal', this.bindEvents, this);
+        },
+
+        bindEvents: function () {
+            var self = this;
+
+            this.ui.imageLink = $('#imageLink');
+            this.ui.imageLink.on('change', function () {
+                self.setImageURL();
+            });
+        },
+
+        setImageURL: function () {
+            this.imageLink = this.ui.imageLink.val();
         },
 
         getImage: function (file, done) {

@@ -49,7 +49,6 @@ define([
             });
 
             App.sidebarNavbar.show(this.view);
-            App.Search.start();
             this.view.on('syncWithCloud', this.startSyncing, this);
         },
 

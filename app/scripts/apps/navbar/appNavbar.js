@@ -4,8 +4,7 @@ define([
     'jquery',
     'marionette',
     'app',
-    'apps/navbar/show/controller',
-    'helpers/search'
+    'apps/navbar/show/controller'
 ], function (_, $, Marionette, App, Show) {
     'use strict';
 

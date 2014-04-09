@@ -11,21 +11,24 @@ define([
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
-        template                 : _.template(Tmpl),
+        template: _.template(Tmpl),
 
-        keyboardEvents       :  { },
+        keyboardEvents:  { },
 
-        ui                   :  {
+        ui:  {
             locationIcon     :  '#location-icon',
             navbarSearchForm :  '.search-form',
+            navbarSearchInput:  '.search-form input',
             syncBtn          :  '.sync-button',
             syncStatus       :  '#syncStatus'
         },
 
-        events                   :  {
-            'click @ui.syncBtn'  :  'syncWithCloud',
-            'click .btn-search'  :  'showSearch',
-            'blur .search-input' :  'hideSearch'
+        events:  {
+            'click @ui.syncBtn'           : 'syncWithCloud',
+            'click .btn-search'           : 'showSearch',
+            'blur .search-input'          : 'hideSearch',
+            'keyup @ui.navbarSearchInput' : 'searchKeyup',
+            'submit @ui.navbarSearchForm' : 'searchSubmit'
         },
 
         initialize: function () {
@@ -55,6 +58,18 @@ define([
 
         syncAfter: function () {
             this.ui.syncStatus.removeClass('animate-spin');
+        },
+
+        searchSubmit: function (e) {
+            e.preventDefault();
+            var text = this.ui.navbarSearchInput.val();
+            App.navigate('/notes/f/search/q/' + text, true);
+        },
+
+        searchKeyup: function (e) {
+            if (e.which === 27) {
+                this.ui.navbarSearchInput.blur();
+            }
         },
 
         showSearch: function (e) {

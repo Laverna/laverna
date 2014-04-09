@@ -25,9 +25,13 @@ Application stores all your notes in your browser storages such as indexedDB or 
 You can use application at laverna.cc, but we encourage you to install application on your own server or machine. To install do the following:
 
 #### 1. Clone repository:
-```
-git clone git@github.com:Laverna/laverna.git
-```
+
+    git clone git@github.com:Laverna/laverna.git
+
+### 2. Switch to stable version
+
+    git checkout 0.4.0
+
 #### 2. Install dependencies:
 
     npm install && bower install

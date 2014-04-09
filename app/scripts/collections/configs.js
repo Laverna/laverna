@@ -19,7 +19,7 @@ define([
          */
         firstStart: function () {
             // Basic
-            this.create(new Config({ name: 'appVersion', value: '0.4.0' }));
+            this.create(new Config({ name: 'appVersion', value: '0.5.0' }));
             this.create(new Config({ name: 'appLang', value: '' }));
             this.create(new Config({ name: 'cloudStorage', value: '0' }));
             this.create(new Config({ name: 'pagination', value: '10' }));

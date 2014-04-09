@@ -308,13 +308,18 @@ module.exports = function (grunt) {
             // App version in collections/configs.js
             settingsAppVersion: {
                 files: {
-                    '<%= yeoman.app %>/scripts/collections/configs.js': '<%= yeoman.app %>/scripts/collections/configs.js'
+                    '<%= yeoman.app %>/scripts/collections/configs.js': '<%= yeoman.app %>/scripts/collections/configs.js',
+                    'README.md' : 'README.md',
                 },
                 options: {
                     replacements: [
                         {
                             pattern: /\'appVersion\', .*/,
                             replacement: '\'appVersion\', value: \'<%= pkg.version %>\' }));'
+                        },
+                        {
+                            pattern: /git checkout 0.4.0/,
+                            replacement: 'git checkout <%= pkg.version %>',
                         }
                     ]
                 }

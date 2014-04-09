@@ -13,6 +13,8 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Templ),
 
+        focusEl: '#imageLink',
+
         ui: {
             'input': 'input[type="file"]',
             'imageLink': '#imageLink'

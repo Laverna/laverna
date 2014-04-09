@@ -10,13 +10,13 @@ define([
     'libs/images',
     'ace',
     'apps/notes/form/dropareaView',
-    'toBlob',
+    'apps/notes/form/linkView',
     'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView) {
+function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView, LinkView) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -256,6 +256,22 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                     _.bindAll(self, 'aceRender');
                     self.aceRender(editor);
                 }
+
+                // Custom link dialog
+                editor.hooks.set('insertLinkDialog', function (callback) {
+                    var view = new LinkView();
+                    App.Confirm.show({
+                        title: $.t('Insert Hyperlink'),
+                        content: view,
+                        success: function () {
+                            callback(view.link);
+                        },
+                        error  : function () {
+                            callback(null);
+                        }
+                    });
+                    return true;
+                });
 
                 // Custom image dialog
                 editor.hooks.set('insertImageDialog', function (callback) {

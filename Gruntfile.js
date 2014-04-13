@@ -41,6 +41,10 @@ module.exports = function (grunt) {
                 files: ['test/spec/{,*/}*.coffee'],
                 tasks: ['coffee:test']
             },
+            less: {
+                files: ['{.tmp,<%= yeoman.app %>}/styles/{,*/}*.less'],
+                tasks: ['less']
+            },
             livereload: {
                 options: {
                     livereload: LIVERELOAD_PORT

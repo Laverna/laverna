@@ -2,7 +2,7 @@
 /**
  * Replaces MD code like ![](#image-id) to ![](base64://image-code)
  */
-define(['underscore', 'jquery', 'toBlob'], function (_, $, toBlob) {
+define(['underscore', 'jquery', 'toBlob', 'blobjs'], function (_, $, toBlob) {
     'use strict';
 
     var Images = function () { };

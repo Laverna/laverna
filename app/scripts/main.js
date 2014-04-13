@@ -29,6 +29,7 @@ require.config({
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         dropzone                   :  '../bower_components/dropzone/downloads/dropzone.min',
         toBlob                     :  '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
+        blobjs                     :  '../bower_components/Blob/Blob',
         fileSaver                  :  '../bower_components/FileSaver/FileSaver',
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',

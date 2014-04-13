@@ -169,7 +169,10 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     compress: false,
-                    dumpLineNumbers: 'comments'
+                    dumpLineNumbers: 'comments',
+                    sourceMap: 'true',
+                    sourceMapFilename: "<%= yeoman.app %>/styles/main.css.map",
+                    sourceMapBasepath: "<%= yeoman.app %>/styles/"
                 },
                 files : {
                     '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'

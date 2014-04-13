@@ -168,7 +168,8 @@ module.exports = function (grunt) {
         less: {
             compile: {
                 options: {
-                    compress: true
+                    compress: false,
+                    dumpLineNumbers: 'comments'
                 },
                 files : {
                     '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'

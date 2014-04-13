@@ -133,6 +133,10 @@ define([
                     if (this.args.page) {
                         return this.args.page;
                     }
+                },
+
+                notebook: function (model) {
+                    return App.Encryption.API.decrypt(model.get('name'));
                 }
             };
         }

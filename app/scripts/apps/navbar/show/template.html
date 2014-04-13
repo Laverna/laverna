@@ -15,7 +15,7 @@
                 <% if (notebooks !== null) { %>
                 <li class="divider"></li>
                 <% notebooks.forEach(function (model) { %>
-                <li><a href="#notes/f/notebook/q/{{ model.id }}"><i class="icon-notebook"></i>  {{ model.get('name') }}</a></li>
+                <li><a href="#notes/f/notebook/q/{{ model.id }}"><i class="icon-notebook"></i>  {{ notebook(model) }}</a></li>
                 <% }); } %>
                 <li class="divider"></li>
                 <li><a href="#settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>

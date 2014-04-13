@@ -33,7 +33,7 @@ require.config({
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
         // remotestorage              :  'libs/remotestorage',
-        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta/remotestorage.amd',
+        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Keybindings             :

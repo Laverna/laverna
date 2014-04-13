@@ -453,6 +453,7 @@ module.exports = function (grunt) {
             'coffee:dist',
             'createDefaultTemplate',
             'jst',
+            'less',
             'connect:livereload',
             'open:server',
             'watch'

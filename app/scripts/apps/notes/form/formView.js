@@ -9,6 +9,7 @@ define([
     'tags',
     'libs/images',
     'ace',
+    'helpers/mathjax',
     'apps/notes/form/dropareaView',
     'apps/notes/form/linkView',
     'marionette',
@@ -16,7 +17,7 @@ define([
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView, LinkView) {
+function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, DropareaView, LinkView) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -298,9 +299,12 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, DropareaView
                 });
 
                 self.trigger('pagedown:ready');
+                mathjax.init(self.el);
 
                 // Save content automatically if user stoped typing for 5 second
                 editor.hooks.chain('onPreviewRefresh', function () {
+                    mathjax.init(self.el);
+
                     self.enableSubmitButton();
                     if (typeof self.timeOut === 'number') {
                         clearTimeout(self.timeOut);

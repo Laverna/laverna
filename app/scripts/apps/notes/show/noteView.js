@@ -9,9 +9,11 @@ define([
     'tags',
     'libs/images',
     'prettify',
-    'backbone.mousetrap', 'marionette',
+    'helpers/mathjax',
+    'backbone.mousetrap',
+    'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Template, Checklist, Tags, Img, prettify) {
+], function (_, App, Backbone, Template, Checklist, Tags, Img, prettify, mathjax) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -63,6 +65,9 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
+
+            // MathJax
+            mathjax.init(this.el);
         },
 
         onClose: function () {

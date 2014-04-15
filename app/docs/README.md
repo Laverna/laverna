@@ -32,18 +32,18 @@ You can use the application at laverna.cc, but we encourage you to install it on
 
     git checkout 0.4.0
     
-#### 2. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
+#### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 
-#### 2. Ensure you have the bower and grunt packages installed:
+#### 4. Ensure you have the bower and grunt packages installed:
 
     npm install bower
     npm install grunt
 
-#### 2. Install Laverna's dependencies:
+#### 5. Install Laverna's dependencies:
 
     npm install && bower install
 
-#### 3. Build minified version of Laverna:
+#### 6. Build minified version of Laverna:
 
     grunt build
 

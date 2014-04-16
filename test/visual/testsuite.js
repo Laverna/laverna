@@ -16,8 +16,8 @@ var phantomcss = require('./../../phantomcss/phantomcss.js');
 
 phantomcss.init({
 	screenshotRoot: './test/visual/screenshots',
+	failedComparisonsRoot: './test/visual/failures',
 	/*
-	failedComparisonsRoot: '/failures'
 	casper: specific_instance_of_casper,
 	*/
 	// libraryRoot: './../../phantomcss'

@@ -1,0 +1,1 @@
+        $ ./node_modules/casperjs/bin/casperjs test test/visual/testsuite.js

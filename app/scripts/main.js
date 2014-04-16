@@ -45,6 +45,7 @@ require.config({
         'pagedown'                 :  '../bower_components/pagedown/Markdown.Editor',
         'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
         'to-markdown'              :  '../bower_components/to-markdown/src/to-markdown',
+        'mathjax'                  :  '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         // Markdown helpers        :
         'checklist'                :  'libs/checklist',
         'tags'                     :  'libs/tags',
@@ -90,7 +91,7 @@ require.config({
         },
         'pagedown': {
             exports: 'Markdown',
-            deps: [ 'pagedown-ace' ]
+            deps: [ 'pagedown-extra' ]
         },
         'pagedown-extra': [ 'pagedown-ace' ],
         'pagedown-ace/Markdown.Editor': {
@@ -99,6 +100,9 @@ require.config({
         },
         'pagedown-ace/Markdown.Sanitizer': {
             deps: [ 'pagedown-ace/Markdown.Converter' ]
+        },
+        'mathjax': {
+            exports: 'MathJax'
         },
         'to-markdown': {
             exports: 'toMarkdown'

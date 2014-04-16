@@ -35,7 +35,8 @@
     "enquire": "~2.1.0",
     "remotestorage.js": "git://github.com/remotestorage/remotestorage.js.git#0.10.0-beta2",
     "FileSaver": "*",
-    "Blob": "git://github.com/eligrey/Blob.js"
+    "Blob": "git://github.com/eligrey/Blob.js",
+    "MathJax": "v2.2"
   },
   "devDependencies": {}
 }

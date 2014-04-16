@@ -1,0 +1,24 @@
+{
+    "name": "laverna",
+    "description": "Open source note taking web application",
+    "version": "0.5.0",
+    "launch_path": "/index.html",
+    "icons": {
+        "16": "/images/icon/icon-16x16.png",
+        "30": "/images/icon/icon-30x30.png",
+        "32": "/images/icon/icon-32x32.png",
+        "48": "/images/icon/icon-48x48.png",
+        "60": "/images/icon/icon-60x60.png",
+        "64": "/images/icon/icon-64x64.png",
+        "90": "/images/icon/icon-90x90.png",
+        "128": "/images/icon/icon-128x128.png",
+        "196": "/images/icon/icon-196x196.png",
+        "256": "/images/icon/icon-256x256.png"
+    },
+    "developer": {
+        "name": "Laverna project",
+        "url": "https://github.com/Laverna/laverna/"
+    },
+    "default_locale": "en",
+    "installs_allowed_from": ["*"]
+}

@@ -171,11 +171,53 @@ module.exports = function (grunt) {
                     compress: false,
                     dumpLineNumbers: 'comments',
                     sourceMap: 'true',
-                    sourceMapFilename: "<%= yeoman.app %>/styles/main.css.map",
-                    sourceMapBasepath: "<%= yeoman.app %>/styles/"
+                    sourceMapFilename: '<%= yeoman.app %>/styles/main.css.map',
+                    sourceMapBasepath: '<%= yeoman.app %>/styles/'
                 },
                 files : {
                     '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'
+                }
+            }
+        },
+        // Scale icons
+        'responsive_images': {
+            icons: {
+                options: {
+                    engine: 'gm',
+                    sizes: [{
+                        width: 256,
+                        height: 256
+                    }, {
+                        width: 196,
+                        height: 196
+                    }, {
+                        width: 128,
+                        height: 128
+                    }, {
+                        width: 90,
+                        height: 90
+                    }, {
+                        width: 64,
+                        height: 64
+                    }, {
+                        width: 60,
+                        height: 60
+                    }, {
+                        width: 48,
+                        height: 48
+                    }, {
+                        width: 32,
+                        height: 32
+                    }, {
+                        width: 30,
+                        height: 30
+                    }, {
+                        width: 16,
+                        height: 16
+                    }]
+                },
+                files: {
+                    '<%= yeoman.app %>/images/icon/icon.png': '<%= yeoman.app %>/images/icon/icon.png'
                 }
             }
         },
@@ -219,7 +261,8 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= yeoman.app %>/images',
-                    src: '{,*/}*.{png,jpg,jpeg}',
+                    // src: '{,*/}*.{png,jpg,jpeg}',
+                    src: '*.{png,jpg,jpeg}',
                     dest: '<%= yeoman.dist %>/images'
                 }]
             }
@@ -275,7 +318,7 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,txt}',
                         '.htaccess',
-                        'images/{,*/}*.{webp,gif}',
+                        'images/{,*/}*.{webp,gif,png}',
                         'font/*',
                         'locales/*/*',
                         'docs/*.md'
@@ -286,48 +329,54 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.app %>',
                     dest: '<%= yeoman.dist %>',
                     src: [
+                        'manifest.webapp',
                         'scripts/libs/dropbox.js',
-                        // 'scripts/libs/remotestorage.js',
                         'bower_components/remotestorage.js/release/0.10.0-beta/remotestorage.amd.js',
                         'bower_components/pagedown/Markdown.Editor.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',
-                        'bower_components/ace/lib/ace/theme/github.css'
+                        'bower_components/ace/lib/ace/theme/github.css',
+                        // MathJax files: https://github.com/mathjax/MathJax/wiki/Shrinking-MathJax-for-%22local%22-installation
+                        'bower_components/MathJax/*.js',
+                        'bower_components/MathJax/config/TeX-AMS-MML_HTMLorMML.js',
+                        'bower_components/MathJax/images/**',
+                        'bower_components/MathJax/extensions/**',
+                        'bower_components/MathJax/fonts/HTML-CSS/TeX/woff/**',
+                        'bower_components/MathJax/jax/element/**',
+                        'bower_components/MathJax/jax/input/{MathML,TeX}/**',
+                        'bower_components/MathJax/jax/output/{HTML-CSS,NativeMML}/**',
+                        'bower_components/MathJax/localization/en/**'
                     ]
                 }]
             }
         },
         // Replace string
         'string-replace': {
-            // App version in constants.js
-            constants: {
+            // App version
+            appVersion: {
                 files: {
-                    '<%= yeoman.app %>/scripts/constants.js': '<%= yeoman.app %>/scripts/constants.js'
-                },
-                options: {
-                    replacements: [
-                        {
-                            pattern: /constants\.VERSION = .*/,
-                            replacement: 'constants.VERSION = \'<%= pkg.version %>\';'
-                        }
-                    ]
-                }
-            },
-            // App version in collections/configs.js
-            settingsAppVersion: {
-                files: {
+                    '<%= yeoman.app %>/scripts/constants.js': '<%= yeoman.app %>/scripts/constants.js',
                     '<%= yeoman.app %>/scripts/collections/configs.js': '<%= yeoman.app %>/scripts/collections/configs.js',
                     'README.md' : 'README.md',
+                    '<%= yeoman.app %>/manifest.webapp' : '<%= yeoman.app %>/manifest.webapp'
                 },
                 options: {
                     replacements: [
                         {
-                            pattern: /\'appVersion\', .*/,
+                            pattern: /constants\.VERSION = *.*.*/,
+                            replacement: 'constants.VERSION = \'<%= pkg.version %>\';'
+                        },
+                        {
+                            pattern: /\'appVersion\', *.*.*/,
                             replacement: '\'appVersion\', value: \'<%= pkg.version %>\' }));'
                         },
                         {
-                            pattern: /git checkout 0.4.0/,
+                            pattern: /git checkout *.*.*/,
                             replacement: 'git checkout <%= pkg.version %>',
+                        },
+                        {
+                            pattern: /\"version\": \"*.*.*\"\,/,
+                            replacement: '"version": "<%= pkg.version %>",',
                         }
                     ]
                 }
@@ -378,7 +427,7 @@ module.exports = function (grunt) {
                     cache: [
                     ],
                     network: ['*'],
-                    fallback: ['/ /404.html'],
+                    fallback: ['/ 404.html'],
                     preferOnline: true,
                     verbose: true,
                     timestamp: true,
@@ -390,13 +439,15 @@ module.exports = function (grunt) {
                     '*.html',
                     'favicon.ico',
                     'robots.txt',
-                    'bower_components/requirejs/require.js',
-                    'bower_components/ace/lib/ace/{,*/}*.css',
                     'docs/*.md',
                     'scripts/{,*/}*.js',
                     'styles/{,*/}*.css',
                     'images/{,*/}*.{webp,gif,png}',
-                    'font/*'
+                    'font/*',
+                    'bower_components/requirejs/require.js',
+                    'bower_components/pagedown/Markdown.Editor.js',
+                    'bower_components/ace/lib/ace/{,*/}*.css',
+                    'bower_components/MathJax/MathJax.js'
                 ],
                 dest: '<%= yeoman.dist %>/manifest.appcache'
             }
@@ -491,8 +542,7 @@ module.exports = function (grunt) {
 
     // Change App version in scripts
     grunt.registerTask('version', [
-        'string-replace:constants',
-        'string-replace:settingsAppVersion'
+        'string-replace:appVersion'
     ]);
 
     // Compile less file

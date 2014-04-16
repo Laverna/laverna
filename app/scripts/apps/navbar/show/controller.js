@@ -19,9 +19,6 @@ define([
         initialize: function () {
             _.bindAll(this, 'show', 'showNavbar');
 
-            // Collection of notebooks
-            this.notebooks = new Notebooks();
-
             // Synchronizing
             this.startSyncing();
         },
@@ -31,6 +28,9 @@ define([
          */
         show: function (args) {
             this.args = args;
+
+            // Collection of notebooks
+            this.notebooks = new Notebooks();
 
             if (App.currentApp.moduleName !== 'AppNotebook') {
                 $.when(this.notebooks.fetch({

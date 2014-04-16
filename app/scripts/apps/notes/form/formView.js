@@ -259,20 +259,22 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
                 }
 
                 // Custom link dialog
-                editor.hooks.set('insertLinkDialog', function (callback) {
-                    var view = new LinkView();
-                    App.Confirm.show({
-                        title: $.t('Insert Hyperlink'),
-                        content: view,
-                        success: function () {
-                            callback(view.link);
-                        },
-                        error  : function () {
-                            callback(null);
-                        }
+                if (editor.hooks.insertLinkDialog) {
+                    editor.hooks.set('insertLinkDialog', function (callback) {
+                        var view = new LinkView();
+                        App.Confirm.show({
+                            title: $.t('Insert Hyperlink'),
+                            content: view,
+                            success: function () {
+                                callback(view.link);
+                            },
+                            error  : function () {
+                                callback(null);
+                            }
+                        });
+                        return true;
                     });
-                    return true;
-                });
+                }
 
                 // Custom image dialog
                 editor.hooks.set('insertImageDialog', function (callback) {

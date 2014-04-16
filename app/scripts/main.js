@@ -91,7 +91,7 @@ require.config({
         },
         'pagedown': {
             exports: 'Markdown',
-            deps: [ 'pagedown-ace' ]
+            deps: [ 'pagedown-extra' ]
         },
         'pagedown-extra': [ 'pagedown-ace' ],
         'pagedown-ace/Markdown.Editor': {

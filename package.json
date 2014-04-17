@@ -1,7 +1,9 @@
 {
   "name": "laverna",
   "version": "0.5.0",
-  "dependencies": {},
+  "dependencies": {
+    "phantomcss": "~0.5.0"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.0",
@@ -29,6 +31,10 @@
     "grunt-contrib-less": "~0.9.0",
     "grunt-manifest": "~0.4.0",
     "grunt-string-replace": "~0.2.7",
+    "phantomjs": "~1.9.7-3",
+    "grunt-phantomcss": "~0.2.3",
+    "phantomcss": "~0.5.0",
+    "casperjs": "~1.1.0-beta3",
     "grunt-responsive-images": "~0.1.1"
   },
   "engines": {

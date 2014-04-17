@@ -101,7 +101,7 @@ define([
 
             // Get new data
             data.title = this.view.ui.title.val().trim();
-            data.notebookId = parseInt(this.view.ui.notebookId.find(':selected').val().trim());
+            data.notebookId = parseInt(this.view.ui.notebookId.val().trim());
 
             if (data.title === '') {
                 data.title = $.t('Unnamed');

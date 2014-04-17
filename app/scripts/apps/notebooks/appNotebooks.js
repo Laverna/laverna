@@ -15,7 +15,6 @@ define([
     AppNotebooks.on('start', function () {
         App.mousetrap.API.restart();
         App.AppNavbar.start();
-        // App.content.reset();
         $(App.content.el).removeClass('active-row');
         App.log('AppNotebook is started');
     });
@@ -62,6 +61,7 @@ define([
             require(['apps/notebooks/list/controller'], function (List) {
                 executeAction(new List().list);
             });
+            App.content.reset();
         },
 
         // Create notebook

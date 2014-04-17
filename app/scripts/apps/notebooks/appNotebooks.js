@@ -15,7 +15,7 @@ define([
     AppNotebooks.on('start', function () {
         App.mousetrap.API.restart();
         App.AppNavbar.start();
-        App.content.reset();
+        // App.content.reset();
         $(App.content.el).removeClass('active-row');
         App.log('AppNotebook is started');
     });
@@ -65,9 +65,9 @@ define([
         },
 
         // Create notebook
-        addNotebook: function () {
+        addNotebook: function (redirect) {
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().addForm);
+                executeAction(new Form().addForm, {redirect: redirect});
             });
         },
 
@@ -108,8 +108,12 @@ define([
     };
 
     // Add notebook
-    AppNotebooks.on('showForm', function () {
-        App.navigate('/notebooks/add', true);
+    AppNotebooks.on('showForm', function (redirect) {
+        if (_.isUndefined(redirect)) {
+            App.navigate('/notebooks/add', true);
+        } else {
+            API.addNotebook(redirect);
+        }
     });
 
     // Re-render

@@ -17,9 +17,11 @@ define([
         },
 
         // Create form initializing
-        addForm: function () {
+        addForm: function (args) {
             this.collection = new Notebooks();
             this.model = new Notebook();
+            this.isNew = true;
+            this.args = args;
 
             $.when(this.collection.fetch()).done(this.show);
         },
@@ -59,11 +61,17 @@ define([
 
             if (this.model.isValid()) {
                 this.model.save(data, {
-                    success: function () {
+                    success: function (model) {
+                        if (self.isNew === true) {
+                            App.trigger('new:notebook', model);
+                        }
+
                         self.view.trigger('close');
+
                         self.redirect();
                     }
                 });
+
             } else {
                 this.view.showErrors(this.model.validationError);
             }
@@ -71,7 +79,9 @@ define([
 
         // Redirect
         redirect: function () {
-            return App.navigate('#/notebooks');
+            if (this.args.redirect !== false) {
+                return App.navigate('#/notebooks');
+            }
         }
     });
 

@@ -29,6 +29,7 @@
                 <div class="form-group border-0">
                     <select class="form-control" name="notebookId">
                         <option value="0">{{ i18n('Select notebook') }}</option>
+                        <option class="newNotebook">{{ i18n('New notebook') }}</option>
                         <% _.forEach(notebooks, function (notebook) { %>
                         <option value="{{notebook.id}}" {{ isActive(notebook.id, notebookId) }}>{{notebook.name}}</option>
                         <% }); %>

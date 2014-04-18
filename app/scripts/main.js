@@ -149,10 +149,13 @@ require([
 
         request = window.indexedDB.open('MyTestDatabase');
         request.onerror = function() {
-            alert('It seems like you refused Laverna to use IndexedDB or you are in Private browsing mode.');
+            // alert('It seems like you refused Laverna to use IndexedDB or you are in Private browsing mode.');
+            window.appNoDB = true;
+            App.start();
         };
-
-        App.start();
+        request.onsuccess = function() {
+            App.start();
+        };
     }
 
     // prevent error in Firefox
@@ -167,7 +170,7 @@ require([
     else {
         require(['IndexedDBShim'], function () {
             if (window.shimIndexedDB) {
-                App.shimDB = true;
+                window.appNoDB = true;
                 window.shimIndexedDB.__useShim(true);
             }
             startApp();

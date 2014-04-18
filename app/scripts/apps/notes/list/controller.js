@@ -68,7 +68,7 @@ define([
                 this.notes.fetch({
                     // offset : this.args.page,
                     // limit  : App.settings.pagination,
-                    conditions: ( App.shimDB ? null : {'trash' : 0} )
+                    conditions: ( window.appNoDB ? null : {'trash' : 0} )
                 })
             ).done(this.showSidebar);
         },
@@ -79,7 +79,7 @@ define([
         favoriteNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {isFavorite : 1} )
+                    conditions: ( window.appNoDB ? null : {isFavorite : 1} )
                 })
             ).done(this.showSidebar);
         },
@@ -90,7 +90,7 @@ define([
         trashedNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {trash : 1} )
+                    conditions: ( window.appNoDB ? null : {trash : 1} )
                 })
             ).done(this.showSidebar);
         },
@@ -101,7 +101,7 @@ define([
         notebooksNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {notebookId : parseInt(this.args.query)} )
+                    conditions: ( window.appNoDB ? null : {notebookId : parseInt(this.args.query)} )
                 })
             ).done(this.showSidebar);
         },
@@ -114,7 +114,7 @@ define([
                 notes;
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {trash : 0} )
+                    conditions: ( window.appNoDB ? null : {trash : 0} )
                 })
             ).done(
                 function () {
@@ -150,7 +150,7 @@ define([
          */
         showSidebar: function () {
             // IndexedDBShim doesn't support indexes - filter with backbone.js
-            if (App.shimDB === true) {
+            if (window.appNoDB === true) {
                 this.notes.filterList(this.args.filter);
             }
 

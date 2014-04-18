@@ -1,6 +1,10 @@
 /*global define*/
 define([
-], function () {
+    'underscore',
+    'backbone',
+    'localStorage',
+    'indexedDB'
+], function (_, Backbone) {
     'use strict';
 
     var NoteDB = {
@@ -65,6 +69,22 @@ define([
             }
         ]
     };
+
+    // IndexedDB and WebSQL blocked or user in private browsing mode
+    if (window.appNoDB === true && _.isUndefined(window.shimIndexedDB)) {
+        // Use LocalStorage instead of IndexedDB
+        Backbone.sync = function(method, model, options) {
+            if (model.storeName) {
+                model.localStorage = new Backbone.LocalStorage('laverna.' + model.storeName);
+                model.store = model.storeName;
+            }
+
+            return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
+        };
+
+        // Make Backbone.IndexedDB ignore this model/collection
+        return undefined;
+    }
 
     return NoteDB;
 });

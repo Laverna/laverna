@@ -4,7 +4,7 @@ Laverna is a JavaScript note-taking web application with a Markdown editor and e
 
 The application stores all your notes in your browser storage spaces such as indexedDB or localStorage, which is good for security reasons, because only you can get access to them.
 
-**Demo**: https://laverna.cc/ OR http://laverna.github.io/static-laverna/dist
+**Demo**: https://laverna.cc/ OR http://laverna.github.io/static-laverna
 
 ## Features
 -----------

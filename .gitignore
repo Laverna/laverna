@@ -14,3 +14,4 @@ app/scripts/apps/settings/show/encryptTemplate.html
 app/scripts/helpers/syncStatus.js
 .DS_Store
 test/visual/screenshots
+*.css.map

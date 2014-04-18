@@ -52,7 +52,7 @@ casper.start( 'http://localhost:9000/#notes' );
 casper.viewport(1024, 768);
 
 casper.then(function(){
-	phantomcss.screenshot('#header-title', '001-header-title');
+	phantomcss.screenshot('#wrapper', 'wrapper--inital-state');
 });
 
 // casper.then(function(){

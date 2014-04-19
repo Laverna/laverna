@@ -15,6 +15,7 @@ define([
      * Notes list controller - shows notes list in sidebar
      */
     List.Controller = Marionette.Controller.extend({
+
         initialize: function () {
             _.bindAll(this, 'listNotes', 'showSidebar', 'favoriteNotes');
 
@@ -42,6 +43,9 @@ define([
         listNotes: function (args) {
             this.args = args || this.args;
             App.settings.pagination = parseInt(App.settings.pagination);
+
+            // Set profile
+            this.notes.database.getDB(args.profile);
 
             // Offset
             if (_.isNull(this.args.page)) {

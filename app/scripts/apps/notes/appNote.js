@@ -31,11 +31,12 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'notes/add'        : 'addNote',
-            'notes/edit/:id'   : 'editNote',
-            'notes/remove/:id' : 'removeNote',
-            'notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
-            'notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
+            'p/:profile'                    : 'showNotes',
+            '(p/:profile/)notes/add'        : 'addNote',
+            '(p/:profile/)notes/edit/:id'   : 'editNote',
+            '(p/:profile/)notes/remove/:id' : 'removeNote',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
         }
     });
 
@@ -51,13 +52,24 @@ define([
      * Controller
      */
     API = {
-        // Show list of notes
-        showNotes: function (filter, query, page) {
-            var args = { filter : filter, page : page, query : query };
+        getArgs: function (args) {
+            var values = ['profile', 'filter', 'query', 'page', 'id'],
+                argsObj = {};
 
-            if (arguments.length === 1 && typeof filter === 'object') {
-                args = filter;
+            if (args.length === 1 && typeof args[0] === 'object') {
+                return args[0];
             }
+
+            _.each(values, function (value, index) {
+                argsObj[value] = (args[index]) ? args[index] : null;
+            });
+
+            return argsObj;
+        },
+
+        // Show list of notes
+        showNotes: function () {
+            var args = this.getArgs(arguments);
 
             require(['apps/notes/list/controller'], function (List) {
                 API.notesArg = args;
@@ -66,15 +78,8 @@ define([
         },
 
         // Show content of note
-        showNote: function (filter, query, page, id) {
-            var args = {
-                id    : id    , filter : filter,
-                query : query , page   : page
-            };
-
-            if (arguments.length === 1 && typeof filter === 'object') {
-                args = filter;
-            }
+        showNote: function () {
+            var args = this.getArgs(arguments);
 
             require(['apps/notes/show/showController'], function (Show) {
                 App.trigger('notes:show', args);

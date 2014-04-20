@@ -4,9 +4,10 @@ define([
     'app',
     'backbone',
     'marionette',
+    'helpers/uri',
     'collections/notes',
-    'apps/notes/list/views/noteSidebar',
-], function (_, App, Backbone, Marionette, Notes, NotesView) {
+    'apps/notes/list/views/noteSidebar'
+], function (_, App, Backbone, Marionette, URI, Notes, NotesView) {
     'use strict';
 
     var List = App.module('AppNote.List');
@@ -41,7 +42,7 @@ define([
          * Fetch notes, then show it
          */
         listNotes: function (args) {
-            this.args = args || this.args;
+            this.args = _.clone(args) || this.args;
             App.settings.pagination = parseInt(App.settings.pagination);
 
             // Set profile
@@ -207,22 +208,8 @@ define([
          */
         toNote: function (note) {
             if ( !note) { return; }
-            var url = '/notes';
 
-            if (this.args.filter) {
-                url += '/f/' + this.args.filter;
-            }
-            if (this.args.query) {
-                url += '/q/' + this.args.query;
-            }
-            if (this.args.page) {
-                url += '/p' + this.args.page;
-            }
-
-            if (_.isObject(note)) {
-                url += '/show/' + note.get('id');
-            }
-
+            var url = URI.note(this.args, note);
             return App.navigate(url, true);
         },
 

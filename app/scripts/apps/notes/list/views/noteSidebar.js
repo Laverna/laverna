@@ -3,19 +3,20 @@ define([
     'underscore',
     'app',
     'backbone',
+    'helpers/uri',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap',
     'marionette'
-], function(_, App, Backbone, NoteSidebarItem, Template) {
+], function(_, App, Backbone, URI, NoteSidebarItem, Template) {
     'use strict';
 
     var View = Backbone.Marionette.CompositeView.extend({
         template: _.template(Template),
 
-        itemView: NoteSidebarItem,
-        itemViewContainer: '.main',
-        className: 'sidebar-notes',
+        itemView          : NoteSidebarItem,
+        itemViewContainer : '.main',
+        className         : 'sidebar-notes',
 
         itemViewOptions : { },
         keyboardEvents  : { },
@@ -28,6 +29,13 @@ define([
         events: {
         },
 
+        collectionEvents: {
+            'changeFocus' : 'changeFocus',
+            'change'      : 'render',
+            'nextPage'    : 'toNextPage',
+            'prevPage'    : 'toPrevPage',
+        },
+
         initialize: function () {
             // Navigation with keys
             this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
@@ -35,12 +43,6 @@ define([
 
             // Options to itemView
             this.itemViewOptions.args = this.options.args;
-
-            // Events
-            this.listenTo(this.collection, 'changeFocus', this.changeFocus);
-            this.listenTo(this.collection, 'change', this.render);
-            this.listenTo(this.collection, 'nextPage', this.toNextPage);
-            this.listenTo(this.collection, 'prevPage', this.toPrevPage);
         },
 
         onRender: function () {
@@ -51,11 +53,11 @@ define([
         },
 
         toNextPage: function () {
-            App.navigate(this.ui.nextPage.attr('href'));
+            App.navigate(this.ui.nextPage.attr('href'), true);
         },
 
         toPrevPage: function () {
-            App.navigate(this.ui.prevPage.attr('href'));
+            App.navigate(this.ui.prevPage.attr('href'), true);
         },
 
         navigateBottom: function () {
@@ -93,18 +95,8 @@ define([
 
                 // Generates the pagination url
                 pageUrl: function (page) {
-                    var url = '/notes';
-                    if (this.args.filter !== null) {
-                        url += '/f/' + this.args.filter;
-                    }
-                    if (this.args.query) {
-                        url += '/q/' + this.args.query;
-                    }
-                    if (page !== undefined) {
-                        url += '/p' + page;
-                    }
-
-                    return '#' + url;
+                    page = page || 0;
+                    return '#' + URI.note(this.args, page);
                 }
             };
         }

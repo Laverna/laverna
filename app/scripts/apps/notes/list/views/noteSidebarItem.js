@@ -5,10 +5,11 @@ define([
     'app',
     'backbone',
     'marionette',
+    'helpers/uri',
     'text!apps/notes/list/templates/sidebarListItem.html',
     'pagedown-ace'
     // 'pagedown.sanitizer'
-], function(_, App, Backbone, Marionette, Template) {
+], function(_, App, Backbone, Marionette, URI, Template) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -70,17 +71,7 @@ define([
 
                 // Generate link
                 link: function () {
-                    var url = '/notes';
-                    if (this.args.filter !== null) {
-                        url += '/f/' + this.args.filter;
-                    }
-                    if (this.args.query) {
-                        url += '/q/' + this.args.query;
-                    }
-                    if (this.args.page) {
-                        url += '/p' + this.args.page;
-                    }
-                    return url + '/show/' + this.id;
+                    return URI.note(this.args, this);
                 }
             };
         }

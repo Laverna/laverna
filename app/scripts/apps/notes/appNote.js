@@ -64,6 +64,7 @@ define([
                 argsObj[value] = (args[index]) ? args[index] : null;
             });
 
+            argsObj.page = parseInt(argsObj.page);
             return argsObj;
         },
 
@@ -72,7 +73,7 @@ define([
             var args = this.getArgs(arguments);
 
             require(['apps/notes/list/controller'], function (List) {
-                API.notesArg = args;
+                App.notesArg = args;
                 executeAction(new List().listNotes, args);
             });
         },
@@ -113,7 +114,7 @@ define([
         checkShowSidebar: function (args) {
             var current = _.omit(App.notesArg || {}, 'id');
 
-            if (current !== _.omit(args, 'id')) {
+            if ( !_.isEqual(current,  _.omit(args, 'id')) ) {
                 API.showNotes(args);
             }
         }

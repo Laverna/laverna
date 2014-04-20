@@ -23,7 +23,7 @@ define([
     // The router
     Settings.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'settings' : 'showSettings'
+            '(p/:profile/)settings' : 'showSettings'
         }
     });
 

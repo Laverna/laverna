@@ -29,15 +29,15 @@ define([
     AppNotebooks.Router = Marionette.AppRouter.extend({
         appRoutes: {
             // Notebooks
-            'notebooks'     : 'listNotebooks',
-            'notebooks/add' : 'addNotebook',
-            'notebooks/edit/:id' : 'editNotebook',
-            'notebooks/remove/:id' : 'removeNotebook',
+            '(p/:profile/)notebooks'     : 'listNotebooks',
+            '(p/:profile/)notebooks/add' : 'addNotebook',
+            '(p/:profile/)notebooks/edit/:id' : 'editNotebook',
+            '(p/:profile/)notebooks/remove/:id' : 'removeNotebook',
 
             // Tags
-            'tags/add'      : 'addTag',
-            'tags/edit/:id' : 'editTag',
-            'tags/remove/:id': 'removeTag'
+            '(p/:profile/)tags/add'      : 'addTag',
+            '(p/:profile/)tags/edit/:id' : 'editTag',
+            '(p/:profile/)tags/remove/:id': 'removeTag'
         }
     });
 

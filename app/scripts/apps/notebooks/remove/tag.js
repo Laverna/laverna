@@ -18,6 +18,9 @@ define([
         start: function (args) {
             this.model = new Model({id: args.id});
 
+            // Set profile
+            this.model.database.getDB(args.profile);
+
             $.when(this.model.fetch()).done(this.remove);
         },
 

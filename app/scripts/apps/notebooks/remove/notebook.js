@@ -18,7 +18,11 @@ define([
         },
 
         start: function (args) {
+            // Set profile
+            this.collection.database.getDB(args.profile);
+
             args.id = parseInt(args.id);
+
             this.model = new Model({id: parseInt(args.id)});
 
             $.when(

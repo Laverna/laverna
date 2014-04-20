@@ -23,6 +23,9 @@ define([
             this.isNew = true;
             this.args = args;
 
+            // Set profile
+            this.collection.database.getDB(args.profile);
+
             $.when(this.collection.fetch()).done(this.show);
         },
 
@@ -30,6 +33,9 @@ define([
         editForm: function (args) {
             this.collection = new Notebooks();
             this.model = new Notebook({id: parseInt(args.id)});
+
+            // Set profile
+            this.collection.database.getDB(args.profile);
 
             $.when(this.collection.fetch(), this.model.fetch()).done(this.show);
         },

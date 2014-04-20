@@ -17,14 +17,22 @@ define([
         },
 
         // Add new tag
-        addForm: function () {
+        addForm: function (args) {
             this.model = new Model();
+
+            // Set profile
+            this.model.database.getDB(args.profile);
+
             this.show();
         },
 
         // Edit an existing tag
         editForm: function (args) {
             this.model = new Model({id: args.id});
+
+            // Set profile
+            this.model.database.getDB(args.profile);
+
             $.when(this.model.fetch()).done(this.show);
         },
 

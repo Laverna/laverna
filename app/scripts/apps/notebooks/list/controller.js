@@ -23,7 +23,11 @@ define([
             this.tags = new Tags();
         },
 
-        list: function () {
+        list: function (args) {
+            // Set profile
+            this.notebooks.database.getDB(args.profile);
+            this.tags.database.getDB(args.profile);
+
             $.when(this.notebooks.fetch(), this.tags.fetch()).done(this.show);
         },
 

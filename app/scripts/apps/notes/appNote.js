@@ -4,8 +4,9 @@ define([
     'jquery',
     'marionette',
     'app',
+    'helpers/uri',
     'enquire'
-], function (_, $,  Marionette, App, enquire) {
+], function (_, $,  Marionette, App, URI, enquire) {
     'use strict';
 
     /**
@@ -64,7 +65,7 @@ define([
                 argsObj[value] = (args[index]) ? args[index] : null;
             });
 
-            argsObj.page = parseInt(argsObj.page);
+            argsObj.page = Number(argsObj.page);
             return argsObj;
         },
 
@@ -89,24 +90,24 @@ define([
         },
 
         // Add new note
-        addNote: function () {
+        addNote: function (profile) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().addForm);
+                executeAction(new Form().addForm, {profile: profile});
             });
         },
 
         // Edit an existing note
-        editNote: function (id) {
+        editNote: function (profile, id) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id});
+                executeAction(new Form().editForm, {id : id, profile: profile});
             });
             App.log('edit note ' + id);
         },
 
         // Remove an existing note
-        removeNote: function (id) {
+        removeNote: function (profile, id) {
             require(['apps/notes/remove/removeController'], function (Controller) {
-                executeAction(new Controller().remove, id);
+                executeAction(new Controller().remove, {id : id, profile: profile});
             });
         },
 
@@ -124,7 +125,7 @@ define([
      * Router events
      */
     App.on('notes:list', function () {
-        App.navigate('notes', { trigger : false });
+        App.navigate(URI.link('/notes'), { trigger : false });
         API.showNotes(null, null);
     });
 
@@ -156,7 +157,7 @@ define([
 
     // Show form
     AppNote.on('showForm', function () {
-        App.navigate('/notes/add', true);
+        App.navigate(URI.link('/notes/add'), true);
     });
 
     // Re-render sidebar's and note's content after sync:after event

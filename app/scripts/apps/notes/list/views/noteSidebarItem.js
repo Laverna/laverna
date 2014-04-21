@@ -24,10 +24,16 @@ define([
         keyboardEvents: {
         },
 
+        modelEvents: {
+            'change'       : 'render',
+            'change:trash' : 'remove',
+            'changeFocus'  : 'changeFocus'
+        },
+
         initialize: function () {
-            this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'change:trash', this.remove);
-            this.listenTo(this.model, 'changeFocus', this.changeFocus);
+            // this.listenTo(this.model, 'change', this.render);
+            // this.listenTo(this.model, 'change:trash', this.remove);
+            // this.listenTo(this.model, 'changeFocus', this.changeFocus);
         },
 
         changeFocus: function () {

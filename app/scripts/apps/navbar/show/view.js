@@ -4,10 +4,11 @@ define([
     'jquery',
     'app',
     'backbone',
+    'helpers/uri',
     'text!apps/navbar/show/template.html',
     'backbone.mousetrap',
     'marionette'
-], function (_, $, App, Backbone, Tmpl) {
+], function (_, $, App, Backbone, URI, Tmpl) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -98,6 +99,7 @@ define([
         serializeData: function () {
             return {
                 args: this.options.args,
+                uri : URI.link('/'),
                 notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
                 syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
             };
@@ -109,9 +111,9 @@ define([
 
                 urlPage : function () {
                     if (App.currentApp.moduleName === 'AppNotebook') {
-                        return '/notebooks';
+                        return URI.link('/notebooks');
                     } else {
-                        return '/notes';
+                        return URI.link('/notes');
                     }
                 },
 

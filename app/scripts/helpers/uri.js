@@ -9,6 +9,16 @@ define([
      * Builds URI's
      */
     var URI = {
+        getProfile: function () {
+            var route = Backbone.history.fragment,
+                uri = route.split('/');
+
+            if (_.contains(uri, 'p')) {
+                console.log('profile', uri[1]);
+                return uri[1];
+            }
+
+        },
 
         link: function (uri, profile) {
             var regx = /p\/[\w\d]+/,

@@ -5,10 +5,11 @@ define([
     'modalRegion',
     'brandRegion',
     'collections/configs',
+    'helpers/uri',
     'i18next',
     'devicejs',
     'marionette'
-], function (_, Backbone, ModalRegion, BrandRegion, Configs, i18n, Device) {
+], function (_, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
     'use strict';
 
     // Underscore template
@@ -81,6 +82,8 @@ define([
             App.currentApp.stop();
         }
 
+        configs.createProfile(URI.getProfile());
+
         App.currentApp = currentApp;
         if(currentApp){
             currentApp.start(args);
@@ -131,6 +134,10 @@ define([
                 Install.start();
 
                 Backbone.history.start({pushState: false});
+
+                $(window).on('hashchange', function () {
+                    configs.createProfile(URI.getProfile());
+                });
 
                 if (App.getCurrentRoute() === '') {
                     App.trigger('notes:list');

@@ -20,7 +20,7 @@ define([
         firstStart: function () {
             // Basic
             this.create(new Config({ name: 'appVersion', value: '0.5.0' }));
-            this.create(new Config({ name: 'appProfiles', value: JSON.stringify([]) }));
+            this.create(new Config({ name: 'appProfiles', value: JSON.stringify(['notes-db']) }));
             this.create(new Config({ name: 'appLang', value: '' }));
             this.create(new Config({ name: 'cloudStorage', value: '0' }));
             this.create(new Config({ name: 'pagination', value: '10' }));
@@ -64,6 +64,16 @@ define([
             });
 
             return data;
+        },
+
+        createProfile: function (name) {
+            var profiles = this.get('appProfiles'),
+                value = JSON.parse(profiles.get('value'));
+
+            if (_.contains(value, name) === false) {
+                value.push(name);
+                profiles.save({ value: JSON.stringify(value) });
+            }
         }
 
     });

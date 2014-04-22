@@ -31,6 +31,7 @@ define([
 
             // Collection of notebooks
             this.notebooks = new Notebooks();
+            this.notebooks.database.getDB(args.profile);
 
             if (App.currentApp.moduleName !== 'AppNotebook') {
                 $.when(this.notebooks.fetch({

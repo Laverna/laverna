@@ -93,6 +93,7 @@ define([
         addNote: function (profile) {
             require(['apps/notes/form/controller'], function (Form) {
                 executeAction(new Form().addForm, {profile: profile});
+                App.trigger('notes:show', {profile: profile});
             });
         },
 
@@ -100,6 +101,7 @@ define([
         editNote: function (profile, id) {
             require(['apps/notes/form/controller'], function (Form) {
                 executeAction(new Form().editForm, {id : id, profile: profile});
+                App.trigger('notes:show', {profile: profile});
             });
             App.log('edit note ' + id);
         },

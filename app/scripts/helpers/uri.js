@@ -17,8 +17,8 @@ define([
             if (profile) {
                 uri = '/p/' + profile + uri;
             }
-            // Search in window's hash
-            else if (arguments.length > 0 && route.match(regx)) {
+            // Search in window's hash (only if 2-nd argument doesn't exist
+            else if (arguments.length === 1 && route.match(regx)) {
                 uri = '/' + route.match(regx)[0] + uri;
             }
             return uri;

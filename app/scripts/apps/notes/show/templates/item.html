@@ -8,7 +8,7 @@
     </ul>
     <ul class="nav navbar-nav pull-right">
         <li>
-            <a href="#/notes/edit/{{id}}" class="btn btn-default btn-edit">
+            <a href="#{{ uri }}notes/edit/{{id}}" class="btn btn-default btn-edit">
                 <span class="icon-pencil"></span> <span class="hidden-xxs">{{ i18n('Edit') }}</span>
             </a>
         </li>
@@ -20,12 +20,12 @@
         </li>
         <% } %>
         <li>
-            <a href="#/notes/remove/{{id}}" class="btn btn-default">
+            <a href="#{{ uri }}notes/remove/{{id}}" class="btn btn-default">
                 <span class="icon-trashed"></span> <span class="hidden-xxs"><% if (trash === 0) { %>{{ i18n('Delete') }}<% } else { %> {{ i18n('Forever') }}<% } %></span>
             </a>
         </li>
         <li>
-            <a href="#/settings" class="btn btn-default" id="showSettings">
+            <a href="#{{ uri }}settings" class="btn btn-default" id="showSettings">
                 <span class="icon-cog"></span> <span class="hidden-xxs">{{ i18n('Settings') }}</span>
             </a>
         </li>

@@ -31,9 +31,6 @@ define([
         },
 
         initialize: function () {
-            // this.listenTo(this.model, 'change', this.render);
-            // this.listenTo(this.model, 'change:trash', this.remove);
-            // this.listenTo(this.model, 'changeFocus', this.changeFocus);
         },
 
         changeFocus: function () {

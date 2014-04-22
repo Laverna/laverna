@@ -4,6 +4,7 @@ define([
     'jquery',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/notes',
     'collections/tags',
     'collections/notebooks',
@@ -12,7 +13,7 @@ define([
     'apps/notes/form/formView',
     'checklist',
     'tags'
-], function (_, $, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
+], function (_, $, App, Marionette, URI, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
     'use strict';
 
     var Form = App.module('AppNote.Form');
@@ -20,18 +21,25 @@ define([
     Form.Controller = Marionette.Controller.extend({
         initialize: function () {
             _.bindAll(this, 'addForm', 'editForm', 'show', 'fetchImages', 'redirect', 'confirmRedirect');
-            App.trigger('notes:show', {filter: null, page: null});
 
             this.tags = new TagsCollection();
             this.notebooks = new NotebooksCollection();
             this.files = new FilesCollection();
         },
 
+        switchDatabase: function (db) {
+            this.model.database.getDB(db);
+            this.tags.database.getDB(db);
+            this.notebooks.database.getDB(db);
+            this.files.database.getDB(db);
+        },
+
         /**
          * Add a new note
          */
-        addForm: function () {
+        addForm: function (args) {
             this.model = new NoteModel();
+            this.switchDatabase(args.profile);
 
             $.when(
                 this.tags.fetch(),
@@ -44,6 +52,7 @@ define([
          */
         editForm: function (args) {
             this.model = new NoteModel({ id : args.id });
+            this.switchDatabase(args.profile);
 
             $.when(
                 this.tags.fetch({ limit : 100 }),
@@ -159,7 +168,7 @@ define([
         },
 
         redirect: function (showNote) {
-            var url = 'notes';
+            var url = '/notes';
             if (typeof showNote === 'object') {
                 return this.confirmRedirect(showNote);
             }
@@ -174,7 +183,7 @@ define([
             }
 
             App.trigger('notes:added', this.model);
-            App.navigate(url, {trigger: true});
+            App.navigate(URI.link(url), {trigger: true});
 
             if (showNote !== false) {
                 App.content.reset();

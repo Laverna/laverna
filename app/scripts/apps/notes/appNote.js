@@ -4,8 +4,9 @@ define([
     'jquery',
     'marionette',
     'app',
+    'helpers/uri',
     'enquire'
-], function (_, $,  Marionette, App, enquire) {
+], function (_, $,  Marionette, App, URI, enquire) {
     'use strict';
 
     /**
@@ -64,6 +65,7 @@ define([
                 argsObj[value] = (args[index]) ? args[index] : null;
             });
 
+            argsObj.page = Number(argsObj.page);
             return argsObj;
         },
 
@@ -72,7 +74,7 @@ define([
             var args = this.getArgs(arguments);
 
             require(['apps/notes/list/controller'], function (List) {
-                API.notesArg = args;
+                App.notesArg = args;
                 executeAction(new List().listNotes, args);
             });
         },
@@ -88,24 +90,26 @@ define([
         },
 
         // Add new note
-        addNote: function () {
+        addNote: function (profile) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().addForm);
+                executeAction(new Form().addForm, {profile: profile});
+                App.trigger('notes:show', {profile: profile});
             });
         },
 
         // Edit an existing note
-        editNote: function (id) {
+        editNote: function (profile, id) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id});
+                executeAction(new Form().editForm, {id : id, profile: profile});
+                App.trigger('notes:show', {profile: profile});
             });
             App.log('edit note ' + id);
         },
 
         // Remove an existing note
-        removeNote: function (id) {
+        removeNote: function (profile, id) {
             require(['apps/notes/remove/removeController'], function (Controller) {
-                executeAction(new Controller().remove, id);
+                executeAction(new Controller().remove, {id : id, profile: profile});
             });
         },
 
@@ -113,7 +117,7 @@ define([
         checkShowSidebar: function (args) {
             var current = _.omit(App.notesArg || {}, 'id');
 
-            if (current !== _.omit(args, 'id')) {
+            if ( !_.isEqual(current,  _.omit(args, 'id')) ) {
                 API.showNotes(args);
             }
         }
@@ -123,7 +127,7 @@ define([
      * Router events
      */
     App.on('notes:list', function () {
-        App.navigate('notes', { trigger : false });
+        App.navigate(URI.link('/notes'), { trigger : false });
         API.showNotes(null, null);
     });
 
@@ -155,7 +159,7 @@ define([
 
     // Show form
     AppNote.on('showForm', function () {
-        App.navigate('/notes/add', true);
+        App.navigate(URI.link('/notes/add'), true);
     });
 
     // Re-render sidebar's and note's content after sync:after event

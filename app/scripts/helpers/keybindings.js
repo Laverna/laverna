@@ -3,17 +3,20 @@
 define([
     'jquery',
     'app',
+    'helpers/uri',
     'Mousetrap',
     'mousetrap-pause'
-], function ($, App) {
+], function ($, App, URI) {
     'use strict';
 
     var Keybindings = App.module('mousetrap');
 
     Keybindings.bind = function () {
+        var uri = URI.link('');
+
         // Help
         Mousetrap.bind(App.settings.appKeyboardHelp, function () {
-            App.navigate('/help', true);
+            App.navigate(uri + '/help', true);
             return false;
         });
 
@@ -32,22 +35,22 @@ define([
 
         // Redirect to notes list
         Mousetrap.bind(App.settings.jumpInbox, function () {
-            App.navigate('/notes', true);
+            App.navigate(uri + '/notes', true);
         });
 
         // Redirect to favorite notes
         Mousetrap.bind(App.settings.jumpFavorite, function () {
-            App.navigate('/notes/f/favorite', true);
+            App.navigate(uri + '/notes/f/favorite', true);
         });
 
         // Redirect to removed list of notes
         Mousetrap.bind(App.settings.jumpRemoved, function () {
-            App.navigate('/notes/f/trashed', true);
+            App.navigate(uri + '/notes/f/trashed', true);
         });
 
         // Redirect to notebooks list
         Mousetrap.bind(App.settings.jumpNotebook, function () {
-            App.navigate('/notebooks', true);
+            App.navigate(uri + '/notebooks', true);
         });
     };
 

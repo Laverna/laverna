@@ -18,8 +18,9 @@ define([
             _.bindAll(this, 'remove', 'doRemove', 'redirect');
         },
 
-        remove: function (id) {
-            this.note = new NoteModel({ id : id });
+        remove: function (args) {
+            this.note = new NoteModel({ id : args.id });
+            this.note.database.getDB(args.profile);
             $.when(this.note.fetch()).done(this.doRemove);
         },
 

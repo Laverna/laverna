@@ -4,6 +4,7 @@ define([
     'underscore',
     'app',
     'backbone',
+    'helpers/uri',
     'text!apps/notes/show/templates/item.html',
     'checklist',
     'tags',
@@ -13,7 +14,7 @@ define([
     'backbone.mousetrap',
     'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Template, Checklist, Tags, Img, prettify, mathjax) {
+], function (_, App, Backbone, URI, Template, Checklist, Tags, Img, prettify, mathjax) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -100,6 +101,7 @@ define([
             // Show title
             document.title = data.title;
 
+            data.uri = URI.link('/');
             data.title = converter.makeHtml(data.title);
             return data;
         },

@@ -32,6 +32,10 @@ define([
                     configs.create(new configs.model({ name: 'appLang', value: '' }));
                 }
             }
+
+            if (typeof App.settings.appProfiles === 'undefined') {
+                configs.create(new configs.model({ name: 'appProfiles', value: JSON.stringify([]) }));
+            }
         },
 
         install: function () {

@@ -69,7 +69,7 @@ define([
     };
 
     // For submodules
-    App.startSubApp = function(appName, args){
+    App.startSubApp = function(appName, args) {
         if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
             return;
         }

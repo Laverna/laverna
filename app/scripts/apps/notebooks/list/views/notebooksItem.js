@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'text!apps/notebooks/list/templates/notebooksItem.html'
-], function (_, App, Marionette, Templ) {
+], function (_, App, Marionette, URI, Templ) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -27,10 +28,10 @@ define([
         },
 
         serializeData: function ( ) {
-            var data = this.model.toJSON();
-            data.name = App.Encryption.API.decrypt(data.name);
-
-            return data;
+            return _.extend(this.model.toJSON(), {
+                name : App.Encryption.API.decrypt(this.model.get('name')),
+                uri  : URI.link('')
+            });
         },
 
         templateHelpers: function () {

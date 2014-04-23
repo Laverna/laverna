@@ -3,11 +3,12 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/configs',
     'models/config',
     'apps/settings/show/showView',
     'fileSaver'
-], function (_, App, Marionette, Configs, Config, View, saveAs) {
+], function (_, App, Marionette, URI, Configs, Config, View, saveAs) {
     'use strict';
 
     var Show = App.module('AppSettings.Show');
@@ -96,14 +97,14 @@ define([
             App.modal.close();
 
             if ( this.isEncryptionChanged(changedSettings) === false) {
-                App.navigate('/notes', {trigger : false});
+                App.navigate(URI.link('/notes'), {trigger : false});
 
                 if (changedSettings && changedSettings.length !== 0) {
                     window.location.reload();
                 }
             } else {
                 App.log('One of encryption\'s settings is changed');
-                App.navigate('/encrypt/all', true);
+                App.navigate(URI.link('/encrypt/all'), true);
             }
         },
 

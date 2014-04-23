@@ -3,10 +3,11 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/notebooks',
     'models/notebook',
     'apps/notebooks/notebooksForm/formView'
-], function (_, App, Marionette, Notebooks, Notebook, FormView) {
+], function (_, App, Marionette, URI, Notebooks, Notebook, FormView) {
     'use strict';
 
     var Form = App.module('AppNotebooks.NotebookForm');
@@ -86,7 +87,7 @@ define([
         // Redirect
         redirect: function () {
             if (this.args.redirect !== false) {
-                return App.navigate('#/notebooks');
+                return App.navigate('#' + URI.link('/notebooks'));
             }
         }
     });

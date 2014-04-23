@@ -1,4 +1,4 @@
-<a class="list-group-item" href="#/notes/f/notebook/q/{{id}}" data-id="{{id}}">
+<a class="list-group-item" href="#{{ uri }}/notes/f/notebook/q/{{id}}" data-id="{{id}}">
     <i class="icon-notebook"></i>
     {{ name }}
 </a>
@@ -8,8 +8,8 @@
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu{{id}}">
-        <li><a href="#/notebooks/edit/{{id}}">{{ i18n('Edit') }}</a></li>
-        <li><a href="#/notebooks/remove/{{id}}">{{ i18n('Remove') }}</a></li>
+        <li><a href="#{{ uri }}/notebooks/edit/{{id}}">{{ i18n('Edit') }}</a></li>
+        <li><a href="#{{ uri }}/notebooks/remove/{{id}}">{{ i18n('Remove') }}</a></li>
     </ul>
 </div>
 

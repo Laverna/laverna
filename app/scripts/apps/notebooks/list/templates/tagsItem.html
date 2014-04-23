@@ -1,4 +1,4 @@
-<a class="list-group-item" href="#/notes/f/tag/q/{{name}}" data-id="{{id}}">
+<a class="list-group-item" href="#{{ uri }}/notes/f/tag/q/{{name}}" data-id="{{id}}">
     <i class="icon-tag"></i>
     {{ name }}
     <span class="pull-right badge">{{count}}</span>
@@ -9,7 +9,7 @@
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu{{id}}">
-        <li><a href="#/tags/edit/{{id}}">{{ i18n('Edit') }}</a></li>
-        <li><a href="#/tags/remove/{{id}}">{{ i18n('Remove') }}</a></li>
+        <li><a href="#{{ uri }}/tags/edit/{{id}}">{{ i18n('Edit') }}</a></li>
+        <li><a href="#{{ uri }}/tags/remove/{{id}}">{{ i18n('Remove') }}</a></li>
     </ul>
 </div>

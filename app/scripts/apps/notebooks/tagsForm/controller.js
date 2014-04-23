@@ -3,10 +3,11 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/tags',
     'models/tag',
     'apps/notebooks/tagsForm/formView'
-], function (_, App, Marionette, Collection, Model, FormView) {
+], function (_, App, Marionette, URI, Collection, Model, FormView) {
     'use strict';
 
     var Form = App.module('AppNotebooks.TagsForm');
@@ -64,7 +65,7 @@ define([
         },
 
         redirect: function () {
-            return App.navigate('#/notebooks');
+            return App.navigate('#' + URI.link('/notebooks'));
         }
     });
 

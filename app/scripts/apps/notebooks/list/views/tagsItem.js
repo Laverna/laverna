@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'text!apps/notebooks/list/templates/tagsItem.html'
-], function (_, App, Marionette, Templ) {
+], function (_, App, Marionette, URI, Templ) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -14,6 +15,12 @@ define([
 
         initialize: function () {
             this.model.on('active', this.changeFocus, this);
+        },
+
+        serializeData: function () {
+            return _.extend(this.model.toJSON(), {
+                uri : URI.link('')
+            });
         },
 
         changeFocus: function () {

@@ -24,6 +24,10 @@ define([
             var regx = /p\/[\w\d]+/,
                 route = Backbone.history.fragment;
 
+            if (uri.search(regx) !== -1) {
+                return uri;
+            }
+
             if (profile) {
                 uri = '/p/' + profile + uri;
             }

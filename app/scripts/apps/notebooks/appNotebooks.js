@@ -1,9 +1,11 @@
 /* global define */
 define([
+    'underscore',
+    'jquery',
     'marionette',
     'app',
-    'jquery'
-], function (Marionette, App, $) {
+    'helpers/uri'
+], function (_, $, Marionette, App, URI) {
     'use strict';
 
     /**
@@ -110,7 +112,7 @@ define([
     // Add notebook
     AppNotebooks.on('showForm', function (redirect) {
         if (_.isUndefined(redirect)) {
-            App.navigate('/notebooks/add', true);
+            App.navigate(URI.link('/notebooks/add'), true);
         } else {
             API.addNotebook(redirect);
         }

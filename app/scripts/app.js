@@ -97,8 +97,11 @@ define([
         // Set default set of configs
         if (configs.length === 0) {
             App.firstStart = true;
-            configs.firstStart();
         }
+
+        $.when(configs.firstStart()).done(function (collection) {
+            configs = collection;
+        });
 
         App.settings = configs.getConfigs();
     });

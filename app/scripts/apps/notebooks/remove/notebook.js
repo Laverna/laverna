@@ -3,9 +3,10 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/notebooks',
     'models/notebook'
-], function (_, App, Marionette, Collection, Model) {
+], function (_, App, Marionette, URI, Collection, Model) {
     'use strict';
 
     var Notebook = App.module('AppNotebooks.RemoveNotebook');
@@ -44,7 +45,7 @@ define([
         },
 
         redirect: function () {
-            App.navigate('#/notebooks');
+            App.navigate('#' + URI.link('/notebooks'));
         }
     });
 

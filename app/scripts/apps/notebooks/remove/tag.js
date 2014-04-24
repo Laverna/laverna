@@ -3,9 +3,10 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'models/tag',
     'collections/tags'
-], function (_, App, Marionette, Model, Tags) {
+], function (_, App, Marionette, URI, Model, Tags) {
     'use strict';
 
     var Tag = App.module('AppNotebooks.RemoveTag');
@@ -31,7 +32,7 @@ define([
         },
 
         redirect: function () {
-            App.navigate('#/notebooks');
+            App.navigate('#' + URI.link('/notebooks'));
         }
     });
 

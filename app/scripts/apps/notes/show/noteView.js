@@ -141,15 +141,14 @@ define([
          * Redirect to edit page
          */
         editNote: function () {
-            var uri = this.ui.editBtn.attr('href');
-            App.navigate(uri);
+            App.navigate(this.ui.editBtn.attr('href'), true);
         },
 
         /**
          * Redirect to deleting page
          */
         deleteNote: function() {
-            App.navigate('/notes/remove/' + this.model.get('id'), true);
+            App.navigate(URI.link('/notes/remove/' + this.model.get('id')), true);
         },
 
         /**

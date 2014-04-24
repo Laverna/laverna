@@ -64,7 +64,7 @@ define([
         searchSubmit: function (e) {
             e.preventDefault();
             var text = this.ui.navbarSearchInput.val();
-            App.navigate('/notes/f/search/q/' + text, true);
+            App.navigate(URI.link('/notes/f/search/q/' + text), true);
         },
 
         searchKeyup: function (e) {

@@ -26,8 +26,8 @@ define([
     // Router
     Encryption.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'auth': 'showAuth',
-            'encrypt/all': 'showEncryptAll',
+            '(p/:profile/)auth': 'showAuth',
+            '(p/:profile/)encrypt/all': 'showEncryptAll',
         }
     });
 

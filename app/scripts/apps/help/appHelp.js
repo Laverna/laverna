@@ -22,8 +22,8 @@ define([
     // Router
     Help.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'help': 'showHelp',
-            'about': 'about'
+            '(p/:profile/)help': 'showHelp',
+            '(p/:profile/)about': 'about'
         }
     });
 

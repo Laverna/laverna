@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'apps/help/show/view'
-], function (_, App, Marionette, View) {
+], function (_, App, Marionette, URI, View) {
     'use strict';
 
     var Show = App.module('AppHelp.Show');
@@ -21,7 +22,7 @@ define([
         },
 
         redirect: function () {
-            App.navigateBack('/notes', true);
+            App.navigateBack(URI.link('/notes'), true);
         }
 
     });

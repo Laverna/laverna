@@ -102,6 +102,8 @@ define([
                 uri : URI.link('/'),
                 notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
                 syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
+                profiles: App.settings.appProfiles,
+                profile: URI.getProfile()
             };
         },
 
@@ -139,6 +141,10 @@ define([
 
                 notebook: function (model) {
                     return App.Encryption.API.decrypt(model.get('name'));
+                },
+
+                link: function (profile) {
+                    return URI.link('/notes', profile);
                 }
             };
         }

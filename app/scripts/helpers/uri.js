@@ -14,26 +14,20 @@ define([
                 uri = route.split('/');
 
             if (_.contains(uri, 'p')) {
-                console.log('profile', uri[1]);
                 return uri[1];
             }
-
+            else {
+                return null;
+            }
         },
 
         link: function (uri, profile) {
-            var regx = /p\/[\w\d]+/,
-                route = Backbone.history.fragment;
-
-            if (uri.search(regx) !== -1) {
-                return uri;
-            }
-
             if (profile) {
                 uri = '/p/' + profile + uri;
             }
             // Search in window's hash (only if 2-nd argument doesn't exist
-            else if (arguments.length === 1 && route.match(regx)) {
-                uri = '/' + route.match(regx)[0] + uri;
+            else if (arguments.length === 1 && (profile = URI.getProfile()) ) {
+                uri = '/p/' + profile + uri;
             }
             return uri;
         },

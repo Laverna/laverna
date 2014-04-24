@@ -103,6 +103,7 @@ define([
 
             data.uri = URI.link('/');
             data.title = converter.makeHtml(data.title);
+
             return data;
         },
 

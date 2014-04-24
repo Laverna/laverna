@@ -127,8 +127,7 @@ define([
      * Router events
      */
     App.on('notes:list', function () {
-        App.navigate(URI.link('/notes'), { trigger : false });
-        API.showNotes(null, null);
+        App.navigate(URI.link('/notes'), { trigger : true });
     });
 
     // Show sidebar with notes list only on big screen

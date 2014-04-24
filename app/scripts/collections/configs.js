@@ -76,12 +76,18 @@ define([
                 data[model.get('name')] = model.get('value');
             });
 
+            data.appProfiles = JSON.parse(data.appProfiles || this.configNames.appProfiles);
+
             return data;
         },
 
         createProfile: function (name) {
             var profiles = this.get('appProfiles'),
                 value = JSON.parse(profiles.get('value'));
+
+            if ( !name ) {
+                return;
+            }
 
             if (_.contains(value, name) === false) {
                 value.push(name);

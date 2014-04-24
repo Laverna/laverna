@@ -82,7 +82,9 @@ define([
             App.currentApp.stop();
         }
 
-        configs.createProfile(URI.getProfile());
+        configs.createProfile(URI.getProfile() || 'notes-db');
+        App.settings = configs.getConfigs();
+        App.currentProfile = URI.getProfile();
 
         App.currentApp = currentApp;
         if(currentApp){
@@ -101,8 +103,13 @@ define([
 
         $.when(configs.firstStart()).done(function (collection) {
             configs = collection;
+            App.settings = collection.getConfigs();
         });
+    });
 
+    App.on('profile:change', function () {
+        App.currentProfile = URI.getProfile();
+        App.mousetrap.API.restart();
         App.settings = configs.getConfigs();
     });
 
@@ -139,7 +146,12 @@ define([
                 Backbone.history.start({pushState: false});
 
                 $(window).on('hashchange', function () {
-                    configs.createProfile(URI.getProfile());
+                    var profile = URI.getProfile();
+                    configs.createProfile(profile);
+
+                    if (profile !== App.currentProfile) {
+                        App.trigger('profile:change');
+                    }
                 });
 
                 if (App.getCurrentRoute() === '') {

@@ -25,17 +25,35 @@ define([
 
             // Events
             this.configs.on('changeSetting', this.save, this);
+            this.configs.on('create:profile', this.createProfile, this);
+            this.configs.on('remove:profile', this.removeProfile, this);
         },
 
         // Show settings form in modal window
         // ---------------------------------
-        show : function () {
-            var view = new View({ collection : this.configs });
+        show : function (args) {
+            var view = new View({
+                collection : this.configs,
+                args: args
+            });
             App.modal.show(view);
 
             view.on('redirect', this.redirect, this);
             view.on('import', this.importSettings, this);
             view.on('export', this.exportSettings, this);
+        },
+
+        // Create new profile
+        // -------------------
+        createProfile: function (profile) {
+            this.configs.createProfile(profile);
+            App.configs.fetch();
+        },
+
+        // Create new profile
+        // -------------------
+        removeProfile: function (profile) {
+            this.configs.removeProfile(profile);
         },
 
         // Export all settings

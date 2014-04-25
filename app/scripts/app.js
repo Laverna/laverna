@@ -101,16 +101,19 @@ define([
             App.firstStart = true;
         }
 
+        App.settings = configs.getConfigs();
+        configs.on('change', function () {
+            App.settings = configs.getConfigs();
+        });
+
         $.when(configs.firstStart()).done(function (collection) {
             configs = collection;
-            App.settings = collection.getConfigs();
         });
     });
 
     App.on('profile:change', function () {
         App.currentProfile = URI.getProfile();
         App.mousetrap.API.restart();
-        App.settings = configs.getConfigs();
     });
 
     // Start default module

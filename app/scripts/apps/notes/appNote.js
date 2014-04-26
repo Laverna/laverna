@@ -66,6 +66,7 @@ define([
             });
 
             argsObj.page = Number(argsObj.page);
+            argsObj.profile = argsObj.profile || URI.getProfile();
             return argsObj;
         },
 

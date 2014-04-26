@@ -6,6 +6,7 @@
             <li class="active"><a href="#basic" data-toggle="tab">{{ i18n('Basic') }}</a></li>
             <li><a href="#shortcuts" data-toggle="tab">{{ i18n('Shortcuts') }}</a></li>
             <li><a href="#other" data-toggle="tab">{{ i18n('Other') }}</a></li>
+            <li><a href="#profiles" data-toggle="tab">{{ i18n('Profiles') }}</a></li>
         </ul>
     </div>
     <div class="modal-body">
@@ -213,6 +214,34 @@
                         </button>
                     </div>
                 </div><!-- }} other -->
+                <div class="tab-pane" id="profiles">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>{{ i18n('Profile name') }}</th>
+                                <th width="5%">{{ i18n('Action') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <% _.forEach (models.appProfiles, function (profile) { %>
+                            <tr>
+                                <td>{{ profile }}</td>
+                                <td>
+                                    <% if (profile !== 'notes-db') { %>
+                                    <button class="btn btn-link removeProfile" data-profile="{{ profile }}"><i class="icon-trashed"></i></button>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                        <tr>
+                            <td>
+                                <input type="text" id="profileName" class="form-control" placeholder="Type profile name"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </form>
     </div><!-- /.modal-body -->

@@ -95,6 +95,21 @@ define([
                 value.push(name);
                 profiles.save({ value: JSON.stringify(value) });
             }
+        },
+
+        removeProfile: function (name) {
+            var profiles = this.get('appProfiles'),
+                value = JSON.parse(profiles.get('value'));
+
+            if ( !name ) {
+                return;
+            }
+
+            if (_.contains(value, name) === true) {
+                value = _.without(value, name);
+                profiles.save({ value: JSON.stringify(value) });
+                indexedDB.deleteDatabase(name);
+            }
         }
 
     });

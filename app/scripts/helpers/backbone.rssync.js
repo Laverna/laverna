@@ -121,6 +121,7 @@ define([
      */
     remoteAdapter = function () {
         var moduleName = 'laverna',
+            db,
             path;
 
         RemoteStorage.defineModule(moduleName, function (privateClient, publicClient) {
@@ -129,6 +130,12 @@ define([
             remoteModule = {
                 privateList: function (model) {
                     path = model.storeName || model.collection.storeName;
+                    db = model.database.id || model.collection.database.id;
+
+                    if (db !== 'notes-db') {
+                        path = db + '/' + path;
+                    }
+
                     return privateClient.scope(path + '/').extend(listMethods).cache('');
                 },
 

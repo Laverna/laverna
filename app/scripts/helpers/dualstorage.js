@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'backbone',
+    'helpers/uri',
     'indexedDB'
-], function (_, App, Backbone) {
+], function (_, App, Backbone, URI) {
     'use strict';
 
     var Sync = App.module('Sync', {startWithParent: false}),
@@ -95,6 +96,7 @@ define([
             // Synchronized objects
             this.synced = [];
 
+            collection.database.getDB(URI.getProfile());
             this.collectionCloud = new collection.constructor();
             this.collectionCloud.sync = Backbone.cloud;
             this.collection = collection.clone();
@@ -320,18 +322,24 @@ define([
      * Return models id that needs to be removed from the cloud storage
      */
     Backbone.Collection.prototype.getDirty = function () {
-        var dirty = localStorage.getItem(this.storeName + '_dirty');
+        var dirty = localStorage.getItem( this.getDirtyPath() );
         return (_.isString(dirty) && dirty !== '') ? dirty.split(',') : [];
     };
 
     Backbone.Collection.prototype.syncDirty = function (model) {
         var dirty = this.getDirty();
         dirty.push(model.get('id'));
-        localStorage.setItem(this.storeName + '_dirty', dirty.join());
+        localStorage.setItem(this.getDirtyPath(), dirty.join());
     };
 
     Backbone.Collection.prototype.resetDirty = function () {
-        localStorage.setItem(this.storeName + '_dirty', '');
+        localStorage.setItem(this.getDirtyPath(), '');
+    };
+
+    Backbone.Collection.prototype.getDirtyPath = function () {
+        var path = this.storeName + '_dirty';
+        path = (this.database.id === 'notes-db' ? path : this.database.id + path);
+        return path;
     };
 
     return Sync;

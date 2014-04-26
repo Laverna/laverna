@@ -22,12 +22,14 @@ define([
             'cloudStorage': '0',
             'pagination': '10',
             'editMode': 'preview',
+            // Ecnryption settings
             'encrypt': '0',
             'encryptPass': '',
             'encryptSalt': '',
             'encryptIter': '1000',
             'encryptTag': '64',
             'encryptKeySize': '128',
+            // Keybindings
             'navigateTop': 'k',
             'navigateBottom': 'j',
             'jumpInbox': 'g i',

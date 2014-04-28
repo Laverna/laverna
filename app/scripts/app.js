@@ -116,6 +116,10 @@ define([
         App.mousetrap.API.restart();
     });
 
+    App.on('configs:fetch', function () {
+        configs.fetch();
+    });
+
     // Start default module
     App.on('initialize:after', function () {
         require([

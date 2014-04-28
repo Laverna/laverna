@@ -31,5 +31,9 @@ define([
         showNavbar(args);
     });
 
+    App.on('configs:fetch', function () {
+        showNavbar();
+    });
+
     return AppNavbar;
 });

@@ -47,7 +47,7 @@ define([
         // -------------------
         createProfile: function (profile) {
             this.configs.createProfile(profile);
-            App.configs.fetch();
+            App.trigger('configs:fetch');
         },
 
         // Remove a profile
@@ -56,6 +56,7 @@ define([
             var result = window.confirm('Are you sure that you want to delete profile ' + profile + '?');
             if (result ) {
                 this.configs.removeProfile(profile);
+                App.trigger('configs:fetch');
             }
         },
 

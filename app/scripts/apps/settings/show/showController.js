@@ -43,17 +43,20 @@ define([
             view.on('export', this.exportSettings, this);
         },
 
-        // Create new profile
+        // Create a new profile
         // -------------------
         createProfile: function (profile) {
             this.configs.createProfile(profile);
             App.configs.fetch();
         },
 
-        // Create new profile
+        // Remove a profile
         // -------------------
         removeProfile: function (profile) {
-            this.configs.removeProfile(profile);
+            var result = window.confirm('Are you sure that you want to delete profile ' + profile + '?');
+            if (result ) {
+                this.configs.removeProfile(profile);
+            }
         },
 
         // Export all settings

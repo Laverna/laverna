@@ -168,8 +168,11 @@ define([
             return;
         }
         else if (args.collection === 'notes' || args.collection === 'files') {
-            API.showNotes(API.notesArg || {});
-            API.showNote(API.notesArg  || {});
+            var notesArg = _.extend(API.notesArg || {}, {
+                profile : URI.getProfile()
+            });
+            API.showNotes(notesArg);
+            API.showNote(notesArg);
         }
     });
 

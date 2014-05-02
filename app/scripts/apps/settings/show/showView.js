@@ -19,7 +19,8 @@ define([
             saltInput : 'input[name=encryptSalt]',
             importBtn : '#do-import',
             exportBtn : '#do-export',
-            importFile: '#import-file'
+            importFile: '#import-file',
+            profileName: '#profileName'
         },
 
         events: {
@@ -31,12 +32,40 @@ define([
             'change input, select, textarea' : 'triggerChange',
             'click @ui.importBtn'     : 'importTrigger',
             'click @ui.exportBtn'     : 'exportTrigger',
-            'change @ui.importFile'   : 'importFile'
+            'change @ui.importFile'   : 'importFile',
+            'keypress @ui.profileName'   : 'createProfile',
+            'click .removeProfile': 'removeProfile'
         },
 
         initialize: function () {
-            this.on('hidden.modal', this.redirect);
             this.changedSettings = [];
+
+            this.on('hidden.modal', this.redirect);
+            this.on('shown.modal', this.changeTab);
+            this.listenTo(this.collection, 'change', this.renderAgain);
+        },
+
+        renderAgain: function () {
+            var tab = this.$('li.active a').attr('href').replace('#', '');
+            this.render();
+            this.changeTab(tab);
+        },
+
+        changeTab: function (tab) {
+            tab = (typeof tab === 'string' && tab !== '') ? tab : this.options.args.tab;
+            this.$('.modal-header ul a[href="#' + tab + '"]').click();
+        },
+
+        removeProfile: function (e) {
+            this.collection.trigger('remove:profile', $(e.currentTarget).attr('data-profile'));
+            e.preventDefault();
+        },
+
+        createProfile: function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                this.collection.trigger('create:profile', this.ui.profileName.val());
+            }
         },
 
         triggerChange: function (e) {
@@ -87,21 +116,25 @@ define([
          * Save the configs changes
          */
         save: function () {
-            var value, el;
+            var values = {},
+                el;
 
-            _.each(this.changedSettings, function (settingName) {
+            this.changedSettings = _.uniq(this.changedSettings);
+
+            _.each(this.changedSettings, function (settingName, iter) {
                 el = this.$('[name=' + settingName + ']');
+                values[settingName] = { name: settingName };
 
                 if (el.attr('type') !== 'checkbox') {
-                    value = el.val();
-                } else {
-                    value = (el.is(':checked')) ? 1 : 0;
+                    values[settingName].value = el.val();
+                }
+                else {
+                    values[settingName].value = (el.is(':checked')) ? 1 : 0;
                 }
 
-                this.collection.trigger('changeSetting', {
-                    name : settingName,
-                    value: value
-                });
+                if (iter === (this.changedSettings.length - 1)) {
+                    this.collection.trigger('changeSettings', values);
+                }
 
             }, this);
 

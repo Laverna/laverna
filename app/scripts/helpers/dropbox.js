@@ -247,7 +247,14 @@ define([
         // Directory name
         // --------------
         getStore: function (model) {
-            return model.storeName || model.collection.storeName;
+            var dir = model.storeName || model.collection.storeName,
+                db = model.database.id || model.collection.database.id;
+
+            if (db !== 'notes-db') {
+                dir = db + '/' + dir;
+            }
+
+            return dir;
         }
 
     });

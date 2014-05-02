@@ -27,7 +27,7 @@ define([
             // var pwd = App.settings.encryptPass;
             var pwd = App.Encryption.API.encryptKey(password);
             if (pwd !== false) {
-                App.settings.secureKey = pwd;
+                App.secureKey = pwd;
                 App.navigateBack('/notes', true);
             }
         }

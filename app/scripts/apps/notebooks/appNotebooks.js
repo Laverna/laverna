@@ -1,9 +1,11 @@
 /* global define */
 define([
+    'underscore',
+    'jquery',
     'marionette',
     'app',
-    'jquery'
-], function (Marionette, App, $) {
+    'helpers/uri'
+], function (_, $, Marionette, App, URI) {
     'use strict';
 
     /**
@@ -29,15 +31,15 @@ define([
     AppNotebooks.Router = Marionette.AppRouter.extend({
         appRoutes: {
             // Notebooks
-            'notebooks'     : 'listNotebooks',
-            'notebooks/add' : 'addNotebook',
-            'notebooks/edit/:id' : 'editNotebook',
-            'notebooks/remove/:id' : 'removeNotebook',
+            '(p/:profile/)notebooks'     : 'listNotebooks',
+            '(p/:profile/)notebooks/add' : 'addNotebook',
+            '(p/:profile/)notebooks/edit/:id' : 'editNotebook',
+            '(p/:profile/)notebooks/remove/:id' : 'removeNotebook',
 
             // Tags
-            'tags/add'      : 'addTag',
-            'tags/edit/:id' : 'editTag',
-            'tags/remove/:id': 'removeTag'
+            '(p/:profile/)tags/add'      : 'addTag',
+            '(p/:profile/)tags/edit/:id' : 'editTag',
+            '(p/:profile/)tags/remove/:id': 'removeTag'
         }
     });
 
@@ -57,52 +59,52 @@ define([
          * Methods for notebooks
          */
         // Shows list of notebooks and tags
-        listNotebooks: function () {
+        listNotebooks: function (profile) {
             require(['apps/notebooks/list/controller'], function (List) {
-                executeAction(new List().list);
+                executeAction(new List().list, {profile: profile});
             });
             App.content.reset();
         },
 
         // Create notebook
-        addNotebook: function (redirect) {
+        addNotebook: function (profile, redirect) {
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().addForm, {redirect: redirect});
+                executeAction(new Form().addForm, {profile: profile, redirect: redirect});
             });
         },
 
         // Edit notebook
-        editNotebook: function (id) {
+        editNotebook: function (profile, id) {
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id});
+                executeAction(new Form().editForm, {id: id, profile: profile});
             });
         },
 
         // Delete notebook
-        removeNotebook: function (id) {
+        removeNotebook: function (profile, id) {
             require(['apps/notebooks/remove/notebook'], function (Controller) {
-                executeAction(new Controller().start, {id: id});
+                executeAction(new Controller().start, {id: id, profile: profile});
             });
         },
 
         /**
          * Methods for tags
          */
-        addTag: function () {
+        addTag: function (profile) {
             require(['apps/notebooks/tagsForm/controller'], function (Form) {
-                executeAction(new Form().addForm);
+                executeAction(new Form().addForm, {profile: profile});
             });
         },
 
-        editTag: function (id) {
+        editTag: function (profile, id) {
             require(['apps/notebooks/tagsForm/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id});
+                executeAction(new Form().editForm, {id: id, profile: profile});
             });
         },
 
-        removeTag: function (id) {
+        removeTag: function (profile, id) {
             require(['apps/notebooks/remove/tag'], function (Controller) {
-                executeAction(new Controller().start, {id: id});
+                executeAction(new Controller().start, {id: id, profile: profile});
             });
         }
     };
@@ -110,7 +112,7 @@ define([
     // Add notebook
     AppNotebooks.on('showForm', function (redirect) {
         if (_.isUndefined(redirect)) {
-            App.navigate('/notebooks/add', true);
+            App.navigate(URI.link('/notebooks/add'), true);
         } else {
             API.addNotebook(redirect);
         }

@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'backbone',
+    'helpers/uri',
     'indexedDB'
-], function (_, App, Backbone) {
+], function (_, App, Backbone, URI) {
     'use strict';
 
     var Sync = App.module('Sync', {startWithParent: false}),
@@ -95,6 +96,7 @@ define([
             // Synchronized objects
             this.synced = [];
 
+            collection.database.getDB(URI.getProfile());
             this.collectionCloud = new collection.constructor();
             this.collectionCloud.sync = Backbone.cloud;
             this.collection = collection.clone();
@@ -285,6 +287,16 @@ define([
             }, this);
         },
 
+        getTime: function () {
+            var store = JSON.parse(localStorage.getItem(App.settings.cloudStorage + ':syncTime')) || {};
+
+            if ( !store[this.collection.database.id] ) {
+                store[this.collection.database.id] = {};
+            }
+
+            return store;
+        },
+
         /**
          * Last synchronized timestamp
          */
@@ -292,7 +304,8 @@ define([
             var time = null;
             // If indexedDB is empty, we should pull all data from the cloud
             if (this.collection.length !== 0) {
-                time = localStorage.getItem(App.settings.cloudStorage + ':syncTime:' + this.collection.storeName);
+                time = this.getTime()[this.collection.database.id];
+                time = time[this.collection.storeName] > 0 ? time[this.collection.storeName] : null;
             }
             return time;
         },
@@ -301,9 +314,13 @@ define([
          * Save synchronized time
          */
         saveSyncTime: function () {
+            var time = this.getTime();
+
+            time[this.collection.database.id][this.collection.storeName] = new Date().getTime();
+
             return localStorage.setItem(
-                App.settings.cloudStorage + ':syncTime:' + this.collection.storeName,
-                new Date().getTime()
+                App.settings.cloudStorage + ':syncTime',
+                JSON.stringify(time)
             );
         }
 
@@ -320,18 +337,33 @@ define([
      * Return models id that needs to be removed from the cloud storage
      */
     Backbone.Collection.prototype.getDirty = function () {
-        var dirty = localStorage.getItem(this.storeName + '_dirty');
-        return (_.isString(dirty) && dirty !== '') ? dirty.split(',') : [];
+        var dirty = JSON.parse(localStorage.getItem('dirtyObjects')) || {};
+
+        if ( !dirty[this.database.id]) {
+            dirty[this.database.id] = {};
+        }
+
+        if (arguments.length > 0) {
+            return dirty;
+        }
+
+        return dirty[this.database.id][this.storeName] || [];
     };
 
     Backbone.Collection.prototype.syncDirty = function (model) {
-        var dirty = this.getDirty();
-        dirty.push(model.get('id'));
-        localStorage.setItem(this.storeName + '_dirty', dirty.join());
+        var dirty = this.getDirty(true),
+            ids = dirty[this.database.id][this.storeName] || [];
+
+        ids.push(model.get('id'));
+        dirty[this.database.id][this.storeName] = ids;
+
+        localStorage.setItem('dirtyObjects', JSON.stringify(dirty));
     };
 
     Backbone.Collection.prototype.resetDirty = function () {
-        localStorage.setItem(this.storeName + '_dirty', '');
+        var dirty = this.getDirty(true);
+        dirty[this.database.id][this.storeName] = [];
+        localStorage.setItem('dirtyObjects', JSON.stringify(dirty));
     };
 
     return Sync;

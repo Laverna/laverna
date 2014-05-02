@@ -26,11 +26,6 @@ define([
 
                 // Increase appVersion
                 configs.create(new configs.model({ name: 'appVersion', value: App.constants.VERSION }));
-
-                // Locales in 0.3.0 version
-                if (App.constants.VERSION === '0.3.0') {
-                    configs.create(new configs.model({ name: 'appLang', value: '' }));
-                }
             }
         },
 

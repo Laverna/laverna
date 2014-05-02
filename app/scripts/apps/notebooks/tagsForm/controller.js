@@ -3,10 +3,11 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/tags',
     'models/tag',
     'apps/notebooks/tagsForm/formView'
-], function (_, App, Marionette, Collection, Model, FormView) {
+], function (_, App, Marionette, URI, Collection, Model, FormView) {
     'use strict';
 
     var Form = App.module('AppNotebooks.TagsForm');
@@ -17,14 +18,22 @@ define([
         },
 
         // Add new tag
-        addForm: function () {
+        addForm: function (args) {
             this.model = new Model();
+
+            // Set profile
+            this.model.database.getDB(args.profile);
+
             this.show();
         },
 
         // Edit an existing tag
         editForm: function (args) {
             this.model = new Model({id: args.id});
+
+            // Set profile
+            this.model.database.getDB(args.profile);
+
             $.when(this.model.fetch()).done(this.show);
         },
 
@@ -56,7 +65,7 @@ define([
         },
 
         redirect: function () {
-            return App.navigate('#/notebooks');
+            return App.navigate('#' + URI.link('/notebooks'));
         }
     });
 

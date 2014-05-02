@@ -3,9 +3,10 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/notebooks',
     'models/notebook'
-], function (_, App, Marionette, Collection, Model) {
+], function (_, App, Marionette, URI, Collection, Model) {
     'use strict';
 
     var Notebook = App.module('AppNotebooks.RemoveNotebook');
@@ -18,7 +19,11 @@ define([
         },
 
         start: function (args) {
+            // Set profile
+            this.collection.database.getDB(args.profile);
+
             args.id = parseInt(args.id);
+
             this.model = new Model({id: parseInt(args.id)});
 
             $.when(
@@ -40,7 +45,7 @@ define([
         },
 
         redirect: function () {
-            App.navigate('#/notebooks');
+            App.navigate('#' + URI.link('/notebooks'));
         }
     });
 

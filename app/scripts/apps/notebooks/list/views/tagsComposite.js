@@ -3,9 +3,10 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'apps/notebooks/list/views/tagsItem',
     'text!apps/notebooks/list/templates/tagsList.html'
-], function (_, App, Marionette, ItemView, Templ) {
+], function (_, App, Marionette, URI, ItemView, Templ) {
     'use strict';
 
     var View = Marionette.CompositeView.extend({
@@ -57,7 +58,8 @@ define([
 
         templateHelpers: function () {
             return {
-                i18n: $.t
+                i18n: $.t,
+                uri : URI.link
             };
         }
     });

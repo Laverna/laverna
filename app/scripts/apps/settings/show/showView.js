@@ -38,10 +38,11 @@ define([
         },
 
         initialize: function () {
+            this.changedSettings = [];
+
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.changeTab);
             this.listenTo(this.collection, 'change', this.renderAgain);
-            this.changedSettings = [];
         },
 
         renderAgain: function () {
@@ -115,21 +116,25 @@ define([
          * Save the configs changes
          */
         save: function () {
-            var value, el;
+            var values = {},
+                el;
 
-            _.each(this.changedSettings, function (settingName) {
+            this.changedSettings = _.uniq(this.changedSettings);
+
+            _.each(this.changedSettings, function (settingName, iter) {
                 el = this.$('[name=' + settingName + ']');
+                values[settingName] = { name: settingName };
 
                 if (el.attr('type') !== 'checkbox') {
-                    value = el.val();
-                } else {
-                    value = (el.is(':checked')) ? 1 : 0;
+                    values[settingName].value = el.val();
+                }
+                else {
+                    values[settingName].value = (el.is(':checked')) ? 1 : 0;
                 }
 
-                this.collection.trigger('changeSetting', {
-                    name : settingName,
-                    value: value
-                });
+                if (iter === (this.changedSettings.length - 1)) {
+                    this.collection.trigger('changeSettings', values);
+                }
 
             }, this);
 

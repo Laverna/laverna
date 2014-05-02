@@ -24,7 +24,7 @@ define([
             this.configs.fetch();
 
             // Events
-            this.configs.on('changeSetting', this.save, this);
+            this.configs.on('changeSettings', this.saveAll, this);
             this.configs.on('create:profile', this.createProfile, this);
             this.configs.on('remove:profile', this.removeProfile, this);
         },
@@ -47,6 +47,7 @@ define([
         // -------------------
         createProfile: function (profile) {
             this.configs.createProfile(profile);
+            this.configs.trigger('change:profile');
             App.trigger('configs:fetch');
         },
 
@@ -103,13 +104,18 @@ define([
             reader.readAsText(data.files[0]);
         },
 
+        saveAll: function (settings) {
+            _.forEach(settings, function (set) {
+                this.save(set);
+            }, this);
+        },
+
         // Save new settings
         // ----------------------
         save: function (setting) {
             var model = this.configs.get(setting.name);
-
             if (model) {
-                model.save({ value : setting.value });
+                return model.save({ value : setting.value });
             }
         },
 

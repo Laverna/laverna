@@ -24,6 +24,7 @@ define([
 
             // Application events
             App.on('notes:show', this.changeFocus, this);
+            App.on('notes:next', this.toNextNote, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -188,7 +189,7 @@ define([
             App.sidebar.show(View);
 
             // Active note
-            if (this.args.id !== undefined) {
+            if (this.args.id) {
                 this.changeFocus(this.args);
             }
 

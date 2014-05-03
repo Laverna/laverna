@@ -43,6 +43,9 @@ define([
                 };
 
             args.page = (typeof note === 'number') ? note : args.page;
+            if (isNaN(args.page)) {
+                args.page = 0;
+            }
 
             _.each(filters, function (value, filter) {
                 if (_.has(args, filter) && args[filter] !== null) {

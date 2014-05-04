@@ -55,6 +55,10 @@ casper.then(function(){
 	phantomcss.screenshot('#wrapper', 'wrapper--inital-state');
 });
 
+casper.thenOpen('http://localhost:9000/welcome.html', function() {
+    phantomcss.screenshot('.welcome-body', '000-welcome-page');
+});
+
 // casper.then(function(){
 // 	phantomcss.screenshot('#coffee-machine-button', '001.1 coffee machine button, button only');
 // });

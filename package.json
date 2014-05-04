@@ -1,6 +1,10 @@
 {
   "name": "laverna",
   "version": "0.5.0",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Laverna/laverna"
+  },
   "dependencies": {
     "phantomcss": "~0.5.0"
   },

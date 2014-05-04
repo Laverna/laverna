@@ -4,6 +4,7 @@ define([
     'underscore',
     'app',
     'backbone',
+    'helpers/uri',
     'text!apps/notes/show/templates/item.html',
     'checklist',
     'tags',
@@ -13,7 +14,7 @@ define([
     'backbone.mousetrap',
     'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, Template, Checklist, Tags, Img, prettify, mathjax) {
+], function (_, App, Backbone, URI, Template, Checklist, Tags, Img, prettify, mathjax) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -100,7 +101,9 @@ define([
             // Show title
             document.title = data.title;
 
+            data.uri = URI.link('/');
             data.title = converter.makeHtml(data.title);
+
             return data;
         },
 
@@ -128,10 +131,9 @@ define([
         /**
          * Add note item to your favorite notes list
          */
-        favorite: function () {
-            var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
-            this.model.trigger('update:any');
-            this.model.save({'isFavorite': isFavorite});
+        favorite: function (e) {
+            e.preventDefault();
+            this.model.trigger('setFavorite');
             return false;
         },
 
@@ -139,15 +141,14 @@ define([
          * Redirect to edit page
          */
         editNote: function () {
-            var uri = this.ui.editBtn.attr('href');
-            App.navigate(uri);
+            App.navigate(this.ui.editBtn.attr('href'), true);
         },
 
         /**
          * Redirect to deleting page
          */
         deleteNote: function() {
-            App.navigate('/notes/remove/' + this.model.get('id'), true);
+            App.navigate(URI.link('/notes/remove/' + this.model.get('id')), true);
         },
 
         /**

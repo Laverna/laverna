@@ -22,17 +22,20 @@ define([
         },
 
         encrypt: function () {
+            // This is probably the first encryption
             if (this.oldConfigs.encrypt === 0 && this.oldConfigs.secureKey === '') {
-                // This is probably the first encryption
                 this.firstEncryption();
-            } else if (this.isSettingsChanged() === true) {
-                // Some (or all) of encryption's settings has been changed
+            }
+            // Some (or all) of encryption's settings has been changed
+            else if (this.isSettingsChanged() === true) {
                 this.reEncryption();
-            } else if (this.oldConfigs.encrypt === 1 && this.configs.encrypt === 0) {
-                // User disabled encryption - unencrypt all data
+            }
+            // User disabled encryption - unencrypt all data
+            else if (this.oldConfigs.encrypt === 1 && this.configs.encrypt === 0) {
                 this.decryption();
-            } else if (this.oldConfigs.encrypt === 0) {
-                // User just re enabled encryption
+            }
+            // User just re enabled encryption
+            else if (this.oldConfigs.encrypt === 0) {
                 this.encryptOnlyNew();
             }
         },

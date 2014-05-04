@@ -1,11 +1,42 @@
 /*global define*/
 define([
-], function () {
+    'underscore',
+    'backbone',
+    'localStorage',
+    'indexedDB'
+], function (_, Backbone) {
     'use strict';
 
+    /**
+     * Use LocalStorage instead of IndexedDB
+     */
+    function setLocalDB () {
+        Backbone.sync = function(method, model, options) {
+            if (model.storeName) {
+                model.localStorage = new Backbone.LocalStorage('laverna.' + model.storeName);
+                model.store = model.storeName;
+            }
+
+            return Backbone.getSyncMethod(model).apply(this, [method, model, options]);
+        };
+    }
+
     var NoteDB = {
-        id:'notes-db',
-        description:'The database for the Notes',
+        id: 'notes-db',
+        description: 'The database for the Notes',
+
+        getDB: function (dbName) {
+            this.id = dbName ? dbName : 'notes-db';
+
+            if (window.appNoDB === true && _.isUndefined(window.shimIndexedDB)) {
+                setLocalDB();
+                return undefined;
+            }
+            else {
+                return this;
+            }
+        },
+
         migrations: [
             {
                 version: 1,

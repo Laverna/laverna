@@ -4,8 +4,9 @@ define([
     'jquery',
     'marionette',
     'app',
+    'helpers/uri',
     'enquire'
-], function (_, $,  Marionette, App, enquire) {
+], function (_, $,  Marionette, App, URI, enquire) {
     'use strict';
 
     /**
@@ -31,11 +32,12 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'notes/add'        : 'addNote',
-            'notes/edit/:id'   : 'editNote',
-            'notes/remove/:id' : 'removeNote',
-            'notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
-            'notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
+            'p/:profile'                    : 'showNotes',
+            '(p/:profile/)notes/add'        : 'addNote',
+            '(p/:profile/)notes/edit/:id'   : 'editNote',
+            '(p/:profile/)notes/remove/:id' : 'removeNote',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
         }
     });
 
@@ -51,30 +53,36 @@ define([
      * Controller
      */
     API = {
-        // Show list of notes
-        showNotes: function (filter, query, page) {
-            var args = { filter : filter, page : page, query : query };
+        getArgs: function (args) {
+            var values = ['profile', 'filter', 'query', 'page', 'id'],
+                argsObj = {};
 
-            if (arguments.length === 1 && typeof filter === 'object') {
-                args = filter;
+            if (args.length === 1 && typeof args[0] === 'object') {
+                return args[0];
             }
 
+            _.each(values, function (value, index) {
+                argsObj[value] = (args[index]) ? args[index] : null;
+            });
+
+            argsObj.page = Number(argsObj.page);
+            argsObj.profile = argsObj.profile || URI.getProfile();
+            return argsObj;
+        },
+
+        // Show list of notes
+        showNotes: function () {
+            var args = this.getArgs(arguments);
+
             require(['apps/notes/list/controller'], function (List) {
-                API.notesArg = args;
+                App.notesArg = args;
                 executeAction(new List().listNotes, args);
             });
         },
 
         // Show content of note
-        showNote: function (filter, query, page, id) {
-            var args = {
-                id    : id    , filter : filter,
-                query : query , page   : page
-            };
-
-            if (arguments.length === 1 && typeof filter === 'object') {
-                args = filter;
-            }
+        showNote: function () {
+            var args = this.getArgs(arguments);
 
             require(['apps/notes/show/showController'], function (Show) {
                 App.trigger('notes:show', args);
@@ -83,24 +91,26 @@ define([
         },
 
         // Add new note
-        addNote: function () {
+        addNote: function (profile) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().addForm);
+                executeAction(new Form().addForm, {profile: profile});
+                App.trigger('notes:show', {profile: profile});
             });
         },
 
         // Edit an existing note
-        editNote: function (id) {
+        editNote: function (profile, id) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id});
+                executeAction(new Form().editForm, {id : id, profile: profile});
+                App.trigger('notes:show', {profile: profile});
             });
             App.log('edit note ' + id);
         },
 
         // Remove an existing note
-        removeNote: function (id) {
+        removeNote: function (profile, id) {
             require(['apps/notes/remove/removeController'], function (Controller) {
-                executeAction(new Controller().remove, id);
+                executeAction(new Controller().remove, {id : id, profile: profile});
             });
         },
 
@@ -108,7 +118,7 @@ define([
         checkShowSidebar: function (args) {
             var current = _.omit(App.notesArg || {}, 'id');
 
-            if (current !== _.omit(args, 'id')) {
+            if ( !_.isEqual(current,  _.omit(args, 'id')) ) {
                 API.showNotes(args);
             }
         }
@@ -118,8 +128,7 @@ define([
      * Router events
      */
     App.on('notes:list', function () {
-        App.navigate('notes', { trigger : false });
-        API.showNotes(null, null);
+        App.navigate(URI.link('/notes'), { trigger : true });
     });
 
     // Show sidebar with notes list only on big screen
@@ -150,7 +159,7 @@ define([
 
     // Show form
     AppNote.on('showForm', function () {
-        App.navigate('/notes/add', true);
+        App.navigate(URI.link('/notes/add'), true);
     });
 
     // Re-render sidebar's and note's content after sync:after event
@@ -159,8 +168,11 @@ define([
             return;
         }
         else if (args.collection === 'notes' || args.collection === 'files') {
-            API.showNotes(API.notesArg || {});
-            API.showNote(API.notesArg  || {});
+            var notesArg = _.extend(API.notesArg || {}, {
+                profile : URI.getProfile()
+            });
+            API.showNotes(notesArg);
+            API.showNote(notesArg);
         }
     });
 

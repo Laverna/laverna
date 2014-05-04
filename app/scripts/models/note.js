@@ -46,6 +46,7 @@ define([
 
         initialize: function () {
             this.on('update:any', this.setUpdate);
+            this.on('setFavorite', this.setFavorite);
 
             if (this.isNew()) {
                 this.set('created', Date.now());
@@ -71,6 +72,12 @@ define([
             if (this.collection) {
                 return this.collection.at(this.collection.indexOf(this) - 1);
             }
+        },
+
+        setFavorite: function () {
+            var isFavorite = (this.get('isFavorite') === 1) ? 0 : 1;
+            this.trigger('update:any');
+            this.save({'isFavorite': isFavorite});
         },
 
         setSync: function () {

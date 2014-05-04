@@ -3,11 +3,12 @@ define([
     'underscore',
     'app',
     'marionette',
+    'helpers/uri',
     'collections/configs',
     'models/config',
     'apps/settings/show/showView',
     'fileSaver'
-], function (_, App, Marionette, Configs, Config, View, saveAs) {
+], function (_, App, Marionette, URI, Configs, Config, View, saveAs) {
     'use strict';
 
     var Show = App.module('AppSettings.Show');
@@ -23,18 +24,41 @@ define([
             this.configs.fetch();
 
             // Events
-            this.configs.on('changeSetting', this.save, this);
+            this.configs.on('changeSettings', this.saveAll, this);
+            this.configs.on('create:profile', this.createProfile, this);
+            this.configs.on('remove:profile', this.removeProfile, this);
         },
 
         // Show settings form in modal window
         // ---------------------------------
-        show : function () {
-            var view = new View({ collection : this.configs });
+        show : function (args) {
+            var view = new View({
+                collection : this.configs,
+                args: args
+            });
             App.modal.show(view);
 
             view.on('redirect', this.redirect, this);
             view.on('import', this.importSettings, this);
             view.on('export', this.exportSettings, this);
+        },
+
+        // Create a new profile
+        // -------------------
+        createProfile: function (profile) {
+            this.configs.createProfile(profile);
+            this.configs.trigger('change:profile');
+            App.trigger('configs:fetch');
+        },
+
+        // Remove a profile
+        // -------------------
+        removeProfile: function (profile) {
+            var result = window.confirm('Are you sure that you want to delete profile ' + profile + '?');
+            if (result ) {
+                this.configs.removeProfile(profile);
+                App.trigger('configs:fetch');
+            }
         },
 
         // Export all settings
@@ -80,13 +104,18 @@ define([
             reader.readAsText(data.files[0]);
         },
 
+        saveAll: function (settings) {
+            _.forEach(settings, function (set) {
+                this.save(set);
+            }, this);
+        },
+
         // Save new settings
         // ----------------------
         save: function (setting) {
             var model = this.configs.get(setting.name);
-
             if (model) {
-                model.save({ value : setting.value });
+                return model.save({ value : setting.value });
             }
         },
 
@@ -96,14 +125,14 @@ define([
             App.modal.close();
 
             if ( this.isEncryptionChanged(changedSettings) === false) {
-                App.navigate('/notes', {trigger : false});
+                App.navigate(URI.link('/notes'), {trigger : false});
 
                 if (changedSettings && changedSettings.length !== 0) {
                     window.location.reload();
                 }
             } else {
                 App.log('One of encryption\'s settings is changed');
-                App.navigate('/encrypt/all', true);
+                App.navigate(URI.link('/encrypt/all'), true);
             }
         },
 

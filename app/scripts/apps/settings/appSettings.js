@@ -23,7 +23,7 @@ define([
     // The router
     Settings.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'settings' : 'showSettings'
+            '(p/:profile/)settings(/:tab)' : 'showSettings'
         }
     });
 
@@ -35,9 +35,9 @@ define([
 
     // Controller
     API = {
-        showSettings: function () {
+        showSettings: function (profile, tab) {
             require(['apps/settings/show/showController'], function (Controller) {
-                executeAction(new Controller().show);
+                executeAction(new Controller().show, {profile: profile, tab: tab});
             });
         }
     };

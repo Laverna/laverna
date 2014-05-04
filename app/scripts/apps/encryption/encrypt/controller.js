@@ -3,12 +3,13 @@ define([
     'underscore',
     'marionette',
     'app',
+    'helpers/uri',
     'collections/configs',
     'collections/notes',
     'collections/notebooks',
     'apps/encryption/encrypt/modelEncrypt',
     'apps/encryption/encrypt/encryptView'
-], function (_, Marionette, App, Configs, Notes, Notebooks, ModelEncrypt, EncryptView) {
+], function (_, Marionette, App, URI, Configs, Notes, Notebooks, ModelEncrypt, EncryptView) {
     'use strict';
 
     /**
@@ -22,6 +23,7 @@ define([
         initialize: function () {
             _.bindAll(this, 'showEncrypt', 'showProgress');
 
+            App.settings.secureKey = App.secureKey;
             this.configs = new Configs();
             this.configs.fetch();
             this.configs = this.configs.getConfigs();
@@ -30,13 +32,18 @@ define([
             this.notebooks = new Notebooks();
         },
 
-        showEncrypt: function () {
+        showEncrypt: function (db) {
+            // Switch to another database
+            db = ( !db ? 'notes-db' : db);
+            this.notes.database.getDB(db);
+            this.notebooks.database.getDB(db);
+
             $.when(this.notes.fetch(), this.notebooks.fetch()).done(this.showProgress);
         },
 
         showProgress: function () {
             this.oldPassNull = true;
-            if ( !App.settings.secureKey && App.settings.encryptPass !== '') {
+            if ( !App.secureKey && App.settings.encryptPass !== '') {
                 this.oldPassNull = false;
             }
 
@@ -55,11 +62,25 @@ define([
         },
 
         redirect: function () {
-            App.navigate('/notes', false);
-            window.location.reload();
+            var db = _.indexOf(this.configs.appProfiles, this.notes.database.id) + 1,
+                uri;
+
+            // Go encrypt data from another profile
+            if (this.configs.appProfiles[db]) {
+                App.settings = this.settingsOld;
+                uri = '/encrypt/all/' + this.configs.appProfiles[db];
+                App.navigate(URI.link(uri), true);
+            }
+            // Reload the page
+            else {
+                App.navigate(URI.link('/notes'), false);
+                window.location.reload();
+            }
         },
 
         encrypt: function () {
+            this.settingsOld = App.settings;
+
             new ModelEncrypt().initialize({
                 configs   : this.configs,
                 notes     : this.notes,

@@ -30,6 +30,11 @@ define([
             this.notebooks = new NotebooksCollection();
             this.files = new FilesCollection();
 
+            // Switch to another database
+            this.note.database.getDB(args.profile);
+            this.notebooks.database.getDB(args.profile);
+            this.files.database.getDB(args.profile);
+
             // Events
             this.note.on('updateTaskProgress', this.updateTaskProgress, this);
             this.note.on('change', this.triggerChangeToSidebar, this);

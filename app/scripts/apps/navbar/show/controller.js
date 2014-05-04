@@ -16,6 +16,8 @@ define([
      */
     Navbar.Controller = Marionette.Controller.extend({
 
+        currentApp: App.currentApp || {},
+
         initialize: function () {
             _.bindAll(this, 'show', 'showNavbar');
 
@@ -31,12 +33,14 @@ define([
 
             // Collection of notebooks
             this.notebooks = new Notebooks();
+            this.notebooks.database.getDB(args.profile);
 
-            if (App.currentApp.moduleName !== 'AppNotebook') {
+            if (this.currentApp.moduleName !== 'AppNotebook') {
                 $.when(this.notebooks.fetch({
                     limit: 5
                 })).done(this.showNavbar);
-            } else {
+            }
+            else {
                 this.showNavbar(true);
             }
         },
@@ -45,7 +49,7 @@ define([
             this.view = new NavbarView({
                 args: this.args,
                 notebooks: (this.notebooks.length) ? this.notebooks : null,
-                inNotebooks: (App.currentApp.moduleName === 'AppNotebook')
+                inNotebooks: (this.currentApp.moduleName === 'AppNotebook')
             });
 
             App.sidebarNavbar.show(this.view);

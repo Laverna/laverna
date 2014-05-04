@@ -5,10 +5,11 @@ define([
     'modalRegion',
     'brandRegion',
     'collections/configs',
+    'helpers/uri',
     'i18next',
     'devicejs',
     'marionette'
-], function (_, Backbone, ModalRegion, BrandRegion, Configs, i18n, Device) {
+], function (_, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
     'use strict';
 
     // Underscore template
@@ -69,7 +70,7 @@ define([
     };
 
     // For submodules
-    App.startSubApp = function(appName, args){
+    App.startSubApp = function(appName, args) {
         if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
             return;
         }
@@ -80,6 +81,10 @@ define([
         if (App.currentApp){
             App.currentApp.stop();
         }
+
+        configs.createProfile(URI.getProfile() || 'notes-db');
+        App.settings = configs.getConfigs();
+        App.currentProfile = URI.getProfile();
 
         App.currentApp = currentApp;
         if(currentApp){
@@ -94,10 +99,25 @@ define([
         // Set default set of configs
         if (configs.length === 0) {
             App.firstStart = true;
-            configs.firstStart();
         }
 
         App.settings = configs.getConfigs();
+        configs.on('change', function () {
+            App.settings = configs.getConfigs();
+        });
+
+        $.when(configs.firstStart()).done(function (collection) {
+            configs = collection;
+        });
+    });
+
+    App.on('profile:change', function () {
+        App.currentProfile = URI.getProfile();
+        App.mousetrap.API.restart();
+    });
+
+    App.on('configs:fetch', function () {
+        configs.fetch();
     });
 
     // Start default module
@@ -131,6 +151,15 @@ define([
                 Install.start();
 
                 Backbone.history.start({pushState: false});
+
+                $(window).on('hashchange', function () {
+                    var profile = URI.getProfile();
+                    configs.createProfile(profile);
+
+                    if (profile !== App.currentProfile) {
+                        App.trigger('profile:change');
+                    }
+                });
 
                 if (App.getCurrentRoute() === '') {
                     App.trigger('notes:list');

@@ -4,9 +4,10 @@ define([
     'app',
     'backbone',
     'marionette',
+    'helpers/uri',
     'collections/notes',
-    'apps/notes/list/views/noteSidebar',
-], function (_, App, Backbone, Marionette, Notes, NotesView) {
+    'apps/notes/list/views/noteSidebar'
+], function (_, App, Backbone, Marionette, URI, Notes, NotesView) {
     'use strict';
 
     var List = App.module('AppNote.List');
@@ -15,6 +16,7 @@ define([
      * Notes list controller - shows notes list in sidebar
      */
     List.Controller = Marionette.Controller.extend({
+
         initialize: function () {
             _.bindAll(this, 'listNotes', 'showSidebar', 'favoriteNotes');
 
@@ -22,6 +24,7 @@ define([
 
             // Application events
             App.on('notes:show', this.changeFocus, this);
+            App.on('notes:next', this.toNextNote, this);
 
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
@@ -40,8 +43,11 @@ define([
          * Fetch notes, then show it
          */
         listNotes: function (args) {
-            this.args = args || this.args;
+            this.args = _.clone(args) || this.args;
             App.settings.pagination = parseInt(App.settings.pagination);
+
+            // Set profile
+            this.notes.database.getDB(args.profile);
 
             // Offset
             if (_.isNull(this.args.page)) {
@@ -68,7 +74,7 @@ define([
                 this.notes.fetch({
                     // offset : this.args.page,
                     // limit  : App.settings.pagination,
-                    conditions: ( App.shimDB ? null : {'trash' : 0} )
+                    conditions: ( window.appNoDB ? null : {'trash' : 0} )
                 })
             ).done(this.showSidebar);
         },
@@ -79,7 +85,7 @@ define([
         favoriteNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {isFavorite : 1} )
+                    conditions: ( window.appNoDB ? null : {isFavorite : 1} )
                 })
             ).done(this.showSidebar);
         },
@@ -90,7 +96,7 @@ define([
         trashedNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {trash : 1} )
+                    conditions: ( window.appNoDB ? null : {trash : 1} )
                 })
             ).done(this.showSidebar);
         },
@@ -101,7 +107,7 @@ define([
         notebooksNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {notebookId : parseInt(this.args.query)} )
+                    conditions: ( window.appNoDB ? null : {notebookId : parseInt(this.args.query)} )
                 })
             ).done(this.showSidebar);
         },
@@ -114,7 +120,7 @@ define([
                 notes;
             $.when(
                 this.notes.fetch({
-                    conditions: ( App.shimDB ? null : {trash : 0} )
+                    conditions: ( window.appNoDB ? null : {trash : 0} )
                 })
             ).done(
                 function () {
@@ -150,7 +156,7 @@ define([
          */
         showSidebar: function () {
             // IndexedDBShim doesn't support indexes - filter with backbone.js
-            if (App.shimDB === true) {
+            if (window.appNoDB === true) {
                 this.notes.filterList(this.args.filter);
             }
 
@@ -183,7 +189,7 @@ define([
             App.sidebar.show(View);
 
             // Active note
-            if (this.args.id !== undefined) {
+            if (this.args.id) {
                 this.changeFocus(this.args);
             }
 
@@ -203,22 +209,8 @@ define([
          */
         toNote: function (note) {
             if ( !note) { return; }
-            var url = '/notes';
 
-            if (this.args.filter) {
-                url += '/f/' + this.args.filter;
-            }
-            if (this.args.query) {
-                url += '/q/' + this.args.query;
-            }
-            if (this.args.page) {
-                url += '/p' + this.args.page;
-            }
-
-            if (_.isObject(note)) {
-                url += '/show/' + note.get('id');
-            }
-
+            var url = URI.note(this.args, note);
             return App.navigate(url, true);
         },
 

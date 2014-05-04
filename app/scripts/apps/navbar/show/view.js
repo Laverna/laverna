@@ -4,10 +4,11 @@ define([
     'jquery',
     'app',
     'backbone',
+    'helpers/uri',
     'text!apps/navbar/show/template.html',
     'backbone.mousetrap',
     'marionette'
-], function (_, $, App, Backbone, Tmpl) {
+], function (_, $, App, Backbone, URI, Tmpl) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -63,7 +64,7 @@ define([
         searchSubmit: function (e) {
             e.preventDefault();
             var text = this.ui.navbarSearchInput.val();
-            App.navigate('/notes/f/search/q/' + text, true);
+            App.navigate(URI.link('/notes/f/search/q/' + text), true);
         },
 
         searchKeyup: function (e) {
@@ -98,8 +99,11 @@ define([
         serializeData: function () {
             return {
                 args: this.options.args,
+                uri : URI.link('/'),
                 notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
                 syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
+                profiles: App.settings.appProfiles,
+                profile: URI.getProfile()
             };
         },
 
@@ -109,9 +113,9 @@ define([
 
                 urlPage : function () {
                     if (App.currentApp.moduleName === 'AppNotebook') {
-                        return '/notebooks';
+                        return URI.link('/notebooks');
                     } else {
-                        return '/notes';
+                        return URI.link('/notes');
                     }
                 },
 
@@ -137,6 +141,10 @@ define([
 
                 notebook: function (model) {
                     return App.Encryption.API.decrypt(model.get('name'));
+                },
+
+                link: function (profile) {
+                    return URI.link('/notes', profile);
                 }
             };
         }

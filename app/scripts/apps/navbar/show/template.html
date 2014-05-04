@@ -8,18 +8,27 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu location-dropdown" >
-                <li><a href="#notes"><i class="icon-note"></i> {{ i18n('All notes') }}</a></li>
-                <li><a href="#notes/f/favorite"><i class="icon-favorite"></i>  {{ i18n('Favourites') }}</a></li>
-                <li><a href="#notes/f/trashed"><i class="icon-trashed"></i>  {{ i18n('Trash') }}</a></li>
-                <li><a href="#notebooks"><i class="icon-notebook"></i>  {{ i18n('Notebooks') }}</a></li>
+                <li><a href="#{{ uri }}notes"><i class="icon-note"></i> {{ i18n('All notes') }}</a></li>
+                <li><a href="#{{ uri }}notes/f/favorite"><i class="icon-favorite"></i>  {{ i18n('Favourites') }}</a></li>
+                <li><a href="#{{ uri }}notes/f/trashed"><i class="icon-trashed"></i>  {{ i18n('Trash') }}</a></li>
+                <li><a href="#{{ uri }}notebooks"><i class="icon-notebook"></i>  {{ i18n('Notebooks') }}</a></li>
+
                 <% if (notebooks !== null) { %>
                 <li class="divider"></li>
                 <% notebooks.forEach(function (model) { %>
-                <li><a href="#notes/f/notebook/q/{{ model.id }}"><i class="icon-notebook"></i>  {{ notebook(model) }}</a></li>
+                <li><a href="#{{ uri }}notes/f/notebook/q/{{ model.id }}"><i class="icon-notebook"></i>  {{ notebook(model) }}</a></li>
                 <% }); } %>
+
                 <li class="divider"></li>
-                <li><a href="#settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
-                <li><a href="#about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
+                <li<% if (profile === 'notes-db' || !profile) { %> class="active" <% } %>><a href="#/notes"><i class="icon-user"></i>  Default</a></li>
+                <% _.forEach(profiles, function (prof) { %>
+                <% if (prof !== 'notes-db') { %>
+                <li<% if (profile === prof) { %> class="active" <% } %>><a href="#{{ link(prof) }}"><i class="icon-user"></i>  {{ prof }}</a></li>
+                <% } }); %>
+
+                <li class="divider"></li>
+                <li><a href="#{{ uri }}settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
+                <li><a href="#{{ uri }}about"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
             </ul>
         </li>
         <li>

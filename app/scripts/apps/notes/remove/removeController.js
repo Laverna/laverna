@@ -2,10 +2,11 @@
 define([
     'underscore',
     'app',
+    'helpers/uri',
     'marionette',
     'models/note',
     'collections/notes',
-], function (_, App, Marionette, NoteModel, NoteCollection) {
+], function (_, App, URI, Marionette, NoteModel, NoteCollection) {
     'use strict';
 
     var Remove = App.module('AppNote.Remove');
@@ -14,12 +15,14 @@ define([
      * Removes an existing note
      */
     Remove.Controller = Marionette.Controller.extend({
+
         initialize: function () {
             _.bindAll(this, 'remove', 'doRemove', 'redirect');
         },
 
-        remove: function (id) {
-            this.note = new NoteModel({ id : id });
+        remove: function (args) {
+            this.note = new NoteModel({ id : args.id });
+            this.note.database.getDB(args.profile);
             $.when(this.note.fetch()).done(this.doRemove);
         },
 
@@ -29,8 +32,10 @@ define([
                 var self = this;
                 $.when(this.note.destroy()).done(function () {
                     self.syncDirty();
+                    self.redirect();
                 });
-            } else {
+            }
+            else {
                 $.when(this.note.save({'trash' : 1})).done(this.redirect);
             }
         },
@@ -42,8 +47,11 @@ define([
         },
 
         redirect: function () {
-            App.navigateBack(-1);
+            App.content.reset();
             App.trigger('notes:rerender');
+
+            App.navigate(URI.link('/notes'), false);
+            App.trigger('notes:next');
         }
 
     });

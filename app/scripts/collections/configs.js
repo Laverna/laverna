@@ -1,10 +1,11 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'backbone',
     'models/config',
     'localStorage'
-], function (_, Backbone, Config) {
+], function (_, $, Backbone, Config) {
     'use strict';
 
     var Configs = Backbone.Collection.extend({
@@ -14,45 +15,60 @@ define([
 
         model : Config,
 
+        configNames: {
+            'appVersion': '0.5.0',
+            'appProfiles': JSON.stringify(['notes-db']),
+            'appLang': '',
+            'cloudStorage': '0',
+            'pagination': '10',
+            'editMode': 'preview',
+            // Ecnryption settings
+            'encrypt': '0',
+            'encryptPass': '',
+            'encryptSalt': '',
+            'encryptIter': '1000',
+            'encryptTag': '64',
+            'encryptKeySize': '128',
+            // Keybindings
+            'navigateTop': 'k',
+            'navigateBottom': 'j',
+            'jumpInbox': 'g i',
+            'jumpNotebook': 'g n',
+            'jumpFavorite': 'g f',
+            'jumpRemoved': 'g t',
+            'actionsEdit': 'e',
+            'actionsOpen': 'o',
+            'actionsRemove': 'shift+3',
+            'actionsRotateStar': 's',
+            'appCreateNote': 'c',
+            'appSearch': '/',
+            'appKeyboardHelp': '?'
+        },
+
         /**
          * Creates default set of configs
          */
         firstStart: function () {
-            // Basic
-            this.create(new Config({ name: 'appVersion', value: '0.5.0' }));
-            this.create(new Config({ name: 'appLang', value: '' }));
-            this.create(new Config({ name: 'cloudStorage', value: '0' }));
-            this.create(new Config({ name: 'pagination', value: '10' }));
-            this.create(new Config({ name: 'editMode', value: 'preview' }));
+            var $d = $.Deferred(),
+                self = this;
 
-            // Encryption
-            this.create(new Config({ name: 'encrypt', value: '0' }));
-            this.create(new Config({ name: 'encryptPass', value: '' }));
-            this.create(new Config({ name: 'encryptSalt', value: '' }));
-            this.create(new Config({ name: 'encryptIter', value: '1000' }));
-            this.create(new Config({ name: 'encryptTag', value: '64' }));
-            this.create(new Config({ name: 'encryptKeySize', value: '128' }));
+            function check() {
+                if (self.length === self.configNames.length) {
+                    $d.resolve(self);
+                    return;
+                }
 
-            // Shortcuts. Navigation
-            this.create(new Config({ name: 'navigateTop', value: 'k' }));
-            this.create(new Config({ name: 'navigateBottom', value: 'j' }));
+                _.forEach(self.configNames, function (item, name) {
+                    if (typeof self.get(name) === 'undefined') {
+                        self.create(new Config({ name: name, value: item }));
+                    }
+                });
 
-            // Shortcuts. Jumping
-            this.create(new Config({ name: 'jumpInbox', value: 'g i' }));
-            this.create(new Config({ name: 'jumpNotebook', value: 'g n' }));
-            this.create(new Config({ name: 'jumpFavorite', value: 'g f' }));
-            this.create(new Config({ name: 'jumpRemoved', value: 'g t' }));
+                $d.resolve(self);
+            }
 
-            // Shortcuts. Actions
-            this.create(new Config({ name: 'actionsEdit', value: 'e' }));
-            this.create(new Config({ name: 'actionsOpen', value: 'o' }));
-            this.create(new Config({ name: 'actionsRemove', value: 'shift+3' }));
-            this.create(new Config({ name: 'actionsRotateStar', value: 's' }));
-
-            // Shortcuts. Application
-            this.create(new Config({ name: 'appCreateNote', value: 'c' }));
-            this.create(new Config({ name: 'appSearch', value: '/' }));
-            this.create(new Config({ name: 'appKeyboardHelp', value: '?' }));
+            $.when(this.fetch()).done(check);
+            return $d;
         },
 
         getConfigs: function () {
@@ -62,7 +78,38 @@ define([
                 data[model.get('name')] = model.get('value');
             });
 
+            data.appProfiles = JSON.parse(data.appProfiles || this.configNames.appProfiles);
+
             return data;
+        },
+
+        createProfile: function (name) {
+            var profiles = this.get('appProfiles'),
+                value = JSON.parse(profiles.get('value'));
+
+            if ( !name ) {
+                return;
+            }
+
+            if (_.contains(value, name) === false) {
+                value.push(name);
+                profiles.save({ value: JSON.stringify(value) });
+            }
+        },
+
+        removeProfile: function (name) {
+            var profiles = this.get('appProfiles'),
+                value = JSON.parse(profiles.get('value'));
+
+            if ( !name ) {
+                return;
+            }
+
+            if (_.contains(value, name) === true) {
+                value = _.without(value, name);
+                profiles.save({ value: JSON.stringify(value) });
+                indexedDB.deleteDatabase(name);
+            }
         }
 
     });

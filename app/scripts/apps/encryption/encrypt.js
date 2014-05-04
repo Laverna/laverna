@@ -26,8 +26,8 @@ define([
     // Router
     Encryption.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            'auth': 'showAuth',
-            'encrypt/all': 'showEncryptAll',
+            '(p/:profile/)auth': 'showAuth',
+            '(p/:profile/)encrypt/all(/:db)': 'showEncryptAll',
         }
     });
 
@@ -45,9 +45,9 @@ define([
             });
         },
 
-        showEncryptAll: function () {
+        showEncryptAll: function (profile, db) {
             require(['apps/encryption/encrypt/controller'], function (Controller) {
-                executeAction(new Controller().showEncrypt);
+                executeAction(new Controller().showEncrypt, db);
             });
         }
     };
@@ -55,7 +55,7 @@ define([
     // API
     Encryption.API = {
         checkAuth: function () {
-            if (App.settings.encrypt === 1 && !App.settings.secureKey) {
+            if (App.settings.encrypt === 1 && !App.secureKey) {
                 App.notesArg = null;
                 App.navigate('/auth', true);
                 return false;
@@ -87,7 +87,8 @@ define([
                 return content;
             }
 
-            if (App.settings.encrypt === 1 && App.settings.secureKey) {
+            var secureKey = App.settings.secureKey || App.secureKey;
+            if (App.settings.encrypt === 1 && secureKey) {
                 var conf = App.settings,
                     p = {
                         iter : conf.encryptIter,
@@ -97,7 +98,7 @@ define([
                         iv   : sjcl.random.randomWords(4, 0)
                     };
 
-                content = sjcl.encrypt(App.settings.secureKey.toString(), content, p);
+                content = sjcl.encrypt(secureKey.toString(), content, p);
             }
             return content;
         },
@@ -107,9 +108,10 @@ define([
                 return content;
             }
 
-            if (App.settings.encrypt === 1 && App.settings.secureKey) {
+            var secureKey = App.settings.secureKey || App.secureKey;
+            if (App.settings.encrypt === 1 && secureKey) {
                 try {
-                    content = sjcl.decrypt(App.settings.secureKey.toString(), content);
+                    content = sjcl.decrypt(secureKey.toString(), content);
                 } catch(e) {
                     App.log('Can\'t decrypt ' + e);
                 }

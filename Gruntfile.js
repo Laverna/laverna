@@ -175,7 +175,8 @@ module.exports = function (grunt) {
                     sourceMapBasepath: '<%= yeoman.app %>/styles/'
                 },
                 files : {
-                    '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'
+                    '<%= yeoman.app %>/styles/theme-default/index.css': '<%= yeoman.app %>/styles/theme-default/index.less',
+                    '<%= yeoman.app %>/styles/theme-default/welcome.css': '<%= yeoman.app %>/styles/theme-default/welcome.less'
                 }
             }
         },

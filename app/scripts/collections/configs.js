@@ -108,7 +108,7 @@ define([
             if (_.contains(value, name) === true) {
                 value = _.without(value, name);
                 profiles.save({ value: JSON.stringify(value) });
-                indexedDB.deleteDatabase(name);
+                window.indexedDB.deleteDatabase(name);
             }
         }
 

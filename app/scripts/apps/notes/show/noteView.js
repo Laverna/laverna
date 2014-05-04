@@ -131,10 +131,9 @@ define([
         /**
          * Add note item to your favorite notes list
          */
-        favorite: function () {
-            var isFavorite = (this.model.get('isFavorite') === 1) ? 0 : 1;
-            this.model.trigger('update:any');
-            this.model.save({'isFavorite': isFavorite});
+        favorite: function (e) {
+            e.preventDefault();
+            this.model.trigger('setFavorite');
             return false;
         },
 

@@ -24,24 +24,48 @@ define([
         keyboardEvents: {
         },
 
+        events: {
+            'click @ui.favorite': 'favorite'
+        },
+
         modelEvents: {
             'change'       : 'render',
             'change:trash' : 'remove',
-            'changeFocus'  : 'changeFocus'
+            'changeFocus'  : 'changeFocus',
+            'change:isFavorite': 'changeFavorite'
         },
 
         initialize: function () {
         },
 
-        changeFocus: function () {
-            $('.list-group-item.active').removeClass('active');
-            this.$('.list-group-item').addClass('active');
+        changeFavorite: function () {
+            var content = $('.article[data-id="' + this.model.get('id') + '"] .favorite span');
+            if (this.model.get('isFavorite') === 1) {
+                content.removeClass('icon-star-empty');
+            } else {
+                content.addClass('icon-star-empty');
+            }
+        },
 
-            $('#sidebar .ui-scroll-y').scrollTop(
-                this.$('.list-group-item').offset().top -
-                $('#sidebar .ui-scroll-y').offset().top +
-                $('#sidebar .ui-scroll-y').scrollTop() - 100
-            );
+        favorite: function () {
+            this.model.trigger('setFavorite');
+            return false;
+        },
+
+        changeFocus: function () {
+            var $sidebar = $('#sidebar .ui-body'),
+                $listGroup = this.$('.list-group-item');
+
+            $('.list-group-item.active').removeClass('active');
+            $listGroup.addClass('active');
+
+            if ($sidebar && $sidebar.offset()) {
+                $sidebar.scrollTop(
+                    $listGroup.offset().top -
+                    $sidebar.offset().top +
+                    $sidebar.scrollTop() - 100
+                );
+            }
         },
 
         serializeData: function () {

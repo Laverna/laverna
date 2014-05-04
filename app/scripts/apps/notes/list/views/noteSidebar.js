@@ -50,6 +50,8 @@ define([
             if ( !this.options.args.id) {
                 $(App.content.el).removeClass('active-row');
             }
+
+            this.changeFocus(this.options.args.id || null);
         },
 
         toNextPage: function () {

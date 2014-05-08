@@ -134,10 +134,16 @@ require.config({
 require([
     'jquery',
     'app',
-    'bootstrap'
+    'bootstrap',
+    'IndexedDBShim'
 ], function ($, App) {
     'use strict';
     /*global alert*/
+
+    // prevent error in Firefox
+    if( !('indexedDB' in window)) {
+        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
+    }
 
     function startApp () {
         var request;
@@ -158,23 +164,15 @@ require([
         };
     }
 
-    // prevent error in Firefox
-    if( !('indexedDB' in window)) {
-        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-    }
-
-    if (window.indexedDB) {
-        startApp();
-    }
-    // IndexedDB support in Safari and in old Chrome
-    else {
-        require(['IndexedDBShim'], function () {
-            if (window.shimIndexedDB) {
-                window.appNoDB = true;
-                window.shimIndexedDB.__useShim(true);
-            }
+    $(document).ready(function () {
+        if('__useShim' in window.indexedDB) {
+            window.appNoDB = true;
+            window.shimIndexedDB.__useShim(true);
             startApp();
-        });
-    }
+        }
+        else {
+            startApp();
+        }
+    });
 
 });

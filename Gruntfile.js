@@ -25,8 +25,23 @@ module.exports = function (grunt) {
         dist: 'dist'
     };
 
+    // phonegap configs
+    var phonegapConfig = {
+		config: {
+			root: 'dist',
+			config: 'config.xml',
+			cordova: '.cordova',
+			path: 'phonegap',
+			plugins: [],
+			platforms: ['android'],
+			verbose: false
+		}
+    };
+
     grunt.initConfig({
         yeoman: yeomanConfig,
+        phonegap: phonegapConfig,
+
         pkg: grunt.file.readJSON('package.json'),
         watch: {
             options: {
@@ -571,6 +586,12 @@ module.exports = function (grunt) {
         'string-replace:i18nextLocal',
         'manifest'
     ]);
+
+	grunt.registerTask('platform-build', [
+		// 'default',
+        'build',
+		'phonegap:build'
+	]);
 
     grunt.registerTask('default', [
         'jshint',

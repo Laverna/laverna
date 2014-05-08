@@ -2,6 +2,7 @@
 // Responsive.less
 //
 
+// Hide on extra small screens
 .hidden-xxs {
   @media (max-width: @screen-xxs-max) {
     .responsive-invisibility();
@@ -30,6 +31,10 @@
     .navbar {
         .nav, .navbar-brand {
             float: left;
+        }
+        .navbar-brand {
+            line-height: 20px;
+            padding-top: 15px;
         }
         .nav {
             > li {

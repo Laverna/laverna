@@ -1,6 +1,7 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'backbone',
     'modalRegion',
     'brandRegion',
@@ -9,7 +10,7 @@ define([
     'i18next',
     'devicejs',
     'marionette'
-], function (_, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
+], function (_, $, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
     'use strict';
 
     // Underscore template
@@ -139,7 +140,7 @@ define([
                 lng             : App.settings.appLang,
                 fallbackLng     : 'en',
                 useCookie       : false,
-                useLocalStorage : false
+                useLocalStorage : true
             };
 
             i18n.init(lng, function () {
@@ -151,6 +152,7 @@ define([
                 Install.start();
 
                 Backbone.history.start({pushState: false});
+                $('.loading').removeClass('loading');
 
                 $(window).on('hashchange', function () {
                     var profile = URI.getProfile();

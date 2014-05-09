@@ -134,8 +134,7 @@ require.config({
 require([
     'jquery',
     'app',
-    'bootstrap',
-    'IndexedDBShim'
+    'bootstrap'
 ], function ($, App) {
     'use strict';
     /*global alert*/
@@ -165,10 +164,12 @@ require([
     }
 
     $(document).ready(function () {
-        if('__useShim' in window.indexedDB) {
-            window.appNoDB = true;
-            window.shimIndexedDB.__useShim(true);
-            startApp();
+        if ( !window.indexedDB) {
+            require(['IndexedDBShim'], function () {
+                window.appNoDB = true;
+                window.shimIndexedDB.__useShim(true);
+                startApp();
+            });
         }
         else {
             startApp();

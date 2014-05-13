@@ -70,7 +70,7 @@ define([
             // Make table look good
             this.$('table').addClass('table table-bordered');
 
-            this.hammertime = Hammer(this.el);
+            this.hammertime = new Hammer(this.el);
             this.hammertime.on('dragright', function (e) {
                 self.toggleSidebar();
                 e.gesture.preventDefault();

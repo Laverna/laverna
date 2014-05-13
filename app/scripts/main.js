@@ -33,6 +33,7 @@ require.config({
         fileSaver                  :  '../bower_components/FileSaver/FileSaver',
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
+        hammerjs                   :  '../bower_components/hammerjs/hammer',
         // remotestorage              :  'libs/remotestorage',
         remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',

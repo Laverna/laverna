@@ -23,7 +23,15 @@ The application stores all your notes in your browser storage spaces such as ind
 
 ## Installation
 ---------------
-You can use the application at laverna.cc, but we encourage you to install it on your own server or machine. To install, do the following:
+You can use the application at laverna.cc, but we encourage you to install it on your own server or machine.
+
+You can download minified version of Laverna app from [Laverna/static-laverna][9] repository if you don't want to build it yourself:
+
+    git clone -b gh-pages https://github.com/Laverna/static-laverna
+
+## Installation from source
+---------------
+To install, do the following:
 
 #### 1. Clone repository:
 
@@ -74,3 +82,4 @@ Laverna uses a lot of other libraries and each of these [libraries uses differen
 [6]: https://github.com/Laverna/laverna
 [7]: https://github.com/Laverna/laverna/blob/master/CONTRIBUTE.md
 [8]: http://nodejs.org
+[9]: https://github.com/Laverna/static-laverna/archive/gh-pages.zip

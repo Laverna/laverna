@@ -87,3 +87,35 @@
         padding-left: 30px;
     }
 }
+
+//
+// Show spining icon while user is waiting
+//
+.loading {
+    &:extend(#brand-layer);
+    z-index: @zindex-modal;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: block;
+    text-align: center;
+    animation:fade 3000ms infinite;
+    -webkit-animation:fade 3000ms infinite;
+    &:after {
+        margin-top: 20%;
+        font-family: "fontello";
+        &:extend(#brand-layer h1);
+        &:extend(.icon-arrows:before);
+        &:extend(.animate-spin);
+    }
+}
+@keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.9; }
+    to { opacity: 1.0; }
+}
+@-webkit-keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.9; }
+    to { opacity: 1.0; }
+}

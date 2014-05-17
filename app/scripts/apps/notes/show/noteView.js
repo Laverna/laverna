@@ -11,10 +11,11 @@ define([
     'libs/images',
     'prettify',
     'helpers/mathjax',
+    'hammerjs',
     'backbone.mousetrap',
     'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, URI, Template, Checklist, Tags, Img, prettify, mathjax) {
+], function (_, App, Backbone, URI, Template, Checklist, Tags, Img, prettify, mathjax, Hammer) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -57,8 +58,10 @@ define([
         },
 
         onRender: function () {
+            var self = this,
+                code = null;
+
             // Google code prettify
-            var code = null;
             this.$('pre').addClass('prettyprint').each(function (idx, el) {
                 code = el.firstChild;
                 code.innerHTML = prettify.prettyPrintOne(code.innerHTML);
@@ -66,6 +69,12 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
+
+            this.hammertime = new Hammer(this.el);
+            this.hammertime.on('dragright', function (e) {
+                self.toggleSidebar();
+                e.gesture.preventDefault();
+            });
 
             // MathJax
             mathjax.init(this.el);
@@ -193,9 +202,14 @@ define([
          * Show sidebar
          */
         toggleSidebar: function (e) {
-            e.preventDefault();
-            App.navigate('/notes/p1', {trigger: false});
-            App.trigger('notes:toggle', this.options.args);
+            if (e) {
+                e.preventDefault();
+            }
+
+            if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
+                App.navigate('/notes/p1', {trigger: false});
+                App.trigger('notes:toggle', this.options.args);
+            }
         },
 
         templateHelpers: function() {

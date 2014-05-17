@@ -13,7 +13,7 @@
     "backbone.wreqr": "1.0.0",
     "backbone.localStorage": "~1.1.7",
     "indexeddb-backbonejs-adapter": "git://github.com/superfeedr/indexeddb-backbonejs-adapter.git#master",
-    "IndexedDBShim": "git://github.com/axemclion/IndexedDBShim.git#master",
+    "IndexedDBShim": "git://github.com/axemclion/IndexedDBShim.git#e5961318d9c49b877ed181c7b639cbe9302c3e6d",
     "mousetrap": "~1.4.6",
     "backbone.mousetrap": "git://github.com/elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
     "ace": "#fbc546032090752664aaea13c8f9489dea43490a",

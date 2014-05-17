@@ -25,8 +25,45 @@ module.exports = function (grunt) {
         dist: 'dist'
     };
 
+    var pkg = grunt.file.readJSON('package.json');
+
+    // phonegap configs
+    var phonegapConfig = {
+		config: {
+			root: '<%= yeoman.dist %>',
+			// config: 'config.xml',
+            config: {
+                template: 'config.xml',
+                data: {
+                    id: 'org.phonegap.laverna',
+                    version: pkg.version,
+                    name: pkg.name
+                }
+            },
+			cordova: '.cordova',
+			path: 'phonegap',
+			plugins: [],
+			platforms: ['android'],
+			verbose: false,
+            releases: 'releases',
+            releaseName: function () {
+                return (pkg.name + '-' + pkg.version);
+            },
+            icons: {
+                android: {
+                    ldpi  : 'phonegap/www/images/icon/icon-32x32.png',
+                    mdpi  : 'phonegap/www/images/icon/icon-48x48.png',
+                    hdpi  : 'phonegap/www/images/icon/icon-64x64.png',
+                    xhdpi : 'phonegap/www/images/icon/icon-90x90.png'
+                }
+            }
+		}
+    };
+
     grunt.initConfig({
         yeoman: yeomanConfig,
+        phonegap: phonegapConfig,
+
         pkg: grunt.file.readJSON('package.json'),
         watch: {
             options: {
@@ -571,6 +608,12 @@ module.exports = function (grunt) {
         'string-replace:i18nextLocal',
         'manifest'
     ]);
+
+	grunt.registerTask('platform-build', [
+		// 'default',
+        'build',
+		'phonegap:build'
+	]);
 
     grunt.registerTask('default', [
         'jshint',

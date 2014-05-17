@@ -4,7 +4,7 @@
     </div>
 
     <% if (pagination === true || args.page > 0) { %>
-    <nav class="navbar navbar-static-top navbar-bottom">
+    <nav class="navbar navbar-static-bottom navbar-bottom">
         <div class="btn-group btn-group-justified">
             <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">{{ i18n('Previous') }}</a>
             <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">{{ i18n('Next') }}</a>

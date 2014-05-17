@@ -33,6 +33,7 @@ require.config({
         fileSaver                  :  '../bower_components/FileSaver/FileSaver',
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
+        hammerjs                   :  '../bower_components/hammerjs/hammer',
         // remotestorage              :  'libs/remotestorage',
         remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
@@ -139,6 +140,11 @@ require([
     'use strict';
     /*global alert*/
 
+    // prevent error in Firefox
+    if( !('indexedDB' in window)) {
+        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
+    }
+
     function startApp () {
         var request;
 
@@ -158,23 +164,17 @@ require([
         };
     }
 
-    // prevent error in Firefox
-    if( !('indexedDB' in window)) {
-        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-    }
-
-    if (window.indexedDB) {
-        startApp();
-    }
-    // IndexedDB support in Safari and in old Chrome
-    else {
-        require(['IndexedDBShim'], function () {
-            if (window.shimIndexedDB) {
+    $(document).ready(function () {
+        if ( !window.indexedDB) {
+            require(['IndexedDBShim'], function () {
                 window.appNoDB = true;
                 window.shimIndexedDB.__useShim(true);
-            }
+                startApp();
+            });
+        }
+        else {
             startApp();
-        });
-    }
+        }
+    });
 
 });

@@ -47,10 +47,13 @@ define([
                 this.model.set('id', this.collection.nextOrder());
             }
 
+            var data = this.model.toJSON();
+            data.name = App.Encryption.API.decrypt(data.name);
+
             this.view = new FormView ({
                 collection: this.collection,
                 model: this.model,
-                data: this.model.toJSON()
+                data: data
             });
 
             App.modal.show(this.view);
@@ -86,9 +89,7 @@ define([
 
         // Redirect
         redirect: function () {
-            if (this.args.redirect !== false) {
-                return App.navigate('#' + URI.link('/notebooks'));
-            }
+            return App.navigate('#' + URI.link('/notebooks'));
         }
     });
 

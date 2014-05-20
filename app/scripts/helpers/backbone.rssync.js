@@ -109,7 +109,7 @@ define([
         },
 
         destroy: function (model) {
-            return this.rssync(model).remove(model.id.toString()).then(function() {
+            return this.rssync(model).destroy(model.id).then(function() {
                 return model.toJSON();
             });
         }
@@ -149,13 +149,13 @@ define([
                 // --------------------
                 add: function(doc) {
                     var id = privateClient.uuid();
-                    return this.set(id, doc);
+                    return this.set(id + '.json', doc);
                 },
 
                 // Update or create a document for a specified id.
                 // --------------------
                 set: function(id, doc) {
-                    return this.storeObject('text', id.toString(), doc).then(function() {
+                    return this.storeObject('text', id.toString() + '.json', doc).then(function() {
                         doc.id = id;
                         return    doc;
                     });
@@ -164,16 +164,20 @@ define([
                 // Get a document.
                 // ---------------
                 get: function(id) {
-                    return this.getObject(id.toString()).then(function(obj) {
+                    return this.getObject(id.toString() + '.json').then(function(obj) {
                         return obj || {};
                     });
+                },
+
+                destroy: function(id) {
+                    return this.remove(id.toString() + '.json');
                 },
 
                 // Store a raw document of the specified contentType at shared/.
                 // ------------------------------
                 addRaw: function(contentType, data) {
                     var id = privateClient.uuid(),
-                        path = 'shared/' + id,
+                        path = 'shared/' + id + '.json',
                         url = this.getItemURL(path);
 
                     return this.storeFile(contentType, path, data).then(function() {
@@ -184,7 +188,7 @@ define([
                 // Store a raw doccument of the specified contentType at shared/.
                 // ---------------------
                 setRaw: function(id, contentType, data) {
-                    var path = 'shared/' + id;
+                    var path = 'shared/' + id + '.json';
                     return this.storeFile(contentType, path, data);
                 }
 

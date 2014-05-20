@@ -149,7 +149,7 @@ define([
 
     // Re render
     App.on('notes:rerender', function () {
-        API.showNotes(API.notesArg || {});
+        API.showNotes(App.notesArg || {});
     });
 
     // Re-render sidebar if new note has been added
@@ -168,7 +168,7 @@ define([
             return;
         }
         else if (args.collection === 'notes' || args.collection === 'files') {
-            var notesArg = _.extend(API.notesArg || {}, {
+            var notesArg = _.extend(App.notesArg || {}, {
                 profile : URI.getProfile()
             });
             API.showNotes(notesArg);

@@ -110,11 +110,12 @@ define([
             }
 
             var pattern = new RegExp(letters, 'gi'),
-                title;
+                title, content;
 
             return this.filter(function(model) {
                 title = App.Encryption.API.decrypt(model.get('title'));
-                return pattern.test(title);
+                content = App.Encryption.API.decrypt(model.get('content'));
+                return pattern.test(title) || pattern.test(content);
             });
         },
 

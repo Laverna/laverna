@@ -2,7 +2,7 @@
 
 Laverna is a JavaScript note-taking web application with a Markdown editor and encryption support.  It's built to be an open source alternative to Evernote.
 
-The application stores all your notes in your browser storage spaces such as indexedDB or localStorage, which is good for security reasons, because only you can get access to them.
+The application stores all your notes in your browser local storage spaces such as indexedDB or localStorage, which is good for security reasons, because only you have access to them.
 
 **Demo**: https://laverna.cc/ OR http://laverna.github.io/static-laverna
 
@@ -12,7 +12,7 @@ The application stores all your notes in your browser storage spaces such as ind
 * Markdown editor based on Pagedown
 * Manage your notes even if you're offline
 * Secure - client side encryption with [SJCL] [1] and AES algorithm
-* Synchronizes with cloud storage services. At the time only with Dropbox and RemoteStorage
+* Synchronizes with cloud storage services. At this time only Dropbox and RemoteStorage are supported
 * Three editing modes: distraction free, preview, and normal mode
 * WYSIWYG control buttons
 * MathJax support

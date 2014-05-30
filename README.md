@@ -47,6 +47,7 @@ To install, do the following:
 
     npm install bower
     npm install grunt
+    npm install grunt-cli
 
 #### 5. Install Laverna's dependencies:
 

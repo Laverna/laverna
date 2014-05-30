@@ -66,7 +66,8 @@ You can change the storage API keys in app/scripts/constants.js
 3. [Contribute][7]
 
 ### Tips:
-[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/master/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/860a9f84d7987cea59bad16114aa71543934eca5/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+
 [Bitcoin][3]
 
 ## Licence

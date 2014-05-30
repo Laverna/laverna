@@ -35,7 +35,7 @@ require.config({
         dropbox                    :  'libs/dropbox',
         hammerjs                   :  '../bower_components/hammerjs/hammer',
         // remotestorage              :  'libs/remotestorage',
-        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
+        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage-nocache.amd',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Keybindings             :
@@ -135,8 +135,9 @@ require.config({
 require([
     'jquery',
     'app',
+    'helpers/sync/remotestorage',
     'bootstrap'
-], function ($, App) {
+], function ($, App, rssync) {
     'use strict';
     /*global alert*/
 
@@ -157,10 +158,15 @@ require([
         request.onerror = function() {
             // alert('It seems like you refused Laverna to use IndexedDB or you are in Private browsing mode.');
             window.appNoDB = true;
-            App.start();
+            $.when(rssync('auth')).done(function () {
+                App.start();
+            });
         };
         request.onsuccess = function() {
-            App.start();
+            rssync('auth');
+            // $.when(rssync('auth')).done(function () {
+                App.start();
+            // });
         };
     }
 

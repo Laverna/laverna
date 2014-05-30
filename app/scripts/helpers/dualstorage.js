@@ -38,6 +38,7 @@ define([
             collections = [];
 
         App.log('Synchronize all collections');
+        Sync.stop();
 
         // Synchronize all collections
         _.each(names, function (col, i) {

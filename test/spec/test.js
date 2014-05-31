@@ -16,7 +16,9 @@ require.config({
         'models'        :  '../app/scripts/models',
         'collections'   :  '../app/scripts/collections',
         'helpers'       :  '../app/scripts/helpers',
-        'libs'          :  '../app/scripts/libs'
+        'libs'          :  '../app/scripts/libs',
+        'constants'     :  '../app/scripts/constants',
+        'dropbox'       :  '../app/scripts/libs/dropbox'
     },
 
     shim: {
@@ -31,6 +33,9 @@ require.config({
         },
         'jquery': {
             exports: '$'
+        },
+        'dropbox': {
+            exports: 'Dropbox'
         },
         'backbone': {
             deps: ['underscore', 'jquery'],

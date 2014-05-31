@@ -2,8 +2,9 @@
 define([
     'chai',
     'helpers/sync/remotestorage',
+    'helpers/sync/dropbox',
     'models/note'
-], function (chai, RemoteSync, Note) {
+], function (chai, RemoteSync, DropboxSync, Note) {
     'use strict';
 
     var expect = chai.expect;
@@ -15,14 +16,14 @@ define([
                 id;
 
             beforeEach(function () {
+                Note.prototype.sync = syncStorage;
                 note = new Note();
-                note.sync = syncStorage;
             });
 
             describe('Backbone.Model and ' + storageName, function () {
 
                 it('can use ' + storageName + ' as a sync adapter', function () {
-                    expect(note.sync === RemoteSync).to.be.equal(true);
+                    expect(note.sync === syncStorage).to.be.equal(true);
                 });
 
                 it('can save data to ' + storageName, function (done) {
@@ -66,5 +67,8 @@ define([
 
     // Test RemoteStorage
     testStorage(RemoteSync, 'RemoteStorage');
+
+    // Test Dropbox
+    testStorage(DropboxSync, 'Dropbox');
 
 });

@@ -1,9 +1,10 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'remotestorage',
     'helpers/sync/remotestorage-module'
-], function (_, remoteStorage, module) {
+], function (_, $, remoteStorage, module) {
     'use strict';
 
     /**

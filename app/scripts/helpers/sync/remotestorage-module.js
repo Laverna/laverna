@@ -1,5 +1,4 @@
-/*global define*/
-/*global RemoteStorage*/
+/*global define, RemoteStorage*/
 define([
     'underscore',
     'remotestorage'
@@ -171,7 +170,7 @@ define([
             },
 
             create: function (model) {
-                return this.save(privateClient.uuid(), model);
+                return this.save((model.id || privateClient.uuid()), model);
             },
 
             save: function (id, model) {

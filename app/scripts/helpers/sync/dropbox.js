@@ -147,17 +147,21 @@ define([
                     data = fileStat.json();
 
                     _.each(data.contents, function (item, iter) {
-                        id = item.path.replace('/' + self.dir + '/', '');
-                        id = id.replace('.json', '');
 
-                        items.push({
-                            id : id,
-                            updated: new Date(item.modified).getTime()
-                        });
+                        /* jshint camelcase: false */
+                        if ( !item.is_dir ) {
+                            id = item.path.replace('/' + self.dir + '/', '');
+                            id = id.replace('.json', '');
 
+                            items.push({
+                                id : id,
+                                updated: new Date(item.modified).getTime()
+                            });
+                        }
                         if (iter === data.contents.length-1) {
                             d.resolve(items);
                         }
+
                     });
                 }
                 return true;
@@ -206,7 +210,6 @@ define([
     });
 
     return function (method, model, options) {
-
         var adapter = new Adapter(model),
             done = $.Deferred(),
             args = arguments,
@@ -221,17 +224,19 @@ define([
             });
         }
 
-        resp.then(function(res) {
-            options.success(res);
-            if (options.complete) {
-                options.complete(res);
+        function callMethod (method, res) {
+            if (options && _.has(options, method)) {
+                options[method](res);
             }
+        }
+
+        resp.then(function(res) {
+            callMethod('success', res);
+            callMethod('complete', res);
             done.resolve(res);
         }, function(res) {
-            options.error(res);
-            if (options.complete) {
-                options.complete(res);
-            }
+            callMethod('error', res);
+            callMethod('complete', res);
             done.reject(res);
         });
 

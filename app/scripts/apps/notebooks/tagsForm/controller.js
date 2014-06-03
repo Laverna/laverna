@@ -51,7 +51,9 @@ define([
 
         save: function (data) {
             var self = this;
+
             this.model.set(data);
+            this.model.updateDate();
 
             if (this.model.isValid()) {
                 this.model.save(data, {

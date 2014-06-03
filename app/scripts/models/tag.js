@@ -16,14 +16,20 @@ define([
         storeName: 'tags',
 
         defaults: {
-            'id'    : 0,
-            'name'  : '',
-            'count' : '',
-            'synchronized' : 0
+            'id'           :  undefined,
+            'name'         :  '',
+            'count'        :  '',
+            'synchronized' :  0,
+            'updated'      : Date.now()
         },
 
         initialize: function () {
             this.on('update:name', this.doEscape());
+        },
+
+        updateDate: function () {
+            this.set('updated', Date.now());
+            this.set('synchronized', 0);
         },
 
         doEscape: function () {

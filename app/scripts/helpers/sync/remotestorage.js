@@ -52,17 +52,19 @@ define([
                 break;
             }
 
-            resp.then(function(res) {
-                options.success(res);
-                if (options.complete) {
-                    options.complete(res);
+            function callMethod (method, res) {
+                if (options && _.has(options, method)) {
+                    options[method](res);
                 }
+            }
+
+            resp.then(function(res) {
+                callMethod('success', res);
+                callMethod('complete', res);
                 done.resolve(res);
             }, function(res) {
-                options.error(res);
-                if (options.complete) {
-                    options.complete(res);
-                }
+                callMethod('error', res);
+                callMethod('complete', res);
                 done.reject(res);
             });
 

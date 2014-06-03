@@ -128,7 +128,7 @@ define([
             'helpers/install',
             'apps/confirm/appConfirm',
             'apps/encryption/encrypt',
-            'helpers/dualstorage',
+            // 'helpers/dualstorage',
             'helpers/keybindings',
             'apps/navbar/appNavbar',
             'apps/notes/appNote',

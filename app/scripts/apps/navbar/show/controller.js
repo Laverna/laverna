@@ -22,7 +22,7 @@ define([
             _.bindAll(this, 'show', 'showNavbar');
 
             // Synchronizing
-            this.startSyncing();
+            // this.startSyncing();
         },
 
         /**

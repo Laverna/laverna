@@ -75,7 +75,7 @@ define([
                 'name': {
                     'type': 'string'
                 },
-                'count': {
+                'updated':  {
                     'type': 'number'
                 },
                 'synchronized': {
@@ -96,7 +96,7 @@ define([
                 'name': {
                     'type': 'string'
                 },
-                'count': {
+                'updated':  {
                     'type': 'number'
                 },
                 'synchronized': {

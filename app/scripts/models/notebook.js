@@ -14,12 +14,12 @@ define([
         storeName: 'notebooks',
 
         defaults: {
-            'id'       :  0,
-            'parentId' :  0,
-            'name'     :  '',
-            'notes'    :  [],
-            'count'    :  0,
-            'synchronized' : 0
+            'id'           : undefined,
+            'parentId'     : '',
+            'name'         : '',
+            'synchronized' : 0,
+            'count'        : 0,
+            'updated'      : Date.now()
         },
 
         validate: function (attrs) {
@@ -36,6 +36,11 @@ define([
         initialize: function () {
             this.on('removed:note', this.removeCount);
             this.on('add:note', this.addCount);
+        },
+
+        updateDate: function () {
+            this.set('updated', Date.now());
+            this.set('synchronized', 0);
         },
 
         addCount: function () {

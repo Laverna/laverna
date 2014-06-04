@@ -2,9 +2,10 @@
 define([
     'underscore',
     'jquery',
+    'collections/removed',
     'helpers/sync/dropbox',
     'helpers/sync/remotestorage'
-], function (_, $, DropboxSync, RemoteSync) {
+], function (_, $, Removed, DropboxSync, RemoteSync) {
     'use strict';
 
     /**
@@ -21,6 +22,9 @@ define([
                 this.cloud = RemoteSync;
                 break;
         }
+
+        // Collection contains IDs of removed objects
+        this.removed = new Removed();
 
         // Create new instances of collection
         this.collection = new collection.constructor();
@@ -43,7 +47,7 @@ define([
             }
 
             // Fetch all from cloud storage and local, then check it
-            $.when(this.collection.fetch(), this.collectionCloud.fetch())
+            $.when(this.collection.fetch(), this.collectionCloud.fetch(), this.removed.fetch())
             .then(function () {
                 resp = self.checkUpdates(done);
             });
@@ -141,7 +145,7 @@ define([
         },
 
         /**
-         * Check data from cloud storage and if there is any changes,
+         * Check data from cloud storage and if there are any changes,
          * update local version
          */
         localNeedsUpdate: function (model) {
@@ -152,9 +156,13 @@ define([
             if (local && Number(local.get('synchronized')) === 0) {
                 d.resolve();
             }
+            // User removed it locally
+            else if (this.removed.getID(model)) {
+                this.destroyFromCloud(model, d);
+            }
             else {
                 // If it's a "fake" model, fetch
-                if ( !model.get('date') ) {
+                if (this.cloud === DropboxSync) {
                     $.when( this.cloud('read', model) ).then(function (m) {
                         model.set(m);
                         self.updateLocal(model, local, d);
@@ -222,6 +230,21 @@ define([
             });
 
             return d;
+        },
+
+        /**
+         * Destroy a model from the cloud storage
+         */
+        destroyFromCloud: function (model, d) {
+            var removed = this.removed.getID(model);
+
+            $.when(this.cloud('delete', model)).then(function () {
+                removed.destroy({
+                    success: function () {
+                        d.resolve(d);
+                    }
+                });
+            });
         }
 
     };

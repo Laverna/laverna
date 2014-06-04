@@ -2,8 +2,9 @@
 define([
     'underscore',
     'backbone',
+    'collections/removed',
     'migrations/note'
-], function (_, Backbone, TagsDB) {
+], function (_, Backbone, Removed, TagsDB) {
     'use strict';
 
     /**
@@ -25,6 +26,13 @@ define([
 
         initialize: function () {
             this.on('update:name', this.doEscape());
+        },
+
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function () {
+            return new Removed().newObject(this, arguments);
         },
 
         updateDate: function () {

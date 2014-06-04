@@ -35,7 +35,7 @@ require.config({
         dropbox                    :  'libs/dropbox',
         hammerjs                   :  '../bower_components/hammerjs/hammer',
         // remotestorage              :  'libs/remotestorage',
-        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
+        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage-nocache.amd',
         'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
         'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
         // Keybindings             :

@@ -20,15 +20,15 @@ define([
         switch (model) {
             case Note.prototype.storeName:
                 data = {
-                    title: 'Hello world',
+                    title: 'Hello world' + _.uniqueId(),
                     content: 'Random content'
                 };
                 break;
             case Notebook.prototype.storeName:
-                data = { name: 'Hello notebook' };
+                data = { name: 'Hello notebook' + _.uniqueId() };
                 break;
             case Tag.prototype.storeName:
-                data = { name: 'syncTestTag' };
+                data = { name: 'syncTestTag' + _.uniqueId() };
                 break;
         }
         return data;
@@ -81,7 +81,6 @@ define([
             it('can remove data from ' + storageName, function (done) {
                 var modelNew = new Model({id: id});
 
-                // Try to fetch data from RemoteStorage
                 $.when(modelNew.destroy()).done(function () {
                     done();
                 });
@@ -147,14 +146,13 @@ define([
 
             it('synchronizes data, if a model changed', function (done) {
                 newModel.set(uniqueData());
-
                 newModel.updateDate();
+
                 $.when(newModel.save()).then(function () { syncData(done); });
             });
 
             it('synchronizes data, if a model removed', function (done) {
-                newModel = new collection.model({id: newModel.id});
-                $.when(newModel.destroy()).then(function () { syncData(done); });
+                $.when(newModel.destroySync()).then(function () { syncData(done); });
             });
 
         });
@@ -180,7 +178,7 @@ define([
     describe('RemoteStorage adapter', function () {
         syncTest.adapter(Note, RemoteSync, 'RemoteStorage');
         syncTest.adapter(Notebook, RemoteSync, 'RemoteStorage');
-        syncTest.adapter(Tag, RemoteSync, 'RemoteStorage');
+        // syncTest.adapter(Tag, RemoteSync, 'RemoteStorage');
     });
 
     /**

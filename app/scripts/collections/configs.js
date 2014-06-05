@@ -21,6 +21,7 @@ define([
             'appLang': '',
             'cloudStorage': '0',
             'pagination': '10',
+            'sortnotebooks': 'name',
             'editMode': 'preview',
             // Ecnryption settings
             'encrypt': '0',

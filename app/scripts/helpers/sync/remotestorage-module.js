@@ -177,7 +177,7 @@ define([
                 model = model.toJSON();
                 model.id = id;
 
-                return this.storeObject(this.modelType, id, model).then(function () {
+                return this.storeObject(this.modelType, id.toString(), model).then(function () {
                     model.id = id;
                     return model;
                 });

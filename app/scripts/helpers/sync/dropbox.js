@@ -182,11 +182,11 @@ define([
             this.client.writeFile(
                 this.dir + '/' + model.id + '.json',
                 JSON.stringify(model),
-                function (error, stat) {
+                function (error) {
                     if (error) {
                         d.reject(error);
                     } else {
-                        d.resolve(stat);
+                        d.resolve(model);
                     }
                     return true;
                 }

@@ -8,6 +8,7 @@ require.config({
         'localStorage'  :  '../app/bower_components/backbone.localStorage/backbone.localStorage',
         'indexedDB'     :  '../app/bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         'remotestorage' :  '../app/bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
+        'toBlob'        :  '../app/bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
         'mocha'         :  'bower_components/mocha/mocha',
         'chai'          :  'bower_components/chai/chai',
         'chai-jquery'   :  'bower_components/chai-jquery/chai-jquery',
@@ -60,6 +61,10 @@ require([
 ], function (chai, chaiJquery) {
     'use strict';
 
+    var tests = [
+        'spec/model-test'
+    ];
+
     // Chai
     chai.should();
     chai.use(chaiJquery);
@@ -68,10 +73,12 @@ require([
     mocha.setup('bdd');
     mocha.bail(false);
 
-    require([
-        'spec/model-test',
-        'spec/sync-test'
-    ], function () {
+    // Test synchronizing only in browsers
+    if ( !window.mochaPhantomJS) {
+        tests.push('spec/sync-test');
+    }
+
+    require(tests, function () {
         if (window.mochaPhantomJS) {
             window.mochaPhantomJS.run();
         }

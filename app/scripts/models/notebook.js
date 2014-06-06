@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'migrations/note',
+    'collections/removed',
     'indexedDB'
-], function (_, Backbone, NotesDB) {
+], function (_, Backbone, NotesDB, Removed) {
     'use strict';
 
     var Model = Backbone.Model.extend({
@@ -41,6 +42,13 @@ define([
         updateDate: function () {
             this.set('updated', Date.now());
             this.set('synchronized', 0);
+        },
+
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function () {
+            return new Removed().newObject(this, arguments);
         },
 
         addCount: function () {

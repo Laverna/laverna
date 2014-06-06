@@ -3,8 +3,9 @@ define([
     'underscore',
     'backbone',
     'migrations/note',
+    'collections/removed',
     'indexedDB'
-], function (_, Backbone, NotesDB) {
+], function (_, Backbone, NotesDB, Removed) {
     'use strict';
 
     /**
@@ -23,8 +24,8 @@ define([
             'content'       :  '',
             'taskAll'       :  0,
             'taskCompleted' :  0,
-            'created'       :  null,
-            'updated'       :  null,
+            'created'       :  Date.now(),
+            'updated'       :  Date.now(),
             'notebookId'    :  0,
             'tags'          :  [],
             'isFavorite'    :  0,
@@ -45,21 +46,28 @@ define([
         },
 
         initialize: function () {
-            this.on('update:any', this.setUpdate);
+            this.on('update:any', this.updateDate);
             this.on('setFavorite', this.setFavorite);
 
             if (this.isNew()) {
                 this.set('created', Date.now());
-                this.setUpdate();
+                this.updateDate();
             }
         },
 
         /**
          * Note's last modified time
          */
-        setUpdate: function () {
+        updateDate: function () {
             this.set('updated', Date.now());
             this.setSync();
+        },
+
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function () {
+            return new Removed().newObject(this, arguments);
         },
 
         next: function () {

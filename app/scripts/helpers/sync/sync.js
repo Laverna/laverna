@@ -236,14 +236,24 @@ define([
          * Destroy a model from the cloud storage
          */
         destroyFromCloud: function (model, d) {
-            var removed = this.removed.getID(model);
+            var self = this;
 
-            $.when(this.cloud('delete', model)).then(function () {
-                removed.destroy({
-                    success: function () {
-                        d.resolve(d);
-                    }
+            if ( !model.id ) {
+                self.cleanRemoved(model, d);
+            }
+            else {
+                $.when(this.cloud('delete', model)).then(function () {
+                    self.cleanRemoved(model, d);
                 });
+            }
+        },
+
+        cleanRemoved: function (model, d) {
+            var removed = this.removed.getID(model);
+            removed.destroy({
+                success: function () {
+                    d.resolve(d);
+                }
             });
         }
 

@@ -10,7 +10,7 @@ The application stores all your notes in your browser local storage spaces such 
 -----------
 
 * Markdown editor based on Pagedown
-* Manage your notes even if you're offline
+* Manage your notes, even when you're offline
 * Secure - client side encryption with [SJCL] [1] and AES algorithm
 * Synchronizes with cloud storage services. At this time only Dropbox and RemoteStorage are supported
 * Three editing modes: distraction free, preview, and normal mode
@@ -23,7 +23,15 @@ The application stores all your notes in your browser local storage spaces such 
 
 ## Installation
 ---------------
-You can use the application at laverna.cc, but we encourage you to install it on your own server or machine. To install, do the following:
+You can use the application at laverna.cc, but we encourage you to install it on your own server or machine.
+
+You can download the minified version of Laverna app from [Laverna/static-laverna][9] repository if you don't want to build it yourself:
+
+    git clone -b gh-pages https://github.com/Laverna/static-laverna
+
+## Installation from source
+---------------
+To install, do the following:
 
 #### 1. Clone repository:
 
@@ -39,6 +47,7 @@ You can use the application at laverna.cc, but we encourage you to install it on
 
     npm install bower
     npm install grunt
+    npm install grunt-cli
 
 #### 5. Install Laverna's dependencies:
 
@@ -57,7 +66,8 @@ You can change the storage API keys in app/scripts/constants.js
 3. [Contribute][7]
 
 ### Tips:
-[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/master/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/860a9f84d7987cea59bad16114aa71543934eca5/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+
 [Bitcoin][3]
 
 ## Licence
@@ -74,3 +84,4 @@ Laverna uses a lot of other libraries and each of these [libraries uses differen
 [6]: https://github.com/Laverna/laverna
 [7]: https://github.com/Laverna/laverna/blob/master/CONTRIBUTE.md
 [8]: http://nodejs.org
+[9]: https://github.com/Laverna/static-laverna/archive/gh-pages.zip

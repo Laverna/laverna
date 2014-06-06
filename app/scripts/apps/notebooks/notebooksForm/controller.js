@@ -19,7 +19,9 @@ define([
 
         // Create form initializing
         addForm: function (args) {
-            this.collection = new Notebooks();
+            this.collection = new Notebooks([], {
+              comparator: 'name'
+            });
             this.model = new Notebook();
             this.isNew = true;
             this.args = args;
@@ -32,7 +34,9 @@ define([
 
         // Edit form initializing
         editForm: function (args) {
-            this.collection = new Notebooks();
+            this.collection = new Notebooks([], {
+              comparator: 'name'
+            });
             this.model = new Notebook({id: parseInt(args.id)});
 
             // Set profile

@@ -87,6 +87,8 @@ define([
         App.settings = configs.getConfigs();
         App.currentProfile = URI.getProfile();
 
+        window.dropboxKey = App.settings.dropboxKey;
+
         App.currentApp = currentApp;
         if(currentApp){
             currentApp.start(args);
@@ -128,7 +130,6 @@ define([
             'helpers/install',
             'apps/confirm/appConfirm',
             'apps/encryption/encrypt',
-            // 'helpers/dualstorage',
             'helpers/keybindings',
             'apps/navbar/appNavbar',
             'apps/notes/appNote',

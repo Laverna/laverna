@@ -11,10 +11,15 @@ define([
      * Dropbox sync Adapter for Backbone.js
      */
     var Adapter = function (model) {
+        var key = CONST.DROPBOX_KEY;
         this.dir = (model ? model.storeName : 'notes');
 
+        if (window.dropboxKey !== '') {
+            key = window.dropboxKey;
+        }
+
         this.client = new Dropbox.Client({
-            key    : CONST.DROPBOX_KEY
+            key    : key
             // secret : constants.DROPBOX_SECRET
         });
 
@@ -28,18 +33,29 @@ define([
 
     _.extend(Adapter.prototype, {
 
-        auth: function () {
-            var d = $.Deferred();
+        auth: function (interactive) {
+            var d = $.Deferred(),
+                self = this;
 
-            this.client.authenticate({ interactive: false });
+            interactive = interactive || false;
 
-            if ( !this.client.isAuthenticated()) {
-                this.client.authenticate();
-            }
+            this.client.authenticate({ interactive: interactive }, function () {
 
-            if (this.client.isAuthenticated()) {
-                d.resolve(true);
-            }
+                if ( self.client.isAuthenticated() ) {
+                    d.resolve(true);
+                }
+                else if (interactive === false) {
+                    $.when(self.auth(true)).then(function () {
+                        d.resolve(true);
+                    }, function () {
+                        d.reject();
+                    });
+                }
+                else {
+                    d.reject();
+                }
+
+            });
 
             return d;
         },
@@ -138,7 +154,13 @@ define([
 
             this.client.readdir(this.dir, function (error, entries, fileStat) {
                 if (error) {
-                    d.reject(error);
+                    // It's OK
+                    if (error.status === 404) {
+                        d.resolve();
+                    }
+                    else {
+                        d.reject(error);
+                    }
                 }
                 else {
                     if (entries.length === 0) {

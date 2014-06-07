@@ -38,27 +38,23 @@ define([
             'click .removeProfile': 'removeProfile'
         },
 
-        /**
-         * Shows additional parameters
-         */
-        showOnSelect: function (e) {
-            var $el = $(e.target),
-                option = $el.find('option[value=' + $el.attr('data-option') + ']');
-
-            if (option.is(':selected')) {
-                $( option.attr('data-show') ).removeClass('hidden');
-            }
-            else {
-                $( option.attr('data-show') ).addClass('hidden');
-            }
-        },
-
         initialize: function () {
             this.changedSettings = [];
 
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.changeTab);
             this.listenTo(this.collection, 'change', this.renderAgain);
+            this.on('shown.modal', this.onModal);
+        },
+
+        onModal: function () {
+            var pop = $('.popover-dropbox').html();
+
+            $('.popover-key').popover({
+                trigger: 'click',
+                html   : true,
+                content: function () { return pop; }
+            });
         },
 
         renderAgain: function () {
@@ -91,7 +87,8 @@ define([
 
         serializeData: function () {
             return {
-                models: this.collection.getConfigs()
+                models: this.collection.getConfigs(),
+                dropboxKeyNeed: App.constants.DROPBOXKEYNEED
             };
         },
 
@@ -125,6 +122,21 @@ define([
                 field.removeClass('hidden');
             } else {
                 field.addClass('hidden');
+            }
+        },
+
+        /**
+         * Shows additional parameters
+         */
+        showOnSelect: function (e) {
+            var $el = $(e.target),
+                option = $el.find('option[value=' + $el.attr('data-option') + ']');
+
+            if (option.is(':selected')) {
+                $( option.attr('data-show') ).removeClass('hidden');
+            }
+            else {
+                $( option.attr('data-show') ).addClass('hidden');
             }
         },
 
@@ -179,6 +191,7 @@ define([
                 i18n: $.t
             };
         }
+
     });
 
     return View;

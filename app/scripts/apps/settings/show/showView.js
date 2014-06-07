@@ -27,6 +27,7 @@ define([
             'click .ok'               : 'save',
             'click .close'            : 'close',
             'click .showField'        : 'clickCheckbox',
+            'change .show-onselect'   : 'showOnSelect',
             'click #randomize'        : 'randomize',
             'submit .form-horizontal' : 'save',
             'change input, select, textarea' : 'triggerChange',
@@ -35,6 +36,21 @@ define([
             'change @ui.importFile'   : 'importFile',
             'keypress @ui.profileName'   : 'createProfile',
             'click .removeProfile': 'removeProfile'
+        },
+
+        /**
+         * Shows additional parameters
+         */
+        showOnSelect: function (e) {
+            var $el = $(e.target),
+                option = $el.find('option[value=' + $el.attr('data-option') + ']');
+
+            if (option.is(':selected')) {
+                $( option.attr('data-show') ).removeClass('hidden');
+            }
+            else {
+                $( option.attr('data-show') ).addClass('hidden');
+            }
         },
 
         initialize: function () {

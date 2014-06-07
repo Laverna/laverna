@@ -20,6 +20,7 @@ define([
             'appProfiles': JSON.stringify(['notes-db']),
             'appLang': '',
             'cloudStorage': '0',
+            'dropboxKey': '',
             'pagination': '10',
             'sortnotebooks': 'name',
             'editMode': 'preview',

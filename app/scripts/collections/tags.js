@@ -18,6 +18,8 @@ define([
         database : TagsDB,
         storeName: 'tags',
 
+        comparator: 'name',
+
         initialize: function () {
         },
 

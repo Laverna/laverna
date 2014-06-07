@@ -32,7 +32,9 @@ define([
             this.args = args;
 
             // Collection of notebooks
-            this.notebooks = new Notebooks();
+            this.notebooks = new Notebooks([], {
+              comparator: App.settings.sortnotebooks
+            });
             this.notebooks.database.getDB(args.profile);
 
             if (this.currentApp.moduleName !== 'AppNotebook') {

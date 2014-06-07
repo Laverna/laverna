@@ -19,7 +19,9 @@ define([
             _.bindAll(this, 'list', 'show');
 
             // Collections of notebooks and tags
-            this.notebooks = new Notebooks();
+            this.notebooks = new Notebooks([], {
+                comparator: App.settings.sortnotebooks
+            });
             this.tags = new Tags();
         },
 

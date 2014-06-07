@@ -119,11 +119,8 @@ define([
     });
 
     // Re-render
-    App.on('sync:after', function (sync) {
-        if (sync.objects.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
-            return;
-        }
-        else if (sync.collection === 'notebooks' || sync.collection === 'tags') {
+    App.on('sync:after', function () {
+        if (App.currentApp.moduleName === 'AppNotebook') {
             API.listNotebooks();
         }
     });

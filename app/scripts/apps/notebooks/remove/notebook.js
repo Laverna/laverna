@@ -39,9 +39,7 @@ define([
                 child.save({parentId : 0});
             });
 
-            this.model.destroy();
-            this.collection.syncDirty(this.model);
-            this.redirect();
+            $.when(this.model.destroySync()).then(this.redirect);
         },
 
         redirect: function () {

@@ -32,6 +32,7 @@ define([
         redirect: function () {
             App.navigate('#' + URI.link('/notebooks'));
         }
+
     });
 
     return Tag.Controller;

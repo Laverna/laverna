@@ -5,8 +5,8 @@ define([
     'marionette',
     'collections/notebooks',
     'apps/navbar/show/view',
-    'helpers/dualstorage'
-], function ( _, App, Marionette, Notebooks, NavbarView ) {
+    'helpers/sync/sync-collections'
+], function ( _, App, Marionette, Notebooks, NavbarView, getSync ) {
     'use strict';
 
     var Navbar = App.module('AppNavbar.Show');
@@ -22,7 +22,7 @@ define([
             _.bindAll(this, 'show', 'showNavbar');
 
             // Synchronizing
-            // this.startSyncing();
+            this.startSyncing();
         },
 
         /**
@@ -61,8 +61,11 @@ define([
          */
         startSyncing: function () {
             var self = this;
+
             if (App.currentApp && this.view) {
-                App.Sync.start();
+                getSync().init(App.settings.cloudStorage, [
+                    'notes', 'notebooks', 'tags', 'files'
+                ]);
             }
             else {
                 setTimeout(function () {

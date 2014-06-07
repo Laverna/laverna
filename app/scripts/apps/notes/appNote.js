@@ -163,11 +163,8 @@ define([
     });
 
     // Re-render sidebar's and note's content after sync:after event
-    App.on('sync:after', function (args) {
-        if (args.objects.length === 0 || App.currentApp.moduleName !== 'AppNote') {
-            return;
-        }
-        else if (args.collection === 'notes' || args.collection === 'files') {
+    App.on('sync:after', function () {
+        if (App.currentApp.moduleName === 'AppNote') {
             var notesArg = _.extend(App.notesArg || {}, {
                 profile : URI.getProfile()
             });

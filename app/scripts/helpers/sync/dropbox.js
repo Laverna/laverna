@@ -45,6 +45,7 @@ define([
         },
 
         checkAuth: function () {
+            this.client.authenticate({ interactive: false });
             return this.client.isAuthenticated();
         },
 
@@ -216,7 +217,13 @@ define([
             resp;
 
         if (method === 'auth') {
-            resp = adapter.auth();
+            // No popup === true
+            if (arguments[1] === true) {
+                return adapter.checkAuth();
+            }
+            else {
+                return adapter.auth();
+            }
         }
         else {
             $.when(adapter.auth()).then(function () {

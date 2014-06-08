@@ -141,7 +141,7 @@ define([
                 lng             : App.settings.appLang,
                 fallbackLng     : 'en',
                 useCookie       : false,
-                useLocalStorage : true
+                useLocalStorage : false
             };
 
             i18n.init(lng, function () {

@@ -143,93 +143,47 @@
                 <div class="tab-pane" id="shortcuts"><!-- {{ shortcuts -->
                     <fieldset>
                         <legend>{{ i18n('Navigation') }}</legend>
+                        <% _.forEach(filter('navigate'), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Top') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.navigateTop}}" name="navigateTop" />
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Bottom') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.navigateBottom}}" name="navigateBottom" />
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                     <fieldset>
                         <legend>{{ i18n('Jump') }}</legend>
+                        <% _.forEach(filter('jump'), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to inbox') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpInbox}}" name="jumpInbox"/>
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to notebook list') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpNotebook}}" name="jumpNotebook"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to favourite notes') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpFavorite}}" name="jumpFavorite"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to removed notes') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpRemoved}}" name="jumpRemoved"/>
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                     <fieldset>
                         <legend>{{ i18n('Actions') }}</legend>
+                        <% _.forEach(filter('actions'), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Edit') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsEdit}}" name="actionsEdit"/>
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Open') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsOpen}}" name="actionsOpen"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Remove') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsRemove}}" name="actionsRemove"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Rotate Star') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsRotateStar}}" name="actionsRotateStar"/>
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                     <fieldset>
                         <legend>{{ i18n('App') }}</legend>
+                        <% _.forEach(appShortcuts(), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Create new note') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.appCreateNote}}" name="appCreateNote"/>
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Search note') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.appSearch}}" name="appSearch"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Keyboard help') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.appKeyboardHelp}}" name="appKeyboardHelp"/>
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                 </div><!-- }} shortcuts -->
                 <div class="tab-pane" id="other"><!-- {{ other -->

@@ -87,8 +87,9 @@ define([
 
         serializeData: function () {
             return {
-                models: this.collection.getConfigs(),
-                dropboxKeyNeed: App.constants.DROPBOXKEYNEED
+                models         : this.collection.getConfigs(),
+                collection     : this.collection,
+                dropboxKeyNeed : App.constants.DROPBOXKEYNEED
             };
         },
 
@@ -188,7 +189,15 @@ define([
 
         templateHelpers: function () {
             return {
-                i18n: $.t
+                i18n: $.t,
+
+                filter: function (str) {
+                    return this.collection.filterName(str);
+                },
+
+                appShortcuts: function () {
+                    return this.collection.appShortcuts();
+                }
             };
         }
 

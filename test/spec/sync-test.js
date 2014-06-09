@@ -25,7 +25,7 @@ define([
                 };
                 break;
             case Notebooks.prototype.storeName:
-                data = { name: 'Hello notebook' + _.uniqueId() };
+                data = { id: 1, name: 'Hello notebook' + _.uniqueId() };
                 break;
             case Tags.prototype.storeName:
                 data = { name: 'syncTestTag' + _.uniqueId() };

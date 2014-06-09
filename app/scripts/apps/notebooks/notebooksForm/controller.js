@@ -47,7 +47,7 @@ define([
 
         // Shows form
         show: function () {
-            if (this.model.get('id') === 0) {
+            if ( !this.model.id ) {
                 this.model.set('id', this.collection.nextOrder());
             }
 
@@ -70,6 +70,7 @@ define([
             var self = this;
 
             data.name = App.Encryption.API.encrypt(_.escape(data.name));
+            data.parentId = Number(data.parentId);
 
             this.model.set(data, {validate: true});
 

@@ -65,12 +65,12 @@ define([
             'type' : 'object',
             'properties': {
                 'id': {
-                    'type': 'string',
+                    'type': 'number',
                     'format': 'id',
                     'required': true
                 },
                 'parentId': {
-                    'type': 'string'
+                    'type': 'number'
                 },
                 'name': {
                     'type': 'string'

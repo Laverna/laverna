@@ -50,7 +50,7 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
 
             var data = {
                 name     : this.ui.name.val(),
-                parentId : parseInt(this.ui.parentId.val())
+                parentId : this.ui.parentId.val()
             };
 
             this.model.trigger('save', data);

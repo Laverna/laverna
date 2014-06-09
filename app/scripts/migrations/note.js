@@ -100,8 +100,9 @@ define([
                 version: 6,
                 migrate: function(transaction, next) {
                     var store = transaction.db.createObjectStore('removed');
-                    store = transaction.objectStore('removed');
-                    next();
+                    if (store) {
+                        next();
+                    }
                 }
             }
         ]

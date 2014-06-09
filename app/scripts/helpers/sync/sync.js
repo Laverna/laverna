@@ -42,7 +42,7 @@ define([
 
             // User is offline or no cloud storage
             if ( !window.navigator.onLine || !this.cloud ) {
-                done.fail();
+                done.reject();
                 return;
             }
 
@@ -66,7 +66,7 @@ define([
                         done.resolve(result);
                     },
                     function (error) {
-                        done.fail(error);
+                        done.reject(error);
                     }
                 );
             }
@@ -135,6 +135,8 @@ define([
                 if (iter === (this.collection.length - 1)) {
                     resp.then(function () {
                         d.resolve();
+                    }, function (e) {
+                        d.reject(e);
                     });
                 }
 
@@ -199,7 +201,7 @@ define([
                         done.resolve();
                     },
                     error: function (e) {
-                        done.fail(e);
+                        done.reject(e);
                     }
                 });
             }
@@ -226,6 +228,9 @@ define([
                     .then(function () {
                         d.resolve();
                     });
+                },
+                error: function (e) {
+                    d.reject(e);
                 }
             });
 

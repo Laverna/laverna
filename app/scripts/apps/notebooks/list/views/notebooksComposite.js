@@ -24,12 +24,12 @@ define([
          * Build tree structure
          */
         appendHtml: function (colView, itemView) {
-            var parentId = parseInt(itemView.model.get('parentId'));
+            var parentId = Number(itemView.model.get('parentId'));
 
             if (parentId === 0) {
                 colView.$(this.itemViewContainer).append(itemView.el);
             } else {
-                this.$('div[data-id=' + parentId + ']').append(itemView.el);
+                this.$('div[data-id=' + String(parentId) + ']').append(itemView.el);
             }
         },
 

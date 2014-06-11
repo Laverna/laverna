@@ -80,7 +80,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
 
         newNotebook: function (e) {
             if (this.ui.notebookId.find('.newNotebook').is(':selected')) {
-                App.AppNotebook.trigger('showForm', false);
+                App.AppNotebook.trigger('showForm', this.options.profile, false);
 
                 this.listenTo(App, 'new:notebook', function (model) {
                     var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.toJSON()) );

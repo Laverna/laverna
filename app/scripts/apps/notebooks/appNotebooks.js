@@ -110,11 +110,11 @@ define([
     };
 
     // Add notebook
-    AppNotebooks.on('showForm', function (redirect) {
+    AppNotebooks.on('showForm', function (profile, redirect) {
         if (_.isUndefined(redirect)) {
             App.navigate(URI.link('/notebooks/add'), true);
         } else {
-            API.addNotebook(redirect);
+            API.addNotebook(profile, redirect);
         }
     });
 

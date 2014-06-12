@@ -34,7 +34,9 @@ define([
                 });
             }
             else {
-                $.when(this.note.save({'trash' : 1})).done(this.redirect);
+                this.note.updateDate();
+                $.when(this.note.save({'trash' : 1}))
+                 .done(this.redirect);
             }
         },
 

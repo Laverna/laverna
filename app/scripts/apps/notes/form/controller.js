@@ -77,6 +77,7 @@ define([
 
             this.view = new View({
                 model     : this.model,
+                profile   : this.model.database.id,
                 decrypted : decrypted,
                 tags      : this.tags,
                 notebooks : this.notebooks,

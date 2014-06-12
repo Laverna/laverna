@@ -224,11 +224,12 @@ define([
             }
 
             var note;
-            if ( !this.args.id) {
-                note = this.notes.at(0);
-            } else {
+            try {
                 note = this.notes.get(this.args.id);
                 note = note.next();
+            }
+            catch (e) {
+                note = this.notes.at(0);
             }
 
             if (this.notes.length >= App.settings.pagination && this.notes.indexOf(note) < 0) {
@@ -248,11 +249,12 @@ define([
             }
 
             var note;
-            if ( !this.args.id) {
-                note = this.notes.last();
-            } else {
+            try {
                 note = this.notes.get(this.args.id);
                 note = note.prev();
+            }
+            catch (e) {
+                note = this.notes.last();
             }
 
             if (this.args.page > 1 && this.notes.indexOf(note) < 0) {

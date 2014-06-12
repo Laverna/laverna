@@ -94,7 +94,9 @@ define([
 
         // Redirect
         redirect: function () {
-            return App.navigate('#' + URI.link('/notebooks'));
+            if (_.isUndefined(this.args.redirect) || this.args.redirect === true) {
+                return App.navigate('#' + URI.link('/notebooks'));
+            }
         }
     });
 

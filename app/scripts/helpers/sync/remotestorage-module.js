@@ -134,7 +134,7 @@ define([
             },
 
             personal: function (type, path) {
-                var dir = type + ( !path ? '' : '/' + path),
+                var dir = ( !path ? '' : '' + path + '/' ) + type,
                     client = privateClient.scope(dir + '/').extend(methods);
 
                 client.modelType = type;

@@ -11,8 +11,14 @@ define([
      * RemoteStorage Adapter for Backbone.js
      */
     var Adapter = function (model) {
-        var type = (model ? model.storeName : 'notes');
-        this.store = module.personal(type);
+        var type = (model ? model.storeName : 'notes'),
+            path;
+
+        if (model && model.database.id !== 'notes-db') {
+            path = model.database.id;
+        }
+
+        this.store = module.personal(type, path);
     };
 
     _.extend(Adapter.prototype, {

@@ -14,6 +14,10 @@ define([
         var key = CONST.DROPBOX_KEY;
         this.dir = (model ? model.storeName : 'notes');
 
+        if (typeof model === 'object' && model.database.id !== 'notes-db') {
+            this.dir = model.database.id + '/' + this.dir;
+        }
+
         if (window.dropboxKey !== '') {
             key = window.dropboxKey;
         }

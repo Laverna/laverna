@@ -266,7 +266,7 @@ module.exports = function (grunt) {
                     mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
                     optimize: 'none',
                     exclude : ['dropbox', 'remotestorage'],
-                    include : [ 'helpers/dropbox', 'helpers/backbone.rssync' ],
+                    // include : [],
                     // TODO: Figure out how to make sourcemaps work with grunt-usemin
                     // https://github.com/yeoman/grunt-usemin/issues/30
                     //generateSourceMaps: true,
@@ -368,7 +368,7 @@ module.exports = function (grunt) {
                     src: [
                         'manifest.webapp',
                         'scripts/libs/dropbox.js',
-                        'bower_components/remotestorage.js/release/0.10.0-beta/remotestorage.amd.js',
+                        'bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage-nocache.amd.js',
                         'bower_components/pagedown/Markdown.Editor.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',

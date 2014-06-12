@@ -127,7 +127,7 @@ define([
                     title = $.t(title.substr(0,1).toUpperCase() + title.substr(1));
 
                     if (this.args.query && this.args.filter !== 'search') {
-                        title += ': ' + this.args.query;
+                        title += ': ' + App.Encryption.API.decrypt(this.args.query);
                     }
 
                     return title;

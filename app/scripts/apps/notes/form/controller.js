@@ -174,17 +174,17 @@ define([
                 return this.confirmRedirect(showNote);
             }
 
+            App.trigger('notes:added', this.model);
+
             // Redirect to edit page
             if (showNote === false) {
                 url += '/edit/' + this.model.get('id');
+                App.navigate(URI.link(url), {trigger: true});
             }
             // Redirect to list
             else if (typeof this.model.get('id') !== 'undefined') {
-                url += '/show/' + this.model.get('id');
+                App.AppNote.trigger('navigate:back');
             }
-
-            App.trigger('notes:added', this.model);
-            App.navigate(URI.link(url), {trigger: true});
 
             if (showNote !== false) {
                 App.content.reset();

@@ -35,7 +35,7 @@ define([
 
     // Modal region events
     App.modal.on('close', function () {
-        App.notesArg = null; // Re render sidebar
+        // App.notesArg = null; // Re render sidebar
     });
 
     // Backbone history navigate

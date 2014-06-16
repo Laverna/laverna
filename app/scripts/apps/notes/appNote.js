@@ -182,10 +182,15 @@ define([
 
     // Re-render sidebar's and note's content after sync:after event
     App.on('sync:after', function () {
-        if (App.currentApp.moduleName === 'AppNote') {
+
+        // Re-render sidebar and note's content
+        if ( App.currentApp.moduleName === 'AppNote' &&
+           !App.getCurrentRoute().match(/\/[edit|add]+/) ) {
+
             var notesArg = _.extend(API.notesArg || {}, {
                 profile : URI.getProfile()
             });
+
             API.showNotes(notesArg);
             API.showNote(notesArg);
         }

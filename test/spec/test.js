@@ -2,6 +2,7 @@ require.config({
     baseUrl: '../test/',
 
     paths: {
+        'sjcl'          :  '../app/bower_components/sjcl/sjcl',
         'jquery'        :  '../app/bower_components/jquery/jquery',
         'underscore'    :  '../app/bower_components/underscore/underscore',
         'backbone'      :  '../app/bower_components/backbone/backbone',
@@ -19,6 +20,7 @@ require.config({
         'helpers'       :  '../app/scripts/helpers',
         'libs'          :  '../app/scripts/libs',
         'constants'     :  '../app/scripts/constants',
+        'apps'          :  '../app/scripts/apps',
         'dropbox'       :  '../app/scripts/libs/dropbox'
     },
 
@@ -45,7 +47,10 @@ require.config({
         'indexedDB': {
             deps: ['underscore', 'backbone']
         },
-        'chai-jquery': ['jquery', 'chai']
+        'chai-jquery': ['jquery', 'chai'],
+        'sjcl': {
+            exports: 'sjcl'
+        }
     },
 
     urlArgs: 'bust=' + (new Date()).getTime(),
@@ -75,7 +80,8 @@ require([
 
     // Test synchronizing only in browsers
     if ( !window.mochaPhantomJS) {
-        tests.push('spec/sync-test');
+        // tests.push('spec/sync-test');
+        tests.push('spec/auth-test');
     }
 
     require(tests, function () {

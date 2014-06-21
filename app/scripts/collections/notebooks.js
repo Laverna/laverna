@@ -2,11 +2,10 @@
 define([
     'underscore',
     'backbone',
-    'app',
     'migrations/note',
     'models/notebook',
     'indexedDB'
-], function (_, Backbone, App, NotesDB, Notebook) {
+], function (_, Backbone, NotesDB, Notebook) {
     'use strict';
 
     /**
@@ -58,11 +57,14 @@ define([
             });
         },
 
+        /**
+         * Decrypt all models in collection
+         */
         decrypt: function () {
-            var data = this.toJSON();
+            var data = [];
 
-            _.forEach(data, function (model) {
-                model.name = App.Encryption.API.decrypt(model.name);
+            this.each(function (model) {
+                data.push(model.decrypt());
             });
 
             return data;

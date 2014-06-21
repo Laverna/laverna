@@ -6,8 +6,9 @@ define([
     'helpers/uri',
     'collections/notebooks',
     'models/notebook',
+    'apps/encryption/auth',
     'apps/notebooks/notebooksForm/formView'
-], function (_, App, Marionette, URI, Notebooks, Notebook, FormView) {
+], function (_, App, Marionette, URI, Notebooks, Notebook, getAuth, FormView) {
     'use strict';
 
     var Form = App.module('AppNotebooks.NotebookForm');
@@ -51,8 +52,7 @@ define([
                 this.model.set('id', this.collection.nextOrder());
             }
 
-            var data = this.model.toJSON();
-            data.name = App.Encryption.API.decrypt(data.name);
+            var data = this.model.decrypt();
 
             this.view = new FormView ({
                 collection: this.collection,
@@ -65,17 +65,16 @@ define([
             this.view.on('redirect', this.redirect, this);
         },
 
-        // Saving data or shows validation errors
+        // Saves data or shows validation errors
         save: function (data) {
             var self = this;
-
-            data.name = App.Encryption.API.encrypt(_.escape(data.name));
-            data.parentId = Number(data.parentId);
 
             this.model.set(data, {validate: true});
 
             if (this.model.isValid()) {
-                this.model.save(data, {
+                this.model.set(data).encrypt();
+
+                this.model.save(this.model.toJSON(), {
                     success: function (model) {
                         if (self.isNew === true) {
                             App.trigger('new:notebook', model);
@@ -98,6 +97,7 @@ define([
                 return App.navigate('#' + URI.link('/notebooks'));
             }
         }
+
     });
 
     return Form.Controller;

@@ -54,14 +54,12 @@ define([
                 decrypted,
                 args;
 
-            decrypted = {
-                title   : App.Encryption.API.decrypt(this.note.get('title')),
-                content : App.Encryption.API.decrypt(this.note.get('content')),
+            decrypted = _.extend(this.note.decrypt(), {
                 notebook: null
-            };
+            });
 
             if (notebook) {
-                decrypted.notebook = notebook.get('name');
+                decrypted.notebook = notebook.decrypt().name;
             }
 
             args = {

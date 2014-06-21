@@ -69,13 +69,8 @@ define([
         },
 
         serializeData: function () {
-            var data = this.model.toJSON();
-
             // Decrypting
-            data.title = App.Encryption.API.decrypt(data.title);
-            data.content = App.Encryption.API.decrypt(data.content);
-
-            return _.extend(data, {
+            return _.extend(this.model.decrypt(), {
                 args    : this.options.args
             });
         },

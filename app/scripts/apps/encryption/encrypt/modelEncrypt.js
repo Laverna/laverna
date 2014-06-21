@@ -2,11 +2,14 @@
 define([
     'underscore',
     'marionette',
+    'apps/encryption/auth',
     'app'
-], function (_, Marionette, App) {
+], function (_, Marionette, getAuth, App) {
     'use strict';
 
     var ModelEncrypt = function () {
+        this.auth = getAuth();
+
         // Old configs from Application cache
         this.oldConfigs = App.settings;
     };
@@ -69,7 +72,7 @@ define([
         // User re enabled encryption but does not change any of settings
         // -------------------------
         encryptOnlyNew: function () {
-            App.log('You\'re enabled encryption again');
+            App.log('You enabled encryption again');
 
             // Filter data
             this.notes.reset(this.notes.getUnEncrypted());
@@ -102,21 +105,17 @@ define([
                 data;
 
             this.notes.each(function (note) {
-                data = {};
-
                 // Try to decrypt data
-                App.settings = self.oldConfigs;
-                data.title = App.Encryption.API.decrypt(note.get('title'));
-                data.content = App.Encryption.API.decrypt(note.get('content'));
+                self.auth.settings = self.oldConfigs;
+                data = note.decrypt();
 
                 // Encrypt
-                App.settings = self.configs;
-                data.title = App.Encryption.API.encrypt(data.title);
-                data.content = App.Encryption.API.encrypt(data.content);
+                self.auth.settings = self.configs;
+                note.encrypt(data);
 
                 // Save
                 note.trigger('update:any');
-                note.save(data, {
+                note.save(note.toJSON(), {
                     success: function () {
                         self.notes.trigger('progressEncryption');
                     }
@@ -129,18 +128,17 @@ define([
                 data;
 
             this.notebooks.each(function (note) {
-                data = {};
 
                 // Try to decrypt data
-                App.settings = self.oldConfigs;
-                data.name = App.Encryption.API.decrypt(note.get('name'));
+                self.auth.settings = self.oldConfigs;
+                data = note.decrypt();
 
                 // Encrypt
-                App.settings = self.configs;
-                data.name = App.Encryption.API.encrypt(data.name);
+                self.auth.settings = self.configs;
+                note.encrypt(data);
 
                 // Save
-                note.save(data, {
+                note.save(note.toJSON(), {
                     success: function () {
                         self.notebooks.trigger('progressEncryption');
                     }

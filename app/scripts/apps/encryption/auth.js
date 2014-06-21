@@ -18,12 +18,17 @@ define([
     Auth.prototype = {
 
         checkAuth: function () {
-            if (this.settings.encrypt === 1 && !this.secureKey) {
-                return false;
-            }
-            else {
+            // Encryption is disabled
+            if (this.settings.encrypt !== 1) {
                 return true;
             }
+
+            // Get secureKey from sessionStorage
+            if ( !this.secureKey ) {
+                this.secureKey = this.getKey();
+            }
+
+            return this.secureKey !== null;
         },
 
         /**
@@ -56,7 +61,7 @@ define([
             }
 
             var secureKey = this.settings.secureKey || this.secureKey;
-            if (this.settings.encrypt === 1 && secureKey) {
+            if (Number(this.settings.encrypt) === 1 && secureKey) {
                 var conf = this.settings,
                     p = {
                         iter : conf.encryptIter,
@@ -85,7 +90,9 @@ define([
                     content = sjcl.decrypt(secureKey.toString(), content);
                 }
                 catch (e) {
-                    console.log('Can\'t decrypt ' + e);
+                    if (console && typeof console.log === 'function') {
+                        console.log('Can\'t decrypt ' + e);
+                    }
                 }
             }
 
@@ -111,6 +118,16 @@ define([
                 return null;
             }
             return this.session.getItem('secureKey');
+        },
+
+        /**
+         * Remove secureKey from sessionStorage
+         */
+        destroyKey: function () {
+            this.secureKey = null;
+            if (this.session) {
+                this.session.removeItem('secureKey');
+            }
         }
 
     };

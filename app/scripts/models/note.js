@@ -4,8 +4,9 @@ define([
     'backbone',
     'migrations/note',
     'collections/removed',
+    'apps/encryption/auth',
     'indexedDB'
-], function (_, Backbone, NotesDB, Removed) {
+], function (_, Backbone, NotesDB, Removed, getAuth) {
     'use strict';
 
     /**
@@ -53,6 +54,24 @@ define([
                 this.set('created', Date.now());
                 this.updateDate();
             }
+        },
+
+        encrypt: function (data) {
+            var auth = getAuth();
+            data = data || this.toJSON();
+
+            this.set('title', auth.encrypt(data.title));
+            this.set('content', auth.encrypt(data.content));
+            this.set('synchronized', 0);
+        },
+
+        decrypt: function () {
+            var data = this.toJSON(),
+                auth = getAuth();
+
+            data.title = auth.decrypt(data.title);
+            data.content = auth.decrypt(data.content);
+            return data;
         },
 
         /**

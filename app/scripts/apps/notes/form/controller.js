@@ -68,12 +68,7 @@ define([
         },
 
         show: function () {
-            var decrypted;
-
-            decrypted = {
-                title : App.Encryption.API.decrypt(this.model.get('title')),
-                content : App.Encryption.API.decrypt(this.model.get('content')),
-            };
+            var decrypted = this.model.decrypt();
 
             this.view = new View({
                 model     : this.model,
@@ -124,6 +119,7 @@ define([
                 data.notebookId = (notebook) ? notebook.get('id') : 0;
             }
 
+            // Images
             data.images = [];
             this.view.options.files.forEach(function (img) {
                 data.images.push(img.get('id'));
@@ -138,15 +134,14 @@ define([
             data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
 
             // Encryption
-            data.title = App.Encryption.API.encrypt(_.escape(data.title));
-            data.content = App.Encryption.API.encrypt(data.content);
+            this.model.set(data).encrypt();
 
             // Save
             this.model.trigger('update:any');
 
             $.when(
                 // Save changes
-                this.model.save(data),
+                this.model.save(),
                 // Add new tags
                 this.tags.saveAdd(data.tags)
             ).done(function () {

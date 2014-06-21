@@ -140,7 +140,7 @@ define([
                 },
 
                 notebook: function (model) {
-                    return App.Encryption.API.decrypt(model.get('name'));
+                    return model.decrypt().name;
                 },
 
                 link: function (profile) {

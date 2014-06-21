@@ -49,8 +49,29 @@ define([
 
             it('properly checks authorization', function () {
                 expect(auth.checkAuth()).to.be.equal(true);
+
+                // Get secureKey from sessionStorage
                 auth.secureKey = null;
+                expect(auth.checkAuth()).to.be.equal(true);
+
+                auth.destroyKey();
                 expect(auth.checkAuth()).to.be.equal(false);
+            });
+
+        });
+
+        describe('Encryption', function () {
+            var value = '24';
+
+            it('can encrypt the data', function () {
+                auth.getSecureKey('1');
+                expect(auth.encrypt(value) === value).to.be.equal(false);
+            });
+
+            it('can decrypt an encrypted data', function () {
+                var encrypted = auth.encrypt(value);
+                expect(encrypted === value).to.be.equal(false);
+                expect(auth.decrypt(encrypted) === value).to.be.equal(true);
             });
 
         });

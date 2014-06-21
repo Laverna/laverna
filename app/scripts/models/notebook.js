@@ -4,8 +4,9 @@ define([
     'backbone',
     'migrations/note',
     'collections/removed',
+    'apps/encryption/auth',
     'indexedDB'
-], function (_, Backbone, NotesDB, Removed) {
+], function (_, Backbone, NotesDB, Removed, getAuth) {
     'use strict';
 
     var Model = Backbone.Model.extend({
@@ -37,6 +38,22 @@ define([
         initialize: function () {
             this.on('removed:note', this.removeCount);
             this.on('add:note', this.addCount);
+        },
+
+        encrypt: function (data) {
+            data = data || this.toJSON();
+
+            this.set('name', getAuth().encrypt( _.escape(data.name) ));
+            this.set('parentId', Number(data.parentId));
+            this.set('synchronized', 0);
+        },
+
+        decrypt: function () {
+            var data = this.toJSON(),
+                auth = getAuth();
+
+            data.name = auth.decrypt(data.name);
+            return data;
         },
 
         updateDate: function () {

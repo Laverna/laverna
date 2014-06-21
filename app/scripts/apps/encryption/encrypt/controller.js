@@ -7,9 +7,10 @@ define([
     'collections/configs',
     'collections/notes',
     'collections/notebooks',
+    'apps/encryption/auth',
     'apps/encryption/encrypt/modelEncrypt',
     'apps/encryption/encrypt/encryptView'
-], function (_, Marionette, App, URI, Configs, Notes, Notebooks, ModelEncrypt, EncryptView) {
+], function (_, Marionette, App, URI, Configs, Notes, Notebooks, getAuth, ModelEncrypt, EncryptView) {
     'use strict';
 
     /**
@@ -28,6 +29,8 @@ define([
             this.configs.fetch();
             this.configs = this.configs.getConfigs();
 
+            this.auth = getAuth(App.settings);
+
             this.notes = new Notes();
             this.notebooks = new Notebooks();
         },
@@ -43,7 +46,7 @@ define([
 
         showProgress: function () {
             this.oldPassNull = true;
-            if ( !App.secureKey && App.settings.encryptPass !== '') {
+            if ( !this.auth.secureKey && App.settings.encryptPass !== '') {
                 this.oldPassNull = false;
             }
 
@@ -94,7 +97,7 @@ define([
                 newKey;
 
             App.settings = this.configs;
-            newKey = App.Encryption.API.encryptKey(args.newPass);
+            newKey = this.auth.getSecureKey(args.newPass);
 
             if (newKey !== false) {
                 this.configs.secureKey = newKey;
@@ -103,7 +106,7 @@ define([
             App.settings = oldConfigs;
             // Old secure key isn't in cache
             if (this.oldPassNull === false) {
-                oldKey = App.Encryption.API.encryptKey(args.oldPass);
+                oldKey = this.auth.getSecureKey(args.oldPass);
                 if (oldKey !== false) {
                     App.settings.secureKey = oldKey;
                 }

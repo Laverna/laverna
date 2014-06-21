@@ -28,8 +28,7 @@ define([
         },
 
         serializeData: function ( ) {
-            return _.extend(this.model.toJSON(), {
-                name : App.Encryption.API.decrypt(this.model.get('name')),
+            return _.extend(this.model.decrypt(), {
                 uri  : URI.link('')
             });
         },

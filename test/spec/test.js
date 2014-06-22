@@ -67,7 +67,8 @@ require([
     'use strict';
 
     var tests = [
-        'spec/model-test'
+        'spec/model-test',
+        'spec/collection-test'
     ];
 
     // Chai
@@ -80,7 +81,7 @@ require([
 
     // Test synchronizing only in browsers
     if ( !window.mochaPhantomJS) {
-        // tests.push('spec/sync-test');
+        tests.push('spec/sync-test');
         tests.push('spec/auth-test');
     }
 

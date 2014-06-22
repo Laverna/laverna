@@ -1,12 +1,11 @@
 /*global define*/
 define([
     'underscore',
-    'app',
     'backbone',
     'migrations/note',
     'models/note',
     'indexedDB'
-], function (_, App, Backbone, NotesDB, Note) {
+], function (_, Backbone, NotesDB, Note) {
     'use strict';
 
     var Notes = Backbone.Collection.extend({
@@ -105,17 +104,17 @@ define([
          * Search
          */
         search : function(letters) {
-            if(letters === '') {
+            if (letters === '') {
                 return this;
             }
 
-            var pattern = new RegExp(letters, 'gi'),
-                title, content;
+            var pattern = new RegExp(letters, 'gim'),
+                data;
 
             return this.filter(function(model) {
-                title = App.Encryption.API.decrypt(model.get('title'));
-                content = App.Encryption.API.decrypt(model.get('content'));
-                return pattern.test(title) || pattern.test(content);
+                data = model.decrypt();
+                pattern.lastIndex = 0;  // Reuse regexp
+                return pattern.test(data.title) || pattern.test(data.content);
             });
         },
 

@@ -46,6 +46,8 @@ define([
                 $.when(self.sync()).then(function () {
                     App.log('SYNC DONE');
                     App.trigger('sync:after');
+                }, function () {
+                    App.log('SYNC error');
                 });
 
             });

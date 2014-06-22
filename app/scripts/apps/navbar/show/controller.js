@@ -48,7 +48,7 @@ define([
         showNavbar: function () {
             if (this.args.filter === 'notebook') {
                 var notebook = this.notebooks.get(this.args.query);
-                this.args.query = notebook.get('name');
+                this.args.query = (notebook ? notebook.decrypt().name : '');
             }
 
             this.view = new NavbarView({

@@ -21,7 +21,7 @@ define([
         // Create form initializing
         addForm: function (args) {
             this.collection = new Notebooks([], {
-              comparator: 'name'
+                comparator: 'name'
             });
             this.model = new Notebook();
             this.isNew = true;
@@ -36,7 +36,7 @@ define([
         // Edit form initializing
         editForm: function (args) {
             this.collection = new Notebooks([], {
-              comparator: 'name'
+                comparator: 'name'
             });
             this.model = new Notebook({id: parseInt(args.id)});
 

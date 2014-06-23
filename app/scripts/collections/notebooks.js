@@ -24,7 +24,7 @@ define([
             if ( !this.length) {
                 return 1;
             }
-            return this.last().get('id') + 1;
+            return this.length + 1;
         },
 
         /**

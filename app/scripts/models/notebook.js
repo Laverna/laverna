@@ -45,7 +45,7 @@ define([
 
             this.set('name', getAuth().encrypt( _.escape(data.name) ));
             this.set('parentId', Number(data.parentId));
-            this.set('synchronized', 0);
+            this.updateDate();
         },
 
         decrypt: function () {

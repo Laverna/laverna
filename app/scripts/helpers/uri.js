@@ -34,7 +34,7 @@ define([
 
         // Builds note\'s hash URI
         note: function (opt, note) {
-            var args = _.clone(opt),
+            var args = (opt ? _.clone(opt) : {}),
                 url = '/notes',
                 filters = {
                     filter : '/f/',

@@ -93,7 +93,7 @@ define([
 
         // Redirect
         redirect: function () {
-            if (_.isUndefined(this.args.redirect) || this.args.redirect === true) {
+            if (_.isNull(this.args.redirect) || this.args.redirect === true) {
                 return App.navigate('#' + URI.link('/notebooks'));
             }
         }

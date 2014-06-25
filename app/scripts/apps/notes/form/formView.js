@@ -78,12 +78,12 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
             this.ui.sCont.on('scroll', this.scrollPagedownBar);
         },
 
-        newNotebook: function (e) {
+        newNotebook: function () {
             if (this.ui.notebookId.find('.newNotebook').is(':selected')) {
                 App.AppNotebook.trigger('showForm', this.options.profile, false);
 
                 this.listenTo(App, 'new:notebook', function (model) {
-                    var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.toJSON()) );
+                    var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.decrypt()) );
                     this.ui.notebookId.append(tmpl);
                     tmpl.prop('selected', true);
                     this.options.notebooks.add(model);

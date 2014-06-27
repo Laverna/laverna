@@ -56,7 +56,7 @@ define([
          * Encrypt the content
          */
         encrypt: function (content) {
-            if (!content || content === '') {
+            if (!content || content === '' || !this.settings) {
                 return content;
             }
 
@@ -80,7 +80,7 @@ define([
          * Decrypt the content
          */
         decrypt: function (content) {
-            if ( !content || content.length === 0) {
+            if ( !content || content.length === 0 || !this.settings) {
                 return content;
             }
 

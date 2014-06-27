@@ -7,146 +7,99 @@ define([
 ], function (_, Marionette, getAuth, App) {
     'use strict';
 
-    var ModelEncrypt = function () {
-        this.auth = getAuth();
+    function ModelEncrypt (configs, configsOld) {
+        var names = ['encrypt', 'encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize'];
 
-        // Old configs from Application cache
-        this.oldConfigs = App.settings;
-    };
+        this.configs = _.pick(configs, names);
+        this.configsOld = _.pick(configsOld, names);
+        this.auth = getAuth(this.configs);
+    }
 
-    _.extend(ModelEncrypt.prototype, {
+    /**
+     * Encryption settings: {
+     *  encrypt: 1 || 0, // enabled or disabled
+     * }
+     */
+    ModelEncrypt.prototype = {
 
-        initialize: function (args) {
-            this.configs = args.configs;
-            this.notes = args.notes;
-            this.notebooks = args.notebooks;
+        initialize: function (collections) {
+            var self = this,
+                done = $.Deferred(),
+                method;
 
-            this.encrypt();
+            // User disabled encryption - we need to decrypt all data
+            if (Number(this.configsOld.encrypt) === 1 && Number(this.configs.encrypt) === 0) {
+                // .. decryption
+                console.log('decrypt');
+                method = 'decrypt';
+            }
+            // Encryption settings has been changed
+            else if ( _.isEqual(this.configs, this.configsOld) === false ) {
+
+                // ... (re)encryption
+                console.log('(re)encryption');
+                method = 'encrypt';
+            }
+
+            _.forEach(collections, function (collection, key) {
+                var resp = self[method].apply(self, [collection]);
+
+                $.when(resp).done(function () {
+                    if (key === (collections.length - 1)) {
+                        console.log('DONE collections');
+                        done.resolve();
+                    }
+                });
+            });
+
+            return done;
         },
 
-        encrypt: function () {
-            // This is probably the first encryption
-            if (this.oldConfigs.encrypt === 0 && this.oldConfigs.secureKey === '') {
-                this.firstEncryption();
-            }
-            // Some (or all) of encryption's settings has been changed
-            else if (this.isSettingsChanged() === true) {
-                this.reEncryption();
-            }
-            // User disabled encryption - unencrypt all data
-            else if (this.oldConfigs.encrypt === 1 && this.configs.encrypt === 0) {
-                this.decryption();
-            }
-            // User just re enabled encryption
-            else if (this.oldConfigs.encrypt === 0) {
-                this.encryptOnlyNew();
-            }
-        },
+        encrypt: function (collection) {
+            var done = $.Deferred(),
+                data;
 
-        // Returns true if any of encryption's settings has been changed
-        // ----------------------------
-        isSettingsChanged: function () {
-            var encrSet = ['encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize'],
-                changed = false;
+            collection.forEach(function (model, key) {
+                this.auth.settings = this.configsOld;
+                data = model.decrypt();
 
-            _.each(encrSet, function (set) {
-                if (typeof(this.configs[set]) !== 'object' &&
-                    this.configs[set] !== this.oldConfigs[set]) {
-                    changed = true;
-                } else if (this.configs[set].toString() !== this.oldConfigs[set].toString()) {
-                    changed = true;
-                }
+                this.auth.settings = this.configs;
+                model.encrypt(data);
+
+                model.save(model.toJSON(), {
+                    success: function () {
+                        if (key === (collection.length - 1)) {
+                            console.log('DONE models');
+                            done.resolve();
+                        }
+                        collection.trigger('encryption:progress');
+                    }
+                });
             }, this);
 
-            return changed;
+            return done;
         },
 
-        // First kiss :)
-        // ------------
-        firstEncryption: function () {
-            App.log('First encryption');
-            this.encryptNotes();
-            this.encryptNotebooks();
-        },
+        decrypt: function (collection) {
+            var done = $.Deferred();
 
-        // User re enabled encryption but does not change any of settings
-        // -------------------------
-        encryptOnlyNew: function () {
-            App.log('You enabled encryption again');
+            collection.forEach(function (model, key) {
+                this.auth.settings = this.configsOld;
 
-            // Filter data
-            this.notes.reset(this.notes.getUnEncrypted());
-            this.notebooks.reset(this.notebooks.getUnEncrypted());
-
-            // Encrypt
-            this.encryptNotes();
-            this.encryptNotebooks();
-        },
-
-        // Encryption settings is changed decrypt and encrypt all data
-        // ------------------------
-        reEncryption: function () {
-            App.log('You changed some of encryption settings');
-            App.settings.encrypt = 1;
-            this.encryptNotes();
-            this.encryptNotebooks();
-        },
-
-        // No need of encryption - decrypt all the data
-        // ----------------------
-        decryption: function () {
-            App.log('Decryption');
-            this.encryptNotes();
-            this.encryptNotebooks();
-        },
-
-        encryptNotes: function () {
-            var self = this,
-                data;
-
-            this.notes.each(function (note) {
-                // Try to decrypt data
-                self.auth.settings = self.oldConfigs;
-                data = note.decrypt();
-
-                // Encrypt
-                self.auth.settings = self.configs;
-                note.encrypt(data);
-
-                // Save
-                note.trigger('update:any');
-                note.save(note.toJSON(), {
+                model.save(model.decrypt(), {
                     success: function () {
-                        self.notes.trigger('progressEncryption');
+                        if (key === (collection.length - 1)) {
+                            done.resolve();
+                        }
+                        collection.trigger('decryption:progress');
                     }
                 });
-            });
-        },
+            }, this);
 
-        encryptNotebooks: function () {
-            var self = this,
-                data;
-
-            this.notebooks.each(function (note) {
-
-                // Try to decrypt data
-                self.auth.settings = self.oldConfigs;
-                data = note.decrypt();
-
-                // Encrypt
-                self.auth.settings = self.configs;
-                note.encrypt(data);
-
-                // Save
-                note.save(note.toJSON(), {
-                    success: function () {
-                        self.notebooks.trigger('progressEncryption');
-                    }
-                });
-            });
+            return done;
         }
 
-    });
+    };
 
     return ModelEncrypt;
 });

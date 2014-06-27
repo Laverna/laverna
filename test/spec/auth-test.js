@@ -2,8 +2,9 @@
 define([
     'underscore',
     'chai',
-    'apps/encryption/auth'
-], function (_, chai, getAuth) {
+    'apps/encryption/auth',
+    'apps/encryption/encrypt/modelEncrypt'
+], function (_, chai, getAuth, Encrypt) {
     'use strict';
 
     var expect = chai.expect,
@@ -74,6 +75,76 @@ define([
                 expect(auth.decrypt(encrypted) === value).to.be.equal(true);
             });
 
+        });
+
+        describe('Reencryption', function () {
+            var settingsNew = _.extend(_.clone(settings), { encryptKeySize: '256', encrypt: 0}),
+                notes,
+                encrypt;
+
+            this.timeout(5000);
+
+            function getJSON (data, key) {
+                key = key || 'title';
+                try {
+                    return JSON.parse(data.get(key));
+                }
+                catch (e) {
+                    return data.get(key);
+                }
+            }
+
+            before(function (done) {
+                encrypt = new Encrypt(settingsNew, settings);
+
+                require(['collections/notes'], function (Notes) {
+                    notes = new Notes();
+                    notes.database.getDB('unittest');
+
+                    for (var i = 0; i <= 10; i++) {
+                        notes.create(new notes.model({
+                            id: i,
+                            title: 'Note #' + i,
+                            content: 'Content of note #' + i
+                        }));
+                    }
+                    done();
+                });
+            });
+
+            it('collection is not empty', function () {
+                expect(notes.length > 0).to.be.equal(true);
+            });
+
+            it('can encrypt data', function (done) {
+                encrypt.configsOld.encrypt = 0;
+                encrypt.configs.encrypt = 1;
+
+                $.when(encrypt.initialize([notes])).then(function () {
+                    var note = getJSON(notes.at(0));
+
+                    expect(typeof note).to.be.equal('object');
+                    done();
+                });
+            });
+
+            it('can decrypt data', function (done) {
+                encrypt.configsOld.encrypt = 1;
+                encrypt.configs.encrypt = 0;
+
+                $.when(encrypt.initialize([notes])).done(function () {
+                    var note = getJSON(notes.at(0));
+
+                    expect(typeof note).to.be.equal('string');
+                    done();
+                });
+            });
+
+            it('reencrypts the data when an encryption settings have been changed', function () {
+            });
+
+            it('can decrypt all data when user disables encryption', function () {
+            });
         });
 
     });

@@ -81,7 +81,7 @@ require([
 
     // Test synchronizing only in browsers
     if ( !window.mochaPhantomJS) {
-        tests.push('spec/sync-test');
+        // tests.push('spec/sync-test');
         tests.push('spec/auth-test');
     }
 

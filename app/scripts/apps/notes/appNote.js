@@ -192,7 +192,9 @@ define([
             });
 
             API.showNotes(notesArg);
-            API.showNote(notesArg);
+            if (notesArg.id) {
+                API.showNote(notesArg);
+            }
         }
     });
 

@@ -19,7 +19,7 @@ define([
             var configs = new Configs();
 
             if (App.firstStart  === true) {
-                this.install();
+                this.createDoc();
             }
             else if (App.settings.appVersion !== App.constants.VERSION) {
                 App.log('New version of application is available');
@@ -29,38 +29,32 @@ define([
             }
         },
 
-        install: function () {
-            var notes = new Notes(),
+        createDoc: function () {
+            var notes = new Notes({}),
                 note;
 
-            $.ajax({
-                url: App.constants.URL + 'docs/README.md',
-                dataType: 'text'
-            }).done(function (text) {
-                note = new notes.model();
-                note.save({
-                    title: 'About Laverna',
-                    content: text
-                });
-            });
+            $.when(notes.fetch({limit: 2})).then(function () {
+                // Do not create doc if collection is not empty
+                if (notes.length === 0) {
+                    $.ajax({
+                        url: App.constants.URL + 'docs/howto.md',
+                        dataType: 'text'
+                    }).done(function (text) {
+                        note = new notes.model();
 
-            $.ajax({
-                url: App.constants.URL + 'docs/howto.md',
-                dataType: 'text'
-            }).done(function (text) {
-                note = new notes.model();
-
-                $.when(
-                    note.save({
-                        title: 'How to use tags and tasks',
-                        content: text
-                    })
-                ).done(
-                    // Reload notes list
-                    function () {
-                        App.trigger('notes:list');
-                    }
-                );
+                        $.when(
+                            note.save({
+                                title: 'How to use tags and tasks',
+                                content: text
+                            })
+                        ).done(
+                            // Reload notes list
+                            function () {
+                                App.trigger('notes:list');
+                            }
+                        );
+                    });
+                }
             });
         }
 

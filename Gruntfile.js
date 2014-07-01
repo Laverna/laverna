@@ -336,16 +336,6 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            readme: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/../',
-                    dest: '<%= yeoman.app %>/docs/',
-                    src: [
-                        'README.md'
-                    ]
-                }]
-            },
             dist: {
                 files: [{
                     expand: true,

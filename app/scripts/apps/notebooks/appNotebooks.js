@@ -69,7 +69,6 @@ define([
         // Create notebook
         addNotebook: function (profile, redirect) {
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                // redirect = redirect || true;
                 executeAction(new Form().addForm, {profile: profile, redirect: redirect});
             });
         },

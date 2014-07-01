@@ -1,10 +1,10 @@
-/* global define, describe, before, it */
+/* global define, describe, before, after, it */
 define([
     'underscore',
     'chai',
     'apps/encryption/auth',
     'apps/encryption/encrypt/modelEncrypt'
-], function (_, chai, getAuth, Encrypt) {
+], function (_, chai, getAuth, getEncrypt) {
     'use strict';
 
     var expect = chai.expect,
@@ -82,7 +82,7 @@ define([
                 notes,
                 encrypt;
 
-            this.timeout(5000);
+            this.timeout(10000);
 
             function getJSON (data, key) {
                 key = key || 'title';
@@ -95,7 +95,10 @@ define([
             }
 
             before(function (done) {
-                encrypt = new Encrypt(settingsNew, settings);
+                encrypt = getEncrypt(settingsNew, settings);
+
+                encrypt.checkPassword('1', 'configsOld');
+                encrypt.checkPassword('1', 'configs');
 
                 require(['collections/notes'], function (Notes) {
                     notes = new Notes();
@@ -112,6 +115,10 @@ define([
                 });
             });
 
+            after(function () {
+                window.indexedDB.deleteDatabase('unittest');
+            });
+
             it('collection is not empty', function () {
                 expect(notes.length > 0).to.be.equal(true);
             });
@@ -124,11 +131,15 @@ define([
                     var note = getJSON(notes.at(0));
 
                     expect(typeof note).to.be.equal('object');
+                    expect(typeof notes.at(0).decrypt().title).to.be.equal('string');
                     done();
                 });
             });
 
             it('can decrypt data', function (done) {
+                encrypt.configsOld = settingsNew;
+                encrypt.configs = settings;
+
                 encrypt.configsOld.encrypt = 1;
                 encrypt.configs.encrypt = 0;
 
@@ -140,10 +151,27 @@ define([
                 });
             });
 
-            it('reencrypts the data when an encryption settings have been changed', function () {
-            });
+            it('reencrypts the data when an encryption settings have been changed', function (done) {
+                encrypt.configsOld = settings;
+                encrypt.configs = settingsNew;
 
-            it('can decrypt all data when user disables encryption', function () {
+                encrypt.configsOld.encrypt = 0;
+                encrypt.configs.encrypt = 1;
+
+                function reEncrypt () {
+                    encrypt.configsOld.encrypt = 1;
+                    encrypt.configs.encrypt = 1;
+                    encrypt.configs.encryptKeySize = '256';
+
+                    $.when(encrypt.initialize([notes])).done(function () {
+                        var note = getJSON(notes.at(0));
+                        expect(typeof note).to.be.equal('object');
+                        expect(typeof notes.at(0).decrypt().title).to.be.equal('string');
+                        done();
+                    });
+                }
+
+                $.when(encrypt.initialize([notes])).done(reEncrypt);
             });
         });
 

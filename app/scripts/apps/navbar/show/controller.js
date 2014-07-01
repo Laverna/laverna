@@ -37,7 +37,7 @@ define([
             });
             this.notebooks.database.getDB(args.profile);
 
-            if (App.currentApp.moduleName !== 'AppNotebook') {
+            if (App.currentApp && App.currentApp.moduleName !== 'AppNotebook') {
                 $.when(this.notebooks.fetch()).done(this.showNavbar);
             }
             else {

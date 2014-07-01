@@ -96,7 +96,7 @@ define([
     };
 
     // Initialize settings
-    App.on('initialize:before', function () {
+    App.on('before:start', function () {
         configs.fetch();
 
         // Set default set of configs
@@ -124,7 +124,7 @@ define([
     });
 
     // Start default module
-    App.on('initialize:after', function () {
+    App.on('start', function () {
         require([
             'constants',
             'helpers/install',

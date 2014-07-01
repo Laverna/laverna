@@ -11,9 +11,9 @@ define([
     var View = Marionette.CompositeView.extend({
         template: _.template(Templ),
 
-        itemView: ItemView,
+        childView: ItemView,
 
-        itemViewContainer: '.list-notebooks',
+        childViewContainer: '.list-notebooks',
 
         initialize: function () {
             this.on('next', this.next, this);
@@ -23,11 +23,11 @@ define([
         /**
          * Build tree structure
          */
-        appendHtml: function (colView, itemView) {
+        attachHtml: function (colView, itemView) {
             var parentId = Number(itemView.model.get('parentId'));
 
             if (parentId === 0) {
-                colView.$(this.itemViewContainer).append(itemView.el);
+                this.$(colView.childViewContainer).append(itemView.el);
             } else {
                 this.$('div[data-id=' + String(parentId) + ']').append(itemView.el);
             }

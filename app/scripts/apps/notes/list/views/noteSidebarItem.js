@@ -3,25 +3,20 @@
 define([
     'underscore',
     'app',
-    'backbone',
     'marionette',
     'helpers/uri',
     'text!apps/notes/list/templates/sidebarListItem.html',
     'pagedown-ace'
-    // 'pagedown.sanitizer'
-], function(_, App, Backbone, Marionette, URI, Template) {
+], function(_, App, Marionette, URI, Template) {
     'use strict';
 
-    var View = Backbone.Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'list-group',
 
         ui: {
             favorite : '.favorite',
-        },
-
-        keyboardEvents: {
         },
 
         events: {
@@ -33,9 +28,6 @@ define([
             'change:trash' : 'remove',
             'changeFocus'  : 'changeFocus',
             'change:isFavorite': 'changeFavorite'
-        },
-
-        initialize: function () {
         },
 
         changeFavorite: function () {

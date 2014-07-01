@@ -14,7 +14,7 @@ define([
     /**
      * Layout view
      */
-    Layout.View = Backbone.Marionette.Layout.extend({
+    Layout.View = Backbone.Marionette.LayoutView.extend({
         template: _.template(Templ),
 
         regions: {

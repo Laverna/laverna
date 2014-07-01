@@ -23,7 +23,7 @@ require.config({
         i18next                    :  '../bower_components/i18next/i18next.min',
         // Backbone &              :  Marionette
         backbone                   :  '../bower_components/backbone/backbone',
-        marionette                 :  '../bower_components/marionette/lib/core/amd/backbone.marionette',
+        marionette                 :  '../bower_components/marionette/lib/core/backbone.marionette',
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
         IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
@@ -36,8 +36,8 @@ require.config({
         hammerjs                   :  '../bower_components/hammerjs/hammer',
         // remotestorage              :  'libs/remotestorage',
         remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage-nocache.amd',
-        'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
-        'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
+        'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/backbone.wreqr',
+        'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/backbone.babysitter',
         // Keybindings             :
         'Mousetrap'                :  '../bower_components/mousetrap/mousetrap',
         'mousetrap-pause'          :  '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
@@ -137,7 +137,7 @@ require([
     'app',
     'helpers/sync/remotestorage',
     'bootstrap'
-], function ($, App, rssync) {
+], function ($, App) {
     'use strict';
     /*global alert*/
 
@@ -158,15 +158,10 @@ require([
         request.onerror = function() {
             // alert('It seems like you refused Laverna to use IndexedDB or you are in Private browsing mode.');
             window.appNoDB = true;
-            $.when(rssync('auth')).done(function () {
-                App.start();
-            });
+            App.start();
         };
         request.onsuccess = function() {
-            rssync('auth');
-            // $.when(rssync('auth')).done(function () {
-                App.start();
-            // });
+            App.start();
         };
     }
 

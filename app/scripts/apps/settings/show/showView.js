@@ -58,6 +58,7 @@ define([
         },
 
         renderAgain: function () {
+            console.log('rendered again');
             var tab = this.$('li.active a').attr('href').replace('#', '');
             this.render();
             this.changeTab(tab);
@@ -168,7 +169,7 @@ define([
             }, this);
 
             this.somethingChanged = true;
-            this.close();
+            this.destroy();
             return false;
         },
 
@@ -180,11 +181,11 @@ define([
             this.trigger('redirect', args);
         },
 
-        close: function (e) {
+        destroy: function (e) {
             if (e !== undefined) {
                 e.preventDefault();
             }
-            this.trigger('close');
+            this.trigger('destroy');
         },
 
         templateHelpers: function () {

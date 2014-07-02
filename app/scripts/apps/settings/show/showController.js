@@ -122,7 +122,7 @@ define([
         // Navivate back and reload the page
         // ---------------------------------
         redirect: function (changedSettings) {
-            App.modal.close();
+            App.modal.empty();
 
             if ( this.isEncryptionChanged(changedSettings) === false) {
                 App.navigate(URI.link('/notes'), {trigger : false});

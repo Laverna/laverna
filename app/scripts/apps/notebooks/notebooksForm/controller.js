@@ -80,7 +80,7 @@ define([
                             App.trigger('new:notebook', model);
                         }
 
-                        self.view.trigger('close');
+                        self.view.trigger('destroy');
 
                         self.redirect();
                     }

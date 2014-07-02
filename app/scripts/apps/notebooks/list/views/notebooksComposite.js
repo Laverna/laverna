@@ -4,20 +4,23 @@ define([
     'app',
     'marionette',
     'apps/notebooks/list/views/notebooksItem',
+    'helpers/uri',
     'text!apps/notebooks/list/templates/notebooksList.html'
-], function (_, App, Marionette, ItemView, Templ) {
+], function (_, App, Marionette, ItemView, URI, Templ) {
     'use strict';
 
     var View = Marionette.CompositeView.extend({
         template: _.template(Templ),
 
         childView: ItemView,
-
         childViewContainer: '.list-notebooks',
+        childViewOptions: {},
 
         initialize: function () {
             this.on('next', this.next, this);
             this.on('prev', this.prev, this);
+
+            this.childViewOptions.uri = URI.link('');
         },
 
         /**

@@ -4,9 +4,14 @@ require.config({
     paths: {
         'sjcl'          :  '../app/bower_components/sjcl/sjcl',
         'jquery'        :  '../app/bower_components/jquery/jquery',
+        'i18next'       :  '../app/bower_components/i18next/i18next.min',
         'underscore'    :  '../app/bower_components/underscore/underscore',
+        'text'          :  '../app/bower_components/requirejs-text/text',
         'backbone'      :  '../app/bower_components/backbone/backbone',
+        'marionette'    :  '../app/bower_components/marionette/lib/core/backbone.marionette',
         'localStorage'  :  '../app/bower_components/backbone.localStorage/backbone.localStorage',
+        'backbone.wreqr'           :  '../app/bower_components/backbone.wreqr/lib/backbone.wreqr',
+        'backbone.babysitter'      :  '../app/bower_components/backbone.babysitter/lib/backbone.babysitter',
         'indexedDB'     :  '../app/bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         'remotestorage' :  '../app/bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
         'toBlob'        :  '../app/bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
@@ -21,7 +26,9 @@ require.config({
         'libs'          :  '../app/scripts/libs',
         'constants'     :  '../app/scripts/constants',
         'apps'          :  '../app/scripts/apps',
-        'dropbox'       :  '../app/scripts/libs/dropbox'
+        'dropbox'       :  '../app/scripts/libs/dropbox',
+        'app'           :  '../app/scripts/app',
+        'locales'       :  '../app/locales'
     },
 
     shim: {
@@ -36,6 +43,10 @@ require.config({
         },
         'jquery': {
             exports: '$'
+        },
+        'i18next': {
+            deps: ['jquery'],
+            exports: 'i18n'
         },
         'dropbox': {
             exports: 'Dropbox'
@@ -59,16 +70,26 @@ require.config({
 });
 
 require([
+    'underscore',
+    'i18next',
     'chai',
     'chai-jquery',
     'mocha',
     'jquery'
-], function (chai, chaiJquery) {
+], function (_, i18n, chai, chaiJquery) {
     'use strict';
+
+    // Underscore template
+    _.templateSettings = {
+        // interpolate : /\{\{(.+?)\}\}/g
+        interpolate: /\{\{(.+?)\}\}/g,
+        evaluate: /<%([\s\S]+?)%>/g
+    };
 
     var tests = [
         'spec/model-test',
-        'spec/collection-test'
+        'spec/collection-test',
+        'spec/views/notebooks'
     ];
 
     // Chai
@@ -90,7 +111,9 @@ require([
             window.mochaPhantomJS.run();
         }
         else {
-            mocha.run();
+            i18n.init({'lng': 'en'}, function () {
+                mocha.run();
+            });
         }
     });
 

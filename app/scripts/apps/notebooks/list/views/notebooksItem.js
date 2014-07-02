@@ -1,11 +1,9 @@
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
-    'helpers/uri',
     'text!apps/notebooks/list/templates/notebooksItem.html'
-], function (_, App, Marionette, URI, Templ) {
+], function (_, Marionette, Templ) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -29,7 +27,7 @@ define([
 
         serializeData: function ( ) {
             return _.extend(this.model.decrypt(), {
-                uri  : URI.link('')
+                uri  : this.options.uri
             });
         },
 

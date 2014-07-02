@@ -3,7 +3,7 @@ define([
     'underscore',
     'jquery',
     'app',
-    'backbone',
+    'marionette',
     'text!apps/notes/form/templates/form.html',
     'checklist',
     'tags',
@@ -12,15 +12,14 @@ define([
     'helpers/mathjax',
     'apps/notes/form/dropareaView',
     'apps/notes/form/linkView',
-    'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, DropareaView, LinkView) {
+function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, DropareaView, LinkView) {
     'use strict';
 
-    var View = Backbone.Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         ui: {
@@ -67,7 +66,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
             this.on('pagedown:mode',  this.changePagedownMode);
         },
 
-        onClose: function () {
+        onDestroy: function () {
             App.mousetrap.API.unpause();
             this.imgHelper.clean();
             this.switchMode();

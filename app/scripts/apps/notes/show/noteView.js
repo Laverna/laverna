@@ -3,7 +3,7 @@
 define([
     'underscore',
     'app',
-    'backbone',
+    'marionette',
     'helpers/uri',
     'text!apps/notes/show/templates/item.html',
     'checklist',
@@ -13,12 +13,11 @@ define([
     'helpers/mathjax',
     'hammerjs',
     'backbone.mousetrap',
-    'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, URI, Template, Checklist, Tags, Img, prettify, mathjax, Hammer) {
+], function (_, App, Marionette, URI, Template, Checklist, Tags, Img, prettify, mathjax, Hammer) {
     'use strict';
 
-    var View = Backbone.Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'content-notes',

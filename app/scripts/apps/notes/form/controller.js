@@ -169,6 +169,7 @@ define([
                 return this.confirmRedirect(showNote);
             }
 
+            console.log(url);
             App.trigger('notes:added', this.model);
 
             // Redirect to edit page

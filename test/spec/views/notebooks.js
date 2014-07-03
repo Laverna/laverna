@@ -4,8 +4,10 @@ define([
     'jquery',
     'chai',
     'models/notebook',
-    'apps/notebooks/list/views/notebooksItem'
-], function (require, $, chai, Notebook, ItemView) {
+    'collections/notebooks',
+    'apps/notebooks/list/views/notebooksItem',
+    'apps/notebooks/list/views/notebooksComposite'
+], function (require, $, chai, Notebook, Notebooks, ItemView, ListView) {
     'use strict';
 
     var expect = chai.expect;
@@ -51,6 +53,61 @@ define([
             });
         });
 
+    });
+
+    describe('Notebook CompositeView', function () {
+        var notebooks,
+            view,
+            viewHtml,
+            models = [],
+            list;
+
+        before(function () {
+
+            for (var i = 0; i < 6; i++) {
+                models.push({
+                    id: i,
+                    name: 'Notebook #' + i,
+                    parentId: (i - 1)
+                });
+            }
+
+            notebooks = new Notebooks(models);
+
+            // Instantiate a CompositeView
+            view = new ListView({
+                el: $('<div>'),
+                // el: $('div'),
+                collection: notebooks
+            });
+            view.render();
+            viewHtml = view.$el.html();
+        });
+
+        describe('instantiated', function () {
+            it('collection is not empty', function () {
+                expect(notebooks.length).to.be.ok(models.length);
+            });
+
+            it('is was rendered', function () {
+                expect(view.isRendered).to.be.ok();
+                expect(viewHtml !== '').to.be.ok();
+            });
+        });
+
+        describe('nested view', function () {
+            it('items are nested', function () {
+                for (var i = 0; i < notebooks.length; i++) {
+                    var div = view.$el.find('div.tags[data-id=' + i + ']').html();
+                    if (i === (notebooks.length - 1)) {
+                        expect(div === '').to.be.ok();
+                    }
+                    else {
+                        expect(div !== '').to.be.ok();
+                    }
+                }
+            });
+        });
     });
 
 });

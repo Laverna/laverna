@@ -1,12 +1,11 @@
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
     'apps/notebooks/list/views/notebooksItem',
     'helpers/uri',
     'text!apps/notebooks/list/templates/notebooksList.html'
-], function (_, App, Marionette, ItemView, URI, Templ) {
+], function (_, Marionette, ItemView, URI, Templ) {
     'use strict';
 
     var View = Marionette.CompositeView.extend({

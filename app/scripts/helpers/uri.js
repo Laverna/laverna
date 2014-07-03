@@ -11,7 +11,7 @@ define([
     var URI = {
         getProfile: function () {
             var route = Backbone.history.fragment,
-                uri = route.split('/');
+                uri = (route ? route.split('/') : '');
 
             if (_.contains(uri, 'p')) {
                 return uri[1];

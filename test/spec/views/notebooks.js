@@ -32,7 +32,7 @@ define([
 
         describe('instantiated', function () {
             it('should exist', function () {
-                expect(view).to.be.ok;
+                expect(view).to.be.ok();
             });
 
             it('model was passed', function () {
@@ -42,12 +42,12 @@ define([
 
         describe('render()', function () {
             it('is not empty', function () {
-                expect(viewHtml !== '').to.be.ok;
+                expect(viewHtml !== '').to.be.ok();
             });
 
             it('model', function () {
                 var regx = new RegExp(notebook.get('name'), 'gi');
-                expect(regx.test(viewHtml)).to.be.ok;
+                expect(regx.test(viewHtml)).to.be.ok();
             });
         });
 

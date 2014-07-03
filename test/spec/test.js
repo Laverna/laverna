@@ -33,10 +33,10 @@ require.config({
 
     shim: {
         mocha: {
-             exports: 'mocha'
+            exports: 'mocha'
         },
         chai: {
-             exports: 'chai'
+            exports: 'chai'
         },
         'underscore': {
             exports: '_'

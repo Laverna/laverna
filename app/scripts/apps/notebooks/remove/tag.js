@@ -6,7 +6,7 @@ define([
     'helpers/uri',
     'models/tag',
     'collections/tags'
-], function (_, App, Marionette, URI, Model, Tags) {
+], function (_, App, Marionette, URI, Model) {
     'use strict';
 
     var Tag = App.module('AppNotebooks.RemoveTag');
@@ -26,14 +26,13 @@ define([
         },
 
         remove: function () {
-            this.model.destroy();
-            new Tags().syncDirty(this.model);
-            this.redirect();
+            $.when(this.model.destroySync()).done(this.redirect);
         },
 
         redirect: function () {
             App.navigate('#' + URI.link('/notebooks'));
         }
+
     });
 
     return Tag.Controller;

@@ -13,13 +13,13 @@
     <form action="#" class="form-wrapper" role="form" method="post">
         <h1><i class="icon-lock"></i></h1>
         <h1>Laverna</h1>
-        <div class="form-password<% if (oldPass == true) { %> hide<% } %>">
+        <div class="form-password<% if (passwords.old !== true) { %> hide<% } %>">
             <i class="icon icon-lock"></i>
             <input class="form-control input-lg" type="password" name="oldpass" placeholder="{{ i18n('Your old encryption password') }}" autofocus />
         </div>
-        <div class="form-password">
+        <div class="form-password<% if (passwords.new !== true) { %> hide<% } %>">
             <i class="icon icon-lock"></i>
-            <input class="form-control input-lg" type="password" name="password" placeholder="{{ i18n('Your new encryption password') }}" required="" autofocus />
+            <input class="form-control input-lg" type="password" name="password" placeholder="{{ i18n('Your new encryption password') }}" autofocus />
         </div>
         <input class="btn btn-lg btn-block btn-success" type="submit" value="{{ i18n('Submit') }}"/>
     </form>

@@ -2,12 +2,10 @@
 define([
     'underscore',
     'backbone',
-    'app',
     'migrations/note',
     'models/notebook',
     'indexedDB'
-    // 'localStorage',
-], function (_, Backbone, App, NotesDB, Notebook) {
+], function (_, Backbone, NotesDB, Notebook) {
     'use strict';
 
     /**
@@ -20,13 +18,31 @@ define([
         storeName: 'notebooks',
 
         /**
-         * Generates the next order number
+         * Filter for tree structure
          */
-        nextOrder: function () {
-            if ( !this.length) {
-                return 1;
-            }
-            return this.last().get('id') + 1;
+        getTree: function (parents, tree) {
+            var self = this,
+                childs;
+
+            parents = (parents || this.getRoots());
+            tree = (tree || []);
+
+            _.forEach(parents, function (model) {
+                tree.push(model);
+                childs = self.getChilds(model.get('id'));
+
+                if (childs.length > 0) {
+                    childs = self.getTree(childs, tree);
+                }
+            });
+
+            return tree;
+        },
+
+        getChilds: function (parentId) {
+            return this.filter(function (model) {
+                return model.get('parentId') === parentId;
+            });
         },
 
         /**
@@ -34,7 +50,7 @@ define([
          */
         getChildrens: function () {
             return this.filter(function (notebook) {
-                return notebook.get('parentId') !== 0;
+                return notebook.get('parentId') !== '0';
             });
         },
 
@@ -59,11 +75,14 @@ define([
             });
         },
 
+        /**
+         * Decrypt all models in collection
+         */
         decrypt: function () {
-            var data = this.toJSON();
+            var data = [];
 
-            _.forEach(data, function (model) {
-                model.name = App.Encryption.API.decrypt(model.name);
+            this.each(function (model) {
+                data.push(model.decrypt());
             });
 
             return data;

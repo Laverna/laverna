@@ -35,7 +35,7 @@ define([
 
     // Modal region events
     App.modal.on('close', function () {
-        App.notesArg = null; // Re render sidebar
+        // App.notesArg = null; // Re render sidebar
     });
 
     // Backbone history navigate
@@ -87,6 +87,8 @@ define([
         App.settings = configs.getConfigs();
         App.currentProfile = URI.getProfile();
 
+        window.dropboxKey = App.settings.dropboxKey;
+
         App.currentApp = currentApp;
         if(currentApp){
             currentApp.start(args);
@@ -94,7 +96,7 @@ define([
     };
 
     // Initialize settings
-    App.on('initialize:before', function () {
+    App.on('before:start', function () {
         configs.fetch();
 
         // Set default set of configs
@@ -122,13 +124,12 @@ define([
     });
 
     // Start default module
-    App.on('initialize:after', function () {
+    App.on('start', function () {
         require([
             'constants',
             'helpers/install',
             'apps/confirm/appConfirm',
             'apps/encryption/encrypt',
-            'helpers/dualstorage',
             'helpers/keybindings',
             'apps/navbar/appNavbar',
             'apps/notes/appNote',

@@ -32,10 +32,10 @@ define([
         showModal: function(view) {
             this.view = view;
 
-            view.on('close', this.hideModal, this);
+            view.on('destroy', this.hideModal, this);
 
             Mousetrap.bind('esc', function () {
-                view.trigger('close');
+                view.trigger('destroy');
                 return false;
             });
 
@@ -59,7 +59,7 @@ define([
             // If url is changed we should close modal window
             if (view.hashChange === undefined && this.modalShown === true) {
                 this.$window.on('hashchange.modal', function () {
-                    view.trigger('close');
+                    view.trigger('destroy');
                 });
             }
         },

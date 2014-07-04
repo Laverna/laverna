@@ -68,15 +68,11 @@ define([
         },
 
         show: function () {
-            var decrypted;
-
-            decrypted = {
-                title : App.Encryption.API.decrypt(this.model.get('title')),
-                content : App.Encryption.API.decrypt(this.model.get('content')),
-            };
+            var decrypted = this.model.decrypt();
 
             this.view = new View({
                 model     : this.model,
+                profile   : this.model.database.id,
                 decrypted : decrypted,
                 tags      : this.tags,
                 notebooks : this.notebooks,
@@ -110,7 +106,7 @@ define([
 
             // Get new data
             data.title = this.view.ui.title.val().trim();
-            data.notebookId = parseInt(this.view.ui.notebookId.val().trim());
+            data.notebookId = this.view.ui.notebookId.val().trim();
 
             if (data.title === '') {
                 data.title = $.t('Unnamed');
@@ -123,6 +119,7 @@ define([
                 data.notebookId = (notebook) ? notebook.get('id') : 0;
             }
 
+            // Images
             data.images = [];
             this.view.options.files.forEach(function (img) {
                 data.images.push(img.get('id'));
@@ -137,15 +134,14 @@ define([
             data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
 
             // Encryption
-            data.title = App.Encryption.API.encrypt(_.escape(data.title));
-            data.content = App.Encryption.API.encrypt(data.content);
+            this.model.set(data).encrypt();
 
             // Save
             this.model.trigger('update:any');
 
             $.when(
                 // Save changes
-                this.model.save(data),
+                this.model.save(),
                 // Add new tags
                 this.tags.saveAdd(data.tags)
             ).done(function () {
@@ -173,17 +169,17 @@ define([
                 return this.confirmRedirect(showNote);
             }
 
+            App.trigger('notes:added', this.model);
+
             // Redirect to edit page
             if (showNote === false) {
                 url += '/edit/' + this.model.get('id');
+                App.navigate(URI.link(url), {trigger: true});
             }
             // Redirect to list
             else if (typeof this.model.get('id') !== 'undefined') {
-                url += '/show/' + this.model.get('id');
+                App.AppNote.trigger('navigate:back');
             }
-
-            App.trigger('notes:added', this.model);
-            App.navigate(URI.link(url), {trigger: true});
 
             if (showNote !== false) {
                 App.content.reset();

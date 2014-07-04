@@ -11,9 +11,9 @@ define([
 
     var View = Marionette.CompositeView.extend({
         template: _.template(Templ),
-        itemView: ItemView,
+        childView: ItemView,
 
-        itemViewContainer: '.list-notebooks',
+        childViewContainer: '.list-notebooks',
 
         initialize: function () {
             this.on('next', this.next, this);

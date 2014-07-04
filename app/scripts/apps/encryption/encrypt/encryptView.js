@@ -31,17 +31,23 @@ define([
             this.listenTo(this.options.notebooks, 'reset', this.countMax);
 
             // Change encryption progress
-            this.options.notes.on('progressEncryption', this.progress, this);
-            this.options.notebooks.on('progressEncryption', this.progress, this);
+            this.options.notes.on('encryption:progress', this.progress, this);
+            this.options.notebooks.on('encryption:progress', this.progress, this);
         },
 
         checkPasswords: function (e) {
             e.preventDefault();
+            var data = {};
 
-            this.trigger('checkPasswords', {
-                newPass: this.ui.password.val().trim(),
-                oldPass: this.ui.oldPass.val().trim(),
-            });
+            if (this.options.passwords.new) {
+                data.new = this.ui.password.val().trim();
+            }
+
+            if (this.options.passwords.old) {
+                data.old = this.ui.oldPass.val().trim();
+            }
+
+            this.trigger('checkPasswords', data);
         },
 
         countMax: function () {
@@ -69,7 +75,7 @@ define([
         serializeData: function () {
             return {
                 max: this.max,
-                oldPass: this.options.oldPass,
+                passwords: this.options.passwords
             };
         },
 

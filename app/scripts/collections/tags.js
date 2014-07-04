@@ -4,7 +4,8 @@ define([
     'jquery',
     'backbone',
     'models/tag',
-    'migrations/note'
+    'migrations/note',
+    'indexedDB'
 ], function (_, $, Backbone, Tag, TagsDB) {
     'use strict';
 

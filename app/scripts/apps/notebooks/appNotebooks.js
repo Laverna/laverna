@@ -74,9 +74,9 @@ define([
         },
 
         // Edit notebook
-        editNotebook: function (profile, id) {
+        editNotebook: function (profile, id, redirect) {
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id, profile: profile});
+                executeAction(new Form().editForm, {id: id, profile: profile, redirect: redirect});
             });
         },
 
@@ -110,20 +110,17 @@ define([
     };
 
     // Add notebook
-    AppNotebooks.on('showForm', function (redirect) {
+    AppNotebooks.on('showForm', function (profile, redirect) {
         if (_.isUndefined(redirect)) {
             App.navigate(URI.link('/notebooks/add'), true);
         } else {
-            API.addNotebook(redirect);
+            API.addNotebook(profile, redirect);
         }
     });
 
     // Re-render
-    App.on('sync:after', function (sync) {
-        if (sync.objects.length === 0 || App.currentApp.moduleName !== 'AppNotebook') {
-            return;
-        }
-        else if (sync.collection === 'notebooks' || sync.collection === 'tags') {
+    App.on('sync:after', function () {
+        if (App.currentApp.moduleName === 'AppNotebook') {
             API.listNotebooks();
         }
     });

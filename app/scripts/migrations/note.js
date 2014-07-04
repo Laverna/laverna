@@ -93,6 +93,17 @@ define([
                     store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
+            },
+            // Store for removed objects
+            // ----------------
+            {
+                version: 6,
+                migrate: function(transaction, next) {
+                    var store = transaction.db.createObjectStore('removed');
+                    if (store) {
+                        next();
+                    }
+                }
             }
         ]
     };

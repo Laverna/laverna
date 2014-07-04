@@ -20,6 +20,7 @@ define([
             'appProfiles': JSON.stringify(['notes-db']),
             'appLang': '',
             'cloudStorage': '0',
+            'dropboxKey': '',
             'pagination': '10',
             'sortnotebooks': 'name',
             'editMode': 'preview',
@@ -111,6 +112,22 @@ define([
                 profiles.save({ value: JSON.stringify(value) });
                 window.indexedDB.deleteDatabase(name);
             }
+        },
+
+        /**
+         * Filter
+         */
+        appShortcuts: function () {
+            var names = ['appCreateNote', 'appSearch', 'appKeyboardHelp'];
+            return this.filter(function (m) {
+                return _.contains(names, m.get('name'));
+            });
+        },
+
+        filterName: function (str) {
+            return this.filter(function (m) {
+                return m.get('name').search(str) >= 0;
+            });
         }
 
     });

@@ -17,7 +17,7 @@ define([
             this.$el.slideDown('fast');
         },
 
-        onClose: function () {
+        onDestroy: function () {
             this.$el.slideUp('fast');
             $('#wrapper').show();
         }

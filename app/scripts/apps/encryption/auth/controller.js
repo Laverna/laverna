@@ -3,8 +3,9 @@ define([
     'underscore',
     'app',
     'marionette',
+    'apps/encryption/auth',
     'apps/encryption/auth/authView'
-], function (_, App, Marionette, View) {
+], function (_, App, Marionette, getAuth, View) {
     'use strict';
 
     var Form = App.module('Encryption.Form');
@@ -13,6 +14,8 @@ define([
 
         initialize: function () {
             _.bindAll(this, 'showForm');
+
+            this.auth = getAuth(App.settings);
         },
 
         showForm: function () {
@@ -24,10 +27,8 @@ define([
         },
 
         login: function (password) {
-            // var pwd = App.settings.encryptPass;
-            var pwd = App.Encryption.API.encryptKey(password);
+            var pwd = this.auth.getSecureKey(password);
             if (pwd !== false) {
-                App.secureKey = pwd;
                 App.navigateBack('/notes', true);
             }
         }

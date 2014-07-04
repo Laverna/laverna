@@ -19,7 +19,7 @@ define([
         events: {
             'submit .form-horizontal' : 'save',
             'click .ok'               : 'save',
-            'click .cancelBtn'        : 'close'
+            'click .cancelBtn'        : 'destroy'
         },
 
         /**
@@ -64,11 +64,11 @@ define([
         /**
          * Close
          */
-        close: function (e) {
+        destroy: function (e) {
             if (e !== undefined) {
                 e.preventDefault();
             }
-            this.trigger('close');
+            this.trigger('destroy');
         },
 
         /**

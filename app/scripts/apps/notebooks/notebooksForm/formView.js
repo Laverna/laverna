@@ -2,13 +2,10 @@
 define([
     'underscore',
     'jquery',
-    'app',
-    'backbone',
     'marionette',
     'models/notebook',
     'text!apps/notebooks/notebooksForm/templates/form.html'
-],
-function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
+], function (_, $, Marionette, Notebook, Tmpl) {
     'use strict';
 
     /**
@@ -27,7 +24,7 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
         events: {
             'submit .form-horizontal' : 'save',
             'click .ok'               : 'save',
-            'click .cancelBtn'        : 'close'
+            'click .cancelBtn'        : 'destroy'
         },
 
         initialize: function () {
@@ -50,7 +47,7 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
 
             var data = {
                 name     : this.ui.name.val(),
-                parentId : parseInt(this.ui.parentId.val())
+                parentId : this.ui.parentId.val()
             };
 
             this.model.trigger('save', data);
@@ -69,11 +66,11 @@ function (_, $, App, Backbone, Marionette, Notebook, Tmpl) {
             });
         },
 
-        close: function (e) {
+        destroy: function (e) {
             if (e !== undefined) {
                 e.preventDefault();
             }
-            this.trigger('close');
+            this.trigger('destroy');
         },
 
         redirect: function () {

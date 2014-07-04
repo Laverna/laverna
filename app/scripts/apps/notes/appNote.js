@@ -53,6 +53,8 @@ define([
      * Controller
      */
     API = {
+        notesArg: null,
+
         getArgs: function (args) {
             var values = ['profile', 'filter', 'query', 'page', 'id'],
                 argsObj = {};
@@ -75,7 +77,7 @@ define([
             var args = this.getArgs(arguments);
 
             require(['apps/notes/list/controller'], function (List) {
-                App.notesArg = args;
+                API.notesArg = args;
                 executeAction(new List().listNotes, args);
             });
         },
@@ -94,7 +96,7 @@ define([
         addNote: function (profile) {
             require(['apps/notes/form/controller'], function (Form) {
                 executeAction(new Form().addForm, {profile: profile});
-                App.trigger('notes:show', {profile: profile});
+                API.notesWhileEditing(profile);
             });
         },
 
@@ -102,9 +104,15 @@ define([
         editNote: function (profile, id) {
             require(['apps/notes/form/controller'], function (Form) {
                 executeAction(new Form().editForm, {id : id, profile: profile});
-                App.trigger('notes:show', {profile: profile});
+                API.notesWhileEditing(profile);
             });
             App.log('edit note ' + id);
+        },
+
+        notesWhileEditing: function (profile) {
+            if ( !API.notesArg ) {
+                App.trigger('notes:show', {profile: profile});
+            }
         },
 
         // Remove an existing note
@@ -116,7 +124,8 @@ define([
 
         // Re-render sidebar only if necessary
         checkShowSidebar: function (args) {
-            var current = _.omit(App.notesArg || {}, 'id');
+            var current = _.omit(API.notesArg || {}, 'id');
+            API.notesArg = args;
 
             if ( !_.isEqual(current,  _.omit(args, 'id')) ) {
                 API.showNotes(args);
@@ -137,6 +146,9 @@ define([
         enquire.register('screen and (min-width:768px)', {
             match: function () {
                 API.checkShowSidebar(args);
+            },
+            unmatch: function () {
+                API.notesArg = args;
             }
         });
     });
@@ -149,12 +161,12 @@ define([
 
     // Re render
     App.on('notes:rerender', function () {
-        API.showNotes(App.notesArg || {});
+        API.showNotes(API.notesArg || {});
     });
 
     // Re-render sidebar if new note has been added
     App.on('notes:added', function (model) {
-        API.showNotes(_.extend(App.notesArg || {}, {id: model.get('id')}));
+        API.showNotes(_.extend(API.notesArg || {}, {id: model.get('id')}));
     });
 
     // Show form
@@ -162,17 +174,27 @@ define([
         App.navigate(URI.link('/notes/add'), true);
     });
 
+    // Navigate to last note
+    AppNote.on('navigate:back', function () {
+        var url = URI.note(API.notesArg, API.notesArg);
+        App.navigate(url, true);
+    });
+
     // Re-render sidebar's and note's content after sync:after event
-    App.on('sync:after', function (args) {
-        if (args.objects.length === 0 || App.currentApp.moduleName !== 'AppNote') {
-            return;
-        }
-        else if (args.collection === 'notes' || args.collection === 'files') {
-            var notesArg = _.extend(App.notesArg || {}, {
+    App.on('sync:after', function () {
+
+        // Re-render sidebar and note's content
+        if ( App.currentApp.moduleName === 'AppNote' &&
+           !App.getCurrentRoute().match(/\/[edit|add]+/) ) {
+
+            var notesArg = _.extend(API.notesArg || {}, {
                 profile : URI.getProfile()
             });
+
             API.showNotes(notesArg);
-            API.showNote(notesArg);
+            if (notesArg.id) {
+                API.showNote(notesArg);
+            }
         }
     });
 

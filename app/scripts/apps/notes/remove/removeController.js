@@ -4,9 +4,8 @@ define([
     'app',
     'helpers/uri',
     'marionette',
-    'models/note',
-    'collections/notes',
-], function (_, App, URI, Marionette, NoteModel, NoteCollection) {
+    'models/note'
+], function (_, App, URI, Marionette, NoteModel) {
     'use strict';
 
     var Remove = App.module('AppNote.Remove');
@@ -28,22 +27,17 @@ define([
 
         doRemove: function () {
             // Destroy if note is already in trash
-            if (this.note.get('trash') === 1) {
+            if (Number(this.note.get('trash')) === 1) {
                 var self = this;
-                $.when(this.note.destroy()).done(function () {
-                    self.syncDirty();
+                $.when(this.note.destroySync()).done(function () {
                     self.redirect();
                 });
             }
             else {
-                $.when(this.note.save({'trash' : 1})).done(this.redirect);
+                this.note.updateDate();
+                $.when(this.note.save({'trash' : 1}))
+                 .done(this.redirect);
             }
-        },
-
-        syncDirty: function () {
-            var notes = new NoteCollection();
-            notes.syncDirty(this.note);
-            this.redirect();
         },
 
         redirect: function () {

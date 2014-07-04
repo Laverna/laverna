@@ -21,11 +21,14 @@ define([
             return -model.get('created');
         },
 
-        filterList: function (filter) {
+        filterList: function (filter, query) {
             var res;
             switch (filter) {
             case 'favorite':
                 res = this.getFavorites();
+                break;
+            case 'notebook':
+                res = this.getNotebookNotes(query);
                 break;
             case 'trashed':
                 res = this.getTrashed();

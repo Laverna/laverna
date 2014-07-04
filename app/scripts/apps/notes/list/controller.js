@@ -157,7 +157,7 @@ define([
         showSidebar: function () {
             // IndexedDBShim doesn't support indexes - filter with backbone.js
             if (window.appNoDB === true) {
-                this.notes.filterList(this.args.filter);
+                this.notes.filterList(this.args.filter, this.args.query);
             }
 
             // Pagination

@@ -39,7 +39,7 @@ To install, do the following:
 
 #### 2. Switch to stable version:
 
-    git checkout 0.6.1
+    git checkout 0.6.2
 
 #### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 

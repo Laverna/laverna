@@ -58,7 +58,7 @@ define([
             if (this.model.isValid()) {
                 this.model.save(data, {
                     success: function () {
-                        self.view.trigger('close');
+                        self.view.trigger('destroy');
                     }
                 });
             } else {

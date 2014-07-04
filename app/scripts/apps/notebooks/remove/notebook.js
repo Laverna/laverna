@@ -21,10 +21,7 @@ define([
         start: function (args) {
             // Set profile
             this.collection.database.getDB(args.profile);
-
-            args.id = parseInt(args.id);
-
-            this.model = new Model({id: parseInt(args.id)});
+            this.model = new Model({id: args.id});
 
             $.when(
                 this.collection.fetch({
@@ -36,8 +33,8 @@ define([
 
         remove: function () {
             this.collection.each(function (child) {
-                child.save({parentId : 0});
-            });
+                child.save({parentId : this.model.get('parentId')});
+            }, this);
 
             $.when(this.model.destroySync()).then(this.redirect);
         },

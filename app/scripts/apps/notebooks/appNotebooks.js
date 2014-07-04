@@ -74,9 +74,9 @@ define([
         },
 
         // Edit notebook
-        editNotebook: function (profile, id) {
+        editNotebook: function (profile, id, redirect) {
             require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id, profile: profile});
+                executeAction(new Form().editForm, {id: id, profile: profile, redirect: redirect});
             });
         },
 

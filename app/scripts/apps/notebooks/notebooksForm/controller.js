@@ -39,6 +39,7 @@ define([
                 comparator: 'name'
             });
             this.model = new Notebook({id: args.id});
+            this.args = args;
 
             // Set profile
             this.collection.database.getDB(args.profile);

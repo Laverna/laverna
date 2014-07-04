@@ -30,7 +30,7 @@
     "bootstrap": "~3.1.1",
     "pagedown": "git://github.com/ujifgc/pagedown.git",
     "enquire": "~2.1.0",
-    "remotestorage.js": "git://github.com/remotestorage/remotestorage.js.git#0.10.0-beta2",
+    "remotestorage.js": "git://github.com/remotestorage/remotestorage.js.git#0.10.0-beta3",
     "FileSaver": "*",
     "Blob": "git://github.com/eligrey/Blob.js",
     "MathJax": "v2.2"

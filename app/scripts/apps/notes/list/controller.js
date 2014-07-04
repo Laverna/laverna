@@ -107,7 +107,7 @@ define([
         notebooksNotes: function () {
             $.when(
                 this.notes.fetch({
-                    conditions: ( window.appNoDB ? null : {notebookId : parseInt(this.args.query)} )
+                    conditions: ( window.appNoDB ? null : {notebookId : this.args.query} )
                 })
             ).done(this.showSidebar);
         },

@@ -185,7 +185,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
             }
 
             if (this.ui.title.val() === this.model.get('title') &&
-                parseInt(this.ui.notebookId.val()) === this.model.get('notebookId') &&
+                this.ui.notebookId.val() === this.model.get('notebookId') &&
                 content === this.model.get('content') ) {
                 return true;
             }

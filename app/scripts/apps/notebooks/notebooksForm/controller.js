@@ -38,7 +38,7 @@ define([
             this.collection = new Notebooks([], {
                 comparator: 'name'
             });
-            this.model = new Notebook({id: parseInt(args.id)});
+            this.model = new Notebook({id: args.id});
 
             // Set profile
             this.collection.database.getDB(args.profile);
@@ -48,10 +48,6 @@ define([
 
         // Shows form
         show: function () {
-            if ( !this.model.id ) {
-                this.model.set('id', this.collection.nextOrder());
-            }
-
             var data = this.model.decrypt();
 
             this.view = new FormView ({

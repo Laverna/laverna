@@ -40,7 +40,7 @@ define([
                     'type': 'number'
                 },
                 'notebookId':  {
-                    'type': 'number'
+                    'type': 'string'
                 },
                 'tags':  {
                     'type': 'array'
@@ -65,12 +65,12 @@ define([
             'type' : 'object',
             'properties': {
                 'id': {
-                    'type': 'number',
+                    'type': 'string',
                     'format': 'id',
                     'required': true
                 },
                 'parentId': {
-                    'type': 'number'
+                    'type': 'string'
                 },
                 'name': {
                     'type': 'string'

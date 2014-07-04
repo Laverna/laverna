@@ -26,9 +26,9 @@ define([
          * Build tree structure
          */
         attachHtml: function (colView, itemView) {
-            var parentId = Number(itemView.model.get('parentId'));
+            var parentId = itemView.model.get('parentId');
 
-            if (parentId === 0) {
+            if (parentId === '0' || parentId === '') {
                 this.$(colView.childViewContainer).append(itemView.el);
             } else {
                 this.$('div[data-id=' + String(parentId) + ']').append(itemView.el);

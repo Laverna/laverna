@@ -36,6 +36,11 @@ define([
         },
 
         initialize: function () {
+            if (typeof this.id === 'number') {
+                this.set('id', this.id.toString());
+                this.set('parentId', this.get('parentId').toString());
+            }
+
             this.on('removed:note', this.removeCount);
             this.on('add:note', this.addCount);
         },
@@ -44,7 +49,7 @@ define([
             data = data || this.toJSON();
 
             this.set('name', getAuth().encrypt( _.escape(data.name) ));
-            this.set('parentId', Number(data.parentId));
+            this.set('parentId', data.parentId);
             this.updateDate();
         },
 

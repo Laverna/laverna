@@ -59,8 +59,7 @@ define([
         var notebooks,
             view,
             viewHtml,
-            models = [],
-            list;
+            models = [];
 
         before(function () {
 

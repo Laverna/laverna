@@ -27,7 +27,7 @@ define([
             parents = (parents || this.getRoots());
             tree = (tree || []);
 
-            _.forEach(parents, function (model, key) {
+            _.forEach(parents, function (model) {
                 tree.push(model);
                 childs = self.getChilds(model.get('id'));
 

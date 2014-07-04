@@ -358,7 +358,7 @@ module.exports = function (grunt) {
                     src: [
                         'manifest.webapp',
                         'scripts/libs/dropbox.js',
-                        'bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage-nocache.amd.js',
+                        'bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd.js',
                         'bower_components/pagedown/Markdown.Editor.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',

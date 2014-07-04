@@ -20,7 +20,7 @@ define([
 
     Encryption.on('stop', function () {
         App.log('Encryption module has stopped');
-        App.brand.close();
+        App.brand.empty();
     });
 
     // Router

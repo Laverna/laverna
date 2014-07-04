@@ -164,7 +164,7 @@ define([
         toggleTask: function (e) {
             var task = $(e.target),
                 taskId = parseInt(task.attr('data-task'), null),
-                content = App.Encryption.API.decrypt(this.model.get('content')),
+                content = this.model.decrypt().content,
                 text = new Checklist().toggle(content, taskId);
 
             // Save result

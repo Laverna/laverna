@@ -77,13 +77,14 @@ define([
         },
 
         updateTaskProgress: function (text) {
-            var content = App.Encryption.API.encrypt(text.content);
-            this.note.trigger('update:any');
+            this.note.set(_.extend(this.note.decrypt(), {
+                'content': text.content,
+                'taskCompleted': text.completed
+            }));
 
-            this.note.save({
-                content       : content,
-                taskCompleted : text.completed
-            });
+            this.note.encrypt();
+            this.note.trigger('update:any');
+            this.note.save(this.note.toJSON());
         }
 
     });

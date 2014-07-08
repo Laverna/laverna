@@ -25,7 +25,7 @@ define([
 
         initialize: function () {
             this.now = 0;
-            this.countMax();
+            this.max = this.options.notes.length + this.options.notebooks.length;
 
             this.listenTo(this.options.notes, 'reset', this.countMax);
             this.listenTo(this.options.notebooks, 'reset', this.countMax);
@@ -50,13 +50,6 @@ define([
             this.trigger('checkPasswords', data);
         },
 
-        countMax: function () {
-            this.max = this.options.notes.length + this.options.notebooks.length;
-            if (this.max === 0) {
-                this.trigger('redirect');
-            }
-        },
-
         /**
          * Show encryption progress
          */
@@ -68,7 +61,6 @@ define([
             this.$('#progress').css('width', ((this.now * 100) / this.max) + '%' );
             if (this.now === this.max) {
                 this.$('#progress').css('width', '100%' );
-                this.trigger('redirect');
             }
         },
 

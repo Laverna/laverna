@@ -72,7 +72,6 @@ define([
             App.brand.show(this.view);
 
             this.view.on('checkPasswords', this.checkPasswords, this);
-            this.view.on('redirect', this.redirect, this);
 
             if (passwords.old === false || passwords.new === false) {
                 this.checkPasswords(passwords);
@@ -95,12 +94,23 @@ define([
 
                 i++;
                 if (i === _.keys(passwords).length) {
-                    this.encrypt.initialize([
-                        this.notes, this.notebooks
-                    ]);
+                    this.encryptInit();
                 }
             }
+        },
 
+        /**
+         * Initialize encryption progress
+         */
+        encryptInit: function () {
+            var self = this;
+            $.when(
+                this.encrypt.initialize([
+                    this.notes, this.notebooks
+                ])
+            ).then(function () {
+                self.redirect();
+            });
         },
 
         redirect: function () {

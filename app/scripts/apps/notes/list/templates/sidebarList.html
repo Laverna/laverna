@@ -6,8 +6,8 @@
     <% if (pagination === true || args.page > 0) { %>
     <nav class="navbar navbar-static-bottom navbar-bottom">
         <div class="btn-group btn-group-justified">
-            <a class="btn btn-default" id="prevPage" href="{{ pageUrl(args.prev) }}">{{ i18n('Previous') }}</a>
-            <a class="btn btn-default" id="nextPage" href="{{ pageUrl(args.next) }}">{{ i18n('Next') }}</a>
+            <a class="btn btn-default<% if(args.page === 0) { %> disabled<% } %>" id="prevPage" href="{{ pageUrl(args.prev) }}">{{ i18n('Newer') }}</a>
+            <a class="btn btn-default<% if(args.isLastPage) { %> disabled<% } %>" id="nextPage" href="{{ pageUrl(args.next) }}">{{ i18n('Older') }}</a>
         </div>
     </nav>
     <% } %>

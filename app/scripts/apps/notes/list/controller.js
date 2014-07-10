@@ -160,6 +160,8 @@ define([
                 this.notes.filterList(this.args.filter, this.args.query);
             }
 
+            this.args.isLastPage = this.notes.length <= (this.args.page + App.settings.pagination);
+
             // Pagination
             if (this.notes.length > App.settings.pagination) {
                 var notes = this.notes.pagination(this.args.page, App.settings.pagination);

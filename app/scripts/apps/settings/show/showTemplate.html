@@ -20,11 +20,17 @@
                         </label>
                         <div class="col-sm-10">
                             <select class="form-control" name="appLang" id="appLang">
+                                <option value="de"<%if(models.appLang === 'de'){ %> selected<% } %>>{{ i18n('de') }}</option>
+                                <option value="el"<%if(models.appLang === 'el'){ %> selected<% } %>>{{ i18n('el') }}</option>
                                 <option value="en"<%if(models.appLang === 'en'){ %> selected<% } %>>{{ i18n('en') }}</option>
-                                <option value="ru"<%if(models.appLang === 'ru'){ %> selected<% } %>>{{ i18n('ru') }}</option>
-                                <option value="nl"<%if(models.appLang === 'nl'){ %> selected<% } %>>{{ i18n('nl') }}</option>
+                                <option value="eo"<%if(models.appLang === 'eo'){ %> selected<% } %>>{{ i18n('eo') }}</option>
+                                <option value="es"<%if(models.appLang === 'es'){ %> selected<% } %>>{{ i18n('es') }}</option>
                                 <option value="fr"<%if(models.appLang === 'fr'){ %> selected<% } %>>{{ i18n('fr') }}</option>
+                                <option value="nb"<%if(models.appLang === 'nb'){ %> selected<% } %>>{{ i18n('nb') }}</option>
+                                <option value="nl"<%if(models.appLang === 'nl'){ %> selected<% } %>>{{ i18n('nl') }}</option>
+                                <option value="nn"<%if(models.appLang === 'nn'){ %> selected<% } %>>{{ i18n('nn') }}</option>
                                 <option value="pt_br"<%if(models.appLang === 'pt_br'){ %> selected<% } %>>{{ i18n('pt_br') }}</option>
+                                <option value="ru"<%if(models.appLang === 'ru'){ %> selected<% } %>>{{ i18n('ru') }}</option>
                             </select>
                         </div>
                     </div>

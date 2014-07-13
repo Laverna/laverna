@@ -86,7 +86,7 @@
     },
     {
       "uid": "178053298e3e5b03551d754d4b9acd8b",
-      "css": "file",
+      "css": "note",
       "code": 59420,
       "src": "fontawesome"
     },
@@ -170,7 +170,7 @@
     },
     {
       "uid": "9755f76110ae4d12ac5f9466c9152031",
-      "css": "book",
+      "css": "notebook",
       "code": 59400,
       "src": "fontawesome"
     },
@@ -200,7 +200,7 @@
     },
     {
       "uid": "25b34dea4784f72c710454f32ff8fa2b",
-      "css": "star",
+      "css": "favorite",
       "code": 59395,
       "src": "entypo"
     },
@@ -212,7 +212,7 @@
     },
     {
       "uid": "2626e3a1bbcd90e45849af3b58a1d594",
-      "css": "trash",
+      "css": "trashed",
       "code": 59397,
       "src": "entypo"
     },
@@ -238,6 +238,12 @@
       "uid": "62b0580ee8edc3a3edfbf68a47c852d5",
       "css": "pencil",
       "code": 59418,
+      "src": "elusive"
+    },
+    {
+      "uid": "9e0404ba55575a540164db9a5ad511df",
+      "css": "doc-new",
+      "code": 59432,
       "src": "elusive"
     },
     {

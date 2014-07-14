@@ -70,6 +70,7 @@ define([
             };
 
             App.content.show(new NoteView(args));
+            App.setTitle(decrypted.title);
         },
 
         triggerChangeToSidebar: function () {

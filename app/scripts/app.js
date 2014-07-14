@@ -58,6 +58,16 @@ define([
         }
     };
 
+    // Document title
+    App.setTitle = function (title, mainTitle) {
+        App.title = (App.title || {main: '', index: ''});
+        if (mainTitle) {
+            App.title.main = mainTitle;
+        }
+        App.title.index = (title ? title + ' - ' : App.title.index);
+        document.title = App.title.index + App.title.main;
+    };
+
     // Debug
     App.log = function (str) {
         if (console && typeof console.log === 'function') {

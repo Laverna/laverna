@@ -1,12 +1,13 @@
 /* global define */
 define([
+    'jquery',
     'underscore',
     'app',
     'marionette',
     'collections/notebooks',
     'apps/navbar/show/view',
     'helpers/sync/sync-collections'
-], function ( _, App, Marionette, Notebooks, NavbarView, getSync ) {
+], function ( $, _, App, Marionette, Notebooks, NavbarView, getSync ) {
     'use strict';
 
     var Navbar = App.module('AppNavbar.Show');
@@ -46,6 +47,8 @@ define([
         },
 
         showNavbar: function () {
+            var title;
+
             if (this.args.filter === 'notebook') {
                 var notebook = this.notebooks.get(this.args.query);
                 this.args.query = (notebook ? notebook.decrypt().name : '');
@@ -59,6 +62,13 @@ define([
 
             App.sidebarNavbar.show(this.view);
             this.view.on('syncWithCloud', this.startSyncing, this);
+
+            // Set document title
+            if (this.args.filter) {
+                title = $.t(this.args.filter.substr(0,1).toUpperCase() + this.args.filter.substr(1));
+            }
+            title = (this.args.query ? this.args.query : title);
+            App.setTitle(null, (title || $.t('All notes')));
         },
 
         /**

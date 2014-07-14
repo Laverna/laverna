@@ -40,7 +40,7 @@
                     {{ title }}
                     <small>{{ createdDate() }}</small>
                     <a href="#" class="btn btn-link favorite pull-right">
-                        <span class="icon-favorite <% if (isFavorite === 0) {%>icon-star-empty<% } %>"></span>
+                        <span class="<% if (isFavorite === 0) {%>icon-star-empty<% } else { %>icon-favorite<% } %>"></span>
                     </a>
                 </h1>
             </header>

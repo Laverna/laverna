@@ -104,10 +104,6 @@ define([
             });
 
             data.content = converter.makeHtml(data.content);
-
-            // Show title
-            document.title = data.title;
-
             data.uri = URI.link('/');
             data.title = converter.makeHtml(data.title);
 
@@ -125,14 +121,21 @@ define([
         },
 
         changeFavorite: function () {
-            var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
             if (this.model.get('isFavorite') === 1) {
-                this.ui.favorite.removeClass('icon-star-empty');
-                sidebar.removeClass('icon-star-empty');
+                this.changeFavoriteClass('icon-favorite', 'icon-star-empty');
             } else {
-                this.ui.favorite.addClass('icon-star-empty');
-                sidebar.addClass('icon-star-empty');
+                this.changeFavoriteClass('icon-star-empty', 'icon-favorite');
             }
+        },
+
+        changeFavoriteClass: function (addClass, removeClass) {
+            var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
+
+            this.ui.favorite.removeClass(removeClass);
+            sidebar.removeClass(removeClass);
+
+            this.ui.favorite.addClass(addClass);
+            sidebar.addClass(addClass);
         },
 
         /**

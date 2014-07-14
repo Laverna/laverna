@@ -196,8 +196,6 @@ define([
             }
 
             App.AppNavbar.trigger('titleChange', this.args);
-            // Show document.title
-            document.title = (this.args.filter) ? this.args.filter : 'All notes';
         },
 
         changeFocus: function (args) {

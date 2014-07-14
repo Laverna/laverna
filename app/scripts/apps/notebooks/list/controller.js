@@ -59,6 +59,8 @@ define([
             App.AppNavbar.trigger('titleChange', {
                 filter: 'Notebooks & Tags'
             });
+
+            App.setTitle('', 'Notebooks and tags');
         }
 
     });

@@ -47,6 +47,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
         },
 
         initialize: function () {
+            var self = this;
             _.bindAll(this, 'scrollPagedownBar');
             App.mousetrap.API.pause();
             this.$body = $('body');
@@ -64,9 +65,26 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
             this.on('pagedown:ready', this.onPagedownReady);
             this.on('pagedown:ready', this.changePagedownMode);
             this.on('pagedown:mode',  this.changePagedownMode);
+
+            // Keybindings
+            this.$document = $(document);
+            this.$document.on('keydown', function (event) {
+                var isS = String.fromCharCode(event.which).toLowerCase() === 's';
+                // Ctrl + s
+                if ( (event.ctrlKey && isS) || (event.metaKey && isS) ) {
+                    event.preventDefault();
+                    self.save();
+                }
+                // Redirect if user hits Esc and editor is focused
+                else if (event.which === 27 && self.editor && self.editor.isFocused()) {
+                    event.preventDefault();
+                    self.redirect(event);
+                }
+            });
         },
 
         onDestroy: function () {
+            this.$document.off('keydown');
             App.mousetrap.API.unpause();
             this.imgHelper.clean();
             this.switchMode();

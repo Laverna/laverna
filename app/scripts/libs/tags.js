@@ -3,14 +3,18 @@
  * @tagName -> <a href="#/notes/f/tag/q/tagName">@tagName</a>
  */
 /*global define*/
-define(['underscore'], function (_) {
+define([
+    'underscore',
+    'xregexp/xregexp',
+    'xregexp/addons/unicode/unicode-base'
+], function (_, XRegExp) {
     'use strict';
 
     var Tags = function () {
     };
 
     _.extend(Tags.prototype, {
-        pattern: /(^|[^@\w])@(\w{1,250})\b/g,
+        pattern: new XRegExp('(^|[^@\\p{L}])@(\\p{L}+)', 'g'),
 
         getTags: function (text) {
             if (this.tags === undefined) {
@@ -27,7 +31,7 @@ define(['underscore'], function (_) {
                 if (leadingSlash === '\\') {
                     return match;
                 } else {
-                    return ' <a class="label label-default" href="#/notes/f/tag/q/' + tagName + '">@' + tagName + '</a>';
+                    return ' <a class="label label-default" href="#/notes/f/tag/q/' + tagName + '">' + tagName + '</a>';
                 }
             });
         },
@@ -36,7 +40,7 @@ define(['underscore'], function (_) {
             var tags = [],
                 content;
 
-            text = text.replace(this.pattern, function(match, leadingSlash, tagName) {
+            text = XRegExp.replace(text, this.pattern, function(match, leadingSlash, tagName) {
                 content = '';
                 if (callback) {
                     content += callback(match, leadingSlash, tagName);

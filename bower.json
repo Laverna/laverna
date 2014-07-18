@@ -33,7 +33,8 @@
     "remotestorage.js": "git://github.com/remotestorage/remotestorage.js.git#0.10.0-beta3",
     "FileSaver": "*",
     "Blob": "git://github.com/eligrey/Blob.js",
-    "MathJax": "v2.2"
+    "MathJax": "v2.2",
+    "xregexp": "~2.0.0"
   },
   "devDependencies": {}
 }

@@ -11,6 +11,12 @@ require.config({
             name     : 'pagedown-ace',
             location : '../bower_components/pagedown-ace',
             main     : 'Markdown.Editor'
+        },
+        // Xregexp
+        {
+            name     : 'xregexp',
+            location : '../bower_components/xregexp/src',
+            main     : 'xregexp'
         }
     ],
     paths: {
@@ -103,6 +109,14 @@ require.config({
         },
         'mathjax': {
             exports: 'MathJax'
+        },
+        // Xregexp
+        'xregexp/xregexp': {
+            exports: 'XRegExp'
+        },
+        'xregexp/addons/unicode/unicode-base': {
+            deps: ['xregexp/xregexp'],
+            exports: 'XRegExp'
         },
         'to-markdown': {
             exports: 'toMarkdown'

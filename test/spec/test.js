@@ -1,6 +1,15 @@
 require.config({
     baseUrl: '../test/',
 
+    packages: [
+        // Xregexp
+        {
+            name     : 'xregexp',
+            location : '../app/bower_components/xregexp/src',
+            main     : 'xregexp'
+        }
+    ],
+
     paths: {
         'sjcl'          :  '../app/bower_components/sjcl/sjcl',
         'jquery'        :  '../app/bower_components/jquery/jquery',
@@ -55,6 +64,14 @@ require.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
+        // Xregexp
+        'xregexp/xregexp': {
+            exports: 'XRegExp'
+        },
+        'xregexp/addons/unicode/unicode-base': {
+            deps: ['xregexp/xregexp'],
+            exports: 'XRegExp'
+        },
         'indexedDB': {
             deps: ['underscore', 'backbone']
         },
@@ -89,7 +106,8 @@ require([
     var tests = [
         'spec/model-test',
         'spec/collection-test',
-        'spec/views/notebooks'
+        'spec/views/notebooks',
+        'spec/utils'
     ];
 
     // Chai

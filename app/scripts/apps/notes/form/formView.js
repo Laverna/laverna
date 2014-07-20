@@ -57,6 +57,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
 
             // Model
             this.listenTo(this.model, 'sync', this.disableSubmitButton);
+            this.listenTo(App, 'new:notebook', this.newNotebookRender);
             this.on('autoSave', this.autoSave, this);
 
             // Pagedown editor
@@ -98,14 +99,14 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
         newNotebook: function () {
             if (this.ui.notebookId.find('.newNotebook').is(':selected')) {
                 App.AppNotebook.trigger('showForm', this.options.profile, false);
-
-                this.listenTo(App, 'new:notebook', function (model) {
-                    var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.decrypt()) );
-                    this.ui.notebookId.append(tmpl);
-                    tmpl.prop('selected', true);
-                    this.options.notebooks.add(model);
-                });
             }
+        },
+
+        newNotebookRender: function (model) {
+            var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.decrypt()) );
+            this.ui.notebookId.append(tmpl);
+            tmpl.prop('selected', true);
+            this.options.notebooks.add(model);
         },
 
         enableSubmitButton: function () {

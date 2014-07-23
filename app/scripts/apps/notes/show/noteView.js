@@ -70,9 +70,9 @@ define([
             this.$('table').addClass('table table-bordered');
 
             this.hammertime = new Hammer(this.el);
-            this.hammertime.on('dragright', function (e) {
+            this.hammertime.on('swiperight', function (e) {
                 self.toggleSidebar();
-                e.gesture.preventDefault();
+                e.preventDefault();
             });
 
             // MathJax

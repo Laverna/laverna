@@ -25,8 +25,45 @@ module.exports = function (grunt) {
         dist: 'dist'
     };
 
+    var pkg = grunt.file.readJSON('package.json');
+
+    // phonegap configs
+    var phonegapConfig = {
+		config: {
+			root: '<%= yeoman.dist %>',
+			// config: 'config.xml',
+            config: {
+                template: 'config.xml',
+                data: {
+                    id: 'org.phonegap.laverna',
+                    version: pkg.version,
+                    name: pkg.name
+                }
+            },
+			cordova: '.cordova',
+			path: 'phonegap',
+			plugins: [],
+			platforms: ['android'],
+			verbose: false,
+            releases: 'releases',
+            releaseName: function () {
+                return (pkg.name + '-' + pkg.version);
+            },
+            icons: {
+                android: {
+                    ldpi  : 'phonegap/www/images/icon/icon-32x32.png',
+                    mdpi  : 'phonegap/www/images/icon/icon-48x48.png',
+                    hdpi  : 'phonegap/www/images/icon/icon-64x64.png',
+                    xhdpi : 'phonegap/www/images/icon/icon-90x90.png'
+                }
+            }
+		}
+    };
+
     grunt.initConfig({
         yeoman: yeomanConfig,
+        phonegap: phonegapConfig,
+
         pkg: grunt.file.readJSON('package.json'),
         watch: {
             options: {
@@ -229,7 +266,7 @@ module.exports = function (grunt) {
                     mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
                     optimize: 'none',
                     exclude : ['dropbox', 'remotestorage'],
-                    include : [ 'helpers/dropbox', 'helpers/backbone.rssync' ],
+                    // include : [],
                     // TODO: Figure out how to make sourcemaps work with grunt-usemin
                     // https://github.com/yeoman/grunt-usemin/issues/30
                     //generateSourceMaps: true,
@@ -299,16 +336,6 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            readme: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/../',
-                    dest: '<%= yeoman.app %>/docs/',
-                    src: [
-                        'README.md'
-                    ]
-                }]
-            },
             dist: {
                 files: [{
                     expand: true,
@@ -331,7 +358,7 @@ module.exports = function (grunt) {
                     src: [
                         'manifest.webapp',
                         'scripts/libs/dropbox.js',
-                        'bower_components/remotestorage.js/release/0.10.0-beta/remotestorage.amd.js',
+                        'bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd.js',
                         'bower_components/pagedown/Markdown.Editor.js',
                         'bower_components/ace/lib/ace/css/editor.css',
                         'bower_components/ace/lib/ace/theme/textmate.css',
@@ -571,6 +598,12 @@ module.exports = function (grunt) {
         'string-replace:i18nextLocal',
         'manifest'
     ]);
+
+	grunt.registerTask('platform-build', [
+		// 'default',
+        'build',
+		'phonegap:build'
+	]);
 
     grunt.registerTask('default', [
         'jshint',

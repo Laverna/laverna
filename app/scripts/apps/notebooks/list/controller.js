@@ -19,7 +19,9 @@ define([
             _.bindAll(this, 'list', 'show');
 
             // Collections of notebooks and tags
-            this.notebooks = new Notebooks();
+            this.notebooks = new Notebooks([], {
+                comparator: App.settings.sortnotebooks
+            });
             this.tags = new Tags();
         },
 
@@ -33,6 +35,7 @@ define([
 
         show: function () {
             var notebookView, tagsView;
+            this.notebooks.models = this.notebooks.getTree();
 
             // Show layout
             this.layout = new Layout({ notebooks: this.notebooks.length, tags: this.tags.length});
@@ -56,6 +59,8 @@ define([
             App.AppNavbar.trigger('titleChange', {
                 filter: 'Notebooks & Tags'
             });
+
+            App.setTitle('', 'Notebooks and tags');
         }
 
     });

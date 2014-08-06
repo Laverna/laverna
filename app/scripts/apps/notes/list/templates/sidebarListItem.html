@@ -1,7 +1,7 @@
 <a href="#{{ link() }}" class="list-group-item" id="note-{{ id }}" data-id="{{id}}">
     <h4 class="list-group-item-heading">
         {{ getTitle(title) }}
-        <span class="favorite pull-right icon-favorite <% if (isFavorite === 0) {%>icon-star-empty<% } %>"></span>
+        <span class="favorite pull-right <% if (isFavorite === 0) {%>icon-star-empty<% } else { %>icon-favorite<% } %>"></span>
     </h4>
     <p class="list-group-item-text">{{ getContent(content) }}</p>
 </a>

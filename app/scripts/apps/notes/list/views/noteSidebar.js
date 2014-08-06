@@ -2,31 +2,27 @@
 define([
     'underscore',
     'app',
-    'backbone',
+    'marionette',
     'helpers/uri',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
-    'backbone.mousetrap',
-    'marionette'
-], function(_, App, Backbone, URI, NoteSidebarItem, Template) {
+    'backbone.mousetrap'
+], function(_, App, Marionette, URI, NoteSidebarItem, Template) {
     'use strict';
 
-    var View = Backbone.Marionette.CompositeView.extend({
-        template: _.template(Template),
+    var View = Marionette.CompositeView.extend({
+        template           :  _.template(Template),
+        className          :  'sidebar-notes',
 
-        itemView          : NoteSidebarItem,
-        itemViewContainer : '.main',
-        className         : 'sidebar-notes',
+        childView          :  NoteSidebarItem,
+        childViewContainer :  '.notes-list',
+        childViewOptions   :  { },
 
-        itemViewOptions : { },
-        keyboardEvents  : { },
+        keyboardEvents     :  { },
 
         ui: {
             prevPage         : '#prevPage',
             nextPage         : '#nextPage'
-        },
-
-        events: {
         },
 
         collectionEvents: {
@@ -41,8 +37,8 @@ define([
             this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
             this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
 
-            // Options to itemView
-            this.itemViewOptions.args = this.options.args;
+            // Options to childView
+            this.childViewOptions.args = this.options.args;
         },
 
         onRender: function () {

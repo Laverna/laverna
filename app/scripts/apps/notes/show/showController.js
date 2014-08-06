@@ -54,14 +54,12 @@ define([
                 decrypted,
                 args;
 
-            decrypted = {
-                title   : App.Encryption.API.decrypt(this.note.get('title')),
-                content : App.Encryption.API.decrypt(this.note.get('content')),
+            decrypted = _.extend(this.note.decrypt(), {
                 notebook: null
-            };
+            });
 
             if (notebook) {
-                decrypted.notebook = notebook.get('name');
+                decrypted.notebook = notebook.decrypt().name;
             }
 
             args = {
@@ -72,6 +70,7 @@ define([
             };
 
             App.content.show(new NoteView(args));
+            App.setTitle(decrypted.title);
         },
 
         triggerChangeToSidebar: function () {
@@ -79,13 +78,14 @@ define([
         },
 
         updateTaskProgress: function (text) {
-            var content = App.Encryption.API.encrypt(text.content);
-            this.note.trigger('update:any');
+            this.note.set(_.extend(this.note.decrypt(), {
+                'content': text.content,
+                'taskCompleted': text.completed
+            }));
 
-            this.note.save({
-                content       : content,
-                taskCompleted : text.completed
-            });
+            this.note.encrypt();
+            this.note.trigger('update:any');
+            this.note.save(this.note.toJSON());
         }
 
     });

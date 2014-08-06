@@ -87,17 +87,17 @@ define([
 
         refuse: function () {
             this.trigger('refuse');
-            this.close();
+            this.destroy();
         },
 
         confirm: function () {
             this.trigger('confirm');
-            this.close();
+            this.destroy();
         },
 
-        close: function () {
+        destroy: function () {
             this.answered = true;
-            this.trigger('close');
+            this.trigger('destroy');
             return false;
         }
 

@@ -3,7 +3,7 @@
 define([
     'underscore',
     'app',
-    'backbone',
+    'marionette',
     'helpers/uri',
     'text!apps/notes/show/templates/item.html',
     'checklist',
@@ -11,13 +11,13 @@ define([
     'libs/images',
     'prettify',
     'helpers/mathjax',
+    'hammerjs',
     'backbone.mousetrap',
-    'marionette',
     'pagedown-extra'
-], function (_, App, Backbone, URI, Template, Checklist, Tags, Img, prettify, mathjax) {
+], function (_, App, Marionette, URI, Template, Checklist, Tags, Img, prettify, mathjax, Hammer) {
     'use strict';
 
-    var View = Backbone.Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         className: 'content-notes',
@@ -57,8 +57,10 @@ define([
         },
 
         onRender: function () {
+            var self = this,
+                code = null;
+
             // Google code prettify
-            var code = null;
             this.$('pre').addClass('prettyprint').each(function (idx, el) {
                 code = el.firstChild;
                 code.innerHTML = prettify.prettyPrintOne(code.innerHTML);
@@ -66,6 +68,12 @@ define([
 
             // Make table look good
             this.$('table').addClass('table table-bordered');
+
+            this.hammertime = new Hammer(this.el);
+            this.hammertime.on('swiperight', function (e) {
+                self.toggleSidebar();
+                e.preventDefault();
+            });
 
             // MathJax
             mathjax.init(this.el);
@@ -96,11 +104,6 @@ define([
             });
 
             data.content = converter.makeHtml(data.content);
-            data.notebook = App.Encryption.API.decrypt(data.notebook);
-
-            // Show title
-            document.title = data.title;
-
             data.uri = URI.link('/');
             data.title = converter.makeHtml(data.title);
 
@@ -118,14 +121,21 @@ define([
         },
 
         changeFavorite: function () {
-            var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
             if (this.model.get('isFavorite') === 1) {
-                this.ui.favorite.removeClass('icon-star-empty');
-                sidebar.removeClass('icon-star-empty');
+                this.changeFavoriteClass('icon-favorite', 'icon-star-empty');
             } else {
-                this.ui.favorite.addClass('icon-star-empty');
-                sidebar.addClass('icon-star-empty');
+                this.changeFavoriteClass('icon-star-empty', 'icon-favorite');
             }
+        },
+
+        changeFavoriteClass: function (addClass, removeClass) {
+            var sidebar = $('#note-' + this.model.get('id') + ' .favorite');
+
+            this.ui.favorite.removeClass(removeClass);
+            sidebar.removeClass(removeClass);
+
+            this.ui.favorite.addClass(addClass);
+            sidebar.addClass(addClass);
         },
 
         /**
@@ -157,7 +167,7 @@ define([
         toggleTask: function (e) {
             var task = $(e.target),
                 taskId = parseInt(task.attr('data-task'), null),
-                content = App.Encryption.API.decrypt(this.model.get('content')),
+                content = this.model.decrypt().content,
                 text = new Checklist().toggle(content, taskId);
 
             // Save result
@@ -193,9 +203,14 @@ define([
          * Show sidebar
          */
         toggleSidebar: function (e) {
-            e.preventDefault();
-            App.navigate('/notes/p1', {trigger: false});
-            App.trigger('notes:toggle', this.options.args);
+            if (e) {
+                e.preventDefault();
+            }
+
+            if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
+                App.navigate('/notes/p1', {trigger: false});
+                App.trigger('notes:toggle', this.options.args);
+            }
         },
 
         templateHelpers: function() {

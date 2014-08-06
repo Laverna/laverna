@@ -2,7 +2,7 @@
 
 Laverna is a JavaScript note-taking web application with a Markdown editor and encryption support.  It's built to be an open source alternative to Evernote.
 
-The application stores all your notes in your browser storage spaces such as indexedDB or localStorage, which is good for security reasons, because only you can get access to them.
+The application stores all your notes in your browser local storage spaces such as indexedDB or localStorage, which is good for security reasons, because only you have access to them.
 
 **Demo**: https://laverna.cc/ OR http://laverna.github.io/static-laverna
 
@@ -10,9 +10,9 @@ The application stores all your notes in your browser storage spaces such as ind
 -----------
 
 * Markdown editor based on Pagedown
-* Manage your notes even if you're offline
+* Manage your notes, even when you're offline
 * Secure - client side encryption with [SJCL] [1] and AES algorithm
-* Synchronizes with cloud storage services. At the time only with Dropbox and RemoteStorage
+* Synchronizes with cloud storage services. At this time only Dropbox and RemoteStorage are supported
 * Three editing modes: distraction free, preview, and normal mode
 * WYSIWYG control buttons
 * MathJax support
@@ -23,7 +23,15 @@ The application stores all your notes in your browser storage spaces such as ind
 
 ## Installation
 ---------------
-You can use the application at laverna.cc, but we encourage you to install it on your own server or machine. To install, do the following:
+You can use the application at laverna.cc, but we encourage you to install it on your own server or machine.
+
+You can download the minified version of Laverna app from [Laverna/static-laverna][9] repository if you don't want to build it yourself:
+
+    git clone -b gh-pages https://github.com/Laverna/static-laverna
+
+## Installation from source
+---------------
+To install, do the following:
 
 #### 1. Clone repository:
 
@@ -31,7 +39,7 @@ You can use the application at laverna.cc, but we encourage you to install it on
 
 #### 2. Switch to stable version:
 
-    git checkout 0.5.0
+    git checkout 0.6.2
 
 #### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 
@@ -39,6 +47,7 @@ You can use the application at laverna.cc, but we encourage you to install it on
 
     npm install bower
     npm install grunt
+    npm install grunt-cli
 
 #### 5. Install Laverna's dependencies:
 
@@ -57,7 +66,8 @@ You can change the storage API keys in app/scripts/constants.js
 3. [Contribute][7]
 
 ### Tips:
-[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/master/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/860a9f84d7987cea59bad16114aa71543934eca5/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+
 [Bitcoin][3]
 
 ## Licence
@@ -74,3 +84,4 @@ Laverna uses a lot of other libraries and each of these [libraries uses differen
 [6]: https://github.com/Laverna/laverna
 [7]: https://github.com/Laverna/laverna/blob/master/CONTRIBUTE.md
 [8]: http://nodejs.org
+[9]: https://github.com/Laverna/static-laverna/archive/gh-pages.zip

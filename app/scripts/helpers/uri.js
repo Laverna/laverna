@@ -11,7 +11,7 @@ define([
     var URI = {
         getProfile: function () {
             var route = Backbone.history.fragment,
-                uri = route.split('/');
+                uri = (route ? route.split('/') : '');
 
             if (_.contains(uri, 'p')) {
                 return uri[1];
@@ -34,7 +34,7 @@ define([
 
         // Builds note\'s hash URI
         note: function (opt, note) {
-            var args = _.clone(opt),
+            var args = (opt ? _.clone(opt) : {}),
                 url = '/notes',
                 filters = {
                     filter : '/f/',

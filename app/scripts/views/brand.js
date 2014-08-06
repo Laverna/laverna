@@ -10,14 +10,13 @@ define([
     var BrandRegion = Backbone.Marionette.Region.extend({
         el : '#brand-layer',
 
-        open: function (view) {
+        onShow: function () {
             $('#wrapper').hide();
-
-            this.$el.html(view.el);
+            // this.$el.html(view.el);
             this.$el.slideDown('fast');
         },
 
-        onClose: function () {
+        onEmpty: function () {
             this.$el.slideUp('fast');
             $('#wrapper').show();
         }

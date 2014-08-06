@@ -112,7 +112,7 @@ define([
                 i18n: $.t,
 
                 urlPage : function () {
-                    if (App.currentApp.moduleName === 'AppNotebook') {
+                    if (App.currentApp && App.currentApp.moduleName === 'AppNotebook') {
                         return URI.link('/notebooks');
                     } else {
                         return URI.link('/notes');
@@ -140,7 +140,7 @@ define([
                 },
 
                 notebook: function (model) {
-                    return App.Encryption.API.decrypt(model.get('name'));
+                    return model.decrypt().name;
                 },
 
                 link: function (profile) {

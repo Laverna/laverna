@@ -20,11 +20,17 @@
                         </label>
                         <div class="col-sm-10">
                             <select class="form-control" name="appLang" id="appLang">
+                                <option value="de"<%if(models.appLang === 'de'){ %> selected<% } %>>{{ i18n('de') }}</option>
+                                <option value="el"<%if(models.appLang === 'el'){ %> selected<% } %>>{{ i18n('el') }}</option>
                                 <option value="en"<%if(models.appLang === 'en'){ %> selected<% } %>>{{ i18n('en') }}</option>
-                                <option value="ru"<%if(models.appLang === 'ru'){ %> selected<% } %>>{{ i18n('ru') }}</option>
-                                <option value="nl"<%if(models.appLang === 'nl'){ %> selected<% } %>>{{ i18n('nl') }}</option>
+                                <option value="eo"<%if(models.appLang === 'eo'){ %> selected<% } %>>{{ i18n('eo') }}</option>
+                                <option value="es"<%if(models.appLang === 'es'){ %> selected<% } %>>{{ i18n('es') }}</option>
                                 <option value="fr"<%if(models.appLang === 'fr'){ %> selected<% } %>>{{ i18n('fr') }}</option>
+                                <option value="nb"<%if(models.appLang === 'nb'){ %> selected<% } %>>{{ i18n('nb') }}</option>
+                                <option value="nl"<%if(models.appLang === 'nl'){ %> selected<% } %>>{{ i18n('nl') }}</option>
+                                <option value="nn"<%if(models.appLang === 'nn'){ %> selected<% } %>>{{ i18n('nn') }}</option>
                                 <option value="pt_br"<%if(models.appLang === 'pt_br'){ %> selected<% } %>>{{ i18n('pt_br') }}</option>
+                                <option value="ru"<%if(models.appLang === 'ru'){ %> selected<% } %>>{{ i18n('ru') }}</option>
                             </select>
                         </div>
                     </div>
@@ -34,11 +40,29 @@
                             <i class="fa fa-cloud"></i> {{ i18n('Cloud storage') }}
                         </label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="cloudStorage" id="cloudStorage">
+                            <select class="form-control show-onselect" data-option="dropbox" name="cloudStorage" id="cloudStorage">
                                 <option value="0">{{ i18n('No') }}</option>
-                                <option value="dropbox"<%if(models.cloudStorage === 'dropbox'){ %> selected<% } %>>Dropbox</option>
+                                <option data-show="#group-dropboxKey" value="dropbox"<% if(models.cloudStorage === 'dropbox'){ %> selected<% } %>>Dropbox</option>
                                 <option value="remotestorage"<%if(models.cloudStorage === 'remotestorage'){ %> selected<% } %>>RemoteStorage</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group <% if (models.cloudStorage !== 'dropbox') { %> hidden<% } %>" id="group-dropboxKey">
+                        <label class="col-sm-2 control-label" for="dropboxKey">
+                            <span class="pull-left">{{ i18n('Dropbox API key') }}</span>
+                            <button type="button" class="btn btn-link popover-key" role="button" data-title="Dropbox API Key" data-container="#group-dropboxKey">?</button>
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="dropboxKey" type="text" name="dropboxKey" class="form-control" value="{{ models.dropboxKey }}" placeholder="<% if(dropboxKeyNeed) { %>{{ 'Required!' }}<% } else { %>{{'Optional'}}<% } %>" />
+                        </div>
+                        <div class="popover-dropbox hidden">
+                            <p>You can have your own API key <a target="_blank" href="https://www.dropbox.com/developers/apps">here</a>.</p>
+                            <p>When you create a new app at Dropbox's Developer site you should keep in mind that:</p>
+                            <ol>
+                                <li>Type of app should be <b>Dropbox API app</b></li>
+                                <li>Type of data should be <b>Files and datastores</b></li>
+                            </ol>
                         </div>
                     </div>
 
@@ -48,6 +72,17 @@
                             <input type="text" id="pagination" name="pagination" value="{{models.pagination}}" class="form-control" >
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="sortnotebooks">{{ i18n('Sort notebooks') }}</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="sortnotebooks" checked="{{models.sortnotebooks}}">
+                                <option value="name">{{ i18n('Name') }}</option>
+                                <option value="id" <%if(models.sortnotebooks === 'id'){%>selected<%}%>>{{ i18n('Created') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ i18n('Default edit mode') }}</label>
                         <div class="col-sm-10">
@@ -114,93 +149,47 @@
                 <div class="tab-pane" id="shortcuts"><!-- {{ shortcuts -->
                     <fieldset>
                         <legend>{{ i18n('Navigation') }}</legend>
+                        <% _.forEach(filter('navigate'), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Top') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.navigateTop}}" name="navigateTop" />
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Bottom') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.navigateBottom}}" name="navigateBottom" />
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                     <fieldset>
                         <legend>{{ i18n('Jump') }}</legend>
+                        <% _.forEach(filter('jump'), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to inbox') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpInbox}}" name="jumpInbox"/>
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to notebook list') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpNotebook}}" name="jumpNotebook"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to favourite notes') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpFavorite}}" name="jumpFavorite"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Go to removed notes') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.jumpRemoved}}" name="jumpRemoved"/>
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                     <fieldset>
                         <legend>{{ i18n('Actions') }}</legend>
+                        <% _.forEach(filter('actions'), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Edit') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsEdit}}" name="actionsEdit"/>
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Open') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsOpen}}" name="actionsOpen"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Remove') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsRemove}}" name="actionsRemove"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Rotate Star') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.actionsRotateStar}}" name="actionsRotateStar"/>
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                     <fieldset>
                         <legend>{{ i18n('App') }}</legend>
+                        <% _.forEach(appShortcuts(), function (model) { %>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Create new note') }}</label>
+                            <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.appCreateNote}}" name="appCreateNote"/>
+                                <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Search note') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.appSearch}}" name="appSearch"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ i18n('Keyboard help') }}</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" value="{{models.appKeyboardHelp}}" name="appKeyboardHelp"/>
-                            </div>
-                        </div>
+                        <% }); %>
                     </fieldset>
                 </div><!-- }} shortcuts -->
                 <div class="tab-pane" id="other"><!-- {{ other -->

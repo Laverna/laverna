@@ -27,6 +27,7 @@ define([
             'click .ok'               : 'save',
             'click .close'            : 'close',
             'click .showField'        : 'clickCheckbox',
+            'change .show-onselect'   : 'showOnSelect',
             'click #randomize'        : 'randomize',
             'submit .form-horizontal' : 'save',
             'change input, select, textarea' : 'triggerChange',
@@ -43,9 +44,21 @@ define([
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.changeTab);
             this.listenTo(this.collection, 'change', this.renderAgain);
+            this.on('shown.modal', this.onModal);
+        },
+
+        onModal: function () {
+            var pop = $('.popover-dropbox').html();
+
+            $('.popover-key').popover({
+                trigger: 'click',
+                html   : true,
+                content: function () { return pop; }
+            });
         },
 
         renderAgain: function () {
+            console.log('rendered again');
             var tab = this.$('li.active a').attr('href').replace('#', '');
             this.render();
             this.changeTab(tab);
@@ -75,7 +88,9 @@ define([
 
         serializeData: function () {
             return {
-                models: this.collection.getConfigs()
+                models         : this.collection.getConfigs(),
+                collection     : this.collection,
+                dropboxKeyNeed : App.constants.DROPBOXKEYNEED
             };
         },
 
@@ -113,6 +128,21 @@ define([
         },
 
         /**
+         * Shows additional parameters
+         */
+        showOnSelect: function (e) {
+            var $el = $(e.target),
+                option = $el.find('option[value=' + $el.attr('data-option') + ']');
+
+            if (option.is(':selected')) {
+                $( option.attr('data-show') ).removeClass('hidden');
+            }
+            else {
+                $( option.attr('data-show') ).addClass('hidden');
+            }
+        },
+
+        /**
          * Save the configs changes
          */
         save: function () {
@@ -139,7 +169,7 @@ define([
             }, this);
 
             this.somethingChanged = true;
-            this.close();
+            this.destroy();
             return false;
         },
 
@@ -151,18 +181,27 @@ define([
             this.trigger('redirect', args);
         },
 
-        close: function (e) {
+        destroy: function (e) {
             if (e !== undefined) {
                 e.preventDefault();
             }
-            this.trigger('close');
+            this.trigger('destroy');
         },
 
         templateHelpers: function () {
             return {
-                i18n: $.t
+                i18n: $.t,
+
+                filter: function (str) {
+                    return this.collection.filterName(str);
+                },
+
+                appShortcuts: function () {
+                    return this.collection.appShortcuts();
+                }
             };
         }
+
     });
 
     return View;

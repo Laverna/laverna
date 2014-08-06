@@ -3,7 +3,7 @@ define([
     'underscore',
     'jquery',
     'app',
-    'backbone',
+    'marionette',
     'text!apps/notes/form/templates/form.html',
     'checklist',
     'tags',
@@ -12,15 +12,14 @@ define([
     'helpers/mathjax',
     'apps/notes/form/dropareaView',
     'apps/notes/form/linkView',
-    'marionette',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
 ],
-function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, DropareaView, LinkView) {
+function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, DropareaView, LinkView) {
     'use strict';
 
-    var View = Backbone.Marionette.ItemView.extend({
+    var View = Marionette.ItemView.extend({
         template: _.template(Template),
 
         ui: {
@@ -48,6 +47,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
         },
 
         initialize: function () {
+            var self = this;
             _.bindAll(this, 'scrollPagedownBar');
             App.mousetrap.API.pause();
             this.$body = $('body');
@@ -57,6 +57,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
 
             // Model
             this.listenTo(this.model, 'sync', this.disableSubmitButton);
+            this.listenTo(App, 'new:notebook', this.newNotebookRender);
             this.on('autoSave', this.autoSave, this);
 
             // Pagedown editor
@@ -65,9 +66,26 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
             this.on('pagedown:ready', this.onPagedownReady);
             this.on('pagedown:ready', this.changePagedownMode);
             this.on('pagedown:mode',  this.changePagedownMode);
+
+            // Keybindings
+            this.$document = $(document);
+            this.$document.on('keydown', function (event) {
+                var isS = String.fromCharCode(event.which).toLowerCase() === 's';
+                // Ctrl + s
+                if ( (event.ctrlKey && isS) || (event.metaKey && isS) ) {
+                    event.preventDefault();
+                    self.save();
+                }
+                // Redirect if user hits Esc and editor is focused
+                else if (event.which === 27 && self.editor && self.editor.isFocused()) {
+                    event.preventDefault();
+                    self.redirect(event);
+                }
+            });
         },
 
-        onClose: function () {
+        onDestroy: function () {
+            this.$document.off('keydown');
             App.mousetrap.API.unpause();
             this.imgHelper.clean();
             this.switchMode();
@@ -78,17 +96,17 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
             this.ui.sCont.on('scroll', this.scrollPagedownBar);
         },
 
-        newNotebook: function (e) {
+        newNotebook: function () {
             if (this.ui.notebookId.find('.newNotebook').is(':selected')) {
-                App.AppNotebook.trigger('showForm', false);
-
-                this.listenTo(App, 'new:notebook', function (model) {
-                    var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.toJSON()) );
-                    this.ui.notebookId.append(tmpl);
-                    tmpl.prop('selected', true);
-                    this.options.notebooks.add(model);
-                });
+                App.AppNotebook.trigger('showForm', this.options.profile, false);
             }
+        },
+
+        newNotebookRender: function (model) {
+            var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.decrypt()) );
+            this.ui.notebookId.append(tmpl);
+            tmpl.prop('selected', true);
+            this.options.notebooks.add(model);
         },
 
         enableSubmitButton: function () {
@@ -186,7 +204,7 @@ function (_, $, App, Backbone, Template, Checklist, Tags, Img, ace, mathjax, Dro
             }
 
             if (this.ui.title.val() === this.model.get('title') &&
-                parseInt(this.ui.notebookId.val()) === this.model.get('notebookId') &&
+                this.ui.notebookId.val() === this.model.get('notebookId') &&
                 content === this.model.get('content') ) {
                 return true;
             }

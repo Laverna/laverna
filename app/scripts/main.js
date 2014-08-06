@@ -11,6 +11,12 @@ require.config({
             name     : 'pagedown-ace',
             location : '../bower_components/pagedown-ace',
             main     : 'Markdown.Editor'
+        },
+        // Xregexp
+        {
+            name     : 'xregexp',
+            location : '../bower_components/xregexp/src',
+            main     : 'xregexp'
         }
     ],
     paths: {
@@ -23,7 +29,7 @@ require.config({
         i18next                    :  '../bower_components/i18next/i18next.min',
         // Backbone &              :  Marionette
         backbone                   :  '../bower_components/backbone/backbone',
-        marionette                 :  '../bower_components/marionette/lib/core/amd/backbone.marionette',
+        marionette                 :  '../bower_components/marionette/lib/core/backbone.marionette',
         localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
         IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim',
         indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
@@ -33,10 +39,10 @@ require.config({
         fileSaver                  :  '../bower_components/FileSaver/FileSaver',
         enquire                    :  '../bower_components/enquire/dist/enquire.min',
         dropbox                    :  'libs/dropbox',
-        // remotestorage              :  'libs/remotestorage',
-        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
-        'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/amd/backbone.wreqr',
-        'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/amd/backbone.babysitter',
+        hammerjs                   :  '../bower_components/hammerjs/hammer',
+        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd',
+        'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/backbone.wreqr',
+        'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/backbone.babysitter',
         // Keybindings             :
         'Mousetrap'                :  '../bower_components/mousetrap/mousetrap',
         'mousetrap-pause'          :  '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
@@ -104,6 +110,14 @@ require.config({
         'mathjax': {
             exports: 'MathJax'
         },
+        // Xregexp
+        'xregexp/xregexp': {
+            exports: 'XRegExp'
+        },
+        'xregexp/addons/unicode/unicode-base': {
+            deps: ['xregexp/xregexp'],
+            exports: 'XRegExp'
+        },
         'to-markdown': {
             exports: 'toMarkdown'
         },
@@ -122,9 +136,6 @@ require.config({
         i18next: {
             deps: ['jquery'],
             exports: 'i18n'
-        },
-        prettify: {
-            exports: 'prettify'
         }
     },
     findNestedDependencies: true,
@@ -134,10 +145,16 @@ require.config({
 require([
     'jquery',
     'app',
+    'helpers/sync/remotestorage',
     'bootstrap'
 ], function ($, App) {
     'use strict';
     /*global alert*/
+
+    // prevent error in Firefox
+    if( !('indexedDB' in window)) {
+        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
+    }
 
     function startApp () {
         var request;
@@ -158,23 +175,17 @@ require([
         };
     }
 
-    // prevent error in Firefox
-    if( !('indexedDB' in window)) {
-        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-    }
-
-    if (window.indexedDB) {
-        startApp();
-    }
-    // IndexedDB support in Safari and in old Chrome
-    else {
-        require(['IndexedDBShim'], function () {
-            if (window.shimIndexedDB) {
+    $(document).ready(function () {
+        if ( !window.indexedDB) {
+            require(['IndexedDBShim'], function () {
                 window.appNoDB = true;
                 window.shimIndexedDB.__useShim(true);
-            }
+                startApp();
+            });
+        }
+        else {
             startApp();
-        });
-    }
+        }
+    });
 
 });

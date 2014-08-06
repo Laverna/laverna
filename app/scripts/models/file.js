@@ -2,8 +2,9 @@
 define([
     'underscore',
     'backbone',
-    'migrations/note'
-], function (_, Backbone, FilesDB) {
+    'migrations/note',
+    'collections/removed'
+], function (_, Backbone, FilesDB, Removed) {
     'use strict';
 
     /**
@@ -19,6 +20,7 @@ define([
             id           : undefined,
             src          : '',
             type         : '',
+            updated      : Date.now(),
             synchronized : 0
         },
 
@@ -33,7 +35,20 @@ define([
             if (errors.length > 0) {
                 return errors;
             }
+        },
+
+        updateDate: function () {
+            this.set('updated', Date.now());
+            this.set('synchronized', 0);
+        },
+
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function () {
+            return new Removed().newObject(this, arguments);
         }
+
     });
 
     return File;

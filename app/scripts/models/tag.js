@@ -2,8 +2,9 @@
 define([
     'underscore',
     'backbone',
+    'collections/removed',
     'migrations/note'
-], function (_, Backbone, TagsDB) {
+], function (_, Backbone, Removed, TagsDB) {
     'use strict';
 
     /**
@@ -16,14 +17,27 @@ define([
         storeName: 'tags',
 
         defaults: {
-            'id'    : 0,
-            'name'  : '',
-            'count' : '',
-            'synchronized' : 0
+            'id'           :  undefined,
+            'name'         :  '',
+            'count'        :  '',
+            'synchronized' :  0,
+            'updated'      : Date.now()
         },
 
         initialize: function () {
             this.on('update:name', this.doEscape());
+        },
+
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function () {
+            return new Removed().newObject(this, arguments);
+        },
+
+        updateDate: function () {
+            this.set('updated', Date.now());
+            this.set('synchronized', 0);
         },
 
         doEscape: function () {

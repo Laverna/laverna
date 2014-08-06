@@ -1,7 +1,7 @@
 {
     "name": "laverna",
     "description": "Open source note taking web application",
-    "version": "0.5.0",
+    "version": "0.6.2",
     "launch_path": "/index.html",
     "icons": {
         "16": "/images/icon/icon-16x16.png",

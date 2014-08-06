@@ -1,6 +1,7 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'backbone',
     'modalRegion',
     'brandRegion',
@@ -9,7 +10,7 @@ define([
     'i18next',
     'devicejs',
     'marionette'
-], function (_, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
+], function (_, $, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
     'use strict';
 
     // Underscore template
@@ -34,7 +35,7 @@ define([
 
     // Modal region events
     App.modal.on('close', function () {
-        App.notesArg = null; // Re render sidebar
+        // App.notesArg = null; // Re render sidebar
     });
 
     // Backbone history navigate
@@ -55,6 +56,16 @@ define([
         } else {
             url.back();
         }
+    };
+
+    // Document title
+    App.setTitle = function (title, mainTitle) {
+        App.title = (App.title || {main: '', index: ''});
+        if (mainTitle) {
+            App.title.main = mainTitle;
+        }
+        App.title.index = (title ? title + ' - ' : App.title.index);
+        document.title = App.title.index + App.title.main;
     };
 
     // Debug
@@ -86,6 +97,8 @@ define([
         App.settings = configs.getConfigs();
         App.currentProfile = URI.getProfile();
 
+        window.dropboxKey = App.settings.dropboxKey;
+
         App.currentApp = currentApp;
         if(currentApp){
             currentApp.start(args);
@@ -93,7 +106,7 @@ define([
     };
 
     // Initialize settings
-    App.on('initialize:before', function () {
+    App.on('before:start', function () {
         configs.fetch();
 
         // Set default set of configs
@@ -121,13 +134,12 @@ define([
     });
 
     // Start default module
-    App.on('initialize:after', function () {
+    App.on('start', function () {
         require([
             'constants',
             'helpers/install',
             'apps/confirm/appConfirm',
             'apps/encryption/encrypt',
-            'helpers/dualstorage',
             'helpers/keybindings',
             'apps/navbar/appNavbar',
             'apps/notes/appNote',
@@ -139,7 +151,7 @@ define([
                 lng             : App.settings.appLang,
                 fallbackLng     : 'en',
                 useCookie       : false,
-                useLocalStorage : false
+                useLocalStorage : true
             };
 
             i18n.init(lng, function () {
@@ -151,6 +163,7 @@ define([
                 Install.start();
 
                 Backbone.history.start({pushState: false});
+                $('.loading').removeClass('loading');
 
                 $(window).on('hashchange', function () {
                     var profile = URI.getProfile();

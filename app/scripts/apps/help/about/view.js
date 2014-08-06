@@ -2,10 +2,9 @@
 define([
     'underscore',
     'jquery',
-    'backbone',
     'marionette',
     'text!apps/help/about/template.html'
-], function ( _, $, Backbone, Marionette, Tmpl) {
+], function (_, $, Marionette, Tmpl) {
     'use strict';
 
     var View = Marionette.ItemView.extend({

@@ -1,0 +1,22 @@
+{
+  "name": "laverna-theme-default",
+  "version": "0.5.0",
+  "dependencies": {
+    "bootstrap": "~3.1.1"
+  },
+  "homepage": "https://github.com/laverna/laverna",
+  "authors": [
+    "see laverna credits"
+  ],
+  "description": "default theme for laverna.cc",
+  "main": "index.less",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
+}

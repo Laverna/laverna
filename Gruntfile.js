@@ -212,7 +212,8 @@ module.exports = function (grunt) {
                     sourceMapBasepath: '<%= yeoman.app %>/styles/'
                 },
                 files : {
-                    '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'
+                    '<%= yeoman.app %>/styles/theme-default/index.css': '<%= yeoman.app %>/styles/theme-default/index.less',
+                    '<%= yeoman.app %>/styles/theme-default/welcome.css': '<%= yeoman.app %>/styles/theme-default/welcome.less'
                 }
             }
         },
@@ -307,9 +308,11 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 files: {
-                    '<%= yeoman.dist %>/styles/main.css': [
-                        '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                    '<%= yeoman.dist %>/styles/theme-default/welcome.css': [
+                        '<%= yeoman.app %>/styles/theme-default/welcome.css'
+                    ],
+                    '<%= yeoman.dist %>/styles/theme-default/index.css': [
+                        '<%= yeoman.app %>/styles/theme-default/index.css'
                     ]
                 }
             }

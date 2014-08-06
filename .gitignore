@@ -6,7 +6,7 @@ dist
 app/bower_components
 test/bower_components
 .idea
-app/styles/*.css
+app/styles/**/*.css
 *.swp
 app/scripts/libs/remotestorage.js
 app/scripts/apps/settings/show/encryptView.js

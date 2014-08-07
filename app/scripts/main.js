@@ -136,9 +136,6 @@ require.config({
         i18next: {
             deps: ['jquery'],
             exports: 'i18n'
-        },
-        prettify: {
-            exports: 'prettify'
         }
     },
     findNestedDependencies: true,

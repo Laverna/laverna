@@ -160,7 +160,7 @@ require([
         var request;
 
         if ( !window.indexedDB || !window.localStorage) {
-            alert('Your browser outdated and does not support IndexedDB and/or LocalStorage.');
+            alert('Your browser is outdated and does not support IndexedDB and/or LocalStorage.');
             return;
         }
 

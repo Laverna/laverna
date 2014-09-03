@@ -16,6 +16,16 @@
                 <li><a href="#" data-mode="normal"><i class="icon-squares"></i> {{ i18n('Normal') }}</a></li>
             </ul>
         </li>
+         <li class="btn-group dropdown switch-mode">
+            <span class="wordBtn btn btn-success dropdown-toggle" data-toggle="dropdown">
+                <span class="word-btn-text">{{ i18n('Word Count Info') }} </span>
+            </span>
+            <ul class="modeMenu dropdown-menu pull-right" aria-labelledby="switchMode">
+                <li> {{ i18n('Word Count:') }} <span id="wordCount"></span> </li>
+                <li> {{ i18n('Characters:') }} <span id="charCount"></span> </li>
+            </ul>
+        </li>
+        
     </ul>
 </nav>
 

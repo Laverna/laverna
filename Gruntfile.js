@@ -203,6 +203,12 @@ module.exports = function (grunt) {
         },
         // Compile less files
         less: {
+            options: {
+                paths: [
+                    '<%= yeoman.app %>/bower_components',
+                    '<%= yeoman.app %>/styles'
+                ],
+            },
             compile: {
                 options: {
                     compress: false,

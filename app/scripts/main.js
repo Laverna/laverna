@@ -149,24 +149,20 @@ require([
     'bootstrap'
 ], function ($, App) {
     'use strict';
-    /*global alert*/
-
-    // prevent error in Firefox
-    if( !('indexedDB' in window)) {
-        window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.oIndexedDB || window.msIndexedDB;
-    }
+    /* global Modernizr */
 
     function startApp () {
         var request;
 
-        if ( !window.indexedDB || !window.localStorage) {
-            alert('Your browser is outdated and does not support IndexedDB and/or LocalStorage.');
+        // Browser doesn't support neither indexeddb nor websql
+        if ( ( !Modernizr.indexeddb && !Modernizr.websqldatabase ) ||
+            !Modernizr.localstorage ) {
+            window.alert('Your browser is outdated and does not support IndexedDB and/or LocalStorage.');
             return;
         }
 
         request = window.indexedDB.open('MyTestDatabase');
         request.onerror = function() {
-            // alert('It seems like you refused Laverna to use IndexedDB or you are in Private browsing mode.');
             window.appNoDB = true;
             App.start();
         };
@@ -176,7 +172,7 @@ require([
     }
 
     $(document).ready(function () {
-        if ( !window.indexedDB) {
+        if ( !Modernizr.indexeddb ) {
             require(['IndexedDBShim'], function () {
                 window.appNoDB = true;
                 window.shimIndexedDB.__useShim(true);

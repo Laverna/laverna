@@ -198,32 +198,37 @@ module.exports = function (grunt) {
                 options: {
                     engine: 'gm',
                     sizes: [{
-                        width: 256,
-                        height: 256
-                    }, {
-                        width: 196,
-                        height: 196
-                    }, {
-                        width: 128,
+                        // For display on Firefox Marketplace
+                        width:  128,
                         height: 128
                     }, {
-                        width: 90,
-                        height: 90
+                        // web clip icon for iOS
+                        width:  120,
+                        height: 120
                     }, {
-                        width: 64,
-                        height: 64
+                        // web clip icon for iOS
+                        width:  152,
+                        height: 152
                     }, {
-                        width: 60,
-                        height: 60
+                        // Android xhdpi
+                        width:  96,
+                        height: 96
                     }, {
-                        width: 48,
+                        // web clip icon for iOS
+                        width:  76,
+                        height: 76
+                    }, {
+                        // Android & iPad hdpi
+                        width:  72,
+                        height: 72
+                    }, {
+                        // Android & iPad mdpi
+                        width:  48,
                         height: 48
                     }, {
-                        width: 32,
-                        height: 32
-                    }, {
-                        width: 30,
-                        height: 30
+                        // Android ldpi
+                        width:  36,
+                        height: 36
                     }, {
                         width: 16,
                         height: 16

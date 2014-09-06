@@ -70,14 +70,6 @@ module.exports = function (grunt) {
                 nospawn: true,
                 livereload: true
             },
-            coffee: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
-                tasks: ['coffee:dist']
-            },
-            coffeeTest: {
-                files: ['test/spec/{,*/}*.coffee'],
-                tasks: ['coffee:test']
-            },
             less: {
                 files: ['{.tmp,<%= yeoman.app %>}/styles/{,*/}*.less'],
                 tasks: ['less']
@@ -177,28 +169,6 @@ module.exports = function (grunt) {
                     run: true,
                     urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
                 }
-            }
-        },
-        coffee: {
-            dist: {
-                files: [{
-                    // rather than compiling multiple files here you should
-                    // require them into your main .coffee file
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/scripts',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
-                    ext: '.js'
-                }]
-            },
-            test: {
-                files: [{
-                    expand: true,
-                    cwd: 'test/spec',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/spec',
-                    ext: '.js'
-                }]
             }
         },
         // Compile less files
@@ -531,7 +501,6 @@ module.exports = function (grunt) {
         if (target === 'test') {
             return grunt.task.run([
                 'clean:server',
-                'coffee',
                 'createDefaultTemplate',
                 'jst',
                 'connect:test',
@@ -542,7 +511,6 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
-            'coffee:dist',
             'createDefaultTemplate',
             'jst',
             'less',
@@ -556,7 +524,6 @@ module.exports = function (grunt) {
         isConnected = Boolean(isConnected);
         var testTasks = [
                 'clean:server',
-                // 'coffee',
                 'createDefaultTemplate',
                 'jst',
                 'connect:test',
@@ -586,7 +553,6 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'string-replace:i18nextLocal',
-        // 'coffee',
         'createDefaultTemplate',
         'jst',
         'lessc',

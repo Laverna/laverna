@@ -23,7 +23,7 @@ require.config({
         sjcl                       :  '../bower_components/sjcl/sjcl',
         // Dependencies            :  and libraries
         text                       :  '../bower_components/requirejs-text/text',
-        jquery                     :  '../bower_components/jquery/jquery',
+        jquery                     :  '../bower_components/jquery/dist/jquery',
         underscore                 :  '../bower_components/underscore/underscore',
         devicejs                   :  '../bower_components/device.js/lib/device.min',
         i18next                    :  '../bower_components/i18next/i18next.min',
@@ -145,7 +145,6 @@ require.config({
 require([
     'jquery',
     'app',
-    'helpers/sync/remotestorage',
     'bootstrap'
 ], function ($, App) {
     'use strict';

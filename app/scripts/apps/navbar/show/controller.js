@@ -72,7 +72,7 @@ define([
         },
 
         /**
-         * Start syncing only if application has been started
+         * Start syncing only if application has started
          */
         startSyncing: function () {
             var self = this;

@@ -46,13 +46,19 @@ define([
             }
         },
 
+        /**
+         * Show fetched data
+         */
         showNavbar: function () {
-            var title;
+            var title,
+                notebook;
 
             if (this.args.filter === 'notebook') {
-                var notebook = this.notebooks.get(this.args.query);
-                this.args.query = (notebook ? notebook.decrypt().name : '');
+                notebook = this.notebooks.get(this.args.query);
             }
+
+            title = this.getTitle(notebook);
+            this.args.title = title;
 
             this.view = new NavbarView({
                 args: this.args,
@@ -60,15 +66,13 @@ define([
                 inNotebooks: (this.currentApp.moduleName === 'AppNotebook')
             });
 
+            // Show navbar and set document's title
             App.sidebarNavbar.show(this.view);
-            this.view.on('syncWithCloud', this.startSyncing, this);
+            App.setTitle(null, title);
 
-            // Set document title
-            if (this.args.filter) {
-                title = $.t(this.args.filter.substr(0,1).toUpperCase() + this.args.filter.substr(1));
-            }
-            title = (this.args.query ? this.args.query : title);
-            App.setTitle(null, (title || $.t('All notes')));
+            // View events
+            this.view.on('syncWithCloud', this.startSyncing, this);
+            this.view.on('redirect:form', this.redirectAdd, this);
         },
 
         /**
@@ -87,6 +91,23 @@ define([
                     self.startSyncing();
                 }, 300);
             }
+        },
+
+        /**
+         * Document's title
+         */
+        getTitle: function (notebook) {
+            if (notebook) {
+                return notebook.decrypt().name;
+            }
+
+            var title = (this.args.filter ? this.args.filter : 'All notes');
+            title = $.t(title.substr(0,1).toUpperCase() + title.substr(1));
+
+            if (this.args.query && this.args.filter !== 'search') {
+                title += ': ' + this.args.query;
+            }
+            return title;
         }
 
     });

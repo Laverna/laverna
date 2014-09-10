@@ -25,11 +25,14 @@ define([
         },
 
         events:  {
-            'click @ui.syncBtn'           : 'syncWithCloud',
             'click .btn-search'           : 'showSearch',
             'blur .search-input'          : 'hideSearch',
             'keyup @ui.navbarSearchInput' : 'searchKeyup',
             'submit @ui.navbarSearchForm' : 'searchSubmit'
+        },
+
+        triggers: {
+            'click @ui.syncBtn': 'syncWithCloud'
         },
 
         initialize: function () {
@@ -46,11 +49,6 @@ define([
             var iconClass = (this.options.args.filter === null) ? 'note' : this.options.args.filter;
             this.ui.locationIcon.removeClass();
             this.ui.locationIcon.addClass('icon-' + iconClass);
-        },
-
-        syncWithCloud: function (e) {
-            e.preventDefault();
-            this.trigger('syncWithCloud');
         },
 
         syncBefore: function () {
@@ -101,7 +99,6 @@ define([
                 args: this.options.args,
                 uri : URI.link('/'),
                 notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
-                syncButton  : (App.settings.cloudStorage.toString() === '0') ? 'hidden' : '',
                 profiles: App.settings.appProfiles,
                 profile: URI.getProfile()
             };
@@ -111,26 +108,18 @@ define([
             return {
                 i18n: $.t,
 
+                isSyncEnabled: function () {
+                    if (App.settings.cloudStorage.toString() === '0') {
+                        return 'hidden';
+                    }
+                },
+
                 urlPage : function () {
                     if (App.currentApp && App.currentApp.moduleName === 'AppNotebook') {
                         return URI.link('/notebooks');
                     } else {
                         return URI.link('/notes');
                     }
-                },
-
-                pageTitle: function () {
-                    var title = 'All notes';
-                    if (this.args.filter) {
-                        title = this.args.filter;
-                    }
-                    title = $.t(title.substr(0,1).toUpperCase() + title.substr(1));
-
-                    if (this.args.query && this.args.filter !== 'search') {
-                        title += ': ' + this.args.query;
-                    }
-
-                    return title;
                 },
 
                 pageNumber: function () {

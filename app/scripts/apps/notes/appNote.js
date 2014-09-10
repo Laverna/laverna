@@ -95,7 +95,11 @@ define([
         // Add new note
         addNote: function (profile) {
             require(['apps/notes/form/controller'], function (Form) {
-                executeAction(new Form().addForm, {profile: profile});
+                var args = API.notesArg || {};
+                executeAction(new Form().addForm, {
+                    profile: profile,
+                    notebookId: (args.filter === 'notebook' ? args.query : null)
+                });
                 API.notesWhileEditing(profile);
             });
         },

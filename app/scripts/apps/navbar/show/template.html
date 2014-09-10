@@ -4,7 +4,7 @@
         <li class="dropdown">
             <a id="header-title" href="#{{ urlPage() }}" class="btn-link navbar-brand dropdown-toggle" data-toggle="dropdown">
                 <i id="location-icon" class="icon-file"></i>
-                {{ pageTitle() }} {{ pageNumber() }}
+                {{ args.title }} {{ pageNumber() }}
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu location-dropdown" >
@@ -41,7 +41,7 @@
         <input class="form-control search-input col-12" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value="{{ args.query }}" />
     </form>
     <ul class="nav navbar-nav navbar-right">
-        <li class="{{ syncButton }}">
+        <li class="{{ isSyncEnabled() }}">
             <a href="#" class="btn sync-button">
                 <span id="syncStatus" class="icon-arrows"></span>
             </a>

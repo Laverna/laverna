@@ -41,6 +41,11 @@ define([
             this.model = new NoteModel();
             this.switchDatabase(args.profile);
 
+            // Default notebook
+            if (args.notebookId) {
+                this.model.set('notebookId', args.notebookId);
+            }
+
             $.when(
                 this.tags.fetch(),
                 this.notebooks.fetch()

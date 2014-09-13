@@ -24,13 +24,23 @@ define([
 
             // Synchronizing
             this.startSyncing();
+
+            this.listenTo(App, 'sync:before', function () {
+                this.view.trigger('sync:before');
+            }, this);
+
+            this.listenTo(App, 'sync:after', function () {
+                this.view.trigger('sync:after');
+            }, this);
         },
 
         /**
          * Fetch data and prepare arguments
          */
         show: function (args) {
-            this.args = _.clone(args);
+            this.args = _.extend({}, args, {
+                currentApp: (App.currentApp ? App.currentApp.moduleName : null)
+            });
 
             // Collection of notebooks
             this.notebooks = new Notebooks([], {
@@ -61,6 +71,7 @@ define([
             this.args.title = title;
 
             this.view = new NavbarView({
+                settings: App.settings,
                 args: this.args,
                 notebooks: (this.notebooks.length) ? this.notebooks.first(5) : null,
                 inNotebooks: (this.currentApp.moduleName === 'AppNotebook')

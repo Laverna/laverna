@@ -12,7 +12,7 @@ require.config({
 
     paths: {
         'sjcl'          :  '../app/bower_components/sjcl/sjcl',
-        'jquery'        :  '../app/bower_components/jquery/jquery',
+        'jquery'        :  '../app/bower_components/jquery/dist/jquery',
         'i18next'       :  '../app/bower_components/i18next/i18next.min',
         'underscore'    :  '../app/bower_components/underscore/underscore',
         'text'          :  '../app/bower_components/requirejs-text/text',
@@ -107,6 +107,7 @@ require([
         'spec/model-test',
         'spec/collection-test',
         'spec/views/notebooks',
+        'spec/views/navbarView',
         'spec/utils'
     ];
 

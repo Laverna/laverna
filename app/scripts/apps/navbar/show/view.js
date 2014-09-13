@@ -2,13 +2,12 @@
 define([
     'underscore',
     'jquery',
-    'app',
     'backbone',
     'helpers/uri',
     'text!apps/navbar/show/template.html',
     'backbone.mousetrap',
     'marionette'
-], function (_, $, App, Backbone, URI, Tmpl) {
+], function (_, $, Backbone, URI, Tmpl) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -36,13 +35,11 @@ define([
         },
 
         initialize: function () {
-            _.bindAll(this, 'syncBefore', 'syncAfter');
-
-            this.keyboardEvents[App.settings.appSearch] = 'showSearch';
+            this.keyboardEvents[this.options.settings.appSearch] = 'showSearch';
 
             // Show sync status
-            this.listenTo(App, 'sync:before', this.syncBefore);
-            this.listenTo(App, 'sync:after', this.syncAfter);
+            this.on('sync:before', this.syncBefore, this);
+            this.on('sync:after', this.syncAfter, this);
         },
 
         onRender: function () {
@@ -62,7 +59,7 @@ define([
         searchSubmit: function (e) {
             e.preventDefault();
             var text = this.ui.navbarSearchInput.val();
-            App.navigate(URI.link('/notes/f/search/q/' + text), true);
+            this.trigger('navigate', URI.link('/notes/f/search/q/' + text));
         },
 
         searchKeyup: function (e) {
@@ -97,9 +94,9 @@ define([
         serializeData: function () {
             return {
                 args: this.options.args,
+                settings: this.options.settings,
                 uri : URI.link('/'),
                 notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
-                profiles: App.settings.appProfiles,
                 profile: URI.getProfile()
             };
         },
@@ -109,13 +106,13 @@ define([
                 i18n: $.t,
 
                 isSyncEnabled: function () {
-                    if (App.settings.cloudStorage.toString() === '0') {
+                    if (this.settings.cloudStorage.toString() === '0') {
                         return 'hidden';
                     }
                 },
 
                 urlPage : function () {
-                    if (App.currentApp && App.currentApp.moduleName === 'AppNotebook') {
+                    if (this.args.currentApp === 'AppNotebook') {
                         return URI.link('/notebooks');
                     } else {
                         return URI.link('/notes');

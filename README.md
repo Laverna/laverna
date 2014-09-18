@@ -11,8 +11,8 @@ The application stores all your notes in your browser local storage spaces such 
 
 * Markdown editor based on Pagedown
 * Manage your notes, even when you're offline
-* Secure - client side encryption with [SJCL] [1] and AES algorithm
-* Synchronizes with cloud storage services. At this time only Dropbox and RemoteStorage are supported
+* Secure client-side encryption  
+* Synchronizes with cloud storage services (at this time only Dropbox and RemoteStorage are supported)
 * Three editing modes: distraction free, preview, and normal mode
 * WYSIWYG control buttons
 * MathJax support
@@ -69,6 +69,12 @@ You can change the storage API keys in app/scripts/constants.js
 [![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/860a9f84d7987cea59bad16114aa71543934eca5/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
 
 [Bitcoin][3]
+
+## Security
+--------------
+Laverna uses the [SJCL] [1] library implementing the AES algorithm. You can review the code at: 
+* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/auth.js 
+* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/encrypt/modelEncrypt.js
 
 ## Licence
 --------------

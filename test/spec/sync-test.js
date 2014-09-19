@@ -1,7 +1,6 @@
-/* global define, describe, beforeEach, before, it */
+/* global chai, define, describe, beforeEach, before, it */
 define([
     'underscore',
-    'chai',
     'helpers/sync/remotestorage',
     'helpers/sync/dropbox',
     'helpers/sync/sync',
@@ -9,7 +8,7 @@ define([
     'collections/notes',
     'collections/tags',
     'collections/files'
-], function (_, chai, RemoteSync, DropboxSync, Sync, Notebooks, Notes, Tags, Files) {
+], function (_, RemoteSync, DropboxSync, Sync, Notebooks, Notes, Tags, Files) {
     'use strict';
 
     var expect = chai.expect,

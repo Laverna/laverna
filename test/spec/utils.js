@@ -1,9 +1,8 @@
-/* global define, describe, it */
+/* global chai, define, describe, it */
 define([
     'require',
-    'chai',
     'libs/tags'
-], function (require, chai, TagHelper) {
+], function (require, TagHelper) {
     'use strict';
 
     var expect = chai.expect;

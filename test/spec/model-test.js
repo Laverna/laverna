@@ -1,14 +1,11 @@
-/* global define, describe, beforeEach, it */
+/* global chai, define, describe, beforeEach, it */
 define([
     'require',
-    'chai',
     'models/note'
-], function (require, chai, Note) {
+], function (require, Note) {
     'use strict';
 
-    // var assert = chai.assert,
-    //     should = chai.should(),
-    var    expect = chai.expect;
+    var expect = chai.expect;
 
     describe('Note Model', function () {
         var note;

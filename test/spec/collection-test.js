@@ -1,9 +1,8 @@
-/* global define, describe, before, it */
+/* global chai, define, describe, before, it */
 define([
     'require',
-    'chai',
     'collections/notes'
-], function (require, chai, Notes) {
+], function (require, Notes) {
     'use strict';
 
     var expect = chai.expect,

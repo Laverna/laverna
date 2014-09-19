@@ -29,7 +29,9 @@ define([
             if (attrs.name === '') {
                 errors.push('name');
             }
-
+            if (attrs.parentId === attrs.id) {
+                errors.push('parentId');
+            }
             if (errors.length > 0) {
                 return errors;
             }

@@ -1,13 +1,12 @@
-/* global define, describe, before, it */
+/* global chai, define, describe, before, it */
 define([
     'require',
     'jquery',
-    'chai',
     'models/notebook',
     'collections/notebooks',
     'apps/notebooks/list/views/notebooksItem',
     'apps/notebooks/list/views/notebooksComposite'
-], function (require, $, chai, Notebook, Notebooks, ItemView, ListView) {
+], function (require, $, Notebook, Notebooks, ItemView, ListView) {
     'use strict';
 
     var expect = chai.expect;

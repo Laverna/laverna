@@ -1,10 +1,9 @@
-/* global define, describe, before, after, it */
+/* global chai, define, describe, before, after, it */
 define([
     'underscore',
-    'chai',
     'apps/encryption/auth',
     'apps/encryption/encrypt/modelEncrypt'
-], function (_, chai, getAuth, getEncrypt) {
+], function (_, getAuth, getEncrypt) {
     'use strict';
 
     var expect = chai.expect,

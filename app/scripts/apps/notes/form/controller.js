@@ -184,6 +184,8 @@ define([
             // Redirect to list
             else if (typeof this.model.get('id') !== 'undefined') {
                 App.AppNote.trigger('navigate:back');
+            } else {
+                window.history.go(-1);
             }
 
             if (showNote !== false) {

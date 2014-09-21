@@ -33,7 +33,7 @@ module.exports = function (grunt) {
 			root: '<%= yeoman.dist %>',
 			// config: 'config.xml',
             config: {
-                template: 'config.xml',
+                template: '<%= yeoman.dist %>/config.xml',
                 data: {
                     id: 'org.phonegap.laverna',
                     version: pkg.version,
@@ -48,14 +48,6 @@ module.exports = function (grunt) {
             releases: 'releases',
             releaseName: function () {
                 return (pkg.name + '-' + pkg.version);
-            },
-            icons: {
-                android: {
-                    ldpi  : 'phonegap/www/images/icon/icon-32x32.png',
-                    mdpi  : 'phonegap/www/images/icon/icon-48x48.png',
-                    hdpi  : 'phonegap/www/images/icon/icon-64x64.png',
-                    xhdpi : 'phonegap/www/images/icon/icon-90x90.png'
-                }
             }
 		}
     };
@@ -328,6 +320,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/{,*/}*.{webp,gif,png}',
                         'font/*',
+                        'config.xml',
                         'locales/*/*',
                         'docs/*.md'
                     ]
@@ -351,8 +344,8 @@ module.exports = function (grunt) {
                         'bower_components/MathJax/extensions/**',
                         'bower_components/MathJax/fonts/HTML-CSS/TeX/woff/**',
                         'bower_components/MathJax/jax/element/**',
-                        'bower_components/MathJax/jax/input/{MathML,TeX}/**',
-                        'bower_components/MathJax/jax/output/{HTML-CSS,NativeMML}/**',
+                        'bower_components/MathJax/jax/input/{MathML,TeX}/{,**/}*',
+                        'bower_components/MathJax/jax/output/{HTML-CSS,NativeMML}/{,*/,***/}*',
                         'bower_components/MathJax/localization/en/**'
                     ]
                 }]

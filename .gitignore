@@ -20,6 +20,8 @@ test/visual/screenshots
 #########################
 platforms
 phonegap
+releases
+.cordova
 
 # Compiled source #
 ###################

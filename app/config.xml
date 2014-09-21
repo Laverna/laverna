@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="<%= id %>" version="<%= version %>" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>Laverna</name>
+    <description>
+        Open source note taking application
+    </description>
+    <author email="lavernaproject@gmail.com" href="https://github.com/Laverna/laverna">
+        Laverna project
+    </author>
+    <feature name="http://api.phonegap.com/1.0/device" />
+    <preference name="permissions" value="none" />
+    <preference name="orientation" value="default" />
+    <preference name="target-device" value="universal" />
+    <preference name="fullscreen" value="true" />
+    <preference name="webviewbounce" value="true" />
+    <preference name="prerendered-icon" value="true" />
+    <preference name="stay-in-webview" value="false" />
+    <preference name="ios-statusbarstyle" value="black-opaque" />
+    <preference name="detect-data-types" value="true" />
+    <preference name="exit-on-suspend" value="false" />
+    <preference name="show-splash-screen-spinner" value="true" />
+    <preference name="auto-hide-splash-screen" value="true" />
+    <preference name="disable-cursor" value="false" />
+    <preference name="android-minSdkVersion" value="7" />
+    <preference name="android-installLocation" value="auto" />
+    <icon src="www/images/icon/icon.png" />
+    <icon gap:density="ldpi" gap:platform="android" src="www/images/icon/icon-36x36.png" />
+    <icon gap:density="mdpi" gap:platform="android" src="www/images/icon/icon-48x48.png" />
+    <icon gap:density="hdpi" gap:platform="android" src="www/images/icon/icon-72x72.png" />
+    <icon gap:density="xhdpi" gap:platform="android" src="www/images/icon/icon-96x96.png" />
+    <access origin="http://127.0.0.1*" />
+</widget>

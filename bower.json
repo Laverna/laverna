@@ -17,7 +17,7 @@
     "mousetrap": "~1.4.6",
     "backbone.mousetrap": "git://github.com/elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
     "ace": "#79eda6d2a8c4f788530cb5e6b238af67bfcc609d",
-    "pagedown-ace": "git://github.com/benweet/pagedown-ace.git#84d5e1b7ff233a1c8cafa9716e825228d275120c",
+    "pagedown-ace": "git://github.com/benweet/pagedown-ace.git#c9d41937e1e3b4e46f823856a47f9eb22a8108e1",
     "pagedown-extra": "git://github.com/jmcmanus/pagedown-extra.git#bd0870e3e871e15bde1fa5a427e3e10028a09789",
     "google-code-prettify": "master",
     "sjcl": "~1.0.0",

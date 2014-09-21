@@ -25,6 +25,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
         ui: {
             title      :  'input[name="title"]',
             content    :  '.wmd-input',
+            preview    :  '#wmd-preview',
             clipContent :  '#clipContent',
             tags       :  'select[name="tags"]',
             notebookId :  '[name="notebookId"]',
@@ -119,20 +120,16 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
             this.editor.setValue(this.ui.clipContent.val());
         },
 
-        /**
-         * Save note to storage
-         */
-        word: function(e) {
+        word: function() {
             var text = this.editor.getSession().getValue();
             var wordCount = text.trim().replace(/\s+/gi, ' ').split(' ').length;
             var charCount = text.replace(/\s+/gi, '').length;
-            if (charCount ===0) wordCount = 0;
+            if (charCount === 0) { wordCount = 0; }
 
             this.$('span#wordCount').html(wordCount.toString());
             this.$('span#charCount').html(charCount.toString());
-
-
         },
+
         save: function (e) {
             var self = this,
                 mayRedirect = (typeof e === 'boolean') ? e : true,
@@ -148,8 +145,6 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
             } else {
                 content = this.$('div#wmd-input').val();
             }
-
-
 
             // Trigger save
             $.when(
@@ -330,11 +325,11 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
                 });
 
                 self.trigger('pagedown:ready');
-                mathjax.init(self.el);
+                mathjax.init(self.ui.preview.el);
 
                 // Save content automatically if user stoped typing for 5 second
                 editor.hooks.chain('onPreviewRefresh', function () {
-                    mathjax.init(self.el);
+                    mathjax.init(self.ui.preview.el);
 
                     self.enableSubmitButton();
                     if (typeof self.timeOut === 'number') {

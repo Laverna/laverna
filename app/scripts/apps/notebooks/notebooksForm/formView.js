@@ -83,7 +83,7 @@ define([
 
                 isParent: function (notebookId, parentId) {
                     var selected = '';
-                    if (parseInt(notebookId) === parseInt(parentId)) {
+                    if (notebookId === parentId) {
                         selected = ' selected="selected"';
                     }
                     return selected;

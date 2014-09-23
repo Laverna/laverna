@@ -78,5 +78,8 @@
     "App": "App",
     "appCreateNote": "Create new note",
     "appSearch": "Search note",
-    "appKeyboardHelp": "Keyboard help"
+    "appKeyboardHelp": "Keyboard help",
+    "notebook": {
+        "name": "Please, provide notebook's name"
+    }
 }

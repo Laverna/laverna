@@ -27,6 +27,10 @@ define([
             'click .cancelBtn'        : 'destroy'
         },
 
+        modelEvents: {
+            'invalid': 'showErrors'
+        },
+
         initialize: function () {
             this.on('hidden.modal', this.redirect);
             this.on('shown.modal', this.onFormShown);
@@ -45,25 +49,23 @@ define([
         save: function (e) {
             e.preventDefault();
 
-            var data = {
+            this.model.trigger('save', {
                 name     : this.ui.name.val(),
                 parentId : this.ui.parentId.val()
-            };
-
-            this.model.trigger('save', data);
+            });
         },
 
         /**
          * Shows validation errors
          */
-        showErrors: function (errors) {
-            var that = this;
-            _.each(errors, function (e) {
-                if (e === 'name') {
-                    that.$('#notebook-name').addClass('has-error');
-                    that.ui.name.attr('placeholder', 'Notebook name is required');
+        showErrors: function (model, errors) {
+            _.forEach(errors, function (err) {
+                this.ui[err].parent().addClass('has-error');
+
+                if (this.ui[err].attr('type') === 'text') {
+                    this.ui[err].attr('placeholder', $.t('notebook.' + err));
                 }
-            });
+            }, this);
         },
 
         destroy: function (e) {
@@ -82,11 +84,9 @@ define([
                 i18n: $.t,
 
                 isParent: function (notebookId, parentId) {
-                    var selected = '';
                     if (notebookId === parentId) {
-                        selected = ' selected="selected"';
+                        return ' selected="selected"';
                     }
-                    return selected;
                 }
             };
         }

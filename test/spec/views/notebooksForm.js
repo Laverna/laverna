@@ -69,6 +69,21 @@ define([
                 expect(view.ui.parentId).to.have(':selected');
                 expect(par.val()).to.be.equal(notebook.get('parentId'));
             });
+
+            it('Shows validation errors', function (done) {
+                notebook.on('invalid', function (model, errors) {
+                    _.forEach(errors, function (err) {
+                        expect(view.ui[err].parent()).to.have.class('has-error');
+                        if (errors[errors.length - 1] === err) {
+                            done();
+                        }
+                    });
+                });
+                notebook.save({
+                    'name': '',
+                    'parentId': notebook.get('id')
+                });
+            });
         });
 
         describe('Triggers events', function () {
@@ -77,6 +92,13 @@ define([
                     done();
                 });
                 $('.form-horizontal', view.$el).submit();
+            });
+
+            it('model:save when user OK button', function (done) {
+                notebook.on('save', function () {
+                    done();
+                });
+                $('.ok', view.$el).click();
             });
 
             it('view:redirect', function (done) {

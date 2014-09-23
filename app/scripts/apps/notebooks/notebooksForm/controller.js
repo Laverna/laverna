@@ -60,30 +60,25 @@ define([
             this.view.on('redirect', this.redirect, this);
         },
 
-        // Saves data or shows validation errors
+        /**
+         * Saves changes
+         */
         save: function (data) {
             var self = this;
 
-            this.model.set(data, {validate: true});
+            // First we need to encrypt data
+            this.model.set(data).encrypt();
 
-            if (this.model.isValid()) {
-                this.model.set(data).encrypt();
-
-                this.model.save(this.model.toJSON(), {
-                    success: function (model) {
-                        if (self.isNew === true) {
-                            App.trigger('new:notebook', model);
-                        }
-
-                        self.view.trigger('destroy');
-
-                        self.redirect();
+            this.model.save(this.model.toJSON(), {
+                success: function (model) {
+                    if (self.isNew === true) {
+                        App.trigger('new:notebook', model);
                     }
-                });
 
-            } else {
-                this.view.showErrors(this.model.validationError);
-            }
+                    self.view.trigger('destroy');
+                    self.redirect();
+                }
+            });
         },
 
         // Redirect

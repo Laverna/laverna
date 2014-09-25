@@ -92,6 +92,7 @@ require([
         'spec/collection-test',
         'spec/views/notebooks',
         'spec/views/notebooksForm',
+        'spec/views/tagForm',
         'spec/views/navbarView',
         'spec/utils'
     ];

@@ -55,15 +55,11 @@ define([
             this.model.set(data);
             this.model.updateDate();
 
-            if (this.model.isValid()) {
-                this.model.save(data, {
-                    success: function () {
-                        self.view.trigger('destroy');
-                    }
-                });
-            } else {
-                this.view.showErrors(this.model.validationError);
-            }
+            this.model.save(data, {
+                success: function () {
+                    self.view.trigger('destroy');
+                }
+            });
         },
 
         redirect: function () {

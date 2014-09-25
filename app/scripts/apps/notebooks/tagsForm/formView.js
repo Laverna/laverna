@@ -1,10 +1,9 @@
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
     'text!apps/notebooks/tagsForm/templates/form.html'
-], function (_, App, Marionette, Templ) {
+], function (_, Marionette, Templ) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -20,6 +19,10 @@ define([
             'submit .form-horizontal' : 'save',
             'click .ok'               : 'save',
             'click .cancelBtn'        : 'destroy'
+        },
+
+        modelEvents: {
+            'invalid': 'showErrors'
         },
 
         /**
@@ -54,11 +57,9 @@ define([
                 e.preventClose();
             }
 
-            var data = {
+            this.model.trigger('save', {
                 name: this.ui.name.val()
-            };
-
-            this.model.trigger('save', data);
+            });
         },
 
         /**
@@ -81,14 +82,14 @@ define([
         /**
          * Shows validation errors
          */
-        showErrors: function(errors) {
-            var that = this;
-            _.each(errors, function( e) {
-                if (e === 'name') {
-                    that.$('#notebook-name').addClass('has-error');
-                    that.ui.name.attr('placeholder', 'Tag name is required');
+        showErrors: function(model, errors) {
+            _.forEach(errors, function (err) {
+                this.ui[err].parent().addClass('has-error');
+
+                if (this.ui[err].attr('type') === 'text') {
+                    this.ui[err].attr('placeholder', $.t('tag.' + err));
                 }
-            });
+            }, this);
         },
 
         templateHelpers: function () {

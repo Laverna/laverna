@@ -81,5 +81,8 @@
     "appKeyboardHelp": "Keyboard help",
     "notebook": {
         "name": "Please, provide notebook's name"
+    },
+    "tag": {
+        "name": "Tag name is required"
     }
 }

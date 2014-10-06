@@ -138,6 +138,7 @@ define([
         require([
             'constants',
             'helpers/install',
+            'helpers/i18next',
             'apps/confirm/appConfirm',
             'apps/encryption/encrypt',
             'helpers/keybindings',

@@ -1,14 +1,14 @@
 /*global define*/
 define([
     'underscore',
+    'jquery',
     'app',
     'marionette',
+    'fileSaver',
     'helpers/uri',
     'collections/configs',
-    'models/config',
-    'apps/settings/show/showView',
-    'fileSaver'
-], function (_, App, Marionette, URI, Configs, Config, View, saveAs) {
+    'apps/settings/show/views/showView'
+], function (_, $, App, Marionette, saveAs, URI, Configs, View) {
     'use strict';
 
     var Show = App.module('AppSettings.Show');
@@ -24,45 +24,63 @@ define([
             this.configs.fetch();
 
             // Events
-            this.configs.on('changeSettings', this.saveAll, this);
+            this.configs.on('save:all', this.saveAll, this);
             this.configs.on('create:profile', this.createProfile, this);
             this.configs.on('remove:profile', this.removeProfile, this);
+
+            // Import & export events
+            this.configs.on('import', this.importSettings, this);
+            this.configs.on('export', this.exportSettings, this);
         },
 
-        // Show settings form in modal window
-        // ---------------------------------
+        onDestroy: function () {
+            this.view.trigger('destroy');
+            delete this.view;
+        },
+
+        /*
+         * Show settings form in modal window
+         */
         show : function (args) {
-            var view = new View({
+            this.view = new View({
                 collection : this.configs,
                 args: args
             });
-            App.modal.show(view);
 
-            view.on('redirect', this.redirect, this);
-            view.on('import', this.importSettings, this);
-            view.on('export', this.exportSettings, this);
+            App.modal.show(this.view);
+            this.view.trigger('show:tab');
+
+            this.view.on('redirect', this.redirect, this);
+            this.view.on('show:tab', this.onShowTab, this);
         },
 
-        // Create a new profile
-        // -------------------
+        onShowTab: function (args) {
+            App.navigate('/settings/' + args.tab, false);
+        },
+
+        /*
+         * Create a new profile
+         */
         createProfile: function (profile) {
             this.configs.createProfile(profile);
             this.configs.trigger('change:profile');
             App.trigger('configs:fetch');
         },
 
-        // Remove a profile
-        // -------------------
+        /*
+         * Remove a profile
+         */
         removeProfile: function (profile) {
-            var result = window.confirm('Are you sure that you want to delete profile ' + profile + '?');
+            var result = window.confirm($.t('Remove profile', {profile: profile}));
             if (result ) {
                 this.configs.removeProfile(profile);
                 App.trigger('configs:fetch');
             }
         },
 
-        // Export all settings
-        // -------------------
+        /*
+         * Export all settings
+         */
         exportSettings: function () {
             var blob = new Blob(
                 [JSON.stringify( this.configs )],
@@ -72,8 +90,9 @@ define([
             saveAs(blob, 'laverna-settings.json');
         },
 
-        // Import settings (encryption settings, hashes etc..)
-        // -----------------------------
+        /*
+         * Import settings (encryption settings, hashes etc..)
+         */
         importSettings: function (data) {
             var reader = new FileReader(),
                 self = this,
@@ -87,14 +106,7 @@ define([
                 try {
                     settings = JSON.parse(event.target.result);
                     settings = _.extend(settings, {'appVersion' : App.constants.VERSION});
-
-                    _.each(settings, function (conf, iter) {
-                        self.save(conf);
-
-                        if (iter === settings.length-1) {
-                            self.redirect(['']);
-                        }
-                    });
+                    self.saveAll(settings);
                 }
                 catch (error) {
                     throw new Error('File chould be in json format');
@@ -105,13 +117,22 @@ define([
         },
 
         saveAll: function (settings) {
-            _.forEach(settings, function (set) {
+            if (settings.length === 0) {
+                return this.redirect(settings);
+            }
+
+            _.forEach(settings, function (set, iter) {
                 this.save(set);
+
+                if (iter === (settings.length - 1)) {
+                    this.view.trigger('redirect', settings);
+                }
             }, this);
         },
 
-        // Save new settings
-        // ----------------------
+        /*
+         * Save new settings
+         */
         save: function (setting) {
             var model = this.configs.get(setting.name);
             if (model) {
@@ -119,13 +140,14 @@ define([
             }
         },
 
-        // Navivate back and reload the page
-        // ---------------------------------
+        /*
+         * Navivate back and reload the page
+         */
         redirect: function (changedSettings) {
             App.modal.empty();
 
             if ( this.isEncryptionChanged(changedSettings) === false) {
-                App.navigate(URI.link('/notes'), {trigger : false});
+                App.navigate(URI.link('/notes'), {trigger : changedSettings.length === 0});
 
                 if (changedSettings && changedSettings.length !== 0) {
                     window.location.reload();
@@ -136,18 +158,18 @@ define([
             }
         },
 
-        // Check is any of encryption settings is changed
-        // -------------------------------
+        /*
+         * Check is any of encryption settings changed
+         */
         isEncryptionChanged: function (changedSettings) {
             var encrSet = ['encrypt', 'encryptPass', 'encryptSalt', 'encryptIter', 'encryptTag', 'encryptKeySize'],
                 encrypt = parseInt(this.configs.get('encrypt').get('value')),
                 changed = false;
 
-            _.each(encrSet, function (set) {
-                if (_.contains(changedSettings, set) === true) {
-                    changed = true;
-                }
-            });
+            changedSettings = new Configs(changedSettings).getConfigs();
+            if ( !_.isEmpty(_.pick(changedSettings, encrSet)) ) {
+                changed = true;
+            }
 
             if (encrypt === App.settings.encrypt && encrypt === 0) {
                 changed = false;

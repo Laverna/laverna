@@ -10,7 +10,7 @@ define([
 
     var expect = chai.expect;
 
-    describe('NavbarView', function () {
+    describe('Navbar view', function () {
         var view;
 
         before(function () {

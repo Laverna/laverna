@@ -17,6 +17,7 @@ define([
 
     Settings.on('stop', function () {
         App.mousetrap.API.restart();
+        API.controller.destroy();
         App.log('AppSettings is stoped');
     });
 
@@ -37,7 +38,8 @@ define([
     API = {
         showSettings: function (profile, tab) {
             require(['apps/settings/show/showController'], function (Controller) {
-                executeAction(new Controller().show, {profile: profile, tab: tab});
+                API.controller = new Controller();
+                executeAction(API.controller.show, {profile: profile, tab: tab});
             });
         }
     };

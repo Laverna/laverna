@@ -1,0 +1,44 @@
+<fieldset>
+    <legend>{{ i18n('Navigation') }}</legend>
+    <% _.forEach(filter('navigate'), function (model) { %>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
+        <div class="col-sm-10">
+            <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
+        </div>
+    </div>
+    <% }); %>
+</fieldset>
+<fieldset>
+    <legend>{{ i18n('Jump') }}</legend>
+    <% _.forEach(filter('jump'), function (model) { %>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
+        <div class="col-sm-10">
+            <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
+        </div>
+    </div>
+    <% }); %>
+</fieldset>
+<fieldset>
+    <legend>{{ i18n('Actions') }}</legend>
+    <% _.forEach(filter('actions'), function (model) { %>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
+        <div class="col-sm-10">
+            <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
+        </div>
+    </div>
+    <% }); %>
+</fieldset>
+<fieldset>
+    <legend>{{ i18n('App') }}</legend>
+    <% _.forEach(appShortcuts(), function (model) { %>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="{{ model.get('name') }}">{{ i18n(model.get('name')) }}</label>
+        <div class="col-sm-10">
+            <input id="{{ model.get('name') }}" class="form-control" type="text" value="{{ model.get('value') }}" name="{{ model.get('name') }}"/>
+        </div>
+    </div>
+    <% }); %>
+</fieldset>

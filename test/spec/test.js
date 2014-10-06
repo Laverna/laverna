@@ -17,6 +17,7 @@ require.config({
     paths: {
         'sjcl'          :  '../bower_components/sjcl/sjcl',
         'jquery'        :  '../bower_components/jquery/dist/jquery',
+        'bootstrap'                :  '../bower_components/bootstrap/dist/js/bootstrap.min',
         'i18next'       :  '../bower_components/i18next/i18next.min',
         'underscore'    :  '../bower_components/underscore/underscore',
         'text'          :  '../bower_components/requirejs-text/text',
@@ -28,7 +29,8 @@ require.config({
         'indexedDB'     :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         'remotestorage' :  '../bower_components/remotestorage.js/release/0.10.0-beta2/remotestorage.amd',
         'toBlob'        :  '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
-        'chai-jquery'   :  '../../test/bower_components/chai-jquery/chai-jquery'
+        'chai-jquery'   :  '../../test/bower_components/chai-jquery/chai-jquery',
+        'locales'       :  '../locales'
     },
 
     shim: {
@@ -37,6 +39,9 @@ require.config({
         },
         'jquery': {
             exports: '$'
+        },
+        'bootstrap': {
+            deps: ['jquery']
         },
         'i18next': {
             deps: ['jquery'],
@@ -76,7 +81,9 @@ require([
     'underscore',
     'i18next',
     'chai-jquery',
-    'jquery'
+    'helpers/i18next',
+    'jquery',
+    'bootstrap'
 ], function (_, i18n, chaiJquery) {
     'use strict';
 
@@ -94,6 +101,7 @@ require([
         'spec/views/notebooksForm',
         'spec/views/tagForm',
         'spec/views/navbarView',
+        'spec/views/settingsShow',
         'spec/utils'
     ];
 

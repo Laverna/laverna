@@ -351,6 +351,17 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        tree: {
+            locales: {
+                options: {
+                    exclude: ['locales.json']
+                },
+                files: [{
+                    src: ['<%= yeoman.app %>/locales/'],
+                    dest: '<%= yeoman.app %>/locales/locales.json'
+                }]
+            }
+        },
         // Replace string
         'string-replace': {
             // App version

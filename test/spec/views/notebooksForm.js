@@ -11,7 +11,7 @@ define([
 
     var expect = chai.expect;
 
-    describe('Notebook\'s form', function () {
+    describe('Notebook\'s form view', function () {
         var notebook,
             notebooks,
             models = [],

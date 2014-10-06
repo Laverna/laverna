@@ -79,6 +79,7 @@
     "appCreateNote": "Create new note",
     "appSearch": "Search note",
     "appKeyboardHelp": "Keyboard help",
+    "Remove profile": "Are you sure that you want to delete profile '__profile__'?",
     "notebook": {
         "name": "Please, provide notebook's name"
     },

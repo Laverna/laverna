@@ -61,7 +61,8 @@ require.config({
         // View                    :  scripts here
         'modalRegion'              :  'views/modal',
         'brandRegion'              :  'views/brand',
-        'apps'                     :  'apps/'
+        'apps'                     :  'apps/',
+        'locales'                  :  '../locales'
     },
     shim: {
         underscore: {

@@ -11,7 +11,7 @@ define([
 
     var expect = chai.expect;
 
-    describe('Notebook ItemView', function () {
+    describe('Notebook Item view', function () {
         var notebook,
             view,
             viewHtml;

@@ -8,12 +8,14 @@ test/bower_components
 .idea
 app/styles/*.css
 *.swp
+test/visual/screenshots
+*.css.map
+
+# Old files that should not appear again if someone pushes them
 app/scripts/libs/remotestorage.js
 app/scripts/apps/settings/show/encryptView.js
 app/scripts/apps/settings/show/encryptTemplate.html
 app/scripts/helpers/syncStatus.js
-test/visual/screenshots
-*.css.map
 
 # Phonegap-cli specific
 # Thanks for yeoman generator-phonegap

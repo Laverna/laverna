@@ -10,7 +10,7 @@ define([
 
     var expect = chai.expect;
 
-    describe('Tag form', function () {
+    describe('Tag form view', function () {
         var tag,
             view;
 

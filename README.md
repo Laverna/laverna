@@ -27,7 +27,9 @@ You can use the application at laverna.cc, but we encourage you to install it on
 
 You can download the minified version of Laverna app from [Laverna/static-laverna][9] repository if you don't want to build it yourself:
 
-    git clone -b gh-pages https://github.com/Laverna/static-laverna
+```bash
+$ git clone -b gh-pages https://github.com/Laverna/static-laverna
+```
 
 ## Installation from source
 ---------------
@@ -35,27 +37,37 @@ To install, do the following:
 
 #### 1. Clone repository:
 
-    git clone git@github.com:Laverna/laverna.git
+```bash
+$ git clone git@github.com:Laverna/laverna.git
+```
 
 #### 2. Switch to stable version:
 
-    git checkout 0.6.2
+```bash
+$ git checkout 0.6.2
+```
 
 #### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 
 #### 4. Ensure you have the bower and grunt packages installed:
 
-    npm install bower
-    npm install grunt
-    npm install grunt-cli
+```bash
+$ npm install bower
+$ npm install grunt
+$ npm install grunt-cli
+```
 
 #### 5. Install Laverna's dependencies:
 
-    npm install && bower install
+```bash
+$ npm install && bower install
+```
 
 #### 6. Build minified version of Laverna:
 
-    grunt build
+```bash  
+$ grunt build
+```
 
 You can change the storage API keys in app/scripts/constants.js
 
@@ -76,11 +88,11 @@ Laverna uses the [SJCL] [1] library implementing the AES algorithm. You can revi
 * https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/auth.js 
 * https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/encrypt/modelEncrypt.js
 
-## Licence
+## License
 --------------
 Published under GNU GPL v.3
 
-Laverna uses a lot of other libraries and each of these [libraries uses different licences] [2].
+Laverna uses a lot of other libraries and each of these [libraries uses different licenses] [2].
 
 [1]: http://bitwiseshiftleft.github.io/sjcl/
 [2]: https://github.com/Laverna/laverna/blob/master/bower.json

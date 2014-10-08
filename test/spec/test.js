@@ -102,6 +102,7 @@ require([
         'spec/views/tagForm',
         'spec/views/navbarView',
         'spec/views/settingsShow',
+        'spec/views/helpShow',
         'spec/utils'
     ];
 

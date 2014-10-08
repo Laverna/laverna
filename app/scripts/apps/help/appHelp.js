@@ -11,12 +11,15 @@ define([
 
     Help.on('start', function () {
         App.mousetrap.API.reset();
-        App.log('AppHelp has been started');
+        App.log('AppHelp module has started');
     });
 
     Help.on('stop', function () {
         App.mousetrap.API.restart();
-        App.log('AppHelp has been stoped');
+        App.log('AppHelp module has stoped');
+
+        API.controller.destroy();
+        delete API.controller;
     });
 
     // Router
@@ -37,13 +40,15 @@ define([
     API = {
         showHelp: function () {
             require(['apps/help/show/controller'], function (Controller) {
-                executeAction(new Controller().show);
+                API.controller = new Controller();
+                executeAction(API.controller.show);
             });
         },
 
         about: function () {
             require(['apps/help/about/controller'], function (Controller) {
-                executeAction(new Controller().show);
+                API.controller = new Controller();
+                executeAction(API.controller.show);
             });
         }
     };

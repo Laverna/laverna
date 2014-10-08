@@ -85,6 +85,14 @@ define([
             return data;
         },
 
+        resetFromJSON: function (jsonSettings) {
+            var newConfs = [];
+            _.forEach(jsonSettings, function (val, key) {
+                newConfs.push({name: key, val: val});
+            });
+            this.reset(newConfs);
+        },
+
         createProfile: function (name) {
             var profiles = this.get('appProfiles'),
                 value = JSON.parse(profiles.get('value'));
@@ -112,6 +120,14 @@ define([
                 profiles.save({ value: JSON.stringify(value) });
                 window.indexedDB.deleteDatabase(name);
             }
+        },
+
+        shortcuts: function () {
+            var pattern = /(actions|navigate|jump|appCreateNote|appSearch|appKeyboardHelp)/;
+            return this.filter(function (m) {
+                pattern.lastIndex = 0;
+                return pattern.test(m.get('name'));
+            });
         },
 
         /**

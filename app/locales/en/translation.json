@@ -80,6 +80,7 @@
     "appSearch": "Search note",
     "appKeyboardHelp": "Keyboard help",
     "Remove profile": "Are you sure that you want to delete profile '__profile__'?",
+    "Change shortcuts": "Change shortcut settings",
     "notebook": {
         "name": "Please, provide notebook's name"
     },

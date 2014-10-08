@@ -3,40 +3,20 @@ define([
     'underscore',
     'jquery',
     'marionette',
+    'behaviors/modal',
     'text!apps/help/about/template.html'
-], function (_, $, Marionette, Tmpl) {
+], function (_, $, Marionette, ModalBehavior, Tmpl) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        hashChange: false,
-
         className: 'modal fade',
 
-        events: {
-            'click .cancelBtn'  : 'close'
-        },
-
-        initialize: function () {
-            this.on('hidden.modal', this.redirect);
-        },
-
-        /**
-         * Redirect
-         */
-        redirect: function () {
-            this.trigger('redirect');
-        },
-
-        /**
-         * Close
-         */
-        close: function (e) {
-            if (e !== undefined) {
-                e.preventDefault();
+        behaviors: {
+            ModalBehavior: {
+                behaviorClass: ModalBehavior
             }
-            this.trigger('close');
         },
 
         serializeData: function () {
@@ -44,7 +24,6 @@ define([
                 appVersion : this.options.appVersion
             };
         }
-
     });
 
     return View;

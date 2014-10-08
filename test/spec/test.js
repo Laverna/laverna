@@ -103,6 +103,7 @@ require([
         'spec/views/navbarView',
         'spec/views/settingsShow',
         'spec/views/helpShow',
+        'spec/views/helpAbout',
         'spec/utils'
     ];
 

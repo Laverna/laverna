@@ -81,6 +81,13 @@
     "appKeyboardHelp": "Keyboard help",
     "Remove profile": "Are you sure that you want to delete profile '__profile__'?",
     "Change shortcuts": "Change shortcut settings",
+    "Donate": "Donate",
+    "Github page": "Github page",
+    "Report bugs and issues here": "Report bugs and issues here",
+    "Report bugs through email": "Report bugs through email",
+    "Credits": "Credits",
+    "List of contributors": "List of contributors",
+    "List of all used libraries": "List of all used libraries",
     "notebook": {
         "name": "Please, provide notebook's name"
     },

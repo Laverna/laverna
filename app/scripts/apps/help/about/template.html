@@ -7,37 +7,36 @@
             </h2>
         </div>
         <div class="modal-body">
-            <h3>About:</h3>
+            <h3>{{ i18n('About') }}:</h3>
             <ul class="list-unstyled">
-                <li><a target="_blank" href="https://github.com/Laverna/laverna">Github Page</a></li>
-                <li><a target="_blank" href="https://github.com/Laverna/laverna/issues">Report Bugs and issues here</a></li>
+                <li><a target="_blank" href="https://github.com/Laverna/laverna">{{ i18n('Github Page') }}</a></li>
+                <li><a target="_blank" href="https://github.com/Laverna/laverna/issues">{{ i18n('Report bugs and issues here') }}</a></li>
+                <li><a href="mailto:lavernaproject@gmail.com">{{ i18n('Report bugs through email') }}</a></li>
             </ul>
-
             <hr/>
-            <h3>Donate</h3>
-            <ul class="list-unstyled">
-                <li>
-                    <a target="_blank" href="https://www.gittip.com/Laverna/" title="Fund us on Gittip">
-                        <img src="https://raw.github.com/gittip/www.gittip.com/860a9f84d7987cea59bad16114aa71543934eca5/www/assets/gittip.png" alt="Fund us on gittip">
+            <h3>{{ i18n('Donate') }}</h3>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <a class="btn btn-success" target="_blank" href="https://gratipay.com/Laverna/" title="Fund us on Gratipay">
+                        Gratipay
                     </a>
-                </li>
-                <li>
-                    <a href="bitcoin:18JpeKeSaoryHCkfV63XcvLZUgeuuATp86">
-                        Bitcoin: 18JpeKeSaoryHCkfV63XcvLZUgeuuATp86
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-warning" href="bitcoin:18JpeKeSaoryHCkfV63XcvLZUgeuuATp86">
+                        Bitcoin
                     </a>
-                </li>
-                <li>
-                    <a href="litecoin:LVXArmrqVCJW58mEuLWK4hDVoCaQaiPNgy">
-                        Litecoin: LVXArmrqVCJW58mEuLWK4hDVoCaQaiPNgy
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-default" href="litecoin:LVXArmrqVCJW58mEuLWK4hDVoCaQaiPNgy">
+                        Litecoin
                     </a>
-                </li>
-            </ul>
-
+                </div>
+            </div>
             <hr/>
-            <h3>Credits:</h3>
+            <h3>{{ i18n('Credits') }}:</h3>
             <ul class="list-unstyled">
-                <li><a target="_blank" href="https://github.com/Laverna/laverna/graphs/contributors">List of contributors</a></li>
-                <li><a target="_blank" href="https://github.com/Laverna/laverna/blob/master/bower.json">List of all used libraries</a></li>
+                <li><a target="_blank" href="https://github.com/Laverna/laverna/graphs/contributors">{{ i18n('List of contributors') }}</a></li>
+                <li><a target="_blank" href="https://github.com/Laverna/laverna/blob/master/bower.json">{{ i18n('List of all used libraries') }}</a></li>
             </ul>
         </div>
     </div>

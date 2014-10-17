@@ -36,6 +36,13 @@ define([
                 });
                 view.ui.syncBtn.click();
             });
+
+            it('view:navigate when a form was submitted', function (done) {
+                view.on('navigate', function () {
+                    done();
+                });
+                view.ui.navbarSearchForm.trigger('submit');
+            });
         });
 
         describe('Shows sync status', function () {

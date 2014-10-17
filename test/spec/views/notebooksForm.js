@@ -87,15 +87,15 @@ define([
         });
 
         describe('Triggers events', function () {
-            it('model:save when user submits the form', function (done) {
-                notebook.on('save', function () {
+            it('view:save when user submits the form', function (done) {
+                view.on('save', function () {
                     done();
                 });
                 $('.form-horizontal', view.$el).submit();
             });
 
-            it('model:save when user OK button', function (done) {
-                notebook.on('save', function () {
+            it('view:save when user OK button', function (done) {
+                view.on('save', function () {
                     done();
                 });
                 $('.ok', view.$el).click();
@@ -108,14 +108,12 @@ define([
                 view.trigger('hidden.modal');
             });
 
-            it('view:destroy when user hits cancel', function (done) {
-                view.on('destroy', function () {
+            it('view:close when user hits cancel', function (done) {
+                view.on('close', function () {
                     done();
                 });
                 $('.cancelBtn', view.$el).click();
             });
         });
-
     });
-
 });

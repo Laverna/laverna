@@ -88,10 +88,10 @@
     "Credits": "Credits",
     "List of contributors": "List of contributors",
     "List of all used libraries": "List of all used libraries",
-    "notebook": {
+    "notebooks": {
         "name": "Please, provide notebook's name"
     },
-    "tag": {
+    "tags": {
         "name": "Tag name is required"
     }
 }

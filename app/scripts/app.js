@@ -89,7 +89,8 @@ define([
         var currentApp = appName ? App.module(appName) : null;
         if (App.currentApp === currentApp){ return; }
 
-        if (App.currentApp){
+        // Stop previous app if current app is not modal
+        if (App.currentApp && (!currentApp.options.modal || App.isMobile)) {
             App.currentApp.stop();
         }
 

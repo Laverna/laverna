@@ -6,19 +6,21 @@ define([
 ], function (_, Marionette, App) {
     'use strict';
 
-    var Settings = App.module('AppSettings', {startWithParent : false}),
+    var Settings = App.module('AppSettings', {startWithParent : false, modal: true}),
         executeAction,
         API;
 
     Settings.on('start', function () {
         App.mousetrap.API.reset();
-        App.log('AppSettings is started');
+        App.log('AppSettings has started');
     });
 
     Settings.on('stop', function () {
         App.mousetrap.API.restart();
+        App.log('AppSettings has stoped');
+
         API.controller.destroy();
-        App.log('AppSettings is stoped');
+        delete API.controller;
     });
 
     // The router

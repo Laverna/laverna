@@ -6,7 +6,7 @@ define([
 ], function (_, Marionette, App) {
     'use strict';
 
-    var Help = App.module('AppHelp', {startWithParent: false}),
+    var Help = App.module('AppHelp', {startWithParent: false, modal: true}),
         executeAction, API;
 
     Help.on('start', function () {

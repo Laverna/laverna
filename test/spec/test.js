@@ -17,11 +17,14 @@ require.config({
     paths: {
         'sjcl'          :  '../bower_components/sjcl/sjcl',
         'jquery'        :  '../bower_components/jquery/dist/jquery',
-        'bootstrap'                :  '../bower_components/bootstrap/dist/js/bootstrap.min',
+        'bootstrap'     :  '../bower_components/bootstrap/dist/js/bootstrap.min',
         'i18next'       :  '../bower_components/i18next/i18next.min',
+        'Mousetrap'     :  '../bower_components/mousetrap/mousetrap',
+        'mousetrap-pause'  :  '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
         'underscore'    :  '../bower_components/underscore/underscore',
         'text'          :  '../bower_components/requirejs-text/text',
         'backbone'      :  '../bower_components/backbone/backbone',
+        'backbone.mousetrap' :  '../bower_components/backbone.mousetrap/backbone.mousetrap',
         'marionette'    :  '../bower_components/marionette/lib/core/backbone.marionette',
         'localStorage'  :  '../bower_components/backbone.localStorage/backbone.localStorage',
         'backbone.wreqr'       :  '../bower_components/backbone.wreqr/lib/backbone.wreqr',
@@ -53,6 +56,9 @@ require.config({
         'backbone': {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
+        },
+        'backbone.mousetrap': {
+            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
         },
         // Xregexp
         'xregexp/xregexp': {
@@ -98,6 +104,8 @@ require([
         'spec/model-test',
         'spec/collection-test',
         'spec/views/notebooks',
+        'spec/views/tagList',
+        'spec/views/notebookLayout',
         'spec/views/notebooksForm',
         'spec/views/tagForm',
         'spec/views/navbarView',

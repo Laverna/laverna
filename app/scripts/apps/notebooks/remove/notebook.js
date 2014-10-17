@@ -6,19 +6,20 @@ define([
     'helpers/uri',
     'collections/notebooks',
     'models/notebook'
-], function (_, App, Marionette, URI, Collection, Model) {
+], function(_, App, Marionette, URI, Collection, Model) {
     'use strict';
 
     var Notebook = App.module('AppNotebooks.RemoveNotebook');
 
     Notebook.Controller = Marionette.Controller.extend({
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'start', 'remove');
 
             this.collection = new Collection();
+            this.on('destroy:it', this.destroy, this);
         },
 
-        start: function (args) {
+        start: function(args) {
             // Set profile
             this.collection.database.getDB(args.profile);
             this.model = new Model({id: args.id});
@@ -31,15 +32,15 @@ define([
             ).done(this.remove);
         },
 
-        remove: function () {
-            this.collection.each(function (child) {
+        remove: function() {
+            this.collection.each(function(child) {
                 child.save({parentId : this.model.get('parentId')});
             }, this);
 
             $.when(this.model.destroySync()).then(this.redirect);
         },
 
-        redirect: function () {
+        redirect: function() {
             App.navigate('#' + URI.link('/notebooks'));
         }
     });

@@ -1,20 +1,17 @@
 /*global define */
 define([
     'underscore',
-    'app',
     'backbone',
     'text!apps/notebooks/list/templates/layout.html',
     'backbone.mousetrap',
-    'marionette',
-], function (_, App, Backbone, Templ) {
+    'marionette'
+], function(_, Backbone, Templ) {
     'use strict';
 
-    var Layout = App.module('AppNotebook.List.Layout');
-
     /**
-     * Layout view
+     * Layout view. Shows notebooks and tag's list
      */
-    Layout.View = Backbone.Marionette.LayoutView.extend({
+    var LayoutView = Backbone.Marionette.LayoutView.extend({
         template: _.template(Templ),
 
         regions: {
@@ -23,54 +20,58 @@ define([
         },
 
         keyboardEvents: {
-            'o' : 'openActiveLink'
+            'enter'  : 'openActiveLink'
         },
 
-        initialize: function () {
-            this.keyboardEvents[App.settings.navigateBottom] = 'next';
-            this.keyboardEvents[App.settings.navigateTop] = 'prev';
+        initialize: function() {
+            var settings = this.options.settings;
+            this.keyboardEvents[settings.navigateBottom] = 'next';
+            this.keyboardEvents[settings.navigateTop] = 'prev';
+            this.keyboardEvents[settings.actionsOpen] = 'openActiveLink';
+            this.keyboardEvents[settings.actionsEdit] = 'openEdit';
         },
 
-        openActiveLink: function () {
-            var a = this.$('.list-group-item.active');
-            if (a.length) {
-                App.navigate(a.attr('href'), true);
+        openEdit: function() {
+            var $a = this.$('.list-group-item.active').parent().find('.edit-link');
+            if ($a.length) {
+                this.trigger('navigate', $a.attr('href'));
+            }
+        },
+
+        openActiveLink: function() {
+            var $a = this.$('.list-group-item.active');
+            if ($a.length) {
+                this.trigger('navigate', $a.attr('href'));
             }
         },
 
         /**
          * Navigation: next
          */
-        next: function () {
-            if ( !this.activeRegion) {
-                this.activeRegion = 'notebooks';
-            }
+        next: function() {
+            this.activeRegion = this.activeRegion || 'notebooks';
             this[this.activeRegion].currentView.trigger('next');
-            this[this.activeRegion].currentView.on('changeRegion', this.changeNext, this);
+            this[this.activeRegion].currentView.on('changeRegion', this.changeRegion, this);
         },
 
         /**
          * Navigation: prev
          */
-        prev: function () {
-            if ( !this.activeRegion) {
-                this.activeRegion = 'notebooks';
-            }
+        prev: function() {
+            this.activeRegion = this.activeRegion || 'notebooks';
             this[this.activeRegion].currentView.trigger('prev');
+            this[this.activeRegion].currentView.on('changeRegion', this.changeRegion, this);
         },
 
-        changeNext: function (region) {
+        /**
+         * Makes another region active for example 'notebooks'
+         */
+        changeRegion: function(region) {
             if (this.options[region] !== 0) {
                 this.activeRegion = region;
             }
-        },
-
-        templateHelpers: function () {
-            return {
-                i18n: $.t
-            };
         }
     });
 
-    return Layout.View;
+    return LayoutView;
 });

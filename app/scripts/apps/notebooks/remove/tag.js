@@ -6,17 +6,18 @@ define([
     'helpers/uri',
     'models/tag',
     'collections/tags'
-], function (_, App, Marionette, URI, Model) {
+], function(_, App, Marionette, URI, Model) {
     'use strict';
 
     var Tag = App.module('AppNotebooks.RemoveTag');
 
     Tag.Controller = Marionette.Controller.extend({
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'start', 'remove');
+            this.on('destroy:it', this.destroy, this);
         },
 
-        start: function (args) {
+        start: function(args) {
             this.model = new Model({id: args.id});
 
             // Set profile
@@ -25,11 +26,11 @@ define([
             $.when(this.model.fetch()).done(this.remove);
         },
 
-        remove: function () {
+        remove: function() {
             $.when(this.model.destroySync()).done(this.redirect);
         },
 
-        redirect: function () {
+        redirect: function() {
             App.navigate('#' + URI.link('/notebooks'));
         }
 

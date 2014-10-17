@@ -2,28 +2,29 @@
 define([
     'require',
     'jquery',
-    'models/notebook',
-    'collections/notebooks',
-    'apps/notebooks/list/views/notebooksItem',
-    'apps/notebooks/list/views/notebooksComposite'
-], function(require, $, Notebook, Notebooks, ItemView, ListView) {
+    'spec/testNotebookBehavior',
+    'models/tag',
+    'collections/tags',
+    'apps/notebooks/list/views/tagsItem',
+    'apps/notebooks/list/views/tagsComposite'
+], function(require, $, testBehavior, Tag, Tags, ItemView, ListView) {
     'use strict';
 
     var expect = chai.expect;
 
-    describe('NotebooksItem view', function() {
-        var notebook,
+    describe('TagsItem view', function() {
+        var tag,
             view;
 
         before(function() {
-            notebook = new Notebook({
+            tag = new Tag({
                 id  : '1',
-                name: 'This is notebook name'
+                name: 'This is tag name'
             });
 
             view = new ItemView({
                 el: $('<div>'),
-                model: notebook
+                model: tag
             });
 
             view.render();
@@ -35,7 +36,7 @@ define([
             });
 
             it('model was passed', function() {
-                expect(view.model).to.be.equal(notebook);
+                expect(view.model).to.be.equal(tag);
             });
         });
 
@@ -45,23 +46,22 @@ define([
             });
 
             it('model', function() {
-                var regx = new RegExp(notebook.get('name'), 'gi');
+                var regx = new RegExp(tag.get('name'), 'gi');
                 expect(regx.test(view.$el.html())).to.be.ok();
             });
 
             it('makes itself active after event model:active', function(done) {
-                notebook.on('active', function() {
-                    var $item = view.$('.list-group-item[data-id=' + notebook.get('id') + ']');
+                tag.on('active', function() {
+                    var $item = view.$('.list-group-item[data-id=' + tag.get('id') + ']');
                     expect($item).to.have.class('active');
                     done();
                 });
-                notebook.trigger('active');
+                tag.trigger('active');
             });
         });
-
     });
 
-    describe('NotebooksComposite view', function() {
+    describe('TagsComposite view', function() {
         var collection,
             view,
             models = [];
@@ -70,13 +70,12 @@ define([
 
             for (var i = 1; i <= 10; i++) {
                 models.push({
-                    id: i,
-                    name: 'Notebook #' + i.toString(),
-                    parentId: (i.toString() - 1)
+                    id: i.toString(),
+                    name: 'tag #' + i.toString()
                 });
             }
 
-            collection = new Notebooks(models);
+            collection = new Tags(models);
 
             // Instantiate a CompositeView
             view = new ListView({
@@ -97,19 +96,6 @@ define([
             });
         });
 
-        describe('nested view', function() {
-            it('items are nested', function() {
-                var div,
-                    id;
-
-                for (var i = 0; i < collection.length; i++) {
-                    id = collection.at(i).get('id');
-                    div = view.$el.find('div.tags[data-id=' + id + '] .list-group-item');
-                    expect(div.length).to.be.equal(collection.length - 1 - i);
-                }
-            });
-        });
-
         describe('behaviors', function() {
             it('has a behavior', function() {
                 expect(view.behaviors.hasOwnProperty('CompositeBehavior')).to.be.ok();
@@ -124,7 +110,7 @@ define([
             function changeRegion (trigger) {
                 it('triggers event :changeRegion when there are no objects left', function(done) {
                     view.once('changeRegion', function(region) {
-                        expect(region).to.be.equal('tags');
+                        expect(region).to.be.equal('notebooks');
                         done();
                     });
                     view.trigger(trigger);

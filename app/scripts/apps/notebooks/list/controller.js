@@ -1,6 +1,7 @@
 /* global define */
 define([
     'underscore',
+    'jquery',
     'app',
     'marionette',
     'apps/notebooks/list/layout',
@@ -8,14 +9,14 @@ define([
     'apps/notebooks/list/views/tagsComposite',
     'collections/notebooks',
     'collections/tags'
-], function (_, App, Marionette, Layout, NotebooksComposite, TagsComposite, Notebooks, Tags) {
+], function(_, $, App, Marionette, Layout, NotebooksComposite, TagsComposite, Notebooks, Tags) {
     'use strict';
 
     var List = App.module('AppNotebook.List');
 
     List.Controller = Marionette.Controller.extend({
 
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'list', 'show');
 
             // Collections of notebooks and tags
@@ -25,7 +26,11 @@ define([
             this.tags = new Tags();
         },
 
-        list: function (args) {
+        onDestroy: function() {
+            this.layout.trigger('destroy');
+        },
+
+        list: function(args) {
             // Set profile
             this.notebooks.database.getDB(args.profile);
             this.tags.database.getDB(args.profile);
@@ -33,12 +38,15 @@ define([
             $.when(this.notebooks.fetch(), this.tags.fetch()).done(this.show);
         },
 
-        show: function () {
+        show: function() {
             var notebookView, tagsView;
             this.notebooks.models = this.notebooks.getTree();
 
             // Show layout
-            this.layout = new Layout({ notebooks: this.notebooks.length, tags: this.tags.length});
+            this.layout = new Layout({
+                settings: App.settings
+            });
+
             App.sidebar.show(this.layout);
 
             // Show notebooks list
@@ -55,14 +63,18 @@ define([
             this.layout.notebooks.show(notebookView);
             this.layout.tags.show(tagsView);
 
-            // View events
+            // Change value of document.title
+            App.setTitle('', $.t('Notebooks & Tags'));
             App.AppNavbar.trigger('titleChange', {
                 filter: 'Notebooks & Tags'
             });
 
-            App.setTitle('', 'Notebooks and tags');
-        }
+            this.layout.on('navigate', this.navigate, this);
+        },
 
+        navigate: function(uri) {
+            App.navigate(uri, true);
+        }
     });
 
     return List.Controller;

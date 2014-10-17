@@ -2,8 +2,10 @@
 define([
     'underscore',
     'marionette',
+    'helpers/uri',
+    'apps/notebooks/list/behaviors/itemBehavior',
     'text!apps/notebooks/list/templates/notebooksItem.html'
-], function (_, Marionette, Templ) {
+], function(_, Marionette, URI, ItemBehavior, Templ) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -11,30 +13,16 @@ define([
 
         className: 'list-group-tag',
 
-        initialize: function () {
-            this.model.on('active', this.changeFocus, this);
+        behaviors: {
+            ItemBehavior: {
+                behaviorClass: ItemBehavior
+            }
         },
 
-        changeFocus: function () {
-            this.$('.list-group-item[data-id=' + this.model.get('id') + ']').addClass('active');
-
-            $('#sidebar .ui-body').scrollTop(
-                this.$('.list-group-item').offset().top -
-                $('#sidebar .ui-body').offset().top +
-                $('#sidebar .ui-body').scrollTop() - 100
-            );
-        },
-
-        serializeData: function ( ) {
+        serializeData: function() {
             return _.extend(this.model.decrypt(), {
-                uri  : this.options.uri
+                uri  : URI.link('')
             });
-        },
-
-        templateHelpers: function () {
-            return {
-                i18n: $.t
-            };
         }
     });
 

@@ -1,11 +1,11 @@
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
     'helpers/uri',
+    'apps/notebooks/list/behaviors/itemBehavior',
     'text!apps/notebooks/list/templates/tagsItem.html'
-], function (_, App, Marionette, URI, Templ) {
+], function(_, Marionette, URI, ItemBehavior, Templ) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -13,30 +13,16 @@ define([
 
         className: 'list-group-tag',
 
-        initialize: function () {
-            this.model.on('active', this.changeFocus, this);
+        behaviors: {
+            ItemBehavior: {
+                behaviorClass: ItemBehavior
+            }
         },
 
-        serializeData: function () {
+        serializeData: function() {
             return _.extend(this.model.toJSON(), {
                 uri : URI.link('')
             });
-        },
-
-        changeFocus: function () {
-            this.$('.list-group-item').addClass('active');
-
-            $('#sidebar .ui-body').scrollTop(
-                this.$('.list-group-item').offset().top -
-                $('#sidebar .ui-body').offset().top +
-                $('#sidebar .ui-body').scrollTop() - 100
-            );
-        },
-
-        templateHelpers: function () {
-            return {
-                i18n: $.t
-            };
         }
     });
 

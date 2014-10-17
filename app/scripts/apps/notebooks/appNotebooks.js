@@ -5,24 +5,33 @@ define([
     'marionette',
     'app',
     'helpers/uri'
-], function (_, $, Marionette, App, URI) {
+], function(_, $, Marionette, App, URI) {
     'use strict';
 
     /**
-     * Submodule which shows notebooks */
+     * Submodule which shows notebooks
+     */
     var AppNotebooks = App.module('AppNotebook', {startWithParent: false}),
         executeAction,
         API;
 
-    AppNotebooks.on('start', function () {
+    AppNotebooks.on('start', function() {
+        // Restart global keybindings and start Navbar module
         App.mousetrap.API.restart();
         App.AppNavbar.start();
+
+        // Make sidebar region visible
         $(App.content.el).removeClass('active-row');
-        App.log('AppNotebook is started');
+
+        App.log('AppNotebook has started');
     });
 
-    AppNotebooks.on('stop', function () {
-        App.log('AppNotebook is stoped');
+    AppNotebooks.on('stop', function() {
+        // Destroy the last controller
+        API.controller.destroy();
+        delete API.controller;
+
+        App.log('AppNotebook has stoped');
     });
 
     /**
@@ -46,71 +55,93 @@ define([
     /**
      * Start application
      */
-    executeAction = function (action, args) {
+    executeAction = function(Controller, action, args) {
         App.startSubApp('AppNotebook');
-        action(args);
+
+        // Trigger 'destroy' event to a previous controller
+        if (API.controller) {
+            API.controller.trigger('destroy:it');
+        }
+
+        API.controller = new Controller();
+        API.controller[action](args);
     };
 
     /**
      * Controller
      */
     API = {
-        /**
-         * Methods for notebooks
-         */
         // Shows list of notebooks and tags
-        listNotebooks: function (profile) {
-            require(['apps/notebooks/list/controller'], function (List) {
-                executeAction(new List().list, {profile: profile});
+        listNotebooks: function(profile) {
+            require(['apps/notebooks/list/controller'], function(List) {
+                executeAction(List, 'list', {profile: profile});
             });
+
+            // Clear content region
             App.content.reset();
         },
 
         // Create notebook
-        addNotebook: function (profile, redirect) {
-            require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().addForm, {profile: profile, redirect: redirect});
+        addNotebook: function(profile, redirect) {
+            require(['apps/notebooks/notebooksForm/controller'], function(Form) {
+                executeAction(Form, 'addForm', {
+                    profile: profile,
+                    redirect: redirect
+                });
             });
         },
 
         // Edit notebook
-        editNotebook: function (profile, id, redirect) {
-            require(['apps/notebooks/notebooksForm/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id, profile: profile, redirect: redirect});
+        editNotebook: function(profile, id, redirect) {
+            require(['apps/notebooks/notebooksForm/controller'], function(Form) {
+                executeAction(Form, 'editForm', {
+                    id: id,
+                    profile: profile,
+                    redirect: redirect
+                });
             });
         },
 
         // Delete notebook
-        removeNotebook: function (profile, id) {
-            require(['apps/notebooks/remove/notebook'], function (Controller) {
-                executeAction(new Controller().start, {id: id, profile: profile});
+        removeNotebook: function(profile, id) {
+            require(['apps/notebooks/remove/notebook'], function(Controller) {
+                executeAction(Controller, 'start', {
+                    id: id,
+                    profile: profile
+                });
             });
         },
 
-        /**
-         * Methods for tags
-         */
-        addTag: function (profile) {
-            require(['apps/notebooks/tagsForm/controller'], function (Form) {
-                executeAction(new Form().addForm, {profile: profile});
+        // Add a new tag
+        addTag: function(profile) {
+            require(['apps/notebooks/tagsForm/controller'], function(Form) {
+                executeAction(Form, 'addForm', { profile: profile });
             });
         },
 
-        editTag: function (profile, id) {
-            require(['apps/notebooks/tagsForm/controller'], function (Form) {
-                executeAction(new Form().editForm, {id: id, profile: profile});
+        // Edit an existing tag
+        editTag: function(profile, id) {
+            require(['apps/notebooks/tagsForm/controller'], function(Form) {
+                executeAction(Form, 'editForm', {
+                    id: id,
+                    profile: profile
+                });
             });
         },
 
-        removeTag: function (profile, id) {
-            require(['apps/notebooks/remove/tag'], function (Controller) {
-                executeAction(new Controller().start, {id: id, profile: profile});
+        // Remove a tag
+        removeTag: function(profile, id) {
+            require(['apps/notebooks/remove/tag'], function(Controller) {
+                executeAction(Controller, 'start', {
+                    id: id,
+                    profile: profile
+                });
             });
         }
     };
 
     // Add notebook
-    AppNotebooks.on('showForm', function (profile, redirect) {
+    AppNotebooks.on('showForm', function(profile, redirect) {
         if (_.isUndefined(redirect)) {
             App.navigate(URI.link('/notebooks/add'), true);
         } else {
@@ -119,7 +150,7 @@ define([
     });
 
     // Re-render
-    App.on('sync:after', function () {
+    App.on('sync:after', function() {
         if (App.currentApp.moduleName === 'AppNotebook') {
             API.listNotebooks();
         }

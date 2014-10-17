@@ -103,8 +103,6 @@ define([
 
         templateHelpers: function () {
             return {
-                i18n: $.t,
-
                 isSyncEnabled: function () {
                     if (this.settings.cloudStorage.toString() === '0') {
                         return 'hidden';
@@ -120,9 +118,7 @@ define([
                 },
 
                 pageNumber: function () {
-                    if (this.args.page) {
-                        return this.args.page;
-                    }
+                    return (this.args.page || '');
                 },
 
                 notebook: function (model) {

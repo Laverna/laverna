@@ -76,6 +76,7 @@ module.exports = function (grunt) {
                     '{.tmp,<%= yeoman.app %>}/scripts/{,*/,**/}*.js',
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
                     '<%= yeoman.app %>/scripts/{,templates/,**/}*.{ejs,mustache,hbs,html}',
+                    '<%= yeoman.app %>/locales/{,**/}*.json',
                     'test/spec/**/*.js'
                 ]
             },
@@ -348,17 +349,6 @@ module.exports = function (grunt) {
                         'bower_components/MathJax/jax/output/{HTML-CSS,NativeMML}/{,*/,***/}*',
                         'bower_components/MathJax/localization/en/**'
                     ]
-                }]
-            }
-        },
-        tree: {
-            locales: {
-                options: {
-                    exclude: ['locales.json']
-                },
-                files: [{
-                    src: ['<%= yeoman.app %>/locales/'],
-                    dest: '<%= yeoman.app %>/locales/locales.json'
                 }]
             }
         },

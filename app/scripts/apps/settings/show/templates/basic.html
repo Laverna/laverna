@@ -5,7 +5,7 @@
     <div class="col-sm-10">
         <select class="form-control" name="appLang" id="appLang">
         <% _.forEach(locales, function (val, locale) { %>
-        <option value="{{ locale }}"{{ isLocaleActive(locale) }}>{{ i18n(locale) }}</option>
+        <option value="{{ locale }}"{{ isLocaleActive(locale) }}>{{ i18n(val.nativeName) }}</option>
         <% }); %>
         </select>
     </div>

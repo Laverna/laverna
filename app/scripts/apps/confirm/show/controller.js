@@ -4,20 +4,23 @@ define([
     'app',
     'marionette',
     'apps/confirm/show/view'
-], function (_, App, Marionette, View) {
+], function(_, App, Marionette, View) {
     'use strict';
 
     var Show = App.module('Confirm.Show');
 
     Show.Controller = Marionette.Controller.extend({
 
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'show');
-            this.options = null;
         },
 
-        show: function (options) {
-            if (typeof(options) === 'string') {
+        onDestroy: function() {
+            this.view.trigger('destroy');
+        },
+
+        show: function(options) {
+            if (typeof options === 'string') {
                 options = { content : options };
             }
             this.options = options;
@@ -33,7 +36,7 @@ define([
             this.view.on('refuse', this.refused, this);
         },
 
-        confirmed: function () {
+        confirmed: function() {
             if (this.options.success) {
                 this.options.success();
             }
@@ -41,14 +44,13 @@ define([
             App.Confirm.stop();
         },
 
-        refused: function () {
+        refused: function() {
             if (this.options.error) {
                 this.options.error();
             }
             App.Confirm.trigger('refuse');
             App.Confirm.stop();
         }
-
     });
 
     return Show.Controller;

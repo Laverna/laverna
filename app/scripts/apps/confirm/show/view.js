@@ -1,12 +1,10 @@
-/*global define*/
-/*global Markdown*/
+/*global define, Markdown*/
 define([
     'underscore',
-    'jquery',
     'marionette',
     'text!apps/confirm/show/template.html',
     'pagedown-ace'
-], function ( _, $, Marionette, Tmpl) {
+], function(_, Marionette, Tmpl) {
     'use strict';
 
     /**
@@ -19,7 +17,7 @@ define([
 
         ui : {
             'confirm': '.confirm',
-            'refuse' : '.refuse',
+            'refuse' : '.refuse'
         },
 
         events: {
@@ -27,13 +25,13 @@ define([
             'click @ui.refuse'  : 'refuse'
         },
 
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'keyupEvents');
-            this.on('hidden.modal', this.refuseOnHide);
+            this.on('hidden.modal', this.refuseOnHide, this);
             this.on('shown.modal', this.confirmFocus, this);
         },
 
-        confirmFocus: function () {
+        confirmFocus: function() {
             var $focus = this.ui.confirm,
                 text = this.options.text;
 
@@ -42,7 +40,7 @@ define([
                 $focus = (text.focusEl) ? this.$(text.focusEl) : $focus;
             }
 
-            $focus.trigger('focus');
+            $focus.focus();
 
             if ($focus.hasClass('form-control')) {
                 $focus.select();
@@ -50,7 +48,7 @@ define([
             }
         },
 
-        keyupEvents: function (e) {
+        keyupEvents: function(e) {
             switch (e.which) {
                 // Refuse on Esc
                 case 27:
@@ -63,10 +61,11 @@ define([
             }
         },
 
-        serializeData: function () {
+        serializeData: function() {
             var converter = new Markdown.Converter(),
                 content = this.options.text;
 
+            // If it's a view object, render it
             if (typeof content === 'object') {
                 content = content.render().$el.html();
             } else {
@@ -78,29 +77,17 @@ define([
             };
         },
 
-        refuseOnHide: function () {
-            // Trigger only once
-            if (this.answered !== true) {
-                this.trigger('refuse');
-            }
-        },
-
-        refuse: function () {
+        refuseOnHide: function() {
             this.trigger('refuse');
-            this.destroy();
         },
 
-        confirm: function () {
+        refuse: function() {
+            this.trigger('refuse');
+        },
+
+        confirm: function() {
             this.trigger('confirm');
-            this.destroy();
-        },
-
-        destroy: function () {
-            this.answered = true;
-            this.trigger('destroy');
-            return false;
         }
-
     });
 
     return View;

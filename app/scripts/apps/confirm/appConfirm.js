@@ -2,32 +2,37 @@
 define([
     'underscore',
     'marionette',
-    'app'
-], function (_, Marionette, App) {
+    'app',
+    'apps/confirm/show/controller'
+], function(_, Marionette, App, Controller) {
     'use strict';
 
     /**
      * Confirm modal window
      */
-    var Confirm = App.module('Confirm', {startWithParent: false});
+    var Confirm = App.module('Confirm', {startWithParent: false, modal: true}),
+        controller;
 
-    Confirm.on('start', function () {
+    Confirm.on('start', function() {
         App.mousetrap.API.reset();
-        App.log('AppConfirm has been started');
-        App.Confirm.active = true;
+        App.log('AppConfirm has started');
     });
 
-    Confirm.on('stop', function () {
+    Confirm.on('stop', function() {
         App.mousetrap.API.restart();
-        App.log('AppConfirm has been stoped');
-        App.Confirm.active = false;
+
+        // Destroy the controller
+        controller.destroy();
+        controller = null;
+
+        App.log('AppConfirm has stoped');
     });
 
-    App.Confirm.show = function (options) {
+    App.Confirm.show = function(options) {
         App.Confirm.start();
-        require(['apps/confirm/show/controller'], function (Controller) {
-            new Controller().show(options);
-        });
+
+        controller = new Controller();
+        controller.show(options);
     };
 
     return Confirm;

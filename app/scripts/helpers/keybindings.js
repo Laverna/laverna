@@ -1,83 +1,93 @@
-/*global define*/
-/*global Mousetrap*/
+/* global define, Mousetrap */
 define([
     'jquery',
+    'marionette',
     'app',
     'helpers/uri',
     'Mousetrap',
     'mousetrap-pause'
-], function ($, App, URI) {
+], function($, Marionette, App, URI) {
     'use strict';
 
-    var Keybindings = App.module('mousetrap');
+    var Keybindings = App.module('mousetrap', {startWithParent: true}),
+        Controller;
 
-    Keybindings.bind = function () {
-        var uri = URI.link('');
+    Controller = Marionette.Controller.extend({
+        initialize: function() {
+            App.vent.on('mousetrap:toggle', this.toggle, this);
+            App.vent.on('mousetrap:reset', Mousetrap.reset);
+        },
 
-        // Help
-        Mousetrap.bind(App.settings.appKeyboardHelp, function () {
-            App.navigate(uri + '/help', true);
-            return false;
-        });
+        onDestroy: function() {
+            App.vent.off('mousetrap:toggle');
+            App.vent.off('mousetrap:reset');
+            Mousetrap.reset();
+        },
 
-        // Focus on search form
-        Mousetrap.bind(App.settings.appSearch, function () {
-            $('#search-input').focus();
-            return false;
-        });
+        toggle: function() {
+            Mousetrap[(this.paused ? 'unpause' : 'pause')]();
+            this.paused = (this.paused ? false : true);
+        },
 
-        // Create new object
-        Mousetrap.bind(App.settings.appCreateNote, function () {
-            if (App.currentApp) {
-                App.currentApp.trigger('showForm');
-            }
-        });
+        bind: function(settings) {
+            // Help
+            Mousetrap.bind(settings.appKeyboardHelp, function(e) {
+                e.preventDefault();
+                App.navigate(URI.link('/help'), true);
+            });
 
-        // Redirect to notes list
-        Mousetrap.bind(App.settings.jumpInbox, function () {
-            App.navigate(uri + '/notes', true);
-        });
+            // Focus on search form
+            Mousetrap.bind(settings.appSearch, function() {
+                $('#search-input').focus();
+                return false;
+            });
 
-        // Redirect to favorite notes
-        Mousetrap.bind(App.settings.jumpFavorite, function () {
-            App.navigate(uri + '/notes/f/favorite', true);
-        });
+            // Create new object
+            Mousetrap.bind(settings.appCreateNote, function() {
+                App.vent.trigger('form:show');
+            });
 
-        // Redirect to removed list of notes
-        Mousetrap.bind(App.settings.jumpRemoved, function () {
-            App.navigate(uri + '/notes/f/trashed', true);
-        });
+            // Redirect to notes list
+            Mousetrap.bind(settings.jumpInbox, function() {
+                App.navigate(URI.link('/notes'), true);
+            });
 
-        // Redirect to notebooks list
-        Mousetrap.bind(App.settings.jumpNotebook, function () {
-            App.navigate(uri + '/notebooks', true);
-        });
-    };
+            // Redirect to favorite notes
+            Mousetrap.bind(settings.jumpFavorite, function() {
+                App.navigate(URI.link('/notes/f/favorite'), true);
+            });
+
+            // Redirect to removed list of notes
+            Mousetrap.bind(settings.jumpRemoved, function() {
+                App.navigate(URI.link('/notes/f/trashed'), true);
+            });
+
+            // Redirect to notebooks list
+            Mousetrap.bind(settings.jumpNotebook, function() {
+                App.navigate(URI.link('/notebooks'), true);
+            });
+
+            App.log('Keys are binded');
+        }
+    });
+
+    App.vent.on('mousetrap:restart', function() {
+        Keybindings.stop();
+        Keybindings.start();
+    });
 
     /**
-     * API
+     * Initializers & finalizers
      */
-    Keybindings.API = {
-        pause: function () {
-            Mousetrap.pause();
-        },
+    Keybindings.addInitializer(function() {
+        Keybindings.controller = new Controller();
+        Keybindings.controller.bind(App.settings);
+    });
 
-        unpause: function () {
-            Mousetrap.unpause();
-        },
-
-        reset: function () {
-            Mousetrap.reset();
-            App.log('Keybindings has been reseted');
-        },
-
-        restart: function () {
-            Keybindings.API.reset();
-            Keybindings.bind();
-            App.log('Keybindings has been restarted');
-        }
-    };
+    Keybindings.addFinalizer(function() {
+        Keybindings.controller.destroy();
+        delete Keybindings.controller;
+    });
 
     return Keybindings;
-
 });

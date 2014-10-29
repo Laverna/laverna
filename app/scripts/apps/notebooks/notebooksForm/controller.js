@@ -24,7 +24,7 @@ define([
             this.on('destroy:it', this.destroy, this);
         },
 
-        onBeforeDestroy: function() {
+        onDestroy: function() {
             this.view.trigger('destroy');
         },
 

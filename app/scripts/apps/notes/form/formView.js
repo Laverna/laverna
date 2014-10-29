@@ -31,7 +31,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
             notebookId :  '[name="notebookId"]',
             sCont      :  '.ui-s-content',
             saveBtn    :  '.saveBtn',
-            wordBtn    :  '.wordBtn', 
+            wordBtn    :  '.wordBtn',
             // Mode stuff
             form       :  '#noteForm',
             wmdBar     :  '#wmd-button-bar',
@@ -52,7 +52,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
 
         initialize: function () {
             _.bindAll(this, 'scrollPagedownBar');
-            App.mousetrap.API.pause();
+            App.vent.trigger('mousetrap:toggle');
             this.$body = $('body');
             this.imgHelper = new Img();
 
@@ -71,7 +71,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
         },
 
         onDestroy: function () {
-            App.mousetrap.API.unpause();
+            App.vent.trigger('mousetrap:toggle');
             this.imgHelper.clean();
             this.switchMode();
         },
@@ -83,7 +83,7 @@ function (_, $, App, Marionette, Template, Checklist, Tags, Img, ace, mathjax, D
 
         newNotebook: function () {
             if (this.ui.notebookId.find('.newNotebook').is(':selected')) {
-                App.AppNotebook.trigger('showForm', this.options.profile, false);
+                App.vent.trigger('notebook:form', this.options.profile, false);
 
                 this.listenTo(App, 'new:notebook', function (model) {
                     var tmpl = $( _.template('<option value="{{id}}">{{name}}</option>', model.decrypt()) );

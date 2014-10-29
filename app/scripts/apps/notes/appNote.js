@@ -17,7 +17,6 @@ define([
         API;
 
     AppNote.on('start', function () {
-        App.mousetrap.API.restart();
         App.AppNavbar.start();
 
         App.log('AppNote is started');
@@ -25,6 +24,7 @@ define([
 
     AppNote.on('stop', function () {
         App.log('AppNote is stoped');
+        App.vent.off('form:show');
     });
 
     /**
@@ -174,7 +174,7 @@ define([
     });
 
     // Show form
-    AppNote.on('showForm', function () {
+    App.vent.on('form:show', function () {
         App.navigate(URI.link('/notes/add'), true);
     });
 

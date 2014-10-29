@@ -11,12 +11,12 @@ define([
         API;
 
     Settings.on('start', function () {
-        App.mousetrap.API.reset();
+        App.vent.trigger('mousetrap:reset');
         App.log('AppSettings has started');
     });
 
     Settings.on('stop', function () {
-        App.mousetrap.API.restart();
+        App.vent.trigger('mousetrap:restart');
         App.log('AppSettings has stoped');
 
         API.controller.destroy();

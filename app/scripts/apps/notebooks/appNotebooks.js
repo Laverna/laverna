@@ -16,8 +16,7 @@ define([
         API;
 
     AppNotebooks.on('start', function() {
-        // Restart global keybindings and start Navbar module
-        App.mousetrap.API.restart();
+        // Start Navbar module
         App.AppNavbar.start();
 
         // Make sidebar region visible
@@ -82,12 +81,15 @@ define([
         },
 
         // Create notebook
-        addNotebook: function(profile, redirect) {
+        addNotebook: function(profile) {
             require(['apps/notebooks/notebooksForm/controller'], function(Form) {
-                executeAction(Form, 'addForm', {
-                    profile: profile,
-                    redirect: redirect
-                });
+                executeAction(Form, 'addForm', { profile: profile });
+            });
+        },
+
+        showAddForm: function(profile, redirect) {
+            require(['apps/notebooks/notebooksForm/controller'], function(Form) {
+                new Form().addForm({ profile: profile, redirect: redirect });
             });
         },
 
@@ -140,13 +142,14 @@ define([
         }
     };
 
-    // Add notebook
-    AppNotebooks.on('showForm', function(profile, redirect) {
-        if (_.isUndefined(redirect)) {
-            App.navigate(URI.link('/notebooks/add'), true);
-        } else {
-            API.addNotebook(profile, redirect);
-        }
+    // Show a form
+    App.vent.on('form:show', function() {
+        App.navigate(URI.link('/notebooks/add'), true);
+    });
+
+    // Show a form without starting an entire AppNotebook sub app
+    App.vent.on('notebook:form', function(profile, redirect) {
+        API.showAddForm(profile, redirect);
     });
 
     // Re-render

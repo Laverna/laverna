@@ -14,12 +14,12 @@ define([
         controller;
 
     Confirm.on('start', function() {
-        App.mousetrap.API.reset();
+        App.vent.trigger('mousetrap:reset');
         App.log('AppConfirm has started');
     });
 
     Confirm.on('stop', function() {
-        App.mousetrap.API.restart();
+        App.vent.trigger('mousetrap:restart');
 
         // Destroy the controller
         controller.destroy();

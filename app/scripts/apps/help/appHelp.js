@@ -10,12 +10,12 @@ define([
         executeAction, API;
 
     Help.on('start', function () {
-        App.mousetrap.API.reset();
+        App.vent.trigger('mousetrap:reset');
         App.log('AppHelp module has started');
     });
 
     Help.on('stop', function () {
-        App.mousetrap.API.restart();
+        App.vent.trigger('mousetrap:restart');
         App.log('AppHelp module has stoped');
 
         API.controller.destroy();

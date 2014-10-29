@@ -65,6 +65,9 @@ require.config({
         'locales'                  :  '../locales'
     },
     shim: {
+        prettify: {
+            exports: 'PR'
+        },
         underscore: {
             exports: '_'
         },

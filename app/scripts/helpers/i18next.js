@@ -3,8 +3,9 @@ define([
     'underscore',
     'jquery',
     'marionette',
-    'i18next'
-], function (_, $, Marionette) {
+    'i18next',
+    'app'
+], function(_, $, Marionette, i18n, App) {
     'use strict';
 
     /**
@@ -13,9 +14,21 @@ define([
      */
     var render = Marionette.Renderer.render;
 
-    Marionette.Renderer.render = function (template, data) {
+    Marionette.Renderer.render = function(template, data) {
         data = _.extend(data, { i18n: $.t });
 
         return render(template, data);
     };
+
+    /**
+     * Init i18next
+     */
+    App.addInitializer(function() {
+        i18n.init({
+            lng             : App.settings.appLang,
+            fallbackLng     : 'en',
+            useCookie       : false,
+            useLocalStorage : false
+        });
+    });
 });

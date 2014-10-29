@@ -26,7 +26,7 @@ require.config({
         jquery                     :  '../bower_components/jquery/dist/jquery',
         underscore                 :  '../bower_components/underscore/underscore',
         devicejs                   :  '../bower_components/device.js/lib/device.min',
-        i18next                    :  '../bower_components/i18next/i18next.min',
+        i18next                    :  '../bower_components/i18next/i18next.amd.withJQuery.min',
         // Backbone &              :  Marionette
         backbone                   :  '../bower_components/backbone/backbone',
         marionette                 :  '../bower_components/marionette/lib/core/backbone.marionette',
@@ -133,10 +133,6 @@ require.config({
         },
         remotestorage: {
             exports: 'remoteStorage'
-        },
-        i18next: {
-            deps: ['jquery'],
-            exports: 'i18n'
         }
     },
     findNestedDependencies: true,

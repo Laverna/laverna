@@ -33,11 +33,6 @@ define([
         modal         : ModalRegion
     });
 
-    // Modal region events
-    App.modal.on('close', function () {
-        // App.notesArg = null; // Re render sidebar
-    });
-
     // Backbone history navigate
     App.navigate = function (route, options) {
         if (!options) {
@@ -149,37 +144,28 @@ define([
             'apps/settings/appSettings',
             'apps/help/appHelp'
         ], function (constants, Install) {
-            var lng = {
-                lng             : App.settings.appLang,
-                fallbackLng     : 'en',
-                useCookie       : false,
-                useLocalStorage : false
-            };
+            if (App.settings.appLang === '') {
+                configs.get('appLang').save({ 'value': i18n.lng() });
+            }
 
-            i18n.init(lng, function () {
-                if (App.settings.appLang === '') {
-                    configs.get('appLang').save({ 'value': i18n.lng() });
-                }
+            App.constants = constants;
+            Install.start();
 
-                App.constants = constants;
-                Install.start();
+            Backbone.history.start({pushState: false});
+            $('.loading').removeClass('loading');
 
-                Backbone.history.start({pushState: false});
-                $('.loading').removeClass('loading');
+            $(window).on('hashchange', function () {
+                var profile = URI.getProfile();
+                configs.createProfile(profile);
 
-                $(window).on('hashchange', function () {
-                    var profile = URI.getProfile();
-                    configs.createProfile(profile);
-
-                    if (profile !== App.currentProfile) {
-                        App.trigger('profile:change');
-                    }
-                });
-
-                if (App.getCurrentRoute() === '') {
-                    App.trigger('notes:list');
+                if (profile !== App.currentProfile) {
+                    App.trigger('profile:change');
                 }
             });
+
+            if (App.getCurrentRoute() === '') {
+                App.trigger('notes:list');
+            }
         });
     });
 

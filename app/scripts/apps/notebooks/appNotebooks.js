@@ -11,27 +11,44 @@ define([
     /**
      * Submodule which shows notebooks
      */
-    var AppNotebooks = App.module('AppNotebook', {startWithParent: false}),
+    var AppNotebooks,
         executeAction,
         API;
 
-    AppNotebooks.on('start', function() {
-        // Start Navbar module
-        App.AppNavbar.start();
+    AppNotebooks = Marionette.Module.extend({
+        startWithParent: false,
 
-        // Make sidebar region visible
-        $(App.content.el).removeClass('active-row');
+        onStart: function() {
+            App.log('AppNotebook has started');
 
-        App.log('AppNotebook has started');
+            // Start Navbar module
+            App.AppNavbar.start();
+
+            // Make sidebar region visible
+            $(App.content.el).removeClass('active-row');
+
+            // Show a form
+            App.vent.on('form:show', function() {
+                App.navigate(URI.link('/notebooks/add'), true);
+            });
+
+            // Re render notebook's list after synchronizing
+            App.vent.on('sync:after', API.listNotebooks, API);
+        },
+
+        onStop: function() {
+            App.vent.off('form:show');
+            App.vent.off('sync:after');
+
+            // Destroy the last controller
+            API.controller.destroy();
+            delete API.controller;
+
+            App.log('AppNotebook has stoped');
+        }
     });
 
-    AppNotebooks.on('stop', function() {
-        // Destroy the last controller
-        API.controller.destroy();
-        delete API.controller;
-
-        App.log('AppNotebook has stoped');
-    });
+    AppNotebooks = App.module('AppNotebook', AppNotebooks);
 
     /**
      * The Router
@@ -142,22 +159,8 @@ define([
         }
     };
 
-    // Show a form
-    App.vent.on('form:show', function() {
-        App.navigate(URI.link('/notebooks/add'), true);
-    });
-
     // Show a form without starting an entire AppNotebook sub app
-    App.vent.on('notebook:form', function(profile, redirect) {
-        API.showAddForm(profile, redirect);
-    });
-
-    // Re-render
-    App.on('sync:after', function() {
-        if (App.currentApp.moduleName === 'AppNotebook') {
-            API.listNotebooks();
-        }
-    });
+    App.vent.on('notebook:form', API.showAddForm);
 
     /**
      * Register the router

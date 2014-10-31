@@ -44,7 +44,7 @@ define([
             });
 
             it('Shows validation errors', function (done) {
-                tag.on('invalid', function (model, errors) {
+                tag.once('invalid', function (model, errors) {
                     _.forEach(errors, function (err) {
                         expect(view.ui[err].parent()).to.have.class('has-error');
                         if (errors[errors.length - 1] === err) {
@@ -60,28 +60,28 @@ define([
 
         describe('Triggers events', function () {
             it('view:save when user submits the form', function (done) {
-                view.on('save', function () {
+                view.once('save', function () {
                     done();
                 });
                 $('.form-horizontal', view.$el).submit();
             });
 
             it('view:save when user hits OK button', function (done) {
-                view.on('save', function () {
+                view.once('save', function () {
                     done();
                 });
                 $('.ok', view.$el).click();
             });
 
             it('view:redirect', function (done) {
-                view.on('redirect', function () {
+                view.once('redirect', function () {
                     done();
                 });
                 view.trigger('hidden.modal');
             });
 
             it('view:close when user hits cancel', function (done) {
-                view.on('close', function () {
+                view.once('close', function () {
                     done();
                 });
                 $('.cancelBtn', view.$el).click();

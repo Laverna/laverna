@@ -2,12 +2,11 @@
 define([
     'require',
     'jquery',
-    'spec/testNotebookBehavior',
     'models/tag',
     'collections/tags',
     'apps/notebooks/list/views/tagsItem',
     'apps/notebooks/list/views/tagsComposite'
-], function(require, $, testBehavior, Tag, Tags, ItemView, ListView) {
+], function(require, $, Tag, Tags, ItemView, ListView) {
     'use strict';
 
     var expect = chai.expect;

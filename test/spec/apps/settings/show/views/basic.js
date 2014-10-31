@@ -2,7 +2,7 @@
 define([
     'underscore',
     'jquery',
-    'spec/views/settingsTabs/settingsBehavior',
+    'spec/apps/settings/show/formBehavior',
     'apps/settings/show/views/basic',
     'collections/configs',
     'text!locales/locales.json'
@@ -16,17 +16,17 @@ define([
             configs;
 
         before(function (done) {
-            configs = new Configs(Configs.configNames);
+            configs = new Configs();
+            configs.resetFromJSON(Configs.prototype.configNames);
+
             locales = _.keys(JSON.parse(locales));
             view = new Basic({
                 el: $('<div>'),
                 collection: configs
             });
 
-            $.when(configs.fetch()).then(function () {
-                view.render();
-                done();
-            });
+            view.render();
+            done();
         });
 
         describe('Instantiated', function () {
@@ -51,6 +51,7 @@ define([
                 view.ui.saltInput.on('change', function () {
                     expect(view.ui.saltInput.val() !== '').to.be.ok();
                     expect(view.ui.saltInput.val().length > 8).to.be.ok();
+                    view.ui.saltInput.off('change');
                     done();
                 });
                 $('#randomize', view.$el).click();

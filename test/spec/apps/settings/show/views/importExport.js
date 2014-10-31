@@ -28,14 +28,14 @@ define([
 
         describe('Triggers events', function () {
             it('collection:export', function (done) {
-                view.collection.on('export', function () {
+                view.collection.once('export', function () {
                     done();
                 });
                 $('#do-export', view.$el).click();
             });
 
             it('collection:import', function (done) {
-                view.collection.on('import', function () {
+                view.collection.once('import', function () {
                     done();
                 });
                 view.ui.importFile.trigger('change');

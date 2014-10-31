@@ -140,7 +140,7 @@ define([
     /**
      * Router events
      */
-    App.on('notes:list', function () {
+    App.vent.on('notes:list', function () {
         App.navigate(URI.link('/notes'), { trigger : true });
     });
 

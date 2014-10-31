@@ -1,7 +1,7 @@
 /* global chai, define, describe, before, it */
 define([
     'jquery',
-    'spec/views/settingsTabs/settingsBehavior',
+    'spec/apps/settings/show/formBehavior',
     'collections/configs',
     'apps/settings/show/views/shortcuts'
 ], function ($, settingsBehavior, Configs, Shortcuts) {
@@ -15,20 +15,22 @@ define([
 
         before(function (done) {
             configs = new Configs();
+            configs.resetFromJSON(Configs.prototype.configNames);
+
             view = new Shortcuts({
                 el: $('<div>'),
                 collection: configs
             });
-            $.when(configs.fetch()).then(function () {
-                view.render();
-                done();
-            });
+
+            view.render();
+            done();
         });
 
         describe('Instantiated', function () {
             it('ok', function () {
                 expect(view).to.be.ok();
                 expect(view.collection).to.be.ok();
+                expect(view.collection.length > 0).to.be.ok();
             });
 
             it('has behaviors', function () {

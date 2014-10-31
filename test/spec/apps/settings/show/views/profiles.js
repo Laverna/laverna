@@ -39,7 +39,7 @@ define([
             });
 
             it('re renders itself if collection has changed', function (done) {
-                view.on('render', function () {
+                view.once('render', function () {
                     done();
                 });
                 view.collection.trigger('change');
@@ -51,7 +51,7 @@ define([
                 var e = $.Event('keypress');
                 e.which = 13;
 
-                view.collection.on('create:profile', function (name) {
+                view.collection.once('create:profile', function (name) {
                     expect(name).to.be.equal(view.ui.profileName.val());
                     done();
                 });
@@ -61,7 +61,7 @@ define([
             });
 
             it('collection:remove:profile', function (done) {
-                view.collection.on('remove:profile', function (name) {
+                view.collection.once('remove:profile', function (name) {
                     expect(name !== '').to.be.ok();
                     done();
                 });

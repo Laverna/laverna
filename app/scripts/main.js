@@ -1,4 +1,10 @@
-require.config({
+/* global requirejs */
+requirejs.config({
+
+    // Find all nested dependencies
+    findNestedDependencies: true,
+    waitSeconds: 10,
+
     packages: [
         // Ace editor
         {
@@ -20,54 +26,57 @@ require.config({
         }
     ],
     paths: {
-        sjcl                       :  '../bower_components/sjcl/sjcl',
-        // Dependencies            :  and libraries
-        text                       :  '../bower_components/requirejs-text/text',
-        jquery                     :  '../bower_components/jquery/dist/jquery',
-        underscore                 :  '../bower_components/underscore/underscore',
-        devicejs                   :  '../bower_components/device.js/lib/device.min',
-        i18next                    :  '../bower_components/i18next/i18next.amd.withJQuery.min',
-        // Backbone &              :  Marionette
-        backbone                   :  '../bower_components/backbone/backbone',
-        marionette                 :  '../bower_components/marionette/lib/core/backbone.marionette',
-        localStorage               :  '../bower_components/backbone.localStorage/backbone.localStorage',
-        IndexedDBShim              :  '../bower_components/IndexedDBShim/dist/IndexedDBShim',
-        indexedDB                  :  '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
-        dropzone                   :  '../bower_components/dropzone/downloads/dropzone.min',
-        toBlob                     :  '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
-        blobjs                     :  '../bower_components/Blob/Blob',
-        fileSaver                  :  '../bower_components/FileSaver/FileSaver',
-        enquire                    :  '../bower_components/enquire/dist/enquire.min',
-        dropbox                    :  'libs/dropbox',
-        hammerjs                   :  '../bower_components/hammerjs/hammer',
-        remotestorage              :  '../bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd',
-        'backbone.wreqr'           :  '../bower_components/backbone.wreqr/lib/backbone.wreqr',
-        'backbone.babysitter'      :  '../bower_components/backbone.babysitter/lib/backbone.babysitter',
-        // Keybindings             :
-        'Mousetrap'                :  '../bower_components/mousetrap/mousetrap',
-        'mousetrap-pause'          :  '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
-        'backbone.mousetrap'       :  '../bower_components/backbone.mousetrap/backbone.mousetrap',
-        // Pagedown                :
-        'pagedown'                 :  '../bower_components/pagedown/Markdown.Editor',
-        'pagedown-extra'           :  '../bower_components/pagedown-extra/Markdown.Extra',
-        'to-markdown'              :  '../bower_components/to-markdown/src/to-markdown',
-        'mathjax'                  :  '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
-        // Markdown helpers        :
-        'checklist'                :  'libs/checklist',
-        'tags'                     :  'libs/tags',
-        // Other                   :  libraries
-        'bootstrap'                :  '../bower_components/bootstrap/dist/js/bootstrap.min',
-        'prettify'                 :  '../bower_components/google-code-prettify/src/prettify',
-        // View                    :  scripts here
-        'modalRegion'              :  'views/modal',
-        'brandRegion'              :  'views/brand',
-        'apps'                     :  'apps/',
-        'locales'                  :  '../locales'
+        sjcl                  : '../bower_components/sjcl/sjcl',
+        text                  : '../bower_components/requirejs-text/text',
+        jquery                : '../bower_components/jquery/dist/jquery',
+        bootstrap             : '../bower_components/bootstrap/dist/js/bootstrap.min',
+        i18next               : '../bower_components/i18next/i18next.amd.withJQuery.min',
+
+        // Backbone
+        underscore            : '../bower_components/underscore/underscore',
+        backbone              : '../bower_components/backbone/backbone',
+        marionette            : '../bower_components/marionette/lib/core/backbone.marionette',
+        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/backbone.wreqr',
+        'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
+        'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
+
+        // Mousetrap
+        'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
+        'mousetrap-pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
+
+        // Storage adapters
+        localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
+        indexedDB             : '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
+        IndexedDBShim         : '../bower_components/IndexedDBShim/dist/IndexedDBShim',
+        remotestorage         : '../bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd',
+        dropbox               : 'libs/dropbox',
+
+        // Markdown
+        'pagedown'            : '../bower_components/pagedown/Markdown.Editor',
+        'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
+        'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
+
+        // Others
+        mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+        prettify              : '../bower_components/google-code-prettify/src/prettify',
+        dropzone              : '../bower_components/dropzone/downloads/dropzone.min',
+        toBlob                : '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
+        blobjs                : '../bower_components/Blob/Blob',
+        fileSaver             : '../bower_components/FileSaver/FileSaver',
+        enquire               : '../bower_components/enquire/dist/enquire.min',
+        hammerjs              : '../bower_components/hammerjs/hammer',
+        devicejs              : '../bower_components/device.js/lib/device.min',
+
+        // Aliases
+        'modalRegion'         : 'views/modal',
+        'brandRegion'         : 'views/brand',
+        'checklist'           : 'libs/checklist',
+        'tags'                : 'libs/tags',
+        'apps'                : 'apps',
+        'locales'             : '../locales'
     },
     shim: {
-        prettify: {
-            exports: 'PR'
-        },
+        // Backbone
         underscore: {
             exports: '_'
         },
@@ -75,9 +84,17 @@ require.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
-        devicejs: {
-            exports: 'device'
+        'backbone.mousetrap': {
+            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
         },
+
+        // Mousetrap
+        'Mousetrap': { },
+        'mousetrap-pause': {
+            deps: ['Mousetrap']
+        },
+
+        // Storage adapters
         localStorage: {
             deps: ['underscore', 'backbone']
         },
@@ -87,15 +104,14 @@ require.config({
         'IndexedDBShim': {
             exports: 'shimIndexedDB'
         },
-        // Mousetrap
-        'Mousetrap': { },
-        'mousetrap-pause': {
-            deps: ['Mousetrap']
+        dropbox: {
+            exports: 'Dropbox'
         },
-        'backbone.mousetrap': {
-            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
+        remotestorage: {
+            exports: 'remoteStorage'
         },
-        // Ace && pagedown editor
+
+        // Markdown
         ace: {
             exports: 'ace'
         },
@@ -111,9 +127,10 @@ require.config({
         'pagedown-ace/Markdown.Sanitizer': {
             deps: [ 'pagedown-ace/Markdown.Converter' ]
         },
-        'mathjax': {
-            exports: 'MathJax'
+        'to-markdown': {
+            exports: 'toMarkdown'
         },
+
         // Xregexp
         'xregexp/xregexp': {
             exports: 'XRegExp'
@@ -122,65 +139,25 @@ require.config({
             deps: ['xregexp/xregexp'],
             exports: 'XRegExp'
         },
-        'to-markdown': {
-            exports: 'toMarkdown'
+
+        // Others
+        sjcl: {
+            exports: 'sjcl'
         },
         bootstrap: {
             deps: ['jquery']
         },
-        sjcl: {
-            exports: 'sjcl'
+        'mathjax': {
+            exports: 'MathJax'
         },
-        dropbox: {
-            exports: 'Dropbox'
+        devicejs: {
+            exports: 'device'
         },
-        remotestorage: {
-            exports: 'remoteStorage'
+        prettify: {
+            exports: 'PR'
         }
-    },
-    findNestedDependencies: true,
-    waitSeconds: 10
-});
-
-require([
-    'jquery',
-    'app',
-    'bootstrap'
-], function ($, App) {
-    'use strict';
-    /* global Modernizr */
-
-    function startApp () {
-        var request;
-
-        // Browser doesn't support neither indexeddb nor websql
-        if ( ( !Modernizr.indexeddb && !Modernizr.websqldatabase ) ||
-            !Modernizr.localstorage ) {
-            window.alert('Your browser is outdated and does not support IndexedDB and/or LocalStorage.');
-            return;
-        }
-
-        request = window.indexedDB.open('MyTestDatabase');
-        request.onerror = function() {
-            window.appNoDB = true;
-            App.start();
-        };
-        request.onsuccess = function() {
-            App.start();
-        };
     }
-
-    $(document).ready(function () {
-        if ( !Modernizr.indexeddb ) {
-            require(['IndexedDBShim'], function () {
-                window.appNoDB = true;
-                window.shimIndexedDB.__useShim(true);
-                startApp();
-            });
-        }
-        else {
-            startApp();
-        }
-    });
-
 });
+
+// Starting point
+requirejs(['init']);

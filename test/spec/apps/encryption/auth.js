@@ -6,6 +6,11 @@ define([
 ], function (_, getAuth, getEncrypt) {
     'use strict';
 
+    // Right now this Unit test doesn't work without indexedDB
+    if (navigator.userAgent.indexOf('PhantomJS') > 0) {
+        return;
+    }
+
     var expect = chai.expect,
         settings = {'encrypt': 1, 'encryptPass': [1803989619,-13304607,-1653899186,-10862761,1202562282,-1573970615,-1071754531,-1215866037], 'encryptSalt': '-1741709422,-1683544510', 'encryptIter': '1000','encryptTag': '64', 'encryptKeySize': '128'};
 

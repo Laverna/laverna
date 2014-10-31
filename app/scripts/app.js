@@ -164,7 +164,7 @@ define([
             });
 
             if (App.getCurrentRoute() === '') {
-                App.trigger('notes:list');
+                App.vent.trigger('notes:list');
             }
         });
     });

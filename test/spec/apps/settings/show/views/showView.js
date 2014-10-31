@@ -3,16 +3,11 @@ define([
     'underscore',
     'jquery',
     'collections/configs',
-    'apps/settings/show/showView',
+    'apps/settings/show/views/showView',
     'apps/settings/show/views/basic',
     'apps/settings/show/views/shortcuts',
     'apps/settings/show/views/importExport',
     'apps/settings/show/views/profiles',
-    // Unit tests for tabs views
-    'spec/views/settingsTabs/settingsBasic',
-    'spec/views/settingsTabs/settingsShortcuts',
-    'spec/views/settingsTabs/settingsImport',
-    'spec/views/settingsTabs/settingsProfiles'
 ], function (_, $, Configs, View, Basic, Shortcuts, Import, Profiles) {
     'use strict';
 
@@ -24,16 +19,16 @@ define([
 
         before(function (done) {
             configs = new Configs();
+            configs.resetFromJSON(Configs.prototype.configNames);
+
             view = new View({
                 el: $('<div>'),
                 collection : configs,
                 args: {}
             });
 
-            $.when(configs.fetch()).then(function () {
-                view.render();
-                done();
-            });
+            view.render();
+            done();
         });
 
         describe('instantiated', function () {

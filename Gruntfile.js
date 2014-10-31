@@ -111,14 +111,15 @@ module.exports = function (grunt) {
             test: {
                 options: {
                     port: 9001,
-                    middleware: function (connect) {
-                        return [
-                            lrSnippet,
-                            mountFolder(connect, '.tmp'),
-                            mountFolder(connect, 'test'),
-                            mountFolder(connect, yeomanConfig.app)
-                        ];
-                    }
+                    base: '.',
+                    // middleware: function (connect) {
+                    //     return [
+                    //         lrSnippet,
+                    //         mountFolder(connect, '.tmp'),
+                    //         mountFolder(connect, 'test'),
+                    //         mountFolder(connect, yeomanConfig.app)
+                    //     ];
+                    // }
                 }
             },
             dist: {
@@ -159,12 +160,11 @@ module.exports = function (grunt) {
         mocha: {
             all: {
                 options: {
-                    run: true,
-                    urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
+                    run: false,
+                    urls: ['http://localhost:<%= connect.test.options.port %>/test/index.html']
                 }
             }
         },
-        // Compile less files
         less: {
             options: {
                 paths: [

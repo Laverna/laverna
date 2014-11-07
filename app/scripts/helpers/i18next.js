@@ -29,6 +29,8 @@ define([
             fallbackLng     : 'en',
             useCookie       : false,
             useLocalStorage : false
+        }, function() {
+            App.vent.trigger('i18n:ready', i18n.lng());
         });
     });
 });

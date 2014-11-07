@@ -3,10 +3,9 @@ define([
     'jquery',
     'marionette',
     'app',
-    'helpers/uri',
     'Mousetrap',
     'mousetrap-pause'
-], function($, Marionette, App, URI) {
+], function($, Marionette, App) {
     'use strict';
 
     var Keybindings = App.module('mousetrap', {startWithParent: true}),
@@ -33,7 +32,7 @@ define([
             // Help
             Mousetrap.bind(settings.appKeyboardHelp, function(e) {
                 e.preventDefault();
-                App.navigate(URI.link('/help'), true);
+                App.vent.trigger('navigate:link', '/help', true);
             });
 
             // Focus on search form
@@ -49,22 +48,22 @@ define([
 
             // Redirect to notes list
             Mousetrap.bind(settings.jumpInbox, function() {
-                App.navigate(URI.link('/notes'), true);
+                App.vent.trigger('navigate:link', '/notes', true);
             });
 
             // Redirect to favorite notes
             Mousetrap.bind(settings.jumpFavorite, function() {
-                App.navigate(URI.link('/notes/f/favorite'), true);
+                App.vent.trigger('navigate:link', '/notes/f/favorite', true);
             });
 
             // Redirect to removed list of notes
             Mousetrap.bind(settings.jumpRemoved, function() {
-                App.navigate(URI.link('/notes/f/trashed'), true);
+                App.vent.trigger('navigate:link', '/notes/f/trashed', true);
             });
 
             // Redirect to notebooks list
             Mousetrap.bind(settings.jumpNotebook, function() {
-                App.navigate(URI.link('/notebooks'), true);
+                App.vent.trigger('navigate:link', '/notebooks', true);
             });
 
             App.log('Keys are binded');

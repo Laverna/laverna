@@ -52,10 +52,12 @@ define([
          */
         firstStart: function () {
             var $d = $.Deferred(),
-                self = this;
+                self = this,
+                length;
 
             function check() {
-                if (self.length === self.configNames.length) {
+                length = self.length;
+                if (length === self.configNames.length) {
                     $d.resolve(self);
                     return;
                 }
@@ -66,7 +68,7 @@ define([
                     }
                 });
 
-                $d.resolve(self);
+                $d.resolve({ collection: self, startLength: length });
             }
 
             $.when(this.fetch()).done(check);

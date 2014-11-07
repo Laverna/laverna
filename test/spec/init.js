@@ -22,7 +22,13 @@ define([
         'spec/libs/tags',
 
         // Helpers
+        'spec/helpers/storage',
+        'spec/helpers/configs',
+        'spec/helpers/uri',
         // 'spec/helpers/sync/sync',
+
+        // Core
+        'spec/app.js',
 
         // Modules
         'spec/apps/confirm/test',

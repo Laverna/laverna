@@ -84,7 +84,7 @@ define([
             // View events
             this.view.on('syncWithCloud', this.startSyncing, this);
             this.view.on('navigate', function (uri) {
-                App.navigate(uri, true);
+                App.vent.trigger('navigate', uri, true);
             });
         },
 

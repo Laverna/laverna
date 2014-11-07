@@ -5,26 +5,22 @@ define([
     'backbone',
     'modalRegion',
     'brandRegion',
-    'collections/configs',
-    'helpers/uri',
-    'i18next',
     'devicejs',
     'marionette'
-], function (_, $, Backbone, ModalRegion, BrandRegion, Configs, URI, i18n, Device) {
+], function(_, $, Backbone, ModalRegion, BrandRegion, Device) {
     'use strict';
 
-    // Underscore template
+    var App = new Backbone.Marionette.Application();
+
+    App.isMobile = Device.mobile() === true || Device.tablet() === true;
+
+    // Customize underscore template
     _.templateSettings = {
-        // interpolate : /\{\{(.+?)\}\}/g
         interpolate: /\{\{(.+?)\}\}/g,
         evaluate: /<%([\s\S]+?)%>/g
     };
 
-    var App = new Backbone.Marionette.Application(),
-        configs = new Configs();
-
-    App.isMobile = Device.mobile() === true || Device.tablet() === true;
-
+    // Regions
     App.addRegions({
         sidebarNavbar : '#sidebar-navbar',
         sidebar       : '#sidebar-content',
@@ -33,140 +29,63 @@ define([
         modal         : ModalRegion
     });
 
-    // Backbone history navigate
-    App.navigate = function (route, options) {
-        if (!options) {
-            options = {};
+    _.extend(App, {
+
+        // Debug
+        log: function(str) {
+            if (console && typeof console.log === 'function') {
+                console.log(str);
+            }
+        },
+
+        // Document title
+        setTitle: function(title, mainTitle) {
+            App.title = (App.title || {main: '', index: ''});
+            if (mainTitle) {
+                App.title.main = mainTitle;
+            }
+            App.title.index = (title ? title + ' - ' : App.title.index);
+            document.title = App.title.index + App.title.main;
         }
-        Backbone.history.navigate(route, options);
-    };
 
-    // Go back
-    App.navigateBack = function (defUrl) {
-        var url = window.history;
-        defUrl = (defUrl) ? defUrl : '/notes';
+    });
 
-        if (url.length === 0) {
-            App.navigate(defUrl, {trigger: true});
-        } else {
-            url.back();
-        }
-    };
-
-    // Document title
-    App.setTitle = function (title, mainTitle) {
-        App.title = (App.title || {main: '', index: ''});
-        if (mainTitle) {
-            App.title.main = mainTitle;
-        }
-        App.title.index = (title ? title + ' - ' : App.title.index);
-        document.title = App.title.index + App.title.main;
-    };
-
-    // Debug
-    App.log = function (str) {
-        if (console && typeof console.log === 'function') {
-            console.log(str);
-        }
-    };
-
-    // Return current route
-    App.getCurrentRoute = function () {
-        return Backbone.history.fragment;
-    };
-
-    // For submodules
+    // Start a module
     App.startSubApp = function(appName, args) {
         if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
             return;
         }
 
         var currentApp = appName ? App.module(appName) : null;
-        if (App.currentApp === currentApp){ return; }
+        if (App.currentApp === currentApp) { return; }
 
         // Stop previous app if current app is not modal
         if (App.currentApp && (!currentApp.options.modal || App.isMobile)) {
             App.currentApp.stop();
         }
 
-        configs.createProfile(URI.getProfile() || 'notes-db');
-        App.settings = configs.getConfigs();
-        App.currentProfile = URI.getProfile();
-
-        window.dropboxKey = App.settings.dropboxKey;
-
         App.currentApp = currentApp;
-        if(currentApp){
+        if (currentApp) {
+            App.vent.trigger('app:module', appName);
             currentApp.start(args);
         }
     };
 
-    // Initialize settings
-    App.on('before:start', function () {
-        configs.fetch();
-
-        // Set default set of configs
-        if (configs.length === 0) {
-            App.firstStart = true;
-        }
-
-        App.settings = configs.getConfigs();
-        configs.on('change', function () {
-            App.settings = configs.getConfigs();
-        });
-
-        $.when(configs.firstStart()).done(function (collection) {
-            configs = collection;
-        });
+    // @ToMove somewhere else
+    App.vent.on('app:start', function() {
+        $('.loading').removeClass('loading');
     });
 
-    App.on('profile:change', function () {
-        App.currentProfile = URI.getProfile();
-        App.mousetrap.API.restart();
+    App.on('before:start', function() {
+        App.settings = App.request('configs');
+        App.constants = App.request('constants');
+        App.vent.trigger('app:init');
     });
 
-    App.on('configs:fetch', function () {
-        configs.fetch();
-    });
-
-    // Start default module
-    App.on('start', function () {
-        require([
-            'constants',
-            'helpers/install',
-            'helpers/i18next',
-            'apps/confirm/appConfirm',
-            'apps/encryption/encrypt',
-            'helpers/keybindings',
-            'apps/navbar/appNavbar',
-            'apps/notes/appNote',
-            'apps/notebooks/appNotebooks',
-            'apps/settings/appSettings',
-            'apps/help/appHelp'
-        ], function (constants, Install) {
-            if (App.settings.appLang === '') {
-                configs.get('appLang').save({ 'value': i18n.lng() });
-            }
-
-            App.constants = constants;
-            Install.start();
-
-            Backbone.history.start({pushState: false});
-            $('.loading').removeClass('loading');
-
-            $(window).on('hashchange', function () {
-                var profile = URI.getProfile();
-                configs.createProfile(profile);
-
-                if (profile !== App.currentProfile) {
-                    App.trigger('profile:change');
-                }
-            });
-
-            if (App.getCurrentRoute() === '') {
-                App.vent.trigger('notes:list');
-            }
-        });
+    App.on('start', function() {
+        console.timeEnd('App');
+        Backbone.history.start({pushState: false});
+        App.vent.trigger('app:start');
     });
 
     return App;

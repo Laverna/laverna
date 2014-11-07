@@ -1,16 +1,82 @@
 /*global define*/
 define([
     'underscore',
-    'backbone'
+    'backbone',
+    'backbone.wreqr'
 ], function (_, Backbone) {
     'use strict';
 
+    var instance = null;
+
     /**
-     * Builds URI's
+     * Helper to navigate and build URLs
      */
-    var URI = {
+    function URI() {
+        this.init();
+    }
+
+    _.extend(URI.prototype, {
+
+        // Register response and event listeners
+        init: function() {
+            var channel = Backbone.Wreqr.radio.channel('global');
+            _.bindAll(this, 'link', 'note', 'getProfile');
+
+            // Events
+            channel.vent.on('navigate', this.navigate, this);
+            channel.vent.on('navigate:link', this.navigateLink, this);
+            channel.vent.on('navigate:back', this.goBack, this);
+
+            // Responses
+            channel.reqres.setHandler('uri:route', this.getCurrentRoute, this);
+            channel.reqres.setHandler('uri:profile', this.getProfile, this);
+            channel.reqres.setHandler('uri:link', this.link, this);
+            channel.reqres.setHandler('uri:note', this.note, this);
+        },
+
+        /**
+         * Build a URI and navigate
+         */
+        navigateLink: function(uri, options) {
+            this.navigate(this.link(uri), options);
+        },
+
+        /**
+         * Navigate to URI
+         * @param string uri a hash link
+         * @param object options navigate options
+         */
+        navigate: function(uri, options) {
+            options = (arguments.length > 1 ? options : {trigger: true});
+            Backbone.history.navigate(uri, options);
+        },
+
+        /**
+         * Navigate back
+         * @param string defUrl default URL. Used when history.length is empty
+         * @param number pages number of pages to go
+         */
+        goBack: function(defUrl, pages) {
+            var history = window.history;
+            if (history.length === 0) {
+                this.navigate((defUrl || '/notes'), {trigger: true});
+            } else {
+                history.go( (arguments.length > 1 ? pages : -1) );
+            }
+        },
+
+        /**
+         * Returns current route
+         */
+        getCurrentRoute: function() {
+            return Backbone.history.fragment;
+        },
+
+        /**
+         * Returns current profile's name
+         */
         getProfile: function () {
-            var route = Backbone.history.fragment,
+            var route = this.getCurrentRoute(),
                 uri = (route ? route.split('/') : '');
 
             if (_.contains(uri, 'p')) {
@@ -21,18 +87,27 @@ define([
             }
         },
 
+        /**
+         * Adds to a provided URL link to profile
+         * @param string uri URL
+         * @param string profile profile name (optional)
+         */
         link: function (uri, profile) {
             if (profile) {
                 uri = '/p/' + profile + uri;
             }
             // Search in window's hash (only if 2-nd argument doesn't exist
-            else if (arguments.length === 1 && (profile = URI.getProfile()) ) {
+            else if (arguments.length === 1 && (profile = this.getProfile()) ) {
                 uri = '/p/' + profile + uri;
             }
             return uri;
         },
 
-        // Builds note\'s hash URI
+        /**
+         * Generates a hash link to a note
+         * @param object opt options
+         * @param object note a note model or JSON object
+         */
         note: function (opt, note) {
             var args = (opt ? _.clone(opt) : {}),
                 url = '/notes',
@@ -60,8 +135,7 @@ define([
 
             return this.link(url, args.profile);
         }
+    });
 
-    };
-
-    return URI;
+    return (instance = (instance || new URI()));
 });

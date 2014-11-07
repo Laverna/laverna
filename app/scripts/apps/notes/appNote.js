@@ -4,9 +4,8 @@ define([
     'jquery',
     'marionette',
     'app',
-    'helpers/uri',
     'enquire'
-], function (_, $,  Marionette, App, URI, enquire) {
+], function (_, $,  Marionette, App, enquire) {
     'use strict';
 
     /**
@@ -32,12 +31,18 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
+            '': 'showIndex',
             'p/:profile'                    : 'showNotes',
             '(p/:profile/)notes/add'        : 'addNote',
             '(p/:profile/)notes/edit/:id'   : 'editNote',
             '(p/:profile/)notes/remove/:id' : 'removeNote',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)'   : 'showNotes',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)'  : 'showNote',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'showNotes',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote',
+        },
+
+        // Start this module
+        onRoute: function() {
+            App.startSubApp('AppNote');
         }
     });
 
@@ -45,7 +50,6 @@ define([
      * Start application
      */
     executeAction = function (action, args) {
-        App.startSubApp('AppNote');
         action(args);
     };
 
@@ -68,8 +72,12 @@ define([
             });
 
             argsObj.page = Number(argsObj.page);
-            argsObj.profile = argsObj.profile || URI.getProfile();
+            argsObj.profile = argsObj.profile || App.request('uri:profile');
             return argsObj;
+        },
+
+        showIndex: function() {
+            App.vent.trigger('notes:list');
         },
 
         // Show list of notes
@@ -141,7 +149,7 @@ define([
      * Router events
      */
     App.vent.on('notes:list', function () {
-        App.navigate(URI.link('/notes'), { trigger : true });
+        App.navigate(App.request('uri:link', '/notes'), { trigger : true });
     });
 
     // Show sidebar with notes list only on big screen
@@ -175,12 +183,12 @@ define([
 
     // Show form
     App.vent.on('form:show', function () {
-        App.navigate(URI.link('/notes/add'), true);
+        App.navigate(App.request('uri:link', '/notes/add'), true);
     });
 
     // Navigate to last note
     AppNote.on('navigate:back', function () {
-        var url = URI.note(API.notesArg, API.notesArg);
+        var url = App.request('uri:note', API.notesArg, API.notesArg);
         App.navigate(url, true);
     });
 
@@ -189,10 +197,10 @@ define([
 
         // Re-render sidebar and note's content
         if ( App.currentApp.moduleName === 'AppNote' &&
-           !App.getCurrentRoute().match(/\/[edit|add]+/) ) {
+           !App.request('uri:route').match(/\/[edit|add]+/) ) {
 
             var notesArg = _.extend(API.notesArg || {}, {
-                profile : URI.getProfile()
+                profile : App.request('uri:profile')
             });
 
             API.showNotes(notesArg);

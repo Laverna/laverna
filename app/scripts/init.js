@@ -1,4 +1,4 @@
-/* global define, requirejs, Modernizr */
+/* global define, requirejs */
 define([
     'jquery',
     'app',
@@ -6,36 +6,33 @@ define([
 ], function($, App) {
     'use strict';
 
-    function startApp() {
-        var request;
+    console.time('App');
 
-        // Browser doesn't support neither indexeddb nor websql
-        if ( ( !Modernizr.indexeddb && !Modernizr.websqldatabase ) ||
-            !Modernizr.localstorage ) {
-            window.alert('Your browser is outdated and does not support IndexedDB and/or LocalStorage.');
-            return;
-        }
+    // Load all modules then start an application
+    requirejs([
+        // Helpers
+        'helpers/configs',
+        'helpers/storage',
+        'helpers/install',
+        'helpers/uri',
+        'helpers/i18next',
+        'helpers/keybindings',
 
-        request = window.indexedDB.open('MyTestDatabase');
-        request.onerror = function() {
-            window.appNoDB = true;
-            App.start();
-        };
-        request.onsuccess = function() {
-            App.start();
-        };
-    }
+        // Modules
+        'apps/confirm/appConfirm',
+        'apps/encryption/encrypt',
+        'apps/navbar/appNavbar',
+        'apps/notes/appNote',
+        'apps/notebooks/appNotebooks',
+        'apps/settings/appSettings',
+        'apps/help/appHelp'
+    ], function(Configs, storage) {
+        console.log('modules are loaded');
 
-    $(document).ready(function() {
-        if ( !Modernizr.indexeddb ) {
-            requirejs(['IndexedDBShim'], function() {
-                window.appNoDB = true;
-                window.shimIndexedDB.__useShim(true);
-                startApp();
+        Configs.fetch()
+            .then(storage.check)
+            .then(function() {
+                App.start();
             });
-        }
-        else {
-            startApp();
-        }
     });
 });

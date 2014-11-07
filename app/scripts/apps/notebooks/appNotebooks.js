@@ -3,9 +3,8 @@ define([
     'underscore',
     'jquery',
     'marionette',
-    'app',
-    'helpers/uri'
-], function(_, $, Marionette, App, URI) {
+    'app'
+], function(_, $, Marionette, App) {
     'use strict';
 
     /**
@@ -29,7 +28,7 @@ define([
 
             // Show a form
             App.vent.on('form:show', function() {
-                App.navigate(URI.link('/notebooks/add'), true);
+                App.navigate(App.request('uri:link', '/notebooks/add'), true);
             });
 
             // Re render notebook's list after synchronizing
@@ -65,6 +64,11 @@ define([
             '(p/:profile/)tags/add'      : 'addTag',
             '(p/:profile/)tags/edit/:id' : 'editTag',
             '(p/:profile/)tags/remove/:id': 'removeTag'
+        },
+
+        // Start the module
+        onRoute: function() {
+            App.startSubApp('AppNotebook');
         }
     });
 
@@ -72,8 +76,6 @@ define([
      * Start application
      */
     executeAction = function(Controller, action, args) {
-        App.startSubApp('AppNotebook');
-
         // Trigger 'destroy' event to a previous controller
         if (API.controller) {
             API.controller.trigger('destroy:it');

@@ -69,7 +69,7 @@ define([
         },
 
         redirect: function() {
-            return App.navigate(URI.link('/notebooks'), true);
+            return App.vent.trigger('navigate:link', '/notebooks');
         }
     });
 

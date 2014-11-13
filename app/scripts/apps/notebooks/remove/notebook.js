@@ -41,7 +41,7 @@ define([
         },
 
         redirect: function() {
-            App.navigate('#' + URI.link('/notebooks'));
+            App.vent.trigger('navigate:link', '/notebooks');
         }
     });
 

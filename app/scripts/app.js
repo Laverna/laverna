@@ -84,7 +84,7 @@ define([
 
     App.on('start', function() {
         console.timeEnd('App');
-        Backbone.history.start({pushState: false});
+        Backbone.history.start({ pushState: false });
         App.vent.trigger('app:start');
     });
 

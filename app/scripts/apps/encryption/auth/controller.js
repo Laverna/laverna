@@ -29,7 +29,7 @@ define([
         login: function (password) {
             var pwd = this.auth.getSecureKey(password);
             if (pwd !== false) {
-                App.navigateBack('/notes', true);
+                App.vent.trigger('navigate:back', '/notes');
             }
         }
 

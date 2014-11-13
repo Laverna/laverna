@@ -3,11 +3,10 @@ define([
     'underscore',
     'app',
     'marionette',
-    'helpers/uri',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap'
-], function(_, App, Marionette, URI, NoteSidebarItem, Template) {
+], function(_, App, Marionette, NoteSidebarItem, Template) {
     'use strict';
 
     var View = Marionette.CompositeView.extend({
@@ -51,11 +50,11 @@ define([
         },
 
         toNextPage: function () {
-            App.navigate(this.ui.nextPage.attr('href'), true);
+            App.vent.trigger('uri:navigate', this.ui.nextPage.attr('href'));
         },
 
         toPrevPage: function () {
-            App.navigate(this.ui.prevPage.attr('href'), true);
+            App.vent.trigger('uri:navigate', this.ui.prevPage.attr('href'));
         },
 
         navigateBottom: function () {
@@ -94,7 +93,7 @@ define([
                 // Generates the pagination url
                 pageUrl: function (page) {
                     page = page || 0;
-                    return '#' + URI.note(this.args, page);
+                    return '#' + App.request('uri:note', this.args, page);
                 }
             };
         }

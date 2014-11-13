@@ -2,10 +2,9 @@
 define([
     'underscore',
     'app',
-    'helpers/uri',
     'marionette',
     'models/note'
-], function (_, App, URI, Marionette, NoteModel) {
+], function (_, App, Marionette, NoteModel) {
     'use strict';
 
     var Remove = App.module('AppNote.Remove');
@@ -44,7 +43,7 @@ define([
             App.content.reset();
             App.trigger('notes:rerender');
 
-            App.navigate(URI.link('/notes'), false);
+            App.vent.trigger('navigate:link', '/notes', false);
             App.trigger('notes:next');
         }
 

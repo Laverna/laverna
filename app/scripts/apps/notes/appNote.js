@@ -17,12 +17,11 @@ define([
 
     AppNote.on('start', function () {
         App.AppNavbar.start();
-
-        App.log('AppNote is started');
+        App.log('AppNote has started');
     });
 
     AppNote.on('stop', function () {
-        App.log('AppNote is stoped');
+        App.log('AppNote has stoped');
         App.vent.off('form:show');
     });
 
@@ -37,7 +36,7 @@ define([
             '(p/:profile/)notes/edit/:id'   : 'editNote',
             '(p/:profile/)notes/remove/:id' : 'removeNote',
             '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'showNotes',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote'
         },
 
         // Start this module
@@ -59,30 +58,29 @@ define([
     API = {
         notesArg: null,
 
-        getArgs: function (args) {
-            var values = ['profile', 'filter', 'query', 'page', 'id'],
-                argsObj = {};
-
-            if (args.length === 1 && typeof args[0] === 'object') {
-                return args[0];
+        // Builds an object from router arguments
+        getArgs: function(profile, filter, query, page, id) {
+            if (arguments.length === 1 && typeof arguments[0] === 'object') {
+                return arguments[0];
             }
 
-            _.each(values, function (value, index) {
-                argsObj[value] = (args[index]) ? args[index] : null;
-            });
-
-            argsObj.page = Number(argsObj.page);
-            argsObj.profile = argsObj.profile || App.request('uri:profile');
-            return argsObj;
+            return {
+                id: id,
+                page: Number(page),
+                query: query,
+                filter: filter,
+                profile: profile || App.request('uri:profile'),
+            };
         },
 
+        // Index page
         showIndex: function() {
             App.vent.trigger('notes:list');
         },
 
         // Show list of notes
         showNotes: function () {
-            var args = this.getArgs(arguments);
+            var args = this.getArgs.apply(this, arguments);
 
             require(['apps/notes/list/controller'], function (List) {
                 API.notesArg = args;
@@ -92,7 +90,7 @@ define([
 
         // Show content of note
         showNote: function () {
-            var args = this.getArgs(arguments);
+            var args = this.getArgs.apply(this, arguments);
 
             require(['apps/notes/show/showController'], function (Show) {
                 App.trigger('notes:show', args);
@@ -149,7 +147,7 @@ define([
      * Router events
      */
     App.vent.on('notes:list', function () {
-        App.navigate(App.request('uri:link', '/notes'), { trigger : true });
+        App.vent.trigger('navigate:link', '/notes');
     });
 
     // Show sidebar with notes list only on big screen
@@ -183,13 +181,13 @@ define([
 
     // Show form
     App.vent.on('form:show', function () {
-        App.navigate(App.request('uri:link', '/notes/add'), true);
+        App.vent.trigger('navigate:link', '/notes/add');
     });
 
     // Navigate to last note
     AppNote.on('navigate:back', function () {
         var url = App.request('uri:note', API.notesArg, API.notesArg);
-        App.navigate(url, true);
+        App.vent.trigger('navigate:link', url);
     });
 
     // Re-render sidebar's and note's content after sync:after event

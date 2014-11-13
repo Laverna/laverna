@@ -100,7 +100,7 @@ define([
          */
         redirect: function() {
             if (_.isNull(this.args.redirect) || this.args.redirect === true) {
-                return App.navigate('#' + URI.link('/notebooks'));
+                return App.vent.trigger('navigate:link', '/notebooks');
             }
         }
     });

@@ -20,7 +20,7 @@ define([
         // Register response and event listeners
         init: function() {
             var channel = Backbone.Wreqr.radio.channel('global');
-            _.bindAll(this, 'link', 'note', 'getProfile');
+            _.bindAll(this, 'link', 'note', 'getProfile', 'navigateLink');
 
             // Events
             channel.vent.on('navigate', this.navigate, this);
@@ -35,10 +35,11 @@ define([
         },
 
         /**
-         * Build a URI and navigate
+         * Build an URI and navigate
          */
-        navigateLink: function(uri, options) {
-            this.navigate(this.link(uri), options);
+        navigateLink: function() {
+            arguments[0] = this.link(arguments[0]);
+            this.navigate.apply(this, arguments);
         },
 
         /**

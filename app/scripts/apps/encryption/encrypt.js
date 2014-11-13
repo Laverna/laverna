@@ -58,7 +58,7 @@ define([
         checkAuth: function () {
             var auth = getAuth(App.settings);
             if (auth.checkAuth() === false) {
-                App.navigate('/auth', true);
+                App.vent.trigger('navigate:link', '/auth');
                 return false;
             }
             return true;

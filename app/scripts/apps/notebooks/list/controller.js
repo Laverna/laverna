@@ -73,7 +73,7 @@ define([
         },
 
         navigate: function(uri) {
-            App.navigate(uri, true);
+            App.vent.trigger('navigate', uri);
         }
     });
 

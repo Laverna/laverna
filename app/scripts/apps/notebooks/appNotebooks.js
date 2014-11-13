@@ -28,7 +28,7 @@ define([
 
             // Show a form
             App.vent.on('form:show', function() {
-                App.navigate(App.request('uri:link', '/notebooks/add'), true);
+                App.vent.trigger('navigate:link', '/notebooks/add');
             });
 
             // Re render notebook's list after synchronizing

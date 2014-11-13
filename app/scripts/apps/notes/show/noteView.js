@@ -4,7 +4,6 @@ define([
     'underscore',
     'app',
     'marionette',
-    'helpers/uri',
     'text!apps/notes/show/templates/item.html',
     'checklist',
     'tags',
@@ -14,7 +13,7 @@ define([
     'hammerjs',
     'backbone.mousetrap',
     'pagedown-extra'
-], function (_, App, Marionette, URI, Template, Checklist, Tags, Img, prettify, mathjax, Hammer) {
+], function (_, App, Marionette, Template, Checklist, Tags, Img, prettify, mathjax, Hammer) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -104,7 +103,7 @@ define([
             });
 
             data.content = converter.makeHtml(data.content);
-            data.uri = URI.link('/');
+            data.uri = App.request('uri:link', '/');
             data.title = converter.makeHtml(data.title);
 
             return data;
@@ -113,7 +112,7 @@ define([
         restoreFromTrash: function (e) {
             e.preventDefault();
             this.model.save({'trash': 0});
-            App.navigateBack();
+            App.vent.trigger('navigate:back');
         },
 
         changeFocus: function () {
@@ -151,14 +150,14 @@ define([
          * Redirect to edit page
          */
         editNote: function () {
-            App.navigate(this.ui.editBtn.attr('href'), true);
+            App.vent.trigger('navigate:link', this.ui.editBtn.attr('href'));
         },
 
         /**
          * Redirect to deleting page
          */
         deleteNote: function() {
-            App.navigate(URI.link('/notes/remove/' + this.model.get('id')), true);
+            App.vent.trigger('navigate:link', '/notes/remove' + this.model.get('id'));
         },
 
         /**
@@ -208,7 +207,7 @@ define([
             }
 
             if (this.$('.btn-toggle-sidebar').css('display') !== 'none') {
-                App.navigate('/notes/p1', {trigger: false});
+                App.vent.trigger('notes:link', '/notes/p1', false);
                 App.trigger('notes:toggle', this.options.args);
             }
         },

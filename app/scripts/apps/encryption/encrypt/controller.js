@@ -120,11 +120,11 @@ define([
             // Go encrypt data from another profile
             if (this.configs.appProfiles[db]) {
                 uri = '/encrypt/all/' + this.configs.appProfiles[db];
-                App.navigate(URI.link(uri), true);
+                App.vent.trigger('navigate:link', uri);
             }
             // Reload the page
             else {
-                App.navigate(URI.link('/notes'), false);
+                App.vent.trigger('navigate:link', '/notes', false);
                 window.location.reload();
             }
         }

@@ -4,7 +4,6 @@ define([
     'jquery',
     'app',
     'marionette',
-    'helpers/uri',
     'collections/notes',
     'collections/tags',
     'collections/notebooks',
@@ -13,7 +12,7 @@ define([
     'apps/notes/form/formView',
     'checklist',
     'tags'
-], function (_, $, App, Marionette, URI, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
+], function (_, $, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
     'use strict';
 
     var Form = App.module('AppNote.Form');
@@ -179,7 +178,7 @@ define([
             // Redirect to edit page
             if (showNote === false) {
                 url += '/edit/' + this.model.get('id');
-                App.navigate(URI.link(url), {trigger: true});
+                App.vent.trigger('navigate:link', url);
             }
             // Redirect to list
             else if (typeof this.model.get('id') !== 'undefined') {

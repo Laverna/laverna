@@ -35,7 +35,7 @@ define([
         },
 
         redirect: function () {
-            App.navigateBack(URI.link('/notes'), true);
+            App.vent.trigger('navigate:back', '/notes');
         }
 
     });

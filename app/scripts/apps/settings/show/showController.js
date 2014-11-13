@@ -5,10 +5,9 @@ define([
     'app',
     'marionette',
     'fileSaver',
-    'helpers/uri',
     'collections/configs',
     'apps/settings/show/views/showView'
-], function (_, $, App, Marionette, saveAs, URI, Configs, View) {
+], function (_, $, App, Marionette, saveAs, Configs, View) {
     'use strict';
 
     var Show = App.module('AppSettings.Show');
@@ -55,7 +54,7 @@ define([
         },
 
         onShowTab: function (args) {
-            App.navigate('/settings/' + args.tab, false);
+            App.vent.trigger('navigate:link', '/settings/' + args.tab, false);
         },
 
         /*
@@ -147,14 +146,18 @@ define([
             App.modal.empty();
 
             if ( this.isEncryptionChanged(changedSettings) === false) {
-                App.navigate(URI.link('/notes'), {trigger : changedSettings.length === 0});
+                App.vent.trigger(
+                    'navigate:link',
+                    '/notes',
+                    { trigger : changedSettings.length === 0 }
+                );
 
                 if (changedSettings && changedSettings.length !== 0) {
                     window.location.reload();
                 }
             } else {
                 App.log('One of encryption\'s settings is changed');
-                App.navigate(URI.link('/encrypt/all'), true);
+                App.vent.trigger('navigate:link', '/encrypt/all');
             }
         },
 

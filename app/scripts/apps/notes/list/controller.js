@@ -4,10 +4,9 @@ define([
     'app',
     'backbone',
     'marionette',
-    'helpers/uri',
     'collections/notes',
     'apps/notes/list/views/noteSidebar'
-], function (_, App, Backbone, Marionette, URI, Notes, NotesView) {
+], function (_, App, Backbone, Marionette, Notes, NotesView) {
     'use strict';
 
     var List = App.module('AppNote.List');
@@ -210,8 +209,8 @@ define([
         toNote: function (note) {
             if ( !note) { return; }
 
-            var url = URI.note(this.args, note);
-            return App.navigate(url, true);
+            var url = App.request('uri:note', this.args, note);
+            return App.vent.trigger('navigate', url);
         },
 
         /**

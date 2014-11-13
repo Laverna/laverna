@@ -4,10 +4,9 @@ define([
     'underscore',
     'app',
     'marionette',
-    'helpers/uri',
     'text!apps/notes/list/templates/sidebarListItem.html',
     'pagedown-ace'
-], function(_, App, Marionette, URI, Template) {
+], function(_, App, Marionette, Template) {
     'use strict';
 
     var View = Marionette.ItemView.extend({
@@ -85,7 +84,7 @@ define([
 
                 // Generate link
                 link: function () {
-                    return URI.note(this.args, this);
+                    return App.request('uri:note', this.args, this);
                 }
             };
         }

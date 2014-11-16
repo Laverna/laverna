@@ -54,7 +54,7 @@ define([
             }
             // It doesn't support neither indexeddb nor websql nor localstorage
             else {
-                console.error('Browser doesn\'t hae web storage support');
+                console.error('Browser doesn\'t have web storage support');
 
                 this.storage = null;
                 channel.vent.trigger('storage:error');

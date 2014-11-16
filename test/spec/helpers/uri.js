@@ -1,4 +1,4 @@
-/* global define, chai, describe, it, before */
+/* global define, chai, describe, it, before, after */
 define([
     'jquery',
     'backbone',
@@ -18,11 +18,14 @@ define([
         });
 
         before(function() {
-            try {
-                Backbone.history.start();
-            } catch (e) {
-                /* handle error */
-            }
+            Backbone.history.stop();
+            Backbone.history.start();
+            Backbone.history.navigate('', {trigger: false});
+        });
+
+        after(function() {
+            Backbone.history.navigate('', {trigger: false});
+            Backbone.history.stop();
         });
 
         it('has functions', function() {

@@ -50,11 +50,11 @@ define([
         },
 
         toNextPage: function () {
-            App.vent.trigger('uri:navigate', this.ui.nextPage.attr('href'));
+            App.vent.trigger('navigate', this.ui.nextPage.attr('href'));
         },
 
         toPrevPage: function () {
-            App.vent.trigger('uri:navigate', this.ui.prevPage.attr('href'));
+            App.vent.trigger('navigate', this.ui.prevPage.attr('href'));
         },
 
         navigateBottom: function () {

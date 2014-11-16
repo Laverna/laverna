@@ -11,7 +11,7 @@ The application stores all your notes in your browser local storage spaces such 
 
 * Markdown editor based on Pagedown
 * Manage your notes, even when you're offline
-* Secure client-side encryption  
+* Secure client-side encryption
 * Synchronizes with cloud storage services (at this time only Dropbox and RemoteStorage are supported)
 * Three editing modes: distraction free, preview, and normal mode
 * WYSIWYG control buttons
@@ -42,6 +42,7 @@ $ git clone git@github.com:Laverna/laverna.git
 ```
 
 #### 2. Switch to stable version:
+Please, make sure that you switched to 0.6.2 release. Master branch is not stable yet.
 
 ```bash
 $ git checkout 0.6.2
@@ -65,7 +66,7 @@ $ npm install && bower install
 
 #### 6. Build minified version of Laverna:
 
-```bash  
+```bash
 $ grunt build
 ```
 
@@ -84,8 +85,8 @@ You can change the storage API keys in app/scripts/constants.js
 
 ## Security
 --------------
-Laverna uses the [SJCL] [1] library implementing the AES algorithm. You can review the code at: 
-* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/auth.js 
+Laverna uses the [SJCL] [1] library implementing the AES algorithm. You can review the code at:
+* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/auth.js
 * https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/encrypt/modelEncrypt.js
 
 ## License

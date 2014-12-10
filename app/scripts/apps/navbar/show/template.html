@@ -21,7 +21,7 @@
 
                 <li class="divider"></li>
                 <li<% if (profile === 'notes-db' || !profile) { %> class="active" <% } %>><a href="#/notes"><i class="icon-user"></i>  Default</a></li>
-                <% _.forEach(settings.profiles, function (prof) { %>
+                <% _.forEach(settings.appProfiles, function (prof) { %>
                 <% if (prof !== 'notes-db') { %>
                 <li<% if (profile === prof) { %> class="active" <% } %>><a href="#{{ link(prof) }}"><i class="icon-user"></i>  {{ prof }}</a></li>
                 <% } }); %>

@@ -23,7 +23,7 @@ define([
     /**
      * Init i18next
      */
-    App.addInitializer(function() {
+    App.on('before:start', function() {
         i18n.init({
             lng             : App.settings.appLang,
             fallbackLng     : 'en',

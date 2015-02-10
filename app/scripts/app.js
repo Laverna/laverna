@@ -3,11 +3,10 @@ define([
     'underscore',
     'jquery',
     'backbone',
-    'modalRegion',
-    'brandRegion',
     'devicejs',
+    'regions/regionManager',
     'marionette'
-], function(_, $, Backbone, ModalRegion, BrandRegion, Device) {
+], function(_, $, Backbone, Device, regions) {
     'use strict';
 
     var App = new Backbone.Marionette.Application();
@@ -20,14 +19,8 @@ define([
         evaluate: /<%([\s\S]+?)%>/g
     };
 
-    // Regions
-    App.addRegions({
-        sidebarNavbar : '#sidebar-navbar',
-        sidebar       : '#sidebar-content',
-        content       : '#content',
-        brand         : BrandRegion,
-        modal         : ModalRegion
-    });
+    // @TODO remove this fallback after refactoring
+    App.content = regions.content;
 
     _.extend(App, {
 
@@ -70,9 +63,6 @@ define([
             currentApp.start(args);
         }
     };
-
-    App.channel.comply('sidebar', App.sidebar.show, App.sidebar);
-    App.channel.comply('content', App.content.show, App.content);
 
     // @ToMove somewhere else
     App.channel.on('app:start', function() {

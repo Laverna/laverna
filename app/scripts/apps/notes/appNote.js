@@ -7,7 +7,7 @@ define([
     'enquire',
     'apps/notes/list/listApp',
     'apps/notes/collection'
-], function(_, $, Marionette, App, enquire, ListApp) {
+], function(_, $, Marionette, App, enquire, SidebarApp) {
     'use strict';
 
     var AppNote = App.module('AppNote', { startWithParent: false }),
@@ -60,6 +60,7 @@ define([
         // Shows sidebar.
         showNotes: function() {
             var args = this._getArgs.apply(this, arguments);
+            console.log('The router works');
             API.notesArg = args;
         },
 
@@ -145,8 +146,8 @@ define([
     /**
      * Module's initializer/finalizer
      */
-    AppNote.addInitializer(function() {
-        ListApp.start();
+    AppNote.on('before:start', function() {
+        SidebarApp.start();
 
         // Events
         App.channel
@@ -159,7 +160,7 @@ define([
         console.log('On initialize----');
     });
 
-    AppNote.addFinalizer(function() {
+    AppNote.on('before:stop', function() {
         // Destroy controllers
         if (API.sideController) {
             API.sideController.destroy();
@@ -179,7 +180,7 @@ define([
     /**
      * Register the router
      */
-    App.addInitializer(function() {
+    App.on('before:start', function() {
         new AppNote.Router({
             controller: API
         });

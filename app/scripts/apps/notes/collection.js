@@ -55,14 +55,14 @@ define([
         },
     });
 
-    Collection.addInitializer(function() {
+    Collection.on('before:start', function() {
         var contr = new Controller();
         Collection.controller = contr;
 
         App.channel.reply('notes:all', contr.getAll, contr);
     });
 
-    Collection.addFinalizer(function() {
+    Collection.on('before:stop', function() {
         App.channel.stopReplying('notes:all');
 
         Collection.controller.destroy();

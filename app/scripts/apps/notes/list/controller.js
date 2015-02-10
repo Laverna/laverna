@@ -31,7 +31,7 @@ define([
                 collection: notes,
                 args      : this.options
             });
-            channel.command('sidebar', view);
+            channel.command('region:show', 'sidebar', view);
         },
 
     });

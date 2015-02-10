@@ -10,11 +10,11 @@ define([
         startWithParent: false
     });
 
-    List.addInitializer(function(options) {
+    List.on('before:start', function(options) {
         List.controller = new Controller(options);
     });
 
-    List.addFinalizer(function() {
+    List.on('before:stop', function() {
         List.controller.destroy();
         delete List.controller;
     });

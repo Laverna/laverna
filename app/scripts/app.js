@@ -66,26 +66,29 @@ define([
 
         App.currentApp = currentApp;
         if (currentApp) {
-            App.vent.trigger('app:module', appName);
+            App.channel.trigger('app:module', appName);
             currentApp.start(args);
         }
     };
 
+    App.channel.comply('sidebar', App.sidebar.show, App.sidebar);
+    App.channel.comply('content', App.content.show, App.content);
+
     // @ToMove somewhere else
-    App.vent.on('app:start', function() {
+    App.channel.on('app:start', function() {
         $('.loading').removeClass('loading');
     });
 
     App.on('before:start', function() {
         App.settings = App.request('configs');
         App.constants = App.request('constants');
-        App.vent.trigger('app:init');
+        App.channel.trigger('app:init');
     });
 
     App.on('start', function() {
         console.timeEnd('App');
         Backbone.history.start({ pushState: false });
-        App.vent.trigger('app:start');
+        App.channel.trigger('app:start');
     });
 
     return App;

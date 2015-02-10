@@ -8,7 +8,7 @@ define([
 ], function($, Backbone, Configs, constants) {
     'use strict';
 
-    var channel = Backbone.Wreqr.radio.channel('global'),
+    var channel = Backbone.Radio.channel('global'),
         Settings;
 
     Settings = {
@@ -47,19 +47,19 @@ define([
         },
 
         createDatabase: function() {
-            var profile = channel.reqres.request('uri:profile') || 'notes-db';
+            var profile = channel.request('uri:profile') || 'notes-db';
             Settings.configs.createProfile(profile);
         }
     };
 
     // Returns configs
-    channel.reqres.setHandler('configs', Settings.getAll);
+    channel.reply('configs', Settings.getAll);
 
     // Constants
-    channel.reqres.setHandler('constants', function() { return constants; });
+    channel.reply('constants', function() { return constants; });
 
     // Create database profiles
-    channel.vent.on('app:module', Settings.createDatabase);
+    channel.on('app:module', Settings.createDatabase);
 
     return Settings;
 });

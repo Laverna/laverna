@@ -30,7 +30,7 @@ define([
             useCookie       : false,
             useLocalStorage : false
         }, function() {
-            App.vent.trigger('i18n:ready', i18n.lng());
+            App.channel.trigger('i18n:ready', i18n.lng());
         });
     });
 });

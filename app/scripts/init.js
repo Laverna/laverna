@@ -1,9 +1,10 @@
 /* global define, requirejs */
 define([
     'jquery',
+    'helpers/radio.shim',
     'app',
     'bootstrap'
-], function($, App) {
+], function($, shim, App) {
     'use strict';
 
     console.time('App');
@@ -16,14 +17,14 @@ define([
         'helpers/install',
         'helpers/uri',
         'helpers/i18next',
-        'helpers/keybindings',
+        // 'helpers/keybindings',
 
         // Modules
         'apps/confirm/appConfirm',
         'apps/encryption/encrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',
-        'apps/notebooks/appNotebooks',
+        // 'apps/notebooks/appNotebooks',
         'apps/settings/appSettings',
         'apps/help/appHelp'
     ], function(Configs, storage) {

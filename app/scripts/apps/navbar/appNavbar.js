@@ -5,34 +5,33 @@ define([
     'marionette',
     'app',
     'apps/navbar/show/controller'
-], function (_, $, Marionette, App, Show) {
+], function(_, $, Marionette, App, Show) {
     'use strict';
 
     /**
      * Module which shows navbar
      */
-    var AppNavbar = App.module('AppNavbar', { startWithParent: false }),
+    var AppNavbar = App.module('AppNavbar', {startWithParent: false}),
+        controller;
+
+    AppNavbar.on('before:start', function() {
         controller = new Show();
 
-    function showNavbar (args) {
-        controller.show(args || {});
-    }
-
-    AppNavbar.on('start', function () {
-        App.log('AppNavbar has been started');
-        showNavbar();
+        App.channel.comply('navbar:show', controller.show, controller);
+        App.log('AppNavbar has started');
     });
 
-    AppNavbar.on('stop', function () {
-        App.log('AppNavbar has been stopped');
+    AppNavbar.on('before:stop', function() {
+        App.channel.off('navbar:show');
+
+        controller.destroy();
+        controller = undefined;
+
+        App.log('AppNavbar has stopped');
     });
 
-    AppNavbar.on('titleChange', function (args) {
-        showNavbar(args);
-    });
-
-    App.on('configs:fetch', function () {
-        showNavbar();
+    App.on('before:start', function() {
+        App.AppNavbar.start();
     });
 
     return AppNavbar;

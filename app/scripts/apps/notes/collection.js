@@ -14,22 +14,22 @@ define([
     /**
      * Controller
      */
-    Controller = Marionette.Controller.extend({
+    Controller = Marionette.Object.extend({
         initialize: function() {
             this.collection = new Notes();
         },
 
-        _getNotes: function(fnc) {
-            if (this.collection.length) {
+        _getNotes: function(fnc, forceReset) {
+            if (this.collection.length && !forceReset) {
                 return fnc(this.collection);
             }
-            this.collection.on('reset', fnc);
+            this.collection.once('reset', fnc);
             this.collection.fetch({reset: true});
         },
 
         getAll: function() {
             var defer = $.Deferred();
-            this._getNotes(defer.resolve);
+            this._getNotes(defer.resolve, true);
             return defer.promise();
         },
 
@@ -43,27 +43,30 @@ define([
             return defer.promise();
         },
 
-        filter: function(condition) {
+        filter: function(cond) {
             var defer = $.Deferred();
 
             this._getNotes(function(notes) {
-                notes = notes.where(condition);
+                notes.filterList(cond.filter, cond.query);
                 defer.resolve(notes);
-            });
+            }, true);
 
             return defer.promise();
-        },
+        }
     });
 
     Collection.on('before:start', function() {
         var contr = new Controller();
         Collection.controller = contr;
 
-        App.channel.reply('notes:all', contr.getAll, contr);
+        App.channel.reply({
+            'notes:all'    : contr.getAll,
+            'notes:filter' : contr.filter
+        }, contr);
     });
 
     Collection.on('before:stop', function() {
-        App.channel.stopReplying('notes:all');
+        App.channel.stopReplying('notes:all notes:filter');
 
         Collection.controller.destroy();
         delete Collection.controller;

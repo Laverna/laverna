@@ -20,11 +20,11 @@ define([
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
             '': 'showIndex',
-            'p/:profile'                    : 'showNotes',
+            'p/:profile'                    : 'filterNotes',
             '(p/:profile/)notes/add'        : 'addNote',
             '(p/:profile/)notes/edit/:id'   : 'editNote',
             '(p/:profile/)notes/remove/:id' : 'removeNote',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'showNotes',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'filterNotes',
             '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote'
         },
 
@@ -54,14 +54,14 @@ define([
 
         // Index page
         showIndex: function() {
-            this.showNotes();
+            this.filterNotes();
         },
 
-        // Shows sidebar.
-        showNotes: function() {
+        // Filter collection
+        filterNotes: function() {
             var args = this._getArgs.apply(this, arguments);
-            console.log('The router works');
             API.notesArg = args;
+            App.channel.trigger('notes:filter', args);
         },
 
         // Show a note
@@ -116,7 +116,7 @@ define([
         // If a sidebar controller is not initialized, do it
         _showSidebar: function(args) {
             if (!this.sideController) {
-                this.showNotes(args);
+                this.filterNotes(args);
             }
         },
 
@@ -124,7 +124,7 @@ define([
         _toggleSidebar: function(args) {
             this.$content = this.$content || $(App.content.el);
             this.$content.removeClass('active-row');
-            this.showNotes.apply(this, args);
+            this.filterNotes.apply(this, args);
         },
 
         // Builds an object from router arguments
@@ -147,6 +147,10 @@ define([
      * Module's initializer/finalizer
      */
     AppNote.on('before:start', function() {
+        // Show a navbar
+        App.channel.command('navbar:show');
+
+        // Show the sidebar
         SidebarApp.start();
 
         // Events
@@ -161,10 +165,8 @@ define([
     });
 
     AppNote.on('before:stop', function() {
-        // Destroy controllers
-        if (API.sideController) {
-            API.sideController.destroy();
-        }
+        // Stop the sidebar app
+        SidebarApp.stop();
 
         // Stop listening to events
         App.channel

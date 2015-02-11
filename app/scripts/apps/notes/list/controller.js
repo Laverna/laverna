@@ -15,12 +15,8 @@ define([
     var Controller = Marionette.Controller.extend({
 
         initialize: function(options) {
-            var getNotes = channel.request('notes:all');
-
-            _.bindAll(this, 'show');
-
-            this.options = options;
-            getNotes.then(this.show);
+            _.bindAll(this, 'show', 'filter');
+            this.filter(options);
         },
 
         onDestroy: function() {
@@ -33,6 +29,14 @@ define([
             });
             channel.command('region:show', 'sidebar', view);
         },
+
+        filter: function(options) {
+            this.options = options;
+            var method = (options && options.filter ? 'filter' : 'all'),
+                getNotes = channel.request('notes:' + method, options);
+
+            getNotes.then(this.show);
+        }
 
     });
 

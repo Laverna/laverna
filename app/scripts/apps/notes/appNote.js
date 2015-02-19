@@ -21,8 +21,8 @@ define([
         appRoutes: {
             '': 'showIndex',
             'p/:profile'                    : 'filterNotes',
-            '(p/:profile/)notes/add'        : 'addNote',
-            '(p/:profile/)notes/edit/:id'   : 'editNote',
+            '(p/:profile/)notes/add'        : 'noteForm',
+            '(p/:profile/)notes/edit/:id'   : 'noteForm',
             '(p/:profile/)notes/remove/:id' : 'removeNote',
             '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'filterNotes',
             '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote'
@@ -35,16 +35,25 @@ define([
     });
 
     /**
-     * Initializes a controller and executes a method
+     * Starts a submodule
      */
-    executeAction = function(Controller, action, args) {
-        // Destroy a previous controller
-        if (API.controller) {
-            API.controller.destroy();
+    executeAction = function(module, args) {
+        if (!module) {
+            return;
         }
 
-        API.controller = new Controller();
-        API.controller[action](args);
+        // Stop previous module
+        if (AppNote.currentApp) {
+            AppNote.currentApp.stop();
+        }
+
+        AppNote.currentApp = module;
+        module.start(args);
+
+        // If module has stopped, remove the variable
+        module.on('stop', function() {
+            delete AppNote.currentApp;
+        });
     };
 
     /**
@@ -69,38 +78,27 @@ define([
             var args = this._getArgs.apply(this, arguments);
 
             // Show sidebar
-            App.execute('notes:show', args);
+            App.channel.command('notes:show', args);
 
-            requirejs(['apps/notes/show/showController'], function(Show) {
-                executeAction(Show, 'showNote', args);
+            requirejs(['apps/notes/show/app'], function(Module) {
+                executeAction(Module, args);
             });
         },
 
-        // Add a new note
-        addNote: function(profile) {
-            var args = _.extend(this.notesArg || {}, { profile: profile });
-
-            App.channel.trigger('navigate:link', '/notes/add', false);
+        // Shows a form for editing or adding notes
+        noteForm: function(profile, id) {
+            var args = _.extend(this.notesArg || {}, {
+                id      : id,
+                profile : profile
+            });
 
             // Show sidebar
-            App.execute('notes:show', args);
+            App.channel.command('notes:show', args);
 
-            requirejs(['apps/notes/form/controller'], function(Form) {
-                executeAction(Form, 'addForm', args);
-            });
-        },
-
-        // Edit an existing note
-        editNote: function(profile, id) {
-            var args = _.extend(this.notesArg || {}, {
-                id: id,
-                profile: profile
-            });
-
-            App.execute('notes:show', args);
-
-            requirejs(['apps/notes/form/controller'], function(Form) {
-                executeAction(Form, 'editForm', args);
+            // Start 'Form' module
+            requirejs(['apps/notes/form/app'], function(Module) {
+                args.method = id ? 'edit' : 'add';
+                executeAction(Module, args);
             });
         },
 
@@ -134,11 +132,11 @@ define([
             }
 
             return {
-                id: id,
-                page: Number(page),
-                query: query,
-                filter: filter,
-                profile: profile || App.request('uri:profile'),
+                id      : id,
+                page    : Number(page),
+                query   : query,
+                filter  : filter,
+                profile : profile || App.channel.request('uri:profile'),
             };
         }
     };
@@ -155,7 +153,7 @@ define([
 
         // Events
         App.channel
-            .on('form:show', API.addNote, API)
+            .on('form:show', API.noteForm, API)
             .on('notes:toggle', API._toggleSidebar, API);
 
         // Commands
@@ -167,6 +165,12 @@ define([
     AppNote.on('before:stop', function() {
         // Stop the sidebar app
         SidebarApp.stop();
+
+        // Stop the current module
+        if (AppNote.currentApp) {
+            AppNote.currentApp.stop();
+            delete AppNote.currentApp;
+        }
 
         // Stop listening to events
         App.channel

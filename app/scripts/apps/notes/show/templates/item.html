@@ -20,7 +20,7 @@
         </li>
         <% } %>
         <li>
-            <a href="#{{ uri }}notes/remove/{{id}}" class="btn btn-default">
+            <a href="#{{ uri }}notes/remove/{{id}}" class="btn btn-default btn-remove">
                 <span class="icon-trashed"></span> <span class="hidden-xxs"><% if (trash === 0) { %>{{ i18n('Delete') }}<% } else { %> {{ i18n('Forever') }}<% } %></span>
             </a>
         </li>
@@ -40,7 +40,7 @@
                     {{ title }}
                     <small>{{ createdDate() }}</small>
                     <a href="#" class="btn btn-link favorite pull-right">
-                        <span class="<% if (isFavorite === 0) {%>icon-star-empty<% } else { %>icon-favorite<% } %>"></span>
+                        <span class="icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
                     </a>
                 </h1>
             </header>
@@ -53,8 +53,8 @@
                 </div>
             </div>
             <% } %>
-            <p class="notebooktitle"><% if (notebook !== null) { %>{{ notebook }}<% } %></p>
-            {{ getContent() }}
+            <p class="notebooktitle"><% if (notebook) { %>{{ notebook }}<% } %></p>
+            {{content}}
         </div>
     </div>
 </div>

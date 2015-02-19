@@ -2,12 +2,16 @@
 define([
     'jquery',
     'helpers/radio.shim',
+    'backbone.radio',
     'app',
+    'initializers',
     'bootstrap'
-], function($, shim, App) {
+], function($, shim, Radio, App) {
     'use strict';
 
     console.time('App');
+
+    var exts = ['modules/pagedown/module'];
 
     // Load all modules then start an application
     requirejs([
@@ -17,7 +21,7 @@ define([
         'helpers/install',
         'helpers/uri',
         'helpers/i18next',
-        // 'helpers/keybindings',
+        'helpers/keybindings',
 
         // Modules
         'apps/confirm/appConfirm',
@@ -27,13 +31,15 @@ define([
         // 'apps/notebooks/appNotebooks',
         'apps/settings/appSettings',
         'apps/help/appHelp'
-    ], function(Configs, storage) {
-        console.log('modules are loaded');
+    ].concat(exts), function(Configs, storage) {
+        var initModules = Radio.channel('init').request('start', 'module');
 
         Configs.fetch()
-            .then(storage.check)
-            .then(function() {
-                App.start();
-            });
+        .then(storage.check)
+        .then(initModules)
+        .then(function() {
+            console.log('modules are loaded');
+            App.start();
+        });
     });
 });

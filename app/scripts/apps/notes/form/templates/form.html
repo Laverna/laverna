@@ -1,31 +1,37 @@
-<nav class="ui-row navbar navbar-static-top">
+<nav id="formNavbar" class="ui-row navbar navbar-static-top">
+    <ul class="nav navbar-nav pull-left">
+    </ul>
     <ul class="m0 pull-right">
-        <li class="btn-group saveBtnGroup">
-            <span class="saveBtn btn btn-success">
-                <i class="icon-save"></i> <span class="save-btn-text">{{ i18n('Save') }}</span>
-            </span>
+        <li class="btn-group dropdown switch-mode">
+            <a title="Mode" href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-fullscreen"></i> <b class="caret"></b>
+            </a>
+            <ul class="modeMenu dropdown-menu pull-left" role="menu" aria-labelledby="switchMode">
+                <li>
+                    <a href="#" data-mode="fullscreen">
+                        <i class="icon-fullscreen"></i> {{ i18n('Full screen') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-mode="preview">
+                        <i class="icon-eye"></i> {{ i18n('Preview') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-mode="normal">
+                        <i class="icon-squares"></i> {{ i18n('Normal') }}
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="btn-group cancelBtnGroup">
             <span class="cancelBtn pull-right btn btn-default">{{ i18n('Cancel') }}</span>
         </li>
-        <li class="btn-group dropdown switch-mode">
-            <a href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="icon-fullscreen"></i> <b class="caret"></b></a>
-            <ul class="modeMenu dropdown-menu pull-right" role="menu" aria-labelledby="switchMode">
-                <li><a href="#" data-mode="fullscreen"><i class="icon-fullscreen"></i> {{ i18n('Full screen') }}</a></li>
-                <li><a href="#" data-mode="preview"><i class="icon-eye"></i> {{ i18n('Preview') }}</a></li>
-                <li><a href="#" data-mode="normal"><i class="icon-squares"></i> {{ i18n('Normal') }}</a></li>
-            </ul>
-        </li>
-         <li class="btn-group dropdown switch-mode">
-            <span class="wordBtn btn btn-success dropdown-toggle" data-toggle="dropdown">
-                <span class="word-btn-text">{{ i18n('Word Count Info') }} </span>
+        <li class="btn-group saveBtn">
+            <span class="btn btn-success">
+                <i class="icon-save"></i> <span class="save-btn-text">{{ i18n('Save') }}</span>
             </span>
-            <ul class="modeMenu dropdown-menu pull-right" aria-labelledby="switchMode">
-                <li> {{ i18n('Word Count:') }} <span id="wordCount"></span> </li>
-                <li> {{ i18n('Characters:') }} <span id="charCount"></span> </li>
-            </ul>
         </li>
-        
     </ul>
 </nav>
 
@@ -45,19 +51,8 @@
                         <% }); %>
                     </select>
                 </div>
-                <div id="wmd-button-bar"></div>
-                <div class="form-group wmd-group">
-                    <div class="markdown-col">
-                        <div class="wmd-input" id="wmd-input">{{content}}</div>
-                    </div>
-                    <div class="preview-col">
-                        <div class="wmd-preview">
-                            <div id="wmd-preview"></div>
-                        </div>
-                    </div>
-                    <!-- For clipper -->
-                    <textarea id="clipContent" class="hidden" name="clipContent"></textarea>
-                </div>
+
+                <div id="editor"></div>
             </form>
         </div>
     </div>

@@ -4,12 +4,25 @@ define([
     'jquery',
     'marionette',
     'app',
+    'backbone.radio',
     'enquire',
     'apps/notes/list/listApp',
     'apps/notes/collection'
-], function(_, $, Marionette, App, enquire, SidebarApp) {
+], function(_, $, Marionette, App, Radio, enquire, SidebarApp) {
     'use strict';
 
+    /**
+     * AppNote module.
+     *
+     * Listens to
+     * --------
+     * Events on channel `appNote`:
+     * 1. `form:show`    - shows a form where a user can add/edit new notes
+     * 2. `notes:toggle` - make the sidebar region active
+     *
+     * Replies on channel `appNote`:
+     * 1. `route:args`   - returns current route arguments
+     */
     var AppNote = App.module('AppNote', { startWithParent: false }),
         executeAction,
         API;
@@ -30,7 +43,9 @@ define([
 
         // Start this module
         onRoute: function() {
-            App.startSubApp('AppNote');
+            if (!AppNote._isInitialized) {
+                App.startSubApp('AppNote', API._getArgs.apply(this, arguments[2]));
+            }
         }
     });
 
@@ -69,16 +84,20 @@ define([
         // Filter collection
         filterNotes: function() {
             var args = this._getArgs.apply(this, arguments);
-            API.notesArg = args;
-            App.channel.trigger('notes:filter', args);
+
+            // Wait until the SidebarApp has started
+            if (!SidebarApp._isInitialized) {
+                return SidebarApp.on('start', function() {
+                    API.filterNotes(args);
+                });
+            }
+
+            Radio.trigger('appNote', 'filter', args);
         },
 
         // Show a note
         showNote: function() {
             var args = this._getArgs.apply(this, arguments);
-
-            // Show sidebar
-            App.channel.command('notes:show', args);
 
             requirejs(['apps/notes/show/app'], function(Module) {
                 executeAction(Module, args);
@@ -91,9 +110,6 @@ define([
                 id      : id,
                 profile : profile
             });
-
-            // Show sidebar
-            App.channel.command('notes:show', args);
 
             // Start 'Form' module
             requirejs(['apps/notes/form/app'], function(Module) {
@@ -111,13 +127,6 @@ define([
             });
         },
 
-        // If a sidebar controller is not initialized, do it
-        _showSidebar: function(args) {
-            if (!this.sideController) {
-                this.filterNotes(args);
-            }
-        },
-
         // Make sidebar active
         _toggleSidebar: function(args) {
             this.$content = this.$content || $(App.content.el);
@@ -131,33 +140,33 @@ define([
                 return arguments[0];
             }
 
-            return {
+            this.notesArg = {
                 id      : id,
-                page    : Number(page),
+                page    : Number(page || 0),
                 query   : query,
                 filter  : filter,
                 profile : profile || App.channel.request('uri:profile'),
             };
+
+            return this.notesArg;
         }
     };
 
     /**
      * Module's initializer/finalizer
      */
-    AppNote.on('before:start', function() {
+    AppNote.on('before:start', function(options) {
         // Show a navbar
         App.channel.command('navbar:show');
 
         // Show the sidebar
-        SidebarApp.start();
+        SidebarApp.start(options);
 
         // Events
-        App.channel
+        Radio.channel('appNote')
             .on('form:show', API.noteForm, API)
-            .on('notes:toggle', API._toggleSidebar, API);
-
-        // Commands
-        App.channel.comply('notes:show', API._showSidebar, API);
+            .on('notes:toggle', API._toggleSidebar, API)
+            .reply('route:args', function() {return API.notesArg;}, API);
 
         console.log('On initialize----');
     });
@@ -173,12 +182,12 @@ define([
         }
 
         // Stop listening to events
-        App.channel
+        Radio.channel('appNote')
             .off('form:show')
             .off('notes:toggle');
 
         // Remove handlers
-        App.channel.stopCompying('notes:show');
+        Radio.channel('appNote').stopReplying('route:args');
 
         console.log('On finalize----');
     });

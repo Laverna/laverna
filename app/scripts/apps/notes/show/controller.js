@@ -11,6 +11,8 @@ define([
      * The controller that shows a note.
      *
      * Triggers the following:
+     * Events:
+     * 1. channel: `appNote`, event: `model:active`
      * Request:
      * 1. channel: editor, request: task:toggle
      * Command:
@@ -33,6 +35,9 @@ define([
         },
 
         _show: function(note) {
+            // Trigger an event that the model is active
+            Radio.trigger('appNote', 'model:active', note);
+
             this.view = new View({
                 model: note,
                 args : this.options,

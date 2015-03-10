@@ -97,7 +97,7 @@ define([
          * Changes favorite status of the note
          */
         favorite: function() {
-            this.model.trigger('favorite:toggle');
+            Radio.command('notes', 'save', this.model, this.model.toggleFavorite());
             return false;
         },
 

@@ -6,7 +6,7 @@ define([
     'collections/removed',
     'apps/encryption/auth',
     'indexedDB'
-], function (_, Backbone, NotesDB, Removed, getAuth) {
+], function(_, Backbone, NotesDB, Removed, getAuth) {
     'use strict';
 
     /**
@@ -35,7 +35,7 @@ define([
             'images'        :  []
         },
 
-        validate: function (attrs) {
+        validate: function(attrs) {
             var errors = [];
             if (attrs.title === '') {
                 errors.push('title');
@@ -46,9 +46,8 @@ define([
             }
         },
 
-        initialize: function () {
+        initialize: function() {
             this.on('update:any', this.updateDate);
-            this.on('setFavorite', this.setFavorite);
 
             if (this.isNew()) {
                 this.set('created', Date.now());
@@ -56,7 +55,7 @@ define([
             }
         },
 
-        encrypt: function (data) {
+        encrypt: function(data) {
             var auth = getAuth();
             data = data || this.toJSON();
 
@@ -65,7 +64,7 @@ define([
             this.set('synchronized', 0);
         },
 
-        decrypt: function () {
+        decrypt: function() {
             var data = this.toJSON(),
                 auth = getAuth();
 
@@ -77,7 +76,7 @@ define([
         /**
          * Note's last modified time
          */
-        updateDate: function () {
+        updateDate: function() {
             this.set('updated', Date.now());
             this.setSync();
         },
@@ -85,29 +84,15 @@ define([
         /**
          * Saves model's id for sync purposes, then destroys it
          */
-        destroySync: function () {
+        destroySync: function() {
             return new Removed().newObject(this, arguments);
         },
 
-        next: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) + 1);
-            }
+        toggleFavorite: function() {
+            return {isFavorite: (this.get('isFavorite') === 1) ? 0 : 1};
         },
 
-        prev: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) - 1);
-            }
-        },
-
-        setFavorite: function () {
-            var isFavorite = (this.get('isFavorite') === 1) ? 0 : 1;
-            this.trigger('update:any');
-            this.save({'isFavorite': isFavorite});
-        },
-
-        setSync: function () {
+        setSync: function() {
             this.set('synchronized', 0);
         }
 

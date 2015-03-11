@@ -40,6 +40,10 @@ define([
                 self    = this;
 
             options.success = function(resp) {
+                if (options.beforeSuccess) {
+                    options.beforeSuccess(self, options.options);
+                }
+
                 // Sort the collection
                 self.sortItOut();
 

@@ -35,6 +35,7 @@ define([
         initialize: function() {
             _.bindAll(this, 'filter', '_getNotes');
             this.vent = Radio.channel('notes');
+            this.storage = Radio.request('global', 'storage');
 
             // Complies
             this.vent.comply({
@@ -66,10 +67,6 @@ define([
 
             this._getNotes(options)
             .then(function() {
-                // @TODO filter with Backbone when we aren't using IndexedDB
-                if (options.filter === 'search') {
-                    self.collection.filterList(options.filter, options.query);
-                }
 
                 defer.resolve(self.collection);
             });
@@ -143,10 +140,19 @@ define([
 
             // Fetch data
             return $.when(this.collection.fetch({
-                conditions : this.collection.conditions[options.filter],
-                sort       : false,
-                page       : options.page
+                conditions    : this.collection.conditions[options.filter],
+                sort          : false,
+                page          : options.page,
+                options       : options,
+                beforeSuccess : (
+                    this.storage !== 'indexeddb' || options.filter === 'search' ?
+                        this._filterOnFetch : null
+                )
             }));
+        },
+
+        _filterOnFetch: function(collection, options) {
+            collection.filterList(options.filter, options.query);
         },
 
         /**

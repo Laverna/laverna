@@ -92,7 +92,7 @@ define([
                 });
             }
 
-            Radio.trigger('appNote', 'filter', args);
+            Radio.command('appNote', 'filter', args);
         },
 
         // Show a note

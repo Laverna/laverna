@@ -95,8 +95,11 @@ define([
 
             // Trigger an event
             Radio.trigger('editor', 'pagedown:ready');
-            this.editor.session.on('changeScrollTop', _.debounce(this.triggerScroll, 50));
             mdEditor.hooks.chain('onPreviewRefresh', _.debounce(this.triggerSave, 1000));
+            this.editor.session.on(
+                'changeScrollTop',
+                _.debounce(this.triggerScroll, 20, {maxWait: 20})
+            );
         },
 
         triggerSave: function() {

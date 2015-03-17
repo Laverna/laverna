@@ -162,13 +162,13 @@ define([
         // Show the sidebar
         SidebarApp.start(options);
 
-        // Events
-        Radio.channel('appNote')
-            .on('form:show', API.noteForm, API)
-            .on('notes:toggle', API._toggleSidebar, API)
-            .reply('route:args', function() {return API.notesArg;}, API);
+        // Listen to events
+        this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
+        this.listenTo(Radio.channel('global'), 'form:show', API.noteForm);
 
-        console.log('On initialize----');
+        // Respond to requests and commands
+        Radio.channel('appNote')
+        .reply('route:args', function() {return API.notesArg;}, API);
     });
 
     AppNote.on('before:stop', function() {
@@ -181,15 +181,12 @@ define([
             delete AppNote.currentApp;
         }
 
-        // Stop listening to events
+        // Stop listenning to events
+        this.stopListening();
+
+        // Stop responding to requests and commands
         Radio.channel('appNote')
-            .off('form:show')
-            .off('notes:toggle');
-
-        // Remove handlers
-        Radio.channel('appNote').stopReplying('route:args');
-
-        console.log('On finalize----');
+        .stopReplying('route:args');
     });
 
     /**

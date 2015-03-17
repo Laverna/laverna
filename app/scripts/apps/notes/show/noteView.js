@@ -96,10 +96,10 @@ define([
         /**
          * Changes favorite status of the note
          */
-        favorite: function() {
+        favorite: _.debounce(function() {
             Radio.command('notes', 'save', this.model, this.model.toggleFavorite());
             return false;
-        },
+        }, 200),
 
         onChangeFavorite: function() {
             this.ui.favorite.toggleClass('icon-favorite', this.model.get('isFavorite'));

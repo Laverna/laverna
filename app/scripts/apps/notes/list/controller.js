@@ -90,16 +90,28 @@ define([
                 return;
             }
 
+            // Trigger `focus` event to a model.
             this.view.options.args.id = model.id;
             model = _.findWhere(this.view.collection.fullCollection, {id: model.id});
-            model.trigger('focus');
+            if (model) {
+                model.trigger('focus');
+            }
         },
 
         navigate: function(model) {
-            var args = Radio.request('appNote', 'route:args'),
-                uri = Radio.request('global', 'uri:note', args, model);
+            var args     = Radio.request('appNote', 'route:args'),
+                uri      = Radio.request('global', 'uri:note', args, model),
+                uriIndex = Radio.request('global', 'uri:note', args);
 
-            Radio.trigger('global', 'navigate', uri);
+            /**
+             * Before navigating to a note, change URI.
+             * It is done because if a user navigates back to the same page
+             * a note might not appear at all.
+             */
+            Radio.trigger('global', 'navigate', uriIndex, {trigger: false});
+
+            // Navigate to a note page
+            Radio.trigger('global', 'navigate', uri, {trigger: true});
         }
 
     });

@@ -3,10 +3,11 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
+    'views/loader',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
     'backbone.mousetrap'
-], function(_, Marionette, Radio, NoteSidebarItem, Tmpl) {
+], function(_, Marionette, Radio, LoaderView, NoteSidebarItem, Tmpl) {
     'use strict';
 
     /**
@@ -25,6 +26,7 @@ define([
         childView          :  NoteSidebarItem,
         childViewContainer :  '.notes-list',
         childViewOptions   :  {},
+        emptyView          : LoaderView,
 
         keyboardEvents     :  {},
 

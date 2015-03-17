@@ -58,7 +58,7 @@ define([
             return {
                 // Show only first 50 characters of the content
                 getContent: function() {
-                    var text = Radio.request('editor', 'content:html', this.content);
+                    var text = Radio.request('editor', 'content:html', this.content) || this.content;
                     return text.replace(/<(?:.|\n)*?>/gm, '').substring(1, 50);
                 },
 

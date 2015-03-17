@@ -19,6 +19,10 @@ define([
             input      : '#wmd-input'
         },
 
+        serializeData: function() {
+            return {content: _.escape(this.model.get('content'))};
+        },
+
         initialize: function() {
             Radio.on('notesForm', 'set:mode', this.onChangeMode, this);
             Radio.on('editor', 'pagedown:ready', this.onPagedownReady, this);

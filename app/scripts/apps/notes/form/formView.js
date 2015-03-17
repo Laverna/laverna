@@ -68,7 +68,6 @@ define([
 
         serializeData: function() {
             var data = this.model.toJSON();
-            data.content = _.escape(data.content);
             data.notebooks = this.options.notebooks.decrypt();
             return data;
         },

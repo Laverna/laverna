@@ -86,7 +86,9 @@ define([
             }
 
             // In case if the collection isn't empty, get the note from there.
-            if (this.collection.length) {
+            if (this.collection.length &&
+                _.findWhere(this.collection.fullCollection, {id: id})) {
+
                 return defer.resolve(
                     _.findWhere(this.collection.fullCollection, {id: id})
                 );
@@ -108,7 +110,7 @@ define([
          */
         save: function(model, data) {
             var self = this;
-            model.set(data).encrypt();
+            model.setEscape(data).encrypt();
 
             model.save(model.toJSON(), {
                 success: function(note) {

@@ -5,8 +5,9 @@ define([
     'migrations/note',
     'collections/removed',
     'apps/encryption/auth',
+    'dompurify',
     'indexedDB'
-], function(_, Backbone, NotesDB, Removed, getAuth) {
+], function(_, Backbone, NotesDB, Removed, getAuth, Purify) {
     'use strict';
 
     /**
@@ -94,6 +95,21 @@ define([
 
         setSync: function() {
             this.set('synchronized', 0);
+        },
+
+        /**
+         * Purify user inputs
+         */
+        setEscape: function(data) {
+            if (data.title) {
+                data.title = _.escape(_.unescape(data.title));
+            }
+            if (data.content) {
+                data.content = Purify.sanitize(data.content);
+            }
+
+            this.set(data);
+            return this;
         }
 
     });

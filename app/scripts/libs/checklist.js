@@ -4,10 +4,10 @@
  * [*] Task -> <label><input type="checkbox" checked="checked" />Task</label>
  */
 /*global define*/
-define(['underscore'], function (_) {
+define(['underscore'], function(_) {
     'use strict';
 
-    var Checklist = function () {
+    var Checklist = function() {
     };
 
     _.extend(Checklist.prototype, {
@@ -16,23 +16,23 @@ define(['underscore'], function (_) {
         /**
          * Count checkboxes
          */
-        count: function (text) {
+        count: function(text) {
             if ( ! this.countTasks) {
                 this.parse(text);
             }
 
             return {
-                all       : this.countTasks,
-                completed : this.completed
+                taskAll       : this.countTasks,
+                taskCompleted : this.completed
             };
         },
 
         /**
          * Toggle task completed status
          */
-        toggle: function (text, index) {
+        toggle: function(text, index) {
             var newMarker;
-            text = this.parse(text, function (match, marker, count) {
+            text = this.parse(text, function(match, marker, count) {
                 if (count === index) {
                     marker = (marker === ' ') ? 'x' : ' ';
                     newMarker = marker;
@@ -51,8 +51,8 @@ define(['underscore'], function (_) {
         /**
          * [] - to html checkboxes
          */
-        toHtml: function (text) {
-            return this.parse(text, function (match, marker, count) {
+        toHtml: function(text) {
+            return this.parse(text, function(match, marker, count) {
                 var content = '', checked = '';
 
                 if (count !== 0) {
@@ -72,7 +72,7 @@ define(['underscore'], function (_) {
         /**
          * Regex parsing here
          */
-        parse: function (text, callback) {
+        parse: function(text, callback) {
             var count = 0, completed = 0;
 
             text = text.replace(this.pattern, function(match, marker) {

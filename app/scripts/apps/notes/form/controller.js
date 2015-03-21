@@ -19,7 +19,7 @@ define([
      * Listens to the following events:
      * 1. channel: notes, event: save:after
      */
-    var Controller = Marionette.Controller.extend({
+    var Controller = Marionette.Object.extend({
 
         initialize: function(options) {
             var self = this;
@@ -45,8 +45,6 @@ define([
         },
 
         onDestroy: function() {
-            console.log('Form controller was destroyed');
-
             Radio.off('notes', 'save:after');
             this.view.trigger('destroy');
         },

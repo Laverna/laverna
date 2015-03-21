@@ -173,11 +173,10 @@ define([
         },
 
         _save: function() {
-            var data = {
+            var data = _.extend(Radio.request('editor', 'get:content'), {
                 title      : this.ui.title.val().trim(),
-                content    : Radio.request('editor', 'get:content'),
                 notebookId : this.ui.notebookId.val().trim(),
-            };
+            });
             Radio.command('notes', 'save', this.model, data);
         },
 

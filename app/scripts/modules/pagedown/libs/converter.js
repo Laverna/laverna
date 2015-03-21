@@ -25,6 +25,10 @@ define([
             return converter;
         },
 
+        countTasks: function(content) {
+            return new Checklist().count(content);
+        },
+
         toHtml: function(content) {
             return this.getConverter().makeHtml(content);
         },

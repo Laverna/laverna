@@ -147,7 +147,10 @@ define([
         },
 
         getContent: function() {
-            return !this.editor ? '' : this.editor.getSession().getValue().trim();
+            var data = {};
+            data.content = !this.editor ? '' : this.editor.getSession().getValue().trim();
+            data = _.extend(data, Converter.countTasks(data.content));
+            return data;
         }
 
     });

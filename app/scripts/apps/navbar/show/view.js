@@ -3,11 +3,12 @@ define([
     'underscore',
     'jquery',
     'backbone',
+    'backbone.radio',
     'helpers/uri',
     'text!apps/navbar/show/template.html',
     'backbone.mousetrap',
     'marionette'
-], function (_, $, Backbone, URI, Tmpl) {
+], function (_, $, Backbone, Radio, URI, Tmpl) {
     'use strict';
 
     var View = Backbone.Marionette.ItemView.extend({
@@ -56,16 +57,20 @@ define([
             this.ui.syncStatus.removeClass('animate-spin');
         },
 
-        searchSubmit: function (e) {
-            e.preventDefault();
-            var text = this.ui.navbarSearchInput.val();
-            this.trigger('navigate', URI.link('/notes/f/search/q/' + text));
+        searchSubmit: function () {
+            var text = typeof text === 'string' ? text : this.ui.navbarSearchInput.val();
+            Radio.trigger('global', 'navigate', URI.link('/notes/f/search/q/' + text));
+            this.ui.navbarSearchInput.trigger('blur');
+            Radio.trigger('global', 'search:hidden');
+            return false;
         },
 
         searchKeyup: function (e) {
             if (e.which === 27) {
-                this.ui.navbarSearchInput.blur();
+                Radio.trigger('global', 'search:hidden');
+                return this.ui.navbarSearchInput.blur();
             }
+            Radio.trigger('global', 'search:change', this.ui.navbarSearchInput.val());
         },
 
         showSearch: function (e) {
@@ -76,6 +81,7 @@ define([
             this.ui.navbarSearchForm.removeClass('hidden');
             this.ui.navbarSearchForm.find('input').focus().select();
             this.$('.navbar-nav').addClass('hidden');
+            Radio.trigger('global', 'search:shown');
         },
 
         hideSearch: function (e) {

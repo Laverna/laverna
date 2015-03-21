@@ -38,6 +38,7 @@ define([
          * Fetch data and prepare arguments
          */
         show: function (args) {
+            args = args || {};
             this.args = _.extend({}, args, {
                 currentApp: (App.currentApp ? App.currentApp.moduleName : null)
             });
@@ -78,13 +79,13 @@ define([
             });
 
             // Show navbar and set document's title
-            App.sidebarNavbar.show(this.view);
+            App.channel.command('region:show', 'sidebarNavbar', this.view);
             App.setTitle(null, title);
 
             // View events
             this.view.on('syncWithCloud', this.startSyncing, this);
-            this.view.on('navigate', function (uri) {
-                App.vent.trigger('navigate', uri, true);
+            this.view.on('navigate', function () {
+                // App.vent.trigger('navigate', uri, true);
             });
         },
 

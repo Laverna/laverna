@@ -17,8 +17,10 @@ define([
      * 1. channel: editor, request: task:toggle
      * Command:
      * 1. channel: notes, command: save
+     * 2. channel: appNote, command: `remove:note`
+     *    in order to destroy a model
      */
-    var Controller = Marionette.Controller.extend({
+    var Controller = Marionette.Object.extend({
 
         initialize: function(options) {
             _.bindAll(this, '_show');
@@ -30,7 +32,7 @@ define([
         },
 
         onDestroy: function() {
-            this.view.off('toggle:task');
+            this.stopListening(this.view);
             this.view.trigger('destroy');
         },
 
@@ -48,7 +50,15 @@ define([
             Radio.command('global', 'region:show', 'content', this.view);
 
             // Events
-            this.view.on('toggle:task', this.toggleTask, this);
+            this.listenTo(this.view, 'toggle:task', this.toggleTask);
+            this.listenTo(this.view, 'model:remove', this.modelRemove);
+        },
+
+        /**
+         * Triggers an event and expects that a model will be destroyed
+         */
+        modelRemove: function() {
+            Radio.command('appNote', 'remove:note', this.view.model.id);
         },
 
         /**

@@ -42,8 +42,9 @@ define([
         },
 
         events: {
-            'click @ui.favorite': 'favorite',
-            'click @ui.tasks'   : 'toggleTask'
+            'click @ui.favorite' : 'favorite',
+            'click @ui.tasks'    : 'toggleTask',
+            'click @ui.rmBtn'    : 'rmNote'
         },
 
         modelEvents: {
@@ -90,7 +91,7 @@ define([
         },
 
         rmNote: function() {
-            Radio.trigger('global', 'navigate:link', this.ui.rmBtn.attr('href'));
+            this.trigger('model:remove');
         },
 
         /**
@@ -115,6 +116,9 @@ define([
             this.trigger('toggle:task', taskId);
         },
 
+        /**
+         * Update progress bar when the status of a task was changed
+         */
         onTaskCompleted: function() {
             var percent = Math.floor(
                 this.model.get('taskCompleted') * 100 / this.model.get('taskAll')

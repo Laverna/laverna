@@ -76,10 +76,10 @@ define([
         /**
          * Makes the provided model active.
          */
-        modelFocus: function(model) {
+        modelFocus: _.debounce(function(model) {
             this.options.args.id = model.id;
             model.trigger('focus');
-        },
+        }, 10),
 
         toNextNote: function() {
             this.collection.getNextItem(this.options.args.id);

@@ -5,8 +5,9 @@ define([
     'collections/pageable',
     'migrations/note',
     'models/note',
+    'fuse',
     'indexedDB'
-], function(_, Backbone, PageableCollection, NotesDB, Note) {
+], function(_, Backbone, PageableCollection, NotesDB, Note, Fuse) {
     'use strict';
 
     var Notes = PageableCollection.extend({
@@ -102,9 +103,19 @@ define([
 
             return this.filter(function(model) {
                 data = model.decrypt();
-                pattern.lastIndex = 0;  // Reuse regexp
+                pattern.lastIndex = 0;
                 return pattern.test(data.title) || pattern.test(data.content);
             });
+        },
+
+        fuzzySearch: function(text) {
+            var fuse = new Fuse(this.fullCollection.models, {
+                keys  : ['title'],
+                getFn : function(obj, path) {
+                    return obj.get(path);
+                }
+            });
+            return fuse.search(text);
         }
 
     });

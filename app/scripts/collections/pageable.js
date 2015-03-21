@@ -40,18 +40,22 @@ define([
                 self    = this;
 
             options.success = function(resp) {
+                /*
+                 * Execute `beforeSuccess` callback.
+                 * The callback might be used to filter collection, for example.
+                 */
                 if (options.beforeSuccess) {
                     options.beforeSuccess(self, options.options);
                 }
 
-                // Sort the collection
-                self.sortItOut();
+                // Keep full collection in memory
+                self.fullCollection = self.clone();
 
-                // Keep models in memory
-                self.fullCollection = self.models;
+                // Sort the collection
+                self.fullCollection.sortItOut();
 
                 // Pagination
-                self.state.totalPages = Math.ceil(self.length / self.state.pageSize);
+                self._updateTotalPages();
                 self.getPage(options.page || self.state.firstPage);
 
                 if (success) {
@@ -60,6 +64,37 @@ define([
             };
 
             return Backbone.Collection.prototype.fetch.call(this, options);
+        },
+
+        /**
+         * Handles events.
+         * It needs to be called after a collection was instantiated.
+         */
+        registerEvents: function() {
+            // Sort the collection again when favorite status is changed
+            this.listenTo(this, 'change:isFavorite', this.sortItOut);
+            this.listenTo(this, 'reset', this.sortItOut);
+
+            // Sort the full collection again when a new model was added
+            this.listenTo(this, 'change:trash', this._onRemoveItem);
+            this.listenTo(this, 'remove'      , this._onRemoveItem);
+            this.listenTo(this, 'add:model'   , this._onAddItem);
+        },
+
+        /**
+         * It makes some "garbage collection"
+         * by destroying full collection and event listeners.
+         * If a collection is no longer in use, this method should be called.
+         */
+        removeEvents: function() {
+            // Destroy a full collection
+            if (this.fullCollection) {
+                this.fullCollection.reset();
+                delete this.fullCollection;
+            }
+
+            // Remove all the event listeners
+            this.stopListening();
         },
 
         getNextPage: function() {
@@ -87,7 +122,7 @@ define([
             this.state.currentPage = number;
 
             // Slice an array of models
-            this.models = this.fullCollection.slice(pageStart, pageStart + this.state.pageSize);
+            this.models = this.fullCollection.models.slice(pageStart, pageStart + this.state.pageSize);
 
             return this.models;
         },
@@ -108,14 +143,15 @@ define([
                 return;
             }
 
-            var self = this;
-            _.each(this.state.comparator, function(value, key) {
-                self.fullCollection = _.sortBy(self.fullCollection, function(model) {
-                    return (value === 'desc' ? (-model.get(key)) : model.get(key));
-                });
-            });
+            // Sort the full collection again
+            this.fullCollection.sortItOut();
 
+            // Update pagination state
+            this._updateTotalPages();
             this.getPage(this.state.currentPage);
+
+            // Reset the collection so the view could re-render itself
+            this.reset(this.models);
         },
 
         /**
@@ -143,7 +179,7 @@ define([
             }
 
             var model  = this.get(id),
-                index = id ? this.indexOf(model) + 1 : 0;
+                index  = model ? this.indexOf(model) + 1 : 0;
 
             // It is the last model on this page
             if (index >= this.models.length) {
@@ -168,6 +204,31 @@ define([
             }
 
             Radio.trigger('notes', 'model:navigate', this.at(index));
+        },
+
+        /**
+         * Update pagination when a model is added
+         */
+        _onAddItem: function(model) {
+            this.fullCollection.add(model);
+            this.sortFullCollection();
+        },
+
+        /**
+         * Update pagination when a model is removed
+         */
+        _onRemoveItem: function(model) {
+            this.fullCollection.remove(model);
+            this.sortFullCollection();
+        },
+
+        /**
+         * Updates the number of available pages
+         */
+        _updateTotalPages: function() {
+            this.state.totalPages = Math.ceil(
+                this.fullCollection.length / this.state.pageSize
+            );
         }
 
     });

@@ -36,7 +36,6 @@ define([
             'p/:profile'                    : 'filterNotes',
             '(p/:profile/)notes/add'        : 'noteForm',
             '(p/:profile/)notes/edit/:id'   : 'noteForm',
-            '(p/:profile/)notes/remove/:id' : 'removeNote',
             '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'filterNotes',
             '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote'
         },
@@ -119,11 +118,10 @@ define([
         },
 
         // Remove an existing note
-        removeNote: function(profile, id) {
-            requirejs([
-                'apps/notes/remove/removeController'
-            ], function(Controller) {
-                executeAction(Controller, 'remove', {id : id, profile: profile});
+        removeNote: function(id) {
+            requirejs(['apps/notes/remove/controller'], function(Controller) {
+                API.notesArg.id = null;
+                new Controller({id: id});
             });
         },
 
@@ -164,10 +162,13 @@ define([
 
         // Listen to events
         this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
-        this.listenTo(Radio.channel('global'), 'form:show', API.noteForm);
+        this.listenTo(Radio.channel('global'), 'form:show', function() {
+            Radio.trigger('global', 'navigate', '/notes/add');
+        });
 
         // Respond to requests and commands
         Radio.channel('appNote')
+        .comply('remove:note', API.removeNote, API)
         .reply('route:args', function() {return API.notesArg;}, API);
     });
 
@@ -186,6 +187,7 @@ define([
 
         // Stop responding to requests and commands
         Radio.channel('appNote')
+        .stopComplying('remove:note')
         .stopReplying('route:args');
     });
 

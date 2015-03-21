@@ -92,7 +92,7 @@ define([
 
             // Trigger `focus` event to a model.
             this.view.options.args.id = model.id;
-            model = _.findWhere(this.view.collection.fullCollection, {id: model.id});
+            model = this.view.collection.get(model.id);
             if (model) {
                 model.trigger('focus');
             }

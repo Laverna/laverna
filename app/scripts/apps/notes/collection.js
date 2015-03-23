@@ -16,7 +16,9 @@ define([
      * Listens to
      * ----------
      * Complies on channel `notes`:
-     * 1. `save` - saves a model
+     * 1. `save`    - saves a model
+     * 2. `remove`  - removes a model
+     * 2. `restore` - restores a model from trash
      *
      * Replies on channel `notes`:
      * 1. `getById` - returns a model with the provided id.
@@ -26,6 +28,8 @@ define([
      * --------
      * 1. channel: `notes`, event: `save:after`
      *    after a note was updated.
+     * 2. channel: `notes`, event: `model:destroy`
+     *    after a note has been removed or its status was changed.
      */
     var Module = App.module('AppNote.Collection', {startWithParent: true}),
         Collection;
@@ -40,7 +44,8 @@ define([
             // Complies
             this.vent.comply({
                 'save'          : this.save,
-                'remove'        : this.remove
+                'remove'        : this.remove,
+                'restore'       : this.restore
             }, this);
 
             // Replies
@@ -55,7 +60,7 @@ define([
 
         onDestroy: function() {
             this.collection.trigger('destroy');
-            this.vent.stopReplying('getById filter');
+            this.vent.stopReplying('getById filter restore');
             this.vent.stopComplying('save');
         },
 
@@ -122,10 +127,25 @@ define([
         },
 
         /**
+         * Restores a model from trash
+         */
+        restore: function(model) {
+            var atIndex = this.collection.indexOf(model);
+
+            // Save a new `trash` status and emmit an event
+            $.when(model.save({trash: 0}))
+            .then(function() {
+                Radio.trigger('notes', 'model:destroy', atIndex);
+            });
+        },
+
+        /**
          * Removes a model
          */
         remove: function(model) {
-            var wait;
+            var atIndex = this.collection.indexOf(model),
+                wait;
+
             model = (typeof model === 'string' ? this.getById(model) : model);
 
             // If the model is already in trash, destroy it
@@ -139,7 +159,7 @@ define([
             }
 
             wait.then(function() {
-                Radio.trigger('notes', 'model:destroy', model);
+                Radio.trigger('notes', 'model:destroy', atIndex);
             });
         },
 

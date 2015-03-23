@@ -52,6 +52,11 @@ define([
             // Events
             this.listenTo(this.view, 'toggle:task', this.toggleTask);
             this.listenTo(this.view, 'model:remove', this.modelRemove);
+            this.listenTo(this.view, 'model:restore', this.modelRestore);
+        },
+
+        modelRestore: function() {
+            Radio.command('notes', 'restore', this.view.model);
         },
 
         /**

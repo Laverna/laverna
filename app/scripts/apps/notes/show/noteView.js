@@ -47,7 +47,12 @@ define([
             'click @ui.rmBtn'    : 'rmNote'
         },
 
+        triggers: {
+            'click #restoreNote' : 'model:restore'
+        },
+
         modelEvents: {
+            'change:trash'         : 'render',
             'change:isFavorite'    : 'onChangeFavorite',
             'change:taskCompleted' : 'onTaskCompleted'
         },
@@ -92,6 +97,7 @@ define([
 
         rmNote: function() {
             this.trigger('model:remove');
+            return false;
         },
 
         /**

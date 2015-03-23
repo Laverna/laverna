@@ -14,6 +14,7 @@ define([
      * ---------
      * Events to channel `notes`:
      * 1. `model:navigate` - when the next or previous model was requested
+     *     or a model was removed.
      *
      * Events to itself (e.g. collection):
      * 1. `page:next` - when the next model was requested but a user
@@ -79,6 +80,8 @@ define([
             this.listenTo(this, 'change:trash', this._onRemoveItem);
             this.listenTo(this, 'remove'      , this._onRemoveItem);
             this.listenTo(this, 'add:model'   , this._onAddItem);
+
+            this.listenTo(Radio.channel('notes'), 'model:destroy', this._navigateOnRemove);
         },
 
         /**
@@ -200,6 +203,22 @@ define([
 
             // It is the first model on this page
             if (index < 0) {
+                return this.hasPreviousPage() ? this.trigger('page:previous') : null;
+            }
+
+            Radio.trigger('notes', 'model:navigate', this.at(index));
+        },
+
+        /**
+         * When some model was removed, trigger `model:navigate` event
+         * passing a model which has the same index as the removed model.
+         */
+        _navigateOnRemove: function(index) {
+            if (!this.at(index)) {
+                index--;
+            }
+
+            if (!this.at(index)) {
                 return this.hasPreviousPage() ? this.trigger('page:previous') : null;
             }
 

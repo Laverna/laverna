@@ -53,7 +53,9 @@
                 </div>
             </div>
             <% } %>
-            <p class="notebooktitle"><% if (notebook !== null) { %>{{ notebook }}<% } %></p>
+            <p class="notebooktitle">
+                <% if (notebook !== null) { %><i class="icon-notebook"></i> {{ notebook }}<hr><% } %>
+            </p>
             {{ getContent() }}
         </div>
     </div>

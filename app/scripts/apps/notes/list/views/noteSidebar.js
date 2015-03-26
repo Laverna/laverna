@@ -120,9 +120,12 @@ define([
          * Saves page status in window.location
          */
         navigatePage: function(number) {
-            var uri = this.collection.state.currentPage + number;
-            uri = Radio.request('global', 'uri:note', this.options.args, uri);
-            Radio.trigger('global', 'navigate:link', uri, {trigger: false});
+            this.options.args.page = this.collection.state.currentPage + number;
+
+            Radio.command(
+                'uri', 'navigate',
+                {options: this.options.args}, {trigger: false}
+            );
         },
 
         /**

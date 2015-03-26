@@ -92,7 +92,7 @@ define([
         },
 
         editNote: function() {
-            Radio.trigger('global', 'navigate:link', this.ui.editBtn.attr('href'));
+            Radio.command('uri', 'navigate', this.ui.editBtn.attr('href'));
         },
 
         rmNote: function() {
@@ -138,7 +138,7 @@ define([
             return _.extend(this.model.toJSON(), {
                 content  : content || this.model.get('content'),
                 notebook : '',
-                uri      : Radio.request('global', 'uri:link', '/')
+                uri      : Radio.request('uri', 'link:profile', '/')
             });
         },
 

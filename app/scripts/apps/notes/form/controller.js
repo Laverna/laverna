@@ -73,7 +73,7 @@ define([
 
             // Stop the module and navigate back
             Radio.trigger('notesForm', 'stop');
-            window.history.go(-1);
+            Radio.command('uri', 'back');
         }
 
     });

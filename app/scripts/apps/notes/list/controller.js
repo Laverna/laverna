@@ -99,19 +99,20 @@ define([
         },
 
         navigate: function(model) {
-            var args     = Radio.request('appNote', 'route:args'),
-                uri      = Radio.request('global', 'uri:note', args, model),
-                uriIndex = Radio.request('global', 'uri:note', args);
+            var args = Radio.request('appNote', 'route:args');
 
             /**
              * Before navigating to a note, change URI.
              * It is done because if a user navigates back to the same page
              * a note might not appear at all.
              */
-            Radio.trigger('global', 'navigate', uriIndex, {trigger: false});
+            Radio.command('uri', 'navigate', {options: args}, {trigger: false});
 
             // Navigate to a note page
-            Radio.trigger('global', 'navigate', uri, {trigger: true});
+            Radio.command(
+                'uri', 'navigate',
+                {options: args, model: model}, {trigger: true}
+            );
         }
 
     });

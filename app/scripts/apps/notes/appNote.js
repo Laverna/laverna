@@ -143,7 +143,7 @@ define([
                 page    : Number(page || 0),
                 query   : query,
                 filter  : filter,
-                profile : profile || App.channel.request('uri:profile'),
+                profile : profile || Radio.request('uri', 'profile'),
             };
 
             return this.notesArg;
@@ -163,7 +163,7 @@ define([
         // Listen to events
         this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
         this.listenTo(Radio.channel('global'), 'form:show', function() {
-            Radio.trigger('global', 'navigate', '/notes/add');
+            Radio.command('uri', 'navigate', '/notes/add');
         });
 
         // Respond to requests and commands

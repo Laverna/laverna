@@ -69,7 +69,7 @@ define([
 
                 // Generate link
                 link: function() {
-                    return Radio.request('global', 'uri:note', this.args, this);
+                    return Radio.request('uri', 'link', this.args, this);
                 },
 
                 isActive: function() {

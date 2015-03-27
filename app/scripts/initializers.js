@@ -3,7 +3,7 @@ define([
     'underscore',
     'jquery',
     'backbone.radio',
-    'marionette',
+    'marionette'
 ], function(_, $, Radio, Marionette) {
     'use strict';
 
@@ -16,43 +16,73 @@ define([
      * App initializers will be executed first. Then, module initializers.
      *
      * Adding new initializers:
-     * Radio.channel('init').command('add:app', function() {});
-     * Radio.channel('init').command('add:module', function() {});
+     * Radio.command('init', 'add', '[app|app:before|module]', function() {});
      *
      * Executing initializers
-     * Radio.channel('init').request('start', '{module|app}', args);
+     * Radio.request('init', 'start', '[app|app:before|module]', args);
      */
     var Initializers = Marionette.Object.extend({
 
         initialize: function() {
-            this._moduleInits = $.Deferred();
-            this._appInits    = $.Deferred();
+            this._inits = {};
 
             Radio.channel('init')
-            .comply('add:app', this.addAppInit, this)
-            .comply('add:module', this.addModuleInit, this)
+            .comply('add', this.addInit, this)
             .reply('start', this.executeInits, this);
         },
 
-        addAppInit: function(initializer) {
-            this._appInits.done(initializer);
-        },
-
-        addModuleInit: function(initializer) {
-            this._moduleInits.done(initializer);
+        addInit: function(name, initializer) {
+            this._inits[name] = this._inits[name] || [];
+            this._inits[name].push(initializer);
         },
 
         /**
          * Executes all the initializers
          */
-        executeInits: function(type, args) {
-            args = Array.prototype.slice.call(arguments, 1);
+        executeInits: function(types, args) {
+            var self  = this;
 
-            // Resolve the initializers promise
-            this['_' + type + 'Inits'].resolveWith(this, args);
+            types = types.split(' ');
+            args  = Array.prototype.slice.call(arguments, 1);
 
-            // Trigger an event
-            Radio.trigger('global', type + ':ready');
+            return function() {
+                var defer = new $.Deferred(),
+                    promise;
+
+                // Execute every init one after another
+                _.each(types, function(type) {
+                    if (!promise) {
+                        promise = self._executeInit(type, args);
+                        return;
+                    }
+
+                    promise.then(self._executeInit(type, args));
+                });
+
+                promise.then(function() {
+                    defer.resolve();
+                });
+
+                return defer.promise();
+            };
+        },
+
+        /**
+         * Executes an initializer
+         */
+        _executeInit: function(type, args) {
+            var defer = new $.Deferred(),
+                self  = this,
+                after = _.after(self._inits[type].length, function() {
+                    defer.resolve();
+                });
+
+            // Execute all the functions asynchronously
+            _.each(self._inits[type], function(fnc) {
+                $.when(fnc(args)).then(after);
+            });
+
+            return defer.promise();
         }
 
     });

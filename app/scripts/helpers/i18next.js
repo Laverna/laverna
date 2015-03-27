@@ -3,9 +3,9 @@ define([
     'underscore',
     'jquery',
     'marionette',
-    'i18next',
-    'app'
-], function(_, $, Marionette, i18n, App) {
+    'backbone.radio',
+    'i18next'
+], function(_, $, Marionette, Radio, i18n) {
     'use strict';
 
     /**
@@ -23,14 +23,12 @@ define([
     /**
      * Init i18next
      */
-    App.on('before:start', function() {
-        i18n.init({
-            lng             : App.settings.appLang,
+    Radio.command('init', 'add', 'app:before', function() {
+        return i18n.init({
+            lng             : Radio.request('global', 'configs').appLang,
             fallbackLng     : 'en',
             useCookie       : false,
             useLocalStorage : false
-        }, function() {
-            App.channel.trigger('i18n:ready', i18n.lng());
         });
     });
 });

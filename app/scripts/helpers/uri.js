@@ -118,7 +118,7 @@ define([
     /**
      * Add a new initializer
      */
-    Radio.command('init', 'add:app', function() {
+    Radio.command('init', 'add', 'app', function() {
         new Uri();
     });
 

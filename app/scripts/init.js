@@ -24,22 +24,22 @@ define([
         'helpers/keybindings',
 
         // Modules
-        'apps/confirm/appConfirm',
+        // 'apps/confirm/appConfirm',
         'apps/encryption/encrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',
         // 'apps/notebooks/appNotebooks',
-        'apps/settings/appSettings',
-        'apps/help/appHelp'
+        // 'apps/settings/appSettings',
+        // 'apps/help/appHelp'
     ].concat(exts), function(Configs, storage) {
-        var initModules = Radio.channel('init').request('start', 'module');
 
         Configs.fetch()
         .then(storage.check)
-        .then(initModules)
+        .then(Radio.request('init', 'start', 'app:before app module'))
         .then(function() {
             console.log('modules are loaded');
             App.start();
         });
+
     });
 });

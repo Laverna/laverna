@@ -40,6 +40,7 @@ requirejs.config({
         'backbone.radio'      : '../bower_components/backbone.radio/build/backbone.radio.min',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
         'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
+        fuse                  : '../bower_components/fuse/src/fuse',
 
         // Mousetrap
         'Mousetrap'           : '../bower_components/mousetrap/mousetrap',

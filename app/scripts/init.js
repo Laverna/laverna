@@ -11,7 +11,10 @@ define([
 
     console.time('App');
 
-    var exts = ['modules/pagedown/module'];
+    var exts = [
+        'modules/pagedown/module',
+        'modules/fuzzySearch/module'
+    ];
 
     // Load all modules then start an application
     requirejs([

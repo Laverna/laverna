@@ -155,7 +155,7 @@ define([
      */
     AppNote.on('before:start', function(options) {
         // Show a navbar
-        App.channel.command('navbar:show');
+        Radio.command('navbar', 'start');
 
         // Show the sidebar
         SidebarApp.start(options);

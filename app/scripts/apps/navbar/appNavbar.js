@@ -1,38 +1,34 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
     'marionette',
-    'app',
+    'backbone.radio',
+    'modules',
     'apps/navbar/show/controller'
-], function(_, $, Marionette, App, Show) {
+], function(_, Marionette, Radio, Modules, Controller) {
     'use strict';
 
     /**
-     * Module which shows navbar
+     * Navbar module.
+     *
+     * Complies to commands:
+     * 1. channel: `navbar`, command: `start`
+     *    starts itself.
      */
-    var AppNavbar = App.module('AppNavbar', {startWithParent: false}),
-        controller;
+    var Navbar = Modules.module('Navbar', {startWithParent: false});
 
-    AppNavbar.on('before:start', function() {
-        controller = new Show();
-
-        App.channel.comply('navbar:show', controller.show, controller);
-        App.log('AppNavbar has started');
+    Navbar.on('start', function() {
+        Navbar.controller = new Controller();
     });
 
-    AppNavbar.on('before:stop', function() {
-        App.channel.off('navbar:show');
-
-        controller.destroy();
-        controller = undefined;
-
-        App.log('AppNavbar has stopped');
+    Navbar.on('stop', function() {
+        Navbar.controller.destroy();
+        delete Navbar.controller;
     });
 
-    App.on('before:start', function() {
-        App.AppNavbar.start();
+    Radio.command('init', 'add', 'app', function() {
+        Radio.complyOnce('navbar', 'start', Navbar.start, Navbar);
     });
 
-    return AppNavbar;
+    return Navbar;
 });

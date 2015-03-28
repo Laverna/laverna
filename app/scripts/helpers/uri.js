@@ -49,7 +49,11 @@ define([
          * Navigate to url
          */
         navigate: function(uri, options) {
-            uri = _.isObject(uri) ? this.getLink(uri.options, uri.model) : uri;
+            if (_.isObject(uri)) {
+                uri = (uri.model || uri.options) ? uri : {options: uri};
+                uri = this.getLink(uri.options, uri.model);
+            }
+
             Backbone.history.navigate(uri, options || {trigger: true});
         },
 

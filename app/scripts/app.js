@@ -3,10 +3,11 @@ define([
     'underscore',
     'jquery',
     'backbone',
+    'backbone.radio',
     'devicejs',
     'regions/regionManager',
     'marionette'
-], function(_, $, Backbone, Device, regions) {
+], function(_, $, Backbone, Radio, Device, regions) {
     'use strict';
 
     var App = new Backbone.Marionette.Application();
@@ -63,6 +64,11 @@ define([
             currentApp.start(args);
         }
     };
+
+    // Returns current app
+    Radio.reply('global', 'app:current', function() {
+        return App.currentApp;
+    });
 
     // @ToMove somewhere else
     App.channel.on('app:start', function() {

@@ -77,6 +77,8 @@ define([
                 return;
             }
 
+            // Trigger an event
+            Radio.trigger('global', 'filter:change', options);
             this.options = options;
 
             // Fetch data

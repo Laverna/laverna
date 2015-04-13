@@ -49,20 +49,32 @@ define([
          * Navigate to url
          */
         navigate: function(uri, options) {
+            options = options || {};
+            if (typeof options.trigger === 'undefined') {
+                options.trigger = true;
+            }
+
+            // Build URL to notes list or a note
             if (_.isObject(uri)) {
                 uri = (uri.model || uri.options) ? uri : {options: uri};
                 uri = this.getLink(uri.options, uri.model);
             }
 
-            Backbone.history.navigate(uri, options || {trigger: true});
+            // Include profile link
+            if (options.includeProfile) {
+                uri = this.getProfileLink(uri);
+                delete options.includeProfile;
+            }
+
+            Backbone.history.navigate(uri, options);
         },
 
         navigateBack: function(url) {
             var history = window.history;
             if (history.length === 0) {
-                return this.navigate(url || '/notes');
+                return this.navigate(url || '/notes', arguments[1]);
             }
-            history.go(-1);
+            history.back();
         },
 
         /**

@@ -37,6 +37,13 @@ define([
          * Overrite `fetch` method.
          */
         fetch: function(options) {
+            options = options || {};
+
+            // Do not use pagination
+            if (this.state.pageSize === 0) {
+                return Backbone.Collection.prototype.fetch.call(this, options);
+            }
+
             var success = options.success,
                 self    = this;
 
@@ -81,7 +88,7 @@ define([
             this.listenTo(this, 'remove'      , this._onRemoveItem);
             this.listenTo(this, 'add:model'   , this._onAddItem);
 
-            this.listenTo(Radio.channel('notes'), 'model:destroy', this._navigateOnRemove);
+            this.listenTo(Radio.channel(this.storeName), 'model:destroy', this._navigateOnRemove);
         },
 
         /**
@@ -116,10 +123,7 @@ define([
          */
         getPage: function(number) {
             // Calculate page number
-            var pageStart = (
-                (this.state.firstPage === 0 ? number : number - 1) *
-                this.state.pageSize
-            );
+            var pageStart = this.getOffset(number);
 
             // Save where we currently are
             this.state.currentPage = number;
@@ -128,6 +132,13 @@ define([
             this.models = this.fullCollection.models.slice(pageStart, pageStart + this.state.pageSize);
 
             return this.models;
+        },
+
+        getOffset: function(number) {
+            return (
+                (this.state.firstPage === 0 ? number : number - 1) *
+                this.state.pageSize
+            );
         },
 
         hasPreviousPage: function() {
@@ -186,10 +197,12 @@ define([
 
             // It is the last model on this page
             if (index >= this.models.length) {
-                return this.hasNextPage() ? this.trigger('page:next') : null;
+                return this.trigger(
+                    this.hasNextPage() ? 'page:next' : 'page:end'
+                );
             }
 
-            Radio.trigger('notes', 'model:navigate', this.at(index));
+            Radio.trigger(this.storeName, 'model:navigate', this.at(index));
         },
 
         getPreviousItem: function(id) {
@@ -203,10 +216,12 @@ define([
 
             // It is the first model on this page
             if (index < 0) {
-                return this.hasPreviousPage() ? this.trigger('page:previous') : null;
+                return this.trigger(
+                    this.hasPreviousPage() ? 'page:previous' : 'page:start'
+                );
             }
 
-            Radio.trigger('notes', 'model:navigate', this.at(index));
+            Radio.trigger(this.storeName, 'model:navigate', this.at(index));
         },
 
         /**
@@ -222,14 +237,14 @@ define([
                 return this.hasPreviousPage() ? this.trigger('page:previous') : null;
             }
 
-            Radio.trigger('notes', 'model:navigate', this.at(index));
+            Radio.trigger(this.storeName, 'model:navigate', this.at(index));
         },
 
         /**
          * Update pagination when a model is added
          */
         _onAddItem: function(model) {
-            this.fullCollection.add(model);
+            this.fullCollection.add(model, {at: 0});
             this.sortFullCollection();
         },
 

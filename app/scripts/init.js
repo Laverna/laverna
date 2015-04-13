@@ -23,6 +23,7 @@ define([
         'helpers/storage',
         'helpers/install',
         'helpers/uri',
+        'helpers/title',
         'helpers/i18next',
         'helpers/keybindings',
 

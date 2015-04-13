@@ -3,6 +3,20 @@
 //
 @tagsPadding: 25px;
 
+#sidebar-nav .search-form {
+    display: none;
+}
+
+#sidebar-nav.shown-search {
+    .search-form {
+        display: block;
+    }
+
+    .navbar-nav {
+        display: none;
+    }
+}
+
 // Sidebar styles
 #sidebar {
     padding-left: 0;
@@ -114,4 +128,8 @@ a.list-group-item {
     border-bottom-width: 0;
     border-top-width: 1px;
     z-index: inherit;
+}
+
+.fuzzy-search #sidebar-content {
+    display: none;
 }

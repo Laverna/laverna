@@ -36,8 +36,14 @@
 }
 
 .wmd-button-row {
+    &:extend(.btn-group);
     margin-bottom: 0;
     padding-left: 6px;
+
+    li {
+        &:extend(.btn);
+        left: 0;
+    }
 }
 
 .wmd-button:hover{
@@ -76,8 +82,16 @@ textarea.wmd-input {
 }
 
 // Syntax
-.ace_heading {
+.ace_heading,
+.ace_strong {
     font-weight: bold;
+}
+.ace_emphasis {
+    font-style: italic;
+}
+.ace_string.ace_emphasis,
+.ace_string.ace_strong {
+    color: inherit !important;
 }
 
 //

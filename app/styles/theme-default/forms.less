@@ -1,6 +1,9 @@
 //
 // forms.less
 //
+.navbar a {
+    color: @text-color;
+}
 .has-error input[type=text] {
     .placeholder(@brand-danger);
 }
@@ -127,7 +130,7 @@
 }
 .distraction-free {
     background-color: #FFF;
-    #sidebar, .navbar-static-top {
+    #sidebar/*, .navbar-static-top*/ {
         display: none;
     }
     #content {
@@ -137,6 +140,27 @@
         width: 70%;
         margin: 0 auto;
     }
+
+    .navbar#formNavbar {
+        z-index: @zindex-navbar-fixed + 1;
+        .btn {
+            padding-top:    6px;
+            padding-bottom: 6px;
+        }
+    }
+    #wmd-button-bar {
+        &:extend(.navbar);
+        &:extend(.navbar-fixed-top);
+        top: 48px;
+        min-height: 20px;
+    }
+    .ui-body {
+        top: 40px * 2;
+    }
+    #wmd-input {
+        height: auto;
+    }
+
     #wmd-button-bar {
         margin: 0;
         text-align: center;
@@ -190,7 +214,7 @@
         .make-pagedown-column(5.84);
         min-height: 1px;
         position: absolute;
-        top: @navbar-height * 2.4;
+        top: @navbar-height * 1.7;
         bottom: 0;
         overflow: hidden;
     }
@@ -208,6 +232,7 @@
         width: 100%;
         min-height: 1px;
         position: absolute;
+        overflow: auto;
         top: 0;
         bottom: 0;
         left: 0;
@@ -235,35 +260,35 @@
     }
 }
 // Hide buttons one by one
-.distraction-free {
-    #wmd-undo-button,
-    #wmd-redo-button,
-    .wmd-spacer3 {
-        .invisible-wmd-btn(920px);
-    }
-    #wmd-hr-button,
-    #wmd-heading-button {
-        .invisible-wmd-btn(836px);
-    }
-    #wmd-ulist-button,
-    #wmd-olist-button,
-    .wmd-spacer2 {
-        .invisible-wmd-btn(752px);
-    }
-    #wmd-image-button,
-    #wmd-code-button {
-        .invisible-wmd-btn(668px);
-    }
-    #wmd-quote-button,
-    #wmd-link-button,
-    .wmd-spacer1 {
-        .invisible-wmd-btn(584px);
-    }
-    #wmd-bold-button,
-    #wmd-italic-button {
-        .invisible-wmd-btn(440px);
-    }
-}
+// .distraction-free {
+//     #wmd-undo-button,
+//     #wmd-redo-button,
+//     .wmd-spacer3 {
+//         .invisible-wmd-btn(920px);
+//     }
+//     #wmd-hr-button,
+//     #wmd-heading-button {
+//         .invisible-wmd-btn(836px);
+//     }
+//     #wmd-ulist-button,
+//     #wmd-olist-button,
+//     .wmd-spacer2 {
+//         .invisible-wmd-btn(752px);
+//     }
+//     #wmd-image-button,
+//     #wmd-code-button {
+//         .invisible-wmd-btn(668px);
+//     }
+//     #wmd-quote-button,
+//     #wmd-link-button,
+//     .wmd-spacer1 {
+//         .invisible-wmd-btn(584px);
+//     }
+//     #wmd-bold-button,
+//     #wmd-italic-button {
+//         .invisible-wmd-btn(440px);
+//     }
+// }
 
 //
 // Dropzone area

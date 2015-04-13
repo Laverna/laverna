@@ -68,8 +68,8 @@ define([
         filter: _.debounce(function(options) {
             var tOptions = this.view ? this.view.options.args : {},
             isEqual = _.isEqual(
-                _.omit((tOptions), 'id'),
-                _.omit(options   , 'id')
+                _.pick((tOptions), 'filter', 'profile', 'query', 'page'),
+                _.pick(options   , 'filter', 'profile', 'query', 'page')
             );
 
             // Do not fetch anything because nothing has changed

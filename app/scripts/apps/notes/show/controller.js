@@ -19,6 +19,7 @@ define([
      * 1. channel: notes, command: save
      * 2. channel: appNote, command: `remove:note`
      *    in order to destroy a model
+     * 3. channel: global, command: `set:title`
      */
     var Controller = Marionette.Object.extend({
 
@@ -27,7 +28,7 @@ define([
             this.options = options;
 
             // Fetch the note by ID
-            Radio.request('notes', 'getById', options.id)
+            Radio.request('notes', 'get:model:full', options.id)
             .then(this._show);
         },
 
@@ -36,18 +37,22 @@ define([
             this.view.trigger('destroy');
         },
 
-        _show: function(note) {
+        _show: function(note, notebook) {
             // Trigger an event that the model is active
             Radio.trigger('appNote', 'model:active', note);
 
             this.view = new View({
-                model: note,
-                args : this.options,
-                files : [],
+                model    : note,
+                notebook : notebook,
+                args     : this.options,
+                files    : [],
             });
 
             // Show the view in the `content` region
             Radio.command('global', 'region:show', 'content', this.view);
+
+            // Set document title
+            Radio.command('global', 'set:title', note.get('title'));
 
             // Events
             this.listenTo(this.view, 'toggle:task', this.toggleTask);

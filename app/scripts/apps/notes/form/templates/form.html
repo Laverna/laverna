@@ -1,6 +1,10 @@
 <nav id="formNavbar" class="ui-row navbar navbar-static-top">
-    <ul class="nav navbar-nav pull-left">
-    </ul>
+    <ul class="nav navbar-nav pull-left"></ul>
+
+    <div class="navbar-form navbar-left">
+        <div class="form-group" id="select-notebook"></div>
+    </div>
+
     <ul class="m0 pull-right">
         <li class="btn-group dropdown switch-mode">
             <a title="Mode" href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -39,19 +43,9 @@
     <div class="main">
         <div class="article">
             <form id="noteForm" class="form-horizontal pretty-form" action="#" method="post">
-                <div class="form-group">
+                <div class="form-group border-0">
                     <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="{{ i18n('Title') }}" />
                 </div>
-                <div class="form-group border-0">
-                    <select class="form-control" name="notebookId">
-                        <option value="0">{{ i18n('Select notebook') }}</option>
-                        <option class="newNotebook">{{ i18n('New notebook') }}</option>
-                        <% _.forEach(notebooks, function (notebook) { %>
-                        <option value="{{notebook.id}}" {{ isActive(notebook.id, notebookId) }}>{{notebook.name}}</option>
-                        <% }); %>
-                    </select>
-                </div>
-
                 <div id="editor"></div>
             </form>
         </div>

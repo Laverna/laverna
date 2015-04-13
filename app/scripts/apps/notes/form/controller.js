@@ -4,10 +4,9 @@ define([
     'jquery',
     'backbone.radio',
     'marionette',
-    'collections/tags',
-    'collections/notebooks',
-    'apps/notes/form/formView'
-], function (_, $, Radio, Marionette, Tags, Notebooks, View) {
+    'apps/notes/form/views/formView',
+    'apps/notes/form/views/notebooks'
+], function (_, $, Radio, Marionette, View, NotebooksView) {
     'use strict';
 
     /**
@@ -22,22 +21,15 @@ define([
     var Controller = Marionette.Object.extend({
 
         initialize: function(options) {
-            var self = this;
             this.options = options;
 
             _.bindAll(this, '_show', '_redirect');
 
-            // Instantiate a few extra collections
-            this.tags = new Tags();
-            this.notebooks = new Notebooks();
-
             // Fetch everything
-            Radio.request('notes', 'getById', options.id)
-            .then(function(note) {
-                self.note = note;
-                return self.tags.fetch();
-            })
-            .then(this.notebooks.fetch())
+            $.when(
+                Radio.request('notes', 'get:model', options.id),
+                Radio.request('notebooks', 'get:all')
+            )
             .then(this._show);
 
             // Events
@@ -49,21 +41,28 @@ define([
             this.view.trigger('destroy');
         },
 
-        _show: function() {
-            this.view = new View({
-                model     : this.note,
-                profile   : this.note.database.id,
-                tags      : this.tags,
-                notebooks : this.notebooks,
-                files     : [],
-            });
+        _show: function(note, notebooks) {
+            var notebooksView;
 
-            // Listen to view events
-            this.view.on('cancel', this._redirect, this);
+            this.view = new View({
+                model     : note,
+                profile   : note.database.id,
+                files     : []
+            });
 
             // Show the view and trigger an event
             Radio.command('global', 'region:show', 'content', this.view);
             this.view.trigger('rendered');
+
+            // Show notebooks selector
+            notebooksView = new NotebooksView({
+                collection : notebooks,
+                activeId   : note.get('notebookId')
+            });
+            this.view.notebooks.show(notebooksView);
+
+            // Listen to view events
+            this.listenTo(this.view, 'cancel', this._redirect);
         },
 
         _redirect: function() {

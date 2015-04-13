@@ -10,7 +10,7 @@ define([
      * A controller which removes a note.
      *
      * Requests:
-     * 1. channel: `notes`, request: `getById`
+     * 1. channel: `notes`, request: `get:model`
      *    expects to receive a model with provided ID
      *
      * Commands:
@@ -25,7 +25,7 @@ define([
             this.listenTo(Radio.channel('notes'), 'model:destroy', this.destroy);
 
             // Fetch the note by ID
-            Radio.request('notes', 'getById', options.id)
+            Radio.request('notes', 'get:model', options.id)
             .then(this.remove);
         },
 

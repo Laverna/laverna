@@ -41,7 +41,8 @@ define([
         template: _.template(Tmpl),
 
         regions: {
-            editor: '#editor'
+            editor    : '#editor',
+            notebooks : '#select-notebook'
         },
 
         ui: {
@@ -53,8 +54,7 @@ define([
 
             // Note content
             title      : 'input[name="title"]',
-            content    : '.wmd-input',
-            notebookId : '[name="notebookId"]',
+            content    : '.wmd-input'
         },
 
         events: {
@@ -63,13 +63,7 @@ define([
             // Handle saving
             'submit @ui.form'   : 'save',
             'click @ui.saveBtn' : 'save',
-            'click .cancelBtn'  : 'cancel',
-        },
-
-        serializeData: function() {
-            var data = this.model.toJSON();
-            data.notebooks = this.options.notebooks.decrypt();
-            return data;
+            'click .cancelBtn'  : 'cancel'
         },
 
         initialize: function() {
@@ -119,8 +113,6 @@ define([
 
             // Destroy shortcuts
             Mousetrap.unbind(['ctrl+s', 'command+s', 'esc']);
-
-            console.log('view was destroyed');
         },
 
         showEditor: function(view) {
@@ -175,7 +167,7 @@ define([
         _save: function() {
             var data = _.extend(Radio.request('editor', 'get:content'), {
                 title      : this.ui.title.val().trim(),
-                notebookId : this.ui.notebookId.val().trim(),
+                notebookId : this.notebooks.currentView.ui.notebookId.val().trim(),
             });
             Radio.command('notes', 'save', this.model, data);
         },

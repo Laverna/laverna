@@ -137,7 +137,7 @@ define([
             var content = Radio.request('editor', 'content:html', this.model.get('content'));
             return _.extend(this.model.toJSON(), {
                 content  : content || this.model.get('content'),
-                notebook : '',
+                notebook : this.options.notebook.toJSON(),
                 uri      : Radio.request('uri', 'link:profile', '/')
             });
         },

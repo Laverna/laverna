@@ -1,92 +1,101 @@
 /* global define, Mousetrap */
 define([
-    'jquery',
+    'underscore',
     'marionette',
-    'app',
+    'backbone.radio',
     'Mousetrap',
     'mousetrap-pause'
-], function($, Marionette, App) {
+], function(_, Marionette, Radio) {
     'use strict';
 
-    var Keybindings = App.module('mousetrap', {startWithParent: true}),
-        Controller;
+    /**
+     * Keybindings helper.
+     *
+     * Complies to commands on `global` channel:
+     * 1. `mousetrap:toggle`  - pause or unpause Mousetrap.
+     * 2. `mousetrap:restart` - rebind the keys.
+     * 3. `mousetrap:reset`   - reset the keys.
+     */
+    var Controller = Marionette.Object.extend({
 
-    Controller = Marionette.Controller.extend({
         initialize: function() {
-            App.chanel.on('mousetrap:toggle', this.toggle, this);
-            App.chanel.on('mousetrap:reset', Mousetrap.reset);
+            // Fetch configs and bind the keys
+            this.configs = Radio.request('global', 'configs');
+            this.bind();
+
+            Radio.comply('global', {
+                'mousetrap:toggle'  : this.toggle,
+                'mousetrap:restart' : this.restart,
+                'mousetrap:reset'   : Mousetrap.reset
+            }, this);
         },
 
-        onDestroy: function() {
-            App.chanel.off('mousetrap:toggle');
-            App.chanel.off('mousetrap:reset');
+        /**
+         * Reset Mousetrap keys and bind them again.
+         */
+        restart: function() {
             Mousetrap.reset();
+            this.bind();
         },
 
+        /**
+         * Pause or unpause Mousetrap
+         */
         toggle: function() {
             Mousetrap[(this.paused ? 'unpause' : 'pause')]();
             this.paused = (this.paused ? false : true);
         },
 
-        bind: function(settings) {
+        /**
+         * Register keybindings.
+         */
+        bind: function() {
             // Help
-            Mousetrap.bind(settings.appKeyboardHelp, function(e) {
+            Mousetrap.bind(this.configs.appKeyboardHelp, function(e) {
                 e.preventDefault();
-                App.chanel.trigger('navigate:link', '/help', true);
+                Radio.command('uri', 'navigate', '/help', true);
             });
 
             // Focus on search form
-            Mousetrap.bind(settings.appSearch, function() {
-                $('#search-input').focus();
-                return false;
+            Mousetrap.bind(this.configs.appSearch, function(e) {
+                e.preventDefault();
+                Radio.trigger('global', 'show:search');
             });
 
-            // Create new object
-            Mousetrap.bind(settings.appCreateNote, function() {
-                App.chanel.trigger('form:show');
+            // Add or edit notes or notebooks
+            Mousetrap.bind(this.configs.appCreateNote, function() {
+                Radio.trigger('global', 'form:show');
             });
 
             // Redirect to notes list
-            Mousetrap.bind(settings.jumpInbox, function() {
-                App.chanel.trigger('navigate:link', '/notes', true);
+            Mousetrap.bind(this.configs.jumpInbox, function() {
+                Radio.command('uri', 'navigate', '/notes', {trigger: true});
             });
 
             // Redirect to favorite notes
-            Mousetrap.bind(settings.jumpFavorite, function() {
-                App.chanel.trigger('navigate:link', '/notes/f/favorite', true);
+            Mousetrap.bind(this.configs.jumpFavorite, function() {
+                Radio.command('uri', 'navigate', '/notes/f/favorite', true);
             });
 
             // Redirect to removed list of notes
-            Mousetrap.bind(settings.jumpRemoved, function() {
-                App.chanel.trigger('navigate:link', '/notes/f/trashed', true);
+            Mousetrap.bind(this.configs.jumpRemoved, function() {
+                Radio.command('uri', 'navigate', '/notes/f/trashed', true);
             });
 
             // Redirect to notebooks list
-            Mousetrap.bind(settings.jumpNotebook, function() {
-                App.chanel.trigger('navigate:link', '/notebooks', true);
+            Mousetrap.bind(this.configs.jumpNotebook, function() {
+                Radio.command('uri', 'navigate', '/notebooks', true);
             });
-
-            App.log('Keys are binded');
         }
-    });
 
-    App.channel.on('mousetrap:restart', function() {
-        Keybindings.stop();
-        Keybindings.start();
     });
 
     /**
-     * Initializers & finalizers
+     * Initializer
      */
-    Keybindings.on('before:start', function() {
-        Keybindings.controller = new Controller();
-        Keybindings.controller.bind(App.settings);
+    Radio.command('init', 'add', 'app:before', function() {
+        new Controller();
     });
 
-    Keybindings.on('before:stop', function() {
-        Keybindings.controller.destroy();
-        delete Keybindings.controller;
-    });
-
-    return Keybindings;
+    return Controller;
 });

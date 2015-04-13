@@ -5,11 +5,15 @@ define([
     'apps/notebooks/list/behaviors/compositeBehavior',
     'apps/notebooks/list/views/notebooksItem',
     'text!apps/notebooks/list/templates/notebooksList.html'
-], function(_, Marionette, Behavior, ItemView, Templ) {
+], function(_, Marionette, Behavior, ItemView, Tmpl) {
     'use strict';
 
+    /**
+     * Notebooks composite view.
+     * Everything happens in its behavior class.
+     */
     var View = Marionette.CompositeView.extend({
-        template: _.template(Templ),
+        template: _.template(Tmpl),
 
         childView: ItemView,
         childViewContainer: '.list-notebooks',

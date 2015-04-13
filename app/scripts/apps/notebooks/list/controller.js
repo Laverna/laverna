@@ -1,81 +1,64 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
-    'app',
     'marionette',
-    'apps/notebooks/list/layout',
+    'backbone.radio',
+    'apps/notebooks/list/views/layout',
     'apps/notebooks/list/views/notebooksComposite',
-    'apps/notebooks/list/views/tagsComposite',
-    'collections/notebooks',
-    'collections/tags'
-], function(_, $, App, Marionette, Layout, NotebooksComposite, TagsComposite, Notebooks, Tags) {
+    'apps/notebooks/list/views/tagsComposite'
+], function(_, Marionette, Radio, View, NotebooksView, TagsView) {
     'use strict';
 
-    var List = App.module('AppNotebook.List');
+    /**
+     * List controller.
+     *
+     * Triggers:
+     * 1. channel: `global`, event: `filter:change`
+     */
+    var Controller = Marionette.Object.extend({
 
-    List.Controller = Marionette.Controller.extend({
+        initialize: function(options) {
+            _.bindAll(this, 'show');
 
-        initialize: function() {
-            _.bindAll(this, 'list', 'show');
+            this.options = options;
 
-            // Collections of notebooks and tags
-            this.notebooks = new Notebooks([], {
-                comparator: App.settings.sortnotebooks
+            // Show the navbar and change document title
+            Radio.command('navbar', 'start', {
+                title  : 'Notebooks & Tags',
+                filter : 'notebook'
             });
-            this.tags = new Tags();
+
+            // Fetch
+            $.when(
+                Radio.request('notebooks', 'get:all'),
+                Radio.request('tags', 'get:all')
+            ).then(this.show);
         },
 
         onDestroy: function() {
-            this.layout.trigger('destroy');
+            Radio.command('global', 'region:empty', 'sidebar');
         },
 
-        list: function(args) {
-            // Set profile
-            this.notebooks.database.getDB(args.profile);
-            this.tags.database.getDB(args.profile);
-
-            $.when(this.notebooks.fetch(), this.tags.fetch()).done(this.show);
-        },
-
-        show: function() {
-            var notebookView, tagsView;
-            this.notebooks.models = this.notebooks.getTree();
-
-            // Show layout
-            this.layout = new Layout({
-                settings: App.settings
+        show: function(notebooks, tags) {
+            this.view = new View({
+                configs: Radio.request('global', 'configs')
             });
 
-            App.sidebar.show(this.layout);
+            Radio.command('global', 'region:show', 'sidebar', this.view);
 
-            // Show notebooks list
-            notebookView = new NotebooksComposite({
-                collection: this.notebooks
-            });
+            // Show notebooks
+            this.view.notebooks.show(new NotebooksView({
+                collection: notebooks
+            }));
 
-            // Show tags list
-            tagsView = new TagsComposite({
-                collection: this.tags
-            });
-
-            // Render lists in layout
-            this.layout.notebooks.show(notebookView);
-            this.layout.tags.show(tagsView);
-
-            // Change value of document.title
-            App.setTitle('', $.t('Notebooks & Tags'));
-            App.AppNavbar.trigger('titleChange', {
-                filter: 'Notebooks & Tags'
-            });
-
-            this.layout.on('navigate', this.navigate, this);
-        },
-
-        navigate: function(uri) {
-            App.vent.trigger('navigate', uri);
+            // Show tags
+            this.view.tags.show(new TagsView({
+                collection: tags
+            }));
         }
+
     });
 
-    return List.Controller;
+    return Controller;
+
 });

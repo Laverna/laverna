@@ -2,14 +2,18 @@
 define([
     'underscore',
     'marionette',
-    'helpers/uri',
+    'backbone.radio',
     'apps/notebooks/list/behaviors/itemBehavior',
     'text!apps/notebooks/list/templates/notebooksItem.html'
-], function(_, Marionette, URI, ItemBehavior, Templ) {
+], function(_, Marionette, Radio, ItemBehavior, Tmpl) {
     'use strict';
 
+    /**
+     * Notebooks item view.
+     * Everything happens in its behaviour.
+     */
     var View = Marionette.ItemView.extend({
-        template: _.template(Templ),
+        template: _.template(Tmpl),
 
         className: 'list-group-tag',
 
@@ -21,7 +25,7 @@ define([
 
         serializeData: function() {
             return _.extend(this.model.decrypt(), {
-                uri  : URI.link('')
+                uri  : Radio.request('uri', 'link:profile', '')
             });
         }
     });

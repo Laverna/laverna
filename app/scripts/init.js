@@ -26,12 +26,17 @@ define([
         'helpers/i18next',
         'helpers/keybindings',
 
+        // Collection modules
+        'collections/modules/notes',
+        'collections/modules/notebooks',
+        'collections/modules/tags',
+
         // Modules
         // 'apps/confirm/appConfirm',
         'apps/encryption/encrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',
-        // 'apps/notebooks/appNotebooks',
+        'apps/notebooks/appNotebooks',
         // 'apps/settings/appSettings',
         // 'apps/help/appHelp'
     ].concat(exts), function(Configs, storage) {

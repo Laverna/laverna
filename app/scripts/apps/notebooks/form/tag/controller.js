@@ -1,77 +1,81 @@
 /* global define */
 define([
+    'jquery',
     'underscore',
-    'app',
     'marionette',
-    'helpers/uri',
-    'models/tag',
-    'apps/notebooks/tagsForm/formView'
-], function(_, App, Marionette, URI, Model, FormView) {
+    'backbone.radio',
+    'apps/notebooks/form/tag/formView'
+], function($, _, Marionette, Radio, View) {
     'use strict';
 
-    var Form = App.module('AppNotebooks.TagsForm');
+    /**
+     * Tag form controller.
+     *
+     * Listens to events:
+     * 1. channel: `tags`, event: `save:after`
+     *    triggers `close` event on the view.
+     * 2. this.view, event: `save`
+     *    saves the changes.
+     * 3. this.view, event: `redirect`
+     *    stops the module and redirects.
+     *
+     * Commands:
+     * 1. channel: `tags`, event: `save`
+     * 2. channel: `uri`, event: `back`
+     * 3. channel: `appNotebooks`, event: `form:stop`
+     */
+    var Controller = Marionette.Object.extend({
 
-    Form.Controller = Marionette.Controller.extend({
-        initialize: function() {
-            _.bindAll(this, 'addForm', 'editForm', 'show');
-            this.on('destroy:it', this.destroy, this);
+        initialize: function(options) {
+            _.bindAll(this, 'show');
+
+            // Events
+            this.listenTo(Radio.channel('tags'), 'save:after', this.onSaveAfter);
+
+            // Fetch the model and render the view
+            $.when(Radio.request('tags', 'get:model', options.id))
+            .then(this.show);
         },
 
-        onBeforeDestroy: function() {
-            this.view.trigger('destroy');
+        onDestroy: function() {
+            this.stopListening();
+            Radio.command('global', 'region:empty', 'modal');
         },
 
-        /*
-         * Add a new tag
-         */
-        addForm: function(args) {
-            // Set profile
-            this.model = new Model();
-            this.model.database.getDB(args.profile);
-            this.show();
-        },
-
-        /*
-         * Edit an existing tag
-         */
-        editForm: function(args) {
-            // Set profile
-            this.model = new Model({id: args.id});
-            this.model.database.getDB(args.profile);
-
-            $.when(this.model.fetch()).done(this.show);
-        },
-
-        show: function() {
-            this.view = new FormView({
-                model: this.model,
-                data: this.model.toJSON()
+        show: function(model) {
+            // Instantiate and show the form view
+            this.view = new View({
+                model: model
             });
 
-            App.modal.show(this.view);
+            Radio.command('global', 'region:show', 'modal', this.view);
 
-            this.view.on('save', this.save, this);
-            this.view.on('redirect', this.redirect, this);
+            // Listen to events
+            this.listenTo(this.view, 'save'    , this.save);
+            this.listenTo(this.view, 'redirect', this.redirect);
         },
 
         save: function() {
-            var self = this,
-                data = { name: this.view.ui.name.val() };
+            var data = {
+                name: this.view.ui.name.val().trim()
+            };
 
-            this.model.set(data);
-            this.model.updateDate();
+            Radio.command('tags', 'save', this.view.model, data);
+        },
 
-            this.model.save(data, {
-                success: function() {
-                    self.view.trigger('redirect');
-                }
-            });
+        onSaveAfter: function() {
+            this.view.trigger('close');
         },
 
         redirect: function() {
-            return App.vent.trigger('navigate:link', '/notebooks');
+            Radio.command('appNotebooks', 'form:stop');
+
+            Radio.command('uri', 'back', '/notebooks', {
+                includeProfile : true
+            });
         }
+
     });
 
-    return Form.Controller;
+    return Controller;
 });

@@ -17,7 +17,7 @@ define([
             uiFocus: 'name'
         },
 
-        events: { },
+        events: {},
 
         triggers: {
             'submit .form-horizontal' : 'save',

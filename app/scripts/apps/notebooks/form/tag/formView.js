@@ -3,10 +3,13 @@ define([
     'underscore',
     'marionette',
     'behaviors/modalForm',
-    'text!apps/notebooks/tagsForm/templates/form.html'
+    'text!apps/notebooks/form/tag/templates/form.html'
 ], function(_, Marionette, ModalForm, Templ) {
     'use strict';
 
+    /**
+     * Tag form view.
+     */
     var View = Marionette.ItemView.extend({
         template: _.template(Templ),
 
@@ -20,13 +23,6 @@ define([
             ModalForm: {
                 behaviorClass: ModalForm
             }
-        },
-
-        /**
-         * Prepare model
-         */
-        serializeData: function() {
-            return this.options.data;
         }
     });
 

@@ -16,7 +16,7 @@
                     <select name="parentId" class="form-control">
                         <option value="0">{{ i18n('Parent') }}: {{ i18n('Root') }}</option>
                         <% _.each(notebooks, function (notebook) { %>
-                        <option value="{{notebook.id}}"{{isParent(notebook.id, parentId) }}>{{ i18n('Parent') }}: {{notebook.name}}</option>
+                        <option value="{{notebook.id}}"{{isParent(notebook.id) }}>{{ i18n('Parent') }}: {{notebook.name}}</option>
                         <% }); %>
                     </select>
                 </div>

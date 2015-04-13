@@ -5,12 +5,12 @@ define([
     'marionette',
     'behaviors/modalForm',
     'models/notebook',
-    'text!apps/notebooks/notebooksForm/templates/form.html'
+    'text!apps/notebooks/form/notebook/templates/form.html'
 ], function(_, $, Marionette, ModalForm, Notebook, Tmpl) {
     'use strict';
 
     /**
-     * Notebook form
+     * Notebook form view.
      */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
@@ -29,15 +29,15 @@ define([
         },
 
         serializeData: function() {
-            return _.extend(this.options.data, {
-                notebooks: this.collection.decrypt()
+            return _.extend(this.model.toJSON(), {
+                notebooks: this.collection.toJSON()
             });
         },
 
         templateHelpers: function() {
             return {
-                isParent: function(notebookId, parentId) {
-                    if (notebookId === parentId) {
+                isParent: function(notebookId) {
+                    if (this.parentId === notebookId) {
                         return ' selected="selected"';
                     }
                 }

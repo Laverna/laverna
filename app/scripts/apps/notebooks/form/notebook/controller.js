@@ -1,109 +1,93 @@
 /* global define */
 define([
+    'jquery',
     'underscore',
-    'app',
     'marionette',
-    'helpers/uri',
-    'collections/notebooks',
-    'models/notebook',
-    'apps/notebooks/notebooksForm/formView'
-], function(_, App, Marionette, URI, Notebooks, Notebook, FormView) {
+    'backbone.radio',
+    'apps/notebooks/form/notebook/formView'
+], function($, _, Marionette, Radio, View) {
     'use strict';
 
-    var Form = App.module('AppNotebooks.NotebookForm');
+    /**
+     * Notebook form controller.
+     *
+     * Listens to events:
+     * 1. channel: `notebooks`, event: `save:after`
+     *    triggers `close` event on the view.
+     * 2. this.view, event: `save`
+     *    saves the changes.
+     * 3. this.view, event: `redirect`
+     *    stops the module and redirects.
+     *
+     * Commands:
+     * 1. channel: `notebooks`, event: `save`
+     * 2. channel: `uri`, event: `back`
+     * 3. channel: `appNotebooks`, event: `form:stop`
+     */
+    var Controller = Marionette.Object.extend({
 
-    Form.Controller = Marionette.Controller.extend({
-        initialize: function() {
-            _.bindAll(this, 'addForm', 'editForm', 'show');
+        initialize: function(options) {
+            options = options || {profile: Radio.request('uri', 'profile')};
+            _.bindAll(this, 'show');
 
-            this.collection = new Notebooks([], {
-                comparator: 'name'
-            });
+            // Events
+            this.listenTo(Radio.channel('notebooks'), 'save:after', this.onSaveAfter);
 
-            // Destroy when it's not under use
-            this.on('destroy:it', this.destroy, this);
+            // Fetch notebooks
+            $.when(
+                Radio.request('notebooks', 'get:all'),
+                Radio.request('notebooks', 'get:model', options.id)
+            )
+            .then(this.show);
         },
 
         onDestroy: function() {
-            this.view.trigger('destroy');
+            this.stopListening();
+            Radio.command('global', 'region:empty', 'modal');
         },
 
-        /*
-         * Create form initializing
-         */
-        addForm: function(args) {
-            this.model = new Notebook();
-            this.isNew = true;
-            this.args = args;
-
-            // Set profile
-            this.collection.database.getDB(args.profile);
-
-            $.when(this.collection.fetch()).done(this.show);
-        },
-
-        /*
-         * Edit form initializing
-         */
-        editForm: function(args) {
-            this.model = new Notebook({id: args.id});
-            this.args = args;
-
-            // Set profile
-            this.collection.database.getDB(args.profile);
-
-            $.when(this.collection.fetch(), this.model.fetch()).done(this.show);
-        },
-
-        /*
-         * Shows form
-         */
-        show: function() {
-            var data = this.model.decrypt();
-
-            this.view = new FormView ({
-                collection: this.collection,
-                model: this.model,
-                data: data
+        show: function(collection, model) {
+            // Instantiate and show the form view
+            this.view = new View({
+                collection : collection,
+                model      : model
             });
 
-            App.modal.show(this.view);
-            this.view.on('save', this.save, this);
-            this.view.on('redirect', this.redirect, this);
+            Radio.command('global', 'region:show', 'modal', this.view);
+
+            // Listen to events
+            this.listenTo(this.view, 'save'    , this.save);
+            this.listenTo(this.view, 'redirect', this.redirect);
         },
 
-        /**
-         * Saves changes
-         */
         save: function() {
-            var self = this,
-                data = {
-                    name     : this.view.ui.name.val(),
-                    parentId : this.view.ui.parentId.val()
-                };
+            var data = {
+                name     : this.view.ui.name.val(),
+                parentId : this.view.ui.parentId.val()
+            };
 
-            // First we need to encrypt data
-            this.model.set(data).encrypt();
-
-            this.model.save(this.model.toJSON(), {
-                success: function(model) {
-                    if (self.isNew === true) {
-                        App.trigger('new:notebook', model);
-                    }
-                    self.view.trigger('redirect');
-                }
-            });
+            Radio.command('notebooks', 'save', this.view.model, data);
         },
 
-        /*
-         * Redirect
-         */
+        onSaveAfter: function() {
+            this.view.trigger('close');
+        },
+
         redirect: function() {
-            if (_.isNull(this.args.redirect) || this.args.redirect === true) {
-                return App.vent.trigger('navigate:link', '/notebooks');
+            var moduleName = Radio.request('global', 'app:current').moduleName;
+
+            // Stop itself
+            Radio.command('appNotebooks', 'form:stop');
+
+            // Redirect only if current active module is AppNotebooks
+            if (moduleName === 'AppNotebooks') {
+                Radio.command('uri', 'back', '/notebooks', {
+                    includeProfile : true
+                });
             }
         }
+
     });
 
-    return Form.Controller;
+    return Controller;
 });

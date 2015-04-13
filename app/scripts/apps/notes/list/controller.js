@@ -65,11 +65,11 @@ define([
         /**
          * Fetches data from `Notes` collection.
          */
-        filter: function(options) {
-            var tOptions = this.view ? this.view.options : {},
+        filter: _.debounce(function(options) {
+            var tOptions = this.view ? this.view.options.args : {},
             isEqual = _.isEqual(
-                _.omit((tOptions), 'id', 'page'),
-                _.omit(options   , 'id', 'page')
+                _.omit((tOptions), 'id'),
+                _.omit(options   , 'id')
             );
 
             // Do not fetch anything because nothing has changed
@@ -77,14 +77,14 @@ define([
                 return;
             }
 
-            // Trigger an event
-            Radio.trigger('global', 'filter:change', options);
+            // Show the navbar
+            Radio.command('navbar', 'start', options);
             this.options = options;
 
             // Fetch data
             Radio.request('notes', 'filter', options)
             .then(this.show);
-        },
+        }, 100),
 
         onModelActive: function(model) {
             // The view was not rendered or the model is already active

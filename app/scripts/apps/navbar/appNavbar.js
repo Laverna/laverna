@@ -17,8 +17,8 @@ define([
      */
     var Navbar = Modules.module('Navbar', {startWithParent: false});
 
-    Navbar.on('start', function() {
-        Navbar.controller = new Controller();
+    Navbar.on('start', function(options) {
+        Navbar.controller = new Controller(options);
     });
 
     Navbar.on('stop', function() {
@@ -26,8 +26,18 @@ define([
         delete Navbar.controller;
     });
 
-    Radio.command('init', 'add', 'app', function() {
-        Radio.complyOnce('navbar', 'start', Navbar.start, Navbar);
+    // Initializer
+    Radio.command('init', 'add', 'app:before', function() {
+
+        Radio.comply('navbar', 'start', _.debounce(function(options) {
+            // Restart the module
+            if (Navbar._isInitialized) {
+                Navbar.stop();
+            }
+
+            Navbar.start(options);
+        }, 200));
+
     });
 
     return Navbar;

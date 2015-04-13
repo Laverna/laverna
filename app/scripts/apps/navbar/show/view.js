@@ -50,6 +50,9 @@ define([
 
         initialize: function() {
             this.listenTo(Radio.channel('global'), 'show:search', this.showSearch);
+
+            // Re-render the view when notebooks collection has changed
+            this.listenTo(this.options.notebooks, 'change add remove', this.render);
         },
 
         onDestroy: function() {
@@ -88,8 +91,8 @@ define([
         serializeData: function() {
             return {
                 args      : this.options.args,
+                notebooks : _.first(this.options.notebooks.toJSON(), 5),
                 uri       : Radio.request('uri', 'link:profile', '/'),
-                notebooks : this.options.notebooks,
                 profile   : Radio.request('uri', 'profile')
             };
         },

@@ -42,7 +42,8 @@ define([
         // Start this module
         onRoute: function() {
             if (!AppNote._isInitialized) {
-                App.startSubApp('AppNote', API._getArgs.apply(this, arguments[2]));
+                var args = arguments[0] === 'noteForm' ? {} : arguments[2];
+                App.startSubApp('AppNote', API._getArgs.apply(this, args));
             }
         }
     });
@@ -153,9 +154,6 @@ define([
      * Module's initializer/finalizer
      */
     AppNote.on('before:start', function(options) {
-        // Show a navbar
-        Radio.command('navbar', 'start');
-
         // Show the sidebar
         SidebarApp.start(options);
 

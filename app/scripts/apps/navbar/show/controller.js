@@ -18,61 +18,59 @@ define([
      * 3. this.view, event: `search:submit`
      *    navigates to search page
      *
-     * Complies to Commands:
-     * ------------------
-     * 1. channel: `navbar`, command: `start`
-     *    re-render the view.
-     *
      * Triggers:
      * ------------------
      * Requests:
      * 1. channel: `global`, request: `app:current`
      * 2. channel: `uri`, request: `link:profile`
+     * 3. channel: `global`, request: `get:title`
+     *
      * Commands:
      * 1. channel: `uri`, command: `navigate`
      * 2. channel: `global`, command: `region:show`
      */
     var Controller = Marionette.Object.extend({
 
-        initialize: function() {
+        initialize: function(options) {
             _.bindAll(this, 'show');
 
             this.configs = Radio.request('global', 'configs');
+            this.options = options;
 
-            // Listen to events, commands
-            Radio.comply('navbar', 'start', this.show, this);
-            this.listenTo(Radio.channel('global'), 'filter:change', this.show);
-
-            // Render the view
-            this.show();
+            // Request notebooks and title
+            $.when(
+                Radio.request('notebooks', 'get:all'),
+                Radio.request('global', 'get:title', options)
+            )
+            .then(this.show);
         },
 
         onDestroy: function() {
-            Radio.stopComplying('navbar', 'start');
             this.stopListening();
             this.view.trigger('destroy');
         },
 
-        show: function(args) {
-            var currentApp = Radio.request('global', 'app:current').moduleName;
-
-            args = _.extend({
-                title   : this.getTitle(args || {}),
-                configs : this.configs
-            }, args);
+        show: function(notebooks, title) {
+            var currentApp = Radio.request('global', 'app:current').moduleName,
+                args;
 
             // Do not render the view if nothing has changed
-            if (this.view && args.title === this.view.options.args.title) {
+            if (this.view && title === this.view.options.args.title) {
                 return;
             }
 
+            args = _.extend({
+                title   : title,
+                configs : this.configs
+            }, this.options);
+
             args.currentUrl = Radio.request('uri', 'link:profile', (
-                currentApp === 'AppNotebook' ? '/notebooks' : '/notes'
+                currentApp === 'AppNotebooks' ? '/notebooks' : '/notes'
             ));
 
             this.view = new View({
                 args      : args,
-                notebooks : null
+                notebooks : notebooks
             });
 
             // Render the view
@@ -90,17 +88,6 @@ define([
                 filter : 'search',
                 query  : text
             });
-        },
-
-        getTitle: function(args) {
-            var title = args.filter || 'All notes';
-            title = $.t(title.substr(0, 1).toUpperCase() + title.substr(1));
-
-            if (args.query && args.filter !== 'search') {
-                title += ': ' + this.args.query;
-            }
-
-            return title;
         }
 
     });

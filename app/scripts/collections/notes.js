@@ -28,6 +28,10 @@ define([
             active   : {trash      : 0},
             favorite : {isFavorite : 1, trash : 0},
             trashed  : {trash      : 1},
+
+            notebook : function(args) {
+                return {notebookId: args.query, trash: 0};
+            }
         },
 
         initialize: function() {
@@ -37,41 +41,32 @@ define([
             return -model.get('created');
         },
 
-        filterList: function(filter, query) {
+        filterList: function(filter, options) {
             filter = filter || 'active';
             var cond = this.conditions[filter],
                 res;
 
             if (cond) {
+                cond = (typeof cond === 'function' ? cond(options) : cond);
                 res = this.where(cond);
             }
             else {
-                res = this[filter + 'Filter'](query);
+                res = this[filter + 'Filter'](options.query);
             }
 
             return this.reset(res);
         },
 
         /**
-         * Show only notebook's notes
+         * Returns notes to which a specified tag was attached.
          */
-        notebookFilter: function( notebookId ) {
-            return this.fullCollection.filter(function(note) {
-                var notebook = note.get('notebookId');
-
-                if (notebook !== 0) {
-                    return notebook.get('id') === notebookId && note.get('trash') === 0;
-                }
-            });
-        },
-
-        /**
-         * Show only tag's notes
-         */
-        tagFilter: function( tagName ) {
-            return this.fullCollection.filter(function(note) {
+        tagFilter: function(tagName) {
+            return this.filter(function(note) {
                 if (note.get('tags').length > 0) {
-                    return (_.indexOf(note.get('tags'), tagName) !== -1) && note.get('trash') === 0;
+                    return (
+                        (_.indexOf(note.get('tags'), tagName) !== -1) &&
+                        note.get('trash') === 0
+                    );
                 }
             });
         },

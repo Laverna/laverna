@@ -6,8 +6,7 @@ define([
     'app',
     'backbone.radio',
     'enquire',
-    'apps/notes/list/listApp',
-    'apps/notes/collection'
+    'apps/notes/list/listApp'
 ], function(_, $, Marionette, App, Radio, enquire, SidebarApp) {
     'use strict';
 

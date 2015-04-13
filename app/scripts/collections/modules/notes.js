@@ -2,15 +2,14 @@
 define([
     'underscore',
     'jquery',
-    'app',
     'backbone.radio',
     'marionette',
     'collections/notes'
-], function(_, $, App, Radio, Marionette, Notes) {
+], function(_, $, Radio, Marionette, Notes) {
     'use strict';
 
     /**
-     * Collection module.
+     * Notes collection module.
      * It is used to fetch, add, save notes.
      *
      * Listens to
@@ -21,8 +20,9 @@ define([
      * 2. `restore` - restores a model from trash
      *
      * Replies on channel `notes`:
-     * 1. `getById` - returns a model with the provided id.
-     * 2. `filter`  - returns a collection filtered by provided filters.
+     * 1. `get:model`      - returns a model with the provided id.
+     * 2. `filter`         - returns a collection filtered by provided filters.
+     * 3. `get:model:full` - returns a model and its notebook
      *
      * Triggers events
      * --------
@@ -31,10 +31,7 @@ define([
      * 2. channel: `notes`, event: `model:destroy`
      *    after a note has been removed or its status was changed.
      */
-    var Module = App.module('AppNote.Collection', {startWithParent: true}),
-        Collection;
-
-    Collection = Marionette.Object.extend({
+    var Collection = Marionette.Object.extend({
 
         initialize: function() {
             _.bindAll(this, 'filter', '_getNotes');
@@ -50,8 +47,9 @@ define([
 
             // Replies
             this.vent.reply({
-                'getById' : this.getById,
-                'filter'  : this.filter
+                'get:model'      : this.getById,
+                'get:model:full' : this.getModelFull,
+                'filter'         : this.filter
             }, this);
 
             // Events
@@ -60,8 +58,8 @@ define([
 
         onDestroy: function() {
             this.collection.trigger('destroy');
-            this.vent.stopReplying('getById filter restore');
-            this.vent.stopComplying('save');
+            this.vent.stopReplying('get:model get:model:full filter');
+            this.vent.stopComplying('save remove restore');
         },
 
         /**
@@ -92,9 +90,9 @@ define([
             }
 
             // In case if the collection isn't empty, get the note from there.
-            if (this.collection.length && this.collection.fullCollection.get(id)) {
+            if (this.collection && this.collection.get(id)) {
                 return defer.resolve(
-                    this.collection.fullCollection.get(id)
+                    this.collection.get(id)
                 );
             }
 
@@ -104,6 +102,23 @@ define([
             $.when(model.fetch())
             .then(function() {
                 defer.resolve(model);
+            });
+
+            return defer.promise();
+        },
+
+        /**
+         * Return a note with its notebook
+         */
+        getModelFull: function(id) {
+            var defer = $.Deferred();
+
+            this.getById(id)
+            .then(function(note) {
+                Radio.request('notebooks', 'get:model', note.get('notebookId'))
+                .then(function(notebook) {
+                    defer.resolve(note, notebook);
+                });
             });
 
             return defer.promise();
@@ -167,6 +182,8 @@ define([
          * Fetches data.
          */
         _getNotes: function(options) {
+            var cond;
+
             // Destroy old collection
             this.trigger('collection:destroy');
 
@@ -176,15 +193,18 @@ define([
             // Register events
             this.collection.registerEvents();
 
+            // Get filter parameters
+            cond = this.collection.conditions[options.filter || 'active'];
+            cond = (typeof cond === 'function' ? cond(options) : cond);
+
             // Fetch data
             return $.when(this.collection.fetch({
-                conditions    : this.collection.conditions[options.filter || 'active'],
+                conditions    : cond,
                 sort          : false,
                 page          : options.page,
                 options       : options,
                 beforeSuccess : (
-                    this.storage !== 'indexeddb' || options.filter === 'search' ?
-                        this._filterOnFetch : null
+                    this.storage !== 'indexeddb' || !cond ? this._filterOnFetch : null
                 )
             }));
         },
@@ -193,7 +213,7 @@ define([
          * Use Backbone's filters when IndexedDB is not available
          */
         _filterOnFetch: function(collection, options) {
-            collection.filterList(options.filter, options.query);
+            collection.filterList(options.filter, options);
         },
 
         /**
@@ -210,15 +230,10 @@ define([
 
     });
 
-    Module.on('before:start', function() {
-        var contr = new Collection();
-        Collection.controller = contr;
+    // Initialize it automaticaly
+    Radio.command('init', 'add', 'app:before', function() {
+        new Collection();
     });
 
-    Module.on('before:stop', function() {
-        Collection.controller.destroy();
-        delete Collection.controller;
-    });
-
-    return Module;
+    return Collection;
 });

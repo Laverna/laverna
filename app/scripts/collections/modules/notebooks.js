@@ -108,19 +108,24 @@ define([
         /**
          * Remove an existing model.
          */
-        remove: function(model) {
+        remove: function(model, removeNotes) {
             var atIndex = this.collection.indexOf(model),
                 defer   = $.Deferred();
 
             model = (typeof model === 'string' ? this.getById(model) : model);
 
-            // Move child models to a higher level
+            /**
+             * Move child models to a higher level.
+             * Then, remove notes attached to the notebook or change their notebookId.
+             * And finally, remove the notebook.
+             */
             this.updateChildren(model)
+            .then(Radio.request('notes', 'change:notebookId', model, removeNotes))
             .then(function() {
                 return model.destroySync();
             })
             .then(function() {
-                Radio.trigger('notebooks', 'model:destroy', atIndex);
+                Radio.trigger('notebooks', 'model:destroy', atIndex, model.id);
                 defer.resolve();
             });
 

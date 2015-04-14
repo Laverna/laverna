@@ -20,9 +20,11 @@ define([
      * 2. `restore` - restores a model from trash
      *
      * Replies on channel `notes`:
-     * 1. `get:model`      - returns a model with the provided id.
-     * 2. `filter`         - returns a collection filtered by provided filters.
-     * 3. `get:model:full` - returns a model and its notebook
+     * 1. `get:model`         - returns a model with the provided id.
+     * 2. `filter`            - returns a collection filtered by provided filters.
+     * 3. `get:model:full`    - returns a model and its notebook
+     * 4. `change:notebookId` - changes notebookId of notes attached to a provided
+     *                          notebook. Returns a promise.
      *
      * Triggers events
      * --------
@@ -47,9 +49,10 @@ define([
 
             // Replies
             this.vent.reply({
-                'get:model'      : this.getById,
-                'get:model:full' : this.getModelFull,
-                'filter'         : this.filter
+                'get:model'         : this.getById,
+                'get:model:full'    : this.getModelFull,
+                'filter'            : this.filter,
+                'change:notebookId' : this.onNotebookRemove
             }, this);
 
             // Events
@@ -176,6 +179,40 @@ define([
             wait.then(function() {
                 Radio.trigger('notes', 'model:destroy', atIndex);
             });
+        },
+
+        /**
+         * When a notebook is removed, change notebookId of the notes
+         * attached to it.
+         */
+        onNotebookRemove: function(notebook, remove) {
+            var defer = $.Deferred(),
+                self  = this,
+                data  = {notebookId: 0},
+                promise;
+
+            // Place notes in trash
+            if (remove) {
+                data.trash = 1;
+            }
+
+            // Fetch notes that are attached to a specified notebook
+            this.filter({filter: 'notebook', query: notebook.get('id')})
+            .then(function(notes) {
+
+                // Change notebookId of each note or remove them
+                notes.fullCollection.each(function(note) {
+                    if (!promise) {
+                        promise = $.when(self.save(note, data));
+                        return;
+                    }
+                    promise.then(self.save(note, data));
+                });
+
+                promise.then(defer.resolve);
+            });
+
+            return defer.promise();
         },
 
         /**

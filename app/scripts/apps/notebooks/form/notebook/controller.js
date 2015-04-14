@@ -47,6 +47,10 @@ define([
         },
 
         show: function(collection, model) {
+            // Show only notebooks which are not related to the current model.
+            collection = collection.clone();
+            collection.reset(collection.rejectTree(model.get('id')));
+
             // Instantiate and show the form view
             this.view = new View({
                 collection : collection,

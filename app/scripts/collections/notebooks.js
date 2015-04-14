@@ -42,6 +42,23 @@ define([
         },
 
         /**
+         * Return only notebooks that are not related to a specified notebook.
+         */
+        rejectTree: function(id) {
+            var ids = [id];
+            return this.filter(function(model) {
+                if (_.indexOf(ids, model.id) > -1 ||
+                    _.indexOf(ids, model.get('parentId')) > -1) {
+
+                    ids.push(model.id);
+                    return false;
+                }
+
+                return true;
+            });
+        },
+
+        /**
          * Build a tree structure
          */
         getTree: function(parents, tree) {

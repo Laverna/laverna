@@ -1,17 +1,16 @@
 /* global define */
 define([
     'marionette',
-    'helpers/communicator',
+    'backbone.radio',
     'modalRegion',
     'brandRegion'
-], function(Marionette, channel, ModalRegion, BrandRegion) {
+], function(Marionette, Radio, ModalRegion, BrandRegion) {
     'use strict';
 
     /**
      * Main region manager
      */
-    var rm = new Marionette.RegionManager(),
-        regions;
+    var rm = new Marionette.RegionManager();
 
     rm.addRegions({
         sidebarNavbar : '#sidebar-navbar',
@@ -21,11 +20,14 @@ define([
         modal         : ModalRegion
     });
 
-    regions = rm.getRegions();
-
-    channel.comply('region:show', function(region, view) {
-        return regions[region].show(view);
+    Radio.channel('global')
+    .comply('region:show', function(region, view) {
+        return rm.get(region).show(view);
+    })
+    .comply('region:empty', function(region) {
+        return rm.get(region).empty();
     });
 
-    return regions;
+    return rm;
 });
+

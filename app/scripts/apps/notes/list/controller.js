@@ -42,6 +42,7 @@ define([
 
         onDestroy: function() {
             this.view.trigger('destroy');
+            this.view.collection.trigger('reset:all');
         },
 
         /**

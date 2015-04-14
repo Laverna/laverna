@@ -56,7 +56,7 @@ define([
             }, this);
 
             // Events
-            this.on('collection:destroy', this.onCollectionDestroy, this);
+            this.on('collection:destroy', this.reset, this);
         },
 
         onDestroy: function() {
@@ -230,6 +230,9 @@ define([
             // Register events
             this.collection.registerEvents();
 
+            // Events
+            this.listenTo(this.collection, 'reset:all', this.reset);
+
             // Get filter parameters
             cond = this.collection.conditions[options.filter || 'active'];
             cond = (typeof cond === 'function' ? cond(options) : cond);
@@ -256,10 +259,11 @@ define([
         /**
          * When some collection was destroyed, do some garbage collection.
          */
-        onCollectionDestroy: function() {
+        reset: function() {
             if (!this.collection) {
                 return;
             }
+            this.stopListening(this.collection);
             this.collection.removeEvents();
             this.collection.reset();
             delete this.collection;

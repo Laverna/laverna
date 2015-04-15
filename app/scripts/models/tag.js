@@ -31,23 +31,6 @@ define([
             // this.on('update:name', this.doEscape());
         },
 
-        /**
-         * Override `save` method so that we can check for uniqueness
-         * of tag's name.
-         */
-        save: function() {
-            var self = this,
-                args = arguments;
-
-            // If the model is not unique, do nothing
-            return this.isUnique()
-            .then(function(result) {
-                if (result) {
-                    return Backbone.Model.prototype.save.apply(self, args);
-                }
-            });
-        },
-
         validate: function(attrs) {
             var errors = [];
             if (attrs.name === '') {
@@ -57,32 +40,6 @@ define([
             if (errors.length > 0) {
                 return errors;
             }
-        },
-
-        /**
-         * Check for uniqueness of the model
-         */
-        isUnique: function() {
-            var defer = $.Deferred(),
-                self  = this;
-
-            // Search for tags with the same name as the current model's
-            Radio.request('tags', 'get:all', {
-                conditions: {name: this.get('name')}
-            })
-            .then(function(collection) {
-                // Ensure to omit this model from the collection
-                collection = _.filter(collection, function(m) {
-                    return m.get('id') !== self.get('id');
-                });
-
-                if (collection.length) {
-                    self.trigger('invalid', self, ['name']);
-                }
-                defer.resolve(collection.length === 0);
-            });
-
-            return defer.promise();
         },
 
         /**

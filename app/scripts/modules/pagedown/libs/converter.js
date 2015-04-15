@@ -29,6 +29,10 @@ define([
             return new Checklist().count(content);
         },
 
+        getTags: function(content) {
+            return new Tags().getTags(content);
+        },
+
         toHtml: function(content) {
             return this.getConverter().makeHtml(content);
         },

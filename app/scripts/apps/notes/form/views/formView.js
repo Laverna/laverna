@@ -67,7 +67,7 @@ define([
         },
 
         initialize: function() {
-            _.bindAll(this, 'autoSave', 'save', 'cancel');
+            _.bindAll(this, 'autoSave', 'save', 'cancel', '_save');
 
             this.configs = Radio.request('global', 'configs');
             this.$body = $('body');
@@ -130,6 +130,10 @@ define([
         },
 
         autoSave: function() {
+            if (this.options.isClosed) {
+                return;
+            }
+
             this.options.redirect = false;
             console.log('Auto saving the note...');
             this._save();
@@ -140,6 +144,7 @@ define([
                 e.preventDefault();
             }
 
+            this.options.isClosed = true;
             this.options.redirect = true;
             this._save();
 

@@ -147,8 +147,9 @@ define([
         },
 
         getContent: function() {
-            var data = {};
+            var data     = {};
             data.content = !this.editor ? '' : this.editor.getSession().getValue().trim();
+            data.tags    = Converter.getTags(data.content);
             data = _.extend(data, Converter.countTasks(data.content));
             return data;
         }

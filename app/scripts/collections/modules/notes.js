@@ -134,13 +134,19 @@ define([
             var self = this;
             model.setEscape(data).encrypt();
 
-            model.save(model.toJSON(), {
-                success: function(note) {
-                    if (self.collection) {
-                        self.collection.trigger('add:model', note);
+            /**
+             * Before saving the model, add tags.
+             */
+            $.when(Radio.request('tags', 'add', data.tags))
+            .then(function() {
+                model.save(model.toJSON(), {
+                    success: function(note) {
+                        if (self.collection) {
+                            self.collection.trigger('add:model', note);
+                        }
+                        Radio.trigger('notes', 'save:after', note.get('id'));
                     }
-                    Radio.trigger('notes', 'save:after', note.get('id'));
-                }
+                });
             });
         },
 

@@ -4,8 +4,9 @@ define([
     'jquery',
     'backbone.radio',
     'marionette',
-    'collections/tags'
-], function(_, $, Radio, Marionette, Tags) {
+    'collections/tags',
+    'sjcl'
+], function(_, $, Radio, Marionette, Tags, sjcl) {
     'use strict';
 
     /**
@@ -23,6 +24,7 @@ define([
      * Replies to requests on channel `tags`:
      * 1. `get:all`  - returns a collection.
      * 2. `get:model` - returns a model with the specified ID.
+     * 3. `add`       - add several tags at once.
      *
      * Triggers events:
      * 1. `add:model` to a collection that is currently under use
@@ -39,18 +41,23 @@ define([
 
             // Register complies
             this.vent.comply({
-                'remove': this.remove,
-                'save'  : this.save
+                'remove' : this.remove,
+                'save'   : this.save
             }, this);
 
             // Register replies
             this.vent.reply({
+                'add'       : this.add,
                 'get:all'   : this.getAll,
                 'get:model' : this.getById
             }, this);
         },
 
         reset: function() {
+            if (!this.collection) {
+                return;
+            }
+
             this.stopListening(this.collection);
             this.collection.removeEvents();
             this.collection.reset([]);
@@ -91,19 +98,25 @@ define([
          */
         save: function(model, data) {
             var self  = this,
+                id    = sjcl.hash.sha256.hash(data.name).join(''),
                 defer = $.Deferred();
 
-            model.set(data);
-            model.updateDate();
+            // First, make sure that a model won't duplicate itself.
+            $.when(this._removeOld(id, model))
+            .then(function() {
+                model.set('id', id);
+                model.set(data);
+                model.updateDate();
 
-            model.save(model.toJSON(), {
-                success: function(tag) {
-                    if (self.collection) {
-                        self.collection.trigger('add:model', tag);
+                model.save(model.toJSON(), {
+                    success: function(tag) {
+                        if (self.collection) {
+                            self.collection.trigger('add:model', tag);
+                        }
+                        defer.resolve(tag);
+                        Radio.trigger('tags', 'save:after', tag.get('id'));
                     }
-                    defer.resolve(tag);
-                    Radio.trigger('tags', 'save:after', tag.get('id'));
-                }
+                });
             });
 
             return defer.promise();
@@ -120,6 +133,7 @@ define([
 
             $.when(model.destroySync())
             .then(function() {
+                defer.resolve();
                 Radio.trigger('tags', 'model:destroy', atIndex);
             });
 
@@ -157,6 +171,50 @@ define([
 
         filter: function(options) {
             return this.collection.fullCollection.where(options.conditions);
+        },
+
+        /**
+         * Add a bunch of tags
+         */
+        add: function(tags) {
+            var defer = $.Deferred(),
+                self  = this,
+                model,
+                promise;
+
+            if (!tags.length) {
+                return defer.resolve();
+            }
+
+            _.each(tags, function(tag) {
+                model = new Tags.prototype.model();
+
+                if (!promise) {
+                    promise = $.when(self.save(model, {name: tag}));
+                    return;
+                }
+
+                promise.then(function() {self.save(model, {name: tag});});
+            });
+
+            promise.then(defer.resolve);
+            return defer.promise();
+        },
+
+        /**
+         * Sometimes a tag might have a new ID.
+         * If that happens, tags will be duplicated.
+         * With this method we solve that problem.
+         */
+        _removeOld: function(newId, model) {
+            var defer = $.Deferred();
+
+            if (!model.id || !this.collection || newId === model.id) {
+                return defer.resolve();
+            }
+
+            $.when(this.remove(model)).then(defer.resolve);
+            return defer.promise();
         }
 
     });

@@ -21,9 +21,6 @@ define([
      *    before the view is destroyed.
      * 3. channel: notesForm, event: set:mode
      *    when "Edit mode" has changed.
-     * Commands:
-     * 1. channel: notes, event: save
-     *    to save the changes.
      *
      * Responds to the following
      * Requests:
@@ -67,7 +64,7 @@ define([
         },
 
         initialize: function() {
-            _.bindAll(this, 'autoSave', 'save', 'cancel', '_save');
+            _.bindAll(this, 'autoSave', 'save', 'cancel');
 
             this.configs = Radio.request('global', 'configs');
             this.$body = $('body');
@@ -78,12 +75,17 @@ define([
             .comply('show:editor', this.showEditor, this)
             .on('save:auto', this.autoSave, this);
 
-            // Shortcuts
-            Mousetrap.bindGlobal(['ctrl+s', 'command+s'], this.save);
-            Mousetrap.bindGlobal(['esc'], this.cancel);
+            // Register keybindings
+            this.bindKeys();
 
             // The view is ready
             this.on('rendered', this.onRendered, this);
+            this.on('bind:keys', this.bindKeys, this);
+        },
+
+        bindKeys: function() {
+            Mousetrap.bindGlobal(['ctrl+s', 'command+s'], this.save);
+            Mousetrap.bindGlobal(['esc'], this.cancel);
         },
 
         onRendered: function() {
@@ -121,10 +123,14 @@ define([
 
         /**
          * Close the form without saving.
-         * @TODO ask for user's approval
          */
         cancel: function() {
+            // Save which element was under focus
+            this.options.focus = this.ui.title.is(':focus') ? 'title' : 'editor';
+
+            this.options.isClosed = true;
             this.options.redirect = true;
+
             this.trigger('cancel');
             return false;
         },
@@ -136,7 +142,7 @@ define([
 
             this.options.redirect = false;
             console.log('Auto saving the note...');
-            this._save();
+            this.trigger('save');
         },
 
         save: function(e) {
@@ -146,7 +152,7 @@ define([
 
             this.options.isClosed = true;
             this.options.redirect = true;
-            this._save();
+            this.trigger('save');
 
             return false;
         },
@@ -167,14 +173,6 @@ define([
             Radio.trigger('notesForm', 'set:mode', mode);
 
             return false;
-        },
-
-        _save: function() {
-            var data = _.extend(Radio.request('editor', 'get:content'), {
-                title      : this.ui.title.val().trim(),
-                notebookId : this.notebooks.currentView.ui.notebookId.val().trim(),
-            });
-            Radio.command('notes', 'save', this.model, data);
         },
 
         _fullscreenMode: function() {

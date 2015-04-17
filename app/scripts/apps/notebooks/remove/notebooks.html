@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-mini">
+<div><div class="modal-dialog modal-mini">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -11,9 +11,12 @@
             <button type="button" class="btn btn-default" data-event="cancel">
                 {{ i18n('Cancel') }}
             </button>
+            <button type="button" class="btn btn-danger" data-event="confirmNotes">
+                {{ i18n('Yes, remove it and attached notes.') }}
+            </button>
             <button type="button" class="btn btn-success" data-event="confirm">
-                {{ i18n('OK') }}
+                {{ i18n('Yes, remove it.') }}
             </button>
         </div>
     </div>
-</div>
+</div></div>

@@ -88,10 +88,17 @@
     "Credits": "Credits",
     "List of contributors": "List of contributors",
     "List of all used libraries": "List of all used libraries",
+    "Are you sure?": "Are you sure?",
+    "notes": {
+        "confirm trash": "The note **__title__** will be moved to trash.",
+        "confirm remove": "The note **__title__** will be removed **for ever**!"
+    },
     "notebooks": {
-        "name": "Please, provide notebook's name"
+        "name": "Please, provide notebook's name",
+        "confirm remove": "The notebook **__name__** will be removed **for ever**!"
     },
     "tags": {
-        "name": "Tag name is required"
+        "name": "Tag name is required",
+        "confirm remove": "The tag **__name__** will be removed **for ever**!"
     }
 }

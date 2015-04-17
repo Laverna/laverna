@@ -137,7 +137,7 @@ define([
             /**
              * Before saving the model, add tags.
              */
-            $.when(Radio.request('tags', 'add', data.tags))
+            $.when(Radio.request('tags', 'add', data.tags || []))
             .then(function() {
                 model.save(model.toJSON(), {
                     success: function(note) {
@@ -205,6 +205,9 @@ define([
             // Fetch notes that are attached to a specified notebook
             this.filter({filter: 'notebook', query: notebook.get('id')})
             .then(function(notes) {
+                if (notes.length === 0) {
+                    return defer.resolve();
+                }
 
                 // Change notebookId of each note or remove them
                 notes.fullCollection.each(function(note) {

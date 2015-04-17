@@ -33,7 +33,7 @@ define([
         'collections/modules/tags',
 
         // Modules
-        // 'apps/confirm/appConfirm',
+        'apps/confirm/appConfirm',
         'apps/encryption/encrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',

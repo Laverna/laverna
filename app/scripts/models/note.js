@@ -28,7 +28,7 @@ define([
             'taskCompleted' :  0,
             'created'       :  Date.now(),
             'updated'       :  Date.now(),
-            'notebookId'    :  0,
+            'notebookId'    :  '0',
             'tags'          :  [],
             'isFavorite'    :  0,
             'trash'         :  0,

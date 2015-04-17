@@ -44,6 +44,7 @@ define([
             // Events
             Radio.channel('editor')
             .on('pagedown:ready', this.changeConfigs, this)
+            .on('focus', this.focus, this)
             .reply('get:content', this.getContent, this);
 
             Radio.on('notesForm', 'set:mode', this.changeConfigs, this);
@@ -58,7 +59,7 @@ define([
             Radio.off('notesForm', 'set:mode');
 
             Radio.channel('editor')
-            .off('pagedown:ready')
+            .off('pagedown:ready focus')
             .stopReplying('get:content');
 
             this.editor.destroy();
@@ -152,6 +153,10 @@ define([
             data.tags    = Converter.getTags(data.content);
             data = _.extend(data, Converter.countTasks(data.content));
             return data;
+        },
+
+        focus: function() {
+            this.editor.focus();
         }
 
     });

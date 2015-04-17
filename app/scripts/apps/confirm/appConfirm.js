@@ -1,39 +1,36 @@
-/*global define*/
+/* global define */
 define([
     'underscore',
     'marionette',
-    'app',
+    'backbone.radio',
+    'modules',
     'apps/confirm/show/controller'
-], function(_, Marionette, App, Controller) {
+], function(_, Marionette, Radio, Modules, Controller) {
     'use strict';
 
     /**
-     * Confirm modal window
+     * Confirm module. We use it as a replacement for window.confirm.
+     *
+     * Complies on channel `Confirm` to:
+     * 1. command `start` - starts itself.
+     * 2. command `stop`  - stops itself.
      */
-    var Confirm = App.module('Confirm', {startWithParent: false, modal: true}),
-        controller;
+    var Confirm = Modules.module('Confirm', {startWithParent: false});
 
-    Confirm.on('start', function() {
-        App.vent.trigger('mousetrap:reset');
-        App.log('AppConfirm has started');
+    Confirm.on('start', function(options) {
+        Confirm.controller = new Controller(options);
     });
 
     Confirm.on('stop', function() {
-        App.vent.trigger('mousetrap:restart');
-
-        // Destroy the controller
-        controller.destroy();
-        controller = null;
-
-        App.log('AppConfirm has stoped');
+        Confirm.controller.destroy();
+        delete Confirm.controller;
     });
 
-    App.Confirm.show = function(options) {
-        App.Confirm.start();
-
-        controller = new Controller();
-        controller.show(options);
-    };
+    // Initializer
+    Radio.command('init', 'add', 'app', function() {
+        Radio.comply('Confirm', 'start', Confirm.start, Confirm);
+        Radio.comply('Confirm', 'stop', Confirm.stop, Confirm);
+    });
 
     return Confirm;
 

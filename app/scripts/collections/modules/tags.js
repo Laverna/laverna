@@ -3,10 +3,10 @@ define([
     'underscore',
     'jquery',
     'backbone.radio',
-    'marionette',
+    'collections/modules/module',
     'collections/tags',
     'sjcl'
-], function(_, $, Radio, Marionette, Tags, sjcl) {
+], function(_, $, Radio, ModuleObject, Tags, sjcl) {
     'use strict';
 
     /**
@@ -34,69 +34,32 @@ define([
      * 3. channel: `tags`, event: `model:destroy`
      *    after a model was destroyed.
      */
-    var Collection = Marionette.Object.extend({
+    var Collection = ModuleObject.extend({
+        Collection: Tags,
 
-        initialize: function() {
-            this.vent = Radio.channel('tags');
-
-            // Register complies
-            this.vent.comply({
+        comply: function() {
+            return {
                 'remove' : this.remove,
-                'save'   : this.save
-            }, this);
+                'save'   : this.saveModel
+            };
+        },
 
-            // Register replies
-            this.vent.reply({
+        reply: function() {
+            return {
                 'add'       : this.add,
                 'get:all'   : this.getAll,
                 'get:model' : this.getById
-            }, this);
+            };
         },
 
-        reset: function() {
-            if (!this.collection) {
-                return;
-            }
-
-            this.stopListening(this.collection);
-            this.collection.removeEvents();
-            this.collection.reset([]);
-            delete this.collection;
-        },
-
-        /**
-         * Search a model by ID
-         */
-        getById: function(id) {
-            var defer = $.Deferred();
-
-            // If id was not provided, just instantiate a new model
-            if (!id) {
-                return defer.resolve(new Tags.prototype.model());
-            }
-
-            // In case if the collection isn't empty, get the note from there.
-            if (this.collection && this.collection.get(id)) {
-                return defer.resolve(
-                    this.collection.get(id)
-                );
-            }
-
-            // Otherwise, fetch it
-            var model = new Tags.prototype.model({id: id});
-
-            $.when(model.fetch())
-            .then(function() {
-                defer.resolve(model);
-            });
-
-            return defer.promise();
+        filter: function(options) {
+            return this.collection.fullCollection.where(options.conditions);
         },
 
         /**
          * Add a new model or update an existing one.
          */
-        save: function(model, data) {
+        saveModel: function(model, data) {
             var self  = this,
                 id    = sjcl.hash.sha256.hash(data.name).join(''),
                 defer = $.Deferred();
@@ -108,69 +71,10 @@ define([
                 model.set(data);
                 model.updateDate();
 
-                model.save(model.toJSON(), {
-                    success: function(tag) {
-                        if (self.collection) {
-                            self.collection.trigger('add:model', tag);
-                        }
-                        defer.resolve(tag);
-                        Radio.trigger('tags', 'save:after', tag.get('id'));
-                    }
-                });
+                return self.save(model, model.toJSON());
             });
 
             return defer.promise();
-        },
-
-        /**
-         * Remove an existing tag
-         */
-        remove: function(model) {
-            var atIndex = this.collection.indexOf(model),
-                defer   = $.Deferred();
-
-            model = (typeof model === 'string' ? this.getById(model) : model);
-
-            $.when(model.destroySync())
-            .then(function() {
-                defer.resolve();
-                Radio.trigger('tags', 'model:destroy', atIndex);
-            });
-
-            return defer.promise();
-        },
-
-        /**
-         * Fetch all the models.
-         */
-        getAll: function(options) {
-            var defer = $.Deferred(),
-                self  = this;
-
-            // Do not fetch twice
-            if (this.collection) {
-                return defer.resolve(
-                    options ? this.filter(options) : this.collection
-                );
-            }
-
-            // Instantiate a collection
-            this.collection = new Tags();
-            this.collection.registerEvents();
-
-            // Events
-            this.listenTo(this.collection, 'reset:all', this.reset);
-
-            $.when(this.collection.fetch(options))
-            .then(function() {
-                defer.resolve(self.collection);
-            });
-
-            return defer.promise();
-        },
-
-        filter: function(options) {
-            return this.collection.fullCollection.where(options.conditions);
         },
 
         /**

@@ -3,9 +3,9 @@ define([
     'underscore',
     'jquery',
     'backbone.radio',
-    'marionette',
+    'collections/modules/module',
     'collections/notes'
-], function(_, $, Radio, Marionette, Notes) {
+], function(_, $, Radio, ModuleObject, Notes) {
     'use strict';
 
     /**
@@ -33,30 +33,24 @@ define([
      * 2. channel: `notes`, event: `model:destroy`
      *    after a note has been removed or its status was changed.
      */
-    var Collection = Marionette.Object.extend({
+    var Collection = ModuleObject.extend({
+        Collection: Notes,
 
-        initialize: function() {
-            _.bindAll(this, 'filter', '_getNotes');
-            this.vent = Radio.channel('notes');
-            this.storage = Radio.request('global', 'storage');
+        comply: function() {
+            return {
+                'save'    : this.saveModel,
+                'remove'  : this.remove,
+                'restore' : this.restore
+            };
+        },
 
-            // Complies
-            this.vent.comply({
-                'save'          : this.save,
-                'remove'        : this.remove,
-                'restore'       : this.restore
-            }, this);
-
-            // Replies
-            this.vent.reply({
+        reply: function() {
+            return {
                 'get:model'         : this.getById,
                 'get:model:full'    : this.getModelFull,
                 'filter'            : this.filter,
                 'change:notebookId' : this.onNotebookRemove
-            }, this);
-
-            // Events
-            this.on('collection:destroy', this.reset, this);
+            };
         },
 
         onDestroy: function() {
@@ -70,41 +64,28 @@ define([
          */
         filter: function(options) {
             var defer = $.Deferred(),
-                self  = this;
+                self  = this,
+                cond;
 
-            this._getNotes(options)
+            // Destroy old collection
+            this.trigger('collection:destroy');
+
+            // Get filter parameters
+            cond = Notes.prototype.conditions[options.filter || 'active'];
+            cond = (typeof cond === 'function' ? cond(options) : cond);
+
+            this.getAll({
+                conditions    : cond,
+                sort          : false,
+                profile       : options.profile,
+                page          : options.page,
+                options       : options,
+                beforeSuccess : (
+                    this.storage !== 'indexeddb' || !cond ? this._filterOnFetch : null
+                )
+            })
             .then(function() {
-
                 defer.resolve(self.collection);
-            });
-
-            return defer.promise();
-        },
-
-        /**
-         * Returns a note.
-         */
-        getById: function(id) {
-            var defer = $.Deferred();
-
-            // If id was not provided, just instantiate a new model
-            if (!id) {
-                return defer.resolve(new Notes.prototype.model());
-            }
-
-            // In case if the collection isn't empty, get the note from there.
-            if (this.collection && this.collection.get(id)) {
-                return defer.resolve(
-                    this.collection.get(id)
-                );
-            }
-
-            // Otherwise, fetch it
-            var model = new Notes.prototype.model({id: id});
-
-            $.when(model.fetch())
-            .then(function() {
-                defer.resolve(model);
             });
 
             return defer.promise();
@@ -113,10 +94,10 @@ define([
         /**
          * Return a note with its notebook
          */
-        getModelFull: function(id) {
+        getModelFull: function(options) {
             var defer = $.Deferred();
 
-            this.getById(id)
+            this.getById(options)
             .then(function(note) {
                 Radio.request('notebooks', 'get:model', note.get('notebookId'))
                 .then(function(notebook) {
@@ -130,7 +111,7 @@ define([
         /**
          * Saves changes to a note.
          */
-        save: function(model, data) {
+        saveModel: function(model, data) {
             var self = this;
             model.setEscape(data).encrypt();
 
@@ -139,14 +120,7 @@ define([
              */
             $.when(Radio.request('tags', 'add', data.tags || []))
             .then(function() {
-                model.save(model.toJSON(), {
-                    success: function(note) {
-                        if (self.collection) {
-                            self.collection.trigger('add:model', note);
-                        }
-                        Radio.trigger('notes', 'save:after', note.get('id'));
-                    }
-                });
+                return self.save(model, model.toJSON());
             });
         },
 
@@ -225,57 +199,10 @@ define([
         },
 
         /**
-         * Fetches data.
-         */
-        _getNotes: function(options) {
-            var cond;
-
-            // Destroy old collection
-            this.trigger('collection:destroy');
-
-            // Instantiate a new collection
-            this.collection = new Notes();
-
-            // Register events
-            this.collection.registerEvents();
-
-            // Events
-            this.listenTo(this.collection, 'reset:all', this.reset);
-
-            // Get filter parameters
-            cond = this.collection.conditions[options.filter || 'active'];
-            cond = (typeof cond === 'function' ? cond(options) : cond);
-
-            // Fetch data
-            return $.when(this.collection.fetch({
-                conditions    : cond,
-                sort          : false,
-                page          : options.page,
-                options       : options,
-                beforeSuccess : (
-                    this.storage !== 'indexeddb' || !cond ? this._filterOnFetch : null
-                )
-            }));
-        },
-
-        /**
          * Use Backbone's filters when IndexedDB is not available
          */
         _filterOnFetch: function(collection, options) {
             collection.filterList(options.filter, options);
-        },
-
-        /**
-         * When some collection was destroyed, do some garbage collection.
-         */
-        reset: function() {
-            if (!this.collection) {
-                return;
-            }
-            this.stopListening(this.collection);
-            this.collection.removeEvents();
-            this.collection.reset();
-            delete this.collection;
         }
 
     });

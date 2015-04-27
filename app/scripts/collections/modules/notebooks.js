@@ -3,9 +3,9 @@ define([
     'underscore',
     'jquery',
     'backbone.radio',
-    'marionette',
+    'collections/modules/module',
     'collections/notebooks'
-], function(_, $, Radio, Marionette, Notebooks) {
+], function(_, $, Radio, ModuleObject, Notebooks) {
     'use strict';
 
     /**
@@ -32,74 +32,31 @@ define([
      * 3. channel: `notebooks`, event: `model:destroy`
      *    after a model was destroyed.
      */
-    var Collection = Marionette.Object.extend({
+    var Collection = ModuleObject.extend({
+        Collection: Notebooks,
 
-        initialize: function() {
-            this.vent = Radio.channel('notebooks');
-
-            // Comply to commands
-            this.vent.comply({
+        comply: function() {
+            return {
                 'remove' : this.remove,
                 'save'   : this.save
-            }, this);
+            };
+        },
 
-            // Reply to requests
-            this.vent.reply({
-                'get:all'   : this.getAll,
+        reply: function() {
+            return {
+                'get:all'   : this.getNotebooks,
                 'get:model' : this.getById
-            }, this);
+            };
         },
 
-        reset: function() {
-            this.stopListening(this.collection);
-            this.collection.removeEvents();
-            this.collection.reset([]);
-            delete this.collection;
-        },
+        getNotebooks: function(options) {
+            var defer = $.Deferred(),
+                self  = this;
 
-        /**
-         * Find and return a model with the specified ID
-         */
-        getById: function(id) {
-            var defer = $.Deferred();
-
-            // If id was not provided, just instantiate a new model
-            if (!id || id === '0') {
-                return defer.resolve(new Notebooks.prototype.model());
-            }
-
-            // In case if the collection isn't empty, get the model from there.
-            if (this.collection && this.collection.get(id)) {
-                return defer.resolve(this.collection.get(id));
-            }
-
-            // Otherwise, fetch it
-            var model = new Notebooks.prototype.model({id: id});
-
-            $.when(model.fetch())
+            this.getAll(options)
             .then(function() {
-                defer.resolve(model);
-            });
-
-            return defer.promise();
-        },
-
-        /**
-         * Add a new model or update an existing one.
-         */
-        save: function(model, data) {
-            var self  = this,
-                defer = $.Deferred();
-
-            model.set(data);
-            model.save(model.toJSON(), {
-                success: function(notebook) {
-                    if (self.collection) {
-                        self.collection.trigger('add:model', notebook);
-                    }
-                    defer.resolve(notebook);
-                    Radio.trigger('notebooks', 'save:after', notebook.get('id'));
-                }
+                self.collection.models = self.collection.getTree();
+                defer.resolve(self.collection);
             });
 
             return defer.promise();
@@ -130,40 +87,6 @@ define([
             });
 
             return defer.promise();
-        },
-
-        /**
-         * Fetch all the models.
-         */
-        getAll: function(options) {
-            var defer = $.Deferred(),
-                self  = this;
-
-            // Do no fetch twice
-            if (this.collection) {
-                return defer.resolve(
-                    options ? this.filter(options) : this.collection
-                );
-            }
-
-            // Instantiate the collection and start listening to events
-            this.collection = new Notebooks();
-            this.collection.registerEvents();
-
-            // Events
-            this.listenTo(this.collection, 'reset:all', this.reset);
-
-            $.when(this.collection.fetch(options))
-            .then(function() {
-                self.collection.models = self.collection.getTree();
-                defer.resolve(self.collection);
-            });
-
-            return defer.promise();
-        },
-
-        filter: function(options) {
-            return this.collection.fullCollection.where(options.conditions);
         },
 
         /**

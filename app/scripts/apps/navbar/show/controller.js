@@ -34,12 +34,13 @@ define([
         initialize: function(options) {
             _.bindAll(this, 'show');
 
-            this.configs = Radio.request('global', 'configs');
             this.options = options;
 
             // Request notebooks and title
             $.when(
-                Radio.request('notebooks', 'get:all'),
+                Radio.request('configs', 'get:all', options),
+                Radio.request('notebooks', 'get:all', options),
+                Radio.request('configs', 'get:model', {name: 'appProfiles'}),
                 Radio.request('global', 'get:title', options)
             )
             .then(this.show);
@@ -50,7 +51,7 @@ define([
             this.view.trigger('destroy');
         },
 
-        show: function(notebooks, title) {
+        show: function(configs, notebooks, profiles, title) {
             var currentApp = Radio.request('global', 'app:current').moduleName,
                 args;
 
@@ -59,18 +60,16 @@ define([
                 return;
             }
 
-            args = _.extend({
-                title   : title,
-                configs : this.configs
-            }, this.options);
-
+            args = _.extend({title: title}, this.options);
             args.currentUrl = Radio.request('uri', 'link:profile', (
                 currentApp === 'AppNotebooks' ? '/notebooks' : '/notes'
             ));
 
             this.view = new View({
-                args      : args,
-                notebooks : notebooks
+                args       : args,
+                notebooks  : notebooks,
+                collection : configs,
+                profiles   : profiles
             });
 
             // Render the view

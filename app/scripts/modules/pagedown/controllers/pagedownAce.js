@@ -33,7 +33,7 @@ define([
 
         initialize: function() {
             _.bindAll(this, 'triggerScroll', 'triggerSave');
-            this.configs = Radio.request('global', 'configs');
+            this.configs = Radio.request('configs', 'get:object');
 
             // Initialize the view
             this.view = new View({

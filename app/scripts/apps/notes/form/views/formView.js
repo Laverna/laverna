@@ -4,9 +4,9 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
-    'Mousetrap',
+    'mousetrap',
     'text!apps/notes/form/templates/form.html',
-    'mousetrap-global'
+    'mousetrap.global'
 ], function($, _, Marionette, Radio, Mousetrap, Tmpl) {
     'use strict';
 
@@ -66,7 +66,7 @@ define([
         initialize: function() {
             _.bindAll(this, 'autoSave', 'save', 'cancel');
 
-            this.configs = Radio.request('global', 'configs');
+            this.configs = Radio.request('configs', 'get:object');
             this.$body = $('body');
 
             // Events, complies, and replies

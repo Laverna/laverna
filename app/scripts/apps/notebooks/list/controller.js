@@ -30,8 +30,8 @@ define([
 
             // Fetch
             $.when(
-                Radio.request('notebooks', 'get:all'),
-                Radio.request('tags', 'get:all')
+                Radio.request('notebooks', 'get:all', options),
+                Radio.request('tags', 'get:all', options)
             ).then(this.show);
         },
 
@@ -41,7 +41,7 @@ define([
 
         show: function(notebooks, tags) {
             this.view = new View({
-                configs: Radio.request('global', 'configs')
+                configs: Radio.request('configs', 'get:object')
             });
 
             Radio.command('global', 'region:show', 'sidebar', this.view);

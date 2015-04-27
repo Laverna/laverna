@@ -67,7 +67,7 @@ define([
         },
 
         initialize: function() {
-            var configs = Radio.request('global', 'configs');
+            var configs = Radio.request('configs', 'get:object');
             this.keyboardEvents[configs.actionsEdit]       = 'editNote';
             this.keyboardEvents[configs.actionsRemove]     = 'rmNote';
             this.keyboardEvents[configs.actionsRotateStar] = 'favorite';

@@ -28,6 +28,7 @@ define([
 
     // Initializer
     Radio.command('init', 'add', 'app:before', function() {
+        Radio.comply('navbar', 'stop', Navbar.stop, Navbar);
 
         Radio.comply('navbar', 'start', _.debounce(function(options) {
             // Restart the module

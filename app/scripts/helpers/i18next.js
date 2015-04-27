@@ -25,7 +25,7 @@ define([
      */
     Radio.command('init', 'add', 'app:before', function() {
         return i18n.init({
-            lng             : Radio.request('global', 'configs').appLang,
+            lng             : Radio.request('configs', 'get:config', 'appLang'),
             fallbackLng     : 'en',
             useCookie       : false,
             useLocalStorage : false

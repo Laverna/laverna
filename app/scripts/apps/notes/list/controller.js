@@ -32,6 +32,9 @@ define([
             this.options = options;
             _.bindAll(this, 'show', 'filter', 'navigate');
 
+            // Get configs
+            this.configs = Radio.request('configs', 'get:object');
+
             // Listen to events
             this.listenTo(this.radio('appNote'), 'model:active', this.onModelActive, this);
             this.listenTo(this.radio('notes'), 'model:navigate', _.debounce(this.navigate, 420));
@@ -80,6 +83,7 @@ define([
 
             // Show the navbar
             Radio.command('navbar', 'start', options);
+            options.pageSize = this.configs.pagination;
             this.options = options;
 
             // Fetch data

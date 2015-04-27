@@ -55,7 +55,7 @@ define([
         initialize: function() {
             _.bindAll(this, 'toNextNote', 'toPreviousNote');
 
-            this.configs = Radio.request('global', 'configs');
+            this.configs = Radio.request('configs', 'get:object');
 
             // Shortcuts
             this.keyboardEvents[this.configs.navigateBottom] = 'toNextNote';

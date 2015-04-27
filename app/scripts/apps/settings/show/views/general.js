@@ -2,14 +2,16 @@
 define([
     'underscore',
     'marionette',
-    'sjcl',
     'constants',
     'text!locales/locales.json',
     'apps/settings/show/formBehavior',
-    'text!apps/settings/show/templates/basic.html'
-], function (_, Marionette, sjcl, constants, locales, FormBehavior, Tmpl) {
+    'text!apps/settings/show/templates/general.html'
+], function(_, Marionette, constants, locales, FormBehavior, Tmpl) {
     'use strict';
 
+    /**
+     * General settings.
+     */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
@@ -19,35 +21,18 @@ define([
             }
         },
 
-        ui: {
-            saltInput : 'input[name=encryptSalt]'
-        },
-
-        events: {
-            'click #randomize'    : 'randomize'
-        },
-
-        /**
-         * Generate random salt
-         */
-        randomize: function () {
-            var random = sjcl.random.randomWords(2, 0);
-            this.ui.saltInput.val(random);
-            this.ui.saltInput.trigger('change');
-            return false;
-        },
-
-        serializeData: function () {
+        serializeData: function() {
             return {
-                locales: JSON.parse(locales),
-                models : this.collection.getConfigs(),
-                dropboxKeyNeed : constants.DROPBOXKEYNEED
+                locales    : JSON.parse(locales),
+                models     : this.collection.getConfigs(),
+                useDefault : this.options.useDefault.toJSON()
             };
         },
 
-        templateHelpers: function () {
+        templateHelpers: function() {
             return {
-                isLocaleActive: function (locale) {
+                isLocaleActive: function(locale) {
+                    this.models.appLang = this.models.appLang || 'en';
                     if (this.models.appLang === locale ||
                         this.models.appLang.indexOf(locale) >= 0) {
                         return ' selected';

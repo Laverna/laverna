@@ -3,10 +3,13 @@ define([
     'underscore',
     'marionette',
     'apps/settings/show/formBehavior',
-    'text!apps/settings/show/templates/shortcuts.html'
-], function (_, Marionette, FormBehavior, Tmpl) {
+    'text!apps/settings/show/templates/keybindings.html'
+], function(_, Marionette, FormBehavior, Tmpl) {
     'use strict';
 
+    /**
+     * Keybinding settings
+     */
     var Shortcuts = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
@@ -16,17 +19,17 @@ define([
             }
         },
 
-        serializeData: function () {
+        serializeData: function() {
             return { collection: this.collection };
         },
 
-        templateHelpers: function () {
+        templateHelpers: function() {
             return {
-                filter: function (str) {
+                filter: function(str) {
                     return this.collection.filterName(str);
                 },
 
-                appShortcuts: function () {
+                appShortcuts: function() {
                     return this.collection.appShortcuts();
                 }
             };

@@ -19,10 +19,9 @@ define([
     // Load all modules then start an application
     requirejs([
         // Helpers
-        'helpers/configs',
         'helpers/storage',
-        'helpers/install',
         'helpers/uri',
+        'helpers/install',
         'helpers/title',
         'helpers/i18next',
         'helpers/keybindings',
@@ -31,18 +30,24 @@ define([
         'collections/modules/notes',
         'collections/modules/notebooks',
         'collections/modules/tags',
+        'collections/modules/configs',
 
         // Modules
         'apps/confirm/appConfirm',
-        'apps/encryption/encrypt',
+        // 'apps/encryption/encrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',
         'apps/notebooks/appNotebooks',
-        // 'apps/settings/appSettings',
+        'apps/settings/appSettings',
         // 'apps/help/appHelp'
-    ].concat(exts), function(Configs, storage) {
+    ].concat(exts), function(storage) {
+        // Get profile name from location hash
+        var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
+        profile     = (!profile ? profile : profile[profile.index]);
 
-        Configs.fetch()
+        console.warn('prof', profile);
+
+        Radio.request('configs', 'get:all', {profile: profile})
         .then(storage.check)
         .then(Radio.request('init', 'start', 'app:before app module'))
         .then(function() {

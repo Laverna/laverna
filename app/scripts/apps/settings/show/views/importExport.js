@@ -6,30 +6,35 @@ define([
 ], function (_, Marionette, Tmpl) {
     'use strict';
 
+    /**
+     * Import or export settings
+     */
     var ImportExport = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
         ui: {
             importBtn : '#do-import',
-            importFile: '#import-file'
+            import: '#import-file'
         },
 
         events: {
-            'click #do-export'        : 'exportTrigger',
-            'click @ui.importBtn'     : 'importTrigger',
-            'change @ui.importFile'   : 'importFile'
+            'click @ui.importBtn' : 'triggerClick',
+            'change @ui.import'   : 'triggerImport'
         },
 
-        exportTrigger: function () {
-            this.collection.trigger('export');
+        triggers: {
+            'click #do-export'  : 'export'
         },
 
-        importFile: function (e) {
-            this.collection.trigger('import', e.target);
+        triggerImport: function(e) {
+            if (!e.target.files.length) {
+                return;
+            }
+            this.trigger('import', e.target);
         },
 
-        importTrigger: function () {
-            this.ui.importFile.click();
+        triggerClick: function () {
+            this.ui.import.click();
         }
     });
 

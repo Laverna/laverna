@@ -1,11 +1,11 @@
-/* global define, Mousetrap */
+/* global define */
 define([
     'underscore',
     'marionette',
     'backbone.radio',
-    'Mousetrap',
-    'mousetrap-pause'
-], function(_, Marionette, Radio) {
+    'mousetrap',
+    'mousetrap.pause'
+], function(_, Marionette, Radio, Mousetrap) {
     'use strict';
 
     /**
@@ -20,7 +20,7 @@ define([
 
         initialize: function() {
             // Fetch configs and bind the keys
-            this.configs = Radio.request('global', 'configs');
+            this.configs = Radio.request('configs', 'get:object');
             this.bind();
 
             Radio.comply('global', {
@@ -46,14 +46,23 @@ define([
             this.paused = (this.paused ? false : true);
         },
 
+        navigate: function(uri) {
+            Radio.command('uri', 'navigate', uri, {
+                includeProfile : true,
+                trigger        : true
+            });
+        },
+
         /**
          * Register keybindings.
          */
         bind: function() {
+            var self = this;
+
             // Help
             Mousetrap.bind(this.configs.appKeyboardHelp, function(e) {
                 e.preventDefault();
-                Radio.command('uri', 'navigate', '/help', true);
+                self.navigate('/help');
             });
 
             // Focus on search form
@@ -69,22 +78,22 @@ define([
 
             // Redirect to notes list
             Mousetrap.bind(this.configs.jumpInbox, function() {
-                Radio.command('uri', 'navigate', '/notes', {trigger: true});
+                self.navigate('/notes');
             });
 
             // Redirect to favorite notes
             Mousetrap.bind(this.configs.jumpFavorite, function() {
-                Radio.command('uri', 'navigate', '/notes/f/favorite', true);
+                self.navigate('/notes/f/favorite');
             });
 
             // Redirect to removed list of notes
             Mousetrap.bind(this.configs.jumpRemoved, function() {
-                Radio.command('uri', 'navigate', '/notes/f/trashed', true);
+                self.navigate('/notes/f/trashed');
             });
 
             // Redirect to notebooks list
             Mousetrap.bind(this.configs.jumpNotebook, function() {
-                Radio.command('uri', 'navigate', '/notebooks', true);
+                self.navigate('/notebooks');
             });
         }
 

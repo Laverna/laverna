@@ -43,9 +43,9 @@ requirejs.config({
         fuse                  : '../bower_components/fuse/src/fuse',
 
         // Mousetrap
-        'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
-        'mousetrap-pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
-        'mousetrap-global'    : '../bower_components/mousetrap/plugins/global-bind/mousetrap-global-bind',
+        'mousetrap'           : '../bower_components/mousetrap/mousetrap',
+        'mousetrap.pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
+        'mousetrap.global'    : '../bower_components/mousetrap/plugins/global-bind/mousetrap-global-bind',
 
         // Storage adapters
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
@@ -89,13 +89,7 @@ requirejs.config({
             exports: 'Backbone'
         },
         'backbone.mousetrap': {
-            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
-        },
-
-        // Mousetrap
-        'Mousetrap': { },
-        'mousetrap-pause': {
-            deps: ['Mousetrap']
+            deps: ['mousetrap', 'mousetrap.pause', 'backbone']
         },
 
         // Storage adapters

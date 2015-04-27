@@ -48,6 +48,10 @@ define([
             'submit .search-form'   : 'searchSubmit'
         },
 
+        collectionEvents: {
+            'change': 'render'
+        },
+
         initialize: function() {
             this.listenTo(Radio.channel('global'), 'show:search', this.showSearch);
 
@@ -91,6 +95,8 @@ define([
         serializeData: function() {
             return {
                 args      : this.options.args,
+                configs   : this.collection.getConfigs(),
+                profiles  : this.options.profiles.getValueJSON(),
                 notebooks : _.first(this.options.notebooks.toJSON(), 5),
                 uri       : Radio.request('uri', 'link:profile', '/'),
                 profile   : Radio.request('uri', 'profile')
@@ -106,7 +112,7 @@ define([
                 },
 
                 isSyncEnabled: function() {
-                    return Number(this.args.configs.cloudStorage) === 1;
+                    return Number(this.configs.cloudStorage) === 1;
                 },
 
                 profileLink: function(profileName) {

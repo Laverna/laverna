@@ -4,7 +4,7 @@
         <li class="dropdown">
             <a id="header-title" href="#{{ args.currentUrl }}" class="btn-link navbar-brand dropdown-toggle" data-toggle="dropdown">
                 <i id="location-icon" class="icon-file {{getIcon()}}"></i>
-                {{ args.title }}
+                {{i18n(args.title)}}
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu location-dropdown" >
@@ -22,10 +22,14 @@
                 <% }); } %>
 
                 <li class="divider"></li>
-                <li<% if (profile === 'notes-db' || !profile) { %> class="active" <% } %>><a href="#/notes"><i class="icon-user"></i>  Default</a></li>
-                <% _.forEach(args.configs.profiles, function(prof) { %>
+                <li<% if (profile === 'notes-db' || !profile) { %> class="active" <% } %>>
+                    <a href="#/notes"><i class="icon-user"></i>  Default</a>
+                </li>
+                <% _.forEach(profiles, function(prof) { %>
                 <% if (prof !== 'notes-db') { %>
-                <li<% if (profile === prof) { %> class="active" <% } %>><a href="#{{ link(prof) }}"><i class="icon-user"></i>  {{ prof }}</a></li>
+                <li<% if (profile === prof) { %> class="active" <% } %>>
+                    <a href="#{{ profileLink(prof) }}"><i class="icon-user"></i>  {{ prof }}</a>
+                </li>
                 <% } }); %>
 
                 <li class="divider"></li>

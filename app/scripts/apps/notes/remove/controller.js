@@ -34,7 +34,7 @@ define([
             this.listenTo(Radio.channel('Confirm'), 'confirm', this.remove);
 
             // Fetch the note by ID
-            Radio.request('notes', 'get:model', options.id)
+            Radio.request('notes', 'get:model', options)
             .then(this.showConfirm);
         },
 

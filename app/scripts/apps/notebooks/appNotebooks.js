@@ -51,7 +51,7 @@ define([
         // Starts itself
         onRoute: function() {
             if (!Notebooks._isInitialized) {
-                App.startSubApp('AppNotebooks');
+                App.startSubApp('AppNotebooks', {profile: arguments[2][0]});
             }
         }
     });
@@ -124,9 +124,9 @@ define([
     /**
      * Initializers and finalizers
      */
-    Notebooks.on('before:start', function() {
+    Notebooks.on('before:start', function(options) {
         // Start the sidebar module
-        SidebarApp.start();
+        SidebarApp.start(options);
 
         // Comply to commands
         Radio.channel('appNotebooks')

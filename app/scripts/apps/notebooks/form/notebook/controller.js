@@ -35,8 +35,8 @@ define([
 
             // Fetch notebooks
             $.when(
-                Radio.request('notebooks', 'get:all'),
-                Radio.request('notebooks', 'get:model', options.id)
+                Radio.request('notebooks', 'get:all', options),
+                Radio.request('notebooks', 'get:model', options)
             )
             .then(this.show);
         },

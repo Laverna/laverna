@@ -38,6 +38,9 @@ define([
          */
         fetch: function(options) {
             options = options || {};
+            options.options = options.options || {};
+
+            this.state.pageSize = Number(options.options.pageSize || this.state.pageSize);
 
             // Do not use pagination
             if (this.state.pageSize === 0) {

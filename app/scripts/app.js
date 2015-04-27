@@ -7,7 +7,7 @@ define([
     'devicejs',
     'regions/regionManager',
     'marionette'
-], function(_, $, Backbone, Radio, Device, regions) {
+], function(_, $, Backbone, Radio, Device) {
     'use strict';
 
     var App = new Backbone.Marionette.Application();
@@ -16,39 +16,15 @@ define([
 
     // Customize underscore template
     _.templateSettings = {
-        interpolate: /\{\{(.+?)\}\}/g,
-        evaluate: /<%([\s\S]+?)%>/g
+        interpolate : /\{\{(.+?)\}\}/g,
+        evaluate    : /<%([\s\S]+?)%>/g
     };
-
-    // @TODO remove this fallback after refactoring
-    App.content = regions.content;
-
-    _.extend(App, {
-
-        // Debug
-        log: function(str) {
-            if (console && typeof console.log === 'function') {
-                console.log(str);
-            }
-        },
-
-        // Document title
-        setTitle: function(title, mainTitle) {
-            App.title = (App.title || {main: '', index: ''});
-            if (mainTitle) {
-                App.title.main = mainTitle;
-            }
-            App.title.index = (title ? title + ' - ' : App.title.index);
-            document.title = App.title.index + App.title.main;
-        }
-
-    });
 
     // Start a module
     App.startSubApp = function(appName, args) {
-        if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
-            return;
-        }
+        // if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
+        //     return;
+        // }
 
         var currentApp = appName ? App.module(appName) : null;
         if (App.currentApp === currentApp) { return; }

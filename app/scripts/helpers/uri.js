@@ -31,7 +31,11 @@ define([
     var Uri = Marionette.Object.extend({
 
         initialize: function() {
-            this.vent = Radio.channel('uri');
+            this.vent    = Radio.channel('uri');
+            this.profile = this.getProfile();
+
+            _.bindAll(this, 'checkProfile');
+            $(window).on('hashchange', this.checkProfile);
 
             // Commands
             this.vent
@@ -43,6 +47,12 @@ define([
             .reply('profile', this.getProfile, this)
             .reply('link:profile', this.getProfileLink, this)
             .reply('link', this.getLink, this);
+        },
+
+        checkProfile: function() {
+            if (this.getProfile() !== this.profile) {
+                window.location.reload();
+            }
         },
 
         /**
@@ -84,17 +94,15 @@ define([
             profile = profile || this.getProfile();
             uri     = (uri[0] !== '/' ? '/' + uri : uri);
 
-            return !profile ? uri : '/p/' + profile + uri;
+            return !profile ? uri : '/p/' + profile + uri.replace(/\/?p\/[^/]*\//, '/');
         },
 
         /**
          * Returns current profile's name
          */
         getProfile: function() {
-            var route = this.getRoute(),
-                uri = (route ? route.split('/') : '');
-
-            return (uri[0] === 'p' ? uri[1] : null);
+            var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
+            return (!profile ? profile : profile[profile.index]);
         },
 
         /**
@@ -111,7 +119,6 @@ define([
             options = _.extend({}, options);
             var url = '/notes',
                 filters = {
-                    profile : '/p/',
                     filter  : '/f/',
                     query   : '/q/',
                     page    : '/p'
@@ -126,7 +133,7 @@ define([
             });
 
             url += model ? '/show/' + model.id : '';
-            return url;
+            return this.getProfileLink(url, options.profile);
         }
 
     });

@@ -28,7 +28,7 @@ define([
             this.options = options;
 
             // Fetch the note by ID
-            Radio.request('notes', 'get:model:full', options.id)
+            Radio.request('notes', 'get:model:full', options)
             .then(this._show);
         },
 

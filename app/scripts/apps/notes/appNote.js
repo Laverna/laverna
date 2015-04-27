@@ -160,7 +160,10 @@ define([
         // Listen to events
         this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
         this.listenTo(Radio.channel('global'), 'form:show', function() {
-            Radio.command('uri', 'navigate', '/notes/add');
+            Radio.command('uri', 'navigate', '/notes/add', {
+                trigger       : true,
+                includeProfile: true
+            });
         });
 
         // Respond to requests and commands

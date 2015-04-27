@@ -97,8 +97,9 @@ define([
          */
         _notebookTitle: function(args) {
             var defer = $.Deferred();
+            args.id = args.query;
 
-            Radio.request('notebooks', 'get:model', args.query)
+            Radio.request('notebooks', 'get:model', args)
             .then(function(model) {
                 args.title = model.get('name');
                 defer.resolve(args);

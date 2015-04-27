@@ -33,7 +33,7 @@ define([
             this.listenTo(Radio.channel('tags'), 'save:after', this.onSaveAfter);
 
             // Fetch the model and render the view
-            $.when(Radio.request('tags', 'get:model', options.id))
+            $.when(Radio.request('tags', 'get:model', options))
             .then(this.show);
         },
 

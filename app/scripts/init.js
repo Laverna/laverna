@@ -26,6 +26,9 @@ define([
         'helpers/i18next',
         'helpers/keybindings',
 
+        // Classes
+        'classes/encryption',
+
         // Collection modules
         'collections/modules/notes',
         'collections/modules/notebooks',

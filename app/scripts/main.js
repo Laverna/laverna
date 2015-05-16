@@ -29,6 +29,7 @@ requirejs.config({
         sjcl                  : '../bower_components/sjcl/sjcl',
         text                  : '../bower_components/requirejs-text/text',
         jquery                : '../bower_components/jquery/dist/jquery',
+        q                     : '../bower_components/q/q',
         bootstrap             : '../bower_components/bootstrap/dist/js/bootstrap.min',
         i18next               : '../bower_components/i18next/i18next.amd.withJQuery.min',
 

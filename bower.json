@@ -37,7 +37,8 @@
     "xregexp": "~2.0.0",
     "backbone.radio": "~0.9.0",
     "dompurify": "~0.6.1",
-    "fuse": "~1.2.2"
+    "fuse": "~1.2.2",
+    "q": "v1.3.0"
   },
   "devDependencies": {}
 }

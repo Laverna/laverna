@@ -49,7 +49,6 @@
     "Unlock": "Unlock",
     "Your new encryption password": "Your new encryption password",
     "Your old encryption password": "Your old encryption password",
-    "Please wait until the encryption will be completed": "Please wait until the encryption will be completed",
     "Shortcuts": "Shortcuts",
     "Previous": "Previous",
     "Next": "Next",
@@ -98,6 +97,14 @@
     "useDefaultConfigs": "Use settings from the default profile",
     "File chould be in json format": "File chould be in json format",
     "Close": "Close",
+    "encryption": {
+        "wait": "Please wait until the encryption will be completed",
+        "state": {
+            "decrypt": "Decrypting everything",
+            "encrypt": "Encrypting everything",
+            "save": "Saving changes"
+        }
+    },
     "profile": {
         "confirm remove": "Profile **__profile__** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
         "type name": "Type profile name"

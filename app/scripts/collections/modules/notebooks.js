@@ -44,6 +44,7 @@ define([
 
         reply: function() {
             return {
+                'save:all'  : this.saveAll,
                 'get:all'   : this.getNotebooks,
                 'get:model' : this.getById
             };

@@ -40,7 +40,9 @@ define([
             options = options || {};
             options.options = options.options || {};
 
-            this.state.pageSize = Number(options.options.pageSize || this.state.pageSize);
+            if (!_.isUndefined(options.pageSize)) {
+                this.state.pageSize = Number(options.pageSize);
+            }
 
             // Do not use pagination
             if (this.state.pageSize === 0) {

@@ -4,10 +4,9 @@ define([
     'backbone',
     'migrations/note',
     'collections/removed',
-    'apps/encryption/auth',
     'dompurify',
     'indexedDB'
-], function(_, Backbone, NotesDB, Removed, getAuth, Purify) {
+], function(_, Backbone, NotesDB, Removed, Purify) {
     'use strict';
 
     /**
@@ -36,6 +35,11 @@ define([
             'images'        :  []
         },
 
+        encryptKeys: [
+            'title',
+            'content'
+        ],
+
         validate: function(attrs) {
             var errors = [];
             if (attrs.title === '') {
@@ -48,30 +52,6 @@ define([
         },
 
         initialize: function() {
-            this.on('update:any', this.updateDate);
-
-            if (this.isNew()) {
-                this.set('created', Date.now());
-                this.updateDate();
-            }
-        },
-
-        encrypt: function(data) {
-            var auth = getAuth();
-            data = data || this.toJSON();
-
-            this.set('title', auth.encrypt(data.title));
-            this.set('content', auth.encrypt(data.content));
-            this.set('synchronized', 0);
-        },
-
-        decrypt: function() {
-            var data = this.toJSON(),
-                auth = getAuth();
-
-            data.title = auth.decrypt(data.title);
-            data.content = auth.decrypt(data.content);
-            return data;
         },
 
         /**

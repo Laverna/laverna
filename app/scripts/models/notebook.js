@@ -24,6 +24,8 @@ define([
             'updated'      : Date.now()
         },
 
+        encryptKeys: ['name'],
+
         validate: function(attrs) {
             var errors = [];
             if (attrs.name === '') {

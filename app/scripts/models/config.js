@@ -40,22 +40,6 @@ define([
         },
 
         /**
-         * Password should be saved only in hashed form
-         */
-        hashPassword: function() {
-            var hash;
-            if (this.get('name') !== 'encryptPass' || this.pwdHashed ||
-                typeof this.get('value') === 'object') {
-                this.pwdHashed = false;
-                return;
-            }
-
-            hash = sjcl.hash.sha256.hash(this.get('value'));
-            this.set('value', hash);
-            this.pwdHashed = true;
-        },
-
-        /**
          * Parse the value of a model
          */
         getValueJSON: function() {
@@ -87,6 +71,21 @@ define([
                 window.indexedDB.deleteDatabase(name);
                 return this.save({value: JSON.stringify(value)});
             }
+        },
+
+        /**
+         * @return bool
+         */
+        isPassword: function(data) {
+            return (
+                (
+                    this.get('name') === 'encryptPass' || data.name === 'encryptPass'
+                ) &&
+                (
+                    typeof data.value !== 'object' &&
+                    data.value !== this.get('value').toString()
+                )
+            );
         }
 
     });

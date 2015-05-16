@@ -27,6 +27,8 @@ define([
             'updated'      : Date.now()
         },
 
+        encryptKeys: ['name'],
+
         initialize: function() {
             // this.on('update:name', this.doEscape());
         },

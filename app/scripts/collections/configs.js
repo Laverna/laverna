@@ -33,6 +33,7 @@ define([
             'encryptIter'       : '1000',
             'encryptTag'        : '64',
             'encryptKeySize'    : '128',
+            'encryptBackup'     : {},
 
             // Keybindings
             'navigateTop'       : 'k',
@@ -95,10 +96,12 @@ define([
                 }
 
                 if (!promise) {
-                    promise = $.when(this.create({name: name, value: value}));
+                    promise = $.when(new self.model().save({name: name, value: value}));
                     return;
                 }
-                promise.then(this.create({name: name, value: value}));
+                promise.then(function() {
+                    return new self.model().save({name: name, value: value});
+                });
             }, this);
 
             promise.then(function() {

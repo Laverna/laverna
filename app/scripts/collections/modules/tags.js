@@ -46,6 +46,7 @@ define([
 
         reply: function() {
             return {
+                'save:all'  : this.saveAll,
                 'add'       : this.add,
                 'get:all'   : this.getAll,
                 'get:model' : this.getById
@@ -53,7 +54,8 @@ define([
         },
 
         filter: function(options) {
-            return this.collection.fullCollection.where(options.conditions);
+            var collection = this.collection.fullCollection || this.collection;
+            return collection.where(options.conditions);
         },
 
         /**

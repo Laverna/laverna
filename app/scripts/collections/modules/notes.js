@@ -46,8 +46,10 @@ define([
 
         reply: function() {
             return {
+                'save:all'          : this.saveAll,
                 'get:model'         : this.getById,
                 'get:model:full'    : this.getModelFull,
+                'get:all'           : this.filter,
                 'filter'            : this.filter,
                 'change:notebookId' : this.onNotebookRemove
             };
@@ -74,16 +76,13 @@ define([
             cond = Notes.prototype.conditions[options.filter || 'active'];
             cond = (typeof cond === 'function' ? cond(options) : cond);
 
-            this.getAll({
+            this.getAll(_.extend({}, options, {
                 conditions    : cond,
                 sort          : false,
-                profile       : options.profile,
-                page          : options.page,
-                options       : options,
                 beforeSuccess : (
                     this.storage !== 'indexeddb' || !cond ? this._filterOnFetch : null
                 )
-            })
+            }))
             .then(function() {
                 defer.resolve(self.collection);
             });
@@ -99,7 +98,9 @@ define([
 
             this.getById(options)
             .then(function(note) {
-                Radio.request('notebooks', 'get:model', note.get('notebookId'))
+                Radio.request('notebooks', 'get:model', _.extend({}, options, {
+                    id: note.get('notebookId')
+                }))
                 .then(function(notebook) {
                     defer.resolve(note, notebook);
                 });
@@ -113,7 +114,7 @@ define([
          */
         saveModel: function(model, data) {
             var self = this;
-            model.setEscape(data).encrypt();
+            model.setEscape(data);
 
             /**
              * Before saving the model, add tags.
@@ -152,8 +153,7 @@ define([
             }
             // Otherwise, just change its status
             else {
-                model.updateDate();
-                wait = $.when(model.save({trash: 1}));
+                wait = $.when(model.save({trash: 1, updated: Date.now()}));
             }
 
             wait.then(function() {

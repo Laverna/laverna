@@ -2,10 +2,11 @@
 define([
     'underscore',
     'marionette',
+    'backbone.radio',
     'sjcl',
     'apps/settings/show/formBehavior',
     'text!apps/settings/show/templates/encryption.html'
-], function(_, Marionette, sjcl, FormBehavior, Tmpl) {
+], function(_, Marionette, Radio, sjcl, FormBehavior, Tmpl) {
     'use strict';
 
     /**
@@ -22,7 +23,8 @@ define([
 
         ui: {
             settings  : '#encryptOpt',
-            saltInput : 'input[name=encryptSalt]'
+            saltInput : 'input[name=encryptSalt]',
+            password  : 'input[name=encryptPass]'
         },
 
         events: {
@@ -32,6 +34,14 @@ define([
 
         serializeData: function() {
             return {models  : this.collection.getConfigs()};
+        },
+
+        initialize: function() {
+            sjcl.random.startCollectors();
+        },
+
+        onDestroy: function() {
+            sjcl.random.stopCollectors();
         },
 
         /**
@@ -46,7 +56,7 @@ define([
          * Generate random salt.
          */
         randomize: function() {
-            var random = sjcl.random.randomWords(3, 0);
+            var random = Radio.request('encrypt', 'randomize', 3, 0);
             this.ui.saltInput.val(random).trigger('change');
             return false;
         }

@@ -17,13 +17,31 @@ define([
             content: 'form'
         },
 
-        triggers: {
-            'click .cancelBtn' : 'cancel',
+        events: {
             'click .saveBtn'   : 'save'
+        },
+
+        triggers: {
+            'click .cancelBtn' : 'cancel'
         },
 
         serializeData: function() {
             return this.options;
+        },
+
+        save: function(e) {
+            var view = this.content.currentView;
+            e.preventDefault();
+
+            /*
+             * If the password was autofilled by a user's browser, it usually will
+             * not trigger `change` event. This will fix it.
+             */
+            if (view.ui && view.ui.password) {
+                this.content.currentView.ui.password.trigger('change');
+            }
+
+            this.trigger('save');
         }
     });
 

@@ -37,7 +37,7 @@ define([
         showSettings: function(profile, tab) {
             requirejs(['apps/settings/show/app'], function(Module) {
                 // Stop previously started module
-                if (Settings.currentApp) {
+                if (Settings.currentApp && controller.args.tab !== tab) {
                     Settings.currentApp.stop();
                 }
 
@@ -47,10 +47,11 @@ define([
         },
 
         getOptions: function() {
-            return {
+            controller.args = {
                 profile : arguments[0],
                 tab     : arguments[1] || 'general',
             };
+            return controller.args;
         }
     };
 
@@ -64,12 +65,13 @@ define([
     Settings.on('before:stop', function() {
         Settings.currentApp.stop();
         delete Settings.currentApp;
+        delete controller.args;
 
         SidebarApp.stop();
     });
 
     // Register the router
-    App.addInitializer(function() {
+    App.on('before:start', function() {
         new Settings.Router({
             controller: controller
         });

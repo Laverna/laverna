@@ -1,12 +1,13 @@
 /* global define, requirejs */
 define([
     'jquery',
+    'q',
     'underscore',
     'marionette',
     'backbone.radio',
     'fileSaver',
     'apps/settings/show/views/showView'
-], function($, _, Marionette, Radio, saveAs, View) {
+], function($, Q, _, Marionette, Radio, saveAs, View) {
     'use strict';
 
     /**
@@ -43,18 +44,19 @@ define([
             Radio.command('navbar', 'stop');
 
             // Fetch configs
-            $.when(
+            Q.all([
+                Radio.request('configs', 'get:all', options),
                 Radio.request('configs', 'get:model', {
                     name    : 'useDefaultConfigs',
                     profile : options.profile
                 }),
-                Radio.request('configs', 'get:all', options),
                 Radio.request('configs', 'get:model', 'appProfiles')
-            )
-            .then(this.requireView);
+            ])
+            .spread(this.requireView);
 
             // Events, replies
             Radio.reply('AppSettings', 'has:changes', this.hasChanges, this);
+            this.listenTo(Radio.channel('configs'), 'changed', this.onChangeConfigs);
         },
 
         onDestroy: function() {
@@ -66,7 +68,7 @@ define([
         /**
          * Show layout view and load a tab view
          */
-        requireView: function(useDefault, configs, profiles) {
+        requireView: function(configs, useDefault, profiles) {
             this.configs    = configs;
             this.profiles   = profiles;
             this.useDefault = useDefault;
@@ -94,7 +96,6 @@ define([
 
             // Collection events
             this.listenTo(this.configs, 'new:value', this.onChange);
-            this.listenTo(this.useDefault, 'change', this.onChangeUseDefault);
 
             // Layout events
             this.listenTo(this.layout, 'cancel', this.confirmRedirect);
@@ -110,8 +111,10 @@ define([
         /**
          * Reload the page when config 'useDefaultConfigs' is changed
          */
-        onChangeUseDefault: function() {
-            window.location.reload();
+        onChangeConfigs: function(changes) {
+            if (changes.useDefaultConfigs) {
+                window.location.reload();
+            }
         },
 
         onChange: function(data) {
@@ -152,7 +155,9 @@ define([
                 return;
             }
 
-            Radio.command('configs', 'save:objects', this.changes, this.useDefault);
+            Radio.channel('configs')
+            .command('save:objects', this.changes, this.useDefault);
+
             this.saves = _.union(this.saves, this.changes);
             this.changes = {};
         },

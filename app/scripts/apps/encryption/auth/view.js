@@ -2,12 +2,14 @@
 define([
     'underscore',
     'jquery',
-    'backbone',
     'marionette',
     'text!apps/encryption/auth/template.html'
-], function ( _, $, Backbone, Marionette, Tmpl) {
+], function (_, $, Marionette, Tmpl) {
     'use strict';
 
+    /**
+     * Auth view.
+     */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
@@ -30,13 +32,8 @@ define([
         login: function (e) {
             e.preventDefault();
             this.trigger('login', this.ui.password.val());
-        },
-
-        templateHelpers: function () {
-            return {
-                i18n: $.t
-            };
         }
+
     });
 
     return View;

@@ -37,7 +37,7 @@ define([
 
         // Modules
         'apps/confirm/appConfirm',
-        // 'apps/encryption/encrypt',
+        'apps/encryption/appEncrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',
         'apps/notebooks/appNotebooks',

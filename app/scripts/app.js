@@ -22,10 +22,6 @@ define([
 
     // Start a module
     App.startSubApp = function(appName, args) {
-        // if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
-        //     return;
-        // }
-
         var currentApp = appName ? App.module(appName) : null;
         if (App.currentApp === currentApp) { return; }
 

@@ -1,76 +1,109 @@
-/*global define*/
+/* global define, requirejs */
 define([
     'underscore',
-    'app',
     'marionette',
-    'apps/encryption/auth',
-], function (_, App, Marionette, getAuth) {
+    'backbone.radio',
+    'app',
+], function(_, Marionette, Radio, App) {
     'use strict';
 
     /**
-     * This module provides encryption API
+     * Encryption module.
+     *
+     * Listens to events:
+     * 1. channel: `encrypt`, event: `changed`
+     *    navigate to re-encryption page.
+     *
+     * Requests:
+     * 1. channel: `encrypt`, request: `check:auth`
+     *    in order to check whether the user is authorized.
      */
-    var Encryption = App.module('Encryption', {startWithParent: false}),
-        executeAction,
-        API;
+    var Encrypt = App.module('AppEncrypt', {startWithParent: false}),
+        controller;
 
-    Encryption.on('start', function () {
-        App.log('Encryption module has started');
-    });
-
-    Encryption.on('stop', function () {
-        App.log('Encryption module has stopped');
-        App.brand.empty();
-    });
-
-    // Router
-    Encryption.Router = Marionette.AppRouter.extend({
+    Encrypt.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            '(p/:profile/)auth': 'showAuth',
-            '(p/:profile/)encrypt/all(/:db)': 'showEncryptAll',
+            '(p/:profile/)auth'        : 'showAuth',
+            '(p/:profile/)encrypt/all' : 'showEncrypt'
+        },
+
+        // Starts itself
+        onRoute: function() {
+            if (!Encrypt._isInitialized) {
+                App.startSubApp('AppEncrypt', {profile: arguments[2][0]});
+            }
         }
     });
 
-    // Start the application
-    executeAction = function (action, args) {
-        App.startSubApp('Encryption');
-        action(args);
-    };
+    function startModule(module, args) {
+        if (!module) {
+            return;
+        }
 
-    // Controller
-    API = {
-        showAuth: function () {
-            require(['apps/encryption/auth/controller'], function (Controller) {
-                executeAction(new Controller().showForm);
+        // Stop previous module
+        if (Encrypt.currentApp) {
+            Encrypt.currentApp.stop();
+        }
+
+        Encrypt.currentApp = module;
+        module.start(args);
+
+        // If module has stopped, remove the variable
+        module.on('stop', function() {
+            delete Encrypt.currentApp;
+        });
+    }
+
+    controller = {
+        showAuth: function(profile) {
+            requirejs(['apps/encryption/auth/app'], function(Module) {
+                startModule(Module, {profile: profile});
             });
         },
 
-        showEncryptAll: function (profile, db) {
-            require(['apps/encryption/encrypt/controller'], function (Controller) {
-                executeAction(new Controller().showEncrypt, db);
+        showEncrypt: function(profile) {
+            requirejs(['apps/encryption/encrypt/app'], function(Module) {
+                startModule(Module, {profile: profile});
             });
-        }
-    };
+        },
 
-    // API
-    Encryption.API = {
+        // If encryption configs are changed, navigate to re-encryption page.
+        _navigateEncrypt: function() {
+            document.location.hash = Radio.request('uri', 'link:profile', '/encrypt/all');
+        },
 
-        checkAuth: function () {
-            var auth = getAuth(App.settings);
-            if (auth.checkAuth() === false) {
-                App.vent.trigger('navigate:link', '/auth');
-                return false;
+        _checkAuth: function() {
+            if (Radio.request('encrypt', 'check:auth')) {
+                return;
             }
-            return true;
-        }
 
+            // Navigate to login page
+            document.location.hash = Radio.request('uri', 'link:profile', '/auth');
+        }
     };
 
-    App.addInitializer(function () {
-        new Encryption.Router({
-            controller: API
-        });
+    /**
+     * Initializers and finalizers
+     */
+    Encrypt.on('before:start', function() {
     });
 
-    return Encryption;
+    Encrypt.on('before:stop', function() {
+        Encrypt.currentApp.stop();
+        delete Encrypt.currentApp;
+    });
+
+    // Check whether a user is authorized when everything is ready
+    Radio.command('init', 'add', 'module', function() {
+        Radio.on('encrypt', 'changed', controller._navigateEncrypt, controller);
+
+        controller._checkAuth();
+    });
+
+    // Register the router
+    App.on('before:start', function() {
+        new Encrypt.Router({
+            controller: controller
+        });
+    });
 });

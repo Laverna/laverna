@@ -102,6 +102,9 @@ define([
                 );
             }
 
+            // Convert configs to a key = value object.
+            objects = (_.isArray(objects) ? _.indexBy(objects, 'name') : objects);
+
             // Backup encryption configs
             this._backupEncryption(objects);
 
@@ -321,6 +324,7 @@ define([
                 'encryptIter', 'encryptTag' , 'encryptKeySize'
             ];
             return _.filter(collection, function(value, key) {
+                key = (typeof value === 'object' ? value.name : key);
                 return (
                     _.indexOf(encrSet, key) > -1 ||
                     _.indexOf(encrSet, value) > -1
@@ -357,7 +361,8 @@ define([
             changed     = _.pick(configs, changed);
 
             // Password hasn't changed
-            if (configs.encryptPass.toString() === objects.encryptPass.value.toString()) {
+            if (objects.encryptPass &&
+                configs.encryptPass.toString() === objects.encryptPass.value.toString()) {
                 delete changed.encryptPass;
             }
 

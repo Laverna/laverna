@@ -2,11 +2,11 @@
 define([
     'underscore',
     'marionette',
-    'constants',
+    'backbone.radio',
     'text!locales/locales.json',
     'apps/settings/show/formBehavior',
     'text!apps/settings/show/templates/general.html'
-], function(_, Marionette, constants, locales, FormBehavior, Tmpl) {
+], function(_, Marionette, Radio, locales, FormBehavior, Tmpl) {
     'use strict';
 
     /**
@@ -31,6 +31,11 @@ define([
 
         templateHelpers: function() {
             return {
+                isDefaultProfile: function() {
+                    var profile = Radio.request('uri', 'profile');
+                    return _.indexOf([null, 'notes-db'], profile) > -1;
+                },
+
                 isLocaleActive: function(locale) {
                     this.models.appLang = this.models.appLang || 'en';
                     if (this.models.appLang === locale ||

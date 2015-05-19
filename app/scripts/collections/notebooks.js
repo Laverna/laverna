@@ -111,19 +111,6 @@ define([
                     return true;
                 }
             });
-        },
-
-        /**
-         * Decrypt all models in collection
-         */
-        decrypt: function() {
-            var data = [];
-
-            this.each(function(model) {
-                data.push(model.decrypt());
-            });
-
-            return data;
         }
 
     });

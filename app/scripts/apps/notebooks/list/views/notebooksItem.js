@@ -24,7 +24,7 @@ define([
         },
 
         serializeData: function() {
-            return _.extend(this.model.decrypt(), {
+            return _.extend(this.model.toJSON(), {
                 uri  : Radio.request('uri', 'link:profile', '')
             });
         }

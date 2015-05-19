@@ -25,17 +25,19 @@ define([
 
         initialize: function() {
             Radio.on('notesForm', 'set:mode', this.onChangeMode, this);
-            Radio.on('editor', 'pagedown:ready', this.onPagedownReady, this);
+            Radio.on('editor', 'ready', this.onPagedownReady, this);
             Radio.on('editor', 'pagedown:scroll', this.syncScroll, this);
         },
 
         onDestroy: function() {
-            Radio.off('editor', 'pagedown:scroll pagedown:ready');
+            Radio.trigger('editor', 'view:destroy');
+            Radio.off('editor', 'pagedown:scroll ready');
             Radio.off('notesForm', 'set:mode');
         },
 
         onPagedownReady: function() {
             this.$scroll = $('.ace_scrollbar');
+            Radio.trigger('editor', 'view:render', this);
         },
 
         onChangeMode: function(mode) {

@@ -21,7 +21,7 @@ define([
      * Events:
      * 1. channel: editor, event: pagedown:scroll
      *    when a user scrolled through the editor.
-     * 2. channel: editor, event: pagedown:ready
+     * 2. channel: editor, event: ready
      *    when pagedown is ready.
      *
      * Answers to the following
@@ -32,7 +32,7 @@ define([
     var PagedownAce = Marionette.Object.extend({
 
         initialize: function() {
-            _.bindAll(this, 'triggerScroll', 'triggerSave');
+            _.bindAll(this, 'triggerScroll', 'onPreviewRefresh');
             this.configs = Radio.request('configs', 'get:object');
 
             // Initialize the view
@@ -43,7 +43,7 @@ define([
 
             // Events
             Radio.channel('editor')
-            .on('pagedown:ready', this.changeConfigs, this)
+            .on('ready', this.changeConfigs, this)
             .on('focus', this.focus, this)
             .reply('get:content', this.getContent, this);
 
@@ -59,7 +59,7 @@ define([
             Radio.off('notesForm', 'set:mode');
 
             Radio.channel('editor')
-            .off('pagedown:ready focus')
+            .off('ready focus')
             .stopReplying('get:content');
 
             this.editor.destroy();
@@ -95,19 +95,24 @@ define([
             mdEditor.run(this.editor);
 
             // Trigger an event
-            Radio.trigger('editor', 'pagedown:ready');
-            mdEditor.hooks.chain('onPreviewRefresh', _.debounce(this.triggerSave, 1000));
+            Radio.trigger('editor', 'ready');
+            mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);
             this.editor.session.on(
                 'changeScrollTop',
                 _.debounce(this.triggerScroll, 20, {maxWait: 20})
             );
         },
 
-        triggerSave: function() {
+        onPreviewRefresh: function() {
+            Radio.trigger('editor', 'preview:refresh');
+            this.triggerSave();
+        },
+
+        triggerSave: _.debounce(function() {
             if (this.getContent() !== '') {
                 Radio.trigger('notesForm', 'save:auto');
             }
-        },
+        }, 1000),
 
         triggerScroll: function() {
             Radio.trigger('editor', 'pagedown:scroll');

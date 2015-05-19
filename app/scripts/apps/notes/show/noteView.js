@@ -75,7 +75,7 @@ define([
         },
 
         onRender: function() {
-            Radio.trigger('noteView', 'view:render');
+            Radio.trigger('noteView', 'view:render', this);
         },
 
         onBeforeDestroy: function() {

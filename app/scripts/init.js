@@ -13,7 +13,8 @@ define([
 
     var exts = [
         'modules/pagedown/module',
-        'modules/fuzzySearch/module'
+        'modules/fuzzySearch/module',
+        'modules/codePrettify/module'
     ];
 
     // Load all modules then start an application

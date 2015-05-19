@@ -42,7 +42,7 @@ define([
         'apps/notes/appNote',
         'apps/notebooks/appNotebooks',
         'apps/settings/appSettings',
-        // 'apps/help/appHelp'
+        'apps/help/appHelp'
     ].concat(exts), function(storage) {
         // Get profile name from location hash
         var profile = document.location.hash.match(/\/?p\/([^/]*)\//);

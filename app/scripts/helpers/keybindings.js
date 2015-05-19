@@ -62,7 +62,7 @@ define([
             // Help
             Mousetrap.bind(this.configs.appKeyboardHelp, function(e) {
                 e.preventDefault();
-                self.navigate('/help');
+                Radio.command('Help', 'show:keybindings');
             });
 
             // Focus on search form

@@ -4,7 +4,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3 class="modal-title">
                 {{ i18n('Shortcuts') }}
-                <a href="#/settings/shortcuts" title="{{ i18n('Change shortcuts') }}">
+                <a href="#/settings/keybindings" title="{{ i18n('Change shortcuts') }}">
                     <small class="icon-cog"></small>
                 </a>
             </h3>
@@ -18,10 +18,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% _.forEach(items, function (conf) { %>
+                    <% _.forEach(items, function(conf) { %>
                     <tr>
                         <td>{{ i18n(conf.name) }}</td>
-                        <td>{{ conf.val }}</td>
+                        <td>{{ conf.value }}</td>
                     </tr>
                     <% }); %>
                 </tbody>

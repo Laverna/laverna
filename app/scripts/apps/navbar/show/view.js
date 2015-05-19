@@ -43,6 +43,7 @@ define([
 
         events: {
             'click .btn-search'     : 'showSearch',
+            'click .show-about'     : 'showAbout',
             'blur @ui.searchInput'  : 'hideSearch',
             'keyup @ui.searchInput' : 'searchKeyup',
             'submit .search-form'   : 'searchSubmit'
@@ -82,6 +83,11 @@ define([
 
         hideSearch: function() {
             this.ui.navbar.removeClass('shown-search');
+        },
+
+        showAbout: function(e) {
+            e.preventDefault();
+            Radio.command('Help', 'show:about');
         },
 
         searchKeyup: function(e) {

@@ -58,7 +58,7 @@ define([
                  * The callback might be used to filter collection, for example.
                  */
                 if (options.beforeSuccess) {
-                    options.beforeSuccess(self, options.options);
+                    options.beforeSuccess(self, options);
                 }
 
                 // Keep full collection in memory

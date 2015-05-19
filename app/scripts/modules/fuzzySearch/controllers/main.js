@@ -1,12 +1,11 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
+    'q',
     'marionette',
     'backbone.radio',
-    'collections/notes',
     'modules/fuzzySearch/views/composite'
-], function(_, $, Marionette, Radio, Notes, View) {
+], function(_, Q, Marionette, Radio, View) {
     'use strict';
 
     /**
@@ -30,21 +29,15 @@ define([
     var Controller = Marionette.Object.extend({
 
         initialize: function() {
-            _.bindAll(this, 'search');
-
-            // Instantiate notes collection and a view
-            this.notes = new Notes();
-            this.view  = new View({
-                collection: this.notes
-            });
+            _.bindAll(this, 'search', 'onFetch');
 
             // Fetch data
-            this.wait = $.Deferred();
-            $.when(this.notes.fetch({})).then(this.wait.resolve);
+            this.wait = Radio.request('notes', 'fetch', {
+                profile  : Radio.request('uri', 'profile')
+            }).then(this.onFetch);
 
             // Listen to events
             this.listenTo(Radio.channel('global'), 'search:change', _.debounce(this.search, 150));
-            this.listenTo(this.view, 'childview:navigate:search', this.filter, this);
         },
 
         onDestroy: function() {
@@ -59,8 +52,7 @@ define([
             if (this.wait) {
                 var self = this;
                 return this.wait.then(function() {
-                    delete self.wait;
-                    self.search.apply(self, [text]);
+                    self.search(text);
                 });
             }
 
@@ -70,6 +62,17 @@ define([
             if (!this.view.isRendered) {
                 Radio.command('fuzzySearch', 'region:show', this.view);
             }
+        },
+
+        onFetch: function(collection) {
+            delete this.wait;
+            this.notes = collection;
+
+            // Instantiate notes collection and a view
+            this.view = new View({collection: this.notes});
+
+            // Events
+            this.listenTo(this.view, 'childview:navigate:search', this.filter, this);
         },
 
         /**

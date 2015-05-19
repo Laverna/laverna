@@ -1,12 +1,12 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
+    'q',
     'backbone.radio',
     'collections/modules/module',
     'collections/tags',
     'sjcl'
-], function(_, $, Radio, ModuleObject, Tags, sjcl) {
+], function(_, Q, Radio, ModuleObject, Tags, sjcl) {
     'use strict';
 
     /**
@@ -63,11 +63,10 @@ define([
          */
         saveModel: function(model, data) {
             var self  = this,
-                id    = sjcl.hash.sha256.hash(data.name).join(''),
-                defer = $.Deferred();
+                id    = sjcl.hash.sha256.hash(data.name).join('');
 
             // First, make sure that a model won't duplicate itself.
-            $.when(this._removeOld(id, model))
+            return this._removeOld(id, model)
             .then(function() {
                 model.set('id', id);
                 model.set(data);
@@ -75,36 +74,27 @@ define([
 
                 return self.save(model, model.toJSON());
             });
-
-            return defer.promise();
         },
 
         /**
          * Add a bunch of tags
          */
         add: function(tags) {
-            var defer = $.Deferred(),
-                self  = this,
-                model,
-                promise;
+            var self  = this,
+                promises = [],
+                model;
 
             if (!tags.length) {
-                return defer.resolve();
+                return Q.resolve();
             }
 
             _.each(tags, function(tag) {
                 model = new Tags.prototype.model();
 
-                if (!promise) {
-                    promise = $.when(self.save(model, {name: tag}));
-                    return;
-                }
-
-                promise.then(function() {self.save(model, {name: tag});});
+                promises.push(self.save(model, {name: tag}));
             });
 
-            promise.then(defer.resolve);
-            return defer.promise();
+            return Q.all(promises);
         },
 
         /**
@@ -113,14 +103,12 @@ define([
          * With this method we solve that problem.
          */
         _removeOld: function(newId, model) {
-            var defer = $.Deferred();
-
             if (!model.id || !this.collection || newId === model.id) {
-                return defer.resolve();
+                return Q.resolve();
             }
 
-            $.when(this.remove(model)).then(defer.resolve);
-            return defer.promise();
+            return this.remove(model)
+            .thenResolve(model);
         }
 
     });

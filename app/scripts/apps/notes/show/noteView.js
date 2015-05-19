@@ -1,11 +1,12 @@
 /* global define */
 define([
     'underscore',
+    'jquery',
     'marionette',
     'backbone.radio',
     'text!apps/notes/show/templates/item.html',
     'backbone.mousetrap'
-], function(_, Marionette, Radio, Tmpl) {
+], function(_, $, Marionette, Radio, Tmpl) {
     'use strict';
 
     /**
@@ -115,12 +116,12 @@ define([
         /**
          * Toggle the status of a task
          */
-        toggleTask: function(e) {
+        toggleTask: _.debounce(function(e) {
             var $task = $(e.target),
                 taskId = Number($task.attr('data-task'));
 
             this.trigger('toggle:task', taskId);
-        },
+        }, 300),
 
         /**
          * Update progress bar when the status of a task was changed

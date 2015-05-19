@@ -1,11 +1,11 @@
 /* global define */
 define([
-    'jquery',
+    'q',
     'underscore',
     'marionette',
     'backbone.radio',
     'apps/notebooks/form/tag/formView'
-], function($, _, Marionette, Radio, View) {
+], function(Q, _, Marionette, Radio, View) {
     'use strict';
 
     /**
@@ -33,7 +33,7 @@ define([
             this.listenTo(Radio.channel('tags'), 'save:after', this.onSaveAfter);
 
             // Fetch the model and render the view
-            $.when(Radio.request('tags', 'get:model', options))
+            Radio.request('tags', 'get:model', options)
             .then(this.show);
         },
 

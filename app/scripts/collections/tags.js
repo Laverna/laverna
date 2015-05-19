@@ -1,13 +1,12 @@
 /*global define*/
 define([
     'underscore',
-    'jquery',
     'backbone',
     'collections/pageable',
     'models/tag',
     'migrations/note',
     'indexedDB'
-], function(_, $, Backbone, PageableCollection, Tag, TagsDB) {
+], function(_, Backbone, PageableCollection, Tag, TagsDB) {
     'use strict';
 
     /**

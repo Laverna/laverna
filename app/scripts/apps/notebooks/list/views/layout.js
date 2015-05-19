@@ -32,7 +32,7 @@ define([
         },
 
         keyboardEvents: {
-            'enter'  : 'openActive'
+            // 'enter'  : 'openActive'
         },
 
         // Default active region is `notebooks`

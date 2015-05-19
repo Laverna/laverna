@@ -72,12 +72,12 @@ define([
         },
 
         getAll: function(options) {
-            var defer = $.Deferred(),
-                self  = this;
+            var self  = this;
+            options.profile = options.profile || this.defaultDB;
 
             // Do not fetch twice
             if (this.collection && this.collection.database.id === options.profile) {
-                return defer.resolve(
+                return new Q(
                     options ? self.filter(options) : self.collection
                 );
             }
@@ -97,15 +97,11 @@ define([
             // Events
             this.listenTo(this.collection, 'reset:all', this.reset);
 
-            $.when(this.collection.fetch(options))
+            return new Q(this.collection.fetch(options))
             .then(function() {
                 return self.decryptModels();
             })
-            .then(function() {
-                defer.resolve(self.collection);
-            });
-
-            return defer.promise();
+            .thenResolve(self.collection);
         },
 
         filter: function(options) {
@@ -116,20 +112,19 @@ define([
          * Find a model by id.
          */
         getById: function(options) {
-            var defer = $.Deferred(),
-                self  = this;
+            var self  = this;
 
             options = (typeof options === 'string' ? {id: options} : options);
             this.changeDatabase(options);
 
             // If id was not provided, just instantiate a new model
             if (!options || !options.id || options.id === '0') {
-                return defer.resolve(new this.Collection.prototype.model());
+                return new Q(new this.Collection.prototype.model());
             }
 
             // In case if the collection isn't empty, get the model from there.
             if (this.collection && this.collection.get(options.id)) {
-                return defer.resolve(
+                return new Q(
                     this.collection.get(options.id)
                 );
             }
@@ -137,13 +132,11 @@ define([
             // Otherwise, fetch it
             var model = new this.Collection.prototype.model({id: options.id});
 
-            $.when(model.fetch())
+            return new Q(model.fetch())
             .then(function() {
                 self.decryptModel(model);
-                defer.resolve(model);
+                return model;
             });
-
-            return defer.promise();
         },
 
         /**
@@ -168,7 +161,7 @@ define([
          * Save changes to a model.
          */
         save: function(model, data) {
-            var defer = $.Deferred(),
+            var defer = Q.defer(),
                 self  = this;
 
             model.set(data);
@@ -190,7 +183,7 @@ define([
                 }
             });
 
-            return defer.promise();
+            return defer.promise;
         },
 
         /**
@@ -198,18 +191,14 @@ define([
          */
         remove: function(model) {
             var atIndex = this.collection.indexOf(model),
-                self    = this,
-                defer   = $.Deferred();
+                self    = this;
 
             model = (typeof model === 'string' ? this.getById(model) : model);
 
-            $.when(model.destroySync())
+            return new Q(model.destroySync())
             .then(function() {
-                defer.resolve();
                 self.vent.trigger('model:destroy', atIndex, model.id);
             });
-
-            return defer.promise();
         },
 
         _isEncryptEnabled: function(model) {

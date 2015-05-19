@@ -206,9 +206,9 @@ define([
          * If there are any changes, show a confirm message.
          */
         hasChanges: function() {
-            var defer = $.Deferred();
+            var defer = Q.defer();
             this.showConfirm(defer.resolve, defer.reject);
-            return defer.promise();
+            return defer.promise;
         },
 
         showConfirm: function(onconfirm, onreject) {

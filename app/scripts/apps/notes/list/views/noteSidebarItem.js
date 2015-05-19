@@ -49,7 +49,7 @@ define([
 
         serializeData: function() {
             // Decrypting
-            return _.extend(this.model.decrypt(), {
+            return _.extend(this.model.toJSON(), {
                 args    : this.options.args
             });
         },

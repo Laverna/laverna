@@ -1,11 +1,11 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
+    'q',
     'backbone.radio',
     'collections/modules/module',
     'collections/notes'
-], function(_, $, Radio, ModuleObject, Notes) {
+], function(_, Q, Radio, ModuleObject, Notes) {
     'use strict';
 
     /**
@@ -49,8 +49,8 @@ define([
                 'save:all'          : this.saveAll,
                 'get:model'         : this.getById,
                 'get:model:full'    : this.getModelFull,
+                'fetch'             : this.fetch,
                 'get:all'           : this.filter,
-                'filter'            : this.filter,
                 'change:notebookId' : this.onNotebookRemove
             };
         },
@@ -61,12 +61,22 @@ define([
             this.vent.stopComplying('save remove restore');
         },
 
+        fetch: function(options) {
+            this.changeDatabase(options);
+            var collection = new this.Collection();
+
+            return new Q(collection.fetch(options))
+            .then(function() {
+                return Radio.request('encrypt', 'decrypt:models', collection.fullCollection);
+            })
+            .thenResolve(collection);
+        },
+
         /**
          * Filters the collection.
          */
         filter: function(options) {
-            var defer = $.Deferred(),
-                self  = this,
+            var self  = this,
                 cond;
 
             // Destroy old collection
@@ -76,37 +86,29 @@ define([
             cond = Notes.prototype.conditions[options.filter || 'active'];
             cond = (typeof cond === 'function' ? cond(options) : cond);
 
-            this.getAll(_.extend({}, options, {
+            return this.getAll(_.extend({}, options, {
                 conditions    : cond,
                 sort          : false,
                 beforeSuccess : (
                     this.storage !== 'indexeddb' || !cond ? this._filterOnFetch : null
                 )
             }))
-            .then(function() {
-                defer.resolve(self.collection);
-            });
-
-            return defer.promise();
+            .thenResolve(self.collection);
         },
 
         /**
          * Return a note with its notebook
          */
         getModelFull: function(options) {
-            var defer = $.Deferred();
-
-            this.getById(options)
+            return this.getById(options)
             .then(function(note) {
-                Radio.request('notebooks', 'get:model', _.extend({}, options, {
+                return Radio.request('notebooks', 'get:model', _.extend({}, options, {
                     id: note.get('notebookId')
                 }))
                 .then(function(notebook) {
-                    defer.resolve(note, notebook);
+                    return [note, notebook];
                 });
             });
-
-            return defer.promise();
         },
 
         /**
@@ -119,7 +121,7 @@ define([
             /**
              * Before saving the model, add tags.
              */
-            $.when(Radio.request('tags', 'add', data.tags || []))
+            return new Q(Radio.request('tags', 'add', data.tags || []))
             .then(function() {
                 return self.save(model, model.toJSON());
             });
@@ -132,7 +134,7 @@ define([
             var atIndex = this.collection.indexOf(model);
 
             // Save a new `trash` status and emmit an event
-            $.when(model.save({trash: 0}))
+            return new Q(model.save({trash: 0}))
             .then(function() {
                 Radio.trigger('notes', 'model:destroy', atIndex);
             });
@@ -153,10 +155,10 @@ define([
             }
             // Otherwise, just change its status
             else {
-                wait = $.when(model.save({trash: 1, updated: Date.now()}));
+                wait = new Q(model.save({trash: 1, updated: Date.now()}));
             }
 
-            wait.then(function() {
+            return wait.then(function() {
                 Radio.trigger('notes', 'model:destroy', atIndex);
             });
         },
@@ -166,10 +168,9 @@ define([
          * attached to it.
          */
         onNotebookRemove: function(notebook, remove) {
-            var defer = $.Deferred(),
-                self  = this,
-                data  = {notebookId: 0},
-                promise;
+            var self     = this,
+                data     = {notebookId: 0},
+                promises = [];
 
             // Place notes in trash
             if (remove) {
@@ -177,25 +178,19 @@ define([
             }
 
             // Fetch notes that are attached to a specified notebook
-            this.filter({filter: 'notebook', query: notebook.get('id')})
+            return this.filter({filter: 'notebook', query: notebook.get('id')})
             .then(function(notes) {
                 if (notes.length === 0) {
-                    return defer.resolve();
+                    return Q.resolve();
                 }
 
                 // Change notebookId of each note or remove them
                 notes.fullCollection.each(function(note) {
-                    if (!promise) {
-                        promise = $.when(self.save(note, data));
-                        return;
-                    }
-                    promise.then(self.save(note, data));
+                    promises.push(self.save(note, data));
                 });
 
-                promise.then(defer.resolve);
+                return Q.all(promises);
             });
-
-            return defer.promise();
         },
 
         /**

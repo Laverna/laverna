@@ -1,12 +1,13 @@
 /* global define */
 define([
     'underscore',
+    'q',
     'marionette',
     'backbone.radio',
     'apps/notebooks/list/views/layout',
     'apps/notebooks/list/views/notebooksComposite',
     'apps/notebooks/list/views/tagsComposite'
-], function(_, Marionette, Radio, View, NotebooksView, TagsView) {
+], function(_, Q, Marionette, Radio, View, NotebooksView, TagsView) {
     'use strict';
 
     /**
@@ -29,10 +30,10 @@ define([
             });
 
             // Fetch
-            $.when(
+            Q.all([
                 Radio.request('notebooks', 'get:all', options),
                 Radio.request('tags', 'get:all', options)
-            ).then(this.show);
+            ]).spread(this.show);
         },
 
         onDestroy: function() {

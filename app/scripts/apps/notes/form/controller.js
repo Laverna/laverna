@@ -1,12 +1,13 @@
 /* global define */
 define([
     'underscore',
+    'q',
     'jquery',
     'backbone.radio',
     'marionette',
     'apps/notes/form/views/formView',
     'apps/notes/form/views/notebooks'
-], function (_, $, Radio, Marionette, View, NotebooksView) {
+], function (_, Q, $, Radio, Marionette, View, NotebooksView) {
     'use strict';
 
     /**
@@ -30,11 +31,11 @@ define([
             _.bindAll(this, 'show', 'redirect');
 
             // Fetch everything
-            $.when(
+            Q.all([
                 Radio.request('notes', 'get:model', options),
-                Radio.request('notebooks', 'get:all')
-            )
-            .then(this.show);
+                Radio.request('notebooks', 'get:all', options)
+            ])
+            .spread(this.show);
 
             // Events
             this.listenTo(Radio.channel('notes'), 'save:after', this.redirect);

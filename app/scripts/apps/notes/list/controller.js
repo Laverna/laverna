@@ -87,7 +87,7 @@ define([
             this.options = options;
 
             // Fetch data
-            Radio.request('notes', 'filter', options)
+            Radio.request('notes', 'get:all', options)
             .then(this.show);
         }, 100),
 

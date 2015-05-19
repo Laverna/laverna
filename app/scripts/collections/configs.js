@@ -1,12 +1,12 @@
 /*global define*/
 define([
     'underscore',
-    'jquery',
+    'q',
     'backbone',
     'models/config',
     'migrations/note',
     'indexedDB'
-], function(_, $, Backbone, Config, DB) {
+], function(_, Q, Backbone, Config, DB) {
     'use strict';
 
     var Configs = Backbone.Collection.extend({
@@ -85,9 +85,8 @@ define([
          * Create default configs.
          */
         createDefault: function() {
-            var defer = $.Deferred(),
-                self  = this,
-                promise;
+            var self     = this,
+                promises = [];
 
             _.each(this.configNames, function(value, name) {
                 // Check whether a model already exists
@@ -95,20 +94,12 @@ define([
                     return;
                 }
 
-                if (!promise) {
-                    promise = $.when(new self.model().save({name: name, value: value}));
-                    return;
-                }
-                promise.then(function() {
-                    return new self.model().save({name: name, value: value});
-                });
+                promises.push(
+                    new Q(new self.model().save({name: name, value: value}))
+                );
             }, this);
 
-            promise.then(function() {
-                defer.resolve(self);
-            });
-
-            return defer.promise();
+            return Q.all(promises);
         },
 
         /**

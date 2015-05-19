@@ -29,12 +29,12 @@ define([
 
             // Fetch the note by ID
             Radio.request('notes', 'get:model:full', options)
-            .then(this._show);
+            .spread(this._show);
         },
 
         onDestroy: function() {
             this.stopListening(this.view);
-            this.view.trigger('destroy');
+            Radio.command('global', 'region:empty', 'content');
         },
 
         _show: function(note, notebook) {

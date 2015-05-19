@@ -1,10 +1,11 @@
 /* global define */
 define([
     'jquery',
+    'q',
     'underscore',
     'marionette',
     'backbone.radio'
-], function($, _, Marionette, Radio) {
+], function($, Q, _, Marionette, Radio) {
     'use strict';
 
     /**
@@ -61,21 +62,14 @@ define([
         },
 
         getTitle: function(args) {
-            var defer = $.Deferred();
-
             // Filter has additional logic
             if (args.query && this['_' + args.filter + 'Title']) {
-                $.when(
-                    this['_' + args.filter + 'Title'](args)
-                )
-                .then(this._makeTitle)
-                .then(defer.resolve);
+                return this['_' + args.filter + 'Title'](args)
+                .then(this._makeTitle);
             }
             else {
-                defer.resolve(this._makeTitle(args));
+                return new Q(this._makeTitle(args));
             }
-
-            return defer.promise();
         },
 
         _makeTitle: function(args) {
@@ -96,16 +90,13 @@ define([
          * Use notebook name as a title instead of ID.
          */
         _notebookTitle: function(args) {
-            var defer = $.Deferred();
             args.id = args.query;
 
-            Radio.request('notebooks', 'get:model', args)
+            return Radio.request('notebooks', 'get:model', args)
             .then(function(model) {
                 args.title = model.get('name');
-                defer.resolve(args);
+                return args;
             });
-
-            return defer.promise();
         }
 
     });

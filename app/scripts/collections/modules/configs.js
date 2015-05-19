@@ -1,12 +1,11 @@
 /* global define */
 define([
-    'jquery',
     'q',
     'underscore',
     'backbone.radio',
     'collections/modules/module',
     'collections/configs'
-], function($, Q, _, Radio, ModuleObject, Configs) {
+], function(Q, _, Radio, ModuleObject, Configs) {
     'use strict';
 
     /**
@@ -310,9 +309,7 @@ define([
                 self.collection.trigger('reset:all');
                 return self.getAll(options);
             })
-            .then(function() {
-                return self.collection;
-            });
+            .thenResolve(self.collection);
         },
 
         /**

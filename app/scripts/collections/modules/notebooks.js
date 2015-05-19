@@ -1,11 +1,11 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
+    'q',
     'backbone.radio',
     'collections/modules/module',
     'collections/notebooks'
-], function(_, $, Radio, ModuleObject, Notebooks) {
+], function(_, Q, Radio, ModuleObject, Notebooks) {
     'use strict';
 
     /**
@@ -51,24 +51,20 @@ define([
         },
 
         getNotebooks: function(options) {
-            var defer = $.Deferred(),
-                self  = this;
+            var self = this;
 
-            this.getAll(options)
+            return this.getAll(options)
             .then(function() {
                 self.collection.models = self.collection.getTree();
-                defer.resolve(self.collection);
+                return self.collection;
             });
-
-            return defer.promise();
         },
 
         /**
          * Remove an existing model.
          */
         remove: function(model, removeNotes) {
-            var atIndex = this.collection.indexOf(model),
-                defer   = $.Deferred();
+            var atIndex = this.collection.indexOf(model);
 
             model = (typeof model === 'string' ? this.getById(model) : model);
 
@@ -77,42 +73,34 @@ define([
              * Then, remove notes attached to the notebook or change their notebookId.
              * And finally, remove the notebook.
              */
-            this.updateChildren(model)
+            return this.updateChildren(model)
             .then(Radio.request('notes', 'change:notebookId', model, removeNotes))
             .then(function() {
                 return model.destroySync();
             })
             .then(function() {
                 Radio.trigger('notebooks', 'model:destroy', atIndex, model.id);
-                defer.resolve();
             });
-
-            return defer.promise();
         },
 
         /**
          * Returns models with the specified parent ID.
          */
         getChildren: function(parentId) {
-            var defer = $.Deferred(),
-                collection;
+            var collection;
 
             // Filter an existing collection if it exists
             if (this.collection) {
                 collection = this.collection.clone();
                 collection.reset(collection.getChildren(parentId));
-                return defer.resolve(collection);
+                return Q.resolve(collection);
             }
 
             // Fetch everything anew
             collection = new Notebooks();
 
-            $.when(collection.fetch({conditions: {parentId: parentId}}))
-            .then(function() {
-                defer.resolve(collection);
-            });
-
-            return defer.promise();
+            return new Q(collection.fetch({conditions: {parentId: parentId}}))
+            .thenResolve(collection);
         },
 
         /**
@@ -121,18 +109,14 @@ define([
         updateChildren: function(model) {
             return this.getChildren(model.id)
             .then(function(collection) {
-                var wait;
+                var promises = [];
 
                 // Change parentId of each children
                 collection.each(function(child) {
-                    if (!wait) {
-                        wait = $.when(child.save({parentId: model.get('parentId')}));
-                        return;
-                    }
-                    wait.then(child.save({parentId : model.get('parentId')}));
+                    promises.push(child.save({parentId : model.get('parentId')}));
                 });
 
-                return wait;
+                return Q.all(promises);
             });
         }
 

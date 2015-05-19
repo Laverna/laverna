@@ -1,4 +1,6 @@
 (function(root, factory) {
+    'use strict';
+    /* global define */
     if (typeof define === 'function' && define.amd) {
         define(['marionette', 'backbone.radio', 'underscore'], function(Marionette, Radio, _) {
             return factory(Marionette, Radio, _);
@@ -16,9 +18,9 @@
 }(this, function(Marionette, Radio, _) {
     'use strict';
 
-    Marionette.Application.prototype._initChannel = function () {
+    Marionette.Application.prototype._initChannel = function() {
         this.channelName = _.result(this, 'channelName') || 'global';
         this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
         this.reqres = this.channel;
-    }
+    };
 }));

@@ -159,7 +159,7 @@ define([
         Radio.comply('appNotebooks', 'show:form', controller.notebookForm, controller);
     });
 
-    App.addInitializer(function() {
+    App.on('before:start', function() {
         new Notebooks.Router({
             controller: controller
         });

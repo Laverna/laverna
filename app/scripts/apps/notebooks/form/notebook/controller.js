@@ -1,11 +1,11 @@
 /* global define */
 define([
-    'jquery',
+    'q',
     'underscore',
     'marionette',
     'backbone.radio',
     'apps/notebooks/form/notebook/formView'
-], function($, _, Marionette, Radio, View) {
+], function(Q, _, Marionette, Radio, View) {
     'use strict';
 
     /**
@@ -34,11 +34,11 @@ define([
             this.listenTo(Radio.channel('notebooks'), 'save:after', this.onSaveAfter);
 
             // Fetch notebooks
-            $.when(
+            Q.all([
                 Radio.request('notebooks', 'get:all', options),
                 Radio.request('notebooks', 'get:model', options)
-            )
-            .then(this.show);
+            ])
+            .spread(this.show);
         },
 
         onDestroy: function() {

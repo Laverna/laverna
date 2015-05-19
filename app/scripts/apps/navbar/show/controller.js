@@ -1,11 +1,12 @@
 /* global define */
 define([
     'jquery',
+    'q',
     'underscore',
     'backbone.radio',
     'marionette',
     'apps/navbar/show/view'
-], function($, _, Radio, Marionette, View) {
+], function($, Q, _, Radio, Marionette, View) {
     'use strict';
 
     /**
@@ -32,23 +33,24 @@ define([
     var Controller = Marionette.Object.extend({
 
         initialize: function(options) {
+            var profile = {profile: Radio.request('uri', 'profile')};
             _.bindAll(this, 'show');
 
             this.options = options;
 
             // Request notebooks and title
-            $.when(
-                Radio.request('configs', 'get:all', options),
-                Radio.request('notebooks', 'get:all', options),
+            Q.all([
+                Radio.request('configs', 'get:all', profile),
+                Radio.request('notebooks', 'get:all', profile),
                 Radio.request('configs', 'get:model', {name: 'appProfiles'}),
                 Radio.request('global', 'get:title', options)
-            )
-            .then(this.show);
+            ])
+            .spread(this.show);
         },
 
         onDestroy: function() {
             this.stopListening();
-            this.view.trigger('destroy');
+            Radio.command('global', 'region:empty', 'sidebarNavbar');
         },
 
         show: function(configs, notebooks, profiles, title) {

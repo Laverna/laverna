@@ -1,10 +1,10 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
+    'q',
     'backbone.radio',
     'marionette'
-], function(_, $, Radio, Marionette) {
+], function(_, Q, Radio, Marionette) {
     'use strict';
 
     /**
@@ -46,24 +46,16 @@ define([
             args  = Array.prototype.slice.call(arguments, 1);
 
             return function() {
-                var defer = new $.Deferred(),
-                    promise;
+                var promises = [];
 
                 // Execute every init one after another
                 _.each(types, function(type) {
-                    if (!promise) {
-                        promise = self._executeInit(type, args);
-                        return;
-                    }
-
-                    promise.then(self._executeInit(type, args));
+                    promises.push(function() {
+                        return self._executeInit(type, args);
+                    });
                 });
 
-                promise.then(function() {
-                    defer.resolve();
-                });
-
-                return defer.promise();
+                return _.reduce(promises, Q.when, new Q());
             };
         },
 
@@ -71,18 +63,17 @@ define([
          * Executes an initializer
          */
         _executeInit: function(type, args) {
-            var defer = new $.Deferred(),
-                self  = this,
-                after = _.after(self._inits[type].length, function() {
-                    defer.resolve();
-                });
+            var self  = this,
+                promises = [];
 
             // Execute all the functions asynchronously
             _.each(self._inits[type], function(fnc) {
-                $.when(fnc(args)).then(after);
+                promises.push(function() {
+                    return new Q(fnc(args));
+                });
             });
 
-            return defer.promise();
+            return _.reduce(promises, Q.when, new Q());
         }
 
     });

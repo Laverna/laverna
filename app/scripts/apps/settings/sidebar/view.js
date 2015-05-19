@@ -1,10 +1,11 @@
 /* global define */
 define([
     'underscore',
+    'q',
     'marionette',
     'backbone.radio',
     'text!apps/settings/sidebar/template.html'
-], function(_, Marionette, Radio, Tmpl) {
+], function(_, Q, Marionette, Radio, Tmpl) {
     'use strict';
 
     /**
@@ -43,7 +44,7 @@ define([
         confirm: function(e) {
             e.preventDefault();
 
-            $.when(Radio.request('AppSettings', 'has:changes'))
+            Radio.request('AppSettings', 'has:changes')
             .then(function() {
                 Radio.command('uri', 'navigate', $(e.currentTarget).attr('href'));
             });

@@ -2,12 +2,13 @@
 define([
     'underscore',
     'backbone',
+    'backbone.radio',
     'collections/pageable',
     'migrations/note',
     'models/note',
     'fuse',
     'indexedDB'
-], function(_, Backbone, PageableCollection, NotesDB, Note, Fuse) {
+], function(_, Backbone, Radio, PageableCollection, NotesDB, Note, Fuse) {
     'use strict';
 
     var Notes = PageableCollection.extend({
@@ -93,13 +94,12 @@ define([
                 return this;
             }
 
-            var pattern = new RegExp(letters, 'gim'),
-                data;
+            var pattern = new RegExp(letters, 'gim');
 
             return this.filter(function(model) {
-                data = model.decrypt();
+                Radio.request('encrypt', 'decrypt:model', model);
                 pattern.lastIndex = 0;
-                return pattern.test(data.title) || pattern.test(data.content);
+                return pattern.test(model.get('title')) || pattern.test(model.get('content'));
             });
         },
 

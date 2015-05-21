@@ -33,7 +33,7 @@ define([
             // Fetch everything
             Q.all([
                 Radio.request('notes', 'get:model', options),
-                Radio.request('notebooks', 'get:all', options)
+                Radio.request('notebooks', 'get:all', _.pick(options, 'profile'))
             ])
             .spread(this.show);
 

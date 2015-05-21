@@ -99,7 +99,7 @@ define([
 
             return new Q(this.collection.fetch(options))
             .then(function() {
-                return self.decryptModels();
+                return new Q(self.decryptModels());
             })
             .thenResolve(self.collection);
         },
@@ -134,9 +134,9 @@ define([
 
             return new Q(model.fetch())
             .then(function() {
-                self.decryptModel(model);
-                return model;
-            });
+                return self.decryptModel(model);
+            })
+            .thenResolve(model);
         },
 
         /**

@@ -243,7 +243,7 @@ define([
             Radio.trigger('encrypt', 'encrypting:models', collection);
 
             collection.each(function(model) {
-                promises.push(self.encryptModel(model));
+                promises.push(new Q(self.encryptModel(model)));
             }, this);
 
             return Q.all(promises);
@@ -265,7 +265,7 @@ define([
             Radio.trigger('encrypt', 'decrypting:models', collection);
 
             collection.each(function(model) {
-                promises.push(self.decryptModel(model));
+                promises.push(new Q(self.decryptModel(model)));
             }, this);
 
             return Q.all(promises);

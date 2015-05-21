@@ -30,6 +30,7 @@ define([
         },
 
         collectionEvents: {
+            'change'   : 'render',
             'add:model': 'selectModel'
         },
 

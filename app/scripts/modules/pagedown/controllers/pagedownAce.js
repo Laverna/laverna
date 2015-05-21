@@ -96,6 +96,8 @@ define([
 
             // Trigger an event
             Radio.trigger('editor', 'ready');
+
+            // Listen to events
             mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);
             this.editor.session.on(
                 'changeScrollTop',

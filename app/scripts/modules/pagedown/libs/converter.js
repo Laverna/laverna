@@ -1,10 +1,11 @@
 /* global define, Markdown */
 define([
     'underscore',
+    'backbone.radio',
     'libs/checklist',
     'libs/tags',
     'pagedown-extra'
-], function(_, Checklist, Tags) {
+], function(_, Radio, Checklist, Tags) {
     'use strict';
 
     /**
@@ -22,6 +23,7 @@ define([
                 return text;
             });
 
+            Radio.trigger('editor', 'converter:init', converter);
             return converter;
         },
 

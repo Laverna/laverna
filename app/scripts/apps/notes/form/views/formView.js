@@ -79,8 +79,8 @@ define([
             this.bindKeys();
 
             // The view is ready
-            this.on('rendered', this.onRendered, this);
-            this.on('bind:keys', this.bindKeys, this);
+            this.listenTo(this, 'rendered', this.onRendered);
+            this.listenTo(this, 'bind:keys', this.bindKeys);
         },
 
         bindKeys: function() {

@@ -63,13 +63,13 @@ define([
          * Executes an initializer
          */
         _executeInit: function(type, args) {
-            var self  = this,
+            var self     = this,
                 promises = [];
 
             // Execute all the functions asynchronously
             _.each(self._inits[type], function(fnc) {
                 promises.push(function() {
-                    return new Q(fnc(args));
+                    return new Q(fnc.apply(null, args));
                 });
             });
 

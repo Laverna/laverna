@@ -1,7 +1,7 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
+    'q',
     'backbone.radio',
     'marionette',
     'modules/pagedown/views/editor',
@@ -11,11 +11,13 @@ define([
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
-], function(_, $, Radio, Marionette, View, Converter, ace, Markdown) {
+], function(_, Q, Radio, Marionette, View, Converter, ace, Markdown) {
     'use strict';
 
     /**
      * This class renders pagedown editor.
+     *
+     * It executes `editor:before` initializer before starting the editor.
      *
      * Triggers the following
      * Events:
@@ -32,7 +34,9 @@ define([
     var PagedownAce = Marionette.Object.extend({
 
         initialize: function() {
-            _.bindAll(this, 'triggerScroll', 'onPreviewRefresh');
+            _.bindAll(this, 'onPreviewRefresh', 'triggerScroll', 'initAce', 'startEditor');
+
+            // Get configs
             this.configs = Radio.request('configs', 'get:object');
 
             // Initialize the view
@@ -41,46 +45,61 @@ define([
                 configs : this.configs
             });
 
-            // Events
-            Radio.channel('editor')
-            .on('ready', this.changeConfigs, this)
-            .on('focus', this.focus, this)
-            .reply('get:content', this.getContent, this);
-
-            Radio.on('notesForm', 'set:mode', this.changeConfigs, this);
-
             // Show the view and render Pagedown editor
             Radio.command('notesForm', 'show:editor', this.view);
-            this.render();
+
+            // Listen to events
+            this.vent = Radio.channel('editor');
+            this.listenTo(this.vent, 'focus', this.focus);
+
+            // Replies
+            this.vent.reply('get:content', this.getContent, this);
+
+            return new Q(this.initMdEditor())
+            .then(this.initAce)
+            .then(this.startEditor)
+            .fail(function(e) {
+                console.error('Markdown editor: error', e);
+            });
         },
 
         onDestroy: function() {
-            console.log('PagedownAce object is destroyed');
-            Radio.off('notesForm', 'set:mode');
-
-            Radio.channel('editor')
-            .off('ready focus')
-            .stopReplying('get:content');
-
+            this.stopListening();
+            this.vent.stopReplying('get:content');
             this.editor.destroy();
             this.view.trigger('destroy');
         },
 
-        render: function() {
-            // Initialize Markdown converter
-            var converter = Converter.getConverter(),
-                mdEditor;
+        /**
+         * Initialize Pagedown editor.
+         * @return promise
+         */
+        initMdEditor: function() {
+            var converter = Converter.getConverter();
 
             // Start the Markdown editor
-            mdEditor = new Markdown.Editor(converter);
+            this.mdEditor = new Markdown.Editor(converter);
 
-            // Configure ACE editor
+            // Register hooks
+            this.mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);
+
+            // Start initializers
+            return Radio.request('init', 'start', 'editor:before', this.mdEditor)();
+        },
+
+        /**
+         * Initialize ACE editor and configure it.
+         * @return object
+         */
+        initAce: function() {
+            // Initialize ACE editor
             this.editor = ace.edit('wmd-input');
+
+            // Configure it
             this.editor.getSession().setMode('ace/mode/markdown');
             this.editor.setTheme('ace/theme/github');
             this.editor.setFontSize(16);
 
-            // Ace configs
             // this.editor.setOption('spellcheck', true);
             this.editor.setHighlightActiveLine(true);
             this.editor.session.setUseWrapMode(true);
@@ -91,36 +110,33 @@ define([
             this.editor.renderer.setPrintMarginColumn(false);
             this.editor.renderer.setShowGutter(false);
 
-            // Run Ace
-            mdEditor.run(this.editor);
-
-            // Trigger an event
-            Radio.trigger('editor', 'ready');
-
-            // Listen to events
-            mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);
+            // Events
             this.editor.session.on(
                 'changeScrollTop',
                 _.debounce(this.triggerScroll, 20, {maxWait: 20})
             );
+
+            return this.editor;
         },
 
-        onPreviewRefresh: function() {
-            Radio.trigger('editor', 'preview:refresh');
-            this.triggerSave();
+        /**
+         * Start Pagedown editor
+         */
+        startEditor: function() {
+            // Run Ace
+            this.mdEditor.run(this.editor);
+
+            // Trigger an event
+            this.vent.trigger('ready');
+
+            this.changeMode();
+            this.listenTo(Radio.channel('notesForm'), 'set:mode', this.changeMode);
         },
 
-        triggerSave: _.debounce(function() {
-            if (this.getContent() !== '') {
-                Radio.trigger('notesForm', 'save:auto');
-            }
-        }, 1000),
-
-        triggerScroll: function() {
-            Radio.trigger('editor', 'pagedown:scroll');
-        },
-
-        changeConfigs: function(mode) {
+        /**
+         * Change mode of the editor.
+         */
+        changeMode: function(mode) {
             mode = mode || this.configs.editMode;
             var options = {
                 maxLines     : Infinity,
@@ -152,6 +168,21 @@ define([
             // Update settings && resize
             this.editor.renderer.updateFull(true);
             this.editor.resize();
+        },
+
+        onPreviewRefresh: function() {
+            this.vent.trigger('preview:refresh');
+            this.triggerSave();
+        },
+
+        triggerSave: _.debounce(function() {
+            if (this.getContent() !== '') {
+                Radio.trigger('notesForm', 'save:auto');
+            }
+        }, 1000),
+
+        triggerScroll: function() {
+            Radio.trigger('editor', 'pagedown:scroll');
         },
 
         getContent: function() {

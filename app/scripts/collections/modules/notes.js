@@ -46,6 +46,7 @@ define([
 
         reply: function() {
             return {
+                'save'              : this.saveModel,
                 'save:all'          : this.saveAll,
                 'get:model'         : this.getById,
                 'get:model:full'    : this.getModelFull,

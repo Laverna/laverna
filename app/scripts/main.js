@@ -37,7 +37,6 @@ requirejs.config({
         underscore            : '../bower_components/underscore/underscore',
         backbone              : '../bower_components/backbone/backbone',
         marionette            : '../bower_components/marionette/lib/core/backbone.marionette',
-        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/backbone.wreqr',
         'backbone.radio'      : '../bower_components/backbone.radio/build/backbone.radio.min',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
         'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
@@ -79,6 +78,11 @@ requirejs.config({
         'tags'                : 'libs/tags',
         'apps'                : 'apps',
         'locales'             : '../locales'
+    },
+    map: {
+        '*': {
+            'backbone.wreqr': 'backbone.radio'
+        }
     },
     shim: {
         // Backbone

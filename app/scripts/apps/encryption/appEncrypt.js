@@ -1,10 +1,11 @@
 /* global define, requirejs */
 define([
+    'jquery',
     'underscore',
     'marionette',
     'backbone.radio',
     'app',
-], function(_, Marionette, Radio, App) {
+], function($, _, Marionette, Radio, App) {
     'use strict';
 
     /**
@@ -67,6 +68,18 @@ define([
             });
         },
 
+        // On encrypt/decrypt error, remove PBKDF2 key from the session
+        _confirmAuth: function() {
+            Radio.command('Confirm', 'start', {
+                title     : 'encryption.error',
+                content   : $.t('encryption.errorConfirm'),
+                onconfirm : function() {
+                    Radio.command('encrypt', 'delete:secureKey');
+                    window.location.reload();
+                }
+            });
+        },
+
         // If encryption configs are changed, navigate to re-encryption page.
         _navigateEncrypt: function() {
             document.location.hash = Radio.request('uri', 'link:profile', '/encrypt/all');
@@ -96,6 +109,7 @@ define([
     // Check whether a user is authorized when everything is ready
     Radio.command('init', 'add', 'module', function() {
         Radio.on('encrypt', 'changed', controller._navigateEncrypt, controller);
+        Radio.on('encrypt', 'decrypt:error', controller._confirmAuth, controller);
 
         controller._checkAuth();
     });

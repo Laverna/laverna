@@ -35,7 +35,7 @@ define([
         initialize: function() {
             // Get configs
             this.configs = Radio.request('configs', 'get:object');
-            this.options = {key: null};
+            this.options = {};
 
             // Complies
             Radio.comply('encrypt', {
@@ -124,7 +124,7 @@ define([
                 return true;
             }
 
-            return (this.options.key || this._getSession()) !== null;
+            return !_.isEmpty(this.options) || this._getSession() !== null;
         },
 
         /**
@@ -193,8 +193,9 @@ define([
             try {
                 str = sjcl.decrypt(key, str);
             } catch (e) {
-                console.error('Decryption error', e, this.options.hexKey);
+                // Trigger error event
                 Radio.trigger('encrypt', 'decrypt:error', e);
+                console.error('Decryption error', e, this.options.hexKey);
                 throw new Error('Decryption error');
             }
 
@@ -257,9 +258,14 @@ define([
             var promises = [],
                 self     = this;
 
-            // The collection is empty or PBKDF2 wasn't generated
-            if (!collection.length || !this.options.key) {
+            // The collection is empty
+            if (!collection.length) {
                 return new Q();
+            }
+
+            // PBKDF2 wasn't generated
+            if (!this.options.key) {
+                return new Q(Radio.trigger('encrypt', 'decrypt:error'));
             }
 
             Radio.trigger('encrypt', 'decrypting:models', collection);
@@ -298,7 +304,7 @@ define([
          * type their passwords every time.
          */
         _saveSession: function() {
-            if (!window.sessionStorage) {
+            if (!window.sessionStorage || !this.options) {
                 return;
             }
             window.sessionStorage.setItem(
@@ -316,7 +322,13 @@ define([
             }
 
             var options  = window.sessionStorage.getItem(this._getSessionKey());
-            this.options = (options ? JSON.parse(options) : {});
+            try {
+                options = JSON.parse(options);
+                this.options = options || this.options;
+            } catch (e) {
+                options = null;
+            }
+
             return options;
         },
 

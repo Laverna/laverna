@@ -100,6 +100,8 @@
     "Hyperlink": "Hyperlink",
     "encryption": {
         "wait": "Please wait until the encryption will be completed",
+        "error": "Encryption error",
+        "errorConfirm": "Error while decrypting data. **Do you want to retry?**",
         "state": {
             "decrypt": "Decrypting everything",
             "encrypt": "Encrypting everything",

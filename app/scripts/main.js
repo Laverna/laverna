@@ -63,7 +63,7 @@ requirejs.config({
         dompurify             : '../bower_components/dompurify/purify',
         mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
-        dropzone              : '../bower_components/dropzone/downloads/dropzone.min',
+        dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',
         toBlob                : '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
         blobjs                : '../bower_components/Blob/Blob',
         fileSaver             : '../bower_components/FileSaver/FileSaver',

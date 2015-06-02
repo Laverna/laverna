@@ -135,7 +135,7 @@ define([
         },
 
         serializeData: function() {
-            var content = Radio.request('editor', 'content:html', this.model.get('content'));
+            var content = Radio.request('editor', 'content:html', this.model);
             return _.extend(this.model.toJSON(), {
                 content  : content || this.model.get('content'),
                 notebook : this.options.notebook.toJSON(),

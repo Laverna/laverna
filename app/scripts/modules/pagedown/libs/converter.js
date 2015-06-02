@@ -12,7 +12,9 @@ define([
      * Converts Markdown to HTML
      */
     var Converter = {
-        getConverter : function() {
+        getConverter : function(model) {
+            model = typeof model !== 'string' ? model : null;
+
             var converter = new Markdown.Converter();
             Markdown.Extra.init(converter);
 
@@ -23,7 +25,7 @@ define([
                 return text;
             });
 
-            Radio.trigger('editor', 'converter:init', converter);
+            Radio.trigger('editor', 'converter:init', converter, model);
             return converter;
         },
 
@@ -35,8 +37,9 @@ define([
             return new Tags().getTags(content);
         },
 
-        toHtml: function(content) {
-            return this.getConverter().makeHtml(content);
+        toHtml: function(model) {
+            var content = (typeof model === 'string' ? model : model.get('content'));
+            return this.getConverter(model).makeHtml(content);
         },
 
         toggleTask: function(data) {

@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'backbone.radio',
-    'marionette'
+    'marionette',
 ], function(_, Backbone, Radio, Marionette) {
     'use strict';
 
@@ -27,6 +27,8 @@ define([
      *    returns a link to a profile.
      * 3. request: `link`
      *    generates and returns a link to notes list or to a note.
+     * 4. request: `link:file`
+     *    generate file URL.
      */
     var Uri = Marionette.Object.extend({
 
@@ -46,6 +48,7 @@ define([
             this.vent
             .reply('profile', this.getProfile, this)
             .reply('link:profile', this.getProfileLink, this)
+            .reply('link:file', this.getFileLink, this)
             .reply('link', this.getLink, this);
         },
 
@@ -85,6 +88,21 @@ define([
                 return this.navigate(url || '/notes', arguments[1]);
             }
             history.back();
+        },
+
+        /**
+         * Generate file URL.
+         */
+        getFileLink: function(model, blob) {
+            // Just generate pseudo URL
+            if (!blob) {
+                return '#file:' + model.id;
+            }
+
+            var url = window.URL || window.webkitURL,
+                src = (model.src || model.get('src'));
+
+            return url.createObjectURL(src);
         },
 
         /**

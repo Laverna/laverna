@@ -30,6 +30,14 @@ define([
      * Replies:
      * 1. channel: editor, event: get:content
      *    returns current value from the editor.
+     * 2. channel: editor, event: generate:link
+     *    generates Markdown code for a link.
+     * 3. channel: editor, event: generate:image
+     *    generates Markdown code for an image.
+     *
+     * Complies:
+     * 1. channel: editor, event: insert
+     *    inserts text to the editor.
      */
     var PagedownAce = Marionette.Object.extend({
 
@@ -54,6 +62,11 @@ define([
 
             // Replies
             this.vent.reply('get:content', this.getContent, this);
+            this.vent.reply('generate:link', this.getLinkCode, this);
+            this.vent.reply('generate:image', this.getImageCode, this);
+
+            // Complies
+            this.vent.comply('insert', this.insertText, this);
 
             return new Q(this.initMdEditor())
             .then(this.initAce)
@@ -75,7 +88,7 @@ define([
          * @return promise
          */
         initMdEditor: function() {
-            var converter = Converter.getConverter();
+            var converter = Converter.getConverter(this.view.model);
 
             // Start the Markdown editor
             this.mdEditor = new Markdown.Editor(converter);
@@ -84,7 +97,7 @@ define([
             this.mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);
 
             // Start initializers
-            return Radio.request('init', 'start', 'editor:before', this.mdEditor)();
+            return Radio.request('init', 'start', 'editor:before', this.mdEditor, this.view.model)();
         },
 
         /**
@@ -189,12 +202,25 @@ define([
             var data     = {};
             data.content = !this.editor ? '' : this.editor.getSession().getValue().trim();
             data.tags    = Converter.getTags(data.content);
+            data.files   = Radio.request('editor', 'get:files', data.content);
             data = _.extend(data, Converter.countTasks(data.content));
             return data;
         },
 
         focus: function() {
             this.editor.focus();
+        },
+
+        getLinkCode: function(data) {
+            return '[' + data.text + ']' + '(' + data.url + ')';
+        },
+
+        getImageCode: function(data) {
+            return '!' + this.getLinkCode(data);
+        },
+
+        insertText: function(text) {
+            this.editor.insert(text);
         }
 
     });

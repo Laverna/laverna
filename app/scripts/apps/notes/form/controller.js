@@ -32,7 +32,7 @@ define([
 
             // Fetch everything
             Q.all([
-                Radio.request('notes', 'get:model', options),
+                Radio.request('notes', 'get:model:full', options),
                 Radio.request('notebooks', 'get:all', _.pick(options, 'profile'))
             ])
             .spread(this.show);
@@ -50,11 +50,11 @@ define([
 
         show: function(note, notebooks) {
             var notebooksView;
+            note = note[0];
 
             this.view = new View({
                 model     : note,
-                profile   : note.database.id,
-                files     : []
+                profile   : note.database.id
             });
 
             // Show the view and trigger an event

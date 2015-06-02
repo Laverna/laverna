@@ -14,6 +14,7 @@ define([
     var exts = [
         'modules/pagedown/module',
         'modules/linkDialog/module',
+        'modules/fileDialog/module',
         'modules/fuzzySearch/module',
         'modules/codePrettify/module',
         'modules/mathjax/module'

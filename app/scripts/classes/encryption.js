@@ -259,7 +259,7 @@ define([
                 self     = this;
 
             // The collection is empty
-            if (!collection.length) {
+            if (!collection.length || !Number(this.configs.encrypt)) {
                 return new Q();
             }
 

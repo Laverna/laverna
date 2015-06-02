@@ -32,7 +32,7 @@ define([
             'isFavorite'    :  0,
             'trash'         :  0,
             'synchronized'  :  0,
-            'images'        :  []
+            'files'         :  []
         },
 
         encryptKeys: [

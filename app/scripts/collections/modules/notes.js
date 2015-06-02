@@ -103,11 +103,21 @@ define([
         getModelFull: function(options) {
             return this.getById(options)
             .then(function(note) {
-                return Radio.request('notebooks', 'get:model', _.extend({}, options, {
-                    id: note.get('notebookId')
-                }))
-                .then(function(notebook) {
-                    return [note, notebook];
+                var profile = options.profile;
+
+                return Q.all([
+                    Radio.request('notebooks', 'get:model', {
+                        profile : profile,
+                        id      : note.get('notebookId')
+                    }),
+                    Radio.request('files', 'get:files', note.get('files'), {
+                        profile: profile
+                    })
+                ])
+                .spread(function(notebook, files) {
+                    note.notebook = notebook;
+                    note.files    = files;
+                    return [note, notebook, files];
                 });
             });
         },

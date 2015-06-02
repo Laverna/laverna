@@ -249,6 +249,13 @@ define([
          * Update pagination when a model is added
          */
         _onAddItem: function(model) {
+            // If the model already exists, update it
+            var colModel = this.fullCollection.get(model.id);
+            if (colModel) {
+                return colModel.set(model.toJSON());
+            }
+
+            // Or add it to fullCollection and sort the collection again
             this.fullCollection.add(model, {at: 0});
             this.sortFullCollection();
         },

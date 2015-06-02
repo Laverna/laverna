@@ -36,6 +36,7 @@ define([
         'collections/modules/notes',
         'collections/modules/notebooks',
         'collections/modules/tags',
+        'collections/modules/files',
         'collections/modules/configs',
 
         // Modules

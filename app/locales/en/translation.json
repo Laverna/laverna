@@ -112,6 +112,12 @@
         "confirm remove": "Profile **__profile__** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
         "type name": "Type profile name"
     },
+    "files": {
+        "file-url": "File or image URL",
+        "attach": "Attach a file",
+        "attachLink": "Attach as a link",
+        "attachImage": "Attach as an image"
+    },
     "notes": {
         "confirm trash": "The note **__title__** will be moved to trash.",
         "confirm remove": "The note **__title__** will be removed **for ever**!",

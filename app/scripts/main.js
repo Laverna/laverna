@@ -50,7 +50,7 @@ requirejs.config({
         // Storage adapters
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
         indexedDB             : '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
-        IndexedDBShim         : '../bower_components/IndexedDBShim/dist/IndexedDBShim',
+        IndexedDBShim         : '../bower_components/IndexedDBShim/dist/indexeddbshim',
         remotestorage         : '../bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd',
         dropbox               : 'libs/dropbox',
 

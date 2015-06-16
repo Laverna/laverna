@@ -46,6 +46,9 @@ define([
                 Radio.request('global', 'get:title', options)
             ])
             .spread(this.show);
+
+            // Events
+            this.listenTo(this, 'change:title', this.changeTitle);
         },
 
         onDestroy: function() {
@@ -56,11 +59,6 @@ define([
         show: function(configs, notebooks, profiles, title) {
             var currentApp = Radio.request('global', 'app:current').moduleName,
                 args;
-
-            // Do not render the view if nothing has changed
-            if (this.view && title === this.view.options.args.title) {
-                return;
-            }
 
             args = _.extend({title: title}, this.options);
             args.currentUrl = Radio.request('uri', 'link:profile', (
@@ -79,6 +77,18 @@ define([
 
             // Listen to view events
             this.listenTo(this.view, 'search:submit', this.navigateSearch, this);
+        },
+
+        /**
+         * Changes current title
+         */
+        changeTitle: function(options) {
+            var self = this;
+
+            Radio.request('global', 'get:title', options)
+            .then(function(title) {
+                self.view.trigger('change:title', {title: title, args: options});
+            });
         },
 
         /**

@@ -38,10 +38,13 @@ define([
 
         ui: {
             navbar       : '#sidebar-nav',
-            searchInput  : '.search-input'
+            searchInput  : '.search-input',
+            title        : '#navbar-title',
+            icon         : '#location-icon'
         },
 
         events: {
+            'click .addlink'        : 'navigateAdd',
             'click .btn-search'     : 'showSearch',
             'click .show-about'     : 'showAbout',
             'blur @ui.searchInput'  : 'hideSearch',
@@ -54,6 +57,7 @@ define([
         },
 
         initialize: function() {
+            this.listenTo(this, 'change:title', this.changeTitle);
             this.listenTo(Radio.channel('global'), 'show:search', this.showSearch);
 
             // Re-render the view when notebooks collection has changed
@@ -62,6 +66,25 @@ define([
 
         onDestroy: function() {
             Radio.trigger('global', 'search:hidden');
+        },
+
+        /**
+         * Trigger form:show event when add button is clicked.
+         */
+        navigateAdd: function() {
+            Radio.trigger('global', 'form:show');
+            return false;
+        },
+
+        /**
+         * Change navbar title
+         */
+        changeTitle: function(options) {
+            var icon = this.templateHelpers().getIcon.apply(options);
+
+            this.ui.title.text($.t(options.title));
+            this.ui.icon.attr('class', icon);
+            this.options.args = options.args;
         },
 
         searchSubmit: function() {

@@ -3,8 +3,10 @@
     <ul class="nav navbar-nav navbar-left">
         <li class="dropdown">
             <a id="header-title" href="#{{ args.currentUrl }}" class="btn-link navbar-brand dropdown-toggle" data-toggle="dropdown">
-                <i id="location-icon" class="icon-file {{getIcon()}}"></i>
-                {{i18n(args.title)}}
+                <i id="location-icon" class="{{getIcon()}}"></i>
+                <span id="navbar-title">
+                    {{i18n(args.title)}}
+                </span>
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu location-dropdown" >
@@ -57,7 +59,7 @@
         </li>
         <% } %>
         <li>
-            <a href="#{{ args.currentUrl }}/add" class="btn btn-danger addlink">
+            <a href="#" class="btn btn-danger addlink">
                 <span class="icon-doc-new"></span>
             </a>
         </li>

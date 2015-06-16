@@ -30,14 +30,14 @@ define([
     Radio.command('init', 'add', 'app:before', function() {
         Radio.comply('navbar', 'stop', Navbar.stop, Navbar);
 
-        Radio.comply('navbar', 'start', _.debounce(function(options) {
-            // Restart the module
+        Radio.comply('navbar', 'start', function(options) {
+            // Just trigger an event
             if (Navbar._isInitialized) {
-                Navbar.stop();
+                return Navbar.controller.trigger('change:title', options);
             }
 
             Navbar.start(options);
-        }, 200));
+        });
 
     });
 

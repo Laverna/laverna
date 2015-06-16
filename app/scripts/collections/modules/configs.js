@@ -82,7 +82,7 @@ define([
 
         saveModel: function(model, data) {
             if (model.isPassword(data)) {
-                data.value = Radio.request('encrypt', 'sha256', data.value);
+                return this._savePassword.apply(this, arguments);
             }
             return this.save(model, data);
         },
@@ -123,8 +123,9 @@ define([
         /**
          * Return the value of a specific config
          */
-        getConfig: function(name) {
-            return this.getObject()[name];
+        getConfig: function(name, defaultValue) {
+            var config = this.getObject()[name];
+            return config ? config : defaultValue;
         },
 
         /**
@@ -371,6 +372,19 @@ define([
                 name  : 'encryptBackup',
                 value : _.extend({}, changed, configs.encryptBackup)
             };
+        },
+
+        /**
+         * Always save password as sha256
+         */
+        _savePassword: function(model, data) {
+            var self = this;
+
+            return new Q(Radio.request('encrypt', 'sha256', data.value))
+            .then(function(result) {
+                data.value = result;
+                return self.save(model, data);
+            });
         }
 
     });

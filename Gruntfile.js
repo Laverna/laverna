@@ -557,7 +557,7 @@ module.exports = function (grunt) {
         'lessc',
         'useminPrepare',
         'requirejs',
-        'imagemin',
+        // 'imagemin',
         'htmlmin',
         'concat',
         'cssmin',

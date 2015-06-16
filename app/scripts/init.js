@@ -13,6 +13,7 @@ define([
 
     var exts = [
         'modules/pagedown/module',
+        'modules/tags/module',
         'modules/linkDialog/module',
         'modules/fileDialog/module',
         'modules/fuzzySearch/module',
@@ -64,4 +65,5 @@ define([
         });
 
     });
+
 });

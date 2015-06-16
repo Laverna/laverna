@@ -4,9 +4,8 @@ define([
     'q',
     'backbone.radio',
     'collections/modules/module',
-    'collections/tags',
-    'sjcl'
-], function(_, Q, Radio, ModuleObject, Tags, sjcl) {
+    'collections/tags'
+], function(_, Q, Radio, ModuleObject, Tags) {
     'use strict';
 
     /**
@@ -62,12 +61,16 @@ define([
          * Add a new model or update an existing one.
          */
         saveModel: function(model, data) {
-            var self  = this,
-                id    = sjcl.hash.sha256.hash(data.name).join('');
+            var self  = this;
 
             // First, make sure that a model won't duplicate itself.
-            return this._removeOld(id, model)
-            .then(function() {
+            return new Q(Radio.request('encrypt', 'sha256', data.name))
+            .then(function(id) {
+                id = id.join('');
+                return self._removeOld(id, model)
+                .thenResolve(id);
+            })
+            .then(function(id) {
                 model.set('id', id);
                 model.set(data);
                 model.updateDate();
@@ -79,22 +82,43 @@ define([
         /**
          * Add a bunch of tags
          */
-        add: function(tags) {
-            var self  = this,
-                promises = [],
-                model;
+        add: function(tags, options) {
+            var self     = this,
+                promises = [];
 
             if (!tags.length) {
                 return Q.resolve();
             }
 
+            options = options || {};
             _.each(tags, function(tag) {
-                model = new Tags.prototype.model();
-
-                promises.push(self.save(model, {name: tag}));
+                promises.push(self._findSave(tag, options));
             });
 
             return Q.all(promises);
+        },
+
+        /**
+         * If there is not a tag with such a name, add a new one.
+         */
+        _findSave: function(name, options) {
+            var self = this;
+
+            return new Q(Radio.request('encrypt', 'sha256', name))
+            .then(function(id) {
+                return self.getById(
+                    _.extend({}, options, {id: id.join('')})
+                );
+            })
+            .then(function(model) {
+                return model;
+            })
+            .catch(function(model) {
+                console.error('Can\'t find the model, adding', name, arguments);
+
+                model = new self.Collection.prototype.model();
+                return self.saveModel(model, {name: name});
+            });
         },
 
         /**

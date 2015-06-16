@@ -132,7 +132,9 @@ define([
             /**
              * Before saving the model, add tags.
              */
-            return new Q(Radio.request('tags', 'add', data.tags || []))
+            return new Q(Radio.request('tags', 'add', data.tags || [], {
+                profile: model.database.id
+            }))
             .then(function() {
                 return self.save(model, model.toJSON());
             });
@@ -189,7 +191,11 @@ define([
             }
 
             // Fetch notes that are attached to a specified notebook
-            return this.filter({filter: 'notebook', query: notebook.get('id')})
+            return this.filter({
+                profile : notebook.database.id,
+                filter  : 'notebook',
+                query   : notebook.get('id')
+            })
             .then(function(notes) {
                 if (notes.length === 0) {
                     return Q.resolve();

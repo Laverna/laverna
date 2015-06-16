@@ -142,6 +142,12 @@ requirejs.config({
             deps: ['xregexp/xregexp'],
             exports: 'XRegExp'
         },
+        'xregexp/addons/unicode/unicode-categories': {
+            deps: [
+                'xregexp/addons/unicode/unicode-base'
+            ],
+            exports: 'XRegExp'
+        },
 
         // Others
         sjcl: {

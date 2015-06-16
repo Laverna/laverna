@@ -3,9 +3,9 @@ define([
     'underscore',
     'backbone.radio',
     'libs/checklist',
-    'libs/tags',
+    // 'libs/tags',
     'pagedown-extra'
-], function(_, Radio, Checklist, Tags) {
+], function(_, Radio, Checklist) {
     'use strict';
 
     /**
@@ -21,7 +21,6 @@ define([
             // Customize Markdown converter
             converter.hooks.chain('postNormalization', function(text) {
                 text = new Checklist().toHtml(text);
-                text = new Tags().toHtml(text);
                 return text;
             });
 
@@ -34,7 +33,7 @@ define([
         },
 
         getTags: function(content) {
-            return new Tags().getTags(content);
+            return Radio.request('editor', 'get:tags', content);
         },
 
         toHtml: function(model) {

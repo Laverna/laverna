@@ -3,8 +3,9 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
-    'apps/settings/sidebar/view'
-], function(_, Marionette, Radio, View) {
+    'apps/settings/sidebar/view',
+    'apps/settings/sidebar/views/navbar'
+], function(_, Marionette, Radio, View, Navbar) {
     'use strict';
 
     /**
@@ -20,11 +21,16 @@ define([
         onDestroy: function() {
             this.stopListening();
             this.view.trigger('destroy');
+            Radio.command('global', 'region:empty', 'sidebarNavbar');
         },
 
         show: function() {
             this.view = new View(this.options);
             Radio.command('global', 'region:show', 'sidebar', this.view);
+
+            // Show a different Navbar
+            Radio.command('navbar', 'stop');
+            Radio.command('global', 'region:show', 'sidebarNavbar', new Navbar());
         }
 
     });

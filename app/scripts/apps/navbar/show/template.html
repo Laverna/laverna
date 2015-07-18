@@ -1,67 +1,89 @@
-<!-- Sidebars header -->
-<nav class="ui-row navbar navbar-default navbar-static-top" id="sidebar-nav">
-    <ul class="nav navbar-nav navbar-left">
-        <li class="dropdown">
-            <a id="header-title" href="#{{ args.currentUrl }}" class="btn-link navbar-brand dropdown-toggle" data-toggle="dropdown">
-                <i id="location-icon" class="{{getIcon()}}"></i>
-                <span id="navbar-title">
+<nav class="header navbar navbar-default navbar-static-top -left" id="sidebar--nav">
+<div class="container-fluid header--container -left">
+
+    <ul class="nav navbar-nav navbar-left header--col--left">
+        <li class="header--col--left -text-elipsis">
+            <a href="#{{args.currentUrl}}" class="btn-link navbar-brand header--title sidemenu--open">
+                <i class="icon-menu header--icon"></i>
+                <span id="header--title">
                     {{i18n(args.title)}}
                 </span>
-                <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu location-dropdown" >
-                <li><a href="#{{ uri }}notes"><i class="icon-note"></i> {{ i18n('All notes') }}</a></li>
-                <li><a href="#{{ uri }}notes/f/favorite"><i class="icon-favorite"></i>  {{ i18n('Favourites') }}</a></li>
-                <li><a href="#{{ uri }}notes/f/trashed"><i class="icon-trashed"></i>  {{ i18n('Trash') }}</a></li>
-                <li><a href="#{{ uri }}notebooks"><i class="icon-notebook"></i>  {{ i18n('Notebooks') }}</a></li>
-
-                <% if (notebooks !== null) { %>
-                <li class="divider"></li>
-                <% notebooks.forEach(function(notebook) { %>
-                <li><a href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
-                    <i class="icon-notebook"></i>  {{notebook.name}}
-                </a></li>
-                <% }); } %>
-
-                <li class="divider"></li>
-                <li<% if (profile === 'notes-db' || !profile) { %> class="active" <% } %>>
-                    <a href="#/notes"><i class="icon-user"></i>  Default</a>
-                </li>
-                <% _.forEach(profiles, function(prof) { %>
-                <% if (prof !== 'notes-db') { %>
-                <li<% if (profile === prof) { %> class="active" <% } %>>
-                    <a href="#{{ profileLink(prof) }}"><i class="icon-user"></i>  {{ prof }}</a>
-                </li>
-                <% } }); %>
-
-                <li class="divider"></li>
-                <li><a href="#{{ uri }}settings"><i class="icon-cog"></i>  {{ i18n('Settings') }}</a></li>
-                <li class="show-about"><a href="#"><i class="icon-help-circled"></i>  {{ i18n('About') }}</a></li>
-            </ul>
         </li>
-        <li>
-            <a href="#" class="btn btn-search" title="{{ i18n('Search') }}">
+        <li class="header--col--right">
+            <button id="header--sbtn" class="btn navbar-btn header--sbtn" title="{{i18n('Search')}}">
                 <i class="icon-search"></i>
-            </a>
+            </button>
         </li>
     </ul>
 
-    <form class="navbar-form search-form">
-        <input class="form-control search-input col-12" type="text" id="search-input" placeholder="{{ i18n('Search') }}" value="{{ args.query }}" />
+    <form id="header--search" class="header--search" role="search">
+        <input id="header--search--input" class="header--search--input form-control"
+            type="text" placeholder="{{i18n('Search')}}" value="{{args.query}}" />
     </form>
 
-    <ul class="nav navbar-nav navbar-right">
+    <div class="navbar-right header--right navbar-btn">
         <% if (isSyncEnabled()) { %>
-        <li>
-            <a href="#" class="btn sync-button">
-                <span id="syncStatus" class="icon-arrows"></span>
-            </a>
-        </li>
+        <button class="btn">
+            <span id="header--sync" class="icon-arrows"></span>
+        </button>
         <% } %>
-        <li>
-            <a href="#" class="btn btn-danger addlink">
-                <span class="icon-doc-new"></span>
-            </a>
-        </li>
-    </ul>
+        <button id="header--add" class="header--add btn btn-danger">
+            <span class="icon-doc-new"></span>
+        </button>
+    </div>
+
+</div>
 </nav>
+
+<div class="sidemenu">
+    <div class="list-group">
+        <div class="list-group-item sidemenu--item -disabled sidemenu--close">
+            <i class="icon-left-open-big"></i>
+            {{i18n('Close')}}
+            <button type="button" class="close" aria-hidden="true">
+                &times;
+            </button>
+        </div>
+
+        <a class="list-group-item sidemenu--item" href="#{{uri}}notes">
+            <i class="icon-note"></i> {{i18n('All notes')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#{{uri}}notes/f/favorite">
+            <i class="icon-favorite"></i> {{i18n('Favourites')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#{{uri}}notes/f/trashed">
+            <i class="icon-trashed"></i> {{i18n('Trash')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#{{uri}}notebooks">
+            <i class="icon-notebook"></i> {{i18n('Notebooks')}}
+        </a>
+
+        <% if (notebooks !== null && notebooks.length) { %>
+        <div class="list-group-item sidemenu--item -disabled">{{i18n('Notebooks')}}</div>
+        <% notebooks.forEach(function(notebook) { %>
+        <a class="list-group-item sidemenu--item" href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
+            <i class="icon-notebook"></i>  {{notebook.name}}
+        </a>
+        <% }); } %>
+
+        <div class="list-group-item sidemenu--item -disabled">{{i18n('Profiles')}}</div>
+        <a class="list-group-item sidemenu--item<% if (profile === 'notes-db' || !profile) { %> class="active" <% } %>" href="#/notes">
+            <i class="icon-user"></i>  {{i18n('Default')}}
+        </a>
+        <% _.forEach(profiles, function(prof) { %>
+        <% if (prof !== 'notes-db') { %>
+        <a class="list-group-item sidemenu--item<% if (profile === prof) { %> class="active" <% } %>" href="#{{profileLink(prof)}}">
+            <i class="icon-user"></i>  {{prof}}
+        </a>
+        <% } }); %>
+
+        <div class="list-group-item sidemenu--item -disabled">{{i18n('Other')}}</div>
+        <a class="list-group-item sidemenu--item" href="#{{uri}}settings">
+            <i class="icon-cog"></i>  {{i18n('Settings')}}
+        </a>
+        <a id="header--about" class="list-group-item sidemenu--item" href="#">
+            <i class="icon-help-circled"></i>  {{i18n('About')}}
+        </a>
+    </div>
+</div>

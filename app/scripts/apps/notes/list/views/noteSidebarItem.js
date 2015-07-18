@@ -13,7 +13,7 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'list-group',
+        className: 'list-group list--group',
 
         ui: {
             favorite : '.favorite',
@@ -58,8 +58,7 @@ define([
             return {
                 // Show only first 50 characters of the content
                 getContent: function() {
-                    var text = Radio.request('editor', 'content:html', this.content) || this.content;
-                    return text.replace(/<(?:.|\n)*?>/gm, '').substring(1, 50);
+                    return this.content.substring(0, 50);
                 },
 
                 // Strip from HTML tags the title

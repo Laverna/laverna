@@ -3,8 +3,9 @@ define([
     'underscore',
     'jquery',
     'marionette',
+    'behaviors/content',
     'text!apps/settings/show/templates/showTemplate.html'
-], function(_, $, Marionette, Tmpl) {
+], function(_, $, Marionette, Behavior, Tmpl) {
     'use strict';
 
     /**
@@ -17,16 +18,34 @@ define([
             content: 'form'
         },
 
-        events: {
-            'click .saveBtn'   : 'save'
+        behaviors: {
+            ContentBehavior: {
+                behaviorClass: Behavior
+            }
         },
 
-        triggers: {
-            'click .cancelBtn' : 'cancel'
+        events: {
+            'click .settings--save'   : 'save',
+            'click .settings--cancel' : 'cancel'
+        },
+
+        onRender: function() {
+            this.$cancel = $('.settings--cancel');
+            this.$cancel.on('click', _.bind(this.cancel, this));
+        },
+
+        onBeforeDestroy: function() {
+            this.$cancel.off('click');
         },
 
         serializeData: function() {
             return this.options;
+        },
+
+        cancel: function(e) {
+            e.preventDefault();
+            console.warn('cancel');
+            this.trigger('cancel');
         },
 
         save: function(e) {

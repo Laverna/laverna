@@ -1,11 +1,14 @@
-<header class="navbar navbar-default navbar-static-top">
-    <span class="navbar-brand">{{ i18n('Tags') }}</span>
-    <ul class="nav navbar-nav navbar-right">
+<header class="list--navbar navbar navbar-default navbar-static-top">
+    <span class="navbar-brand list--brand">{{ i18n('Tags') }}</span>
+    <ul class="nav navbar-nav navbar-right header--right list--nav">
         <li>
-            <a href="#{{ uri('') }}tags/add" title="{{ i18n('New tag') }}">
-                <i class="icon-pencil"></i>
+            <span>
+            <a class="btn btn-danger" href="#{{ uri('') }}tags/add" title="{{ i18n('New tag') }}">
+                <i class="icon-doc-new"></i>
             </a>
+            </span>
         </li>
     </ul>
 </header>
-<div class="tags list-group list-notebooks"></div>
+
+<div class="list list--tags"></div>

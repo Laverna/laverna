@@ -1,19 +1,25 @@
-<nav id="formNavbar" class="ui-row navbar navbar-static-top tab-{{tab}}">
-    <ul class="m0 pull-right">
-        <li class="btn-group cancelBtnGroup">
-            <button type="button" class="cancelBtn pull-right btn btn-default">{{ i18n('Close') }}</button>
-        </li>
-        <li class="btn-group saveBtn">
-            <button type="button" class="btn btn-success">
-                <i class="icon-save"></i> <span class="save-btn-text">{{ i18n('Save') }}</span>
-            </button>
-        </li>
-    </ul>
+<nav class="layout--navbar header navbar navbar-static-top -settings -right -tab-{{tab}}">
+<div class="container-fluid">
+    <div class="navbar-left header--left navbar-btn">
+        <button title="{{i18n('Show sidebar')}}" id="show--sidebar" class="btn btn-default visible-xs">
+            <span class="icon-left-open"></span>
+        </button>
+    </div>
+
+    <div class="navbar-right header--right navbar-btn">
+        <button type="button" class="btn btn-default settings--cancel">
+            {{ i18n('Close') }}
+        </button>
+        <button type="button" class="btn btn-success settings--save">
+            <i class="icon-save"></i>
+            <span class="save-btn-text">{{ i18n('Save') }}</span>
+        </button>
+    </div>
+</div>
 </nav>
 
-<div class="ui-row ui-body ui-scroll-y">
-    <div class="main"><div class="article">
-        <form class="form form-horizontal">
-        </form>
-    </div></div>
+<div class="layout--body -scroll -settings">
+    <div class="container-fluid -settings">
+        <form class="form form-horizontal"></form>
+    </div>
 </div>

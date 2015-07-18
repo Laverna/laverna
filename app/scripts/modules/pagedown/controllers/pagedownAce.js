@@ -120,13 +120,14 @@ define([
             this.editor.session.setNewLineMode('unix');
             this.editor.setShowPrintMargin(false);
 
+            this.editor.renderer.lineHeight = 20;
             this.editor.renderer.setPrintMarginColumn(false);
             this.editor.renderer.setShowGutter(false);
 
             // Events
             this.editor.session.on(
                 'changeScrollTop',
-                _.debounce(this.triggerScroll, 20, {maxWait: 20})
+                _.debounce(this.triggerScroll, 10, {maxWait: 10})
             );
 
             return this.editor;

@@ -20,29 +20,34 @@
         <link rel="icon" sizes="72x72" href="images/icon/icon-72x72.png">
         <link rel="icon" sizes="48x48" href="images/icon/icon-48x48.png">
         <link rel="icon" sizes="96x96" href="images/icon/icon-96x96.png">
-        <!-- build:css({.tmp,app}) styles/main.css -->
-        <link rel="stylesheet" href="styles/main.css">
+        <!-- build:css({.tmp,app}) styles/core.css -->
+        <link rel="stylesheet" href="styles/core.css">
+        <!-- endbuild -->
+        <!-- build:css({.tmp,app}) styles/theme-default/main.css -->
+        <link rel="stylesheet" href="styles/theme-default/main.css">
         <!-- endbuild -->
         <!-- build:js scripts/vendor/modernizr.js -->
         <script src="bower_components/modernizr/modernizr.js"></script>
         <!-- endbuild -->
     </head>
-    <body>
-        <div class="ui-row row" id="wrapper">
-            <!-- Sidebar -->
-            <div class="ui-row ui-left col-xs-12 col-sm-5 col-md-4 col-lg-4" id="sidebar">
-                <div id="sidebar-navbar"></div>
-                <div id="sidebar-content"></div>
+    <body class="-noscroll">
+
+        <div class="layout" id="wrapper">
+            <div id="sidebar" class="layout--sidebar">
+                <div id="sidebar--navbar" class="layout--navbar"></div>
+                <div id="sidebar--content" class="layout--body -scroll"></div>
             </div>
-            <!-- Content -->
-            <div class="ui-row ui-right col-xs-12 col-sm-7 col-md-8 col-lg-8 loading" id="content"></div>
-        </div><!-- /.wrapper -->
+
+            <div id="content" class="layout--content hidden-xs"></div>
+
+            <div id="layout--backdrop" class="layout--backdrop"></div>
+
+            <div id="layout--brand" class="layout--brand -loading">
+            </div>
+        </div>
 
         <!-- Modal -->
         <div id="modal"></div>
-
-        <!-- Brand layer -->
-        <div id="brand-layer"></div>
 
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>

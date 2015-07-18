@@ -51,7 +51,9 @@ define([
         console.info('FuzzySearch module has been initialized');
 
         // Create a new region
-        $('#sidebar').append($('<div id="fuzzy-sidebar" class="hidden"/>'));
+        $('#sidebar').append(
+            $('<div id="sidebar--fuzzy" class="layout--body -scroll hidden"/>')
+        );
         var region = new Region();
 
         // Listen to search events

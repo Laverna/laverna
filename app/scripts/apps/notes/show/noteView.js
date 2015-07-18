@@ -4,9 +4,10 @@ define([
     'jquery',
     'marionette',
     'backbone.radio',
+    'behaviors/content',
     'text!apps/notes/show/templates/item.html',
     'backbone.mousetrap'
-], function(_, $, Marionette, Radio, Tmpl) {
+], function(_, $, Marionette, Radio, Behavior, Tmpl) {
     'use strict';
 
     /**
@@ -26,11 +27,17 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'content-notes',
+        className: 'layout--body',
+
+        behaviors: {
+            ContentBehavior: {
+                behaviorClass: Behavior
+            }
+        },
 
         ui: {
-            favorite : '.favorite span',
-            body     : '.ui-body',
+            favorite : '.btn--favourite--icon',
+            body     : '.-scroll',
 
             // Tasks
             tasks    : '.task [type="checkbox"]',
@@ -38,18 +45,18 @@ define([
             percent  : '.progress-percent',
 
             // Action buttons
-            editBtn  : '.btn-edit',
-            rmBtn    : '.btn-remove'
+            editBtn  : '.note--edit',
+            rmBtn    : '.note--remove'
         },
 
         events: {
-            'click @ui.favorite' : 'favorite',
-            'click @ui.tasks'    : 'toggleTask',
-            'click @ui.rmBtn'    : 'rmNote'
+            'click .btn--favourite' : 'favorite',
+            'click @ui.tasks'       : 'toggleTask',
+            'click @ui.rmBtn'       : 'rmNote'
         },
 
         triggers: {
-            'click #restoreNote' : 'model:restore'
+            'click .note--restore' : 'model:restore'
         },
 
         modelEvents: {
@@ -104,10 +111,10 @@ define([
         /**
          * Changes favorite status of the note
          */
-        favorite: _.debounce(function() {
+        favorite: _.throttle(function() {
             Radio.command('notes', 'save', this.model, this.model.toggleFavorite());
             return false;
-        }, 200),
+        }, 300, {leading: false}),
 
         onChangeFavorite: function() {
             this.ui.favorite.toggleClass('icon-favorite', this.model.get('isFavorite'));

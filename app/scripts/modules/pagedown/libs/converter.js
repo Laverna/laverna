@@ -2,10 +2,10 @@
 define([
     'underscore',
     'backbone.radio',
-    'libs/checklist',
+    // 'libs/checklist',
     // 'libs/tags',
     'pagedown-extra'
-], function(_, Radio, Checklist) {
+], function(_, Radio) {
     'use strict';
 
     /**
@@ -18,18 +18,12 @@ define([
             var converter = new Markdown.Converter();
             Markdown.Extra.init(converter);
 
-            // Customize Markdown converter
-            converter.hooks.chain('postNormalization', function(text) {
-                text = new Checklist().toHtml(text);
-                return text;
-            });
-
             Radio.trigger('editor', 'converter:init', converter, model);
             return converter;
         },
 
         countTasks: function(content) {
-            return new Checklist().count(content);
+            return Radio.request('editor', 'get:tasks', content);
         },
 
         getTags: function(content) {
@@ -42,7 +36,8 @@ define([
         },
 
         toggleTask: function(data) {
-            return new Checklist().toggle(data.content, data.taskId);
+            // return new Checklist().toggle(data.content, data.taskId);
+            return data;
         }
     };
 

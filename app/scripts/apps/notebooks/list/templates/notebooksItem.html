@@ -1,9 +1,9 @@
-<a class="list-group-item" href="#{{ uri }}notes/f/notebook/q/{{id}}" data-id="{{id}}">
+<a class="list--item -notebook list-group-item" href="#{{ uri }}notes/f/notebook/q/{{id}}" data-id="{{id}}">
     <i class="icon-notebook"></i>
     {{ name }}
 </a>
 
-<div class="btn-group dropdown">
+<div class="list--buttons btn-group dropdown">
     <button class="drop-edit btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
     </button>
@@ -13,4 +13,4 @@
     </ul>
 </div>
 
-<div class="tags" data-id="{{id}}" id="{{id}}"></div>
+<div class="list--nested" data-id="{{id}}" id="{{id}}"></div>

@@ -49,7 +49,7 @@
     "Unlock": "Unlock",
     "Your new encryption password": "Your new encryption password",
     "Your old encryption password": "Your old encryption password",
-    "Shortcuts": "Shortcuts",
+    "Show sidebar": "Show sidebar",
     "Previous": "Previous",
     "Next": "Next",
     "Navigation": "Navigation",
@@ -69,7 +69,7 @@
     "appCreateNote": "Create new note",
     "appSearch": "Search note",
     "appKeyboardHelp": "Keyboard help",
-    "Change shortcuts": "Change shortcut settings",
+    "Change keybindings": "Change keybinding settings",
     "Donate": "Donate",
     "Github page": "Github page",
     "Report bugs and issues here": "Report bugs and issues here",
@@ -98,6 +98,8 @@
     "File chould be in json format": "File chould be in json format",
     "Close": "Close",
     "Hyperlink": "Hyperlink",
+    "Editor": "Editor",
+    "Preview": "Preview",
     "encryption": {
         "wait": "Please wait until the encryption will be completed",
         "error": "Encryption error",
@@ -128,11 +130,14 @@
     "notebooks": {
         "select": "Select a Notebook",
         "add": "Add a new notebook",
+        "edit": "Edit a notebook",
         "name": "Please, provide notebook's name",
         "confirm remove": "The notebook **__name__** will be removed **for ever**!"
     },
     "tags": {
         "name": "Tag name is required",
+        "add": "Add a new tag",
+        "edit": "Edit a tag",
         "confirm remove": "The tag **__name__** will be removed **for ever**!"
     }
 }

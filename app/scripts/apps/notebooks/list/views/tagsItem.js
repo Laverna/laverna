@@ -14,7 +14,7 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'list-group-tag',
+        className: 'list--group list-group',
 
         behaviors: {
             ItemBehavior: {

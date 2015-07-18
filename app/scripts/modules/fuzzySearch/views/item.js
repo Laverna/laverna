@@ -13,7 +13,7 @@ define([
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        className: 'list-group',
+        className: 'list-group list--group',
 
         events: {
             'click .list-group-item': 'triggerSearch'

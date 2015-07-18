@@ -44,19 +44,21 @@ define([
 
     // @ToMove somewhere else
     App.channel.on('app:start', function() {
-        $('.loading').removeClass('loading');
+        $('.-loading').removeClass('-loading');
+    });
+
+    Radio.reply('global', 'is:mobile', function() {
+        return App.isMobile;
     });
 
     App.on('before:start', function() {
-        App.settings = App.request('configs');
-        App.constants = App.request('constants');
-        App.channel.trigger('app:init');
+        Radio.trigger('global', 'app:init');
     });
 
     App.on('start', function() {
         console.timeEnd('App');
-        Backbone.history.start({ pushState: false });
-        App.channel.trigger('app:start');
+        Backbone.history.start({pushState: false});
+        Radio.trigger('global', 'app:start');
     });
 
     return App;

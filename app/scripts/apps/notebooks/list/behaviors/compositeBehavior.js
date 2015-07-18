@@ -23,7 +23,7 @@ define([
 
         initialize: function() {
             this.collection = this.view.options.collection;
-            this.uiBody = $('.ui-body');
+            this.uiBody = $('.-scroll');
 
             this.channel = Radio.channel(this.options.channel);
 

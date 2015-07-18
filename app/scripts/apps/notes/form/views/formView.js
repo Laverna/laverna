@@ -6,8 +6,11 @@ define([
     'backbone.radio',
     'mousetrap',
     'text!apps/notes/form/templates/form.html',
+    'behaviors/content',
+    'apps/notes/form/behaviors/desktop',
+    'apps/notes/form/behaviors/mobile',
     'mousetrap.global'
-], function($, _, Marionette, Radio, Mousetrap, Tmpl) {
+], function($, _, Marionette, Radio, Mousetrap, Tmpl, Behavior, Desktop, Mobile) {
     'use strict';
 
     /**
@@ -37,30 +40,39 @@ define([
     var View = Marionette.LayoutView.extend({
         template: _.template(Tmpl),
 
+        className: 'layout--body',
+
         regions: {
             editor    : '#editor',
-            notebooks : '#select-notebook'
+            notebooks : '#editor--notebooks'
+        },
+
+        behaviors: {
+            Content: {
+                behaviorClass: Behavior
+            },
+            Desktop: {
+                behaviorClass: Desktop
+            },
+            Mobile: {
+                behaviorClass: Mobile
+            }
         },
 
         ui: {
-            mode       : '.switch-mode',
-
             // Form
-            form       : '#noteForm',
-            saveBtn    :  '.saveBtn',
-
-            // Note content
-            title      : 'input[name="title"]',
-            content    : '.wmd-input'
+            form       : '.editor--form',
+            saveBtn    :  '.editor--save',
+            title      : '#editor--input--title'
         },
 
         events: {
-            'click .modeMenu a' : 'switchMode',
+            'click .editor--mode a' : 'switchMode',
 
             // Handle saving
-            'submit @ui.form'   : 'save',
-            'click @ui.saveBtn' : 'save',
-            'click .cancelBtn'  : 'cancel'
+            'submit @ui.form'      : 'save',
+            'click @ui.saveBtn'    : 'save',
+            'click .editor--cancel'  : 'cancel'
         },
 
         initialize: function() {
@@ -96,8 +108,7 @@ define([
 
             // Change edit mode
             if (this.configs.editMode !== 'normal') {
-                this.$('.modeMenu a[data-mode="' + this.configs.editMode + '"]')
-                    .trigger('click');
+                this.switchMode(this.configs.editMode);
             }
         },
 
@@ -158,13 +169,13 @@ define([
         },
 
         switchMode: function(e) {
-            var mode = $(e.currentTarget).attr('data-mode');
+            var mode = (typeof e !== 'string' ? $(e.currentTarget).attr('data-mode') : e);
             if (!mode) {
                 return;
             }
 
             // Close a dropdown menu
-            this.ui.mode.trigger('click');
+            this.ui.form.trigger('click');
 
             // Switch to another mode
             this['_' + mode + 'Mode'].apply(this);
@@ -177,16 +188,16 @@ define([
 
         _fullscreenMode: function() {
             this.$body
-            .removeClass('two-column')
-            .addClass('distraction-free');
+            .removeClass('-preview')
+            .addClass('editor--fullscreen');
         },
 
         _previewMode: function() {
-            this.$body.addClass('distraction-free two-column');
+            this.$body.addClass('editor--fullscreen -preview');
         },
 
         _normalMode: function() {
-            this.$body.removeClass('distraction-free two-column');
+            this.$body.removeClass('editor--fullscreen -preview');
         }
     });
 

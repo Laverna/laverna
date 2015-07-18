@@ -4,8 +4,9 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
+    'behaviors/sidemenu',
     'text!apps/navbar/show/template.html'
-], function($, _, Marionette, Radio, Tmpl) {
+], function($, _, Marionette, Radio, Sidemenu, Tmpl) {
     'use strict';
 
     /**
@@ -36,20 +37,26 @@ define([
 
         keyboardEvents:  {},
 
+        behaviors: {
+            Sidemenu: {
+                behaviorClass: Sidemenu
+            }
+        },
+
         ui: {
-            navbar       : '#sidebar-nav',
-            searchInput  : '.search-input',
-            title        : '#navbar-title',
-            icon         : '#location-icon'
+            navbar : '#sidebar--nav',
+            search : '#header--search--input',
+            title  : '#header--title',
+            icon   : '#header--icon'
         },
 
         events: {
-            'click .addlink'        : 'navigateAdd',
-            'click .btn-search'     : 'showSearch',
-            'click .show-about'     : 'showAbout',
-            'blur @ui.searchInput'  : 'hideSearch',
-            'keyup @ui.searchInput' : 'searchKeyup',
-            'submit .search-form'   : 'searchSubmit'
+            'click #header--add'     : 'navigateAdd',
+            'click #header--sbtn'    : 'showSearch',
+            'click #header--about'   : 'showAbout',
+            'blur @ui.search'        : 'hideSearch',
+            'keyup @ui.search'       : 'searchKeyup',
+            'submit #header--search' : 'searchSubmit'
         },
 
         collectionEvents: {
@@ -88,24 +95,24 @@ define([
         },
 
         searchSubmit: function() {
-            this.ui.searchInput.blur();
+            this.ui.search.blur();
 
-            this.trigger('search:submit', this.ui.searchInput.val().trim());
+            this.trigger('search:submit', this.ui.search.val().trim());
             Radio.trigger('global', 'search:hidden');
 
             return false;
         },
 
         showSearch: function() {
-            this.ui.navbar.addClass('shown-search');
-            this.ui.searchInput.focus().select();
+            this.ui.navbar.addClass('-search');
+            this.ui.search.focus().select();
             Radio.trigger('global', 'search:shown');
 
             return false;
         },
 
         hideSearch: function() {
-            this.ui.navbar.removeClass('shown-search');
+            this.ui.navbar.removeClass('-search');
         },
 
         showAbout: function(e) {
@@ -116,9 +123,9 @@ define([
         searchKeyup: function(e) {
             if (e.which === 27) {
                 Radio.trigger('global', 'search:hidden');
-                return this.ui.searchInput.blur();
+                return this.ui.search.blur();
             }
-            Radio.trigger('global', 'search:change', this.ui.searchInput.val());
+            Radio.trigger('global', 'search:change', this.ui.search.val());
         },
 
         serializeData: function() {

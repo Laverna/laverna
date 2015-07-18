@@ -15,7 +15,6 @@ define([
      */
     var CompositeView = Marionette.CompositeView.extend({
         template  : _.template(Tmpl),
-        className : 'sidebar-notes',
 
         childView          : ItemView,
         childViewContainer : '.notes-list',

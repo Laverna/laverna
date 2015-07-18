@@ -1,0 +1,39 @@
+Font license info
+
+
+## Font Awesome
+
+   Copyright (C) 2012 by Dave Gandy
+
+   Author:    Dave Gandy
+   License:   SIL ()
+   Homepage:  http://fortawesome.github.com/Font-Awesome/
+
+
+## Entypo
+
+   Copyright (C) 2012 by Daniel Bruce
+
+   Author:    Daniel Bruce
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  http://www.entypo.com
+
+
+## Elusive
+
+   Copyright (C) 2013 by Aristeides Stathopoulos
+
+   Author:    Aristeides Stathopoulos
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  http://aristeides.com/
+
+
+## Modern Pictograms
+
+   Copyright (c) 2012 by John Caserta. All rights reserved.
+
+   Author:    John Caserta
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  http://thedesignoffice.org/project/modern-pictograms/
+
+

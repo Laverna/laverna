@@ -40,9 +40,6 @@ define([
             // Activate tab in sidebar
             Radio.command('AppSettings', 'activate:tab', this.options.tab);
 
-            // Do not show navbar
-            Radio.command('navbar', 'stop');
-
             // Fetch configs
             Q.all([
                 Radio.request('configs', 'get:all', options),

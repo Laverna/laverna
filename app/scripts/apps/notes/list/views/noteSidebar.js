@@ -21,10 +21,9 @@ define([
      */
     var View = Marionette.CompositeView.extend({
         template           :  _.template(Tmpl),
-        className          :  'sidebar-notes',
 
         childView          :  NoteSidebarItem,
-        childViewContainer :  '.notes-list',
+        childViewContainer :  '.list',
         childViewOptions   :  {},
         emptyView          : LoaderView,
 
@@ -33,8 +32,7 @@ define([
         ui: {
             pageNav  : '#pageNav',
             prevPage : '#prevPage',
-            nextPage : '#nextPage',
-            body     : '.ui-body'
+            nextPage : '#nextPage'
         },
 
         events: {
@@ -55,6 +53,7 @@ define([
         initialize: function() {
             _.bindAll(this, 'toNextNote', 'toPreviousNote');
 
+            this.$scroll  = $('#sidebar .-scroll');
             this.configs = Radio.request('configs', 'get:object');
 
             // Shortcuts
@@ -132,10 +131,10 @@ define([
          * Changes scroll position.
          */
         changeScrollTop: function(view, scrollTop) {
-            this.ui.body.scrollTop(
+            this.$scroll.scrollTop(
                 scrollTop -
-                this.ui.body.offset().top +
-                this.ui.body.scrollTop() - 100
+                this.$scroll.offset().top +
+                this.$scroll.scrollTop() - 100
             );
         },
 

@@ -12,11 +12,17 @@ define([
      */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
+        className: 'layout--body container-fluid',
 
         ui: {
             wmdBar     : '#wmd-button-bar',
-            preview    : '.wmd-preview',
+            preview    : '#wmd-preview',
             input      : '#wmd-input'
+        },
+
+        events: {
+            'click .pagedown--buttons button': 'triggerButton',
+            'click .pagedown--col--btn': 'showColumn'
         },
 
         serializeData: function() {
@@ -40,10 +46,32 @@ define([
             Radio.trigger('editor', 'view:render', this);
         },
 
+        /**
+         * Shows either the preview or the editor.
+         */
+        showColumn: function(e) {
+            var $btn    = $(e.currentTarget),
+                col     = $btn.attr('data-col'),
+                hideCol = (col === 'left' ? 'right' : 'left');
+
+            // Add 'active' class to the button
+            this.$('.pagedown--col--btn.active').removeClass('active');
+            $btn.addClass('active');
+
+            // Show only one column
+            this.$('.-' + hideCol).removeClass('-show');
+            this.$('.-' + col).addClass('-show');
+        },
+
         onChangeMode: function(mode) {
             if (mode === 'preview') {
                 this.ui.input.css('height', 'auto');
             }
+        },
+
+        triggerButton: function(e) {
+            var btn = $(e.currentTarget).attr('data-button');
+            $('#' + btn).trigger('click');
         },
 
         syncScroll: function() {

@@ -13,8 +13,8 @@ define([
     var rm = new Marionette.RegionManager();
 
     rm.addRegions({
-        sidebarNavbar : '#sidebar-navbar',
-        sidebar       : '#sidebar-content',
+        sidebarNavbar : '#sidebar--navbar',
+        sidebar       : '#sidebar--content',
         content       : '#content',
         brand         : BrandRegion,
         modal         : ModalRegion
@@ -22,10 +22,20 @@ define([
 
     Radio.channel('global')
     .comply('region:show', function(region, view) {
-        return rm.get(region).show(view);
+        rm.get(region).show(view);
+        Radio.trigger('region', region + ':shown');
     })
     .comply('region:empty', function(region) {
-        return rm.get(region).empty();
+        Radio.trigger('region', region + ':hidden');
+        rm.get(region).empty();
+    })
+    .comply('region:visible', function(region, hideClass) {
+        region = rm.get(region);
+        region.$el.removeClass(hideClass || 'hidden');
+    })
+    .comply('region:hide', function(region, hideClass) {
+        region = rm.get(region);
+        region.$el.addClass(hideClass || 'hidden');
     });
 
     return rm;

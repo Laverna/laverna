@@ -1,16 +1,15 @@
-<nav id="formNavbar" class="ui-row navbar navbar-static-top">
-    <ul class="nav navbar-nav pull-left"></ul>
-
-    <div class="navbar-form navbar-left">
-        <div class="form-group" id="select-notebook"></div>
+<nav class="layout--navbar navbar navbar-default navbar-static-top header -form">
+<div class="container-fluid">
+    <div class="navbar-left header--left navbar-form">
+        <div id="editor--notebooks"></div>
     </div>
 
-    <ul class="m0 pull-right">
-        <li class="btn-group dropdown switch-mode">
-            <a title="Mode" href="#" id="switchMode" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-fullscreen"></i> <b class="caret"></b>
-            </a>
-            <ul class="modeMenu dropdown-menu pull-left" role="menu" aria-labelledby="switchMode">
+    <ul class="nav navbar-nav navbar-right header--right">
+        <li class="dropdown">
+            <button type="button" title="Mode" class="btn header--btn btn-default" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="icon-fullscreen"></i> <b class="caret hidden-xs"></b>
+            </button>
+            <ul class="editor--mode dropdown-menu dropdown-menu-left" role="menu">
                 <li>
                     <a href="#" data-mode="fullscreen">
                         <i class="icon-fullscreen"></i> {{ i18n('Full screen') }}
@@ -28,26 +27,30 @@
                 </li>
             </ul>
         </li>
-        <li class="btn-group cancelBtnGroup">
-            <span class="cancelBtn pull-right btn btn-default">{{ i18n('Cancel') }}</span>
+        <li>
+            <button class="editor--cancel btn header--btn btn-default ">
+                <i class="icon-block"></i>
+                <span class="hidden-xs">{{ i18n('Cancel') }}<span>
+            </button>
         </li>
-        <li class="btn-group saveBtn">
-            <span class="btn btn-success">
-                <i class="icon-save"></i> <span class="save-btn-text">{{ i18n('Save') }}</span>
-            </span>
+        <li>
+            <button class="editor--save btn header--btn btn-success ">
+                <i class="icon-save"></i>
+                <span class="hidden-xs">{{ i18n('Save') }}</span>
+            </button>
         </li>
     </ul>
+</div>
 </nav>
 
-<div class="ui-row ui-body ui-scroll-y">
-    <div class="main">
-        <div class="article">
-            <form id="noteForm" class="form-horizontal pretty-form" action="#" method="post">
-                <div class="form-group border-0">
-                    <input id="inputTitle" class="form-control" name="title" type="text" value="{{title}}" placeholder="{{ i18n('Title') }}" />
-                </div>
-                <div id="editor"></div>
-            </form>
-        </div>
+<div class="layout--body -scroll -form">
+    <div class="container-fluid editor--container">
+        <form class="editor--form form-horizontal col-xs-12" action="#" method="post">
+            <div class="form-group">
+                <input id="editor--input--title" class="form-control -borderless" name="title"
+                    type="text" value="{{title}}" placeholder="{{ i18n('Title') }}" />
+            </div>
+        </form>
     </div>
+    <div id="editor" class="layout--body editor--container"></div>
 </div>

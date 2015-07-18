@@ -43,8 +43,8 @@ define([
         .on('view:destroy', Pagedown.stop, Pagedown);
 
         Radio.channel('editor')
-        .reply('content:html', converter.toHtml, converter)
-        .reply('task:toggle', converter.toggleTask, converter);
+        .reply('content:html', converter.toHtml, converter);
+        // .reply('task:toggle', converter.toggleTask, converter);
     });
 
     return Pagedown;

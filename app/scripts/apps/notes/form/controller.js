@@ -35,7 +35,10 @@ define([
                 Radio.request('notes', 'get:model:full', options),
                 Radio.request('notebooks', 'get:all', _.pick(options, 'profile'))
             ])
-            .spread(this.show);
+            .spread(this.show)
+            .catch(function() {
+                console.error('Editor error', arguments);
+            });
 
             // Events
             this.listenTo(Radio.channel('notes'), 'save:after', this.redirect);
@@ -51,6 +54,14 @@ define([
         show: function(note, notebooks) {
             var notebooksView;
             note = note[0];
+
+            // Use behaviours that are appropriate for a device.
+            if (Radio.request('global', 'is:mobile')) {
+                delete View.prototype.behaviors.Desktop;
+            }
+            else {
+                delete View.prototype.behaviors.Mobile;
+            }
 
             this.view = new View({
                 model     : note,

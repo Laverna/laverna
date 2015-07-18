@@ -17,7 +17,7 @@ define([
         template: _.template(Tmpl),
 
         childView: ItemView,
-        childViewContainer: '.list-notebooks',
+        childViewContainer: '.list--tags',
 
         behaviors: {
             CompositeBehavior: {

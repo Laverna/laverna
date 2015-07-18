@@ -1,0 +1,26 @@
+/**
+ * Form styles
+ */
+.form-control {
+    &:focus {
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(189, 189, 189, 0.6);
+        border-color: #BDBDBD;
+        outline: 0px none;
+    }
+}
+
+input.-borderless {
+    // Borders
+    border-radius : 0;
+    box-shadow    : none;
+    border        : none;
+
+    // Font
+    font-weight : 700;
+    font-size   : 1.8em;
+
+    &:hover,
+    &:focus {
+        box-shadow: none;
+    }
+}

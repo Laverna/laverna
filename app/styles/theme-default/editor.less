@@ -1,0 +1,46 @@
+/**
+ * Editor module
+ */
+#editor--input--title {
+    height    : auto;
+    padding   : 0;
+    font-size : 36px;
+}
+
+// Leave some space from the top
+.editor--container {
+    &:first-child {
+        margin-top: 30px;
+    }
+}
+
+// Remove borders from Pagedown bar
+.pagedown--bar {
+    border-right-width : 0;
+    border-left-width  : 0;
+}
+
+// Fullscree mode
+.editor--fullscreen {
+    // Reduce font size of the title
+    #editor--input--title {
+        font-size: 1.8em;
+    }
+
+    // Remove space from the top
+    .editor--container {
+        margin-top: 0;
+    }
+
+    // Remove shadows from the main navbar
+    .header.-form {
+        box-shadow: none;
+    }
+}
+
+// Preview mode
+.editor--fullscreen.-preview {
+    #editor--input--title {
+        padding: 0 12px;
+    }
+}

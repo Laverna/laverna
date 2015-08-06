@@ -115,7 +115,7 @@ define([
             }
 
             var title = (this.args.filter ? this.args.filter : 'All notes');
-            title = $.t(title.substr(0,1).toUpperCase() + title.substr(1));
+            title = $.t(title.substr(0,1).toUpperCase() + title.substr(1).replace('_', ' '));
 
             if (this.args.query && this.args.filter !== 'search') {
                 title += ': ' + this.args.query;

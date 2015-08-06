@@ -38,6 +38,7 @@ define([
             'jumpNotebook': 'g n',
             'jumpFavorite': 'g f',
             'jumpRemoved': 'g t',
+            'jumpOpenTasks': 'g o',
             'actionsEdit': 'e',
             'actionsOpen': 'o',
             'actionsRemove': 'shift+3',

@@ -28,6 +28,7 @@ define([
             // Filter
             this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
             this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);
+            this.listenTo(this.notes, 'filter:open_tasks', this.openTasksNotes, this);
             this.listenTo(this.notes, 'filter:trashed', this.trashedNotes, this);
             this.listenTo(this.notes, 'filter:search', this.searchNotes, this);
             this.listenTo(this.notes, 'filter:tag', this.taggedNotes, this);
@@ -87,6 +88,25 @@ define([
                     conditions: ( window.appNoDB ? null : {isFavorite : 1} )
                 })
             ).done(this.showSidebar);
+        },
+
+        /**
+         * Show notes with open tasks
+         */
+        openTasksNotes: function () {
+            var self = this,
+                notes;
+            $.when(
+                this.notes.fetch({
+                    conditions: ( window.appNoDB ? null : {trash : 0} )
+                })
+            ).done(
+                function () {
+                    notes = self.notes.getOpenTasks();
+                    self.notes.reset(notes);
+                    self.showSidebar();
+                }
+            );
         },
 
         /**

@@ -30,6 +30,9 @@ define([
             case 'notebook':
                 res = this.getNotebookNotes(query);
                 break;
+            case 'open_tasks':
+                res = this.getOpenTasks();
+                break;
             case 'trashed':
                 res = this.getTrashed();
                 break;
@@ -66,6 +69,15 @@ define([
                 if (notebook !== 0) {
                     return notebook.get('id') === notebookId && note.get('trash') === 0;
                 }
+            });
+        },
+
+        /**
+         * Show notes with unfinished tasks
+         */
+        getOpenTasks: function () {
+            return this.filter(function (note) {
+                return note.get('taskCompleted') < note.get('taskAll');
             });
         },
 

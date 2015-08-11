@@ -61,6 +61,11 @@ define([
                 App.vent.trigger('navigate:link', '/notes/f/trashed', true);
             });
 
+            // Redirect to list of notes with open tasks
+            Mousetrap.bind(settings.jumpOpenTasks, function() {
+                App.vent.trigger('navigate:link', '/notes/f/open_tasks', true);
+            });
+
             // Redirect to notebooks list
             Mousetrap.bind(settings.jumpNotebook, function() {
                 App.vent.trigger('navigate:link', '/notebooks', true);

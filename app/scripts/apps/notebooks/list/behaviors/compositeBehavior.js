@@ -1,61 +1,107 @@
 /* global define */
 define([
-    'marionette'
-], function(Marionette) {
+    'underscore',
+    'marionette',
+    'backbone.radio'
+], function(_, Marionette, Radio) {
     'use strict';
 
+    /**
+     * Composite behavior class for notebooks and tags views.
+     *
+     * Triggers the following events:
+     * 1. channel: `appNotebooks`, event: `change:region`
+     *    when the user has reached the last or the first model
+     */
     var CompositeBehavior = Marionette.Behavior.extend({
+
         defaults: {
-            regionToChange: 'tags'
+            channel        : 'notebooks',
+            regionToChange : 'tags',
+            activeModel    : null
         },
 
         initialize: function() {
-            this.view.on('next', this.next, this);
-            this.view.on('prev', this.prev, this);
+            this.collection = this.view.options.collection;
+            this.uiBody = $('.-scroll');
+
+            this.channel = Radio.channel(this.options.channel);
+
+            // Listen to events on a channel [notebooks|tags]
+            this.listenTo(this.channel, 'model:navigate', this.modelFocus);
+
+            // View events
+            this.listenTo(this.view, 'navigate:next', this.navigateNext);
+            this.listenTo(this.view, 'navigate:previous', this.navigatePrevious);
+            this.listenTo(this.view, 'childview:scroll:top', this.changeScrollTop);
+
+            // Collection events
+            this.listenTo(this.collection, 'page:end', this.onPageEnd);
+            this.listenTo(this.collection, 'page:start', this.onPageStart);
+        },
+
+        onBeforeDestroy: function() {
+            this.view.collection.trigger('reset:all');
+            this.stopListening();
+
+            delete this.collection;
+            delete this.channel;
+            delete this.uiBody;
         },
 
         /**
-         * Returns object of currently active model
+         * Change scroll position.
          */
-        getActive: function() {
-            var elActive = this.view.$('.active'),
-                idActive = elActive.attr('data-id');
+        changeScrollTop: function(view, scrollTop) {
+            this.uiBody.scrollTop(
+                scrollTop -
+                this.uiBody.offset().top +
+                this.uiBody.scrollTop() - 100
+            );
+        },
 
-            if (idActive) {
-                elActive.removeClass('active');
-                return this.view.collection.get(idActive);
+        /**
+         * Trigger `focus` event on the received model
+         */
+        modelFocus: _.debounce(function(model) {
+            this.view.options.activeModel = model.id;
+            model.trigger('focus');
+        }, 10),
+
+        /**
+         * If a user has reached the first model in a collection
+         * and it is notebooks composite view, trigger change:region event
+         */
+        onPageEnd: function() {
+            if (this.options.regionToChange === 'tags') {
+                Radio.trigger('appNotebooks', 'change:region', this.options.regionToChange, 'Next');
             }
         },
 
-        next: function() {
-            var model = this.getActive(),
-                isLast = this.view.collection.indexOf(model) + 1 === this.view.collection.length;
-
-            if (isLast) {
-                this.view.trigger('changeRegion', this.options.regionToChange);
-            }
-            else if (model) {
-                model.next().trigger('active');
-            }
-            else {
-                this.view.collection.at(0).trigger('active');
+        /**
+         * If a user has reached the first model in a collection
+         * and it is tags composite view, trigger change:region event
+         */
+        onPageStart: function() {
+            if (this.options.regionToChange === 'notebooks') {
+                Radio.trigger('appNotebooks', 'change:region', this.options.regionToChange, 'Previous');
             }
         },
 
-        prev: function() {
-            var model = this.getActive(),
-                isFirst = this.view.collection.indexOf(model) === 0;
+        /**
+         * Navigate to the next model
+         */
+        navigateNext: function() {
+            this.view.collection.getNextItem(this.view.options.activeModel);
+        },
 
-            if (isFirst || this.view.collection.length === 0) {
-                this.view.trigger('changeRegion', this.options.regionToChange);
-            }
-            else if (model) {
-                model.prev().trigger('active');
-            }
-            else {
-                this.view.collection.at(this.view.collection.length-1).trigger('active');
-            }
+        /**
+         * Navigate to the previous model
+         */
+        navigatePrevious: function() {
+            this.view.collection.getPreviousItem(this.view.options.activeModel);
         }
+
     });
 
     return CompositeBehavior;

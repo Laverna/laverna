@@ -1,129 +1,107 @@
 /* global define */
 define([
     'jquery',
+    'q',
     'underscore',
-    'app',
+    'backbone.radio',
     'marionette',
-    'collections/notebooks',
-    'apps/navbar/show/view',
-    'helpers/sync/sync-collections'
-], function ( $, _, App, Marionette, Notebooks, NavbarView, getSync ) {
+    'apps/navbar/show/view'
+], function($, Q, _, Radio, Marionette, View) {
     'use strict';
 
-    var Navbar = App.module('AppNavbar.Show');
-
     /**
-     * Navbar show controller
+     * Navbar controller.
+     *
+     * Listens to events:
+     * ------------------
+     * 1. channel: `global`, event: `filter:change`
+     *    re-renders the view on this event.
+     * 3. this.view, event: `search:submit`
+     *    navigates to search page
+     *
+     * Triggers:
+     * ------------------
+     * Requests:
+     * 1. channel: `global`, request: `app:current`
+     * 2. channel: `uri`, request: `link:profile`
+     * 3. channel: `global`, request: `get:title`
+     *
+     * Commands:
+     * 1. channel: `uri`, command: `navigate`
+     * 2. channel: `global`, command: `region:show`
      */
-    Navbar.Controller = Marionette.Controller.extend({
+    var Controller = Marionette.Object.extend({
 
-        currentApp: App.currentApp || {},
+        initialize: function(options) {
+            var profile = {profile: Radio.request('uri', 'profile')};
+            _.bindAll(this, 'show');
 
-        initialize: function () {
-            _.bindAll(this, 'show', 'showNavbar');
+            this.options = options;
 
-            // Synchronizing
-            this.startSyncing();
+            // Request notebooks and title
+            Q.all([
+                Radio.request('configs', 'get:all', profile),
+                Radio.request('notebooks', 'get:all', profile),
+                Radio.request('configs', 'get:model', {name: 'appProfiles'}),
+                Radio.request('global', 'get:title', options)
+            ])
+            .spread(this.show);
 
-            this.listenTo(App, 'sync:before', function () {
-                this.view.trigger('sync:before');
-            }, this);
+            // Events
+            this.listenTo(this, 'change:title', this.changeTitle);
+        },
 
-            this.listenTo(App, 'sync:after', function () {
-                this.view.trigger('sync:after');
-            }, this);
+        onDestroy: function() {
+            this.stopListening();
+            Radio.command('global', 'region:empty', 'sidebarNavbar');
+        },
+
+        show: function(configs, notebooks, profiles, title) {
+            var currentApp = Radio.request('global', 'app:current').moduleName,
+                args;
+
+            args = _.extend({title: title}, this.options);
+            args.currentUrl = Radio.request('uri', 'link:profile', (
+                currentApp === 'AppNotebooks' ? '/notebooks' : '/notes'
+            ));
+
+            this.view = new View({
+                args       : args,
+                notebooks  : notebooks,
+                collection : configs,
+                profiles   : profiles
+            });
+
+            // Render the view
+            Radio.command('global', 'region:show', 'sidebarNavbar', this.view);
+
+            // Listen to view events
+            this.listenTo(this.view, 'search:submit', this.navigateSearch, this);
         },
 
         /**
-         * Fetch data and prepare arguments
+         * Changes current title
          */
-        show: function (args) {
-            this.args = _.extend({}, args, {
-                currentApp: (App.currentApp ? App.currentApp.moduleName : null)
-            });
-
-            // Collection of notebooks
-            this.notebooks = new Notebooks([], {
-                comparator: App.settings.sortnotebooks
-            });
-            this.notebooks.database.getDB(args.profile);
-
-            if (App.currentApp && App.currentApp.moduleName !== 'AppNotebook') {
-                $.when(this.notebooks.fetch()).done(this.showNavbar);
-            }
-            else {
-                this.showNavbar(true);
-            }
-        },
-
-        /**
-         * Show fetched data
-         */
-        showNavbar: function () {
-            var title,
-                notebook;
-
-            if (this.args.filter === 'notebook') {
-                notebook = this.notebooks.get(this.args.query);
-            }
-
-            title = this.getTitle(notebook);
-            this.args.title = title;
-
-            this.view = new NavbarView({
-                settings: App.settings,
-                args: this.args,
-                notebooks: (this.notebooks.length) ? this.notebooks.first(5) : null,
-                inNotebooks: (this.currentApp.moduleName === 'AppNotebook')
-            });
-
-            // Show navbar and set document's title
-            App.sidebarNavbar.show(this.view);
-            App.setTitle(null, title);
-
-            // View events
-            this.view.on('syncWithCloud', this.startSyncing, this);
-            this.view.on('navigate', function (uri) {
-                App.vent.trigger('navigate', uri, true);
-            });
-        },
-
-        /**
-         * Start syncing only if application has started
-         */
-        startSyncing: function () {
+        changeTitle: function(options) {
             var self = this;
 
-            if (App.currentApp && this.view) {
-                getSync().init(App.settings.cloudStorage, [
-                    'notes', 'notebooks', 'tags', 'files'
-                ]);
-            }
-            else {
-                setTimeout(function () {
-                    self.startSyncing();
-                }, 300);
-            }
+            Radio.request('global', 'get:title', options)
+            .then(function(title) {
+                self.view.trigger('change:title', {title: title, args: options});
+            });
         },
 
         /**
-         * Document's title
+         * Navigate to the search page.
          */
-        getTitle: function (notebook) {
-            if (notebook) {
-                return notebook.decrypt().name;
-            }
-
-            var title = (this.args.filter ? this.args.filter : 'All notes');
-            title = $.t(title.substr(0,1).toUpperCase() + title.substr(1).replace('_', ' '));
-
-            if (this.args.query && this.args.filter !== 'search') {
-                title += ': ' + this.args.query;
-            }
-            return title;
+        navigateSearch: function(text) {
+            Radio.command('uri', 'navigate', {
+                filter : 'search',
+                query  : text
+            });
         }
 
     });
 
-    return Navbar.Controller;
+    return Controller;
 });

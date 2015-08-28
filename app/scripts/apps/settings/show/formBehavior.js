@@ -1,33 +1,36 @@
 /* global define */
 define([
     'marionette'
-], function (Marionette) {
+], function(Marionette) {
     'use strict';
 
+    /**
+     * Default behaviour for settings views.
+     */
     var FormBehavior = Marionette.Behavior.extend({
 
         events: {
             'change input, select, textarea' : 'triggerChange',
             'change .show-onselect'   : 'showOnSelect',
-            'click .showField'        : 'showOnCheck'
+            'click .showField'        : 'showOnCheck',
         },
 
-        initialize: function () {
+        initialize: function() {
             this.view.on('render', this.popover, this);
         },
 
-        popover: function () {
+        popover: function() {
             var pop = this.view.$('.popover-dropbox').html();
 
             this.view.$('.popover-key').popover({
                 trigger: 'click',
                 html   : true,
-                content: function () { return pop; }
+                content: function() { return pop; }
             });
         },
 
-        triggerChange: function (e) {
-            var el = $(e.target),
+        triggerChange: function(e) {
+            var el   = $(e.target),
                 conf = { name: el.attr('name') };
 
             if (el.attr('type') !== 'checkbox') {
@@ -43,7 +46,7 @@ define([
         /**
          * Shows additional parameters when option is selected
          */
-        showOnSelect: function (e) {
+        showOnSelect: function(e) {
             var $el = $(e.target),
                 option = $el.find('option[value=' + $el.attr('data-option') + ']');
 
@@ -58,7 +61,7 @@ define([
         /**
          * Shows fieldsets with aditional parameters when checkbox is checked
          */
-        showOnCheck: function ( e ) {
+        showOnCheck: function(e) {
             var input = $(e.currentTarget),
                 field = $(input.attr('data-field'));
 

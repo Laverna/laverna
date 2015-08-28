@@ -95,7 +95,7 @@ module.exports = function (grunt) {
             options: {
                 port: SERVER_PORT,
                 // change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost'
+                hostname: '0.0.0.0'
             },
             livereload: {
                 options: {
@@ -181,7 +181,8 @@ module.exports = function (grunt) {
                     sourceMapBasepath: '<%= yeoman.app %>/styles/'
                 },
                 files : {
-                    '<%= yeoman.app %>/styles/main.css': '<%= yeoman.app %>/styles/main.less'
+                    '<%= yeoman.app %>/styles/theme-default/main.css': '<%= yeoman.app %>/styles/theme-default/main.less',
+                    '<%= yeoman.app %>/styles/core.css': '<%= yeoman.app %>/styles/core/main.less'
                 }
             }
         },
@@ -557,7 +558,7 @@ module.exports = function (grunt) {
         'lessc',
         'useminPrepare',
         'requirejs',
-        'imagemin',
+        // 'imagemin',
         'htmlmin',
         'concat',
         'cssmin',

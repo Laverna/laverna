@@ -1,0 +1,36 @@
+/**
+ * Sidemenu
+ */
+.sidemenu {
+    background: @sidemenu--bg;
+}
+
+.sidemenu--item.list-group-item {
+    // Sizing
+    min-height   : 50px;
+    max-height   : 50px;
+    padding-left : 20px;
+    padding-top  : 20px;
+
+    // Colors
+    background : @sidemenu--item;
+    color      : @sidemenu--item--color;
+    border     : @sidemenu--item--border;
+
+    &.active,
+    &:hover {
+        background : @sidemenu--item--hover;
+        color      : @sidemenu--item--hover--color;
+    }
+}
+
+.sidemenu--item.-disabled,
+.sidemenu--item.-disabled:hover {
+    background : @sidemenu--disabled;
+    color      : @sidemenu--disabled--color;
+    font-size  : 1.3em;
+}
+
+.sidemenu--close {
+    cursor: pointer;
+}

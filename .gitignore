@@ -55,6 +55,7 @@ releases
 
 # OS generated files #
 ######################
+*.directory
 .DS_Store
 .DS_Store?
 ._*

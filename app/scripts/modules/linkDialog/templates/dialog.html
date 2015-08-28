@@ -1,0 +1,25 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">
+                {{i18n('Hyperlink')}}
+            </h4>
+        </div>
+        <div class="modal-body">
+            <form action="#" class="form" method="post">
+                <div class="form-group">
+                    <input name="url" class="form-control" type="text" value="" placeholder="{{ i18n('notes.hyperlink-dialog') }}" />
+                    <div id="noteMenu" class="dropdown"></div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default cancelBtn">{{ i18n('Cancel') }}</button>
+            <button class="btn btn-success ok">{{ i18n('OK') }}</button>
+            <button title="{{i18n('notes.create and attach')}}" class="btn btn-info create hidden">
+                {{ i18n('notes.create') }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,13 +1,4 @@
 {
-    "en" : "English",
-    "ru" : "Russian",
-    "nl" : "Dutch",
-    "fr" : "French",
-    "pt_br" : "Brazilian Portuguese",
-    "eo": "Esperanto",
-    "es": "Spanish",
-    "de": "German",
-    "de_ch": "Swiss German",
     "Search": "Search",
     "All notes": "All notes",
     "Favourites": "Favourites",
@@ -59,8 +50,7 @@
     "Unlock": "Unlock",
     "Your new encryption password": "Your new encryption password",
     "Your old encryption password": "Your old encryption password",
-    "Please wait until the encryption will be completed": "Please wait until the encryption will be completed",
-    "Shortcuts": "Shortcuts",
+    "Show sidebar": "Show sidebar",
     "Previous": "Previous",
     "Next": "Next",
     "Navigation": "Navigation",
@@ -81,8 +71,7 @@
     "appCreateNote": "Create new note",
     "appSearch": "Search note",
     "appKeyboardHelp": "Keyboard help",
-    "Remove profile": "Are you sure that you want to delete profile '__profile__'?",
-    "Change shortcuts": "Change shortcut settings",
+    "Change keybindings": "Change keybinding settings",
     "Donate": "Donate",
     "Github page": "Github page",
     "Report bugs and issues here": "Report bugs and issues here",
@@ -90,10 +79,67 @@
     "Credits": "Credits",
     "List of contributors": "List of contributors",
     "List of all used libraries": "List of all used libraries",
+    "Are you sure?": "Are you sure?",
+    "You have unsaved changes.": "You have unsaved changes.",
+    "Dropbox API key": "Dropbox API key",
+    "Required": "Required",
+    "Optional": "Optional",
+    "Language": "Language",
+    "Action": "Action",
+    "Select": "Select",
+    "General": "General",
+    "Encryption": "Encryption",
+    "Keybindings": "Keybindings",
+    "Sync": "Sync",
+    "Profiles": "Profiles",
+    "Import & export": "Import & export",
+    "Import settings": "Import settings",
+    "Export settings": "Export settings",
+    "Wrong format": "Wrong format",
+    "useDefaultConfigs": "Use settings from the default profile",
+    "File chould be in json format": "File chould be in json format",
+    "Close": "Close",
+    "Hyperlink": "Hyperlink",
+    "Editor": "Editor",
+    "Preview": "Preview",
+    "encryption": {
+        "wait": "Please wait until the encryption will be completed",
+        "error": "Encryption error",
+        "errorConfirm": "Error while decrypting data. **Do you want to retry?**",
+        "state": {
+            "decrypt": "Decrypting everything",
+            "encrypt": "Encrypting everything",
+            "save": "Saving changes"
+        }
+    },
+    "profile": {
+        "confirm remove": "Profile **__profile__** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
+        "type name": "Type profile name"
+    },
+    "files": {
+        "file-url": "File or image URL",
+        "attach": "Attach a file",
+        "attachLink": "Attach as a link",
+        "attachImage": "Attach as an image"
+    },
+    "notes": {
+        "confirm trash": "The note **__title__** will be moved to trash.",
+        "confirm remove": "The note **__title__** will be removed **for ever**!",
+        "create and attach": "Create a new note and attach its link",
+        "create": "Create a new note",
+        "hyperlink-dialog": "Title of a note or URL"
+    },
     "notebooks": {
-        "name": "Please, provide notebook's name"
+        "select": "Select a Notebook",
+        "add": "Add a new notebook",
+        "edit": "Edit a notebook",
+        "name": "Please, provide notebook's name",
+        "confirm remove": "The notebook **__name__** will be removed **for ever**!"
     },
     "tags": {
-        "name": "Tag name is required"
+        "name": "Tag name is required",
+        "add": "Add a new tag",
+        "edit": "Edit a tag",
+        "confirm remove": "The tag **__name__** will be removed **for ever**!"
     }
 }

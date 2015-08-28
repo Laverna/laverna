@@ -1,62 +1,65 @@
-/* global define */
+/* global define, requirejs */
 define([
     'underscore',
     'marionette',
+    'backbone.radio',
     'app'
-], function (_, Marionette, App) {
+], function(_, Marionette, Radio, App) {
     'use strict';
 
-    var Help = App.module('AppHelp', {startWithParent: false, modal: true}),
-        executeAction, API;
+    var Help = App.module('AppHelp', {startWithParent: false}),
+        controller;
 
-    Help.on('start', function () {
-        App.vent.trigger('mousetrap:reset');
-        App.log('AppHelp module has started');
-    });
-
-    Help.on('stop', function () {
-        App.vent.trigger('mousetrap:restart');
-        App.log('AppHelp module has stoped');
-
-        API.controller.destroy();
-        delete API.controller;
-    });
-
-    // Router
-    Help.Router = Marionette.AppRouter.extend({
-        appRoutes: {
-            '(p/:profile/)help': 'showHelp',
-            '(p/:profile/)about': 'about'
+    function startModule(module, args) {
+        if (!module) {
+            return;
         }
-    });
 
-    // Start the application
-    executeAction = function (action, args) {
-        App.startSubApp('AppHelp');
-        action(args);
-    };
+        // Stop previous module
+        if (Help.currentApp) {
+            Help.currentApp.stop();
+        }
+        // Start this subapp
+        else {
+            Help.start();
+        }
 
-    // Controller
-    API = {
-        showHelp: function () {
-            require(['apps/help/show/controller'], function (Controller) {
-                API.controller = new Controller();
-                executeAction(API.controller.show);
+        Help.currentApp = module;
+        module.start(args);
+
+        // If module has stopped, remove the variable and stop itself
+        module.on('stop', function() {
+            Help.stop();
+            delete Help.currentApp;
+        });
+    }
+
+    controller = {
+        keybindings: function() {
+            requirejs(['apps/help/show/app'], function(Module) {
+                startModule(Module);
             });
         },
 
-        about: function () {
-            require(['apps/help/about/controller'], function (Controller) {
-                API.controller = new Controller();
-                executeAction(API.controller.show);
+        about: function() {
+            requirejs(['apps/help/about/app'], function(Module) {
+                startModule(Module);
             });
         }
     };
 
-    App.addInitializer(function () {
-        new Help.Router({
-            controller: API
-        });
+    Help.on('before:start', function() {
+    });
+
+    Help.on('before:stop', function() {
+    });
+
+    // Add initializer
+    Radio.command('init', 'add', 'app', function() {
+        Radio.comply('Help', {
+            'show:about'        : controller.about,
+            'show:keybindings'  : controller.keybindings
+        }, controller);
     });
 
     return Help;

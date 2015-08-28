@@ -1,62 +1,79 @@
-<nav class="ui-row navbar navbar-static-top">
-    <ul class="nav navbar-nav pull-left">
-        <li>
-            <a href="#" class="btn btn-default btn-toggle-sidebar visible-xs">
-                <span class="icon-align-justify"></span>
-            </a>
-        </li>
-    </ul>
-    <ul class="nav navbar-nav pull-right">
-        <li>
-            <a href="#{{ uri }}notes/edit/{{id}}" class="btn btn-default btn-edit">
-                <span class="icon-pencil"></span> <span class="hidden-xxs">{{ i18n('Edit') }}</span>
-            </a>
-        </li>
-        <% if (trash === 1) { %>
-        <li>
-            <a id="restoreNote" href="#" class="btn btn-default">
-                <span class="icon-undo"></span> <span class="hidden-xxs">{{ i18n('Restore') }}</span>
-            </a>
-        </li>
+<nav class="layout--navbar header navbar navbar-static-top -note">
+<div class="container-fluid">
+    <div class="navbar-left header--left navbar-btn">
+        <button title="{{i18n('Show sidebar')}}" id="show--sidebar" class="btn -note btn-default visible-xs">
+            <span class="icon-left-open"></span>
+        </button>
+    </div>
+
+    <div class="navbar-right header--right navbar-btn dropdown">
+        <a href="#{{uri}}notes/edit/{{id}}" class="btn -note btn-default note--edit">
+            <span class="icon-pencil"></span>
+            <span class="hidden-xs">{{i18n('Edit')}}</span>
+        </a>
+        <a href="#" class="btn -note btn-default note--remove">
+            <span class="icon-trashed"></span>
+            <span class="hidden-xs"><% if (trash === 0) { %>{{i18n('Delete')}}<% } else { %> {{i18n('Forever')}}<% } %></span>
+        </a>
+        <% if (trash !== 1) { %>
+        <a href="#{{uri}}settings" class="btn -note btn-default">
+            <span class="icon-cog"></span>
+            <span>{{i18n('Settings')}}</span>
+        </a>
+        <% } else { %>
+        <a href="#" class="btn -note btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <b class="caret"></b>
+        </a>
+        <div class="dropdown-menu">
+            <div class="btn-group">
+                <a href="#" class="note--restore btn">
+                    <span class="icon-undo icon--block"></span>
+                    {{i18n('Restore')}}
+                </a>
+                <a href="#{{uri}}settings" class="btn">
+                    <span class="icon-cog icon--block"></span>
+                    {{i18n('Settings')}}
+                </a>
+            </div>
+        </div>
         <% } %>
-        <li>
-            <a href="#{{ uri }}notes/remove/{{id}}" class="btn btn-default">
-                <span class="icon-trashed"></span> <span class="hidden-xxs"><% if (trash === 0) { %>{{ i18n('Delete') }}<% } else { %> {{ i18n('Forever') }}<% } %></span>
-            </a>
-        </li>
-        <li>
-            <a href="#{{ uri }}settings" class="btn btn-default" id="showSettings">
-                <span class="icon-cog"></span> <span class="hidden-xxs">{{ i18n('Settings') }}</span>
-            </a>
-        </li>
-    </ul>
+    </div>
+</div>
 </nav>
 
-<div class="ui-row ui-scroll-y ui-body">
-    <div class="main">
-        <div class="article" data-id="{{ id }}">
-            <header>
-                <h1 class="page-header">
-                    {{ title }}
-                    <small>{{ createdDate() }}</small>
-                    <a href="#" class="btn btn-link favorite pull-right">
-                        <span class="<% if (isFavorite === 0) {%>icon-star-empty<% } else { %>icon-favorite<% } %>"></span>
-                    </a>
-                </h1>
-            </header>
-            <% if (taskAll !== 0) { %>
-            <div class="progress">
-                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ taskCompleted }}" aria-valuemin="0" aria-valuemax="{{ taskAll }}" style="width: {{ getProgress(taskCompleted, taskAll) }}%">
-                    <span class="progress-percent">
-                        {{ getProgress() }}%
-                    </span>
-                </div>
+<div class="layout--body -scroll -note">
+    <div class="content container-fluid -note" data-id="{{id}}">
+        <header>
+            <h1 class="page-header -note">
+                {{title}}
+                <small>{{createdDate()}}</small>
+                <button type="button" class="btn btn-link btn--favourite pull-right">
+                    <span class="btn--favourite--icon icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
+                </button>
+            </h1>
+        </header>
+
+        <% if (taskAll !== 0) { %>
+        <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar"
+                aria-valuenow="{{taskCompleted}}" aria-valuemin="0" aria-valuemax="{{taskAll}}" style="width: {{getProgress(taskCompleted, taskAll)}}%">
+                <span class="progress-percent">
+                    {{getProgress()}}%
+                </span>
             </div>
+        </div>
+        <% } %>
+
+        <p class="note--notebook">
+            <% if (notebook && notebook.id) { %>
+            <a href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
+                <i class="icon-notebook"></i> {{notebook.name}}
+            </a>
             <% } %>
-            <p class="notebooktitle">
-                <% if (notebook !== null) { %><i class="icon-notebook"></i> {{ notebook }}<hr><% } %>
-            </p>
-            {{ getContent() }}
+        </p>
+
+        <div class="-text-big">
+            {{content}}
         </div>
     </div>
 </div>

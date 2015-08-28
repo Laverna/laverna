@@ -1,0 +1,47 @@
+/**
+ * Editor module
+ */
+.editor--form {
+    margin-top: 15px;
+}
+
+// Fullscreen mode
+.editor--fullscreen {
+    /**
+     * We don't need to show the sidebar on fullscreen mode.
+     */
+    .layout--sidebar {
+        display: none;
+    }
+    .layout--content {
+        width: 100%;
+    }
+
+}
+
+// Notebook list
+.editor--notebooks--list {
+    max-width: 180px;
+}
+@media (max-width: 400px) {
+    .editor--notebooks--list {
+        max-width: 52px;
+        padding: 6px;
+    }
+}
+
+@media (min-width: @screen-xs) {
+    // Center the editor in fullscreen mode
+    .editor--fullscreen {
+        .editor--container {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    .editor--fullscreen.-preview {
+        .editor--container {
+            width: 100%;
+        }
+    }
+}

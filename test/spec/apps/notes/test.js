@@ -1,7 +1,8 @@
 /* global define, describe, before, after, it, chai */
 define([
     'app',
-    'apps/notes/appNote'
+    'apps/notes/appNote',
+    'spec/apps/notes/list/app'
 ], function(App, AppNote) {
     'use strict';
 

@@ -4,9 +4,9 @@ define([
     'backbone',
     'migrations/note',
     'collections/removed',
-    'apps/encryption/auth',
+    'dompurify',
     'indexedDB'
-], function (_, Backbone, NotesDB, Removed, getAuth) {
+], function(_, Backbone, NotesDB, Removed, Purify) {
     'use strict';
 
     /**
@@ -27,15 +27,20 @@ define([
             'taskCompleted' :  0,
             'created'       :  Date.now(),
             'updated'       :  Date.now(),
-            'notebookId'    :  0,
+            'notebookId'    :  '0',
             'tags'          :  [],
             'isFavorite'    :  0,
             'trash'         :  0,
             'synchronized'  :  0,
-            'images'        :  []
+            'files'         :  []
         },
 
-        validate: function (attrs) {
+        encryptKeys: [
+            'title',
+            'content'
+        ],
+
+        validate: function(attrs) {
             var errors = [];
             if (attrs.title === '') {
                 errors.push('title');
@@ -46,38 +51,13 @@ define([
             }
         },
 
-        initialize: function () {
-            this.on('update:any', this.updateDate);
-            this.on('setFavorite', this.setFavorite);
-
-            if (this.isNew()) {
-                this.set('created', Date.now());
-                this.updateDate();
-            }
-        },
-
-        encrypt: function (data) {
-            var auth = getAuth();
-            data = data || this.toJSON();
-
-            this.set('title', auth.encrypt(data.title));
-            this.set('content', auth.encrypt(data.content));
-            this.set('synchronized', 0);
-        },
-
-        decrypt: function () {
-            var data = this.toJSON(),
-                auth = getAuth();
-
-            data.title = auth.decrypt(data.title);
-            data.content = auth.decrypt(data.content);
-            return data;
+        initialize: function() {
         },
 
         /**
          * Note's last modified time
          */
-        updateDate: function () {
+        updateDate: function() {
             this.set('updated', Date.now());
             this.setSync();
         },
@@ -85,30 +65,31 @@ define([
         /**
          * Saves model's id for sync purposes, then destroys it
          */
-        destroySync: function () {
+        destroySync: function() {
             return new Removed().newObject(this, arguments);
         },
 
-        next: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) + 1);
-            }
+        toggleFavorite: function() {
+            return {isFavorite: (this.get('isFavorite') === 1) ? 0 : 1};
         },
 
-        prev: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) - 1);
-            }
-        },
-
-        setFavorite: function () {
-            var isFavorite = (this.get('isFavorite') === 1) ? 0 : 1;
-            this.trigger('update:any');
-            this.save({'isFavorite': isFavorite});
-        },
-
-        setSync: function () {
+        setSync: function() {
             this.set('synchronized', 0);
+        },
+
+        /**
+         * Purify user inputs
+         */
+        setEscape: function(data) {
+            if (data.title) {
+                data.title = _.escape(_.unescape(data.title));
+            }
+            if (data.content) {
+                data.content = Purify.sanitize(data.content);
+            }
+
+            this.set(data);
+            return this;
         }
 
     });

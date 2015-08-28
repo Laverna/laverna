@@ -1,10 +1,12 @@
 /*global define*/
 define([
+    'jquery',
     'underscore',
     'backbone',
+    'backbone.radio',
     'collections/removed',
     'migrations/note'
-], function (_, Backbone, Removed, TagsDB) {
+], function($, _, Backbone, Radio, Removed, TagsDB) {
     'use strict';
 
     /**
@@ -21,49 +23,41 @@ define([
             'name'         :  '',
             'count'        :  '',
             'synchronized' :  0,
+            'created'      : Date.now(),
             'updated'      : Date.now()
         },
 
-        initialize: function () {
-            this.on('update:name', this.doEscape());
+        encryptKeys: ['name'],
+
+        initialize: function() {
+            // this.on('update:name', this.doEscape());
         },
 
-        /**
-         * Saves model's id for sync purposes, then destroys it
-         */
-        destroySync: function () {
-            return new Removed().newObject(this, arguments);
-        },
-
-        updateDate: function () {
-            this.set('updated', Date.now());
-            this.set('synchronized', 0);
-        },
-
-        doEscape: function () {
-            this.set('name', _.escape(this.get('name')));
-        },
-
-        validate: function (attrs) {
+        validate: function(attrs) {
             var errors = [];
             if (attrs.name === '') {
                 errors.push('name');
             }
+
             if (errors.length > 0) {
                 return errors;
             }
         },
 
-        next: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) + 1);
-            }
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function() {
+            return new Removed().newObject(this, arguments);
         },
 
-        prev: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) - 1);
-            }
+        updateDate: function() {
+            this.set('updated', Date.now());
+            this.set('synchronized', 0);
+        },
+
+        doEscape: function() {
+            this.set('name', _.escape(this.get('name')));
         }
 
     });

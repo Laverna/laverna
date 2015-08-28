@@ -1,37 +1,28 @@
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
-    'helpers/uri',
+    'backbone.radio',
     'apps/help/about/view'
-], function (_, App, Marionette, URI, View) {
+], function(_, Marionette, Radio, View) {
     'use strict';
 
-    var About = App.module('AppHelp.About');
+    var Controller = Marionette.Object.extend({
 
-    About.Controller = Marionette.Controller.extend({
-        initialize: function () {
-            _.bindAll(this, 'show');
-        },
-
-        onDestroy: function () {
-            this.view.trigger('destroy');
-            delete this.view;
-        },
-
-        show: function () {
+        initialize: function() {
             this.view = new View({
-                appVersion : App.constants.VERSION
+                appVersion: '0.5'
             });
-            App.modal.show(this.view);
-            this.view.on('redirect', this.redirect, this);
+
+            Radio.command('global', 'region:show', 'modal', this.view);
+            this.listenTo(this.view, 'redirect', this.destroy);
         },
 
-        redirect: function () {
-            App.vent.trigger('navigate:back', '/notes');
+        onDestroy: function() {
+            Radio.command('global', 'region:empty', 'modal');
         }
+
     });
 
-    return About.Controller;
+    return Controller;
 });

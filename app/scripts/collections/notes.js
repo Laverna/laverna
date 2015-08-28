@@ -2,80 +2,65 @@
 define([
     'underscore',
     'backbone',
+    'backbone.radio',
+    'collections/pageable',
     'migrations/note',
     'models/note',
+    'fuse',
     'indexedDB'
-], function (_, Backbone, NotesDB, Note) {
+], function(_, Backbone, Radio, PageableCollection, NotesDB, Note, Fuse) {
     'use strict';
 
-    var Notes = Backbone.Collection.extend({
+    var Notes = PageableCollection.extend({
         model: Note,
 
         database  : NotesDB,
         storeName : 'notes',
 
-        initialize: function () {
+        state: {
+            pageSize     : 10,
+            firstPage    : 0,
+            currentPage  : 0,
+            totalRecords : 0,
+            comparator   : {'created' : 'desc', 'isFavorite' : 'desc'}
         },
 
-        comparator: function (model) {
+        conditions: {
+            active   : {trash      : 0},
+            favorite : {isFavorite : 1, trash : 0},
+            trashed  : {trash      : 1},
+            notebook : function(args) {
+                return {notebookId: args.query, trash: 0};
+            }
+        },
+
+        initialize: function() {
+        },
+
+        comparator: function(model) {
             return -model.get('created');
         },
 
-        filterList: function (filter, query) {
-            var res;
-            switch (filter) {
-            case 'favorite':
-                res = this.getFavorites();
-                break;
-            case 'notebook':
-                res = this.getNotebookNotes(query);
-                break;
-            case 'open_tasks':
-                res = this.getOpenTasks();
-                break;
-            case 'trashed':
-                res = this.getTrashed();
-                break;
-            default:
-                res = this.getActive();
-                break;
+        filterList: function(filter, options) {
+            filter = filter || 'active';
+            var cond = this.conditions[filter],
+                res;
+
+            if (cond) {
+                cond = (typeof cond === 'function' ? cond(options) : cond);
+                res = this.where(cond);
             }
+            else {
+                res = this[filter + 'Filter'](options.query);
+            }
+
             return this.reset(res);
-        },
-
-        /**
-         * Filter the list of all notes that are favorite
-         */
-        getFavorites: function () {
-            return this.filter(function (note) {
-                return note.get('isFavorite') === 1 && note.get('trash') === 0;
-            });
-        },
-
-        /**
-         * Only active notes
-         */
-        getActive: function () {
-            return this.without.apply(this, this.getTrashed());
-        },
-
-        /**
-         * Show only notebook's notes
-         */
-        getNotebookNotes: function ( notebookId ) {
-            return this.filter(function (note) {
-                var notebook = note.get('notebookId');
-
-                if (notebook !== 0) {
-                    return notebook.get('id') === notebookId && note.get('trash') === 0;
-                }
-            });
         },
 
         /**
          * Show notes with unfinished tasks
          */
-        getOpenTasks: function () {
+        taskFilter: function () {
             return this.filter(function (note) {
                 return note.get('taskCompleted') < note.get('taskAll');
             });
@@ -83,29 +68,24 @@ define([
 
         /**
          * Show only tag's notes
+         * Returns notes to which a specified tag was attached.
          */
-        getTagged: function ( tagName ) {
-            return this.filter(function (note) {
+        tagFilter: function(tagName) {
+            return this.filter(function(note) {
                 if (note.get('tags').length > 0) {
-                    return (_.indexOf(note.get('tags'), tagName) !== -1) && note.get('trash') === 0;
+                    return (
+                        (_.indexOf(note.get('tags'), tagName) !== -1) &&
+                        note.get('trash') === 0
+                    );
                 }
-            });
-        },
-
-        /**
-         * Filter the list of notes that are removed to trash
-         */
-        getTrashed: function () {
-            return this.filter(function (note) {
-                return note.get('trash') === 1;
             });
         },
 
         /**
          * Filter: only unencrypted, JSON data probably encrypted data
          */
-        getUnEncrypted: function () {
-            return this.filter(function (note) {
+        getUnEncrypted: function() {
+            return this.filter(function(note) {
                 try {
                     JSON.parse(note.get('title'));
                     return false;
@@ -118,35 +98,28 @@ define([
         /**
          * Search
          */
-        search : function(letters) {
+        searchFilter: function(letters) {
             if (letters === '') {
                 return this;
             }
 
-            var pattern = new RegExp(letters, 'gim'),
-                data;
+            var pattern = new RegExp(letters, 'gim');
 
             return this.filter(function(model) {
-                data = model.decrypt();
-                pattern.lastIndex = 0;  // Reuse regexp
-                return pattern.test(data.title) || pattern.test(data.content);
+                Radio.request('encrypt', 'decrypt:model', model);
+                pattern.lastIndex = 0;
+                return pattern.test(model.get('title')) || pattern.test(model.get('content'));
             });
         },
 
-        /**
-         * Pagination
-         * @var int perPage
-         * @var int page
-         */
-        pagination : function (page, perPage) {
-            var collection = this;
-
-            collection = _(collection.rest(page));
-            collection = _(collection.first(perPage));
-
-            return collection.map( function(model) {
-                return model;
+        fuzzySearch: function(text) {
+            var fuse = new Fuse(this.fullCollection.models, {
+                keys  : ['title'],
+                getFn : function(obj, path) {
+                    return obj.get(path);
+                }
             });
+            return fuse.search(text);
         }
 
     });

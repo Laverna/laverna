@@ -11,33 +11,36 @@ define([
     'use strict';
 
     var tests = [
+        // Classes
+        'spec/classes/encryption',
+
         // Models
-        'spec/models/note',
-        'spec/models/notebook',
+        // 'spec/models/note',
+        // 'spec/models/notebook',
 
         // Collections
-        'spec/collections/notes',
+        // 'spec/collections/notes',
 
         // Libs
-        'spec/libs/tags',
+        // 'spec/libs/tags',
 
         // Helpers
-        'spec/helpers/storage',
-        'spec/helpers/configs',
-        'spec/helpers/uri',
+        // 'spec/helpers/storage',
+        // 'spec/helpers/configs',
+        // 'spec/helpers/uri',
         // 'spec/helpers/sync/sync',
 
         // Core
-        'spec/app.js',
+        // 'spec/app.js',
 
         // Modules
-        'spec/apps/confirm/test',
+        // 'spec/apps/confirm/test',
         'spec/apps/encryption/test',
-        'spec/apps/help/test',
-        'spec/apps/navbar/test',
-        'spec/apps/notebooks/test',
-        'spec/apps/notes/test',
-        'spec/apps/settings/test'
+        // 'spec/apps/help/test',
+        // 'spec/apps/navbar/test',
+        // 'spec/apps/notebooks/test',
+        // 'spec/apps/notes/test',
+        // 'spec/apps/settings/test'
     ];
 
     // Setup

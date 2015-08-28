@@ -1,0 +1,39 @@
+/**
+ * Side menu
+ */
+.sidemenu {
+    .make-xs-column(8);
+    .make-md-column(3);
+    .make-sm-column(3);
+    .make-lg-column(3);
+}
+.sidemenu {
+    background-color: #fff;
+
+    // Position and z-index
+    position : fixed;
+    top      : 0;
+    bottom   : 0;
+    z-index  : @zindex--sidemenu;
+
+    // Size
+    height  : 100%;
+    padding : 0;
+
+    // Show scrollbars
+    overflow-y : auto;
+    overflow-x : hidden;
+
+    // Slide open from left
+    visibility : hidden;
+    transition : all 0.3s ease;
+    .make-xs-column-push(-8);
+    .make-md-column-push(-3);
+    .make-sm-column-push(-3);
+    .make-lg-column-push(-3);
+
+    &.-show {
+        visibility: visible;
+        left: 0;
+    }
+}

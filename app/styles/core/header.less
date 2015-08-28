@@ -1,0 +1,75 @@
+/**
+ * Navbar styles
+ */
+.header {
+}
+
+/**
+ * "Grid" system for elements in the navbar
+ */
+.header--col--left {
+    max-width: 80%;
+}
+.header--col--right {
+    max-width: 15%;
+}
+
+/**
+ * Fix margins and paddings of .navbar-right or .navbar-left
+ */
+.header--right {
+    margin-right: 0;
+}
+.header--left {
+    padding-left: 0;
+}
+
+/**
+ * Button styles
+ */
+.header--btn {
+    &:extend(.navbar-btn);
+    margin-left: 5px;
+}
+// Search button
+.header--sbtn {
+    background-color: transparent;
+}
+
+/**
+ * Search form
+ */
+.header--search {
+    &:extend(.navbar-form);
+    display: none;
+}
+.header--search--input {
+}
+
+/**
+ * Hide everything else in the navbar and
+ * show the search form.
+ */
+.header.-search {
+    .navbar-right,
+    .navbar-left {
+        display: none;
+    }
+
+    .header--search {
+        display: block;
+    }
+}
+
+/**
+ * Settings navbar
+ */
+.header--settings {
+    .container-fluid  {
+        padding-left: 0;
+    }
+
+    .header--settings--back {
+        margin-right: 15px;
+    }
+}

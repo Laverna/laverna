@@ -4,13 +4,8 @@ define([
     'use strict';
 
     var NoteDB = {
-        id: 'notes-db',
-        description: 'The database for the Notes',
-
-        getDB: function (dbName) {
-            this.id = dbName ? dbName : 'notes-db';
-            return this;
-        },
+        id          : 'notes-db',
+        description : 'The database for the Notes',
 
         migrations: [
             {
@@ -64,7 +59,7 @@ define([
                 version: 5,
                 migrate: function(transaction, next) {
                     var store = transaction.db.createObjectStore('files');
-                    store = transaction.objectStore('files');
+                    store     = transaction.objectStore('files');
                     store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
@@ -78,6 +73,17 @@ define([
                     if (store) {
                         next();
                     }
+                }
+            },
+            // Configs store
+            // -------------
+            {
+                version: 7,
+                migrate: function(transaction, next) {
+                    var store = transaction.db.createObjectStore('configs');
+                    store     = transaction.objectStore('configs');
+                    store.createIndex('name', 'name', {unique: true});
+                    next();
                 }
             }
         ]

@@ -8,17 +8,15 @@ define([
     'use strict';
 
     var BrandRegion = Backbone.Marionette.Region.extend({
-        el : '#brand-layer',
+        el : '#layout--brand',
 
         onShow: function () {
-            $('#wrapper').hide();
             // this.$el.html(view.el);
             this.$el.slideDown('fast');
         },
 
         onEmpty: function () {
             this.$el.slideUp('fast');
-            $('#wrapper').show();
         }
 
     });

@@ -1,289 +1,128 @@
 /*global define*/
 define([
+    'jquery',
     'underscore',
-    'app',
-    'backbone',
+    'backbone.radio',
     'marionette',
-    'collections/notes',
     'apps/notes/list/views/noteSidebar'
-], function (_, App, Backbone, Marionette, Notes, NotesView) {
+], function ($, _, Radio, Marionette, Sidebar) {
     'use strict';
 
-    var List = App.module('AppNote.List');
-
     /**
-     * Notes list controller - shows notes list in sidebar
+     * Notes list controller - shows notes list in the sidebar
+     *
+     * Listens to
+     * ----------
+     * Events:
+     * 1. channel: `appNote`, event: `model:active`
+     *    triggers `focus` event on the passed model.
+     * 2. channel: `notes`, event: `model:navigate`
+     *    navigates to the model which was passed with the event.
+     *
+     * Triggers
+     * --------
+     * Events:
+     * 1. channel: `global`, event: `navigate`
+     *    to navigate to a note page
      */
-    List.Controller = Marionette.Controller.extend({
+    var Controller = Marionette.Object.extend({
 
-        initialize: function () {
-            _.bindAll(this, 'listNotes', 'showSidebar', 'favoriteNotes');
+        initialize: function(options) {
+            this.radio = Radio.channel;
+            this.options = options;
+            _.bindAll(this, 'show', 'filter', 'navigate');
 
-            this.notes = new Notes();
+            // Get configs
+            this.configs = Radio.request('configs', 'get:object');
 
-            // Application events
-            App.on('notes:show', this.changeFocus, this);
-            App.on('notes:next', this.toNextNote, this);
+            // Listen to events
+            this.listenTo(this.radio('appNote'), 'model:active', this.onModelActive, this);
+            this.listenTo(this.radio('notes'), 'model:navigate', _.debounce(this.navigate, 420));
 
-            // Filter
-            this.listenTo(this.notes, 'filter:all', this.activeNotes, this);
-            this.listenTo(this.notes, 'filter:favorite', this.favoriteNotes, this);
-            this.listenTo(this.notes, 'filter:open_tasks', this.openTasksNotes, this);
-            this.listenTo(this.notes, 'filter:trashed', this.trashedNotes, this);
-            this.listenTo(this.notes, 'filter:search', this.searchNotes, this);
-            this.listenTo(this.notes, 'filter:tag', this.taggedNotes, this);
-            this.listenTo(this.notes, 'filter:notebook', this.notebooksNotes, this);
+            // Fetch notes and show them
+            this.filter(options);
+        },
 
-            // Navigation with keys
-            this.listenTo(this.notes, 'navigateTop', this.toPrevNote, this);
-            this.listenTo(this.notes, 'navigateBottom', this.toNextNote, this);
+        onDestroy: function() {
+            this.view.trigger('destroy');
+            this.view.collection.trigger('reset:all');
         },
 
         /**
-         * Fetch notes, then show it
+         * Renders the sidebar view
          */
-        listNotes: function (args) {
-            this.args = _.clone(args) || this.args;
-            App.settings.pagination = parseInt(App.settings.pagination);
-
-            // Set profile
-            this.notes.database.getDB(args.profile);
-
-            // Offset
-            if (_.isNull(this.args.page)) {
-                this.args.page = 0;
-            } else {
-                this.args.page = parseInt(this.args.page);
+        show: function(notes) {
+            // Destroy old view
+            if (this.view) {
+                this.view.trigger('destroy');
+                delete this.view;
             }
 
-            this.query = {};
-
-            // Filter
-            if (_.isNull(this.args) === false && this.args.filter) {
-                this.notes.trigger('filter:' + this.args.filter);
-            } else {
-                this.notes.trigger('filter:all');
-            }
-        },
-
-        /**
-         * Show only active notes
-         */
-        activeNotes: function () {
-            $.when(
-                this.notes.fetch({
-                    // offset : this.args.page,
-                    // limit  : App.settings.pagination,
-                    conditions: ( window.appNoDB ? null : {'trash' : 0} )
-                })
-            ).done(this.showSidebar);
-        },
-
-        /**
-         * Show favorite notes
-         */
-        favoriteNotes: function () {
-            $.when(
-                this.notes.fetch({
-                    conditions: ( window.appNoDB ? null : {isFavorite : 1} )
-                })
-            ).done(this.showSidebar);
-        },
-
-        /**
-         * Show notes with open tasks
-         */
-        openTasksNotes: function () {
-            var self = this,
-                notes;
-            $.when(
-                this.notes.fetch({
-                    conditions: ( window.appNoDB ? null : {trash : 0} )
-                })
-            ).done(
-                function () {
-                    notes = self.notes.getOpenTasks();
-                    self.notes.reset(notes);
-                    self.showSidebar();
-                }
-            );
-        },
-
-        /**
-         * Show only removed notes
-         */
-        trashedNotes: function () {
-            $.when(
-                this.notes.fetch({
-                    conditions: ( window.appNoDB ? null : {trash : 1} )
-                })
-            ).done(this.showSidebar);
-        },
-
-        /**
-         * Notes with notebook
-         */
-        notebooksNotes: function () {
-            $.when(
-                this.notes.fetch({
-                    conditions: ( window.appNoDB ? null : {notebookId : this.args.query} )
-                })
-            ).done(this.showSidebar);
-        },
-
-        /**
-         * Notes which tagged with :tag
-         */
-        taggedNotes: function () {
-            var self = this,
-                notes;
-            $.when(
-                this.notes.fetch({
-                    conditions: ( window.appNoDB ? null : {trash : 0} )
-                })
-            ).done(
-                function () {
-                    notes = self.notes.getTagged(self.args.query);
-                    self.notes.reset(notes);
-                    self.showSidebar();
-                }
-            );
-        },
-
-        /**
-         * Search notes
-         */
-        searchNotes: function () {
-            var self = this,
-                notes;
-            $.when(
-                // Fetch without limit, because with encryption, searching is impossible
-                this.notes.fetch({
-                    conditions: {trash : 0}
-                })
-            ).done(
-                function () {
-                    notes = self.notes.search(self.args.query);
-                    self.notes.reset(notes);
-                    self.showSidebar();
-                }
-            );
-        },
-
-        /**
-         * Show content
-         */
-        showSidebar: function () {
-            // IndexedDBShim doesn't support indexes - filter with backbone.js
-            if (window.appNoDB === true) {
-                this.notes.filterList(this.args.filter, this.args.query);
-            }
-
-            this.args.isLastPage = this.notes.length <= (this.args.page + App.settings.pagination);
-
-            // Pagination
-            if (this.notes.length > App.settings.pagination) {
-                var notes = this.notes.pagination(this.args.page, App.settings.pagination);
-                this.notes.reset(notes);
-            }
-            else if (this.args.page > 1) {
-                this.notes.reset([]);
-            }
-
-            // Next page
-            if (this.notes.length === App.settings.pagination) {
-                this.args.next = this.args.page + App.settings.pagination;
-            } else {
-                this.args.next = this.args.page;
-            }
-
-            // Previous page
-            if (this.args.page > App.settings.pagination) {
-                this.args.prev = this.args.page - App.settings.pagination;
-            }
-
-            var View = new NotesView({
-                collection : this.notes,
-                args       : this.args
+            // Render the view
+            this.view = new Sidebar({
+                collection: notes,
+                args      : this.options
             });
-
-            App.sidebar.show(View);
-
-            // Active note
-            if (this.args.id) {
-                this.changeFocus(this.args);
-            }
-
-            App.AppNavbar.trigger('titleChange', this.args);
-        },
-
-        changeFocus: function (args) {
-            if ( !args ) { return; }
-            this.args = args;
-            this.notes.trigger('changeFocus', args.id);
+            Radio.command('global', 'region:show', 'sidebar', this.view);
         },
 
         /**
-         * Redirects to note
+         * Fetches data from `Notes` collection.
          */
-        toNote: function (note) {
-            if ( !note) { return; }
+        filter: _.debounce(function(options) {
+            var tOptions = this.view ? this.view.options.args : {},
+            isEqual = _.isEqual(
+                _.pick((tOptions), 'filter', 'profile', 'query', 'page'),
+                _.pick(options   , 'filter', 'profile', 'query', 'page')
+            );
 
-            var url = App.request('uri:note', this.args, note);
-            return App.vent.trigger('navigate', url);
-        },
-
-        /**
-         * Navigate to next note
-         */
-        toNextNote: function () {
-            // Nothing is here
-            if (this.notes.length === 0) {
+            // Do not fetch anything because nothing has changed
+            if (isEqual) {
                 return;
             }
 
-            var note;
-            try {
-                note = this.notes.get(this.args.id);
-                note = note.next();
-            }
-            catch (e) {
-                note = this.notes.at(0);
-            }
+            // Show the navbar
+            Radio.command('navbar', 'start', options);
+            options.pageSize = this.configs.pagination;
+            this.options = options;
 
-            if (this.notes.length >= App.settings.pagination && this.notes.indexOf(note) < 0) {
-                this.notes.trigger('nextPage');
-            }
+            // Fetch data
+            Radio.request('notes', 'get:all', options)
+            .then(this.show);
+        }, 100),
 
-            return this.toNote(note);
-        },
-
-        /**
-         * Navigate to previous note
-         */
-        toPrevNote: function () {
-            // Nothing is here
-            if (this.notes.length === 0) {
+        onModelActive: function(model) {
+            // The view was not rendered or the model is already active
+            if (!this.view || !model || model.id === this.view.options.args.id) {
                 return;
             }
 
-            var note;
-            try {
-                note = this.notes.get(this.args.id);
-                note = note.prev();
+            // Trigger `focus` event to a model.
+            this.view.options.args.id = model.id;
+            model = this.view.collection.get(model.id);
+            if (model) {
+                model.trigger('focus');
             }
-            catch (e) {
-                note = this.notes.last();
-            }
+        },
 
-            if (this.args.page > 1 && this.notes.indexOf(note) < 0) {
-                this.notes.trigger('prevPage');
-            }
+        navigate: function(model) {
+            var args = Radio.request('appNote', 'route:args');
 
-            return this.toNote(note);
+            /**
+             * Before navigating to a note, change URI.
+             * It is done because if a user navigates back to the same page
+             * a note might not appear at all.
+             */
+            Radio.command('uri', 'navigate', {options: args}, {trigger: false});
+
+            // Navigate to a note page
+            Radio.command(
+                'uri', 'navigate',
+                {options: args, model: model}, {trigger: true}
+            );
         }
 
     });
 
-    return List.Controller;
+    return Controller;
 });

@@ -17,12 +17,12 @@ define([
             uiFocus: 'name'
         },
 
-        events: { },
+        events: {},
 
         triggers: {
-            'submit .form-horizontal' : 'save',
-            'click .ok'               : 'save',
-            'click .cancelBtn'        : 'close'
+            'submit form'      : 'save',
+            'click .ok'        : 'save',
+            'click .cancelBtn' : 'close'
         },
 
         modelEvents: {

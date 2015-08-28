@@ -1,38 +1,73 @@
 /* global define, requirejs */
 define([
     'jquery',
+    'helpers/radio.shim',
+    'backbone.radio',
     'app',
+    'initializers',
     'bootstrap'
-], function($, App) {
+], function($, shim, Radio, App) {
     'use strict';
 
     console.time('App');
 
+    var exts = [
+        'modules/pagedown/module',
+        'modules/tags/module',
+        'modules/tasks/module',
+        'modules/linkDialog/module',
+        'modules/fileDialog/module',
+        'modules/fuzzySearch/module',
+        'modules/codePrettify/module',
+        'modules/mathjax/module'
+    ];
+
     // Load all modules then start an application
     requirejs([
         // Helpers
-        'helpers/configs',
         'helpers/storage',
-        'helpers/install',
         'helpers/uri',
+        'helpers/install',
+        'helpers/title',
         'helpers/i18next',
         'helpers/keybindings',
 
+        // Classes
+        'classes/encryption',
+
+        // Collection modules
+        'collections/modules/notes',
+        'collections/modules/notebooks',
+        'collections/modules/tags',
+        'collections/modules/files',
+        'collections/modules/configs',
+
         // Modules
         'apps/confirm/appConfirm',
-        'apps/encryption/encrypt',
+        'apps/encryption/appEncrypt',
         'apps/navbar/appNavbar',
         'apps/notes/appNote',
         'apps/notebooks/appNotebooks',
         'apps/settings/appSettings',
         'apps/help/appHelp'
-    ], function(Configs, storage) {
-        console.log('modules are loaded');
+    ].concat(exts), function(storage) {
+        // Get profile name from location hash
+        var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
+        profile     = (!profile ? profile : profile[profile.index]);
 
-        Configs.fetch()
-            .then(storage.check)
-            .then(function() {
-                App.start();
-            });
+        console.warn('prof', profile);
+
+        Radio.request('configs', 'get:all', {profile: profile})
+        .then(storage.check)
+        .then(Radio.request('init', 'start', 'app:before app module'))
+        .then(function() {
+            console.log('modules are loaded');
+            App.start();
+        })
+        .fail(function(e) {
+            console.error('I failed you', e);
+        });
+
     });
+
 });

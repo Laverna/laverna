@@ -1,39 +1,45 @@
 /* global define */
 define([
     'underscore',
-    'jquery',
     'marionette',
-    'app',
+    'backbone.radio',
+    'modules',
     'apps/navbar/show/controller'
-], function (_, $, Marionette, App, Show) {
+], function(_, Marionette, Radio, Modules, Controller) {
     'use strict';
 
     /**
-     * Module which shows navbar
+     * Navbar module.
+     *
+     * Complies to commands:
+     * 1. channel: `navbar`, command: `start`
+     *    starts itself.
      */
-    var AppNavbar = App.module('AppNavbar', { startWithParent: false }),
-        controller = new Show();
+    var Navbar = Modules.module('Navbar', {startWithParent: false});
 
-    function showNavbar (args) {
-        controller.show(args || {});
-    }
-
-    AppNavbar.on('start', function () {
-        App.log('AppNavbar has been started');
-        showNavbar();
+    Navbar.on('start', function(options) {
+        Navbar.controller = new Controller(options);
     });
 
-    AppNavbar.on('stop', function () {
-        App.log('AppNavbar has been stopped');
+    Navbar.on('stop', function() {
+        Navbar.controller.destroy();
+        delete Navbar.controller;
     });
 
-    AppNavbar.on('titleChange', function (args) {
-        showNavbar(args);
+    // Initializer
+    Radio.command('init', 'add', 'app:before', function() {
+        Radio.comply('navbar', 'stop', Navbar.stop, Navbar);
+
+        Radio.comply('navbar', 'start', function(options) {
+            // Just trigger an event
+            if (Navbar._isInitialized) {
+                return Navbar.controller.trigger('change:title', options);
+            }
+
+            Navbar.start(options);
+        });
+
     });
 
-    App.on('configs:fetch', function () {
-        showNavbar();
-    });
-
-    return AppNavbar;
+    return Navbar;
 });

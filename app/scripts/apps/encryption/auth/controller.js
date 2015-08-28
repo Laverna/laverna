@@ -1,39 +1,50 @@
-/*global define*/
+/* global define */
 define([
     'underscore',
-    'app',
     'marionette',
-    'apps/encryption/auth',
-    'apps/encryption/auth/authView'
-], function (_, App, Marionette, getAuth, View) {
+    'backbone.radio',
+    'apps/encryption/auth/view'
+], function(_, Marionette, Radio, View) {
     'use strict';
 
-    var Form = App.module('Encryption.Form');
+    /**
+     * Auth controller. It shows authorization form.
+     */
+    var Controller = Marionette.Object.extend({
 
-    Form.Controller = Marionette.Controller.extend({
-
-        initialize: function () {
-            _.bindAll(this, 'showForm');
-
-            this.auth = getAuth(App.settings);
+        initialize: function(options) {
+            this.options = options;
+            this.show();
         },
 
-        showForm: function () {
-            var form = new View();
-            App.brand.show(form);
-
-            form.trigger('shown');
-            form.on('login', this.login, this);
+        onDestroy: function() {
+            this.stopListening();
+            Radio.command('global', 'region:empty', 'brand');
         },
 
-        login: function (password) {
-            var pwd = this.auth.getSecureKey(password);
-            if (pwd !== false) {
-                App.vent.trigger('navigate:back', '/notes');
+        show: function() {
+            this.view = new View();
+
+            // Show auth form
+            Radio.command('global', 'region:show', 'brand', this.view);
+            this.view.trigger('shown');
+
+            // Events
+            this.listenTo(this.view, 'login', this.login);
+        },
+
+        login: function(pwd) {
+            if (!Radio.request('encrypt', 'check:password', pwd)) {
+                return this.view.trigger('invalid:password');
             }
+
+            Radio.request('encrypt', 'save:secureKey', pwd)
+            .then(function() {
+                Radio.command('uri', 'back');
+            });
         }
 
     });
 
-    return Form.Controller;
+    return Controller;
 });

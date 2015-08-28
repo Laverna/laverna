@@ -1,6 +1,6 @@
 /* global define */
 define([
-    'spec/apps/encryption/auth'
+    'spec/apps/encryption/encrypt/controller'
 ], function() {
     'use strict';
 

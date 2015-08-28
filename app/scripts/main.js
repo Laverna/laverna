@@ -29,6 +29,7 @@ requirejs.config({
         sjcl                  : '../bower_components/sjcl/sjcl',
         text                  : '../bower_components/requirejs-text/text',
         jquery                : '../bower_components/jquery/dist/jquery',
+        q                     : '../bower_components/q/q',
         bootstrap             : '../bower_components/bootstrap/dist/js/bootstrap.min',
         i18next               : '../bower_components/i18next/i18next.amd.withJQuery.min',
 
@@ -36,18 +37,20 @@ requirejs.config({
         underscore            : '../bower_components/underscore/underscore',
         backbone              : '../bower_components/backbone/backbone',
         marionette            : '../bower_components/marionette/lib/core/backbone.marionette',
-        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/backbone.wreqr',
+        'backbone.radio'      : '../bower_components/backbone.radio/build/backbone.radio.min',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
         'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
+        fuse                  : '../bower_components/fuse/src/fuse',
 
         // Mousetrap
-        'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
-        'mousetrap-pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
+        'mousetrap'           : '../bower_components/mousetrap/mousetrap',
+        'mousetrap.pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
+        'mousetrap.global'    : '../bower_components/mousetrap/plugins/global-bind/mousetrap-global-bind',
 
         // Storage adapters
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
         indexedDB             : '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
-        IndexedDBShim         : '../bower_components/IndexedDBShim/dist/IndexedDBShim',
+        IndexedDBShim         : '../bower_components/IndexedDBShim/dist/indexeddbshim',
         remotestorage         : '../bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd',
         dropbox               : 'libs/dropbox',
 
@@ -57,9 +60,10 @@ requirejs.config({
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
+        dompurify             : '../bower_components/dompurify/purify',
         mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
-        dropzone              : '../bower_components/dropzone/downloads/dropzone.min',
+        dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',
         toBlob                : '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
         blobjs                : '../bower_components/Blob/Blob',
         fileSaver             : '../bower_components/FileSaver/FileSaver',
@@ -75,6 +79,11 @@ requirejs.config({
         'apps'                : 'apps',
         'locales'             : '../locales'
     },
+    map: {
+        '*': {
+            'backbone.wreqr': 'backbone.radio'
+        }
+    },
     shim: {
         // Backbone
         underscore: {
@@ -85,13 +94,7 @@ requirejs.config({
             exports: 'Backbone'
         },
         'backbone.mousetrap': {
-            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
-        },
-
-        // Mousetrap
-        'Mousetrap': { },
-        'mousetrap-pause': {
-            deps: ['Mousetrap']
+            deps: ['mousetrap', 'mousetrap.pause', 'backbone']
         },
 
         // Storage adapters
@@ -137,6 +140,12 @@ requirejs.config({
         },
         'xregexp/addons/unicode/unicode-base': {
             deps: ['xregexp/xregexp'],
+            exports: 'XRegExp'
+        },
+        'xregexp/addons/unicode/unicode-categories': {
+            deps: [
+                'xregexp/addons/unicode/unicode-base'
+            ],
             exports: 'XRegExp'
         },
 

@@ -11,17 +11,6 @@ define([
 
     console.time('App');
 
-    var exts = [
-        'modules/pagedown/module',
-        'modules/tags/module',
-        'modules/tasks/module',
-        'modules/linkDialog/module',
-        'modules/fileDialog/module',
-        'modules/fuzzySearch/module',
-        'modules/codePrettify/module',
-        'modules/mathjax/module'
-    ];
-
     // Load all modules then start an application
     requirejs([
         // Helpers
@@ -49,8 +38,18 @@ define([
         'apps/notes/appNote',
         'apps/notebooks/appNotebooks',
         'apps/settings/appSettings',
-        'apps/help/appHelp'
-    ].concat(exts), function(storage) {
+        'apps/help/appHelp',
+
+        // Optional modules
+        'modules/pagedown/module',
+        'modules/tags/module',
+        'modules/tasks/module',
+        'modules/linkDialog/module',
+        'modules/fileDialog/module',
+        'modules/fuzzySearch/module',
+        'modules/codePrettify/module',
+        'modules/mathjax/module'
+    ], function(storage) {
         // Get profile name from location hash
         var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
         profile     = (!profile ? profile : profile[profile.index]);

@@ -7,6 +7,7 @@ app/bower_components
 test/bower_components
 .idea
 app/styles/*.css
+app/styles/**/*.css
 *.swp
 test/visual/screenshots
 *.css.map

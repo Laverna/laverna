@@ -20,6 +20,7 @@ define([
         storeName : 'notes',
 
         defaults: {
+            'type'          : 'notes',
             'id'            :  undefined,
             'title'         :  '',
             'content'       :  '',

@@ -9,6 +9,11 @@ define([
 ], function($, shim, Radio, App) {
     'use strict';
 
+    var hash = document.location.hash;
+    Radio.reply('global', 'hash:original', function() {
+        return hash;
+    });
+
     console.time('App');
 
     // Load all modules then start an application
@@ -41,6 +46,7 @@ define([
         'apps/help/appHelp',
 
         // Optional modules
+        'modules/remotestorage/module',
         'modules/pagedown/module',
         'modules/tags/module',
         'modules/tasks/module',

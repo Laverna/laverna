@@ -19,6 +19,7 @@ define([
         storeName: 'tags',
 
         defaults: {
+            'type'         : 'tags',
             'id'           :  undefined,
             'name'         :  '',
             'count'        :  '',

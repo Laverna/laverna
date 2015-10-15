@@ -15,6 +15,7 @@ define([
         storeName: 'notebooks',
 
         defaults: {
+            'type'         : 'notebooks',
             'id'           : undefined,
             'parentId'     : '0',
             'name'         : '',

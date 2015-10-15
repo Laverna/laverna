@@ -50,7 +50,6 @@ define([
                 'save:all'          : this.saveAll,
                 'get:model'         : this.getById,
                 'get:model:full'    : this.getModelFull,
-                'fetch'             : this.fetch,
                 'get:all'           : this.filter,
                 'change:notebookId' : this.onNotebookRemove
             };
@@ -60,17 +59,6 @@ define([
             this.collection.trigger('destroy');
             this.vent.stopReplying('get:model get:model:full filter');
             this.vent.stopComplying('save remove restore');
-        },
-
-        fetch: function(options) {
-            this.changeDatabase(options);
-            var collection = new this.Collection();
-
-            return new Q(collection.fetch(options))
-            .then(function() {
-                return Radio.request('encrypt', 'decrypt:models', collection.fullCollection);
-            })
-            .thenResolve(collection);
         },
 
         /**
@@ -168,7 +156,10 @@ define([
             }
             // Otherwise, just change its status
             else {
-                wait = new Q(model.save({trash: 1, updated: Date.now()}));
+                // wait = new Q(model.save({trash: 1, updated: Date.now()}));
+                wait = new Q(
+                    this.save(model, {trash: 1, updated: Date.now()})
+                );
             }
 
             return wait.then(function() {

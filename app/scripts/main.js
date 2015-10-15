@@ -51,7 +51,9 @@ requirejs.config({
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
         indexedDB             : '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         IndexedDBShim         : '../bower_components/IndexedDBShim/dist/indexeddbshim',
-        remotestorage         : '../bower_components/remotestorage/remotestorage-nocache.amd',
+        remotestorage         : '../bower_components/remotestorage.js/release/0.12.0/remotestorage',
+        bluebird              : '../bower_components/bluebird/js/browser/bluebird.min',
+        tv4                   : '../bower_components/tv4/tv4',
         dropbox               : 'libs/dropbox',
 
         // Markdown
@@ -81,7 +83,7 @@ requirejs.config({
     },
     map: {
         '*': {
-            'backbone.wreqr': 'backbone.radio'
+            'backbone.wreqr' : 'backbone.radio'
         }
     },
     shim: {
@@ -110,8 +112,15 @@ requirejs.config({
         dropbox: {
             exports: 'Dropbox'
         },
-        remotestorage: {
-            exports: 'remoteStorage'
+        'remotestorage': {
+            exports: 'RemoteStorage',
+            deps: [
+                'tv4',
+                'bluebird',
+            ]
+        },
+        tv4: {
+            exports: 'tv4'
         },
 
         // Markdown

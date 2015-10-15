@@ -20,16 +20,26 @@ define([
             return {};
         },
 
+        defaultReplies: function() {
+            return {
+                'save:raw'    : this.saveRaw,
+                'save:all:raw': this.saveAllRaw,
+                'fetch'       : this.fetch
+            };
+        },
+
         reply: function() {
             return {};
         },
 
         initialize: function() {
+            _.bindAll(this, 'saveRaw', 'saveAllRaw');
+
             this.vent    = Radio.channel(this.Collection.prototype.storeName);
             this.storage = Radio.request('global', 'storage');
 
             this.vent.comply(this.comply(), this);
-            this.vent.reply(this.reply(), this);
+            this.vent.reply(_.extend(this.defaultReplies(), this.reply()), this);
 
             // Listen to events
             this.on('collection:destroy', this.reset, this);
@@ -139,6 +149,77 @@ define([
             .thenResolve(model);
         },
 
+        fetch: function(options) {
+            this.changeDatabase(options);
+            var collection = new this.Collection();
+
+            return new Q(collection.fetch(options))
+            .then(function() {
+                // Return in decrypted format
+                if (!options.encrypt) {
+                    return Radio.request('encrypt', 'decrypt:models', collection.fullCollection || collection);
+                }
+                return collection;
+            })
+            .thenResolve(collection);
+        },
+
+        /**
+         * Saves all changes.
+         */
+        saveAllRaw: function(data) {
+            var promises = [];
+
+            _.each(data, function(note) {
+                promises.push(this.saveRaw(note));
+            }, this);
+
+            return Q.all(promises);
+        },
+
+        /**
+         * Saves changes to a model from raw data.
+         */
+        saveRaw: function(data, profile) {
+            var self = this,
+                model = new this.Collection.prototype.model(data),
+                currentProfile = this.Collection.prototype.database.id,
+                defer = Q.defer();
+
+            if (self.collection) {
+                model = self.collection.get(model.id) || model;
+            }
+            model.set(data);
+
+            if (profile) {
+                var database = _.extend({}, this.Collection.prototype.database, {
+                    id: profile
+                });
+                model.database = database;
+            }
+
+            // In case if a model is encrypted, try to decrypt it before encrypting
+            self.decryptModel(model);
+            self.encryptModel(model);
+
+            model.save(model.attributes, {
+                success: function() {
+                    var coll = self.collection.fullCollection || self.collection;
+                    // Decrypt the model again before adding it to collection
+                    self.decryptModel(model);
+
+                    if ((coll && !coll.get(model.id)) && (profile === currentProfile)) {
+                        self.collection.trigger('add:model', model);
+                    }
+                    self.vent.trigger('after:sync:' + data.id, data);
+                    defer.resolve(model);
+                }
+            });
+
+            return defer.promise;
+        },
+
+
         /**
          * Save all changes in the collection
          */
@@ -170,15 +251,18 @@ define([
             self.decryptModel(model);
             self.encryptModel(model);
 
-            model.save(model.toJSON(), {
+            model.save(model.attributes, {
                 success: function() {
+                    self.vent.trigger('save:after:encrypted', model);
+
                     // Decrypt the model again before adding it to collection
                     self.decryptModel(model);
 
                     if (self.collection) {
                         self.collection.trigger('add:model', model);
                     }
-                    self.vent.trigger('save:after', model.get('id'));
+
+                    self.vent.trigger('save:after', model);
                     defer.resolve(model);
                 }
             });

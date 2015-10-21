@@ -13,9 +13,9 @@ define([
      * 1. channel: `notes`, request: `get:model`
      *    expects to receive a model with provided ID
      *
-     * Commands:
-     * 1. channel: `notes`, command: `remove`
-     * 2. channel: `Confirm`, command: `start`
+     * requests:
+     * 1. channel: `notes`, request: `remove`
+     * 2. channel: `Confirm`, request: `start`
      */
     var Controller = Marionette.Object.extend({
 
@@ -45,13 +45,13 @@ define([
             var content = this.labels[Number(model.get('trash'))];
             this.model = model;
 
-            Radio.command('Confirm', 'start', {
+            Radio.request('Confirm', 'start', {
                 content : $.t(content, model.toJSON())
             });
         },
 
         remove: function() {
-            Radio.command('notes', 'remove', this.model);
+            Radio.request('notes', 'remove', this.model);
         }
 
     });

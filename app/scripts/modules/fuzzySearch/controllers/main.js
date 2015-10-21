@@ -21,9 +21,9 @@ define([
      * --------
      * 1. channel: `global`, event: `search:hidden`
      *    when a model in search results was selected.
-     * 2. channel: `appNote`, command: `filter`
+     * 2. channel: `appNote`, request: `filter`
      *    in order to filter notes in sidebar.
-     * 3. channel: `fuzzySearch`, command: `region:show`
+     * 3. channel: `fuzzySearch`, request: `region:show`
      *    in order to render the view and show search results
      */
     var Controller = Marionette.Object.extend({
@@ -41,7 +41,7 @@ define([
         },
 
         onDestroy: function() {
-            Radio.command('fuzzySearch', 'region:empty');
+            Radio.request('fuzzySearch', 'region:empty');
         },
 
         /**
@@ -60,7 +60,7 @@ define([
             this.notes.reset(result);
 
             if (!this.view.isRendered) {
-                Radio.command('fuzzySearch', 'region:show', this.view);
+                Radio.request('fuzzySearch', 'region:show', this.view);
             }
         },
 
@@ -80,7 +80,7 @@ define([
          */
         filter: function(model) {
             model = model.model;
-            Radio.command('appNote', 'filter', {
+            Radio.request('appNote', 'filter', {
                 filter : 'search',
                 query  : model.get('title')
             });

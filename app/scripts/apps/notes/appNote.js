@@ -91,7 +91,7 @@ define([
                 });
             }
 
-            Radio.command('appNote', 'filter', args);
+            Radio.request('appNote', 'filter', args);
         },
 
         // Show a note
@@ -160,15 +160,15 @@ define([
         // Listen to events
         this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
         this.listenTo(Radio.channel('global'), 'form:show', function() {
-            Radio.command('uri', 'navigate', '/notes/add', {
+            Radio.request('uri', 'navigate', '/notes/add', {
                 trigger       : true,
                 includeProfile: true
             });
         });
 
-        // Respond to requests and commands
+        // Respond to requests and requests
         Radio.channel('appNote')
-        .comply('remove:note', API.removeNote, API)
+        .reply('remove:note', API.removeNote, API)
         .reply('route:args', function() {return API.notesArg;}, API);
     });
 
@@ -185,9 +185,9 @@ define([
         // Stop listenning to events
         this.stopListening();
 
-        // Stop responding to requests and commands
+        // Stop responding to requests and requests
         Radio.channel('appNote')
-        .stopComplying('remove:note')
+        .stopReplying('remove:note')
         .stopReplying('route:args');
     });
 

@@ -34,7 +34,7 @@ define([
                 return [];
             });
 
-            Radio.command('appNote', 'filter', {filter: 'favorite'});
+            Radio.request('appNote', 'filter', {filter: 'favorite'});
         });
     });
 });

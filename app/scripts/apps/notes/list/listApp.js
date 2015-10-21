@@ -19,13 +19,13 @@ define([
 
     List.on('before:start', function(options) {
         List.controller = new Controller(options);
-        Radio.comply('appNote', 'filter', List.controller.filter, List.controller);
+        Radio.reply('appNote', 'filter', List.controller.filter, List.controller);
     });
 
     List.on('before:stop', function() {
-        Radio.channel('appNote').stopComplying('filter');
+        Radio.channel('appNote').stopReplying('filter');
         List.controller.destroy();
-        delete List.controller;
+        List.controller = null;
     });
 
     return List;

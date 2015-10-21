@@ -63,7 +63,7 @@ define([
 
         describe('Check auth', function() {
             it('checkAuth()', function() {
-                radio.command('delete:secureKey');
+                radio.request('delete:secureKey');
                 expect(encrypt.checkAuth()).to.be.equal(false);
             });
 
@@ -180,13 +180,13 @@ define([
                     });
 
                     it('can change configs', function() {
-                        radio.command('change:configs', newConfigs);
+                        radio.request('change:configs', newConfigs);
                         var result = radio.request('check:password', '2');
                         expect(result).to.be.equal(true);
                     });
 
                     it('can decrypt with old configs', function(done) {
-                        radio.command('change:configs', configs);
+                        radio.request('change:configs', configs);
 
                         radio.request('save:secureKey', '1')
                         .then(function() {
@@ -201,7 +201,7 @@ define([
                     });
 
                     it('can encrypt and decrypt with new configs', function(done) {
-                        radio.command('change:configs', newConfigs);
+                        radio.request('change:configs', newConfigs);
 
                         radio.request('save:secureKey', '2')
                         .then(function() {
@@ -219,7 +219,7 @@ define([
                     });
 
                     it('async re-encryption', function(done) {
-                        radio.command('change:configs', configs);
+                        radio.request('change:configs', configs);
 
                         radio.request('save:secureKey', '1')
                         .then(function() {
@@ -231,7 +231,7 @@ define([
                             });
                         })
                         .then(function() {
-                            radio.command('change:configs', newConfigs);
+                            radio.request('change:configs', newConfigs);
                             return radio.request('save:secureKey', '2');
                         })
                         .then(function() {

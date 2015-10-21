@@ -17,17 +17,17 @@ define([
      * 1. channel: `global`, event: `form:show`
      *    shows notebooks form
      *
-     * Complies to commands on channel `appNotebooks`:
-     * 1. command: `notebooks:remove`
+     * Replies to requests on channel `appNotebooks`:
+     * 1. request: `notebooks:remove`
      *    removes specified notebook.
-     * 2. command: `tags:remove`
+     * 2. request: `tags:remove`
      *    removes specified tag.
-     * 3. command: `show:form`
-     *    it always complies to this command. After receiving the command, it
+     * 3. request: `show:form`
+     *    it always replies to this request. After receiving the request, it
      *    shows notebook form without starting this module.
      *
-     * Triggers commands:
-     * 1. channel: `navbar`, command: `start`
+     * Triggers requests:
+     * 1. channel: `navbar`, request: `start`
      */
     var Notebooks = App.module('AppNotebooks', {startWithParent: false}),
         startModule,
@@ -117,7 +117,7 @@ define([
         },
 
         _navigateForm: function() {
-            Radio.command('uri', 'navigate', '/notebooks/add', {includeProfile: true});
+            Radio.request('uri', 'navigate', '/notebooks/add', {includeProfile: true});
         }
     };
 
@@ -128,10 +128,10 @@ define([
         // Start the sidebar module
         SidebarApp.start(options);
 
-        // Comply to commands
+        // Reply to requests
         Radio.channel('appNotebooks')
-        .comply('notebooks:remove', controller._removeNotebook, controller)
-        .comply('tags:remove', controller._removeTag, controller);
+        .reply('notebooks:remove', controller._removeNotebook, controller)
+        .reply('tags:remove', controller._removeTag, controller);
 
         // Listen to events
         this.listenTo(Radio.channel('global'), 'form:show', controller._navigateForm);
@@ -147,16 +147,16 @@ define([
             delete Notebooks.currentApp;
         }
 
-        // Stop responding to commands and requests
+        // Stop responding to requests and requests
         Radio.channel('appNotebooks')
-        .stopComplying('notebooks:remove tags:remove');
+        .stopReplying('notebooks:remove tags:remove');
 
         // Stop listening to events
         this.stopListening();
     });
 
-    Radio.command('init', 'add', 'app', function() {
-        Radio.comply('appNotebooks', 'show:form', controller.notebookForm, controller);
+    Radio.request('init', 'add', 'app', function() {
+        Radio.reply('appNotebooks', 'show:form', controller.notebookForm, controller);
     });
 
     App.on('before:start', function() {

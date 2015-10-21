@@ -11,8 +11,8 @@ define([
     /**
      * Navbar module.
      *
-     * Complies to commands:
-     * 1. channel: `navbar`, command: `start`
+     * Replies to requests:
+     * 1. channel: `navbar`, reply: `start`
      *    starts itself.
      */
     var Navbar = Modules.module('Navbar', {startWithParent: false});
@@ -27,10 +27,10 @@ define([
     });
 
     // Initializer
-    Radio.command('init', 'add', 'app:before', function() {
-        Radio.comply('navbar', 'stop', Navbar.stop, Navbar);
+    Radio.request('init', 'add', 'app:before', function() {
+        Radio.reply('navbar', 'stop', Navbar.stop, Navbar);
 
-        Radio.comply('navbar', 'start', function(options) {
+        Radio.reply('navbar', 'start', function(options) {
             // Just trigger an event
             if (Navbar._isInitialized) {
                 return Navbar.controller.trigger('change:title', options);

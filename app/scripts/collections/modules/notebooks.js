@@ -16,13 +16,11 @@ define([
      * 1. this.collection, event: `reset:all`
      *    destroys the current collection.
      *
-     * Complies to commands on channel `notebooks`:
-     * 1. `remove` - removes an existing model.
-     * 2. `save`   - adds a new model or updates an existing one.
-     *
      * Replies to requests on channel `notebooks`:
      * 1. `get:all`  - returns a collection.
      * 2. `get:model` - returns a model with the specified ID.
+     * 3. `remove` - removes an existing model.
+     * 4. `save`   - adds a new model or updates an existing one.
      *
      * Triggers events:
      * 1. `add:model` to a collection that is currently under use
@@ -35,15 +33,10 @@ define([
     var Collection = ModuleObject.extend({
         Collection: Notebooks,
 
-        comply: function() {
-            return {
-                'remove' : this.remove,
-                'save'   : this.save
-            };
-        },
-
         reply: function() {
             return {
+                'remove'    : this.remove,
+                'save'      : this.save,
                 'save:all'  : this.saveAll,
                 'get:all'   : this.getNotebooks,
                 'get:model' : this.getById
@@ -123,7 +116,7 @@ define([
     });
 
     // Initialize it automaticaly
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Collection();
     });
 

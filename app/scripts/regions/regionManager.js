@@ -21,19 +21,19 @@ define([
     });
 
     Radio.channel('global')
-    .comply('region:show', function(region, view) {
+    .reply('region:show', function(region, view) {
         rm.get(region).show(view);
         Radio.trigger('region', region + ':shown');
     })
-    .comply('region:empty', function(region) {
+    .reply('region:empty', function(region) {
         Radio.trigger('region', region + ':hidden');
         rm.get(region).empty();
     })
-    .comply('region:visible', function(region, hideClass) {
+    .reply('region:visible', function(region, hideClass) {
         region = rm.get(region);
         region.$el.removeClass(hideClass || 'hidden');
     })
-    .comply('region:hide', function(region, hideClass) {
+    .reply('region:hide', function(region, hideClass) {
         region = rm.get(region);
         region.$el.addClass(hideClass || 'hidden');
     });

@@ -11,8 +11,8 @@ define([
     /**
      * Notebooks view. It shows a selector of notebooks.
      *
-     * Commands:
-     * 1. channel: `appNotebooks`, command: `show:form`
+     * requests:
+     * 1. channel: `appNotebooks`, request: `show:form`
      *    in order to show the notebook form.
      */
     var View = Marionette.CompositeView.extend({
@@ -44,7 +44,7 @@ define([
 
         addNotebook: function() {
             if (this.ui.notebookId.find('.addNotebook').is(':selected')) {
-                Radio.command('appNotebooks', 'show:form');
+                Radio.request('appNotebooks', 'show:form');
                 this.ui.notebookId.val(this.options.activeId);
             }
         }

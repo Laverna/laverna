@@ -34,7 +34,7 @@ define([
         },
 
         toggleFavorite: function() {
-            Radio.command('notes', 'save', this.model, this.model.toggleFavorite());
+            Radio.request('notes', 'save', this.model, this.model.toggleFavorite());
             return false;
         },
 

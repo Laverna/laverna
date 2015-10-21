@@ -35,7 +35,7 @@ define([
     });
 
     // Add a global module initializer
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         console.info('Pagedown module has been initialized');
 
         Radio.channel('notesForm')

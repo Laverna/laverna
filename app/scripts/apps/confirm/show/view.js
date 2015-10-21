@@ -4,8 +4,8 @@ define([
     'marionette',
     'backbone.radio',
     'text!apps/confirm/show/template.html',
-    'backbone.mousetrap'
-], function(_, Marionette, Radio, Tmpl) {
+    'mousetrap'
+], function(_, Marionette, Radio, Tmpl, Mousetrap) {
     'use strict';
 
     /**
@@ -18,10 +18,6 @@ define([
 
         events: {
             'click .modal-footer .btn': 'triggerEvent'
-        },
-
-        keyboardEvents: {
-            'tab': 'focusNextBtn',
         },
 
         serializeData: function() {
@@ -41,9 +37,16 @@ define([
                 this.template = _.template(this.options.template);
             }
 
+            _.bindAll(this, 'focusNextBtn');
+            Mousetrap.bind('tab', this.focusNextBtn);
+
             // Events
             this.on('shown.modal', this.onShown, this);
             this.on('hidden.modal', this.refuseOnHide, this);
+        },
+
+        onDestroy: function() {
+            Mousetrap.unbind('tab');
         },
 
         onShown: function() {

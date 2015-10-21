@@ -42,7 +42,7 @@ define([
         show: function() {
             // Instantiate a view
             this.view = new View(this.options);
-            Radio.command('global', 'region:show', 'modal', this.view);
+            Radio.request('global', 'region:show', 'modal', this.view);
 
             // Events
             this.listenTo(this.view, 'click', this.triggerEvent);
@@ -55,7 +55,7 @@ define([
             Radio.trigger('Confirm', event);
 
             // Stop itself
-            Radio.command('Confirm', 'stop');
+            Radio.request('Confirm', 'stop');
         }
 
     });

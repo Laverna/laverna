@@ -19,8 +19,8 @@ define([
      * Listens to the following events:
      * 1. channel: notes, event: save:after
      *
-     * Commands:
-     * 1. channel: notes, command: save
+     * requests:
+     * 1. channel: notes, request: save
      *    to save the changes.
      */
     var Controller = Marionette.Object.extend({
@@ -69,7 +69,7 @@ define([
             });
 
             // Show the view and trigger an event
-            Radio.command('global', 'region:show', 'content', this.view);
+            Radio.request('global', 'region:show', 'content', this.view);
             this.view.trigger('rendered');
 
             // Show notebooks selector
@@ -85,7 +85,7 @@ define([
         },
 
         save: function() {
-            Radio.command('notes', 'save', this.view.model, this.getContent());
+            Radio.request('notes', 'save', this.view.model, this.getContent());
         },
 
         getContent: function() {
@@ -106,7 +106,7 @@ define([
                 return this.redirect();
             }
 
-            Radio.command('Confirm', 'start', $.t('You have unsaved changes.'));
+            Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
         },
 
         redirect: function() {
@@ -116,7 +116,7 @@ define([
 
             // Stop the module and navigate back
             Radio.trigger('notesForm', 'stop');
-            Radio.command('uri', 'back');
+            Radio.request('uri', 'back');
         },
 
         onConfirmCancel: function() {

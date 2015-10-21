@@ -16,10 +16,6 @@ define([
         Collection: Notes,
         defaultDB : 'notes-db',
 
-        comply: function() {
-            return {};
-        },
-
         defaultReplies: function() {
             return {
                 'save:raw'    : this.saveRaw,
@@ -38,7 +34,6 @@ define([
             this.vent    = Radio.channel(this.Collection.prototype.storeName);
             this.storage = Radio.request('global', 'storage');
 
-            this.vent.comply(this.comply(), this);
             this.vent.reply(_.extend(this.defaultReplies(), this.reply()), this);
 
             // Listen to events

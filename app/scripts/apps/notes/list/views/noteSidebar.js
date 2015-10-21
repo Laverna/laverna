@@ -6,8 +6,8 @@ define([
     'views/loader',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
-    'backbone.mousetrap'
-], function(_, Marionette, Radio, LoaderView, NoteSidebarItem, Tmpl) {
+    'mousetrap'
+], function(_, Marionette, Radio, LoaderView, NoteSidebarItem, Tmpl, Mousetrap) {
     'use strict';
 
     /**
@@ -26,8 +26,6 @@ define([
         childViewContainer :  '.list',
         childViewOptions   :  {},
         emptyView          : LoaderView,
-
-        keyboardEvents     :  {},
 
         ui: {
             pageNav  : '#pageNav',
@@ -57,14 +55,18 @@ define([
             this.configs = Radio.request('configs', 'get:object');
 
             // Shortcuts
-            this.keyboardEvents[this.configs.navigateBottom] = 'toNextNote';
-            this.keyboardEvents[this.configs.navigateTop] = 'toPreviousNote';
+            Mousetrap.bind(this.configs.navigateBottom, this.toNextNote);
+            Mousetrap.bind(this.configs.navigateTop, this.toPreviousNote);
 
             // Events
             this.listenTo(Radio.channel('notes'), 'model:navigate', this.modelFocus, this);
 
             // Pass options to childView
             this.childViewOptions.args = this.options.args;
+        },
+
+        onDestroy: function() {
+            Mousetrap.unbind([this.configs.navigateBottom, this.configs.navigateTop]);
         },
 
         onBeforeRender: function() {
@@ -121,7 +123,7 @@ define([
         navigatePage: function(number) {
             this.options.args.page = this.collection.state.currentPage + number;
 
-            Radio.command(
+            Radio.request(
                 'uri', 'navigate',
                 {options: this.options.args}, {trigger: false}
             );

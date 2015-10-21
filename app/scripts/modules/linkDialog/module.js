@@ -31,7 +31,7 @@ define([
         delete LinkDialog.controller;
     });
 
-    Radio.command('init', 'add', 'editor:before', function(editor) {
+    Radio.request('init', 'add', 'editor:before', function(editor) {
         // Register a hook
         editor.hooks.set('insertLinkDialog', function(fnc) {
             LinkDialog.start({callback: fnc});
@@ -40,7 +40,7 @@ define([
     });
 
     // Stop the module when editor is closed
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         Radio.on('editor', 'destroy', LinkDialog.stop, LinkDialog);
     });
 

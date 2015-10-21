@@ -39,7 +39,6 @@ requirejs.config({
         marionette            : '../bower_components/marionette/lib/core/backbone.marionette',
         'backbone.radio'      : '../bower_components/backbone.radio/build/backbone.radio.min',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
-        'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
         fuse                  : '../bower_components/fuse/src/fuse',
 
         // Mousetrap
@@ -94,9 +93,6 @@ requirejs.config({
         backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
-        },
-        'backbone.mousetrap': {
-            deps: ['mousetrap', 'mousetrap.pause', 'backbone']
         },
 
         // Storage adapters

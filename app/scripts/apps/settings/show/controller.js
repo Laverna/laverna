@@ -17,16 +17,16 @@ define([
      * 1. channel: `AppSettings`, replies: `has:changes`
      *    if there are some changes, show a confirm message
      *
-     * Commands:
-     * 1. channel: `AppSettings`, command: `activate`
-     * 2. channel: `global`, command: `region:empty`
-     * 3. channel: `global`, command: `region:show`
-     * 4. channel: `configs`, command: `create:profile`
-     * 5. channel: `configs`, command: `remove:profile`
-     * 6. channel: `configs`, command: `save:objects`
-     * 7. channel: `Confirm`, command: `start`
-     * 8. channel: `uri`, command: `navigate`
-     * 9. channel: `navbar`, command: `stop`
+     * requests:
+     * 1. channel: `AppSettings`, request: `activate`
+     * 2. channel: `global`, request: `region:empty`
+     * 3. channel: `global`, request: `region:show`
+     * 4. channel: `configs`, request: `create:profile`
+     * 5. channel: `configs`, request: `remove:profile`
+     * 6. channel: `configs`, request: `save:objects`
+     * 7. channel: `Confirm`, request: `start`
+     * 8. channel: `uri`, request: `navigate`
+     * 9. channel: `navbar`, request: `stop`
      */
     var Controller = Marionette.Object.extend({
 
@@ -38,7 +38,7 @@ define([
             this.saves   = {};
 
             // Activate tab in sidebar
-            Radio.command('AppSettings', 'activate:tab', this.options.tab);
+            Radio.request('AppSettings', 'activate:tab', this.options.tab);
 
             // Fetch configs
             Q.all([
@@ -59,7 +59,7 @@ define([
         onDestroy: function() {
             this.stopListening();
             Radio.stopReplying('AppSettings', 'has:changes');
-            Radio.command('global', 'region:empty', 'content');
+            Radio.request('global', 'region:empty', 'content');
         },
 
         /**
@@ -72,7 +72,7 @@ define([
 
             // Instantiate layout view and show it
             this.layout = new View(this.options);
-            Radio.command('global', 'region:show', 'content', this.layout);
+            Radio.request('global', 'region:show', 'content', this.layout);
 
             // Load tab view
             requirejs(['apps/settings/show/views/' + this.options.tab], this.show);
@@ -122,7 +122,7 @@ define([
          * Create a new profile.
          */
         createProfile: function(name) {
-            Radio.command('configs', 'create:profile', this.profiles, name);
+            Radio.request('configs', 'create:profile', this.profiles, name);
         },
 
         /**
@@ -131,7 +131,7 @@ define([
         confirmRmProfile: function(name) {
             var self = this;
 
-            Radio.command('Confirm', 'start', {
+            Radio.request('Confirm', 'start', {
                 content   : $.t('profile.confirm remove', {profile: name}),
                 onconfirm : function() {
                     self.removeProfile(name);
@@ -143,7 +143,7 @@ define([
          * Remove a profile
          */
         removeProfile: function(name) {
-            Radio.command('configs', 'remove:profile', this.profiles, name);
+            Radio.request('configs', 'remove:profile', this.profiles, name);
         },
 
         save: function() {
@@ -153,7 +153,7 @@ define([
             }
 
             Radio.channel('configs')
-            .command('save:objects', this.changes, this.useDefault);
+            .request('save:objects', this.changes, this.useDefault);
 
             this.saves = _.union(this.saves, this.changes);
             this.changes = {};
@@ -171,7 +171,7 @@ define([
                     self.changes = JSON.parse(evt.target.result);
                     self.save();
                 } catch (e) {
-                    Radio.command('Confirm', 'start', {
+                    Radio.request('Confirm', 'start', {
                         title   : $.t('Wrong format'),
                         content : $.t('File chould be in json format')
                     });
@@ -213,7 +213,7 @@ define([
                 return onconfirm();
             }
 
-            Radio.command('Confirm', 'start', {
+            Radio.request('Confirm', 'start', {
                 content   : $.t('You have unsaved changes.'),
                 onconfirm : onconfirm,
                 onreject  : onreject
@@ -221,7 +221,7 @@ define([
         },
 
         redirect: function() {
-            Radio.command('uri', 'navigate', '/notes', {
+            Radio.request('uri', 'navigate', '/notes', {
                 trigger        : false,
                 includeProfile : true
             });

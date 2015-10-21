@@ -21,16 +21,16 @@ define([
         onDestroy: function() {
             this.stopListening();
             this.view.trigger('destroy');
-            Radio.command('global', 'region:empty', 'sidebarNavbar');
+            Radio.request('global', 'region:empty', 'sidebarNavbar');
         },
 
         show: function() {
             this.view = new View(this.options);
-            Radio.command('global', 'region:show', 'sidebar', this.view);
+            Radio.request('global', 'region:show', 'sidebar', this.view);
 
             // Show a different Navbar
-            Radio.command('navbar', 'stop');
-            Radio.command('global', 'region:show', 'sidebarNavbar', new Navbar());
+            Radio.request('navbar', 'stop');
+            Radio.request('global', 'region:show', 'sidebarNavbar', new Navbar());
         }
 
     });

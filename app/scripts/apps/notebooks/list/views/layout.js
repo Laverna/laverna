@@ -4,8 +4,8 @@ define([
     'marionette',
     'backbone.radio',
     'text!apps/notebooks/list/templates/layout.html',
-    'backbone.mousetrap'
-], function(_, Marionette, Radio, Tmpl) {
+    'mousetrap'
+], function(_, Marionette, Radio, Tmpl, Mousetrap) {
     'use strict';
 
     /**
@@ -20,8 +20,8 @@ define([
      * 1. `navigate:next` to currently active region
      * 2. `navigate:previous` to currently active region
      *
-     * Commands:
-     * 1. channel: `uri`, command: `navigate`
+     * requests:
+     * 1. channel: `uri`, request: `navigate`
      */
     var View = Marionette.LayoutView.extend({
         template: _.template(Tmpl),
@@ -31,26 +31,31 @@ define([
             tags      :  '#tags'
         },
 
-        keyboardEvents: {
-            // 'enter'  : 'openActive'
-        },
-
         // Default active region is `notebooks`
         activeRegion: 'notebooks',
 
         initialize: function() {
+            _.bindAll(this, 'triggerNext', 'triggerPrevious', 'openActive', 'openEdit', 'triggerRemove');
+
             // Register keyboard events
-            this.keyboardEvents[this.options.configs.navigateBottom] = 'triggerNext';
-            this.keyboardEvents[this.options.configs.navigateTop]    = 'triggerPrevious';
-            this.keyboardEvents[this.options.configs.actionsOpen]    = 'openActive';
-            this.keyboardEvents[this.options.configs.actionsEdit]    = 'openEdit';
-            this.keyboardEvents[this.options.configs.actionsRemove]  = 'triggerRemove';
+            Mousetrap.bind(this.options.configs.navigateBottom, this.triggerNext);
+            Mousetrap.bind(this.options.configs.navigateTop, this.triggerPrevious);
+            Mousetrap.bind(this.options.configs.actionsOpen, this.openActive);
+            Mousetrap.bind(this.options.configs.actionsEdit, this.openEdit);
+            Mousetrap.bind(this.options.configs.actionsRemove, this.triggerRemove);
 
             // Listen to events
             this.listenTo(Radio.channel('appNotebooks'), 'change:region', this.changeRegion);
         },
 
         onBeforeDestroy: function() {
+            Mousetrap.unbind([
+                this.options.configs.navigateBottom,
+                this.options.configs.navigateTop,
+                this.options.configs.actionsOpen,
+                this.options.configs.actionsEdit,
+                this.options.configs.actionsRemove
+            ]);
             this.stopListening();
         },
 
@@ -70,12 +75,12 @@ define([
 
         openActive: function() {
             var $a = this.$('.list-group-item.active');
-            Radio.command('uri', 'navigate', $a.attr('href'));
+            Radio.request('uri', 'navigate', $a.attr('href'));
         },
 
         openEdit: function() {
             var $a = this.$('.list-group-item.active').parent().find('.edit-link:first');
-            Radio.command('uri', 'navigate', $a.attr('href'));
+            Radio.request('uri', 'navigate', $a.attr('href'));
         },
 
         changeRegion: function(regionName, direction) {

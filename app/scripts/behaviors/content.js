@@ -45,16 +45,16 @@ define([
          * Show only the content
          */
         showContent: function() {
-            Radio.command('global', 'region:hide', 'sidebar', 'hidden-xs');
-            Radio.command('global', 'region:visible', 'content', 'hidden-xs');
+            Radio.request('global', 'region:hide', 'sidebar', 'hidden-xs');
+            Radio.request('global', 'region:visible', 'content', 'hidden-xs');
         },
 
         /**
          * Show only the sidebar.
          */
         showSidebar: function() {
-            Radio.command('global', 'region:visible', 'sidebar', 'hidden-xs');
-            Radio.command('global', 'region:hide', 'content', 'hidden-xs');
+            Radio.request('global', 'region:visible', 'sidebar', 'hidden-xs');
+            Radio.request('global', 'region:hide', 'content', 'hidden-xs');
         }
 
     });

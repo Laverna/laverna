@@ -35,7 +35,7 @@ define([
      * 3. channel: editor, event: generate:image
      *    generates Markdown code for an image.
      *
-     * Complies:
+     * Replies:
      * 1. channel: editor, event: insert
      *    inserts text to the editor.
      */
@@ -54,7 +54,7 @@ define([
             });
 
             // Show the view and render Pagedown editor
-            Radio.command('notesForm', 'show:editor', this.view);
+            Radio.request('notesForm', 'show:editor', this.view);
 
             // Listen to events
             this.vent = Radio.channel('editor');
@@ -65,8 +65,8 @@ define([
             this.vent.reply('generate:link', this.getLinkCode, this);
             this.vent.reply('generate:image', this.getImageCode, this);
 
-            // Complies
-            this.vent.comply('insert', this.insertText, this);
+            // Replies
+            this.vent.reply('insert', this.insertText, this);
 
             return new Q(this.initMdEditor())
             .then(this.initAce)

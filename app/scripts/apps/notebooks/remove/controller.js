@@ -13,10 +13,10 @@ define([
      * Listens to events on channel `[notebooks|tags]`:
      * 1. event: `model:destroy`
      *
-     * Commands:
-     * 1. channel: [notebooks|tags], command: `remove`
+     * requests:
+     * 1. channel: [notebooks|tags], request: `remove`
      *    expects that the model will be destroyed.
-     * 2. channel: `Confirm`, command: `start`
+     * 2. channel: `Confirm`, request: `start`
      */
     var Controller = Marionette.Object.extend({
 
@@ -45,18 +45,18 @@ define([
         showConfirm: function(model) {
             this.model = model;
 
-            Radio.command('Confirm', 'start', {
+            Radio.request('Confirm', 'start', {
                 content : $.t(model.storeName + '.confirm remove', model.toJSON()),
                 template: model.storeName === 'notebooks' ? Tmpl : undefined
             });
         },
 
         remove: function() {
-            this.channel.command('remove', this.model);
+            this.channel.request('remove', this.model);
         },
 
         removeWithNotes: function() {
-            this.channel.command('remove', this.model, true);
+            this.channel.request('remove', this.model, true);
         }
 
     });

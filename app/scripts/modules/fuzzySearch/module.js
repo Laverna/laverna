@@ -23,10 +23,10 @@ define([
      * 2. channel: `global`, event: `search:hidden`
      *    stops itself
      *
-     * Commands:
-     * 1. channel: `fuzzySearch`, command: `region:show`
+     * Requests:
+     * 1. channel: `fuzzySearch`, request: `region:show`
      *    renders the provided view in fuzzy search region
-     * 2. channel: `fuzzySearch`, command: `region:empty`
+     * 2. channel: `fuzzySearch`, request: `region:empty`
      */
     var Fuzzy = Modules.module('FuzzySearch', {});
 
@@ -43,11 +43,11 @@ define([
         console.info('FuzzySearch module has stoped');
 
         Fuzzy.controller.destroy();
-        delete Fuzzy.controller;
+        Fuzzy.controller = null;
     });
 
     // Add a global module initializer
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         console.info('FuzzySearch module has been initialized');
 
         // Create a new region
@@ -63,8 +63,8 @@ define([
 
         // Module events
         Radio.channel('fuzzySearch')
-        .comply('region:show', region.show, region)
-        .comply('region:empty', region.empty, region);
+        .reply('region:show', region.show, region)
+        .reply('region:empty', region.empty, region);
     });
 
     return Fuzzy;

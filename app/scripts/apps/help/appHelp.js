@@ -55,8 +55,8 @@ define([
     });
 
     // Add initializer
-    Radio.command('init', 'add', 'app', function() {
-        Radio.comply('Help', {
+    Radio.request('init', 'add', 'app', function() {
+        Radio.reply('Help', {
             'show:about'        : controller.about,
             'show:keybindings'  : controller.keybindings
         }, controller);

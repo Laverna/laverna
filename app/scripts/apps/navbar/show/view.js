@@ -117,7 +117,7 @@ define([
 
         showAbout: function(e) {
             e.preventDefault();
-            Radio.command('Help', 'show:about');
+            Radio.request('Help', 'show:about');
         },
 
         searchKeyup: function(e) {

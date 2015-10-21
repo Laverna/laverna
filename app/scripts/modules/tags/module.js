@@ -66,7 +66,7 @@ define([
         }
     };
 
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         // Setup regex
         Tags.configure();
 

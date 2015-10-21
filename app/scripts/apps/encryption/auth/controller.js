@@ -19,14 +19,14 @@ define([
 
         onDestroy: function() {
             this.stopListening();
-            Radio.command('global', 'region:empty', 'brand');
+            Radio.request('global', 'region:empty', 'brand');
         },
 
         show: function() {
             this.view = new View();
 
             // Show auth form
-            Radio.command('global', 'region:show', 'brand', this.view);
+            Radio.request('global', 'region:show', 'brand', this.view);
             this.view.trigger('shown');
 
             // Events
@@ -40,7 +40,7 @@ define([
 
             Radio.request('encrypt', 'save:secureKey', pwd)
             .then(function() {
-                Radio.command('uri', 'back');
+                Radio.request('uri', 'back');
             });
         }
 

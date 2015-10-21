@@ -10,15 +10,10 @@ define([
     /**
      * Uri helper. It is a convenient module that we use to navigate
      * or do some URI related stuff.
-     * It listens to commands and requests on `uri` channel.
+     * It listens to requests on `uri` channel.
      *
      * Responds to:
      * -----------
-     * Commands:
-     * 1. command: `navigate`
-     *    navigate to provided URL.
-     * 2. command: `back`
-     *    it navigates to the previous page.
      *
      * Requests:
      * 1. request: `profile`
@@ -29,6 +24,10 @@ define([
      *    generates and returns a link to notes list or to a note.
      * 4. request: `link:file`
      *    generate file URL.
+     * 5. request: `navigate`
+     *    navigate to provided URL.
+     * 6. request: `back`
+     *    it navigates to the previous page.
      */
     var Uri = Marionette.Object.extend({
 
@@ -39,10 +38,10 @@ define([
             _.bindAll(this, 'checkProfile');
             $(window).on('hashchange', this.checkProfile);
 
-            // Commands
+            // Replies
             this.vent
-            .comply('navigate', this.navigate, this)
-            .comply('back', this.navigateBack, this);
+            .reply('navigate', this.navigate, this)
+            .reply('back', this.navigateBack, this);
 
             // Replies
             this.vent
@@ -159,7 +158,7 @@ define([
     /**
      * Add a new initializer
      */
-    Radio.command('init', 'add', 'app', function() {
+    Radio.request('init', 'add', 'app', function() {
         new Uri();
     });
 

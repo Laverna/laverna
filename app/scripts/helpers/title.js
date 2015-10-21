@@ -15,8 +15,8 @@ define([
      * Replies to:
      * 1. channel: `global`, request: `get:title`
      *
-     * Complies to:
-     * 1. channel: `global`, command: `set:title`
+     * Replies to:
+     * 1. channel: `global`, request: `set:title`
      */
     var Controller = Marionette.Object.extend({
 
@@ -31,13 +31,12 @@ define([
 
             this.vent = Radio.channel('global');
             this.vent.reply('get:title', this.getTitle, this);
-            this.vent.comply('set:title', this.setTitle, this);
+            this.vent.reply('set:title', this.setTitle, this);
         },
 
         onDestroy: function() {
             this.vent
-            .stopReplying('get:title')
-            .stopComplying('set:title');
+            .stopReplying('get:title set:title');
         },
 
         /**
@@ -82,7 +81,7 @@ define([
             }
 
             // Change document.title and return the title
-            this.vent.command('set:title', title, 'main');
+            this.vent.request('set:title', title, 'main');
             return title;
         },
 
@@ -101,7 +100,7 @@ define([
 
     });
 
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Controller();
     });
 

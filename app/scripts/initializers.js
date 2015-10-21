@@ -16,7 +16,7 @@ define([
      * App initializers will be executed first. Then, module initializers.
      *
      * Adding new initializers:
-     * Radio.command('init', 'add', '[app|app:before|module]', function() {});
+     * Radio.request('init', 'add', '[app|app:before|module]', function() {});
      *
      * Executing initializers
      * Radio.request('init', 'start', '[app|app:before|module]', args);
@@ -27,7 +27,7 @@ define([
             this._inits = {};
 
             Radio.channel('init')
-            .comply('add', this.addInit, this)
+            .reply('add', this.addInit, this)
             .reply('start', this.executeInits, this);
         },
 

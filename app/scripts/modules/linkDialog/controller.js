@@ -19,7 +19,7 @@ define([
 
             // Instantiate and show the view
             this.layout = new Layout();
-            Radio.command('global', 'region:show', 'modal', this.layout);
+            Radio.request('global', 'region:show', 'modal', this.layout);
 
             // Prefetch notes
             this.wait = Radio.request('notes', 'fetch', {
@@ -41,7 +41,7 @@ define([
             }
 
             this.stopListening();
-            Radio.command('global', 'region:empty', 'modal');
+            Radio.request('global', 'region:empty', 'modal');
         },
 
         renderDropdown: function(notes) {

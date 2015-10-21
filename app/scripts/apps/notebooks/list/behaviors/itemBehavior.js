@@ -9,8 +9,8 @@ define([
     /**
      * Item behavior class for notebooks and tags views.
      *
-     * Triggers commands:
-     * 1. channel: `appNotebooks`, command: `[notebooks|tags]:remove`
+     * Triggers requests:
+     * 1. channel: `appNotebooks`, request: `[notebooks|tags]:remove`
      *    expects that the provided model will be removed.
      */
     var ItemBehavior = Marionette.Behavior.extend({
@@ -24,7 +24,7 @@ define([
 
         triggerRemove: function() {
             var event = this.view.model.storeName + ':remove';
-            Radio.command('appNotebooks', event, null, this.view.model.id);
+            Radio.request('appNotebooks', event, null, this.view.model.id);
             return false;
         },
 

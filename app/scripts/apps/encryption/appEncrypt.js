@@ -70,11 +70,11 @@ define([
 
         // On encrypt/decrypt error, remove PBKDF2 key from the session
         _confirmAuth: function() {
-            Radio.command('Confirm', 'start', {
+            Radio.request('Confirm', 'start', {
                 title     : 'encryption.error',
                 content   : $.t('encryption.errorConfirm'),
                 onconfirm : function() {
-                    Radio.command('encrypt', 'delete:secureKey');
+                    Radio.request('encrypt', 'delete:secureKey');
                     window.location.reload();
                 }
             });
@@ -107,7 +107,7 @@ define([
     });
 
     // Check whether a user is authorized when everything is ready
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         Radio.on('encrypt', 'changed', controller._navigateEncrypt, controller);
         Radio.on('encrypt', 'decrypt:error', controller._confirmAuth, controller);
 

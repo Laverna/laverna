@@ -24,7 +24,7 @@ define([
             this.options = options;
 
             // Show the navbar and change document title
-            Radio.command('navbar', 'start', {
+            Radio.request('navbar', 'start', {
                 title  : 'Notebooks & Tags',
                 filter : 'notebook'
             });
@@ -37,7 +37,7 @@ define([
         },
 
         onDestroy: function() {
-            Radio.command('global', 'region:empty', 'sidebar');
+            Radio.request('global', 'region:empty', 'sidebar');
         },
 
         show: function(notebooks, tags) {
@@ -45,7 +45,7 @@ define([
                 configs: Radio.request('configs', 'get:object')
             });
 
-            Radio.command('global', 'region:show', 'sidebar', this.view);
+            Radio.request('global', 'region:show', 'sidebar', this.view);
 
             // Show notebooks
             this.view.notebooks.show(new NotebooksView({

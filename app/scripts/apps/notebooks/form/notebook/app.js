@@ -11,19 +11,19 @@ define([
     /**
      * Notebook form module.
      *
-     * Complies to commands on channel `appNotebooks`
-     * 1. command: `form:stop` - stops itself.
+     * Replies to requests on channel `appNotebooks`
+     * 1. request: `form:stop` - stops itself.
      */
     var Form = App.module('AppNotebooks.Form.Notebook', {startWithParent: false});
 
     Form.on('before:start', function(options) {
         Form.controller = new Controller(options);
 
-        Radio.comply('appNotebooks', 'form:stop', Form.stop, Form);
+        Radio.reply('appNotebooks', 'form:stop', Form.stop, Form);
     });
 
     Form.on('before:stop', function() {
-        Radio.stopComplying('appNotebooks', 'form:stop');
+        Radio.stopReplying('appNotebooks', 'form:stop');
 
         Form.controller.destroy();
         delete Form.controller;

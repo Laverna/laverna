@@ -11,13 +11,11 @@ define([
     /**
      * Encryption class.
      *
-     * Complies to commands on channel `encrypt`:
-     * 1. `change:configs`   - changes encryption configs.
-     * 2. `delete:secureKey` - delete PBKDF2 from session storage.
-     *
      * Replies to requests on channel `encrypt`:
      * 1. `sha256`          - generates and returns sha256 hash of provided string.
      * 2. `randomize`       - generates and returns random data.
+     * 3. `change:configs`   - changes encryption configs.
+     * 4. `delete:secureKey` - delete PBKDF2 from session storage.
      *
      * 3. `check:auth`      - checks whether a user is authorized.
      * 4. `check:password`  - validate provided password.
@@ -37,8 +35,8 @@ define([
             this.configs = Radio.request('configs', 'get:object');
             this.options = {};
 
-            // Complies
-            Radio.comply('encrypt', {
+            // Replies
+            Radio.reply('encrypt', {
                 'change:configs'   : this.changeConfigs,
                 'delete:secureKey' : this.deleteSecureKey
             }, this);
@@ -368,7 +366,7 @@ define([
     });
 
     // Initialize
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Encrypt();
     });
 

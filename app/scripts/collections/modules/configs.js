@@ -25,27 +25,20 @@ define([
      * 5. request: `get:profiles`   - returns list of profiles
      * 6. request: `reset:encrypt`  - resets encryption configs backup.
      *                                Returns promise.
-     *
-     * Complies on channel `configs` to:
-     * 1. command: `save`           - saves changes to a model
-     * 2. command: `save:objects`   - save several configs at once
-     * 3. command: `create:profile` - create a new profile
-     * 3. command: `remove:profile` - remove a profile
+     * 7. request: `save`           - saves changes to a model
+     * 8. request: `save:objects`   - save several configs at once
+     * 9. request: `create:profile` - create a new profile
+     * 10. request: `remove:profile` - remove a profile
      */
     var Collection = ModuleObject.extend({
         Collection: Configs,
 
-        comply: function() {
+        reply: function() {
             return {
                 'save'           : this.saveModel,
                 'save:objects'   : this.saveObjects,
                 'create:profile' : this.createProfile,
-                'remove:profile' : this.removeProfile
-            };
-        },
-
-        reply: function() {
-            return {
+                'remove:profile' : this.removeProfile,
                 'get:config'     : this.getConfig,
                 'get:object'     : this.getObject,
                 'get:all'        : this.getConfigs,

@@ -26,12 +26,12 @@ define([
 
         initialize: function() {
             Radio.channel('AppSettings')
-            .comply('activate:tab', this.activateTab, this);
+            .reply('activate:tab', this.activateTab, this);
         },
 
         onDestroy: function() {
             Radio.channel('AppSettings')
-            .stopComplying('activate:tab');
+            .stopReplying('activate:tab');
         },
 
         onRender: function() {
@@ -46,7 +46,7 @@ define([
 
             Radio.request('AppSettings', 'has:changes')
             .then(function() {
-                Radio.command('uri', 'navigate', $(e.currentTarget).attr('href'));
+                Radio.request('uri', 'navigate', $(e.currentTarget).attr('href'));
             });
         },
 

@@ -16,14 +16,12 @@ define([
      * 1. this.collection, event: `reset:all`
      *    destroys the current collection.
      *
-     * Complies to commands on channel `tags`:
-     * 1. `remove` - removes an existing model.
-     * 2. `save`   - adds a new model or updates an existing one.
-     *
      * Replies to requests on channel `tags`:
      * 1. `get:all`  - returns a collection.
      * 2. `get:model` - returns a model with the specified ID.
      * 3. `add`       - add several tags at once.
+     * 4. `remove` - removes an existing model.
+     * 5. `save`   - adds a new model or updates an existing one.
      *
      * Triggers events:
      * 1. `add:model` to a collection that is currently under use
@@ -36,15 +34,10 @@ define([
     var Collection = ModuleObject.extend({
         Collection: Tags,
 
-        comply: function() {
-            return {
-                'remove' : this.remove,
-                'save'   : this.saveModel
-            };
-        },
-
         reply: function() {
             return {
+                'remove'    : this.remove,
+                'save'      : this.saveModel,
                 'save:all'  : this.saveAll,
                 'add'       : this.add,
                 'get:all'   : this.getAll,
@@ -138,7 +131,7 @@ define([
     });
 
     // Initialize the collection automaticaly
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Collection();
     });
 

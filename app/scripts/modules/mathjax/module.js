@@ -42,7 +42,7 @@ define([
     /**
      * Start listening to events.
      */
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         Radio.on('editor', 'converter:init', math.onInitConverter, math);
 
         // When a note is shown, start this module

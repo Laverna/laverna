@@ -63,7 +63,7 @@ define([
                 collection: notes,
                 args      : this.options
             });
-            Radio.command('global', 'region:show', 'sidebar', this.view);
+            Radio.request('global', 'region:show', 'sidebar', this.view);
         },
 
         /**
@@ -82,7 +82,7 @@ define([
             }
 
             // Show the navbar
-            Radio.command('navbar', 'start', options);
+            Radio.request('navbar', 'start', options);
             options.pageSize = this.configs.pagination;
             this.options = options;
 
@@ -113,10 +113,10 @@ define([
              * It is done because if a user navigates back to the same page
              * a note might not appear at all.
              */
-            Radio.command('uri', 'navigate', {options: args}, {trigger: false});
+            Radio.request('uri', 'navigate', {options: args}, {trigger: false});
 
             // Navigate to a note page
-            Radio.command(
+            Radio.request(
                 'uri', 'navigate',
                 {options: args, model: model}, {trigger: true}
             );

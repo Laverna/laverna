@@ -39,7 +39,7 @@ define([
         Radio.off('editor', 'preview:refresh');
     });
 
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         // When a note is shown, start this module
         Radio.on('noteView', {
             'view:render'  : CodePrettify.start,

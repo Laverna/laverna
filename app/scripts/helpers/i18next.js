@@ -23,7 +23,7 @@ define([
     /**
      * Init i18next
      */
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         return i18n.init({
             lng             : Radio.request('configs', 'get:config', 'appLang'),
             fallbackLng     : 'en',

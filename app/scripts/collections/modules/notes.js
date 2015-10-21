@@ -14,10 +14,6 @@ define([
      *
      * Listens to
      * ----------
-     * Complies on channel `notes`:
-     * 1. `save`    - saves a model
-     * 2. `remove`  - removes a model
-     * 2. `restore` - restores a model from trash
      *
      * Replies on channel `notes`:
      * 1. `get:model`         - returns a model with the provided id.
@@ -25,6 +21,9 @@ define([
      * 3. `get:model:full`    - returns a model and its notebook
      * 4. `change:notebookId` - changes notebookId of notes attached to a provided
      *                          notebook. Returns a promise.
+     * 2. `save`    - saves a model
+     * 3. `remove`  - removes a model
+     * 4. `restore` - restores a model from trash
      *
      * Triggers events
      * --------
@@ -36,17 +35,11 @@ define([
     var Collection = ModuleObject.extend({
         Collection: Notes,
 
-        comply: function() {
-            return {
-                'save'    : this.saveModel,
-                'remove'  : this.remove,
-                'restore' : this.restore
-            };
-        },
-
         reply: function() {
             return {
                 'save'              : this.saveModel,
+                'remove'            : this.remove,
+                'restore'           : this.restore,
                 'save:all'          : this.saveAll,
                 'get:model'         : this.getById,
                 'get:model:full'    : this.getModelFull,
@@ -57,8 +50,7 @@ define([
 
         onDestroy: function() {
             this.collection.trigger('destroy');
-            this.vent.stopReplying('get:model get:model:full filter');
-            this.vent.stopComplying('save remove restore');
+            this.vent.stopReplying('get:model get:model:full filter save remove restore');
         },
 
         /**
@@ -211,7 +203,7 @@ define([
     });
 
     // Initialize it automaticaly
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Collection();
     });
 

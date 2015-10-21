@@ -29,8 +29,7 @@ define([
      * Requests:
      * 1. channel: notesForm, request: model
      *    returns current model.
-     * Commands
-     * 1. channel: notesForm, command: show:editor
+     * 2. channel: notesForm, request: show:editor
      *    shows the provided view in the `editor` region.
      *
      * Listens to the following events:
@@ -81,10 +80,10 @@ define([
             this.configs = Radio.request('configs', 'get:object');
             this.$body = $('body');
 
-            // Events, complies, and replies
+            // Events and replies
             Radio.channel('notesForm')
             .reply('model', this.model, this)
-            .comply('show:editor', this.showEditor, this)
+            .reply('show:editor', this.showEditor, this)
             .on('save:auto', this.autoSave, this);
 
             // Register keybindings
@@ -120,8 +119,7 @@ define([
 
             // Stop listening to events
             Radio.channel('notesForm')
-            .stopReplying('model')
-            .stopComplying('show:editor')
+            .stopReplying('model show:editor')
             .off('save:auto');
 
             // Destroy shortcuts

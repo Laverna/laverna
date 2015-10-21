@@ -109,7 +109,7 @@ define([
         }
     };
 
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         // Parses text for tasks
         Radio.reply('editor', 'get:tasks', Tasks.getTasks, Tasks);
 

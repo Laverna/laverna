@@ -64,14 +64,14 @@ define([
     }
 
     // Show custom dialog on `insertImageDialog` hook.
-    Radio.command('init', 'add', 'editor:before', function(editor, model) {
+    Radio.request('init', 'add', 'editor:before', function(editor, model) {
         editor.hooks.set('insertImageDialog', function(fnc) {
             FileDialog.start({callback: fnc, model: model});
             return true;
         });
     });
 
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         Radio.reply('editor', 'get:files', Helper.getFileIds, Helper);
 
         // When editor converter is initialized, add hooks

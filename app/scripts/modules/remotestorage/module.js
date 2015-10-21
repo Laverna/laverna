@@ -22,7 +22,7 @@ define([
     });
 
     // Add a global module initializer
-    Radio.command('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', function() {
         RemoteStorage.start();
     });
 

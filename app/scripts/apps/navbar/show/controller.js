@@ -26,9 +26,9 @@ define([
      * 2. channel: `uri`, request: `link:profile`
      * 3. channel: `global`, request: `get:title`
      *
-     * Commands:
-     * 1. channel: `uri`, command: `navigate`
-     * 2. channel: `global`, command: `region:show`
+     * requests:
+     * 1. channel: `uri`, request: `navigate`
+     * 2. channel: `global`, request: `region:show`
      */
     var Controller = Marionette.Object.extend({
 
@@ -53,7 +53,7 @@ define([
 
         onDestroy: function() {
             this.stopListening();
-            Radio.command('global', 'region:empty', 'sidebarNavbar');
+            Radio.request('global', 'region:empty', 'sidebarNavbar');
         },
 
         show: function(configs, notebooks, profiles, title) {
@@ -73,7 +73,7 @@ define([
             });
 
             // Render the view
-            Radio.command('global', 'region:show', 'sidebarNavbar', this.view);
+            Radio.request('global', 'region:show', 'sidebarNavbar', this.view);
 
             // Listen to view events
             this.listenTo(this.view, 'search:submit', this.navigateSearch, this);
@@ -95,7 +95,7 @@ define([
          * Navigate to the search page.
          */
         navigateSearch: function(text) {
-            Radio.command('uri', 'navigate', {
+            Radio.request('uri', 'navigate', {
                 filter : 'search',
                 query  : text
             });

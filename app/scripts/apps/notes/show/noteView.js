@@ -6,8 +6,8 @@ define([
     'backbone.radio',
     'behaviors/content',
     'text!apps/notes/show/templates/item.html',
-    'backbone.mousetrap'
-], function(_, $, Marionette, Radio, Behavior, Tmpl) {
+    'mousetrap'
+], function(_, $, Marionette, Radio, Behavior, Tmpl, Mousetrap) {
     'use strict';
 
     /**
@@ -65,20 +65,16 @@ define([
             'change:taskCompleted' : 'onTaskCompleted'
         },
 
-        keyboardEvents: {
-            /*
-             * Scroll with up/down keys.
-             * It is done to avoid an unexpected behaviour.
-             */
-            'up'   : 'scrollTop',
-            'down' : 'scrollDown'
-        },
-
         initialize: function() {
-            var configs = Radio.request('configs', 'get:object');
-            this.keyboardEvents[configs.actionsEdit]       = 'editNote';
-            this.keyboardEvents[configs.actionsRemove]     = 'rmNote';
-            this.keyboardEvents[configs.actionsRotateStar] = 'favorite';
+            _.bindAll(this, 'scrollTop', 'scrollDown', 'editNote', 'rmNote', 'favorite');
+
+            this.configs = Radio.request('configs', 'get:object');
+
+            Mousetrap.bind('up', this.scrollTop);
+            Mousetrap.bind('down', this.scrollDown);
+            Mousetrap.bind(this.configs.actionsEdit, this.editNote);
+            Mousetrap.bind(this.configs.actionsRemove, this.rmNote);
+            Mousetrap.bind(this.configs.actionsRotateStar, this.favorite);
         },
 
         onRender: function() {
@@ -86,6 +82,7 @@ define([
         },
 
         onBeforeDestroy: function() {
+            Mousetrap.unbind(['up', 'down', this.configs.actionsEdit, this.configs.actionsRemove, this.configs.actionsRotateStar]);
             Radio.trigger('noteView', 'view:destroy');
         },
 
@@ -100,7 +97,7 @@ define([
         },
 
         editNote: function() {
-            Radio.command('uri', 'navigate', this.ui.editBtn.attr('href'));
+            Radio.request('uri', 'navigate', this.ui.editBtn.attr('href'));
         },
 
         rmNote: function() {
@@ -112,7 +109,7 @@ define([
          * Changes favorite status of the note
          */
         favorite: _.throttle(function() {
-            Radio.command('notes', 'save', this.model, this.model.toggleFavorite());
+            Radio.request('notes', 'save', this.model, this.model.toggleFavorite());
             return false;
         }, 300, {leading: false}),
 

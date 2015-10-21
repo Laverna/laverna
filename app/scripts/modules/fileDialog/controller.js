@@ -20,8 +20,8 @@ define([
      * 4. channel: `editor`, request: `generate:image`
      *    expects to receive image code. For example, Markdown code for an image.
      *
-     * Commands:
-     * 1. channel: `editor`, command: `insert`
+     * requests:
+     * 1. channel: `editor`, request: `insert`
      *    in order to insert some text to the editor.
      */
     var Controller = Marionette.Object.extend({
@@ -31,7 +31,7 @@ define([
 
             // Instantiate and show the view
             this.view = new View();
-            Radio.command('global', 'region:show', 'modal', this.view);
+            Radio.request('global', 'region:show', 'modal', this.view);
 
             // Events
             this.listenTo(this.view, 'save', this.link);
@@ -44,7 +44,7 @@ define([
             }
 
             this.stopListening();
-            Radio.command('global', 'region:empty', 'modal');
+            Radio.request('global', 'region:empty', 'modal');
         },
 
         /**
@@ -99,7 +99,7 @@ define([
                 }, this);
             }
 
-            Radio.command('editor', 'insert', str);
+            Radio.request('editor', 'insert', str);
             this.attachImage(null);
         },
 
@@ -120,14 +120,14 @@ define([
          */
         generateCode: function(model) {
             var url     = Radio.request('uri', 'link:file', model),
-                command = 'link';
+                request = 'link';
 
             // If file type is an image type, generate image MD code
             if (this.isImage(model)) {
-                command = 'image';
+                request = 'image';
             }
 
-            return Radio.request('editor', 'generate:' + command, {
+            return Radio.request('editor', 'generate:' + request, {
                 text : model.get('name'),
                 url  : url
             });

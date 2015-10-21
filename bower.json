@@ -3,11 +3,11 @@
   "version": "0.6.2",
   "dependencies": {
     "ace": "#79eda6d2a8c4f788530cb5e6b238af67bfcc609d",
-    "backbone": "~1.1.2",
-    "backbone.babysitter": "~0.1.4",
+    "backbone": "~1.2.3",
+    "backbone.babysitter": "~0.1.10",
     "backbone.localStorage": "~1.1.7",
-    "backbone.mousetrap": "git://github.com/elasticsales/backbone.mousetrap.git#11ecdbfbe1099249daa6e1e86db7aee090ea5801",
-    "backbone.radio": "~0.9.0",
+    "backbone.marionette": "marionette#~2.4.3",
+    "backbone.radio": "~1.0.2",
     "Blob": "git://github.com/eligrey/Blob.js",
     "bluebird": "~2.10.2",
     "blueimp-canvas-to-blob": "git://github.com/blueimp/JavaScript-Canvas-to-Blob#~2.1.1",
@@ -27,7 +27,7 @@
     "marionette": "~2.3.2",
     "MathJax": "2.5.3",
     "modernizr": "~2.8.3",
-    "mousetrap": "~1.5.2",
+    "mousetrap": "~1.5.3",
     "pagedown": "git://github.com/ujifgc/pagedown.git",
     "pagedown-ace": "git://github.com/benweet/pagedown-ace.git#c9d41937e1e3b4e46f823856a47f9eb22a8108e1",
     "pagedown-extra": "git://github.com/jmcmanus/pagedown-extra.git#bd0870e3e871e15bde1fa5a427e3e10028a09789",
@@ -38,7 +38,7 @@
     "sjcl": "~1.0.0",
     "to-markdown": "#jquery",
     "tv4": "~1.2.7",
-    "underscore": "~1.7.0",
+    "underscore": "~1.8.3",
     "xregexp": "~2.0.0"
   },
   "devDependencies": {}

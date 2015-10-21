@@ -19,7 +19,7 @@ define([
      * 3. this.view, event: `redirect`
      *    stops the module and redirects.
      *
-     * Commands:
+     * requests:
      * 1. channel: `notebooks`, event: `save`
      * 2. channel: `uri`, event: `back`
      * 3. channel: `appNotebooks`, event: `form:stop`
@@ -43,7 +43,7 @@ define([
 
         onDestroy: function() {
             this.stopListening();
-            Radio.command('global', 'region:empty', 'modal');
+            Radio.request('global', 'region:empty', 'modal');
         },
 
         show: function(collection, model) {
@@ -57,7 +57,7 @@ define([
                 model      : model
             });
 
-            Radio.command('global', 'region:show', 'modal', this.view);
+            Radio.request('global', 'region:show', 'modal', this.view);
 
             // Listen to events
             this.listenTo(this.view, 'save'    , this.save);
@@ -70,7 +70,7 @@ define([
                 parentId : this.view.ui.parentId.val()
             };
 
-            Radio.command('notebooks', 'save', this.view.model, data);
+            Radio.request('notebooks', 'save', this.view.model, data);
         },
 
         onSaveAfter: function() {
@@ -81,11 +81,11 @@ define([
             var moduleName = Radio.request('global', 'app:current').moduleName;
 
             // Stop itself
-            Radio.command('appNotebooks', 'form:stop');
+            Radio.request('appNotebooks', 'form:stop');
 
             // Redirect only if current active module is AppNotebooks
             if (moduleName === 'AppNotebooks') {
-                Radio.command('uri', 'back', '/notebooks', {
+                Radio.request('uri', 'back', '/notebooks', {
                     includeProfile : true
                 });
             }

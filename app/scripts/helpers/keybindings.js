@@ -11,7 +11,7 @@ define([
     /**
      * Keybindings helper.
      *
-     * Complies to commands on `global` channel:
+     * Replies to requests on `global` channel:
      * 1. `mousetrap:toggle`  - pause or unpause Mousetrap.
      * 2. `mousetrap:restart` - rebind the keys.
      * 3. `mousetrap:reset`   - reset the keys.
@@ -23,7 +23,7 @@ define([
             this.configs = Radio.request('configs', 'get:object');
             this.bind();
 
-            Radio.comply('global', {
+            Radio.reply('global', {
                 'mousetrap:toggle'  : this.toggle,
                 'mousetrap:restart' : this.restart,
                 'mousetrap:reset'   : Mousetrap.reset
@@ -47,7 +47,7 @@ define([
         },
 
         navigate: function(uri) {
-            Radio.command('uri', 'navigate', uri, {
+            Radio.request('uri', 'navigate', uri, {
                 includeProfile : true,
                 trigger        : true
             });
@@ -62,7 +62,7 @@ define([
             // Help
             Mousetrap.bind(this.configs.appKeyboardHelp, function(e) {
                 e.preventDefault();
-                Radio.command('Help', 'show:keybindings');
+                Radio.request('Help', 'show:keybindings');
             });
 
             // Focus on search form
@@ -107,7 +107,7 @@ define([
     /**
      * Initializer
      */
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Controller();
     });
 

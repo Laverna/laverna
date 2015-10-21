@@ -20,9 +20,9 @@ define([
      * Triggers:
      * 1. channel: `configs`, request: `get:object`
      * 2. channel: `configs`, request: `reset:encrypt`
-     * 3. channel: `global`, command: `region:show`
-     * 4. channel: `encrypt`, command: `change:configs`
-     * 5. channel: `encrypt`, command: `save:secureKey`
+     * 3. channel: `global`, request: `region:show`
+     * 4. channel: `encrypt`, request: `change:configs`
+     * 5. channel: `encrypt`, request: `save:secureKey`
      * 6. channel: `encrypt`, request: `decrypt:models`
      * 7. channel: `encrypt`, request: `encrypt:models`
      */
@@ -43,7 +43,7 @@ define([
             this.backup  = _.extend({}, this.configs, this.configs.encryptBackup);
 
             // Just to be save remove current secure key from the session
-            this.vent.command('delete:secureKey');
+            this.vent.request('delete:secureKey');
 
             // Show the view
             Radio.request('configs', 'get:profiles')
@@ -55,7 +55,7 @@ define([
 
         onDestroy: function() {
             this.stopListening();
-            Radio.command('global', 'region:empty', 'brand');
+            Radio.request('global', 'region:empty', 'brand');
         },
 
         show: function(profiles) {
@@ -66,7 +66,7 @@ define([
                 collections : this.collectionNames,
                 configs     : this.configs
             });
-            Radio.command('global', 'region:show', 'brand', this.view);
+            Radio.request('global', 'region:show', 'brand', this.view);
 
             // Events
             this.listenTo(this.view, 'check:passwords', this.checkPasswords);
@@ -85,12 +85,12 @@ define([
 
             // Switch to backup configs and check old password
             if (data.old) {
-                this.vent.command('change:configs', this.backup);
+                this.vent.request('change:configs', this.backup);
                 results.push(this.vent.request('check:password', data.old));
             }
             // Switch to new configs and check new password
             if (data.password) {
-                this.vent.command('change:configs', this.configs);
+                this.vent.request('change:configs', this.configs);
                 results.push(this.vent.request('check:password', data.password));
             }
 
@@ -113,7 +113,7 @@ define([
             _.each(this.profiles, function(profile) {
                 promises.push(function() {
                     // Use backup configs
-                    self.vent.command('change:configs', self.backup);
+                    self.vent.request('change:configs', self.backup);
 
                     // Generate PBKDF2 before starting re-encryption
                     return self.vent.request('save:secureKey', self.passwords.old)
@@ -180,7 +180,7 @@ define([
                 self     = this;
 
             // Use new encryption configs
-            this.vent.command('change:configs', this.configs);
+            this.vent.request('change:configs', this.configs);
 
             // Encrypt every collection
             _.each(this.collections, function(collection) {
@@ -241,9 +241,9 @@ define([
          * Delete current secure key from session storage and reload the page.
          */
         redirect: function() {
-            this.vent.command('delete:secureKey');
+            this.vent.request('delete:secureKey');
 
-            Radio.command('uri', 'navigate', '/notes', {
+            Radio.request('uri', 'navigate', '/notes', {
                 includeProfile : true,
                 trigger        : false
             });

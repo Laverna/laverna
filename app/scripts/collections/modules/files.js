@@ -14,12 +14,9 @@ define([
     /**
      * Files collection.
      *
-     * Complies to commands on channel `files`:
-     * 1. `save`     - saves changes to a model.
-     * 2. `save:all` - saves several changes to several models.
-     * 3. `remove`   - removes an existing model.
-     *
      * Replies to requests on channel `files`:
+     * 1. `save`     - saves changes to a model.
+     * 3. `remove`   - removes an existing model.
      * 1. `save:all`  - saves changes to a model, returns a promise.
      * 2. `get:model` - finds a model by ID and returns it.
      * 3. `get:all`   - returns collection with all existing models.
@@ -31,16 +28,10 @@ define([
     var Collection = ModuleObject.extend({
         Collection: Files,
 
-        comply: function() {
-            return {
-                'save'     : this.saveModel,
-                'save:all' : this.saveAll,
-                'remove'   : this.remove
-            };
-        },
-
         reply: function() {
             return {
+                'save'       : this.saveModel,
+                'remove'     : this.remove,
                 'save:all'   : this.saveAll,
                 'get:model'  : this.getById,
                 'get:all'    : this.getAll,
@@ -96,7 +87,7 @@ define([
     });
 
     // Initialize it automaticaly
-    Radio.command('init', 'add', 'app:before', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Collection();
     });
 

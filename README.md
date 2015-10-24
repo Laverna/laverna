@@ -42,8 +42,7 @@ $ git clone git@github.com:Laverna/laverna.git
 ```
 
 #### 2. Switch to stable version:
-Please, make sure that you switched to 0.6.2 release. Master branch is not stable yet.
-
+Please, make sure that you switched to 0.6.2 release. Master branch is not stable yet. You will have to remove `grunt-phantomcss` from `package.json` for `npm install` to execute successfully. See [issue #265](https://github.com/Laverna/laverna/issues/265).
 ```bash
 $ git checkout 0.6.2
 ```

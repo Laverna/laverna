@@ -41,5 +41,9 @@
     "underscore": "~1.8.3",
     "xregexp": "~2.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "resolutions": {
+    "backbone": "~1.2.3",
+    "underscore": "~1.8.3"
+  }
 }

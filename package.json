@@ -18,6 +18,7 @@
     "gulp-minify-html": "^1.0.4",
     "gulp-mocha-phantomjs": "^0.10.1",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "gulp-requirejs-optimize": "^0.3.0",
     "gulp-uglify": "^1.4.1",
     "jshint-stylish": "^0.1.5",

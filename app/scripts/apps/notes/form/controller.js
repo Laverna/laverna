@@ -41,7 +41,7 @@ define([
             });
 
             // Events
-            this.listenTo(Radio.channel('notes'), 'save:after', this.redirect);
+            this.listenTo(Radio.channel('notes'), 'update:model', this.redirect);
             this.listenTo(Radio.channel('Confirm'), 'confirm', this.redirect);
             this.listenTo(Radio.channel('Confirm'), 'cancel', this.onConfirmCancel);
         },
@@ -85,7 +85,10 @@ define([
         },
 
         save: function() {
-            Radio.request('notes', 'save', this.view.model, this.getContent());
+            Radio.request('notes', 'save', this.view.model, this.getContent())
+            .fail(function(e) {
+                console.error('Error', e);
+            });
         },
 
         getContent: function() {

@@ -11,7 +11,7 @@ define([
      * Remove controller. Handles removing of notebooks and tags.
      *
      * Listens to events on channel `[notebooks|tags]`:
-     * 1. event: `model:destroy`
+     * 1. event: `destroy:model`
      *
      * requests:
      * 1. channel: [notebooks|tags], request: `remove`
@@ -27,7 +27,7 @@ define([
             profile = profile || Radio.request('uri', 'profile');
 
             // Events
-            this.listenTo(this.channel, 'model:destroy', this.destroy);
+            this.listenTo(this.channel, 'destroy:model', this.destroy);
             this.listenTo(Radio.channel('Confirm'), 'cancel', this.destroy);
             this.listenTo(Radio.channel('Confirm'), 'confirm', this.remove);
             this.listenTo(Radio.channel('Confirm'), 'confirmNotes', this.removeWithNotes);

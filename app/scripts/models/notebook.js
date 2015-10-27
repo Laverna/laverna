@@ -21,7 +21,8 @@ define([
             'name'         : '',
             'synchronized' : 0,
             'count'        : 0,
-            'updated'      : Date.now()
+            'trash'        : 0,
+            'updated'      : 0
         },
 
         encryptKeys: ['name'],

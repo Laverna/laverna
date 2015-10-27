@@ -12,76 +12,80 @@ define([
     'use strict';
 
     /**
-     * Files collection.
+     * Collection module for Files.
      *
-     * Replies to requests on channel `files`:
-     * 1. `save`     - saves changes to a model.
-     * 3. `remove`   - removes an existing model.
-     * 1. `save:all`  - saves changes to a model, returns a promise.
-     * 2. `get:model` - finds a model by ID and returns it.
-     * 3. `get:all`   - returns collection with all existing models.
-     * 4. `get:files` - fetches all files with specified IDs.
+     * Apart from the replies in collections/modules/module.js,
+     * it also has additional replies:
+     *
+     * 1. `get:files` - fetches all files with specified IDs.
      *
      * Triggers events on channel `files`:
-     * 1. `saved:all` - after changes to collection were saved.
+     * 1. `saved:all` - after changes to collection are saved.
      */
     var Collection = ModuleObject.extend({
         Collection: Files,
 
         reply: function() {
             return {
-                'save'       : this.saveModel,
-                'remove'     : this.remove,
-                'save:all'   : this.saveAll,
-                'get:model'  : this.getById,
-                'get:all'    : this.getAll,
                 'get:files'  : this.getFiles
             };
         },
 
         /**
          * Fetch files with specific ids
+         * @type array ids of files
+         * @type object options
          */
         getFiles: function(ids, options) {
             var promises = [];
 
-            this.changeDatabase(options);
-
             _.each(ids, function(id) {
                 promises.push(
-                    new Q(new this.Collection.prototype.model({id: id}).fetch())
-                );
-            }, this);
-
-            return Q.all(promises).then(function() {
-                return arguments[0];
-            });
-        },
-
-        saveModel: function(model, data) {
-            data.src = toBlob(data.src);
-            model.setEscape(data);
-
-            return this.save(model, model.toJSON());
-        },
-
-        saveAll: function(data, options) {
-            var promises = [];
-
-            console.warn('options', arguments);
-            this.changeDatabase(options);
-
-            _.each(data, function(imgData) {
-                promises.push(
-                    this.saveModel(new this.Collection.prototype.model(), imgData, options)
+                    this.getModel(_.extend({id: id}, options))
                 );
             }, this);
 
             return Q.all(promises)
-            .then(_.bind(function(files) {
+            .then(function() {
+                return arguments[0];
+            });
+        },
+
+        /**
+         * Save a file.
+         * @type object Backbone model
+         * @type object new values
+         */
+        saveModel: function(model, data) {
+            var saveFunc = _.bind(ModuleObject.prototype.saveModel, this);
+            data.src = toBlob(data.src);
+            model.setEscape(data);
+
+            return saveFunc(model, model.attributes);
+        },
+
+        /**
+         * Save several files.
+         * @type array
+         * @type object
+         */
+        saveAll: function(data, options) {
+            var promises = [],
+                self     = this,
+                model;
+
+            _.each(data, function(imgData) {
+                promises.push(function() {
+                    model = new (self.changeDatabase(options)).prototype.model();
+                    return self.saveModel(model, imgData);
+                });
+            });
+
+            return _.reduce(promises, Q.when, new Q())
+            .then(function(files) {
                 Radio.trigger('files', 'saved:all');
                 return files;
-            }, this));
+            });
         }
 
     });

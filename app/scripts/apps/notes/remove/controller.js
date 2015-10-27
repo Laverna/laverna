@@ -12,10 +12,8 @@ define([
      * Requests:
      * 1. channel: `notes`, request: `get:model`
      *    expects to receive a model with provided ID
-     *
-     * requests:
-     * 1. channel: `notes`, request: `remove`
-     * 2. channel: `Confirm`, request: `start`
+     * 2. channel: `notes`, request: `remove`
+     * 3. channel: `Confirm`, request: `start`
      */
     var Controller = Marionette.Object.extend({
 
@@ -29,7 +27,7 @@ define([
             _.bindAll(this, 'showConfirm');
 
             // Events
-            this.listenTo(Radio.channel('notes'), 'model:destroy', this.destroy);
+            this.listenTo(Radio.channel('notes'), 'destroy:model', this.destroy);
             this.listenTo(Radio.channel('Confirm'), 'cancel', this.destroy);
             this.listenTo(Radio.channel('Confirm'), 'confirm', this.remove);
 

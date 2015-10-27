@@ -38,11 +38,8 @@ define([
             // Replies
             Radio.reply('encrypt', {
                 'change:configs'   : this.changeConfigs,
-                'delete:secureKey' : this.deleteSecureKey
-            }, this);
+                'delete:secureKey' : this.deleteSecureKey,
 
-            // Replies
-            Radio.reply('encrypt', {
                 'sha256'           : this.sha256,
                 'randomize'        : this.randomize,
 
@@ -210,7 +207,7 @@ define([
             }, this);
 
             Radio.trigger('encrypt', 'encrypted:model', model);
-            return model.toJSON();
+            return model;
         },
 
         /**
@@ -223,7 +220,7 @@ define([
             }, this);
 
             Radio.trigger('encrypt', 'decrypted:model', model);
-            return model.toJSON();
+            return model;
         },
 
         /**

@@ -12,7 +12,7 @@ define([
      * Notebook form controller.
      *
      * Listens to events:
-     * 1. channel: `notebooks`, event: `save:after`
+     * 1. channel: `notebooks`, event: `update:model`
      *    triggers `close` event on the view.
      * 2. this.view, event: `save`
      *    saves the changes.
@@ -31,7 +31,7 @@ define([
             _.bindAll(this, 'show');
 
             // Events
-            this.listenTo(Radio.channel('notebooks'), 'save:after', this.onSaveAfter);
+            this.listenTo(Radio.channel('notebooks'), 'update:model', this.onSaveAfter);
 
             // Fetch notebooks
             Q.all([
@@ -70,10 +70,14 @@ define([
                 parentId : this.view.ui.parentId.val()
             };
 
-            Radio.request('notebooks', 'save', this.view.model, data);
+            Radio.request('notebooks', 'save', this.view.model, data)
+            .fail(function(e) {
+                console.error('Error:', e);
+            });
         },
 
         onSaveAfter: function() {
+            console.log('svae:after');
             this.view.trigger('close');
         },
 

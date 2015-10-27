@@ -33,7 +33,10 @@ define([
             Q.all([
                 Radio.request('notebooks', 'get:all', options),
                 Radio.request('tags', 'get:all', options)
-            ]).spread(this.show);
+            ]).spread(this.show)
+            .fail(function(e) {
+                console.error('Error:', e);
+            });
         },
 
         onDestroy: function() {

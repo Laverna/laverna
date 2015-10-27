@@ -84,16 +84,16 @@ define([
          * It needs to be called after a collection was instantiated.
          */
         registerEvents: function() {
+            this.vent = Radio.channel(this.storeName);
+
             // Sort the collection again when favorite status is changed
             this.listenTo(this, 'change:isFavorite', this.sortItOut);
             this.listenTo(this, 'reset', this.sortItOut);
 
-            // Sort the full collection again when a new model was added
-            this.listenTo(this, 'change:trash', this._onRemoveItem);
-            this.listenTo(this, 'remove'      , this._onRemoveItem);
-            this.listenTo(this, 'add:model'   , this._onAddItem);
-
-            this.listenTo(Radio.channel(this.storeName), 'model:destroy', this._navigateOnRemove);
+            // Listen to events
+            this.listenTo(this.vent, 'update:model' , this._onAddItem);
+            this.listenTo(this.vent, 'destroy:model', this._navigateOnRemove);
+            this.listenTo(this.vent, 'restore:model', this._onRestore);
         },
 
         /**
@@ -110,6 +110,7 @@ define([
 
             // Remove all the event listeners
             this.stopListening();
+            this.stopListening(this.vent);
         },
 
         getNextPage: function() {
@@ -232,8 +233,15 @@ define([
         /**
          * When some model was removed, trigger `model:navigate` event
          * passing a model which has the same index as the removed model.
+         * @type object Backbone model
          */
-        _navigateOnRemove: function(index) {
+        _navigateOnRemove: function(model) {
+            var coll  = this.fullCollection || this,
+                index = this.indexOf(model);
+
+            coll.remove(model);
+            this.sortFullCollection();
+
             if (!this.at(index)) {
                 index--;
             }
@@ -243,6 +251,19 @@ define([
             }
 
             Radio.trigger(this.storeName, 'model:navigate', this.at(index));
+        },
+
+        /**
+         * When a model was restored from trash.
+         */
+        _onRestore: function(model) {
+            if (this.conditionFilter !== 'trashed') {
+                return this._onAddItem(model);
+            }
+
+            if (this.length > 1) {
+                return this._navigateOnRemove(model);
+            }
         },
 
         /**

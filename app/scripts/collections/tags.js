@@ -26,6 +26,9 @@ define([
             comparator   : {'updated': 'desc'}
         },
 
+        conditions: {
+        },
+
         initialize: function() {
         },
 

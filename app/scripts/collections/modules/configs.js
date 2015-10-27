@@ -1,15 +1,19 @@
 /* global define */
 define([
-    'q',
     'underscore',
+    'q',
+    'marionette',
     'backbone.radio',
     'collections/modules/module',
     'collections/configs'
-], function(Q, _, Radio, ModuleObject, Configs) {
+], function(_, Q, Marionette, Radio, ModuleObject, Configs) {
     'use strict';
 
     /**
-     * Configs collection.
+     * Collection module for Configs.
+     *
+     * Apart from the replies and events in collections/modules/module.js,
+     * it also has additional replies and events.
      *
      * Triggers events on channel `configs`:
      * 1. event: `collection:empty` - if the collection is empty.
@@ -19,30 +23,22 @@ define([
      * Replies on channel `configs` to:
      * 1. request: `get:config`     - returns a config.
      * 2. request: `get:object`     - returns configs in key=value format.
-     * 3. request: `get:all`        - fetches every model from the storage
-     *                            and returns them.
-     * 4. request: `get:model`      - returns a model.
-     * 5. request: `get:profiles`   - returns list of profiles
-     * 6. request: `reset:encrypt`  - resets encryption configs backup.
-     *                                Returns promise.
-     * 7. request: `save`           - saves changes to a model
-     * 8. request: `save:objects`   - save several configs at once
-     * 9. request: `create:profile` - create a new profile
-     * 10. request: `remove:profile` - remove a profile
+     * 3. request: `get:profiles`   - returns list of profiles
+     * 4. request: `reset:encrypt`  - resets encryption configs backup.
+     * 5. request: `save:objects`   - save several configs at once
+     * 6. request: `create:profile` - create a new profile
+     * 7. request: `remove:profile` - remove a profile
      */
     var Collection = ModuleObject.extend({
         Collection: Configs,
 
         reply: function() {
             return {
-                'save'           : this.saveModel,
                 'save:objects'   : this.saveObjects,
                 'create:profile' : this.createProfile,
                 'remove:profile' : this.removeProfile,
                 'get:config'     : this.getConfig,
                 'get:object'     : this.getObject,
-                'get:all'        : this.getConfigs,
-                'get:model'      : this.getById,
                 'get:profiles'   : this.getProfiles,
                 'reset:encrypt'  : this.resetEncrypt
             };
@@ -73,15 +69,30 @@ define([
             });
         },
 
+        /**
+         * Save a config.
+         * @type object Backbone model
+         * @type object new value
+         */
         saveModel: function(model, data) {
-            if (model.isPassword(data)) {
-                return this._savePassword.apply(this, arguments);
+            var saveFunc = _.bind(ModuleObject.prototype.saveModel, this);
+
+            if (!model.isPassword(data)) {
+                return saveFunc(model, data);
             }
-            return this.save(model, data);
+
+            // Always save passwords as sha256
+            return new Q(Radio.request('encrypt', 'sha256', data.value))
+            .then(function(result) {
+                data.value = result;
+                return saveFunc(model, data);
+            });
         },
 
         /**
          * Update several configs at once
+         * @type array array of configs
+         * @type object Backbone model
          */
         saveObjects: function(objects, useDefault) {
             var promises = [],
@@ -103,13 +114,35 @@ define([
             // return;
             _.forEach(objects, function(object) {
                 promises.push(
-                    new Q(self._saveObject(object, useDefault))
+                    new Q(self.saveObject(object, useDefault))
                 );
             }, this);
 
             return Q.all(promises)
             .then(function() {
                 Radio.trigger('configs', 'changed', objects);
+            });
+        },
+
+        /**
+         * Saves an object to the database.
+         * @type object
+         * @type object Backbone model
+         */
+        saveObject: function(object, useDefault) {
+            var self = this;
+
+            return this.getModel({name: object.name})
+            .then(function(model) {
+                if (!model) {
+                    return;
+                }
+
+                if (object.name === 'useDefaultConfigs') {
+                    model = useDefault;
+                }
+
+                return self.saveModel(model, object);
             });
         },
 
@@ -129,56 +162,61 @@ define([
         },
 
         /**
-         * Find a model by ID
+         * Find a model by ID.
+         * @type object options
          */
-        getById: function(options) {
-            var collection = new Configs();
+        getModel: function(options) {
+            var getFunc = _.bind(ModuleObject.prototype.getModel, this),
+                self    = this;
 
-            options = (typeof options === 'string' ? {name: options} : options);
-            collection.changeDB(options.profile || 'notes-db');
+            options     = (typeof options === 'string' ? {name: options} : options);
 
-            return new Q(collection.fetch({conditions: {name: options.name}}))
-            .then(function() {
-                if (!collection.length) {
-                    collection = collection.getDefault(options.name);
-                }
-                else {
-                    collection = collection.get(options.name);
+            return getFunc(options)
+            .then(function(model) {
+                if (model) {
+                    return model;
                 }
 
-                collection.changeDB(options.profile || 'notes-db');
-                return collection;
+                // If a model doesn't exist, return default values
+                var collection  = new (self.changeDatabase(options))();
+                return collection.getDefault(options.name);
             });
         },
 
         /**
-         * Fetch everything.
+         * Return all configs.
+         * @type object options
          */
-        getConfigs: function(options) {
-            var profile = options.profile || this.defaultDB,
-                self    = this;
-
-            if (this.collection) {
+        getAll: function(options) {
+            if (this.collection && this.collection.length) {
                 return new Q(this.collection);
             }
+
+            var self = this,
+                profile = options.profile || this.defaultDB,
+                getFunc = _.bind(ModuleObject.prototype.getAll, this);
 
             /**
              * Before fetching configs collection, find out whether
              * we should use configs from the default profile.
              */
-            return this.getById({name: 'useDefaultConfigs', profile: options.profile})
+            return this.getModel({name: 'useDefaultConfigs', profile: options.profile})
             .then(function(model) {
                 // Use default profile
                 if (!model || Number(model.get('value'))) {
-                    delete options.profile;
+                    options.profile = null;
                 }
-                return self.getAll(options);
+
+                return getFunc(options);
             })
             .then(function() {
                 return self._checkBackup(profile);
             })
             .then(function() {
                 return self._createDefault(options);
+            })
+            .fail(function(e) {
+                console.error('Error:', e);
             });
         },
 
@@ -196,18 +234,17 @@ define([
                 return new Q([backup.database]);
             }
 
-            _.bindAll(this, '_getDefaultProfiles');
-
             /*
              * If it is the default profile, return all profiles which
              * use configs from default profile.
              */
-            return this.getById({name: 'appProfiles'})
-            .then(this._getDefaultProfiles);
+            return this.getModel({name: 'appProfiles'})
+            .then(_.bind(this._getDefaultProfiles, this));
         },
 
         /**
          * Return profiles which use configs from default profile.
+         * @type object Backbone model
          */
         _getDefaultProfiles: function(model) {
             var profiles = model.getValueJSON(),
@@ -217,7 +254,7 @@ define([
             // Fetch `useDefaultConfigs` model of every profile
             _.each(profiles, function(profile) {
                 promises.push(
-                    self.getById({
+                    self.getModel({
                         name    : 'useDefaultConfigs',
                         profile : profile
                     })
@@ -232,55 +269,47 @@ define([
                         profile.database.id === self.defaultDB
                     );
                 });
+
                 return _.pluck(profiles, 'database');
             });
-        },
-
-        _saveObject: function(object, useDefault) {
-            var model = this.collection.get(object.name);
-
-            if (!model) {
-                return;
-            }
-
-            if (object.name === 'useDefaultConfigs') {
-                model = useDefault;
-            }
-
-            return this.saveModel(model, object);
         },
 
         /**
          * Check encryption backup
          */
         _checkBackup: function(profile) {
-            var backup = this.collection.get('encryptBackup');
+            var self = this;
 
-            /**
-             * If it is the default profile or default backup is not empty,
-             * do nothing.
-             */
-            if (profile === this.defaultDB ||
-               (!backup || !_.isEmpty(backup.get('value')))) {
-                return;
-            }
-
-            // Fetch current profile's encryption backup configs
-            return this.getById({
-                name    : 'encryptBackup',
-                profile : profile
-            })
-            .then(function(model) {
-                // If profile's backup is not empty, change backup model
-                if (!_.isEmpty(model.get('value'))) {
-                    backup.set(model.toJSON());
-                    backup.changeDB(profile);
+            return this.getModel({name: 'encryptBackup'})
+            .then(function(backup) {
+                /**
+                 * If it is the default profile or default backup is not empty,
+                 * do nothing.
+                 */
+                if (profile === self.defaultDB ||
+                   (!backup || !_.isEmpty(backup.get('value')))) {
+                    return;
                 }
+
+                // Fetch current profile's encryption backup configs
+                return self.getModel({
+                    name    : 'encryptBackup',
+                    profile : profile
+                })
+                .then(function(model) {
+                    // If profile's backup is not empty, change backup model
+                    if (!_.isEmpty(model.get('value'))) {
+                        backup.set(model.toJSON());
+                        backup.changeDB(profile);
+                    }
+                    return model;
+                });
             });
         },
 
         /**
          * If collection is empty, create configs with default values.
+         * @type object options
          */
         _createDefault: function(options) {
             if (!this.collection.hasNewConfigs()) {
@@ -295,13 +324,12 @@ define([
             }
 
             // If the collection is empty, create default set of configs.
-            _.bindAll(this.collection, 'createDefault');
-
             return new Q(this.collection.migrateFromLocal())
-            .then(this.collection.createDefault)
+            .then(_.bind(this.collection.createDefault, this.collection))
             .then(function() {
+                var func = _.bind(ModuleObject.prototype.getAll, self);
                 self.collection.trigger('reset:all');
-                return self.getAll(options);
+                return func(options);
             })
             .thenResolve(self.collection);
         },
@@ -367,24 +395,11 @@ define([
             };
         },
 
-        /**
-         * Always save password as sha256
-         */
-        _savePassword: function(model, data) {
-            var self = this;
-
-            return new Q(Radio.request('encrypt', 'sha256', data.value))
-            .then(function(result) {
-                data.value = result;
-                return self.save(model, data);
-            });
-        }
-
     });
 
     /**
      * Initialize it automaticaly because everything depends on configs
-     * collection.
+     * collection and it should be available as soon as possible.
      */
     return new Collection();
 });

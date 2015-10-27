@@ -12,7 +12,7 @@ define([
      * Tag form controller.
      *
      * Listens to events:
-     * 1. channel: `tags`, event: `save:after`
+     * 1. channel: `tags`, event: `update:model`
      *    triggers `close` event on the view.
      * 2. this.view, event: `save`
      *    saves the changes.
@@ -30,7 +30,7 @@ define([
             _.bindAll(this, 'show');
 
             // Events
-            this.listenTo(Radio.channel('tags'), 'save:after', this.onSaveAfter);
+            this.listenTo(Radio.channel('tags'), 'update:model', this.onSaveAfter);
 
             // Fetch the model and render the view
             Radio.request('tags', 'get:model', options)
@@ -60,7 +60,10 @@ define([
                 name: this.view.ui.name.val().trim()
             };
 
-            Radio.request('tags', 'save', this.view.model, data);
+            Radio.request('tags', 'save', this.view.model, data)
+            .fail(function(e) {
+                console.error('Error:', e);
+            });
         },
 
         onSaveAfter: function() {

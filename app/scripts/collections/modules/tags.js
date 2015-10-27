@@ -2,131 +2,105 @@
 define([
     'underscore',
     'q',
+    'marionette',
     'backbone.radio',
     'collections/modules/module',
     'collections/tags'
-], function(_, Q, Radio, ModuleObject, Tags) {
+], function(_, Q, Marionette, Radio, ModuleObject, Tags) {
     'use strict';
 
     /**
-     * Tags collection.
-     * A convenience object that handles operations to Tags collection.
+     * Collection module for Tags.
      *
-     * Listens to events:
-     * 1. this.collection, event: `reset:all`
-     *    destroys the current collection.
-     *
-     * Replies to requests on channel `tags`:
-     * 1. `get:all`  - returns a collection.
-     * 2. `get:model` - returns a model with the specified ID.
-     * 3. `add`       - add several tags at once.
-     * 4. `remove` - removes an existing model.
-     * 5. `save`   - adds a new model or updates an existing one.
-     *
-     * Triggers events:
-     * 1. `add:model` to a collection that is currently under use
-     *    when a new model was added or updated.
-     * 2. channel: `tags`, event: `save:after`
-     *    after a model was added or updated.
-     * 3. channel: `tags`, event: `model:destroy`
-     *    after a model was destroyed.
+     * Apart from the replies in collections/modules/module.js,
+     * it also has an additional reply `add` which inserts several
+     * tags into database.
      */
     var Collection = ModuleObject.extend({
         Collection: Tags,
 
         reply: function() {
             return {
-                'remove'    : this.remove,
-                'save'      : this.saveModel,
-                'save:all'  : this.saveAll,
-                'add'       : this.add,
-                'get:all'   : this.getAll,
-                'get:model' : this.getById
+                'add': this.addTags,
             };
         },
 
-        filter: function(options) {
-            var collection = this.collection.fullCollection || this.collection;
-            return collection.where(options.conditions);
+        /**
+         * Add a bunch of tags.
+         * @type array array of tags
+         * @type object options
+         */
+        addTags: function(tags, options) {
+            var self     = this,
+                promises = [];
+
+            if (!tags.length) {
+                return new Q();
+            }
+
+            options = options || {};
+            _.each(tags, function(tag) {
+                promises.push(function() {
+                    return self.addTag(tag, options);
+                });
+            });
+
+            return _.reduce(promises, Q.when, new Q())
+            .fail(function(e) {
+                console.error('Error:', e);
+            });
         },
 
         /**
-         * Add a new model or update an existing one.
+         * Add a tag.
+         * @type string name of a tag
+         * @type object options
+         */
+        addTag: function(tag, options) {
+            var self = this;
+
+            return new Q(Radio.request('encrypt', 'sha256', tag))
+            .then(function(id) {
+                options.id = id;
+                return self.getModel({id: id.join(''), profile: options.profile});
+            })
+            .then(function(model) {
+                if (!model) {
+                    model = new (self.changeDatabase(options)).prototype.model();
+                    return self.saveModel(model, {name: tag});
+                }
+                return model;
+            });
+        },
+
+        /**
+         * Save or create a tag.
+         * @type object Backbone model
+         * @type object new values
          */
         saveModel: function(model, data) {
-            var self  = this;
+            var self = this;
 
             // First, make sure that a model won't duplicate itself.
             return new Q(Radio.request('encrypt', 'sha256', data.name))
             .then(function(id) {
                 id = id.join('');
-                return self._removeOld(id, model)
+
+                if (!model.id) {
+                    return id;
+                }
+
+                return self.remove(model, {profile: model.database.id})
                 .thenResolve(id);
             })
             .then(function(id) {
-                model.set('id', id);
+                var saveFunc = _.bind(ModuleObject.prototype.saveModel, self);
                 model.set(data);
-                model.updateDate();
+                model.set('id', id);
 
-                return self.save(model, model.toJSON());
+                return saveFunc(model, model.attributes);
             });
         },
-
-        /**
-         * Add a bunch of tags
-         */
-        add: function(tags, options) {
-            var self     = this,
-                promises = [];
-
-            if (!tags.length) {
-                return Q.resolve();
-            }
-
-            options = options || {};
-            _.each(tags, function(tag) {
-                promises.push(self._findSave(tag, options));
-            });
-
-            return Q.all(promises);
-        },
-
-        /**
-         * If there is not a tag with such a name, add a new one.
-         */
-        _findSave: function(name, options) {
-            var self = this;
-
-            return new Q(Radio.request('encrypt', 'sha256', name))
-            .then(function(id) {
-                return self.getById(
-                    _.extend({}, options, {id: id.join('')})
-                );
-            })
-            .then(function(model) {
-                return model;
-            })
-            .catch(function(model) {
-                console.error('Can\'t find the model, adding', name, arguments);
-
-                model = new self.Collection.prototype.model();
-                return self.saveModel(model, {name: name});
-            });
-        },
-
-        /**
-         * Sometimes a tag might have a new ID.
-         * If that happens, tags will be duplicated.
-         * With this method we solve that problem.
-         */
-        _removeOld: function(newId, model) {
-            if (!model.id || !this.collection || newId === model.id) {
-                return Q.resolve();
-            }
-
-            return this.remove(model)
-            .thenResolve(model);
-        }
 
     });
 
@@ -136,5 +110,4 @@ define([
     });
 
     return Collection;
-
 });

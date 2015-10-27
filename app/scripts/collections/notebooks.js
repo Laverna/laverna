@@ -25,6 +25,9 @@ define([
             currentPage  : 0
         },
 
+        conditions: {
+        },
+
         comparator: 'name',
 
         sortItOut: function() {

@@ -48,7 +48,7 @@ define([
                 version: 4,
                 migrate: function(transaction, next) {
                     var store = transaction.objectStore('tags');
-                    store.createIndex('nameIndex', 'name', { unique: true});
+                    store.createIndex('nameIndex', 'name', {unique: true});
                     store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
@@ -85,7 +85,18 @@ define([
                     store.createIndex('name', 'name', {unique: true});
                     next();
                 }
-            }
+            },
+            // Tags store
+            {
+                version: 8,
+                migrate: function(transaction, next) {
+                    var store = transaction.objectStore('tags');
+                    console.log('store', store);
+                    store.deleteIndex('nameIndex');
+                    store.createIndex('nameIndex', 'name', {unique: false});
+                    next();
+                }
+            },
         ]
     };
 

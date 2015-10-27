@@ -34,7 +34,7 @@ define([
             // this.on('update:name', this.doEscape());
         },
 
-        validate: function(attrs) {
+        /*validate: function(attrs) {
             var errors = [];
             if (attrs.name === '') {
                 errors.push('name');
@@ -43,7 +43,7 @@ define([
             if (errors.length > 0) {
                 return errors;
             }
-        },
+        },*/
 
         /**
          * Saves model's id for sync purposes, then destroys it

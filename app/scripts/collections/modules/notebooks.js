@@ -2,102 +2,53 @@
 define([
     'underscore',
     'q',
+    'marionette',
     'backbone.radio',
     'collections/modules/module',
     'collections/notebooks'
-], function(_, Q, Radio, ModuleObject, Notebooks) {
+], function(_, Q, Marionette, Radio, ModuleObject, Notebooks) {
     'use strict';
 
     /**
-     * Notebooks collection.
+     * Collection module for Notebooks.
      * A convenience object that handles operations to Notebooks collection.
      *
-     * Listens to events:
-     * 1. this.collection, event: `reset:all`
-     *    destroys the current collection.
-     *
-     * Replies to requests on channel `notebooks`:
-     * 1. `get:all`  - returns a collection.
-     * 2. `get:model` - returns a model with the specified ID.
-     * 3. `remove` - removes an existing model.
-     * 4. `save`   - adds a new model or updates an existing one.
-     *
-     * Triggers events:
-     * 1. `add:model` to a collection that is currently under use
-     *    when a new model was added or updated.
-     * 2. channel: `notebooks`, event: `save:after`
-     *    after a model was added or updated.
-     * 3. channel: `notebooks`, event: `model:destroy`
-     *    after a model was destroyed.
+     * It listens to all events and replies registered in collections/modules/module.js
      */
     var Collection = ModuleObject.extend({
         Collection: Notebooks,
 
-        reply: function() {
-            return {
-                'remove'    : this.remove,
-                'save'      : this.save,
-                'save:all'  : this.saveAll,
-                'get:all'   : this.getNotebooks,
-                'get:model' : this.getById
-            };
-        },
-
-        getNotebooks: function(options) {
-            var self = this;
-
-            return this.getAll(options)
-            .then(function() {
-                self.collection.models = self.collection.getTree();
-                return self.collection;
-            });
-        },
-
         /**
-         * Remove an existing model.
+         * Remove an existing notebook.
+         * @type object Backbone model
+         * @type boolean true if all attached notes should be removed
          */
-        remove: function(model, removeNotes) {
-            var atIndex = this.collection.indexOf(model);
-
-            model = (typeof model === 'string' ? this.getById(model) : model);
+        remove: function(model, remove) {
+            var self = this;
+            model = (typeof model === 'string' ? this.getModel(model) : model);
 
             /**
              * Move child models to a higher level.
              * Then, remove notes attached to the notebook or change their notebookId.
              * And finally, remove the notebook.
              */
-            return this.updateChildren(model)
-            .then(Radio.request('notes', 'change:notebookId', model, removeNotes))
-            .then(function() {
-                return model.destroySync();
+            return new Q(model)
+            .then(function(model) {
+                return self.updateChildren(model).thenResolve(model);
             })
-            .then(function() {
-                Radio.trigger('notebooks', 'model:destroy', atIndex, model.id);
+            .then(function(model) {
+                return Radio.request('notes', 'change:notebookId', model, remove)
+                .thenResolve(model);
+            })
+            .then(function(model) {
+                var removeFunc = _.bind(ModuleObject.prototype.remove, self);
+                return removeFunc(model);
             });
         },
 
         /**
-         * Returns models with the specified parent ID.
-         */
-        getChildren: function(parentId) {
-            var collection;
-
-            // Filter an existing collection if it exists
-            if (this.collection) {
-                collection = this.collection.clone();
-                collection.reset(collection.getChildren(parentId));
-                return Q.resolve(collection);
-            }
-
-            // Fetch everything anew
-            collection = new Notebooks();
-
-            return new Q(collection.fetch({conditions: {parentId: parentId}}))
-            .thenResolve(collection);
-        },
-
-        /**
          * Move child models to a higher level.
+         * @type object Backbone model
          */
         updateChildren: function(model) {
             return this.getChildren(model.id)
@@ -106,12 +57,55 @@ define([
 
                 // Change parentId of each children
                 collection.each(function(child) {
-                    promises.push(child.save({parentId : model.get('parentId')}));
+                    promises.push(new Q(
+                        child.save({parentId : model.get('parentId')})
+                    ));
                 });
 
                 return Q.all(promises);
             });
-        }
+        },
+
+        /**
+         * Returns models with the specified parent ID.
+         * @type string
+         */
+        getChildren: function(parentId) {
+            // Just filter an existing collection
+            if (this.collection) {
+                var collection = this.collection.clone();
+                collection.reset(collection.getChildren(parentId));
+                return Q.resolve(collection);
+            }
+
+            return this.fetch({conditions: {parentId: parentId}});
+        },
+
+        /**
+         * Get all notebooks.
+         * @type object options
+         */
+        getAll: function(options) {
+            var self = this;
+            options.profile = options.profile || this.defaultDB;
+            options.filter  = options.filter || 'active';
+
+            // Do not fetch twice
+            if (this.collection && this.collection.database.id === options.profile) {
+                this.collection.models = this.collection.getTree();
+                return new Q(
+                    this.collection
+                );
+            }
+
+            var getFunc = _.bind(ModuleObject.prototype.getAll, this);
+
+            return getFunc(options)
+            .then(function() {
+                self.collection.models = self.collection.getTree();
+                return self.collection;
+            });
+        },
 
     });
 
@@ -121,5 +115,4 @@ define([
     });
 
     return Collection;
-
 });

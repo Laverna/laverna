@@ -2,191 +2,126 @@
 define([
     'underscore',
     'q',
+    'marionette',
     'backbone.radio',
     'collections/modules/module',
     'collections/notes'
-], function(_, Q, Radio, ModuleObject, Notes) {
+], function(_, Q, Marionette, Radio, ModuleObject, Notes) {
     'use strict';
 
     /**
-     * Notes collection module.
-     * It is used to fetch, add, save notes.
+     * Collection module for Notes.
      *
-     * Listens to
-     * ----------
-     *
-     * Replies on channel `notes`:
-     * 1. `get:model`         - returns a model with the provided id.
-     * 2. `filter`            - returns a collection filtered by provided filters.
-     * 3. `get:model:full`    - returns a model and its notebook
-     * 4. `change:notebookId` - changes notebookId of notes attached to a provided
-     *                          notebook. Returns a promise.
-     * 2. `save`    - saves a model
-     * 3. `remove`  - removes a model
-     * 4. `restore` - restores a model from trash
-     *
-     * Triggers events
-     * --------
-     * 1. channel: `notes`, event: `save:after`
-     *    after a note was updated.
-     * 2. channel: `notes`, event: `model:destroy`
-     *    after a note has been removed or its status was changed.
+     * Apart from the replies in collections/modules/module.js,
+     * it also has additional replies:
+     * 1. `get:model:full`    - returns a note with its notebook.
+     * 2. `restore`           - restores a note from trash
+     * 3. `change:notebookId` - when a notebook is removed, either move all attached
+     *    notes to trash or change notebook ID.
      */
     var Collection = ModuleObject.extend({
         Collection: Notes,
 
         reply: function() {
             return {
-                'save'              : this.saveModel,
-                'remove'            : this.remove,
-                'restore'           : this.restore,
-                'save:all'          : this.saveAll,
-                'get:model'         : this.getById,
-                'get:model:full'    : this.getModelFull,
-                'get:all'           : this.filter,
+                'get:model:full'  : this.getModelFull,
+                'restore'         : this.restore,
                 'change:notebookId' : this.onNotebookRemove
             };
         },
 
-        onDestroy: function() {
-            this.collection.trigger('destroy');
-            this.vent.stopReplying('get:model get:model:full filter save remove restore');
-        },
-
         /**
-         * Filters the collection.
+         * Save a note.
+         * @type object Backbone model
+         * @type object new values
          */
-        filter: function(options) {
-            var self  = this,
-                cond;
+        saveModel: function(model, data) {
+            var saveFunc = _.bind(ModuleObject.prototype.saveModel, this);
 
-            // Destroy old collection
-            this.trigger('collection:destroy');
-
-            // Get filter parameters
-            cond = Notes.prototype.conditions[options.filter || 'active'];
-            cond = (typeof cond === 'function' ? cond(options) : cond);
-
-            return this.getAll(_.extend({}, options, {
-                conditions    : cond,
-                sort          : false,
-                beforeSuccess : (
-                    this.storage !== 'indexeddb' || !cond ? this._filterOnFetch : null
-                )
+            // Before saving the model, add tags
+            return new Q(Radio.request('tags', 'add', data.tags || [], {
+                profile: model.database.id
             }))
-            .thenResolve(self.collection);
+            .then(function() {
+                return saveFunc(model, data);
+            });
         },
 
         /**
-         * Return a note with its notebook
+         * Remove a note.
+         * @type object Backbone model
+         * @type object options
          */
-        getModelFull: function(options) {
-            return this.getById(options)
-            .then(function(note) {
-                var profile = options.profile;
+        remove: function(model, options) {
+            var self = this;
+            model = (typeof model === 'string' ? this.getModel(model, options) : model);
 
-                return Q.all([
-                    Radio.request('notebooks', 'get:model', {
-                        profile : profile,
-                        id      : note.get('notebookId')
-                    }),
-                    Radio.request('files', 'get:files', note.get('files'), {
-                        profile: profile
-                    })
-                ])
-                .spread(function(notebook, files) {
-                    note.notebook = notebook;
-                    note.files    = files;
-                    return [note, notebook, files];
+            return new Q(model)
+            .then(function(model) {
+                // If the model is already in trash, destroy it
+                if (Number(model.get('trash')) === 1) {
+                    var removeFunc = _.bind(ModuleObject.prototype.remove, self);
+                    return removeFunc(model, options);
+                }
+
+                // Otherwise, just change 'trash' status
+                return self.save(model, {trash: 1})
+                .then(function(model) {
+                    self.vent.trigger('destroy:model', model);
+                    return model;
                 });
             });
         },
 
         /**
-         * Saves changes to a note.
+         * Restore a model from trash.
+         * @type object Backbone model
+         * @type object options
          */
-        saveModel: function(model, data) {
+        restore: function(model, options) {
             var self = this;
-            model.setEscape(data);
+            model = (typeof model === 'string' ? this.getModel(model, options) : model);
 
-            /**
-             * Before saving the model, add tags.
-             */
-            return new Q(Radio.request('tags', 'add', data.tags || [], {
-                profile: model.database.id
-            }))
-            .then(function() {
-                return self.save(model, model.toJSON());
+            return new Q(model)
+            .then(function(model) {
+                return self.save(model, {trash: 0})
+                .then(function(model) {
+                    self.vent.trigger('restore:model', model);
+                    return model;
+                });
             });
         },
 
         /**
-         * Restores a model from trash
-         */
-        restore: function(model) {
-            var atIndex = this.collection.indexOf(model);
-
-            // Save a new `trash` status and emmit an event
-            return new Q(model.save({trash: 0}))
-            .then(function() {
-                Radio.trigger('notes', 'model:destroy', atIndex);
-            });
-        },
-
-        /**
-         * Removes a model
-         */
-        remove: function(model) {
-            var atIndex = this.collection.indexOf(model),
-                wait;
-
-            model = (typeof model === 'string' ? this.getById(model) : model);
-
-            // If the model is already in trash, destroy it
-            if (Number(model.get('trash')) === 1) {
-                wait = model.destroySync();
-            }
-            // Otherwise, just change its status
-            else {
-                // wait = new Q(model.save({trash: 1, updated: Date.now()}));
-                wait = new Q(
-                    this.save(model, {trash: 1, updated: Date.now()})
-                );
-            }
-
-            return wait.then(function() {
-                Radio.trigger('notes', 'model:destroy', atIndex);
-            });
-        },
-
-        /**
-         * When a notebook is removed, change notebookId of the notes
-         * attached to it.
+         * When a notebook is removed, either move all attached
+         * notes to trash or change notebook ID.
+         * @type object Backbone model
+         * @type boolean true if all attached notes should be removed
          */
         onNotebookRemove: function(notebook, remove) {
-            var self     = this,
-                data     = {notebookId: 0},
-                promises = [];
+            var self = this,
+                data = {notebookId: 0};
 
-            // Place notes in trash
             if (remove) {
                 data.trash = 1;
             }
 
-            // Fetch notes that are attached to a specified notebook
-            return this.filter({
+            return this.fetch({
+                conditions: {
+                    notebookId: notebook.id
+                },
                 profile : notebook.database.id,
-                filter  : 'notebook',
-                query   : notebook.get('id')
             })
             .then(function(notes) {
                 if (notes.length === 0) {
-                    return Q.resolve();
+                    return;
                 }
 
-                // Change notebookId of each note or remove them
-                notes.fullCollection.each(function(note) {
-                    promises.push(self.save(note, data));
+                var coll     = notes.fullCollection || notes,
+                    promises = [];
+
+                coll.each(function(note) {
+                    promises.push(self.saveModel(note, data));
                 });
 
                 return Q.all(promises);
@@ -194,12 +129,38 @@ define([
         },
 
         /**
-         * Use Backbone's filters when IndexedDB is not available
+         * Get all notes.
+         * @type object options
          */
-        _filterOnFetch: function(collection, options) {
-            collection.filterList(options.filter, options);
-        }
+        getAll: function(options) {
+            var getAll = _.bind(ModuleObject.prototype.getAll, this);
+            options.filter = options.filter || 'active';
+            return getAll(options);
+        },
 
+        /**
+         * Return a note with its notebook.
+         * @type object options
+         */
+        getModelFull: function(options) {
+            return this.getModel(options)
+            .then(function(note) {
+                return Q.all([
+                    Radio.request('notebooks', 'get:model', {
+                        profile : options.profile,
+                        id      : note.get('notebookId')
+                    }),
+                    Radio.request('files', 'get:files', note.get('files'), {
+                        profile: options.profile
+                    })
+                ])
+                .spread(function(notebook, files) {
+                    note.notebook = notebook;
+                    note.files    = files;
+                    return [note, notebook];
+                });
+            });
+        },
     });
 
     // Initialize it automaticaly

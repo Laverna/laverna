@@ -161,7 +161,7 @@ define([
 
             return Q.all(promises)
             .then(function() {
-                self.vent('saved:collection');
+                self.vent.trigger('saved:collection');
                 return collection;
             });
         },
@@ -360,7 +360,7 @@ define([
          */
         decryptModels: function(collection) {
             collection = collection || this.collection;
-            if (!this._isEncryptEnabled(collection.model)) {
+            if (!this._isEncryptEnabled(collection.model.prototype)) {
                 return new Q(collection);
             }
 

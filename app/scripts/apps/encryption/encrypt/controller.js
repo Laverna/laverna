@@ -147,7 +147,7 @@ define([
             // Fetch all collections in a profile
             _.each(this.collectionNames, function(name) {
                 promises.push(
-                    new Q(Radio.request(name, 'get:all', options))
+                    new Q(Radio.request(name, 'fetch', options))
                 );
             });
 
@@ -223,7 +223,7 @@ define([
 
             _.each(this.collections, function(collection) {
                 promises.push(function() {
-                    return new Q(Radio.request(collection.storeName, 'save:all'));
+                    return new Q(Radio.request(collection.storeName, 'save:collection', collection));
                 });
             });
 

@@ -22,6 +22,7 @@ define([
             'synchronized' : 0,
             'count'        : 0,
             'trash'        : 0,
+            'created'      : 0,
             'updated'      : 0
         },
 
@@ -29,9 +30,9 @@ define([
 
         validate: function(attrs) {
             var errors = [];
-            if (attrs.name === '') {
-                errors.push('name');
-            }
+            // if (attrs.name === '') {
+            //     errors.push('name');
+            // }
             if (attrs.parentId === attrs.id) {
                 errors.push('parentId');
             }

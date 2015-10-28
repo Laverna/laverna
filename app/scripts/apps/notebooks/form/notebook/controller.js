@@ -77,7 +77,6 @@ define([
         },
 
         onSaveAfter: function() {
-            console.log('svae:after');
             this.view.trigger('close');
         },
 

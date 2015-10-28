@@ -212,7 +212,7 @@ define([
 
             return this.save(model, model.attributes)
             .then(function() {
-                self.vent.trigger('destroy:model', self.collection.get(model.id));
+                self.vent.trigger('destroy:model', model);
             });
         },
 
@@ -277,7 +277,8 @@ define([
             return this.fetch(options || {})
             .then(function(collection) {
                 self.collection = collection;
-                self.collection.conditionFilter = options.filter;
+                self.collection.conditionFilter  = options.filter;
+                self.collection.conditionCurrent = options.conditions;
 
                 // Register events
                 if (self.collection.registerEvents) {

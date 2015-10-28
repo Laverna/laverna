@@ -236,6 +236,11 @@ define([
          * @type object Backbone model
          */
         _navigateOnRemove: function(model) {
+            model     = this.get(model.id);
+            if (!model) {
+                return;
+            }
+
             var coll  = this.fullCollection || this,
                 index = this.indexOf(model);
 
@@ -270,9 +275,18 @@ define([
          * Update pagination when a model is added
          */
         _onAddItem: function(model) {
+            /**
+             * Remove a model from the collection if it doesn't meet
+             * the current filter condition.
+             */
+            if (!model.matches(this.conditionCurrent || {trash: 0})) {
+                return this._navigateOnRemove(model);
+            }
+
             // If the model already exists, update it
-            var coll = this.fullCollection || this,
+            var coll     = this.fullCollection || this,
                 colModel = coll.get(model.id);
+
             if (colModel) {
                 return colModel.set(model.toJSON());
             }

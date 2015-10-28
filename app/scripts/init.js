@@ -46,7 +46,7 @@ define([
         'apps/help/appHelp',
 
         // Optional modules
-        // 'modules/remotestorage/module',
+        'modules/remotestorage/module',
         'modules/pagedown/module',
         'modules/tags/module',
         'modules/tasks/module',

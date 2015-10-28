@@ -57,8 +57,9 @@ define([
         initialize: function() {
             // Default replies
             var defReply = _.bind(Module.prototype.reply, this);
-
             this.vent = Radio.channel(this.Collection.prototype.storeName);
+
+            _.bindAll(this, 'encryptModel', 'decryptModel', 'decryptModels');
 
             // Register replies
             this.vent.reply(_.extend(defReply(), this.reply()), this);

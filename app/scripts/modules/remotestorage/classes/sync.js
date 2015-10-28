@@ -41,9 +41,9 @@ define([
             RS.laverna.on('change', this.onRsChange);
 
             // Listen to Laverna events
-            this.listenTo(Radio.channel('notes'), 'save:after:encrypted', this.onSave);
-            this.listenTo(Radio.channel('notebooks'), 'save:after:encrypted', this.onSave);
-            this.listenTo(Radio.channel('tags'), 'save:after:encrypted', this.onSave);
+            this.listenTo(Radio.channel('notes'), 'sync:model destroy:model restore:model', this.onSave);
+            this.listenTo(Radio.channel('notebooks'), 'sync:model destroy:model restore:model', this.onSave);
+            this.listenTo(Radio.channel('tags'), 'sync:model destroy:model restore:model', this.onSave);
         },
 
         isConnected: function() {
@@ -57,8 +57,10 @@ define([
             var model   = change.newValue || change.oldValue,
                 profile = change.relativePath.split('/')[0];
 
-            change.newValue['@context'] = null;
-            Radio.request(model.type, 'save:raw', change.newValue, profile);
+            if (change.newValue) {
+                change.newValue['@context'] = null;
+            }
+            Radio.request(model.type, 'save:raw', change.newValue, {profile: profile});
         },
 
         /**
@@ -102,7 +104,7 @@ define([
 
             if (remoteData.length) {
                 promises.push(
-                    Radio.request(module, 'save:all:raw', remoteData)
+                    Radio.request(module, 'save:all:raw', remoteData, {profile: RsModule.profile})
                 );
             }
 

@@ -13,7 +13,7 @@
     "blueimp-canvas-to-blob": "git://github.com/blueimp/JavaScript-Canvas-to-Blob#~2.1.1",
     "bootstrap": "~3.3.5",
     "device.js": "git://github.com/matthewhudson/device.js",
-    "dompurify": "~0.6.1",
+    "DOMPurify": "~0.7.2",
     "dropzone": "~4.0.1",
     "enquire": "~2.1.0",
     "FileSaver": "*",

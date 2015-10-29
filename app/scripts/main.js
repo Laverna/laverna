@@ -61,7 +61,7 @@ requirejs.config({
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
-        dompurify             : '../bower_components/dompurify/src/purify',
+        dompurify             : '../bower_components/DOMPurify/src/purify',
         mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
         dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',

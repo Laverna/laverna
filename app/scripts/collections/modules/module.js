@@ -189,13 +189,16 @@ define([
          * @type array
          */
         saveAllRaw: function(arData, options) {
-            var promises = [];
+            var promises = [],
+                self     = this;
 
             _.each(arData, function(data) {
-                promises.push(this.saveRaw(data, options));
-            }, this);
+                promises.push(function() {
+                    return self.saveRaw(data, options);
+                });
+            });
 
-            return Q.all(promises);
+            return _.reduce(promises, Q.when, new Q());
         },
 
         /**
@@ -272,7 +275,7 @@ define([
                 options.conditions = cond;
             }
 
-            this.onReset();
+            // this.onReset();
 
             return this.fetch(options || {})
             .then(function(collection) {

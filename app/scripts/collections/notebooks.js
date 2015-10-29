@@ -26,6 +26,7 @@ define([
         },
 
         conditions: {
+            active: {trash: 0}
         },
 
         comparator: 'name',
@@ -35,13 +36,27 @@ define([
         },
 
         _onAddItem: function(model) {
+            /**
+             * Remove a model from the collection if it doesn't meet
+             * the current filter condition.
+             */
+            if (!model.matches(this.conditionCurrent || {trash: 0})) {
+                return this._navigateOnRemove(model);
+            }
+
+            var colModel = this.get(model.id);
+            if (colModel) {
+                return colModel.set(model.toJSON());
+            }
+
             this.add(model);
-            this.reset(this.models);
         },
 
-        _onRemoveItem: function(model) {
-            this.remove(model);
-            this.reset(this.models);
+        _navigateOnRemove: function(model) {
+            model = this.get(model.id);
+            if (model) {
+                this.remove(model);
+            }
         },
 
         /**

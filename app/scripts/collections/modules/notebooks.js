@@ -51,6 +51,8 @@ define([
          * @type object Backbone model
          */
         updateChildren: function(model) {
+            var self = this;
+
             return this.getChildren(model.id)
             .then(function(collection) {
                 var promises = [];
@@ -58,7 +60,7 @@ define([
                 // Change parentId of each children
                 collection.each(function(child) {
                     promises.push(new Q(
-                        child.save({parentId : model.get('parentId')})
+                        self.saveModel(child, {parentId: model.get('parentId')})
                     ));
                 });
 

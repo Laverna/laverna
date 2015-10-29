@@ -27,6 +27,7 @@ define([
         },
 
         conditions: {
+            active: {trash: 0}
         },
 
         initialize: function() {

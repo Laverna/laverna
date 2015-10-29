@@ -9,6 +9,7 @@ define([
     // Make TV4 globally available because RemoteStorage needs it.
     window.tv4 = tv4;
     var RS = new RemoteStorage({
+        logging: false
     });
 
     /**

@@ -90,10 +90,15 @@ define([
             {
                 version: 8,
                 migrate: function(transaction, next) {
-                    var store = transaction.objectStore('tags');
-                    console.log('store', store);
-                    store.deleteIndex('nameIndex');
-                    store.createIndex('nameIndex', 'name', {unique: false});
+                    var tagStore      = transaction.objectStore('tags'),
+                        notebookStore = transaction.objectStore('notebooks');
+
+                    tagStore.deleteIndex('nameIndex');
+                    tagStore.createIndex('nameIndex', 'name', {unique: false});
+                    tagStore.createIndex('trashIndex', 'trash', {unique: false});
+
+                    notebookStore.createIndex('trashIndex', 'trash', {unique: false});
+
                     next();
                 }
             },

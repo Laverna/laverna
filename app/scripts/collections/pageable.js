@@ -91,9 +91,9 @@ define([
             this.listenTo(this, 'reset', this.sortItOut);
 
             // Listen to events
-            this.listenTo(this.vent, 'update:model' , this._onAddItem);
-            this.listenTo(this.vent, 'destroy:model', this._navigateOnRemove);
-            this.listenTo(this.vent, 'restore:model', this._onRestore);
+            this.listenTo(this.vent, 'update:model' , this._onAddItem, this);
+            this.listenTo(this.vent, 'destroy:model', this._navigateOnRemove, this);
+            this.listenTo(this.vent, 'restore:model', this._onRestore, this);
         },
 
         /**

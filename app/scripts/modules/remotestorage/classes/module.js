@@ -112,6 +112,7 @@ define([
                 profile : null,
 
                 init: function(profile) {
+                    // RS.caching.set('/', 'FLUSH');
                     prClient.cache('');
                     this.profile = profile;
                 },

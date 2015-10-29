@@ -38,7 +38,6 @@ define([
 
             // Listen to RemoteStorage events
             RS.on('ready', this.onReady);
-            RS.laverna.on('change', this.onRsChange);
 
             // Listen to Laverna events
             this.listenTo(Radio.channel('notes'), 'sync:model destroy:model restore:model', this.onSave);
@@ -77,7 +76,7 @@ define([
                 promises.push(function() {
                     return Q.all([
                         Radio.request(module, 'fetch', {encrypt: true}),
-                        RsModule.getAll(module)
+                        new Q(RsModule.getAll(module))
                     ])
                     .spread(function(localData, remoteData) {
                         return self.syncAll(localData, remoteData, module);
@@ -86,6 +85,9 @@ define([
             });
 
             return _.reduce(promises, Q.when, new Q())
+            .then(function() {
+                return RS.laverna.on('change', self.onRsChange);
+            })
             .fail(function() {
                 console.error('Error', arguments);
             });
@@ -96,6 +98,7 @@ define([
          */
         syncAll: function(localData, remoteData, module) {
             var promises = [];
+            localData    = localData.fullCollection || localData;
 
             // Find notes which don't exist in local storage
             remoteData = _.filter(remoteData, function(rModel) {

@@ -51,7 +51,9 @@ gulp.task('default', ['less'], function() {
  * ---------------------
  */
 gulp.task('jshint', function() {
-    return gulp.src(['./app/scripts/**/*.js', './app/scripts/*.js'])
+    return gulp.src(['./app/scripts/**/*.js', 
+                    '!./app/scripts/libs/dropbox.js',
+                     './app/scripts/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });

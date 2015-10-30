@@ -51,7 +51,7 @@ gulp.task('default', ['less'], function() {
  * ---------------------
  */
 gulp.task('jshint', function() {
-    return gulp.src(['./app/scripts/**/*.js', 
+    return gulp.src(['./app/scripts/**/*.js',
                     '!./app/scripts/libs/dropbox.js',
                      './app/scripts/*.js'])
     .pipe(jshint())
@@ -61,7 +61,13 @@ gulp.task('jshint', function() {
 gulp.task('mocha', ['jshint'], function() {
     return gulp.src('./test/index.html')
     .pipe(mocha({
-    }));
+    }))
+    .once('error', function () {
+        process.exit(1);
+    })
+    .once('end', function () {
+        process.exit();
+    });
 });
 
 gulp.task('test', ['jshint', 'mocha'], function() {

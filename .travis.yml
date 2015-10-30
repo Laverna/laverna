@@ -1,0 +1,12 @@
+language: javascript
+node_js:
+    - 'stable'
+os:
+    - linux
+    - osx
+before_install:
+    - npm install -g gulp bower
+install:
+    - npm install
+    - bower install
+    - gulp build

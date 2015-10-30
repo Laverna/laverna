@@ -6,10 +6,11 @@
     "url": "https://github.com/Laverna/laverna"
   },
   "scripts": {
-      "test": "gulp test"
+    "test": "gulp test"
   },
   "dependencies": {},
   "devDependencies": {
+    "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.2",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",

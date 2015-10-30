@@ -1,4 +1,4 @@
-language: javascript
+language: node_js
 node_js:
     - 'stable'
 os:

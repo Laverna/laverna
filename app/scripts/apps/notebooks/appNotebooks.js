@@ -1,11 +1,12 @@
 /* global define, requirejs */
 define([
+    'q',
     'underscore',
     'marionette',
     'backbone.radio',
     'app',
     'apps/notebooks/list/app'
-], function(_, Marionette, Radio, App, SidebarApp) {
+], function(Q, _, Marionette, Radio, App, SidebarApp) {
     'use strict';
 
     /**
@@ -90,9 +91,16 @@ define([
 
         // Edit or add notebooks
         notebookForm: function(profile, id) {
+
+            // Return a promise that gets resolved when the new notebook is
+            // successfully created.
+            var defer = Q.defer();
+
             requirejs(['apps/notebooks/form/notebook/app'], function(Module) {
-                startModule(Module, {profile: profile, id: id});
+                startModule(Module, {profile: profile, id: id, promise: defer});
             });
+
+            return defer.promise;
         },
 
         // Edit or add tags

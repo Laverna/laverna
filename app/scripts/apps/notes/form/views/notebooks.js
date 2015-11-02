@@ -44,7 +44,15 @@ define([
 
         addNotebook: function() {
             if (this.ui.notebookId.find('.addNotebook').is(':selected')) {
-                Radio.request('appNotebooks', 'show:form');
+                var self = this;
+                Radio.request('appNotebooks', 'show:form')
+                    .then(function(notebook) {
+
+                        // Set the active notebook if one was created by the user.
+                        if (notebook)
+                            self.ui.notebookId.val(notebook.id);
+                    });
+
                 this.ui.notebookId.val(this.options.activeId);
             }
         }

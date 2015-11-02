@@ -72,10 +72,18 @@ define([
             Radio.request('global', 'region:show', 'content', this.view);
             this.view.trigger('rendered');
 
+            // Resolve the notebook ID.
+            // If the current note doesn't have a notebook attached,
+            // try to use one from the filter if it specifies a notebook.
+            var activeId = note.get('notebookId');
+            if (activeId === '0' && this.options.filter == 'notebook') {
+                activeId = this.options.query;
+            }
+
             // Show notebooks selector
             notebooksView = new NotebooksView({
                 collection : notebooks,
-                activeId   : note.get('notebookId')
+                activeId   : activeId
             });
             this.view.notebooks.show(notebooksView);
 

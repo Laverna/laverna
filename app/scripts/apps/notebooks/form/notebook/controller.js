@@ -29,6 +29,7 @@ define([
         initialize: function(options) {
             options = options || {profile: Radio.request('uri', 'profile')};
             _.bindAll(this, 'show');
+            this.options = options;
 
             // Events
             this.listenTo(Radio.channel('notebooks'), 'update:model', this.onSaveAfter);
@@ -44,6 +45,11 @@ define([
         onDestroy: function() {
             this.stopListening();
             Radio.request('global', 'region:empty', 'modal');
+
+            // If we still got an unresolved promise, resolve it with null-value.
+            if (this.options.promise) {
+               this.options.promise.resolve(null);
+            }
         },
 
         show: function(collection, model) {
@@ -65,14 +71,29 @@ define([
         },
 
         save: function() {
+            var self = this;
             var data = {
                 name     : this.view.ui.name.val(),
                 parentId : this.view.ui.parentId.val()
             };
 
             Radio.request('notebooks', 'save', this.view.model, data)
+            .then(function() {
+                // Resolve the promise.
+                if (self.options.promise) {
+                    self.options.promise.resolve({
+                        title: self.view.model.title,
+                        id: self.view.model.id
+                    });
+                    self.options.promise = null;
+                }
+            })
             .fail(function(e) {
                 console.error('Error:', e);
+                if (self.options.promise) {
+                    self.options.promise.reject(e);
+                    self.options.promise = null;
+                }
             });
         },
 

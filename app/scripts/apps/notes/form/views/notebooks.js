@@ -49,8 +49,9 @@ define([
                     .then(function(notebook) {
 
                         // Set the active notebook if one was created by the user.
-                        if (notebook)
+                        if (notebook) {
                             self.ui.notebookId.val(notebook.id);
+                        }
                     });
 
                 this.ui.notebookId.val(this.options.activeId);

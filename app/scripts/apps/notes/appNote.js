@@ -170,10 +170,12 @@ define([
 
             // Construct the notes/.../add URI with optional filter/query args.
             var uri = '/notes';
-            if (API.notesArg && API.notesArg.filter)
+            if (API.notesArg && API.notesArg.filter) {
                 uri += '/f/' + API.notesArg.filter;
-            if (API.notesArg && API.notesArg.query)
+            }
+            if (API.notesArg && API.notesArg.query) {
                 uri += '/q/' + API.notesArg.query;
+            }
             uri += '/add';
 
             Radio.request('uri', 'navigate', uri, {

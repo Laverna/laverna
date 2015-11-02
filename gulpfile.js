@@ -55,7 +55,8 @@ gulp.task('jshint', function() {
                     '!./app/scripts/libs/dropbox.js',
                      './app/scripts/*.js'])
     .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('mocha', ['jshint'], function() {
@@ -64,9 +65,6 @@ gulp.task('mocha', ['jshint'], function() {
     }))
     .once('error', function () {
         process.exit(1);
-    })
-    .once('end', function () {
-        process.exit();
     });
 });
 
@@ -110,7 +108,7 @@ gulp.task('less', function() {
 /**
  * Clean up dist directory.
  */
-gulp.task('clean:dist', ['jshint'], function() {
+gulp.task('clean:dist', ['test'], function() {
     return gulp.src('./dist', {read: false})
     .pipe(clean());
 });

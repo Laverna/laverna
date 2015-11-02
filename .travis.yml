@@ -7,4 +7,17 @@ install:
     - npm install
     - bower install
     - cd test && bower install && cd ../
+script:
     - gulp build
+    - gulp server:dist &
+    - gulp mocha-ui:firefox
+    - killall gulp
+after_failure:
+    - killall gulp
+addons:
+    sauce_connect:
+        username:
+            secure: "F2waNLSycvKfroVB0wIExO9dimxFCrdoKdhj3k8NzcB8a1OFfmu9JqGf+NIHUOXqW3r6LEOmtH522II3AsEAz2a5En+rzl83CVBYiYylYzvnnGZHgTMttemYWRqbH8pEYGA+o/m47NDJo4AbAJ3A5lQvHPKylbPVuuHMGgHwrdXgGAktw2mq15mo65LEhSVKRm08b6tB+AD1OesaZ//dzf/uhhmB6ukvXVI5CaGCJV13OVXHf1vIkutTqx3JrDwi2ErGhwTg/wc1ZKnWG7+EAKxsf0lfgNFCkAL3xS8309LyvrFDIoDCY0T3VeR0WDQtr+ryRDIcOROoo3Q2LUqqERD1W4a1Tsn3yxeEbyHzOPMo2o14AK04y3Alel+5en4V0hNEhDbSgV/pyzkrzZ1KVHNyNkZA5i1aCWG5rfO6oeVhPtUI/oAwom1Xa8FwvK96osbUmv5TDeax/dtMxYLtOZDJo6AZx6aVN7wqjDtLuYg0oZ7/+JAIaHfngxYgKE400sied6v2VNxYdqP+Duf2ZaiuOXfnnQB74/zy29uQtbztmAKuLF36/Wi1PWTBnezIo9vRLTzB8JVZ2echeJYbOpk5dqfnjAE2xwOiHzbqRfRvd699C+x9WCXgNZmySog7MEY5SJ31JqVfUzrhhSgo7xbpWfig9vNdExAcaDJpHSo="
+        access_key:
+            secure: "yDTvc3TpWhwDLtF6LnVduEtfdi1lmA265XAAiirV2Hn/2NonOS4M5eW7j5RB9JY/psLpd9/l5SZZTIYxCxURrMBlxnHyOYlrNnA4aTXGVPulDECPmQFdXuMHJclnCx4GL/YOg5EXhsjD8EFB/ihavDaFr2740tuYet8KNqqB0RI5pkmp7RP8G3x3AiTu2zv72e5C0TukKBdCUpIhSX34ofsmvQ8KQ/DOAUK1MjNYxb55Mhf7MCgskC+bypzWZDuuOvM0w48OzwDuF6LBnHQCxvUmcUwuxRTuJNJZUFoOIEEP44r546fi0vzt9/1gLI2Qsc/YtuvSsPKquMb+iV1Rn8F77vGUN0woiYlcAAtrCIe+fk2Kl6FVNPY9KlldQZPwogLLwGpPN6h+kGVOgNBl0WSmiekDVbFDqo0TcNhlwkkpR8Iuy+WfWZI5l+pmZrBCnQIIFNd+SlLXlftp1aiaghBs6654tp+jULfUzjeL8yxBJpcsosi8+erpx4u7ldbtWi94z1LCstbU65nSPlEaKEmjGPWppFOL0nzORTT2trSil0WrQoAkBmsFkzxI7KOhFPoVuk26E4bY/o7Jz1Y2OGPYKdsZppB3pDDH6BxUYW/u5YLveEU64Kz6ixgDkOi3rHFrDiq81v7OKAINytqik6FV4N1zpsurQ2JUV9aPmf8="
+        tunnel_domains: localhost

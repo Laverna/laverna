@@ -1,22 +1,52 @@
 'use strict';
-var gulp      = require('gulp'),
-    connect   = require('gulp-connect'),
-    path      = require('path'),
-    less      = require('gulp-less'),
-    rename    = require('gulp-rename'),
-    aprefix   = require('gulp-autoprefixer'),
-    // concat = require('gulp-concat'),
-    jshint    = require('gulp-jshint'),
-    mocha     = require('gulp-mocha-phantomjs'),
-    rjs       = require('gulp-requirejs-optimize'),
-    merge     = require('merge-stream'),
-    uglify    = require('gulp-uglify'),
-    clean     = require('gulp-clean'),
-    replace   = require('gulp-replace'),
-    manifest  = require('gulp-manifest'),
-    htmlmin   = require('gulp-minify-html'),
-    cssmin    = require('gulp-minify-css')
+var gulp         = require('gulp'),
+    connect      = require('gulp-connect'),
+    path         = require('path'),
+    less         = require('gulp-less'),
+    rename       = require('gulp-rename'),
+    aprefix      = require('gulp-autoprefixer'),
+    // concat    = require('gulp-concat'),
+    rjs          = require('gulp-requirejs-optimize'),
+    merge        = require('merge-stream'),
+    uglify       = require('gulp-uglify'),
+    clean        = require('gulp-clean'),
+    replace      = require('gulp-replace'),
+    manifest     = require('gulp-manifest'),
+    htmlmin      = require('gulp-minify-html'),
+    cssmin       = require('gulp-minify-css'),
+
+    // Testing libraries
+    jshint       = require('gulp-jshint'),
+    mocha        = require('gulp-mocha-phantomjs'),
+    mochaSel     = require('gulp-mocha-selenium'),
+
+    // Selenium auth data (Saucelabs for default)
+    seleniumConf = {
+        host                : 'ondemand.saucelabs.com',
+        port                : 80,
+        username            : process.env.SAUCE_USERNAME   || 'SAUCE_USERNAME',
+        accessKey           : process.env.SAUCE_ACCESS_KEY || 'SAUCE_ACCESS_KEY',
+        usePromises         : true,
+        useChaining         : true,
+        reporter            : 'nyan',
+        ui                  : 'bdd',
+        bail                : true,
+        timeout             : 200000,
+        'tunnel-identifier' : process.env.TRAVIS_JOB_NUMBER,
+        build               : process.env.TRAVIS_BUILD_NUMBER
+    }
     ;
+
+/**
+ * Server for dist folder.
+ */
+gulp.task('server:dist', function() {
+    connect.server({
+        port: 9000,
+        root: 'dist',
+        livereload: false
+    });
+});
 
 /**
  * -------------------------------------
@@ -47,7 +77,7 @@ gulp.task('default', ['less'], function() {
 
 /**
  * ---------------------
- * Run unit tests.
+ * Run tests.
  * ---------------------
  */
 gulp.task('jshint', function() {
@@ -59,11 +89,29 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('fail'));
 });
 
+/**
+ * Run unit tests.
+ */
 gulp.task('mocha', ['jshint'], function() {
     return gulp.src('./test/index.html')
     .pipe(mocha({
     }))
-    .once('error', function () {
+    .once('error', function(err) {
+        console.log('Error', err.toString());
+        process.exit(1);
+    });
+});
+
+/**
+ * Run UI tests.
+ */
+gulp.task('mocha-ui:firefox', function() {
+    seleniumConf.browserName = 'firefox';
+
+    return gulp.src('./test/spec-ui/test.js', {read: false})
+    .pipe(mochaSel(seleniumConf))
+    .once('error', function(err) {
+        console.log('Error', err.toString());
         process.exit(1);
     });
 });
@@ -130,6 +178,8 @@ gulp.task('build:js', ['clean:dist'], function() {
         exclude                : [
             'mathjax',
             'dropbox',
+            'tv4',
+            'bluebird',
             'remotestorage'
         ],
         include                : [
@@ -202,7 +252,9 @@ gulp.task('copy:deps', ['clean:dist'], function() {
         gulp.src([
             './app/bower_components/requirejs/require.js',
             './app/bower_components/modernizr/modernizr.js',
-            './app/bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd.js',
+            './app/bower_components/remotestorage.js/release/stable/remotestorage.js',
+            './app/bower_components/tv4/tv4.js',
+            './app/bower_components/bluebird/js/browser/bluebird.min.js',
         ], options)
         .pipe(uglify({
             preserveComments: 'license'

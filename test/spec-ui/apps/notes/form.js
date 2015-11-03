@@ -1,18 +1,24 @@
-/* global describe, before, it */
+/* global describe, before, after, it */
 'use strict';
 
 describe('#/notes/add', function() {
-    var browser;
-
-    before(function() {
-        browser = this.browser;
-
-        return browser
-        .get('http://localhost:9000/#notes/add');
+    before(function(client, done) {
+        done();
     });
 
-    it('removes loader', function() {
-        return browser.waitForConditionInBrowser('document.querySelectorAll("#layout--brand *").length === 0', 10000);
+    after(function(client, done) {
+        client.end(function() {
+            done();
+        });
+    });
+
+    it('can change note title', function(client) {
+        client.urlHash('notes/add')
+        .expect.element('#editor--input--title').to.be.visible.before(50000);
+
+        client.setValue('#editor--input--title', ['Nightwatch', client.keys.ENTER])
+        .pause(1000)
+        .expect.element('#editor--input--title').value.to.contain('Nightwatch');
     });
 
 });

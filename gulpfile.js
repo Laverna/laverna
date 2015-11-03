@@ -1,5 +1,6 @@
 'use strict';
 var gulp         = require('gulp'),
+    util         = require('gulp-util'),
     connect      = require('gulp-connect'),
     path         = require('path'),
     less         = require('gulp-less'),
@@ -18,23 +19,7 @@ var gulp         = require('gulp'),
     // Testing libraries
     jshint       = require('gulp-jshint'),
     mocha        = require('gulp-mocha-phantomjs'),
-    mochaSel     = require('gulp-mocha-selenium'),
-
-    // Selenium auth data (Saucelabs for default)
-    seleniumConf = {
-        host                : 'ondemand.saucelabs.com',
-        port                : 80,
-        username            : process.env.SAUCE_USERNAME   || 'SAUCE_USERNAME',
-        accessKey           : process.env.SAUCE_ACCESS_KEY || 'SAUCE_ACCESS_KEY',
-        usePromises         : true,
-        useChaining         : true,
-        reporter            : 'nyan',
-        ui                  : 'bdd',
-        bail                : true,
-        timeout             : 200000,
-        'tunnel-identifier' : process.env.TRAVIS_JOB_NUMBER,
-        build               : process.env.TRAVIS_BUILD_NUMBER
-    }
+    nightwatch   = require('gulp-nightwatch')
     ;
 
 /**
@@ -104,12 +89,17 @@ gulp.task('mocha', ['jshint'], function() {
 
 /**
  * Run UI tests.
+ * Example of running tests:
+ * gulp nightwatch --env [test_settings profile]
  */
-gulp.task('mocha-ui:firefox', function() {
-    seleniumConf.browserName = 'firefox';
-
+gulp.task('nightwatch', function() {
     return gulp.src('./test/spec-ui/test.js', {read: false})
-    .pipe(mochaSel(seleniumConf))
+    .pipe(nightwatch({
+        configFile : './test/nightwatch.json',
+        cliArgs    : [
+            '--env ' + (util.env.env || 'default')
+        ]
+    }))
     .once('error', function(err) {
         console.log('Error', err.toString());
         process.exit(1);

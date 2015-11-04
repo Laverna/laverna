@@ -10,6 +10,7 @@ install:
 script:
     - gulp build
     - gulp server:dist &
+    - set -e
     - gulp nightwatch --env ci
     - killall gulp
 after_failure:

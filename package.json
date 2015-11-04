@@ -27,7 +27,8 @@
     "gulp-requirejs-optimize": "^0.3.0",
     "gulp-uglify": "^1.4.1",
     "jshint-stylish": "^0.1.5",
-    "merge-stream": "^1.0.0"
+    "merge-stream": "^1.0.0",
+    "nightwatch": "^0.8.6"
   },
   "engines": {
     "node": ">=0.8.0"

@@ -32,18 +32,19 @@
 
             "selenium_port"         :  80,
             "selenium_host"         :  "ondemand.saucelabs.com",
-            "tunnel-identifier"     :  "${TRAVIS_JOB_NUMBER}",
-            "build"                 :  "${TRAVIS_BUILD_NUMBER}",
             "username"              :  "${SAUCE_USERNAME}",
             "access_key"            :  "${SAUCE_ACCESS_KEY}",
 
+            "end_session_on_fail"   : true,
             "silent"                :  true,
             "desiredCapabilities"   :  {
                 "name"              :  "CI",
                 "videoUploadOnPass" :  false,
                 "browserName"       :  "firefox",
                 "javascriptEnabled" :  true,
-                "acceptSslCerts"    :  true
+                "acceptSslCerts"    :  true,
+                "tunnel-identifier" :  "${TRAVIS_JOB_NUMBER}",
+                "build"             :  "${TRAVIS_BUILD_NUMBER}"
             }
         },
 

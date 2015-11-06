@@ -6,6 +6,7 @@ var tests = [
     './apps/notes/form.js',
     './apps/notebooks/form.js',
     './apps/notebooks/list.js',
+    './apps/notebooks/remove.js',
 ];
 
 // Load all test files

@@ -9,9 +9,7 @@ describe('/notes', function() {
     });
 
     after(function(client, done) {
-        client.end(function() {
-            done();
-        });
+        done();
     });
 
     it('opens #/notes', function(client) {

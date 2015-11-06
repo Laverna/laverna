@@ -97,6 +97,7 @@ gulp.task('nightwatch', function() {
     .pipe(nightwatch({
         configFile : './test/nightwatch.json',
         cliArgs    : [
+            '--test ' + 'test/spec-ui/test.js',
             '--env ' + (util.env.env || 'default')
         ]
     }))

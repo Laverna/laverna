@@ -168,9 +168,7 @@ describe('#/notebooks/edit', function() {
     });
 
     after(function(client, done) {
-        client.end(function() {
-            done();
-        });
+        done();
     });
 
 

@@ -1,102 +1,36 @@
-
 /* global describe, before, after, it */
 'use strict';
 var expect = require('chai').expect;
-var Q = require('q');
 
 /**
- * Add notebook form test
+ * Notebook list test
  */
 
 describe('#/notebooks', function() {
     var ids;
 
-    var createNotebook = function(client, item) {
-        var defer = Q.defer();
-
-        client
-        .urlHash('notebooks')
-        .pause(100)
-        .urlHash('notebooks/add')
-        .expect.element('#modal .form-group').to.be.visible.before(2000);
-
-        client
-        .perform((client, done) => {
-            client.execute(function(filter) {
-                var ops = document.querySelectorAll('#modal select[name="parentId"] option');
-                for (var i = 0, len = ops.length; i < len; i++) {
-                    if (filter && ops[i].text.indexOf(filter) > -1) {
-                        document
-                        .querySelector('#modal select[name="parentId"]')
-                        .selectedIndex = ops[i].index;
-                    }
-                }
-            }, [item.parent], function(res) {
-                done();
-            });
-        })
-        client.setValue('#modal input[name="name"]', [item.name, client.Keys.ENTER])
-        .perform(function() {
-            defer.resolve();
-        });
-
-        return defer.promise;
-    };
-
-    var createNotebooks = function(client) {
-        var promises = [],
-            notebooks = [
-                {name: 'notebook 1', parent: 0},
-                // {name: 'notebook 2', parent: 0},
-                // {name: 'notebook 3', parent: 0},
-                {name: 'notebook 4'},
-                {name: 'notebook 5', parent: 'notebook 4'},
-            ];
-
-        notebooks.forEach(function(item) {
-            promises.push(function() {
-                return createNotebook(client, item);
-            });
-        });
-
-        return promises.reduce(Q.when, new Q());
-    };
-
     before(function(client, done) {
         this.timeout(100000);
-        client
-        .urlHash('notes');
+        client.urlHash('notes');
 
         client
         .pause(100)
         .urlHash('notebooks');
 
-        createNotebooks(client)
-        .then(function() {
-            client
-            .urlHash('notes');
+        client.addNotebook({name: 'notebook 1', parentId: 0});
+        client.addNotebook({name: 'notebook 4', parentId: 0});
+        client.addNotebook({name: 'notebook 5', parentId: 'notebook 4'});
 
-            client
-            .pause(100)
-            .urlHash('notebooks');
+        client.urlHash('notes');
 
-            // Get all rendered notebooks
-            client.execute(function(filter) {
-                var ops = document.querySelectorAll('#notebooks .list--item'),
-                ids = [];
+        client
+        .pause(100)
+        .urlHash('notebooks');
 
-                for (var i = 0, len = ops.length; i < len; i++) {
-                    ids.push(ops[i].getAttribute('data-id'));
-                }
-
-                return ids;
-            }, [], function(res) {
-                expect(typeof res.value).to.be.equal('object');
-                ids = res.value;
-                done();
-            });
-        })
-        .catch((e) => {console.log('ERROR:', e.toString());});
+        client.findAll('#notebooks .list--item', 'data-id', (res) => {
+            ids = res;
+            done();
+        });
     });
 
     after(function(client, done) {

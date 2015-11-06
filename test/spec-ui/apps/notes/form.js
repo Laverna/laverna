@@ -10,9 +10,7 @@ describe('Note form', function() {
     });
 
     after(function(client, done) {
-        client.end(function() {
-            done();
-        });
+        done();
     });
 
     /**

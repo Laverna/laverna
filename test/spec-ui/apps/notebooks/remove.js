@@ -48,14 +48,13 @@ describe('#/notebooks/remove', function() {
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
     });
 
-    it('deleted notebooks don\'t reappear after url change', function(client) {
+    it('deleted notebooks don\'t re-appear after url change', function(client) {
         client
         .urlHash('notes')
         .pause(1000)
         .urlHash('notebooks');
 
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
-        client.pause(4000);
     });
 
     it('nested notebooks are not removed, but their parentId is changed', function(client) {

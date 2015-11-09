@@ -192,16 +192,16 @@ describe('#/notebooks', function() {
                 client.click('#notebooks .list--item.-notebook');
 
                 client
-                    .expect.element('#header--title')
-                    .to.have.text.that.matches(new RegExp(res.value, 'gi'))
-                    .before(5000);
+                .expect.element('#header--title')
+                .to.have.text.that.matches(new RegExp(res.value, 'gi'))
+                .before(5000);
 
                 client.keys(['g', 'n']);
 
                 client
-                    .expect.element('#header--title')
-                    .to.have.text.that.equals('Notebooks & Tags')
-                    .before(5000);
+                .expect.element('#header--title')
+                .to.have.text.that.equals('Notebooks & Tags')
+                .before(5000);
 
                 client.perform(done);
             });
@@ -217,16 +217,16 @@ describe('#/notebooks', function() {
                 client.keys('o');
 
                 client
-                    .expect.element('#header--title')
-                    .to.have.text.that.matches(new RegExp(res.value, 'gi'))
-                    .before(5000);
+                .expect.element('#header--title')
+                .to.have.text.that.matches(new RegExp(res.value, 'gi'))
+                .before(5000);
 
                 client.keys(['g', 'n']);
 
                 client
-                    .expect.element('#header--title')
-                    .to.have.text.that.equals('Notebooks & Tags')
-                    .before(5000);
+                .expect.element('#header--title')
+                .to.have.text.that.equals('Notebooks & Tags')
+                .before(5000);
 
                 client.perform(done);
             });

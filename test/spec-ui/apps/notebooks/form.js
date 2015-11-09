@@ -26,7 +26,7 @@ describe('#/notebooks/add', function() {
         .expect.element('#modal .form-group').to.be.visible.before(2000);
     });
 
-    it('can change notebook title', function(client) {
+    it('can change title of a notebook', function(client) {
         client
         .expect.element('#modal .form-group').to.be.visible.before(50000);
 
@@ -34,7 +34,7 @@ describe('#/notebooks/add', function() {
         .expect.element('#modal input[name="name"]').value.to.contain('Nightwatch');
     });
 
-    it('can save notebook', function(client) {
+    it('can save notebooks', function(client) {
         client
         .expect.element('#modal .ok').text.to.contain('Save');
 
@@ -46,7 +46,7 @@ describe('#/notebooks/add', function() {
     // @TODO BUG: FAILS
     // it('saved notebooks appear in list', function(client) {
     //     client
-    //     .expect.element('#sidebar--content .list--item.-notebook').text.to.contain('Nightwatch').before(2000);
+    //     .expect.element('#notebooks .list--item.-notebook').text.to.contain('Nightwatch').before(2000);
     // });
 
     it('redirects to notebooks list on save', function(client) {
@@ -119,7 +119,7 @@ describe('#/notebooks/add', function() {
 
         client
         .setValue('#modal input[name="name"]', ['Doesn\'t save', client.Keys.ESCAPE])
-        .expect.element('#sidebar--content').text.not.to.contain('Doesn\'t save').before(2000);
+        .expect.element('#notebooks').text.not.to.contain('Doesn\'t save').before(2000);
     });
 
     it('closes modal window on cancel button click', function(client) {
@@ -131,7 +131,7 @@ describe('#/notebooks/add', function() {
         client
         .setValue('#modal input[name="name"]', ['Doesn\'t save'])
         .click('#modal .cancelBtn')
-        .expect.element('#sidebar--content').text.not.to.contain('Doesn\'t save').before(2000);
+        .expect.element('#notebooks').text.not.to.contain('Doesn\'t save').before(2000);
     });
 });
 
@@ -150,19 +150,10 @@ describe('#/notebooks/edit', function() {
         .urlHash('notebooks');
 
         // Get all rendered notebooks
-        client.execute(function(filter) {
-            var ops = document.querySelectorAll('#notebooks .list--item'),
-            ids = [];
-
-            for (var i = 0, len = ops.length; i < len; i++) {
-                ids.push(ops[i].getAttribute('data-id'));
-            }
-
-            return ids;
-        }, [], function(res) {
-            expect(typeof res.value).to.be.equal('object');
-            expect(res.value.length).to.be.equal(2);
-            ids = res.value;
+        client.findAll('#notebooks .list--item', 'data-id', (res) => {
+            expect(typeof res).to.be.equal('object');
+            expect(res.length).to.be.equal(2);
+            ids = res;
             done();
         });
     });
@@ -170,7 +161,6 @@ describe('#/notebooks/edit', function() {
     after(function(client, done) {
         done();
     });
-
 
     it('shows notebook edit form', function(client) {
         client
@@ -183,7 +173,7 @@ describe('#/notebooks/edit', function() {
         .expect.element('#modal input[name="name"]').to.have.value.that.equals('Changed-Title');
     });
 
-    it('list re-renders new value', function(client) {
+    it('list re-renders notebooks with new values', function(client) {
         client
         .setValue('#modal input[name="name"]', [client.Keys.ENTER])
         .pause(500)
@@ -199,6 +189,7 @@ describe('#/notebooks/edit', function() {
         .expect.element('#modal .form-group').to.be.visible.before(2000);
 
         client
+        .expect.element('#modal input[name="name"]').value.to.contain('Changed-Title')
         .expect.element('#modal select[name="parentId"]').text.to.contain('Changed-Title');
     });
 

@@ -185,4 +185,51 @@ describe('#/notebooks', function() {
         .to.have.text.that.equals('Notebooks & Tags')
         .before(5000);
     });
+
+    it('can filter notes by a notebook name', function(client) {
+        client.perform((client, done) => {
+            client.getText('#notebooks .list--item.-notebook', (res) => {
+                client.click('#notebooks .list--item.-notebook');
+
+                client
+                    .expect.element('#header--title')
+                    .to.have.text.that.matches(new RegExp(res.value, 'gi'))
+                    .before(5000);
+
+                client.keys(['g', 'n']);
+
+                client
+                    .expect.element('#header--title')
+                    .to.have.text.that.equals('Notebooks & Tags')
+                    .before(5000);
+
+                client.perform(done);
+            });
+        });
+    });
+
+    it('can filter notes by a notebook name with a keybinding', function(client) {
+        client.perform((client, done) => {
+            client.getText('#notebooks .list--item.-notebook', (res) => {
+                client.keys('j');
+                client.expect.element('#notebooks .list--item.active').to.be.present.before(5000);
+
+                client.keys('o');
+
+                client
+                    .expect.element('#header--title')
+                    .to.have.text.that.matches(new RegExp(res.value, 'gi'))
+                    .before(5000);
+
+                client.keys(['g', 'n']);
+
+                client
+                    .expect.element('#header--title')
+                    .to.have.text.that.equals('Notebooks & Tags')
+                    .before(5000);
+
+                client.perform(done);
+            });
+        });
+    });
 });

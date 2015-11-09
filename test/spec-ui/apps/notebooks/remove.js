@@ -9,10 +9,9 @@ describe('#/notebooks/remove', function() {
     var notebookCount;
 
     before(function(client, done) {
-        client
-        .urlHash('notes')
-        .pause(100)
-        .urlHash('notebooks');
+        client.urlHash('notes');
+        client.expect.element('#header--add').to.be.visible.before(50000);
+        client.urlHash('notebooks');
 
         client.expect.element('#header--add').to.be.visible.before(5000);
         client.elements('css selector', '#notebooks .list--item', (res) => {
@@ -49,14 +48,13 @@ describe('#/notebooks/remove', function() {
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
     });
 
-    it('deleted notebooks don\'t reappear after url change', function(client) {
+    it('deleted notebooks don\'t re-appear after url change', function(client) {
         client
         .urlHash('notes')
         .pause(1000)
         .urlHash('notebooks');
 
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
-        client.pause(4000);
     });
 
     it('nested notebooks are not removed, but their parentId is changed', function(client) {
@@ -82,7 +80,7 @@ describe('#/notebooks/remove', function() {
         client.click('#modal .btn[data-event="confirm"]')
         client.pause(500);
 
-        //@TODO sub-notebooks are removed from DOM, instead they should be re-rendered
+        //@TODO BUG: sub-notebooks are removed from DOM, instead they should be re-rendered
         client
         .urlHash('notes')
         .pause(100)

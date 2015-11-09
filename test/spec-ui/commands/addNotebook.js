@@ -3,7 +3,7 @@ exports.command = function(item) {
     .urlHash('notebooks')
     .pause(100)
     .urlHash('notebooks/add')
-    .expect.element('#modal .form-group').to.be.visible.before(2000);
+    .expect.element('#modal .form-group').to.be.visible.before(5000);
 
     this.perform((client, done) => {
         client.execute(function(filter) {

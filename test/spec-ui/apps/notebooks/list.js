@@ -12,6 +12,7 @@ describe('#/notebooks', function() {
     before(function(client, done) {
         this.timeout(100000);
         client.urlHash('notes');
+        client.expect.element('#header--add').to.be.visible.before(50000);
 
         client
         .pause(100)
@@ -42,12 +43,12 @@ describe('#/notebooks', function() {
         client.expect.element('#header--add').to.be.visible;
     });
 
-    it('shows buttons that show menu', function(client) {
+    it('shows a button that shows menu', function(client) {
         client.expect.element('#notebooks .list--buttons .drop-edit').to.be.visible;
         client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.not.visible;
     });
 
-    it('click on button shows show menu', function(client) {
+    it('click on the button shows menu', function(client) {
         client.click('#notebooks .list--buttons .drop-edit');
         client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.visible;
         client.click('#notebooks .list--buttons .drop-edit');
@@ -61,7 +62,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .form-group').to.be.present.before(2000);
         client.expect.element('#modal .form-group').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.pause(500);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
     it('remove button shows dialog', function(client) {
@@ -72,7 +73,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .modal-title').to.be.present.before(2000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.pause(500);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
         client.click('#notebooks .list--buttons .drop-edit')
     });
 
@@ -83,7 +84,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .modal-title').to.be.present.before(2000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.pause(500);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
     it('navigation keybindings work', function(client) {
@@ -130,5 +131,106 @@ describe('#/notebooks', function() {
 
         client.click('#modal .close');
         client.expect.element('#modal .modal-title').not.to.be.present.before(2000);
+    });
+
+    /**
+     * Test navigate keybindings
+     * @TODO BUG: after SHIFT+3, keybindings stop working
+     */
+    it('can navigate to active notes', function(client) {
+        client.keys(['g', 'i']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('All notes')
+        .before(5000);
+    });
+
+    it('can navigate to notebooks from notes', function(client) {
+        client.keys(['g', 'n']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Notebooks & Tags')
+        .before(5000);
+    });
+
+    it('can navigate to favourite notes', function(client) {
+        client.keys(['g', 'f']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Favourites')
+        .before(5000);
+
+        client.keys(['g', 'n']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Notebooks & Tags')
+        .before(5000);
+    });
+
+    it('can navigate to removed notes', function(client) {
+        client.keys(['g', 't']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Trashed')
+        .before(5000);
+
+        client.keys(['g', 'n']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Notebooks & Tags')
+        .before(5000);
+    });
+
+    it('can filter notes by a notebook name', function(client) {
+        client.perform((client, done) => {
+            client.getText('#notebooks .list--item.-notebook', (res) => {
+                client.click('#notebooks .list--item.-notebook');
+
+                client
+                .expect.element('#header--title')
+                .to.have.text.that.matches(new RegExp(res.value, 'gi'))
+                .before(5000);
+
+                client.keys(['g', 'n']);
+
+                client
+                .expect.element('#header--title')
+                .to.have.text.that.equals('Notebooks & Tags')
+                .before(5000);
+
+                client.perform(done);
+            });
+        });
+    });
+
+    it('can filter notes by a notebook name with a keybinding', function(client) {
+        client.perform((client, done) => {
+            client.getText('#notebooks .list--item.-notebook', (res) => {
+                client.keys('j');
+                client.expect.element('#notebooks .list--item.active').to.be.present.before(5000);
+
+                client.keys('o');
+
+                client
+                .expect.element('#header--title')
+                .to.have.text.that.matches(new RegExp(res.value, 'gi'))
+                .before(5000);
+
+                client.keys(['g', 'n']);
+
+                client
+                .expect.element('#header--title')
+                .to.have.text.that.equals('Notebooks & Tags')
+                .before(5000);
+
+                client.perform(done);
+            });
+        });
     });
 });

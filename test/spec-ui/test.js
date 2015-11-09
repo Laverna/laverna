@@ -10,6 +10,9 @@ var tests = [
     './apps/notebooks/form.js',
     './apps/notebooks/list.js',
     './apps/notebooks/remove.js',
+    './apps/tags/form.js',
+    './apps/tags/list.js',
+    './apps/tags/remove.js',
 ];
 
 // Load all test files

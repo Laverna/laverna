@@ -131,4 +131,58 @@ describe('#/notebooks', function() {
         client.click('#modal .close');
         client.expect.element('#modal .modal-title').not.to.be.present.before(2000);
     });
+
+    /**
+     * Test navigate keybindings
+     * @TODO BUG: after SHIFT+3, keybindings stop working
+     */
+    it('can navigate to active notes', function(client) {
+        client.keys(['g', 'i']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('All notes')
+        .before(5000);
+    });
+
+    it('can navigate to notebooks from notes', function(client) {
+        client.keys(['g', 'n']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Notebooks & Tags')
+        .before(5000);
+    });
+
+    it('can navigate to favourite notes', function(client) {
+        client.keys(['g', 'f']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Favourites')
+        .before(5000);
+
+        client.keys(['g', 'n']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Notebooks & Tags')
+        .before(5000);
+    });
+
+    it('can navigate to removed notes', function(client) {
+        client.keys(['g', 't']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Trashed')
+        .before(5000);
+
+        client.keys(['g', 'n']);
+
+        client
+        .expect.element('#header--title')
+        .to.have.text.that.equals('Notebooks & Tags')
+        .before(5000);
+    });
 });

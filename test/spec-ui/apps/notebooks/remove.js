@@ -82,7 +82,7 @@ describe('#/notebooks/remove', function() {
         client.click('#modal .btn[data-event="confirm"]')
         client.pause(500);
 
-        //@TODO sub-notebooks are removed from DOM, instead they should be re-rendered
+        //@TODO BUG: sub-notebooks are removed from DOM, instead they should be re-rendered
         client
         .urlHash('notes')
         .pause(100)

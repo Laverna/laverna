@@ -43,7 +43,7 @@ describe('#/notebooks/add', function() {
         .expect.element('#modal .form-group').not.to.be.present.before(2000);
     });
 
-    // @TODO FAILS
+    // @TODO BUG: FAILS
     // it('saved notebooks appear in list', function(client) {
     //     client
     //     .expect.element('#sidebar--content .list--item.-notebook').text.to.contain('Nightwatch').before(2000);
@@ -97,7 +97,7 @@ describe('#/notebooks/add', function() {
         .setValue('#modal input[name="name"]', [client.Keys.ENTER]);
     });
 
-    //@TODO Notebooks are saved even if the title is empty
+    //@TODO BUG: Notebooks are saved even if the title is empty
     // it('doesn\'t save if title is empty', function(client) {
     //     client
     //     .urlHash('notebooks')
@@ -189,7 +189,7 @@ describe('#/notebooks/edit', function() {
         .pause(500)
         .expect.element('#notebooks').text.to.contain('Changed-Title');
 
-        // @TODO After updating a notebook, sub-notebooks are lost
+        // @TODO BUG: After updating a notebook, sub-notebooks are lost
         // client.expect.element('#notebooks').text.to.contain('Sub-Notebook');
     });
 

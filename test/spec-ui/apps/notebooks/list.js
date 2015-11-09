@@ -12,6 +12,7 @@ describe('#/notebooks', function() {
     before(function(client, done) {
         this.timeout(100000);
         client.urlHash('notes');
+        client.expect.element('#header--add').to.be.visible.before(50000);
 
         client
         .pause(100)
@@ -42,12 +43,12 @@ describe('#/notebooks', function() {
         client.expect.element('#header--add').to.be.visible;
     });
 
-    it('shows buttons that show menu', function(client) {
+    it('shows a button that shows menu', function(client) {
         client.expect.element('#notebooks .list--buttons .drop-edit').to.be.visible;
         client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.not.visible;
     });
 
-    it('click on button shows show menu', function(client) {
+    it('click on the button shows menu', function(client) {
         client.click('#notebooks .list--buttons .drop-edit');
         client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.visible;
         client.click('#notebooks .list--buttons .drop-edit');
@@ -61,7 +62,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .form-group').to.be.present.before(2000);
         client.expect.element('#modal .form-group').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.pause(500);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
     it('remove button shows dialog', function(client) {
@@ -72,7 +73,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .modal-title').to.be.present.before(2000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.pause(500);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
         client.click('#notebooks .list--buttons .drop-edit')
     });
 
@@ -83,7 +84,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .modal-title').to.be.present.before(2000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.pause(500);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
     it('navigation keybindings work', function(client) {

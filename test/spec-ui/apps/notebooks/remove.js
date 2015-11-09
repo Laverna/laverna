@@ -9,10 +9,9 @@ describe('#/notebooks/remove', function() {
     var notebookCount;
 
     before(function(client, done) {
-        client
-        .urlHash('notes')
-        .pause(100)
-        .urlHash('notebooks');
+        client.urlHash('notes');
+        client.expect.element('#header--add').to.be.visible.before(50000);
+        client.urlHash('notebooks');
 
         client.expect.element('#header--add').to.be.visible.before(5000);
         client.elements('css selector', '#notebooks .list--item', (res) => {

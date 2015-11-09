@@ -154,7 +154,6 @@ describe('#/notebooks/edit', function() {
         .expect.element('#modal input[name="name"]').to.have.value.that.contains('Changed-Title');
 
         client.keys(client.Keys.ESCAPE);
-        client
-        .expect.element('#modal .form-group').not.to.be.present.before(5000);
+        client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 });

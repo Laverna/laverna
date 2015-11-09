@@ -1,3 +1,4 @@
+'use strict';
 exports.command = function(item) {
     this
     .urlHash('notes/add')

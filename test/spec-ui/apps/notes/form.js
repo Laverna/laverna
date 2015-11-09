@@ -119,7 +119,7 @@ describe('Note form', function() {
      * @TODO if note's trash status !== 2, it shouldn't be possible to
      * create a note with an empty title.
      */
-    it('does not save a note if it\'s title is empty', function(client) {
+    it('does not save a note if its title is empty', function(client) {
         client
         .click('.editor--save')
         .expect.element('.layout--body.-form').to.be.visible.after(1000);
@@ -141,6 +141,7 @@ describe('Note form', function() {
         .click('.editor--save')
 
         // Hack @TODO remove it after fixing the bug with redirects
+        .urlHash('notebooks')
         .urlHash('notes')
         .waitForElementNotPresent('.layout--body.-form', 1000);
     });

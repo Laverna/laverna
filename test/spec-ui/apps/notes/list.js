@@ -19,26 +19,8 @@ describe('/notes', function() {
     });
 
     it('renders new notes', function(client) {
-        function addNote(i) {
-            client
-            .urlHash('notes/add')
-            .expect.element('#editor--input--title').to.be.visible.before(50000);
-
-            client
-            .setValue('#editor--input--title', [i + '. Note'])
-            .expect.element('#editor--input--title').value.to.contain(i + '. Note').before(2000);
-
-            client
-            .click('.ace_content')
-            .keys(['Nightwatch test content ' + i + '.']);
-
-            client
-            .click('.editor--save')
-            .expect.element('.layout--body.-form').not.to.be.present.before(2000);
-        }
-
         for (var i = 1; i <= 15; i++) {
-            addNote(i);
+            client.addNote({title: i + '. Note', content: 'Nightwatch test content ' + i + '.'});
         }
 
         client

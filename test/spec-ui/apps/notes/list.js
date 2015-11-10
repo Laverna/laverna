@@ -140,6 +140,34 @@ describe('/notes', function() {
         .assert.urlContains('notebooks');
     });
 
+    it('can filter notes by a notebook name', function(client) {
+        var note = {
+            title    : 'A note with a notebook:' + Math.floor((Math.random() * 10) + 1),
+            content  : 'A note content with a notebook.',
+            notebook : 'Notebook:' + Math.floor((Math.random() * 10) + 1)
+        };
+
+        client.addNote(note);
+
+        client
+        .keys('gn')
+        .pause(300)
+        .expect.element('.list--item.-notebook').to.be.present.before(50000);
+
+        client.getAttribute('partial link text', note.notebook, 'data-id', function(res) {
+            this.assert.equal(typeof res.value !== 'undefined', true);
+
+            client
+            .urlHash('notes/f/notebook/q/' + res.value)
+            .expect.element('.list').to.be.present.before(50000);
+
+            client.expect.element('.list').text.to.contain(note.title).before(2000);
+            client.elements('css selector', '.list--item', function(res) {
+                this.assert.equal(res.value.length, 1);
+            });
+        });
+    });
+
     /**
      * @TODO It doesn't filter notes by search query
      */

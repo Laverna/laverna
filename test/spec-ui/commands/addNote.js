@@ -12,6 +12,16 @@ exports.command = function(item) {
     .click('.ace_content')
     .keys([item.content]);
 
+    if (item.notebook) {
+        this
+        .click('.addNotebook')
+        .expect.element('.modal--input[name=name]').to.be.visible.before(1000);
+
+        this
+        .setValue('.modal--input[name=name]', [item.notebook, this.Keys.ENTER])
+        .pause(1000);
+    }
+
     this
     .click('.editor--save')
     .expect.element('.layout--body.-form').not.to.be.present.before(2000);

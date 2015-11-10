@@ -15,6 +15,10 @@ var tests = [
     './apps/tags/remove.js',
     './apps/navbar/navbar.js',
     './modules/fuzzySearch/fuzzySearch.js',
+    './apps/settings/general.js',
+    './apps/settings/keybindings.js',
+    './apps/settings/profiles.js',
+    './apps/settings/import.js',
 ];
 
 // Load all test files

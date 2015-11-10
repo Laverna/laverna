@@ -13,6 +13,7 @@ var tests = [
     './apps/tags/form.js',
     './apps/tags/list.js',
     './apps/tags/remove.js',
+    './apps/encryption/encrypt.js',
 ];
 
 // Load all test files

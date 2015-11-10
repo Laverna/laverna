@@ -10,7 +10,7 @@ exports.command = function(item) {
 
     this
     .click('.ace_content')
-    .keys([item.content]);
+    .keys(item.content);
 
     if (item.notebook) {
         this

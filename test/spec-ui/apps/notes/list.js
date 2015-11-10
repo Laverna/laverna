@@ -140,4 +140,24 @@ describe('/notes', function() {
         .assert.urlContains('notebooks');
     });
 
+    /**
+     * @TODO It doesn't filter notes by search query
+     */
+    it('can search notes', function(client) {
+        var note = {
+            title   : 'A unique note title:' + Math.floor((Math.random() * 10) + 1),
+            content : 'A unique note content'
+        };
+        client.addNote(note);
+
+        client
+        .urlHash('notes/f/search/q/' + note.title)
+        .expect.element('.list').to.be.present.before(50000);
+
+        client.expect.element('.list').text.to.contain(note.title).before(2000);
+        client.elements('css selector', '.list--item', function(res) {
+            this.assert.equal(res.value.length, 1);
+        });
+    });
+
 });

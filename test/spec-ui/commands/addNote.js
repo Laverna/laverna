@@ -10,7 +10,17 @@ exports.command = function(item) {
 
     this
     .click('.ace_content')
-    .keys([item.content]);
+    .keys(item.content);
+
+    if (item.notebook) {
+        this
+        .click('.addNotebook')
+        .expect.element('.modal--input[name=name]').to.be.visible.before(1000);
+
+        this
+        .setValue('.modal--input[name=name]', [item.notebook, this.Keys.ENTER])
+        .pause(1000);
+    }
 
     this
     .click('.editor--save')

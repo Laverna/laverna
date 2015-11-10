@@ -140,4 +140,72 @@ describe('/notes', function() {
         .assert.urlContains('notebooks');
     });
 
+    it('can filter notes by a notebook name', function(client) {
+        var note = {
+            title    : 'A note with a notebook:' + Math.floor((Math.random() * 10) + 1),
+            content  : 'A note content with a notebook.',
+            notebook : 'Notebook:' + Math.floor((Math.random() * 10) + 1)
+        };
+
+        client.addNote(note);
+
+        client
+        .keys('gn')
+        .pause(300)
+        .expect.element('.list--item.-notebook').to.be.present.before(50000);
+
+        client.getAttribute('partial link text', note.notebook, 'data-id', function(res) {
+            this.assert.equal(typeof res.value !== 'undefined', true);
+
+            client
+            .urlHash('notes/f/notebook/q/' + res.value)
+            .expect.element('.list').to.be.present.before(50000);
+
+            client.expect.element('.list').text.to.contain(note.title).before(2000);
+            client.elements('css selector', '.list--item', function(res) {
+                this.assert.equal(res.value.length, 1);
+            });
+        });
+    });
+
+    /**
+     * @TODO it doesn't filter notes by a tag
+     */
+    it('can filter notes by a tag', function(client) {
+        var note = {
+            title   : 'A note with a tag:' + Math.floor((Math.random() * 10) + 1),
+            content : [client.Keys.SHIFT, '3', 'TAGNAMEUNIQUE']
+        };
+        client.addNote(note);
+
+        client
+        .urlHash('notes/f/tag/q/TAGNAMEUNIQUE')
+        .expect.element('.list').to.be.present.before(50000);
+
+        client.expect.element('.list').text.to.contain(note.title).before(2000);
+        client.elements('css selector', '.list--item', function(res) {
+            this.assert.equal(res.value.length, 1);
+        });
+    });
+
+    /**
+     * @TODO It doesn't filter notes by search query
+     */
+    it('can search notes', function(client) {
+        var note = {
+            title   : 'A unique note title:' + Math.floor((Math.random() * 10) + 1),
+            content : 'A unique note content'
+        };
+        client.addNote(note);
+
+        client
+        .urlHash('notes/f/search/q/' + note.title)
+        .expect.element('.list').to.be.present.before(50000);
+
+        client.expect.element('.list').text.to.contain(note.title).before(2000);
+        client.elements('css selector', '.list--item', function(res) {
+            this.assert.equal(res.value.length, 1);
+        });
+    });
+
 });

@@ -14,6 +14,7 @@ var tests = [
     './apps/tags/list.js',
     './apps/tags/remove.js',
     './apps/navbar/navbar.js',
+    './modules/fuzzySearch/fuzzySearch.js',
 ];
 
 // Load all test files

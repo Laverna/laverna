@@ -13,6 +13,12 @@ describe('RemoteStorage: client 2', function() {
         });
     });
 
+    it('wait', function(client) {
+        client
+        .urlHash('notes')
+        .expect.element('.list').to.be.present.before(50000);
+    });
+
     it('creates new data', function(client) {
         client
         .addNote({title: 'Note from client 2'})

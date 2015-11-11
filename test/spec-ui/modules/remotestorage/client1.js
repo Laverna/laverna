@@ -12,8 +12,15 @@ try {
 }
 
 describe('RemoteStorage: client 1', function() {
+    var data = {};
 
     before(function(client, done) {
+        data = {
+            note     : {title: 'Note from client 1'},
+            notebook : {name: 'Notebook from client 1'},
+            tag      : {name: 'Tag from client 1'}
+        };
+
         done();
     });
 
@@ -23,13 +30,24 @@ describe('RemoteStorage: client 1', function() {
         });
     });
 
+    it('wait', function(client) {
+        client
+        .urlHash('notes')
+        .expect.element('.list').to.be.present.before(50000);
+    });
+
     it('creates new data', function(client) {
         client
-        .addNote({title: 'Note from client 1'})
+        .addNote(data.note)
         .pause(500)
-        .addNotebook({name: 'Notebook from client 1'})
+        .addNotebook(data.notebook)
         .pause(500)
-        .addTag({name: 'Tag from client 1'});
+        .addTag(data.tag);
+
+        client.pause(1000);
+        setTimeout(function() {
+            console.log('start client 2');
+        }, 500);
     });
 
     // Try to login to a RemoteStorage first

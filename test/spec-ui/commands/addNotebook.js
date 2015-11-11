@@ -1,9 +1,13 @@
+'use strict';
+
 exports.command = function(item) {
     this
     .urlHash('notebooks')
     .pause(100)
     .urlHash('notebooks/add')
-    .expect.element('#modal .form-group').to.be.visible.before(5000);
+    .expect.element('#modal .form-group').to.be.present.before(5000);
+
+    // this.expect.element('#modal .form-group').to.be.visible.before(5000);
 
     this.perform((client, done) => {
         client.execute(function(filter) {
@@ -15,10 +19,10 @@ exports.command = function(item) {
                     .selectedIndex = ops[i].index;
                 }
             }
-        }, [item.parentId], function(res) {
+        }, [item.parentId], function() {
             done();
         });
-    })
+    });
 
     this.setValue('#modal input[name="name"]', [item.name, this.Keys.ENTER]);
 

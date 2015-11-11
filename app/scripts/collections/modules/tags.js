@@ -81,6 +81,10 @@ define([
         saveModel: function(model, data) {
             var self = this;
 
+            if (!model.validateModel(data)) {
+                return new Q();
+            }
+
             // First, make sure that a model won't duplicate itself.
             return new Q(Radio.request('encrypt', 'sha256', data.name))
             .then(function(id) {

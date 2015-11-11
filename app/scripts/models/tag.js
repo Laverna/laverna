@@ -35,16 +35,24 @@ define([
             // this.on('update:name', this.doEscape());
         },
 
-        /*validate: function(attrs) {
+        /**
+         * Validates a tag.
+         * @type array
+         * @return boolean true if there aren't any errors
+         */
+        validateModel: function(attrs) {
             var errors = [];
-            if (attrs.name === '') {
+            if (!attrs.name || !attrs.name.trim().length) {
                 errors.push('name');
             }
 
             if (errors.length > 0) {
-                return errors;
+                this.trigger('invalid', this, errors);
+                return false;
             }
-        },*/
+
+            return true;
+        },
 
         /**
          * Saves model's id for sync purposes, then destroys it

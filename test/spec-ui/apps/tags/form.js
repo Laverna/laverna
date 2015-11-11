@@ -17,7 +17,7 @@ describe('#/tags/add', function() {
     /**
      * Saves a tag
      */
-    it('can show tag form throught button', function(client) {
+    it('can show tag form when button is clicked', function(client) {
         client
         .urlHash('notebooks')
         .expect.element('a[title="New tag"]').to.be.present.before(50000);
@@ -45,7 +45,7 @@ describe('#/tags/add', function() {
         .expect.element('#tags .list--item.-tag').text.to.contain('Nightwatch').before(5000);
     });
 
-    it('redirects to notebooks list on save', function(client) {
+    it('redirects to tags list on save', function(client) {
         client
         .pause(500)
         .url(function(data) {
@@ -54,19 +54,21 @@ describe('#/tags/add', function() {
         });
     });
 
-    //@TODO BUG: Tags are saved even if the title is empty
-    // it('doesn\'t save if title is empty', function(client) {
-    //     client
-    //     .urlHash('notebooks')
-    //     .urlHash('tags/add')
-    //     .expect.element('#modal .form-group').to.be.visible.before(5000);
-    //
-    //     client
-    //     .clearValue('#modal input[name="name"]')
-    //     .click('#modal .ok');
-    //
-    //     client.expect.element('#notebooks .list--item').to.have.text.that.contains('Nightwatch');
-    // });
+    it('doesn\'t save if title is empty', function(client) {
+        client
+        .urlHash('notebooks')
+        .urlHash('tags/add')
+        .expect.element('#modal .form-group').to.be.visible.before(5000);
+
+        client
+        .clearValue('#modal input[name="name"]')
+        .click('#modal .ok');
+
+        client.expect.element('.modal-dialog .has-error').to.be.present.before(5000);
+        client.keys(client.Keys.ESCAPE);
+
+        client.expect.element('#tags .list--item').text.to.contain('Nightwatch');
+    });
 
     it('closes modal window on escape', function(client) {
         client
@@ -93,9 +95,9 @@ describe('#/tags/add', function() {
 });
 
 /**
- * Edit notebook form test
+ * Edit tag form test
  */
-describe('#/notebooks/edit', function() {
+describe('#/tags/edit', function() {
     var ids = [];
 
     before(function(client, done) {
@@ -103,7 +105,7 @@ describe('#/notebooks/edit', function() {
         .urlHash('notebooks')
         .expect.element('a[title="New tag"]').to.be.present.before(50000);
 
-        // Get all rendered notebooks
+        // Get all rendered tags
         client.findAll('#tags .list--item', 'data-id', (res) => {
             expect(typeof res).to.be.equal('object');
             expect(res.length).to.be.equal(1);
@@ -135,7 +137,7 @@ describe('#/notebooks/edit', function() {
         client.expect.element('#tags').text.to.contain('Changed-Title');
 
         client.perform((client, done) => {
-            // Get all rendered notebooks
+            // Get all rendered tags
             client.findAll('#tags .list--item', 'data-id', (res) => {
                 expect(typeof res).to.be.equal('object');
                 expect(res.length).to.be.equal(1);

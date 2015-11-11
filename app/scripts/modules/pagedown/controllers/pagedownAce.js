@@ -42,7 +42,7 @@ define([
     var PagedownAce = Marionette.Object.extend({
 
         initialize: function() {
-            _.bindAll(this, 'onPreviewRefresh', 'triggerScroll', 'initAce', 'startEditor');
+            _.bindAll(this, 'onPreviewRefresh', 'triggerScroll', 'initAce', 'startEditor', 'onChange');
 
             // Get configs
             this.configs = Radio.request('configs', 'get:object');
@@ -129,6 +129,7 @@ define([
                 'changeScrollTop',
                 _.debounce(this.triggerScroll, 10, {maxWait: 10})
             );
+            this.editor.session.on('change', this.onChange);
 
             return this.editor;
         },
@@ -186,6 +187,9 @@ define([
 
         onPreviewRefresh: function() {
             this.vent.trigger('preview:refresh');
+        },
+
+        onChange: function() {
             this.triggerSave();
         },
 

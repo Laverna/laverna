@@ -13,9 +13,6 @@ describe('Note form', function() {
         done();
     });
 
-    /**
-     * @TODO fix bug which automatically saves a note after Pagedown renders.
-     */
     it('can change note title', function(client) {
         client
         .urlHash('notes/add')

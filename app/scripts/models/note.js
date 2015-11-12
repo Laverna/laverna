@@ -42,8 +42,13 @@ define([
         ],
 
         validate: function(attrs) {
+            // It's not neccessary to validate when a model is about to be removed
+            if (attrs.trash && Number(attrs.trash) === 2) {
+                return;
+            }
+
             var errors = [];
-            if (attrs.title === '') {
+            if (!attrs.title || !attrs.title.trim().length) {
                 errors.push('title');
             }
 

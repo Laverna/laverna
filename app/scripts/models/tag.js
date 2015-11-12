@@ -38,20 +38,21 @@ define([
         /**
          * Validates a tag.
          * @type array
-         * @return boolean true if there aren't any errors
          */
-        validateModel: function(attrs) {
+        validate: function(attrs) {
+            // It's not neccessary to validate when a model is about to be removed
+            if (attrs.trash && Number(attrs.trash) === 2) {
+                return;
+            }
+
             var errors = [];
             if (!attrs.name || !attrs.name.trim().length) {
                 errors.push('name');
             }
 
             if (errors.length > 0) {
-                this.trigger('invalid', this, errors);
-                return false;
+                return errors;
             }
-
-            return true;
         },
 
         /**

@@ -114,8 +114,14 @@ define([
          * @type object new values
          */
         save: function(model, data) {
-            var self  = this,
-                set   = model.setEscape ? 'setEscape' : 'set';
+            var self   = this,
+                set    = model.setEscape ? 'setEscape' : 'set',
+                errors = model.validate(data);
+
+            if (errors) {
+                model.trigger('invalid', model, errors);
+                return Q.reject('Validation error', errors);
+            }
 
             // Set new values
             model[set](data);

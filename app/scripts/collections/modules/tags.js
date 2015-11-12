@@ -79,10 +79,12 @@ define([
          * @type object new values
          */
         saveModel: function(model, data) {
-            var self = this;
+            var self   = this,
+                errors = model.validate(data);
 
-            if (!model.validateModel(data)) {
-                return new Q();
+            if (errors) {
+                model.trigger('invalid', model, errors);
+                return Q.reject('Validation error', errors);
             }
 
             // First, make sure that a model won't duplicate itself.

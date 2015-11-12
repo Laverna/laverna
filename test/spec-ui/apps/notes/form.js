@@ -15,6 +15,8 @@ describe('Note form', function() {
 
     it('can change note title', function(client) {
         client
+        .urlHash('notes')
+        .pause(200)
         .urlHash('notes/add')
         .expect.element('#editor--input--title').to.be.visible.before(50000);
 
@@ -37,20 +39,23 @@ describe('Note form', function() {
         .waitForElementNotPresent('.modal-dialog', 1000);
     });
 
-    /*
-     * @TODO solve this bug
     it('closes the form if title is empty', function(client) {
         client
         .clearValue('#editor--input--title')
         .click('.editor--cancel')
-        .waitForElementNotPresent('.layout--body.-form', 1000);
+        .expect.element('.layout--body.-form').not.to.be.present.before(5000);
     });
-    */
 
     it('shows notebook add form', function(client) {
         client
+        .urlHash('notes/add')
+        .expect.element('#editor--input--title').to.be.visible.before(50000);
+
+        client.expect.element('.addNotebook').to.be.visible.before(50000);
+
+        client
         .click('.addNotebook')
-        .expect.element('.modal--input[name=name]').to.be.visible.before(1000);
+        .expect.element('.modal--input[name=name]').to.be.present.before(5000);
     });
 
     it('makes a new notebook active', function(client) {
@@ -112,12 +117,9 @@ describe('Note form', function() {
         .expect.element('[name="notebookId"]').to.have.attribute('value').which.equals(notebookId);
     });
 
-    /**
-     * @TODO if note's trash status !== 2, it shouldn't be possible to
-     * create a note with an empty title.
-     */
     it('does not save a note if its title is empty', function(client) {
         client
+        .clearValue('#editor--input--title')
         .click('.editor--save')
         .expect.element('.layout--body.-form').to.be.visible.after(1000);
     });

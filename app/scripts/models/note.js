@@ -48,7 +48,7 @@ define([
             }
 
             var errors = [];
-            if (!attrs.title || !attrs.title.trim().length) {
+            if (!_.isUndefined(attrs.title) && !attrs.title.trim().length) {
                 errors.push('title');
             }
 

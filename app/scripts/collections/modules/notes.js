@@ -135,7 +135,19 @@ define([
         getAll: function(options) {
             var getAll = _.bind(ModuleObject.prototype.getAll, this);
             options.filter = options.filter || 'active';
+
+            options.beforeSuccess = (
+                !Notes.prototype.conditions[options.filter] ? this._filterOnFetch : null
+            );
+
             return getAll(options);
+        },
+
+        /**
+         * Use Backbone's filters when IndexedDB is not available
+         */
+        _filterOnFetch: function(collection, options) {
+            collection.filterList(options.filter, options);
         },
 
         /**

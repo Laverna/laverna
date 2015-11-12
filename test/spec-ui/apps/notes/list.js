@@ -96,16 +96,16 @@ describe('/notes', function() {
 
     it('changes favourite status of an active note if favourite button is clicked', function(client) {
         client
-        .click('.list--group:first-child .favorite')
-        .expect.element('.list--group:first-child .icon-favorite').to.be.present.before(2000);
+        .click('.list--group .favorite')
+        .expect.element('.list--group .icon-favorite').to.be.present.before(2000);
 
         client
-        .click('.list--group:first-child .favorite')
-        .expect.element('.list--group:first-child .icon-favorite').not.to.be.present.before(2000);
+        .click('.list--group .favorite')
+        .expect.element('.list--group .icon-favorite').not.to.be.present.before(2000);
 
         client
-        .click('.list--group:first-child .favorite')
-        .waitForElementPresent('.list--group:first-child .icon-favorite', 2000);
+        .click('.list--group .favorite')
+        .waitForElementPresent('.list--group .icon-favorite', 2000);
     });
 
     it('navigates to favourite page on "gf" shortcut', function(client) {
@@ -161,7 +161,7 @@ describe('/notes', function() {
             .urlHash('notes/f/notebook/q/' + res.value)
             .expect.element('.list').to.be.present.before(50000);
 
-            client.expect.element('.list').text.to.contain(note.title).before(2000);
+            client.expect.element('#sidebar--content').to.have.text.that.contains(note.title).before(5000);
             client.elements('css selector', '.list--item', function(res) {
                 this.assert.equal(res.value.length, 1);
             });
@@ -174,15 +174,20 @@ describe('/notes', function() {
     it('can filter notes by a tag', function(client) {
         var note = {
             title   : 'A note with a tag:' + Math.floor((Math.random() * 10) + 1),
-            content : [client.Keys.SHIFT, '3', 'TAGNAMEUNIQUE']
+            content : [client.Keys.SHIFT, '3', 'TAGNAME']
         };
-        client.addNote(note);
 
         client
-        .urlHash('notes/f/tag/q/TAGNAMEUNIQUE')
+        .addNote(note)
+        .keys('gn');
+
+        client
+        .urlHash('notes/f/tag/q/TAGNAME')
         .expect.element('.list').to.be.present.before(50000);
 
-        client.expect.element('.list').text.to.contain(note.title).before(2000);
+        client.expect.element('.list--item').to.be.present.before(50000);
+
+        client.expect.element('#sidebar--content').to.have.text.that.contains(note.title).before(5000);
         client.elements('css selector', '.list--item', function(res) {
             this.assert.equal(res.value.length, 1);
         });
@@ -199,11 +204,12 @@ describe('/notes', function() {
         client.addNote(note);
 
         client
+        .pause(300)
         .urlHash('notes/f/search/q/' + note.title)
         .expect.element('.list').to.be.present.before(50000);
 
-        client.expect.element('.list').text.to.contain(note.title).before(2000);
-        client.elements('css selector', '.list--item', function(res) {
+        client.expect.element('#sidebar--content').to.have.text.that.contains(note.title).before(5000);
+        client.elements('css selector', '.list--item.-note', function(res) {
             this.assert.equal(res.value.length, 1);
         });
     });

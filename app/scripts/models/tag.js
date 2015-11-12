@@ -46,7 +46,7 @@ define([
             }
 
             var errors = [];
-            if (!attrs.name || !attrs.name.trim().length) {
+            if (!_.isUndefined(attrs.name) && !attrs.name.trim().length) {
                 errors.push('name');
             }
 

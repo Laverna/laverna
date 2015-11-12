@@ -45,7 +45,9 @@ define([
 
         show: function(notebooks, tags) {
             this.view = new View({
-                configs: Radio.request('configs', 'get:object')
+                notebooks : notebooks,
+                tags      : tags,
+                configs   : Radio.request('configs', 'get:object')
             });
 
             Radio.request('global', 'region:show', 'sidebar', this.view);

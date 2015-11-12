@@ -25,7 +25,8 @@ describe('#/notebooks tags', function() {
 
         client
         .pause(100)
-        .urlHash('notebooks');
+        .urlHash('notebooks')
+        .expect.element('#tags .list--item').to.be.present.before(50000);
 
         client.findAll('#tags .list--item', 'data-id', (res) => {
             ids = res;
@@ -39,17 +40,17 @@ describe('#/notebooks tags', function() {
 
     it('shows tags list', function(client) {
         expect(ids.length).not.to.be.equal(0);
-        client.expect.element('a[title="New tag"]').to.be.visible;
+        client.expect.element('a[title="New tag"]').to.be.visible.before(5000);
     });
 
     it('shows a button that shows menu', function(client) {
-        client.expect.element('#tags .list--buttons .drop-edit').to.be.visible;
-        client.expect.element('#tags .list--buttons .dropdown-menu').to.be.not.visible;
+        client.expect.element('#tags .list--buttons .drop-edit').to.be.visible.before(5000);
+        client.expect.element('#tags .list--buttons .dropdown-menu').to.be.not.visible.before(5000);
     });
 
     it('click on the button shows menu', function(client) {
         client.click('#tags .list--buttons .drop-edit');
-        client.expect.element('#tags .list--buttons .dropdown-menu').to.be.visible;
+        client.expect.element('#tags .list--buttons .dropdown-menu').to.be.visible.before(5000);
         client.click('#tags .list--buttons .drop-edit');
     });
 
@@ -73,7 +74,7 @@ describe('#/notebooks tags', function() {
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
         client.expect.element('#modal .form-group').not.to.be.present.before(5000);
-        client.click('#tags .list--buttons .drop-edit')
+        client.click('#tags .list--buttons .drop-edit');
     });
 
     it('add button shows tag form', function(client) {
@@ -85,28 +86,27 @@ describe('#/notebooks tags', function() {
         client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
-    // @TODO BUG: j,k keybindings don't work when there aren't any notebooks
-    // it('navigation keybindings work', function(client) {
-    //     client.expect.element('#tags .list--item.active').to.be.not.present;
-    //
-    //     client.perform((client, done) => {
-    //         client.execute(function() {
-    //             var el = document.querySelector('#tags .list--item');
-    //             el.className += ' active';
-    //         }, [], () => {done();});
-    //     });
-    //
-    //     client.expect.element('#tags .list--item.active').to.be.present.before(500);
-    //     client.getValue('#tags .list--item.active', function(value) {
-    //         client.keys('j');
-    //         client.expect.element('#tags .list--item.active').value.not.to.be.equal(value);
-    //     });
-    //
-    //     client.getValue('#tags .list--item.active', function(value) {
-    //         client.keys('k');
-    //         client.expect.element('#tags .list--item.active').value.not.to.be.equal(value);
-    //     });
-    // });
+    it('navigation keybindings work', function(client) {
+        client.expect.element('#tags .list--item.active').to.be.not.present.before(5000);
+
+        client.perform((client, done) => {
+            client.execute(function() {
+                var el = document.querySelector('#tags .list--item');
+                el.className += ' active';
+            }, [], () => {done();});
+        });
+
+        client.expect.element('#tags .list--item.active').to.be.present.before(500);
+        client.getValue('#tags .list--item.active', function(value) {
+            client.keys('j');
+            client.expect.element('#tags .list--item.active').value.not.to.be.equal(value);
+        });
+
+        client.getValue('#tags .list--item.active', function(value) {
+            client.keys('k');
+            client.expect.element('#tags .list--item.active').value.not.to.be.equal(value);
+        });
+    });
 
     it('can filter notes by a tag name', function(client) {
         client.perform((client, done) => {

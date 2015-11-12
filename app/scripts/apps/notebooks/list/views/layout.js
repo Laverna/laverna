@@ -37,6 +37,11 @@ define([
         initialize: function() {
             _.bindAll(this, 'triggerNext', 'triggerPrevious', 'openActive', 'openEdit', 'triggerRemove');
 
+            // Make tags active region if there aren't any notebooks
+            if (!this.options.notebooks.length) {
+                this.activeRegion = 'tags';
+            }
+
             // Register keyboard events
             Mousetrap.bind(this.options.configs.navigateBottom, this.triggerNext);
             Mousetrap.bind(this.options.configs.navigateTop, this.triggerPrevious);
@@ -84,6 +89,11 @@ define([
         },
 
         changeRegion: function(regionName, direction) {
+            // Don't change active region
+            if (!this.options[regionName].length) {
+                return;
+            }
+
             this.activeRegion = regionName;
 
             /*

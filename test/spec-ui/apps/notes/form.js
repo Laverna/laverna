@@ -1,6 +1,5 @@
 /* global describe, before, after, it */
 'use strict';
-var expect = require('chai').expect;
 
 describe('Note form', function() {
     var notebookId;
@@ -44,6 +43,8 @@ describe('Note form', function() {
         .clearValue('#editor--input--title')
         .click('.editor--cancel')
         .expect.element('.layout--body.-form').not.to.be.present.before(5000);
+
+        client.expect.element('.list--group').not.to.be.present.after(1000);
     });
 
     it('shows notebook add form', function(client) {
@@ -124,9 +125,6 @@ describe('Note form', function() {
         .expect.element('.layout--body.-form').to.be.visible.after(1000);
     });
 
-    /**
-     * @TODO fix a bug which prevents the form from closing.
-     */
     it('saves a note', function(client) {
         client
         .setValue('#editor--input--title', ['Nightwatch'])
@@ -138,41 +136,21 @@ describe('Note form', function() {
 
         client
         .click('.editor--save')
-
-        // Hack @TODO remove it after fixing the bug with redirects
-        .urlHash('notebooks')
-        .urlHash('notes')
-        .waitForElementNotPresent('.layout--body.-form', 1000);
+        .expect.element('.layout--body.-form').to.be.not.present.before(5000);
     });
 
-    /**
-     * @TODO this test fails because of autosave...
-     */
     it('saved the note', function(client) {
         client
         .urlHash('/notes/')
-        .expect.element('.list--group').to.be.visible.after(1000);
+        .expect.element('.list--group').to.be.visible.after(5000);
 
-        client
-        .expect.element('.list').text.to.contain('Nightwatch test content.');
-
-        client.perform(function(client, done) {
-            client.execute(
-                function() {
-                    var $el = document.querySelectorAll('.list--group');
-                    return $el.length;
-                },
-                [],
-                function(res) {
-                    expect(res.value).to.be.equal(1);
-                    done();
-                }
-            );
-        });
+        client.expect.element('.list').text.to.contain('Nightwatch test content.').before(5000);
+        client.expect.element('.list--group').to.be.present.before(5000);
+        client.expect.element('.list--item').to.be.present.before(5000);
     });
 
     it('opens an edit page', function(client) {
-        client.getAttribute('.list--item:first-child', 'data-id', function(res) {
+        client.getAttribute('.list--item', 'data-id', function(res) {
             client
             .urlHash('/notes/edit/' + res.value)
             .expect.element('.layout--body.-form').to.be.visible.before(1500);
@@ -190,10 +168,7 @@ describe('Note form', function() {
 
         client
         .keys([client.Keys.CONTROL, 's'])
-
-        // Hack @TODO remove it after fixing the bug with redirects
-        .urlHash('notebooks')
-        .waitForElementNotPresent('.layout--body.-form', 2000);
+        .expect.element('.layout--body.-form').to.be.not.present.before(5000);
     });
 
     it('updated the note', function(client) {

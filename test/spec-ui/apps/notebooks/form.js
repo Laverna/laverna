@@ -95,19 +95,18 @@ describe('#/notebooks/add', function() {
         .setValue('#modal input[name="name"]', [client.Keys.ENTER]);
     });
 
-    //@TODO BUG: Notebooks are saved even if the title is empty
-    // it('doesn\'t save if title is empty', function(client) {
-    //     client
-    //     .urlHash('notebooks')
-    //     .urlHash('notebooks/add')
-    //     .expect.element('#modal .form-group').to.be.visible.before(2000);
-    //
-    //     client
-    //     .clearValue('#modal input[name="name"]')
-    //     .click('#modal .ok');
-    //
-    //     client.expect.element('#notebooks .list--item').to.have.text.that.contains('Nightwatch');
-    // });
+    it('doesn\'t save if title is empty', function(client) {
+        client
+        .urlHash('notebooks')
+        .urlHash('notebooks/add')
+        .expect.element('#modal .form-group').to.be.visible.before(2000);
+
+        client
+        .clearValue('#modal input[name="name"]')
+        .click('#modal .ok');
+
+        client.expect.element('#notebooks .list--item').to.have.text.that.contains('Nightwatch');
+    });
 
     it('closes modal window on escape', function(client) {
         client

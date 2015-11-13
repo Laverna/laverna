@@ -29,10 +29,15 @@ define([
         encryptKeys: ['name'],
 
         validate: function(attrs) {
+            // It's not neccessary to validate when a model is about to be removed
+            if (attrs.trash && Number(attrs.trash) === 2) {
+                return;
+            }
+
             var errors = [];
-            // if (attrs.name === '') {
-            //     errors.push('name');
-            // }
+            if (attrs.name === '') {
+                errors.push('name');
+            }
             if (attrs.parentId === attrs.id) {
                 errors.push('parentId');
             }

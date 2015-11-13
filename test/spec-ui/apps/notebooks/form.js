@@ -196,23 +196,23 @@ describe('#/notebooks/edit', function() {
     });
 
     it('re-renders notebooks list with updated data', function(client) {
-        // client
-        // .expect.element('#notebooks').text.to.contain('Sub-CT');
+        client
+        .expect.element('#notebooks').text.to.contain('Sub-CT');
         client
         .expect.element('#notebooks').text.to.contain('Changed-Title');
     });
 
-    // it('doesn\'t update if title is empty', function(client) {
-    //     client
-    //     .urlHash('notebooks')
-    //     .urlHash(`notebooks/edit/${ids[0]}`)
-    //     .expect.element('#modal .form-group').to.be.visible.before(2000);
-    //
-    //     client
-    //     .clearValue('#modal input[name="name"]')
-    //     .setValue('#modal input[name="name"]', [client.Keys.ENTER]);
-    //
-    //     client
-    //     .expect.element('#notebooks').text.to.contain('Changed-Title');
-    // });
+    it('doesn\'t update if title is empty', function(client) {
+        client
+        .urlHash('notebooks')
+        .urlHash(`notebooks/edit/${ids[0]}`)
+        .expect.element('#modal .form-group').to.be.visible.before(2000);
+
+        client
+        .clearValue('#modal input[name="name"]')
+        .setValue('#modal input[name="name"]', [client.Keys.ENTER]);
+
+        client
+        .expect.element('#notebooks').text.to.contain('Changed-Title');
+    });
 });

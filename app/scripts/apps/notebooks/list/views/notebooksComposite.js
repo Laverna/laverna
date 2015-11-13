@@ -48,14 +48,15 @@ define([
          * For performance's sake attach items into fragment.
          */
         attachFragment: function(colView, itemView, fragment) {
-            var parentId = itemView.model.get('parentId');
+            var parentId = String(itemView.model.get('parentId'));
 
             // It isn't a child notebook
-            if (parentId === '0' || parentId === '') {
+            if (parentId === '0' || parentId === '' ||
+                !fragment.getElementById(parentId)) {
                 fragment.appendChild(itemView.el);
             }
             else {
-                fragment.getElementById(String(parentId)).appendChild(itemView.el);
+                fragment.getElementById(parentId).appendChild(itemView.el);
             }
         }
 

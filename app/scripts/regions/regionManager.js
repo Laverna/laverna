@@ -22,6 +22,11 @@ define([
 
     Radio.channel('global')
     .reply('region:show', function(region, view) {
+        // There should be only one modal window at a time
+        if (region === 'modal' && rm.get(region).currentView) {
+            rm.get(region).currentView.trigger('hidden.modal');
+        }
+
         rm.get(region).show(view);
         Radio.trigger('region', region + ':shown');
     })

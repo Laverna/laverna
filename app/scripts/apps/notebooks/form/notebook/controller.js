@@ -71,11 +71,11 @@ define([
         },
 
         save: function() {
-            var self = this;
-            var data = {
-                name     : this.view.ui.name.val(),
-                parentId : this.view.ui.parentId.val()
-            };
+            var self = this,
+                data = {
+                    name     : this.view.ui.name.val(),
+                    parentId : this.view.ui.parentId.val()
+                };
 
             Radio.request('notebooks', 'save', this.view.model, data)
             .then(function() {

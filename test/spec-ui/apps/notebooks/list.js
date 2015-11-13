@@ -40,17 +40,17 @@ describe('#/notebooks', function() {
 
     it('shows notebooks list', function(client) {
         expect(ids.length).not.to.be.equal(0);
-        client.expect.element('#header--add').to.be.visible;
+        client.expect.element('#header--add').to.be.visible.before(5000);
     });
 
     it('shows a button that shows menu', function(client) {
-        client.expect.element('#notebooks .list--buttons .drop-edit').to.be.visible;
-        client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.not.visible;
+        client.expect.element('#notebooks .list--buttons .drop-edit').to.be.visible.before(5000);
+        client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.not.visible.before(5000);
     });
 
     it('click on the button shows menu', function(client) {
         client.click('#notebooks .list--buttons .drop-edit');
-        client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.visible;
+        client.expect.element('#notebooks .list--buttons .dropdown-menu').to.be.visible.before(5000);
         client.click('#notebooks .list--buttons .drop-edit');
     });
 
@@ -74,7 +74,7 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
         client.expect.element('#modal .form-group').not.to.be.present.before(5000);
-        client.click('#notebooks .list--buttons .drop-edit')
+        client.click('#notebooks .list--buttons .drop-edit');
     });
 
     it('add button shows notebook form', function(client) {
@@ -83,12 +83,14 @@ describe('#/notebooks', function() {
 
         client.expect.element('#modal .modal-title').to.be.present.before(2000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
-        client.keys(client.Keys.ESCAPE);
+        client
+        .pause(200)
+        .keys(client.Keys.ESCAPE);
         client.expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
     it('navigation keybindings work', function(client) {
-        client.expect.element('#notebooks .list--item.active').to.be.not.present;
+        client.expect.element('#notebooks .list--item.active').to.be.not.present.before(5000);
         client.keys('j');
         client.expect.element('#notebooks .list--item.active').to.be.present.before(500);
 
@@ -105,13 +107,26 @@ describe('#/notebooks', function() {
 
     // :TODO Keybindings stop working when pressed in particular order
     // SHIFT+3, c, e and c, SHIFT+3, e
-    it('`c` shows create form', function(client) {
-        client.keys('c');
+    it('shift+3 shows delete form', function(client) {
+        client.keys([client.Keys.SHIFT, '3']);
 
         client.expect.element('#modal .modal-title').to.be.present.before(5000);
-        client.expect.element('#modal .modal-title').to.be.visible.before(2000);
+        client.expect.element('#modal .modal-title').to.be.visible.before(5000);
+        client.expect.element('#modal .modal').to.have.css('display').which.equals('block').before(5000);
+
+        client.click('#modal .close');
+        client.expect.element('#modal .modal-title').not.to.be.present.before(5000);
+    });
+
+    it('`c` shows create form', function(client) {
+        client.pause(200);
+
+        client.keys('c');
+
+        client.expect.element('#modal .modal-dialog').to.be.present.before(6000);
+        client.expect.element('#modal .modal-title').to.be.visible.before(6000);
         client.keys(client.Keys.ESCAPE);
-        client.expect.element('#modal .modal-title').not.to.be.present.before(2000);
+        client.expect.element('#modal .modal-dialog').not.to.be.present.before(6000);
     });
 
     it('`e` shows edit form', function(client) {
@@ -120,16 +135,6 @@ describe('#/notebooks', function() {
         client.expect.element('#modal .modal-title').to.be.present.before(5000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
         client.keys(client.Keys.ESCAPE);
-        client.expect.element('#modal .modal-title').not.to.be.present.before(2000);
-    });
-
-    it('SHIFT+3 shows delete form', function(client) {
-        client.keys([client.Keys.SHIFT, '3']);
-
-        client.expect.element('#modal .modal-title').to.be.present.before(5000);
-        client.expect.element('#modal .modal-title').to.be.visible.before(2000);
-
-        client.click('#modal .close');
         client.expect.element('#modal .modal-title').not.to.be.present.before(2000);
     });
 

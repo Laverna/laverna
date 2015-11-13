@@ -17,7 +17,7 @@ describe('#/notebooks/add', function() {
     /**
      * Saves a notebook
      */
-    it('can show notebook form throught button', function(client) {
+    it('can show notebook form when button is clicked', function(client) {
         client
         .urlHash('notebooks')
         .expect.element('#header--add').to.be.present.before(50000);
@@ -40,14 +40,13 @@ describe('#/notebooks/add', function() {
 
         client
         .click('#modal .ok')
-        .expect.element('#modal .form-group').not.to.be.present.before(2000);
+        .expect.element('#modal .form-group').not.to.be.present.before(5000);
     });
 
-    // @TODO BUG: FAILS
-    // it('saved notebooks appear in list', function(client) {
-    //     client
-    //     .expect.element('#notebooks .list--item.-notebook').text.to.contain('Nightwatch').before(2000);
-    // });
+    it('saved notebooks appear in list', function(client) {
+        client
+        .expect.element('#notebooks .list--item.-notebook').text.to.contain('Nightwatch').before(5000);
+    });
 
     it('redirects to notebooks list on save', function(client) {
         client
@@ -60,7 +59,6 @@ describe('#/notebooks/add', function() {
     });
 
     it('saved notebooks appear in the add form', function(client) {
-        client
         client.click('#header--add')
         .expect.element('#modal select[name="parentId"]').text.to.contain('Nightwatch').before(2000);
     });
@@ -143,10 +141,6 @@ describe('#/notebooks/edit', function() {
 
     before(function(client, done) {
         client
-        .urlHash('notes');
-
-        client
-        .pause(500)
         .urlHash('notebooks');
 
         // Get all rendered notebooks
@@ -179,18 +173,16 @@ describe('#/notebooks/edit', function() {
         .pause(500)
         .expect.element('#notebooks').text.to.contain('Changed-Title');
 
-        // @TODO BUG: After updating a notebook, sub-notebooks are lost
-        // client.expect.element('#notebooks').text.to.contain('Sub-Notebook');
+        client.expect.element('#notebooks').text.to.contain('Sub-notebook');
     });
 
     it('shows notebook form with updated data', function(client) {
         client
         .urlHash(`notebooks/edit/${ids[1]}`)
-        .expect.element('#modal .form-group').to.be.visible.before(2000);
+        .expect.element('#modal .form-group').to.be.visible.before(5000);
 
-        client
-        .expect.element('#modal input[name="name"]').value.to.contain('Changed-Title')
-        .expect.element('#modal select[name="parentId"]').text.to.contain('Changed-Title');
+        client.expect.element('#modal input[name="name"]').value.to.contain('Sub-notebook');
+        client.expect.element('#modal select[name="parentId"]').text.to.contain('Changed-Title');
     });
 
     it('shows notebook form with correct notebookId', function(client) {
@@ -201,7 +193,7 @@ describe('#/notebooks/edit', function() {
     it('can update sub-notebooks', function(client) {
         client
         .clearValue('#modal input[name="name"]')
-        .setValue('#modal input[name="name"]', ['Sub-CT', client.Keys.ENTER])
+        .setValue('#modal input[name="name"]', ['Sub-CT', client.Keys.ENTER]);
     });
 
     it('re-renders notebooks list with updated data', function(client) {

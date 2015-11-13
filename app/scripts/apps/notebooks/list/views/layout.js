@@ -35,12 +35,15 @@ define([
         activeRegion: 'notebooks',
 
         initialize: function() {
-            _.bindAll(this, 'triggerNext', 'triggerPrevious', 'openActive', 'openEdit', 'triggerRemove');
+            _.bindAll(this, 'triggerNext', 'triggerPrevious', 'openActive', 'openEdit', 'triggerRemove', 'focusRegion');
 
             // Make tags active region if there aren't any notebooks
             if (!this.options.notebooks.length) {
                 this.activeRegion = 'tags';
             }
+
+            this.listenTo(Radio.channel('notebooks'), 'model:navigate', this.focusRegion);
+            this.listenTo(Radio.channel('tags'), 'model:navigate', this.focusRegion);
 
             // Register keyboard events
             Mousetrap.bind(this.options.configs.navigateBottom, this.triggerNext);
@@ -88,6 +91,19 @@ define([
             Radio.request('uri', 'navigate', $a.attr('href'));
         },
 
+        /**
+         * Make sure a model's region is active.
+         * For example, if a user navigated to a tag, tags region should be
+         * active.
+         */
+        focusRegion: _.debounce(function(model) {
+            this.activeRegion = model.storeName;
+        }, 100),
+
+        /**
+         * Switch from one region to another. For example, from `tags` to
+         * `notebooks`.
+         */
         changeRegion: function(regionName, direction) {
             // Don't change active region
             if (!this.options[regionName].length) {

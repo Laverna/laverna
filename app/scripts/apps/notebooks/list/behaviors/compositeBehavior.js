@@ -29,7 +29,6 @@ define([
 
             // Listen to events on a channel [notebooks|tags]
             this.listenTo(this.channel, 'model:navigate', this.modelFocus);
-            this.listenTo(this.channel, 'update:model', this.onUpdateModel);
 
             // View events
             this.listenTo(this.view, 'navigate:next', this.navigateNext);
@@ -48,17 +47,6 @@ define([
             delete this.collection;
             delete this.channel;
             delete this.uiBody;
-        },
-
-        onUpdateModel: function(model) {
-            var view = this.view.children.find(function(view) {
-                return view.model.id === model.id;
-            });
-
-            if (view) {
-                view.model.set(model.toJSON());
-                view.render();
-            }
         },
 
         /**

@@ -3,10 +3,11 @@ define([
     'underscore',
     'backbone',
     'collections/pageable',
+    'backbone.radio',
     'migrations/note',
     'models/notebook',
     'indexedDB'
-], function(_, Backbone, PageableCollection, NotesDB, Notebook) {
+], function(_, Backbone, PageableCollection, Radio, NotesDB, Notebook) {
     'use strict';
 
     /**
@@ -35,6 +36,11 @@ define([
             this.models = this.getTree();
         },
 
+        sortFullCollection: function() {
+            this.sortItOut();
+            this.reset(this.models);
+        },
+
         _onAddItem: function(model) {
             /**
              * Remove a model from the collection if it doesn't meet
@@ -46,17 +52,14 @@ define([
 
             var colModel = this.get(model.id);
             if (colModel) {
-                return colModel.set(model.toJSON());
+                colModel.set(model.attributes);
+            }
+            else {
+                this.add(model);
             }
 
-            this.add(model);
-        },
-
-        _navigateOnRemove: function(model) {
-            model = this.get(model.id);
-            if (model) {
-                this.remove(model);
-            }
+            this.sortFullCollection();
+            Radio.trigger('notebooks', 'model:navigate', model);
         },
 
         /**

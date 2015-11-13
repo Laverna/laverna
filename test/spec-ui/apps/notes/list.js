@@ -168,9 +168,6 @@ describe('/notes', function() {
         });
     });
 
-    /**
-     * @TODO it doesn't filter notes by a tag
-     */
     it('can filter notes by a tag', function(client) {
         var note = {
             title   : 'A note with a tag:' + Math.floor((Math.random() * 10) + 1),
@@ -193,9 +190,6 @@ describe('/notes', function() {
         });
     });
 
-    /**
-     * @TODO It doesn't filter notes by search query
-     */
     it('can search notes', function(client) {
         var note = {
             title   : 'A unique note title:' + Math.floor((Math.random() * 10) + 1),

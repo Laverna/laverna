@@ -3,10 +3,11 @@ define([
     'underscore',
     'backbone',
     'collections/pageable',
+    'backbone.radio',
     'models/tag',
     'migrations/note',
     'indexedDB'
-], function(_, Backbone, PageableCollection, Tag, TagsDB) {
+], function(_, Backbone, PageableCollection, Radio, Tag, TagsDB) {
     'use strict';
 
     /**
@@ -31,6 +32,11 @@ define([
         },
 
         initialize: function() {
+        },
+
+        _onAddItem: function(model) {
+            PageableCollection.prototype._onAddItem.apply(this, arguments);
+            Radio.trigger('tags', 'model:navigate', model);
         },
 
         sortFullCollection: function() {

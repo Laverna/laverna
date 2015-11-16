@@ -1,12 +1,10 @@
 /* global describe, before, after, it */
 'use strict';
-var expect = require('chai').expect;
 
 /**
- * Notebook list test
+ * Settings list test
  */
-
-describe('#/notebooks', function() {
+describe('#/settings', function() {
     before(function(client, done) {
         this.timeout(100000);
         client.urlHash('notes');
@@ -16,12 +14,12 @@ describe('#/notebooks', function() {
         client.addNote({title: 'hello2', content: 'hello2'});
         client.addNote({title: 'hello3', content: 'hello3'});
 
-        // client.addNotebook({name: 'AAAAAA', parentId: 0});
-        // client.addNotebook({name: 'AAAAAB', parentId: 0});
+        client.addNotebook({name: 'AAAAAA', parentId: 0});
+        client.addNotebook({name: 'AAAAAB', parentId: 0});
 
         client.urlHash('settings');
         client.expect.element('.header--title').to.have.text.that.contains('Settings').before(5000);
-        client.perform(() => {done();})
+        client.perform(() => {done();});
     });
 
     after(function(client, done) {
@@ -34,6 +32,8 @@ describe('#/notebooks', function() {
     });
 
     it('can change how many notes should be displayed', function(client) {
+        client.expect.element('input[name="pagination"]').to.be.present.before(5000);
+
         // Set pagination to 1
         client.clearValue('input[name="pagination"]');
         client.setValue('input[name="pagination"]', '1');
@@ -53,6 +53,7 @@ describe('#/notebooks', function() {
         // Set pagination to 10
         client.urlHash('settings');
         client.expect.element('.header--title').to.have.text.that.contains('Settings').before(5000);
+        client.expect.element('input[name="pagination"]').to.be.present.before(5000);
 
         client.clearValue('input[name="pagination"]');
         client.setValue('input[name="pagination"]', '10');
@@ -73,6 +74,7 @@ describe('#/notebooks', function() {
     it('can change default edit mode', function(client) {
         client.urlHash('settings');
         client.expect.element('.header--title').to.have.text.that.contains('Settings').before(5000);
+        client.expect.element('select[name="editMode"]').to.be.present.before(5000);
 
         client.setValue('select[name="editMode"]', 'normal');
 
@@ -87,19 +89,18 @@ describe('#/notebooks', function() {
         client.expect.element('#sidebar--content').to.be.visible.before(5000);
     });
 
-    // @TODO Sort notebooks doesn't work
-    // it('can change default edit mode', function(client) {
-    //     client.urlHash('settings');
-    //     client.expect.element('.header--title').to.have.text.that.contains('Settings').before(5000);
-    //
-    //     client.setValue('select[name="sortnotebooks"]', 'id');
-    //
-    //     client.click('.settings--save');
-    //     client.click('.settings--cancel');
-    //
-    //     client.expect.element('#header--add').to.be.visible.before(50000);
-    //
-    //     client.urlHash('notebooks');
-    //     client.expect.element('#notesbooks .list--item.-notebook').to.have.text.that.equals('AAAAAB').before(5000);
-    // });
+    it('can change default edit mode', function(client) {
+        client.urlHash('settings');
+        client.expect.element('.header--title').to.have.text.that.contains('Settings').before(5000);
+
+        client.setValue('select[name="sortnotebooks"]', 'created');
+
+        client.click('.settings--save');
+        client.click('.settings--cancel');
+
+        client.expect.element('#header--add').to.be.visible.before(50000);
+
+        client.urlHash('notebooks');
+        client.expect.element('#notebooks .list--item.-notebook').to.have.text.that.equals('AAAAAB').before(5000);
+    });
 });

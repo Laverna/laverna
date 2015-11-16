@@ -30,7 +30,11 @@ define([
             active: {trash: 0}
         },
 
-        comparator: 'name',
+        sortField: 'name',
+
+        comparator: function(model) {
+            return -model.get(this.sortField);
+        },
 
         sortItOut: function() {
             this.models = this.getTree();
@@ -84,18 +88,18 @@ define([
          */
         getTree: function(parents, tree) {
             var self = this,
-                childs;
+                children;
 
             parents = (parents || this.getRoots());
             tree = (tree || []);
 
             _.forEach(parents, function(model) {
                 tree.push(model);
-                childs = self.getChildren(model.get('id'));
+                children = self.getChildren(model.get('id'));
 
                 // Every child model can have its own children
-                if (childs.length > 0) {
-                    childs = self.getTree(childs, tree);
+                if (children.length > 0) {
+                    children = self.getTree(children, tree);
                 }
             });
 

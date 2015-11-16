@@ -88,7 +88,9 @@ define([
          * @type object options
          */
         getAll: function(options) {
-            var self = this;
+            var self      = this,
+                sortField = Radio.request('configs', 'get:config', 'sortnotebooks');
+
             options.profile = options.profile || this.defaultDB;
             options.filter  = options.filter || 'active';
 
@@ -101,6 +103,7 @@ define([
             }
 
             var getFunc = _.bind(ModuleObject.prototype.getAll, this);
+            this.Collection.prototype.sortField = sortField;
 
             return getFunc(options)
             .then(function() {

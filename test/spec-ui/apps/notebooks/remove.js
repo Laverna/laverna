@@ -42,7 +42,7 @@ describe('#/notebooks/remove', function() {
 
         client.expect.element('#modal .modal-title').to.be.present.before(5000);
         client.expect.element('#modal .modal-title').to.be.visible.before(5000);
-        client.click('#modal .btn[data-event="confirm"]')
+        client.click('#modal .btn[data-event="confirm"]');
         client.pause(500);
 
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
@@ -77,14 +77,8 @@ describe('#/notebooks/remove', function() {
 
         client.expect.element('#modal .modal-title').to.be.present.before(5000);
         client.expect.element('#modal .modal-title').to.be.visible.before(5000);
-        client.click('#modal .btn[data-event="confirm"]')
+        client.click('#modal .btn[data-event="confirm"]');
         client.pause(500);
-
-        //@TODO BUG: sub-notebooks are removed from DOM, instead they should be re-rendered
-        client
-        .urlHash('notes')
-        .pause(100)
-        .urlHash('notebooks');
 
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
         client.expect.element('#notebooks').text.to.contain('1.NestedRemove').before(5000);
@@ -105,7 +99,7 @@ describe('#/notebooks/remove', function() {
             client.expect.element('#modal .modal-title').to.be.present.before(5000);
             client.expect.element('#modal .modal-title').to.be.visible.before(5000);
 
-            client.click('#modal .btn[data-event="confirm"]')
+            client.click('#modal .btn[data-event="confirm"]');
             client.pause(500);
         }
 
@@ -119,7 +113,7 @@ describe('#/notebooks/remove', function() {
                 expect(notebookCount).to.be.equal(res.value.length);
                 done();
             });
-        })
+        });
     });
 
     // @TODO add tests for notes behaviour after linked notebooks are deleted

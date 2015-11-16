@@ -39,7 +39,9 @@
     <div class="col-sm-10">
         <select id="sortnotebooks" class="form-control" name="sortnotebooks" checked="{{models.sortnotebooks}}">
             <option value="name">{{ i18n('Name') }}</option>
-            <option value="id" <%if(models.sortnotebooks === 'id'){%>selected<%}%>>{{ i18n('Created') }}</option>
+            <option value="created" <%if(models.sortnotebooks === 'created'){%>selected<%}%>>
+            {{ i18n('Created') }}
+            </option>
         </select>
     </div>
 </div>

@@ -140,6 +140,11 @@ define([
         saveModel: function(model, data) {
             var self = this;
 
+            data.updated = Date.now();
+            if (!model.attributes.created) {
+                data.created = Date.now();
+            }
+
             return this.save(model, data)
             .then(function(model) {
                 self.vent.trigger('sync:model', model);

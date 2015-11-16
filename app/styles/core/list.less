@@ -22,6 +22,19 @@
     min-height: 60px;
     max-height: 60px;
 }
+
+.list--item--title.-note {
+    overflow    : hidden;
+    white-space : nowrap;
+    width       : 90%;
+    &:extend(.pull-left);
+}
+
+.list--item--favorite {
+    width: 7%;
+    &:extend(.pull-right);
+}
+
 .list--item--text {
     max-width: 80%;
     &:extend(.-text-elipsis);

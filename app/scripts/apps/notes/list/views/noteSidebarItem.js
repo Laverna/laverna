@@ -62,8 +62,8 @@ define([
                 },
 
                 // Strip from HTML tags the title
-                getTitle: function(title) {
-                    return title.replace(/<(?:.|\n)*?>/gm, '');
+                getTitle: function() {
+                    return this.title.replace(/<(?:.|\n)*?>/gm, '');
                 },
 
                 // Generate link

@@ -37,6 +37,7 @@ define([
 
         onDestroy: function() {
             if (this.$active) {
+                this.showSidebar();
                 this.$active.off('click.toggle');
             }
         },

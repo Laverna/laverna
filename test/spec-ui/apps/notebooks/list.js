@@ -22,14 +22,9 @@ describe('#/notebooks', function() {
         client.addNotebook({name: 'notebook 4', parentId: 0});
         client.addNotebook({name: 'notebook 5', parentId: 'notebook 4'});
 
-        client.urlHash('notes');
-
-        client
-        .pause(100)
-        .urlHash('notebooks');
-
         client.findAll('#notebooks .list--item', 'data-id', (res) => {
             ids = res;
+            expect(ids.length).to.be.equal(3);
             done();
         });
     });
@@ -90,25 +85,24 @@ describe('#/notebooks', function() {
     });
 
     it('navigation keybindings work', function(client) {
-        client.expect.element('#notebooks .list--item.active').to.be.not.present.before(5000);
-        client.keys('j');
-        client.expect.element('#notebooks .list--item.active').to.be.present.before(500);
+        client.getValue('#notebooks .list--item.active', function(value) {
+            client.keys('k');
+            client.expect.element('#notebooks .list--item.active').value.not.to.be.equal(value).before(5000);
+        });
 
         client.getValue('#notebooks .list--item.active', function(value) {
             client.keys('j');
             client.expect.element('#notebooks .list--item.active').value.not.to.be.equal(value).before(5000);
         });
-
-        client.getValue('#notebooks .list--item.active', function(value) {
-            client.keys('k');
-            client.expect.element('#notebooks .list--item.active').value.not.to.be.equal(value).before(5000);
-        });
     });
 
-    // :TODO Keybindings stop working when pressed in particular order
     // SHIFT+3, c, e and c, SHIFT+3, e
     it('shift+3 shows delete form', function(client) {
-        client.keys([client.Keys.SHIFT, '3']);
+        client
+        .keys([client.Keys.SHIFT, '3'])
+
+        // Hit Shift again to disable it
+        .keys(client.Keys.SHIFT);
 
         client.expect.element('#modal .modal-title').to.be.present.before(5000);
         client.expect.element('#modal .modal-title').to.be.visible.before(5000);
@@ -134,14 +128,10 @@ describe('#/notebooks', function() {
 
         client.expect.element('#modal .modal-title').to.be.present.before(5000);
         client.expect.element('#modal .modal-title').to.be.visible.before(2000);
-        client.keys(client.Keys.ESCAPE);
+        client.click('#modal .cancelBtn');
         client.expect.element('#modal .modal-title').not.to.be.present.before(2000);
     });
 
-    /**
-     * Test navigate keybindings
-     * @TODO BUG: after SHIFT+3, keybindings stop working
-     */
     it('can navigate to active notes', function(client) {
         client.keys(['g', 'i']);
 

@@ -171,7 +171,7 @@ describe('/notes', function() {
     it('can filter notes by a tag', function(client) {
         var note = {
             title   : 'A note with a tag:' + Math.floor((Math.random() * 10) + 1),
-            content : [client.Keys.SHIFT, '3', 'TAGNAME']
+            content : [client.Keys.SHIFT, '3', client.Keys.SHIFT, 'tagname']
         };
 
         client
@@ -179,7 +179,7 @@ describe('/notes', function() {
         .keys('gn');
 
         client
-        .urlHash('notes/f/tag/q/TAGNAME')
+        .urlHash('notes/f/tag/q/tagname')
         .expect.element('.list').to.be.present.before(50000);
 
         client.expect.element('.list--item').to.be.present.before(50000);

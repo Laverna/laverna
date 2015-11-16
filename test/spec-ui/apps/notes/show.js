@@ -125,6 +125,9 @@ describe('/notes/f/active/show/:id:', function() {
         client
         .pause(1000)
         .keys([client.Keys.SHIFT, '3'])
+
+        // Hit Shift key again to disable it
+        .keys([client.Keys.SHIFT])
         .expect.element('.modal-dialog').to.be.present.before(2000);
     });
 

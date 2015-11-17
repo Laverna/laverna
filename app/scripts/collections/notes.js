@@ -50,8 +50,11 @@ define([
                 cond = (typeof cond === 'function' ? cond(options) : cond);
                 res = this.where(cond);
             }
-            else {
+            else if (this[filter + 'Filter']) {
                 res = this[filter + 'Filter'](options.query);
+            }
+            else {
+                return;
             }
 
             return this.reset(res);

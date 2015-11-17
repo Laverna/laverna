@@ -17,8 +17,10 @@ define([
     MathJax.Hub.Config({
         jax     : ['input/TeX', 'output/HTML-CSS'],
         tex2jax : {
-            inlineMath     : [['$', '$'], ['\\(', '\\)']],
-            displayMath    : [['$$', '$$'], ['\\(', '\\)']],
+            inlineMath     : [['$', '$']],
+            displayMath    : [['$$', '$$']],
+            processClass   : 'mathjax',
+            ignoreClass    : 'layout',
             processEscapes : true
         }
     });
@@ -35,7 +37,7 @@ define([
     });
 
     MathjaxModule.on('stop', function() {
-        delete math.view;
+        math.view = null;
         Radio.off('editor', 'preview:refresh');
     });
 

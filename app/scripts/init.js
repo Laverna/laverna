@@ -1,12 +1,13 @@
 /* global define, requirejs */
 define([
     'jquery',
+    'q',
     'helpers/radio.shim',
     'backbone.radio',
     'app',
     'initializers',
     'bootstrap'
-], function($, shim, Radio, App) {
+], function($, Q, shim, Radio, App) {
     'use strict';
 
     var hash = document.location.hash;
@@ -46,7 +47,6 @@ define([
         'apps/help/appHelp',
 
         // Optional modules
-        'modules/remotestorage/module',
         'modules/pagedown/module',
         'modules/tags/module',
         'modules/tasks/module',
@@ -64,13 +64,32 @@ define([
 
         Radio.request('configs', 'get:all', {profile: profile})
         .then(storage.check)
+        .then(function() {
+            var modules = [],
+                defer   = Q.defer();
+
+            switch (Radio.request('configs', 'get:config', 'cloudStorage')) {
+                case 'remotestorage':
+                    modules.push('modules/remotestorage/module');
+                    break;
+
+                default:
+                    return defer.resolve();
+            }
+
+            requirejs(modules, function() {
+                defer.resolve();
+            });
+
+            return defer.promise;
+        })
         .then(Radio.request('init', 'start', 'app:before app module'))
         .then(function() {
             console.log('modules are loaded');
             App.start();
         })
         .fail(function(e) {
-            console.error('I failed you', e);
+            console.error('Error', e);
         });
 
     });

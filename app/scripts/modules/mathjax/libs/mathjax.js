@@ -12,14 +12,28 @@ define([
          * Render MathJax.
          */
         render: function(view) {
-            var groups   = [],
-                promises = [],
-                defer,
-                $divs,
-                ng;
+            var $divs;
 
             this.view = view || this.view;
             $divs = this.view.$el.find('.mathjax');
+
+            return this.preProcess($divs)
+            .then(function() {
+                MathJax.Hub.Queue(['Typeset', MathJax.Hub, $divs.toArray()]);
+            })
+            .fail(function(e) {
+                console.error('MathJax Error:', e);
+            });
+        },
+
+        /**
+         * Process MathJax expressions.
+         */
+        preProcess: function($divs) {
+            var groups   = [],
+                promises = [],
+                defer,
+                ng;
 
             /**
              * Divide divs into groups of 5 elements in order to
@@ -44,15 +58,11 @@ define([
 
             return _.reduce(promises, Q.when, new Q())
             .then(function() {
-                // Clear up everything
+                promises = null;
                 defer    = null;
                 groups   = null;
-                promises = null;
 
-                MathJax.Hub.Queue(['Typeset', MathJax.Hub, $divs.toArray()]);
-            })
-            .fail(function(e) {
-                console.error('MathJax Error:', e);
+                return;
             });
         },
 

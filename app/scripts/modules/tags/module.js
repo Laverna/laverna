@@ -1,11 +1,9 @@
 /* global define */
 define([
     'underscore',
-    'backbone.radio',
-    'marionette',
-    'modules',
-    'xregexp/addons/unicode/unicode-categories'
-], function(_, Radio, Marionette, Modules, XRegExp) {
+    'backbone.radio'
+    // 'xregexp/addons/unicode/unicode-categories'
+], function(_, Radio) {
     'use strict';
 
     /**
@@ -27,7 +25,20 @@ define([
          */
         configure: function() {
             this.symbol = Radio.request('configs', 'get:config', 'tagSymbol', '#');
-            this.regex = new XRegExp('(^|[^' + this.symbol + '\\p{L}\\p{N}])' + this.symbol + '([\\p{L}\\p{N}\-\+]+)', 'g');
+            // this.regex = new XRegExp('(^|[^' + this.symbol + '\\p{L}\\p{N}])' + this.symbol + '([\\p{L}\\p{N}\-\+]+)', 'g');
+
+            // Regex: /([^\s])?#+?([^\s\.#])+/gm;
+            this.regex = new RegExp('([^\\s])?' + this.symbol + '+?([^\\s\\.\\,' + this.symbol + '])+', 'gm');
+        },
+
+        /**
+         * Return true if:
+         * it starts with # symbol
+         * and
+         * it doesn't contain /
+         */
+        testForTag: function(tag) {
+            return (new RegExp('^' + this.symbol).test(tag) && /\//.test(tag) === false);
         },
 
         /**
@@ -35,10 +46,15 @@ define([
          * them to a tag link.
          */
         replaceTags: function(text) {
+            var self = this;
+
             return text.replace(this.regex, function(tag) {
-                tag = arguments[2];
+                if (!self.testForTag(tag)) {
+                    return tag;
+                }
+
                 return ' <a class="label label-default" href="#/notes/f/tag/q/' +
-                    tag + '">' + Tags.symbol + tag + '</a>';
+                    tag.replace('#', '') + '">' + tag + '</a>';
             });
         },
 
@@ -50,8 +66,10 @@ define([
                 tags   = [];
 
             _.each(result, function(tag) {
-                tags.push(tag.trim().replace(Tags.symbol, ''));
-            });
+                if (this.testForTag(tag)) {
+                    tags.push(tag.trim().replace(Tags.symbol, ''));
+                }
+            }, this);
 
             return _.uniq(tags);
         },

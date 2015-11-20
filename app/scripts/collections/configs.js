@@ -31,8 +31,8 @@ define([
             'encryptPass'       : '',
             'encryptSalt'       : '',
             'encryptIter'       : '1000',
-            'encryptTag'        : '64',
-            'encryptKeySize'    : '128',
+            'encryptTag'        : '128',
+            'encryptKeySize'    : '256',
             'encryptBackup'     : {},
 
             // Keybindings

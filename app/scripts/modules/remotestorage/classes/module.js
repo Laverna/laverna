@@ -120,10 +120,10 @@ define([
                 save: function(type, obj) {
                     obj.id = obj.id.toString();
 
-                    if (obj.notebookId) {
+                    if (typeof obj.notebookId !== 'undefined') {
                         obj.notebookId = obj.notebookId.toString();
                     }
-                    if (obj.parentId) {
+                    if (typeof obj.parentId !== 'undefined') {
                         obj.parentId = obj.parentId.toString();
                     }
 

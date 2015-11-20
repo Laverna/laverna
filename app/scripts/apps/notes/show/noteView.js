@@ -60,8 +60,8 @@ define([
         },
 
         modelEvents: {
+            'synced'               : 'render',
             'change:trash'         : 'render',
-            'change:content'       : 'render',
             'change:isFavorite'    : 'onChangeFavorite',
             'change:taskCompleted' : 'onTaskCompleted'
         },

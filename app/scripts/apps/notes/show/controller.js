@@ -55,9 +55,15 @@ define([
             Radio.request('global', 'set:title', note.get('title'));
 
             // Events
+            this.listenTo(Radio.channel('notes'), 'synced:' + note.id, this.onSync);
             this.listenTo(this.view, 'toggle:task', this.toggleTask);
             this.listenTo(this.view, 'model:remove', this.modelRemove);
             this.listenTo(this.view, 'model:restore', this.modelRestore);
+        },
+
+        onSync: function(model) {
+            this.view.model.set(model.attributes);
+            this.view.model.trigger('synced');
         },
 
         modelRestore: function() {

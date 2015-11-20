@@ -191,6 +191,7 @@ define([
             .then(this.decryptModel)
             .then(function(model) {
                 self.vent.trigger('update:model', model);
+                self.vent.trigger('synced:' + model.id, model);
                 return model;
             });
         },

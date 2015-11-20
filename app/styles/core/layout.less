@@ -49,9 +49,10 @@
 }
 
 .layout--body {
-    height   : 100%;
-    width    : 100%;
-    position : relative;
+    height     : 100%;
+    width      : 100%;
+    position   : relative;
+    word-break : break-all;
 
     &.-scroll {
         height   : auto;
@@ -100,4 +101,9 @@
     text-align      : center;
     justify-content : center;
     z-index         : @zindex-navbar-fixed + 3;
+}
+
+// Notes
+.note--date {
+    display: inline-block;
 }

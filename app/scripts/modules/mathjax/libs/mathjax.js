@@ -17,6 +17,11 @@ define([
             this.view = view || this.view;
             $divs = this.view.$el.find('.mathjax');
 
+            // Don't bother with processing MathJax
+            if (!$divs.length) {
+                return;
+            }
+
             return this.preProcess($divs)
             .then(function() {
                 MathJax.Hub.Queue(['Typeset', MathJax.Hub, $divs.toArray()]);

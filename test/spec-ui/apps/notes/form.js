@@ -106,12 +106,16 @@ describe('Note form', function() {
 
         client
         .click('.modal-dialog button[data-event="confirm"]')
-        .waitForElementNotPresent('.layout--body.-form', 1000);
+        .expect.element('.layout--body.-form').not.to.be.present.before(5000);
     });
 
     it('makes previously selected notebook active', function(client) {
         client
-        .urlHash('notes/f/notebook/q/' + notebookId + '/add')
+        .urlHash('/notes/f/notebook/q/' + notebookId)
+        .expect.element('#sidebar--content').to.be.visible.before(50000);
+
+        client
+        .urlHash('/notes/add')
         .expect.element('#editor--input--title').to.be.visible.before(50000);
 
         client

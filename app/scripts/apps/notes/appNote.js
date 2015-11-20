@@ -31,12 +31,16 @@ define([
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            '': 'showIndex',
-            'p/:profile'                    : 'filterNotes',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)/add': 'noteForm',
-            '(p/:profile/)notes/edit/:id'   : 'noteEditForm',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'filterNotes',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote'
+            ''           : 'showIndex',
+            'p/:profile' : 'filterNotes',
+
+            // Edit/Add notes
+            '(p/:profile/)notes/add'      : 'noteForm',
+            '(p/:profile/)notes/edit/:id' : 'noteForm',
+
+            // Filter notes
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)'            : 'filterNotes',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)' : 'showNote'
         },
 
         // Start this module
@@ -103,17 +107,10 @@ define([
             });
         },
 
-        // Shows a form for editing
-        noteEditForm: function(profile, id) {
-            this.noteForm(profile, null, null, id );
-        },
-
         // Shows a form for editing or adding notes
-        noteForm: function(profile, filter, query, id) {
-            var args = _.extend(this.notesArg || {}, {
+        noteForm: function(profile, id) {
+            var args = _.extend({}, this.notesArg || {}, {
                 id      : id,
-                filter  : filter,
-                query   : query,
                 profile : profile
             });
 
@@ -167,18 +164,7 @@ define([
         // Listen to events
         this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
         this.listenTo(Radio.channel('global'), 'form:show', function() {
-
-            // Construct the notes/.../add URI with optional filter/query args.
-            var uri = '/notes';
-            if (API.notesArg && API.notesArg.filter) {
-                uri += '/f/' + API.notesArg.filter;
-            }
-            if (API.notesArg && API.notesArg.query) {
-                uri += '/q/' + API.notesArg.query;
-            }
-            uri += '/add';
-
-            Radio.request('uri', 'navigate', uri, {
+            Radio.request('uri', 'navigate', '/notes/add', {
                 trigger       : true,
                 includeProfile: true
             });

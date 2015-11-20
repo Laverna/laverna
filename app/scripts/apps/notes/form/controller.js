@@ -55,6 +55,9 @@ define([
             var notebooksView;
             note = note[0];
 
+            // Set document title
+            Radio.request('global', 'set:title', note.get('title'));
+
             // Use behaviours that are appropriate for a device.
             if (Radio.request('global', 'is:mobile')) {
                 delete View.prototype.behaviors.Desktop;
@@ -72,9 +75,11 @@ define([
             Radio.request('global', 'region:show', 'content', this.view);
             this.view.trigger('rendered');
 
-            // Resolve the notebook ID.
-            // If the current note doesn't have a notebook attached,
-            // try to use one from the filter if it specifies a notebook.
+            /*
+             * Resolve the notebook ID.
+             * If the current note doesn't have a notebook attached,
+             * try to use one from the filter if it specifies a notebook.
+             */
             var activeId = note.get('notebookId');
             if (activeId === '0' && this.options.filter === 'notebook') {
                 activeId = this.options.query;

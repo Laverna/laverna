@@ -51,7 +51,7 @@ define([
 
         events: {
             'click .btn--favourite' : 'favorite',
-            'click @ui.tasks'       : 'toggleTask',
+            'click @ui.tasks'       : 'onClickTask',
             'click @ui.rmBtn'       : 'rmNote'
         },
 
@@ -118,6 +118,11 @@ define([
             this.ui.favorite.toggleClass('icon-favorite', this.model.get('isFavorite'));
         },
 
+        onClickTask: function(e) {
+            e.preventDefault();
+            this.toggleTask(e);
+        },
+
         /**
          * Toggle the status of a task
          */
@@ -125,8 +130,10 @@ define([
             var $task = $(e.target),
                 taskId = Number($task.attr('data-task'));
 
+            $task.blur();
+            $task.prop('checked', $task.is(':checked') === false);
             this.trigger('toggle:task', taskId);
-        }, 300),
+        }, 200),
 
         /**
          * Update progress bar when the status of a task was changed

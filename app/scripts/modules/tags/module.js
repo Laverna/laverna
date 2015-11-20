@@ -78,7 +78,7 @@ define([
          * Add hooks to Pagedown editor
          */
         addHook: function(converter) {
-            converter.hooks.chain('preConversion', function(text) {
+            converter.hooks.chain('preBlockGamut', function(text) {
                 return Tags.replaceTags(text);
             });
         }

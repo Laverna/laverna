@@ -103,8 +103,12 @@ define([
          * Add hooks to Pagedown editor
          */
         addHook: function(converter) {
-            converter.hooks.chain('postConversion', function(text) {
+            converter.hooks.chain('preBlockGamut', function(text) {
                 return Tasks.replaceTasks(text);
+            });
+
+            converter.hooks.chain('postBlockGamut', function(text) {
+                return text.replace(/<\/label>(\r|\n)+/mg, '<\/label>');
             });
         }
     };

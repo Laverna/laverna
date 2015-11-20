@@ -75,7 +75,7 @@ define([
 
         // If module has stopped, remove the variable
         module.on('stop', function() {
-            delete Notebooks.currentApp;
+            Notebooks.currentApp = null;
         });
     };
 
@@ -152,7 +152,7 @@ define([
         // Stop the current module
         if (Notebooks.currentApp) {
             Notebooks.currentApp.stop();
-            delete Notebooks.currentApp;
+            Notebooks.currentApp = null;
         }
 
         // Stop responding to requests and requests

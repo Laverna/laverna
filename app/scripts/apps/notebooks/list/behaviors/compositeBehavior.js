@@ -44,9 +44,9 @@ define([
             this.view.collection.trigger('reset:all');
             this.stopListening();
 
-            delete this.collection;
-            delete this.channel;
-            delete this.uiBody;
+            this.collection = null;
+            this.channel = null;
+            this.uiBody = null;
         },
 
         /**

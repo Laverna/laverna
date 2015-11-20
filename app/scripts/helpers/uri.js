@@ -75,7 +75,7 @@ define([
             // Include profile link
             if (options.includeProfile) {
                 uri = this.getProfileLink(uri);
-                delete options.includeProfile;
+                options.includeProfile = null;
             }
 
             Backbone.history.navigate(uri, options);

@@ -64,8 +64,8 @@ define([
 
     Settings.on('before:stop', function() {
         Settings.currentApp.stop();
-        delete Settings.currentApp;
-        delete controller.args;
+        Settings.currentApp = null;
+        controller.args = null;
 
         SidebarApp.stop();
     });

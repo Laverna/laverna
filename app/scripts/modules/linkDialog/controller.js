@@ -45,7 +45,7 @@ define([
         },
 
         renderDropdown: function(notes) {
-            delete this.wait;
+            this.wait  = null;
             this.notes = notes;
 
             this.view = new View({
@@ -62,7 +62,7 @@ define([
             this.options.callback(url !== '' ? url : null);
 
             // Close the dialog
-            delete this.options.callback;
+            this.options.callback = null;
             this.destroy();
         },
 

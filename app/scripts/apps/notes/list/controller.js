@@ -55,7 +55,7 @@ define([
             // Destroy old view
             if (this.view) {
                 this.view.trigger('destroy');
-                delete this.view;
+                this.view = null;
             }
 
             // Render the view

@@ -107,7 +107,7 @@ define([
             this.options.callback(url !== '' ? url : null);
 
             // Close the dialog
-            delete this.options.callback;
+            this.options.callback = null;
             this.destroy();
         },
 

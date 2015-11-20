@@ -30,7 +30,7 @@ define([
         // If module has stopped, remove the variable and stop itself
         module.on('stop', function() {
             Help.stop();
-            delete Help.currentApp;
+            Help.currentApp = null;
         });
     }
 

@@ -41,7 +41,7 @@ define([
     FileDialog.on('before:stop', function() {
         Helper.revokeUrls();
         this.stopListening();
-        delete FileDialog.controller;
+        FileDialog.controller = null;
     });
 
     /**

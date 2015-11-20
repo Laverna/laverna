@@ -105,7 +105,7 @@ define([
             // Destroy a full collection
             if (this.fullCollection) {
                 this.fullCollection.reset();
-                delete this.fullCollection;
+                this.fullCollection = null;
             }
 
             // Remove all the event listeners

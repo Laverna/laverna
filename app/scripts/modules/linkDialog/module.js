@@ -28,7 +28,7 @@ define([
 
     LinkDialog.on('before:stop', function() {
         this.stopListening();
-        delete LinkDialog.controller;
+        LinkDialog.controller = null;
     });
 
     Radio.request('init', 'add', 'editor:before', function(editor) {

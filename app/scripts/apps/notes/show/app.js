@@ -30,7 +30,7 @@ define([
     Show.on('before:stop', function() {
         this.stopListening(Radio.channel('notes'));
         Show.controller.destroy();
-        delete Show.controller;
+        Show.controller = null;
     });
 
     return Show;

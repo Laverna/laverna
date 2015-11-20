@@ -24,7 +24,7 @@ define([
 
     About.on('before:stop', function() {
         this.stopListening();
-        delete About.controller;
+        About.controller = null;
     });
 
     return About;

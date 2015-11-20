@@ -30,7 +30,7 @@ define([
 
     Pagedown.on('stop', function() {
         Pagedown.controller.destroy();
-        delete Pagedown.controller;
+        Pagedown.controller = null;
         console.info('Pagedown module has stoped');
     });
 

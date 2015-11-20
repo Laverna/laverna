@@ -39,7 +39,7 @@ define([
 
         onDestroy: function() {
             this.stopListening();
-            delete this.channel;
+            this.channel = null;
         },
 
         showConfirm: function(model) {

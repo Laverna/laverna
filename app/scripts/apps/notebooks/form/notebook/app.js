@@ -26,7 +26,7 @@ define([
         Radio.stopReplying('appNotebooks', 'form:stop');
 
         Form.controller.destroy();
-        delete Form.controller;
+        Form.controller = null;
     });
 
     return Form;

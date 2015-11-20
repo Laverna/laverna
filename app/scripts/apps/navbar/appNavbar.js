@@ -23,7 +23,7 @@ define([
 
     Navbar.on('stop', function() {
         Navbar.controller.destroy();
-        delete Navbar.controller;
+        Navbar.controller = null;
     });
 
     // Initializer

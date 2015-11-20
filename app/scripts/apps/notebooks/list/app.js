@@ -20,7 +20,7 @@ define([
 
     List.on('before:stop', function() {
         List.controller.destroy();
-        delete List.controller;
+        List.controller = null;
     });
 
     return List;

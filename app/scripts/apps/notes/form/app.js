@@ -28,7 +28,7 @@ define([
     Form.on('before:stop', function() {
         Radio.off('notesForm', 'stop');
         Form.controller.destroy();
-        delete Form.controller;
+        Form.controller = null;
     });
 
     return Form;

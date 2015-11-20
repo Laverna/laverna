@@ -19,7 +19,7 @@ define([
 
     Show.on('before:stop', function() {
         Show.controller.destroy();
-        delete Show.controller;
+        Show.controller = null;
     });
 
     return Show;

@@ -65,7 +65,7 @@ define([
         },
 
         onFetch: function(collection) {
-            delete this.wait;
+            this.wait = null;
             this.notes = collection;
 
             // Instantiate notes collection and a view

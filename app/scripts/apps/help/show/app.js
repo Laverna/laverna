@@ -24,7 +24,7 @@ define([
 
     Keybindings.on('before:stop', function() {
         this.stopListening();
-        delete Keybindings.controller;
+        Keybindings.controller = null;
     });
 
     return Keybindings;

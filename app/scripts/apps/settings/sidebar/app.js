@@ -19,7 +19,7 @@ define([
 
     Sidebar.on('before:stop', function() {
         Sidebar.controller.destroy();
-        delete Sidebar.controller;
+        Sidebar.controller = null;
     });
 
     return Sidebar;

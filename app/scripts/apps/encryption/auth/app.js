@@ -19,7 +19,7 @@ define([
 
     Auth.on('before:stop', function() {
         Auth.controller.destroy();
-        delete Auth.controller;
+        Auth.controller = null;
     });
 
     return Auth;

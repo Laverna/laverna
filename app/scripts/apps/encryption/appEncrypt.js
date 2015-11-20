@@ -51,7 +51,7 @@ define([
 
         // If module has stopped, remove the variable
         module.on('stop', function() {
-            delete Encrypt.currentApp;
+            Encrypt.currentApp = null;
         });
     }
 
@@ -103,7 +103,7 @@ define([
 
     Encrypt.on('before:stop', function() {
         Encrypt.currentApp.stop();
-        delete Encrypt.currentApp;
+        Encrypt.currentApp = null;
     });
 
     // Check whether a user is authorized when everything is ready

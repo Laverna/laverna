@@ -66,7 +66,7 @@ define([
 
         // If module has stopped, remove the variable
         module.on('stop', function() {
-            delete AppNote.currentApp;
+            AppNote.currentApp = null;
         });
     };
 
@@ -197,7 +197,7 @@ define([
         // Stop the current module
         if (AppNote.currentApp) {
             AppNote.currentApp.stop();
-            delete AppNote.currentApp;
+            AppNote.currentApp = null;
         }
 
         // Stop listenning to events

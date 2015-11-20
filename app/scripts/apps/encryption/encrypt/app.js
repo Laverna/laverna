@@ -22,7 +22,7 @@ define([
 
     Encrypt.on('before:stop', function() {
         Encrypt.controller.destroy();
-        delete Encrypt.controller;
+        Encrypt.controller = null;
     });
 
     return Encrypt;

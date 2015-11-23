@@ -14,6 +14,7 @@
     "bootstrap": "~3.3.5",
     "device.js": "git://github.com/matthewhudson/device.js",
     "DOMPurify": "~0.7.2",
+    "dropbox": "dropbox-build#*",
     "dropzone": "~4.0.1",
     "enquire": "~2.1.0",
     "FileSaver": "*",

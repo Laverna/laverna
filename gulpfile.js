@@ -67,7 +67,6 @@ gulp.task('default', ['less'], function() {
  */
 gulp.task('jshint', function() {
     return gulp.src(['./app/scripts/**/*.js',
-                    '!./app/scripts/libs/dropbox.js',
                      './app/scripts/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
@@ -229,7 +228,6 @@ gulp.task('copy:deps', ['clean:dist'], function() {
     return merge.apply(merge, [
         // Copy
         gulp.src([
-            './app/scripts/libs/dropbox.js',
             './app/images/**/*.+(png|jpg|gif)',
             './app/docs/**',
             './app/locales/**',

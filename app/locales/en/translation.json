@@ -134,12 +134,18 @@
         "add": "Add a new notebook",
         "edit": "Edit a notebook",
         "name": "Please, provide notebook's name",
-        "confirm remove": "The notebook **__name__** will be removed **for ever**!"
+        "confirm remove": "The notebook **__name__** will be removed **for ever**!",
+        "remove with notes": "Yes, remove with attached notes",
+        "remove": "Yes, remove"
     },
     "tags": {
         "name": "Tag name is required",
         "add": "Add a new tag",
         "edit": "Edit a tag",
         "confirm remove": "The tag **__name__** will be removed **for ever**!"
+    },
+    "dropbox": {
+        "auth confirm": "Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.",
+        "auth title": "Dropbox auth"
     }
 }

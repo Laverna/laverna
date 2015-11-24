@@ -241,6 +241,7 @@ gulp.task('copy:deps', ['clean:dist'], function() {
         gulp.src([
             './app/bower_components/requirejs/require.js',
             './app/bower_components/modernizr/modernizr.js',
+            './app/bower_components/dropbox/dropbox.js',
             './app/bower_components/remotestorage.js/release/stable/remotestorage.js',
             './app/bower_components/tv4/tv4.js',
             './app/bower_components/bluebird/js/browser/bluebird.min.js',

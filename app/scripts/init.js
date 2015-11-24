@@ -73,6 +73,10 @@ define([
                     modules.push('modules/remotestorage/module');
                     break;
 
+                case 'dropbox':
+                    modules.push('modules/dropbox/module');
+                    break;
+
                 default:
                     return defer.resolve();
             }

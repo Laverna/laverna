@@ -97,17 +97,19 @@ define([
          * Synchronize local and remote data.
          */
         syncAll: function(localData, remoteData, module) {
-            var promises = [];
+            var promises = [],
+                newData;
+
             localData    = localData.fullCollection || localData;
 
             // Find notes which don't exist in local storage
-            remoteData = _.filter(remoteData, function(rModel) {
+            newData = _.filter(remoteData, function(rModel) {
                 return !_.findWhere(localData.models, {id: rModel.id});
             });
 
-            if (remoteData.length) {
+            if (newData.length) {
                 promises.push(
-                    Radio.request(module, 'save:all:raw', remoteData, {profile: RsModule.profile})
+                    Radio.request(module, 'save:all:raw', newData, {profile: RsModule.profile})
                 );
             }
 

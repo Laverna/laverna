@@ -37,7 +37,14 @@ describe('/encryption', function() {
 
         client
         .setValue('input[name=password]', '1')
-        .click('.btn-success')
+        .click('[type="submit"]');
+    });
+
+    it('shows backup', function(client) {
+        client.expect.element('.-backup').to.be.present.before(50000);
+
+        client
+        .click('#btn--next')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
     });
 
@@ -46,7 +53,7 @@ describe('/encryption', function() {
 
         client
         .setValue('input[name="password"]', '1')
-        .click('form .btn-success')
+        .click('[type="submit"]')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
     });
 
@@ -73,7 +80,12 @@ describe('/encryption', function() {
         client
         .setValue('input[name=oldpass]', '1')
         .setValue('input[name=password]', '2')
-        .click('form .btn-success')
+        .click('[type="submit"]');
+
+        client.expect.element('.-backup').to.be.present.before(50000);
+
+        client
+        .click('#btn--next')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
     });
 
@@ -82,7 +94,7 @@ describe('/encryption', function() {
 
         client
         .setValue('input[name="password"]', '2')
-        .click('form .btn-success')
+        .click('[type="submit"]')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
     });
 
@@ -107,7 +119,12 @@ describe('/encryption', function() {
 
         client
         .setValue('input[name=oldpass]', '2')
-        .click('form .btn-success')
+        .click('[type="submit"]');
+
+        client.expect.element('.-backup').to.be.present.before(50000);
+
+        client
+        .click('#btn--next')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
 
         notes.forEach(function(note) {

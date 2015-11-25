@@ -24,3 +24,47 @@ input.-borderless {
         box-shadow: none;
     }
 }
+
+/**
+ * Brand forms
+ */
+.input--brand {
+    background    : transparent;
+    box-shadow    : none;
+    border        : none;
+    border-bottom : 2px solid #FFF;
+    color         : #FFF;
+    border-radius : 0;
+    text-align    : center;
+    .placeholder(darken(#FFF, 10));
+
+    &:hover,
+    &:focus,
+    &.focus {
+        box-shadow   : none;
+        border-color : #FFF;
+    }
+}
+
+.btn--brand {
+    margin-top     : 33px;
+    padding-top    : 17px;
+    padding-bottom : 17px;
+
+    border         : none;
+    border-radius  : 9px;
+    border         : 2px solid #fff;
+
+    background     : transparent;
+    box-shadow     : 0;
+    color          : #fff;
+
+    font-variant   : small-caps;
+    font-size      : 1.5em;
+
+    &:hover, &:focus, &:active {
+        background : #fff;
+        color      : #303030;
+        outline    : none;
+    }
+}

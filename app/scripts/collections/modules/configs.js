@@ -382,7 +382,7 @@ define([
             // Password hasn't changed
             if (objects.encryptPass &&
                 configs.encryptPass.toString() === objects.encryptPass.value.toString()) {
-                changed.encryptPass = null;
+                delete changed.encryptPass;
             }
 
             /**

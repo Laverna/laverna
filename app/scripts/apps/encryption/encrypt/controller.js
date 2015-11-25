@@ -4,8 +4,10 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
+    'fileSaver',
     'apps/encryption/encrypt/view',
-], function(Q, _, Marionette, Radio, View) {
+    'apps/encryption/encrypt/backupView'
+], function(Q, _, Marionette, Radio, fileSaver, View, BackupView) {
     'use strict';
 
     /**
@@ -33,7 +35,7 @@ define([
         collections     : {},
 
         initialize: function(options) {
-            _.bindAll(this, 'saveChanges', 'encrypt', 'redirect', 'show', 'encryptProfile');
+            _.bindAll(this, 'saveChanges', 'encrypt', 'redirect', 'show', 'encryptProfile', 'showBackup');
 
             this.options = options;
             this.vent    = Radio.channel('encrypt');
@@ -47,7 +49,10 @@ define([
 
             // Show the view
             Radio.request('configs', 'get:profiles')
-            .then(this.show);
+            .then(this.show)
+            .fail(function(e) {
+                console.error('Error:', e);
+            });
 
             // Events
             this.listenTo(Radio.channel('Encryption'), 'password:valid', this.initEncrypt);
@@ -107,7 +112,11 @@ define([
          */
         initEncrypt: function() {
             var promises = [],
+                profile  = (this.profiles.length === 1 ? this.profiles[0].id : 'notes-db'),
                 self     = this;
+
+            this.rawData = {};
+            this.rawData[profile] = {configs: this.configs};
 
             // Re-encrypt every profile
             _.each(this.profiles, function(profile) {
@@ -127,6 +136,7 @@ define([
 
             return _.reduce(promises, Q.when, new Q())
             .then(this.resetBackup)
+            .then(this.showBackup)
             .then(this.redirect)
             .fail(function() {
                 console.error('Error!', arguments);
@@ -144,6 +154,8 @@ define([
             options          = options || this.options;
             options.pageSize = 0;
 
+            this.rawData[options.profile] = this.rawData[options.profile] || {};
+
             // Fetch all collections in a profile
             _.each(this.collectionNames, function(name) {
                 promises.push(
@@ -158,6 +170,7 @@ define([
             .spread(function() {
                 // Re-encrypt the collections that are not empty
                 self.collections = _.filter(arguments, function(collection) {
+                    self.rawData[options.profile][collection.storeName] = collection.toJSON();
                     return collection.length > 0;
                 });
                 self.view.trigger('encrypt:init', self.collections.length);
@@ -235,6 +248,31 @@ define([
          */
         resetBackup: function() {
             return new Q(Radio.request('configs', 'reset:encrypt'));
+        },
+
+        /**
+         * Advice to download backup with data.
+         */
+        showBackup: function() {
+            var defer = Q.defer();
+
+            this.view = new BackupView({
+                data: this.rawData
+            });
+
+            this.view.once('confirm:download', this.downloadBackup, this);
+            this.view.once('next:step', defer.resolve, defer);
+            Radio.request('global', 'region:show', 'brand', this.view);
+
+            return defer.promise;
+        },
+
+        downloadBackup: function() {
+            var blob = new Blob(
+                [JSON.stringify(this.rawData)],
+                {type: 'text/plain;charset=utf8'}
+            );
+            fileSaver(blob, 'laverna-backup.json');
         },
 
         /**

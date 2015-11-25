@@ -102,10 +102,16 @@
     "Hyperlink": "Hyperlink",
     "Editor": "Editor",
     "Preview": "Preview",
+    "Download": "Download",
     "encryption": {
-        "wait": "Please wait until the encryption will be completed",
+        "wait": "Please wait until the encryption is completed",
         "error": "Encryption error",
         "errorConfirm": "Error while decrypting data. **Do you want to retry?**",
+        "backup": {
+            "title": "Backup Data",
+            "content": "Please, before proceeding to the next step, download your backup file. It contains decrypted previous data of changed profiles. Keep it in a safe place.",
+            "next": "Procceed without downloading the backup file"
+        },
         "state": {
             "decrypt": "Decrypting everything",
             "encrypt": "Encrypting everything",

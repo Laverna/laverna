@@ -25,21 +25,19 @@
 
         <% if (needOldPassword()) { %>
         <div class="form-group form--icon">
-            <i class="icon icon-lock"></i>
-            <input class="form-control input-lg input--icon" type="password" name="oldpass"
+            <input class="form-control input-lg input--brand" type="password" name="oldpass"
             placeholder="{{ i18n('Your old encryption password') }}" autofocus />
         </div>
         <% } %>
         <% if (needNewPassword()) { %>
         <div class="form-group form--icon">
-            <i class="icon icon-lock"></i>
-            <input class="form-control input-lg input--icon" type="password" name="password"
+            <input class="form-control input-lg input--brand" type="password" name="password"
             placeholder="{{ i18n('Your new encryption password') }}" autofocus />
         </div>
         <% } %>
 
         <div class="form-group">
-            <input class="btn btn-lg btn-block btn-success btn--brand" type="submit"
+            <input class="btn btn-lg btn-block btn--brand" type="submit"
             value="{{ i18n('Submit') }}"/>
         </div>
     </form>

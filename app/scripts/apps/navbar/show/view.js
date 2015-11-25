@@ -47,7 +47,8 @@ define([
             navbar : '#sidebar--nav',
             search : '#header--search--input',
             title  : '#header--title',
-            icon   : '#header--icon'
+            icon   : '#header--icon',
+            sync   : '#header--sync--icon'
         },
 
         events: {
@@ -56,7 +57,8 @@ define([
             'click #header--about'   : 'showAbout',
             'blur @ui.search'        : 'hideSearch',
             'keyup @ui.search'       : 'searchKeyup',
-            'submit #header--search' : 'searchSubmit'
+            'submit #header--search' : 'searchSubmit',
+            'click #header--sync'    : 'triggerSync'
         },
 
         collectionEvents: {
@@ -67,12 +69,29 @@ define([
             this.listenTo(this, 'change:title', this.changeTitle);
             this.listenTo(Radio.channel('global'), 'show:search', this.showSearch);
 
+            this.listenTo(Radio.channel('sync'), 'start', this.onSyncStart);
+            this.listenTo(Radio.channel('sync'), 'stop', this.onSyncStop);
+
             // Re-render the view when notebooks collection has changed
             this.listenTo(this.options.notebooks, 'change add remove', this.render);
         },
 
         onDestroy: function() {
             Radio.trigger('global', 'search:hidden');
+        },
+
+        triggerSync: function() {
+            Radio.request('sync', 'start');
+        },
+
+        onSyncStart: function() {
+            console.log('start spin');
+            this.ui.sync.toggleClass('animate-spin', true);
+        },
+
+        onSyncStop: function() {
+            console.log('stop spin');
+            this.ui.sync.toggleClass('animate-spin', false);
         },
 
         /**
@@ -148,7 +167,7 @@ define([
                 },
 
                 isSyncEnabled: function() {
-                    return Number(this.configs.cloudStorage) === 1;
+                    return this.configs.cloudStorage === 'dropbox';
                 },
 
                 profileLink: function(profileName) {

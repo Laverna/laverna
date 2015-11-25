@@ -13,8 +13,17 @@ define([
     /**
      * Dropbox synchronizer.
      *
-     * Triggers on `dropbox` channel:
-     * 1. `auth:success` - after authentication is completed successfully.
+     * Triggers:
+     * 1. `auth:success` on `dropbox` channel
+     *     - after authentication is completed successfully.
+     * 2. `start` on `sync` channel
+     *     when synchronizing starts
+     * 3. `stop` on `sync` channel
+     *     when synchronizing stops
+     *
+     * Replies:
+     * 1. `start` on `sync` channel
+     *     starts synchronizing.
      */
     var Sync = Marionette.Object.extend({
 
@@ -47,6 +56,9 @@ define([
                 rememberUser : true
             }));
 
+            // Replies
+            Radio.reply('sync', 'start', this.startSync, this);
+
             // Listen to events
             this.listenTo(this.vent, 'auth:success', this.onReady);
 
@@ -57,6 +69,19 @@ define([
 
             // Authorize the app
             this.checkAuth();
+        },
+
+        /**
+         * Start synchronizing immediately.
+         */
+        startSync: function() {
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+
+            this.timeout = setTimeout(_.bind(function() {
+                this.checkChanges();
+            }, this), 0);
         },
 
         /**
@@ -142,6 +167,7 @@ define([
                 self     = this;
 
             this.configs.statRemote = false;
+            Radio.trigger('sync', 'start', 'dropbox');
 
             // Synchronize all collections
             _.each(['notes', 'notebooks', 'tags'], function(module) {
@@ -159,6 +185,7 @@ define([
             // After synchronizing, start watching for changes
             return _.reduce(promises, Q.when, new Q())
             .then(function() {
+                Radio.trigger('sync', 'stop', 'dropbox');
                 self.startWatch();
             })
             .fail(function(err) {
@@ -167,6 +194,7 @@ define([
                     self.checkAuth();
                 }
 
+                Radio.trigger('sync', 'error', {cloud: 'dropbox', error: err});
                 console.error('Error', arguments);
             });
         },

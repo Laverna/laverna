@@ -66,10 +66,6 @@ define([
                 });
 
                 return Q.all(promises);
-            })
-            .then(function(data) {
-                self.saveCache(type, data);
-                return data;
             });
         },
 

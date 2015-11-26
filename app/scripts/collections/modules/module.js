@@ -166,6 +166,11 @@ define([
             collection   = collection || this.collection;
 
             collection.each(function(model) {
+                model.attributes.updated = Date.now();
+                if (!model.attributes.created) {
+                    model.attributes.created = Date.now();
+                }
+
                 promises.push(
                     Q.invoke(model, 'save', model.attributes)
                 );

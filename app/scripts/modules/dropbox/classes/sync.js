@@ -210,13 +210,20 @@ define([
         syncAll: function(localData, remoteData, module) {
             var promises;
 
-            localData = localData.fullCollection || localData;
-            localData = localData.toJSON();
+            localData = (localData.fullCollection || localData).toJSON();
 
             promises = this.checkRemoteChanges(localData, remoteData, module);
             promises.push.apply(promises, this.checkLocalChanges(localData, remoteData, module));
 
             return _.reduce(promises, Q.when, new Q())
+            .then(function() {
+                return Radio.request(module, 'fetch', {encrypt: true});
+            })
+            .then(function(data) {
+                data = (data.fullCollection || data).toJSON();
+                adapter.saveCache(module, data);
+                return;
+            })
             .then(function() {
                 console.log('all done');
                 return adapter.updateHash(module);

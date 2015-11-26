@@ -166,10 +166,7 @@ define([
             collection   = collection || this.collection;
 
             collection.each(function(model) {
-                model.attributes.updated = Date.now();
-                if (!model.attributes.created) {
-                    model.attributes.created = Date.now();
-                }
+                model.updated = Date.now();
 
                 promises.push(
                     Q.invoke(model, 'save', model.attributes)
@@ -228,7 +225,7 @@ define([
             model = typeof model === 'string' ? model : model.id;
             model = new (this.changeDatabase(options)).prototype.model({id: model});
 
-            model.set({'trash': 2});
+            model.set({'trash': 2, updated: Date.now()});
 
             return this.save(model, model.attributes)
             .then(function() {

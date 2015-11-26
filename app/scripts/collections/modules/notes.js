@@ -65,7 +65,7 @@ define([
                 }
 
                 // Otherwise, just change 'trash' status
-                return self.save(model, {trash: 1})
+                return self.save(model, {trash: 1, updated: Date.now()})
                 .then(function(model) {
                     self.vent.trigger('destroy:model', model);
                     return model;
@@ -84,7 +84,7 @@ define([
 
             return new Q(model)
             .then(function(model) {
-                return self.save(model, {trash: 0})
+                return self.save(model, {trash: 0, updated: Date.now()})
                 .then(function(model) {
                     self.vent.trigger('restore:model', model);
                     return model;

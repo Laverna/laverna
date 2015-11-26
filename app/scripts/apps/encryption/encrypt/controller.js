@@ -221,7 +221,8 @@ define([
                 mStr  = model.get(model.encryptKeys[0]),
                 str   = this.vent.request('decrypt', mStr);
 
-            if (mStr === str) {
+            if (str.length && mStr === str) {
+                console.error('Encryption error:', mStr, str);
                 throw new Error('Error with encryption');
             }
 

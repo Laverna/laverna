@@ -5,7 +5,8 @@ define([
     'marionette',
     'backbone.radio',
     'app',
-], function($, _, Marionette, Radio, App) {
+    'text!apps/encryption/auth/errorConfirm.html'
+], function($, _, Marionette, Radio, App, ConfirmTmpl) {
     'use strict';
 
     /**
@@ -70,13 +71,22 @@ define([
 
         // On encrypt/decrypt error, remove PBKDF2 key from the session
         _confirmAuth: function() {
+            Radio.once('Confirm', 'auth', function() {
+                Radio.request('encrypt', 'delete:secureKey');
+                window.location.reload();
+            });
+
+            Radio.once('Confirm', 'openSettings', function() {
+                Radio.request('uri', 'navigate', '/settings/encryption', {
+                    trigger       : true,
+                    includeProfile: true
+                });
+            });
+
             Radio.request('Confirm', 'start', {
                 title     : 'encryption.error',
                 content   : $.t('encryption.errorConfirm'),
-                onconfirm : function() {
-                    Radio.request('encrypt', 'delete:secureKey');
-                    window.location.reload();
-                }
+                template  : ConfirmTmpl
             });
         },
 

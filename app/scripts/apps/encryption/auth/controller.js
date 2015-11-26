@@ -40,7 +40,11 @@ define([
 
             Radio.request('encrypt', 'save:secureKey', pwd)
             .then(function() {
-                Radio.request('uri', 'back');
+                Radio.trigger('appEncrypt', 'auth:success');
+
+                if (document.location.hash.search('auth') !== -1) {
+                    Radio.request('uri', 'back');
+                }
             });
         }
 

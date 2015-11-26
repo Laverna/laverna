@@ -2,11 +2,12 @@
 define([
     'jquery',
     'underscore',
+    'q',
     'marionette',
     'backbone.radio',
     'app',
     'text!apps/encryption/auth/errorConfirm.html'
-], function($, _, Marionette, Radio, App, ConfirmTmpl) {
+], function($, _, Q, Marionette, Radio, App, ConfirmTmpl) {
     'use strict';
 
     /**
@@ -41,6 +42,8 @@ define([
         if (!module) {
             return;
         }
+
+        $('.-loading').removeClass('-loading');
 
         // Stop previous module
         if (Encrypt.currentApp) {
@@ -90,18 +93,18 @@ define([
             });
         },
 
-        // If encryption configs are changed, navigate to re-encryption page.
-        _navigateEncrypt: function() {
-            document.location.hash = Radio.request('uri', 'link:profile', '/encrypt/all');
-        },
-
         _checkAuth: function() {
-            if (Radio.request('encrypt', 'check:auth')) {
+            var isAuthed = Radio.request('encrypt', 'check:auth');
+
+            if (isAuthed === true) {
+                return Radio.trigger('appEncrypt', 'auth:success');
+            }
+            else if (isAuthed && isAuthed.isChanged === true) {
                 return;
             }
 
-            // Navigate to login page
-            document.location.hash = Radio.request('uri', 'link:profile', '/auth');
+            // Show auth form
+            controller.showAuth();
         }
     };
 
@@ -117,11 +120,22 @@ define([
     });
 
     // Check whether a user is authorized when everything is ready
-    Radio.request('init', 'add', 'module', function() {
-        Radio.on('encrypt', 'changed', controller._navigateEncrypt, controller);
+    Radio.request('init', 'add', 'auth', function() {
+        var defer = Q.defer();
+
+        Radio.on('encrypt', 'changed', controller.showEncrypt, controller);
         Radio.on('encrypt', 'decrypt:error', controller._confirmAuth, controller);
 
+        Radio.on('appEncrypt', 'auth:success', function() {
+            if (Encrypt.currentApp) {
+                Encrypt.currentApp.stop();
+            }
+            Encrypt.stop();
+            defer.resolve();
+        });
+
         controller._checkAuth();
+        return defer.promise;
     });
 
     // Register the router

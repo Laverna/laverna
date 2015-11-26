@@ -166,7 +166,7 @@ define([
             collection   = collection || this.collection;
 
             collection.each(function(model) {
-                model.updated = Date.now();
+                model.attributes.updated = Date.now();
 
                 promises.push(
                     Q.invoke(model, 'save', model.attributes)

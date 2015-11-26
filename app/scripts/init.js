@@ -87,7 +87,7 @@ define([
 
             return defer.promise;
         })
-        .then(Radio.request('init', 'start', 'app:before app module'))
+        .then(Radio.request('init', 'start', 'app:before app auth module'))
         .then(function() {
             console.log('modules are loaded');
             App.start();

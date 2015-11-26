@@ -111,7 +111,7 @@ define([
              */
             if (!_.isEmpty(this.configs.encryptBackup)) {
                 Radio.trigger('encrypt', 'changed');
-                return true;
+                return {isChanged: true};
             }
 
             // Encryption is disabled

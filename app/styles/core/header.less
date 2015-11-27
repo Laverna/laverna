@@ -8,7 +8,7 @@
  * "Grid" system for elements in the navbar
  */
 .header--col--left {
-    max-width: 80%;
+    max-width: 70%;
 }
 .header--col--right {
     max-width: 15%;
@@ -18,7 +18,8 @@
  * Fix margins and paddings of .navbar-right or .navbar-left
  */
 .header--right {
-    margin-right: 0;
+    margin-right : 2px;
+    margin-left  : auto;
 }
 .header--left {
     padding-left: 0;
@@ -41,7 +42,8 @@
  */
 .header--search {
     &:extend(.navbar-form);
-    display: none;
+    display : none;
+    width   : 100%;
 }
 .header--search--input {
 }
@@ -72,4 +74,14 @@
     .header--settings--back {
         margin-right: 15px;
     }
+}
+
+.header--container {
+    display: flex;
+}
+
+.navbar > .container-fluid .navbar-brand.header--title {
+    margin-left   : 0;
+    padding-left  : 0;
+    padding-right : 0;
 }

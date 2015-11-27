@@ -180,7 +180,9 @@ gulp.task('build:js', ['clean:dist'], function() {
             'apps/settings/show/views/keybindings',
             'apps/settings/show/views/profiles',
             'apps/settings/show/views/showView',
-            'apps/settings/show/views/sync'
+            'apps/settings/show/views/sync',
+            'modules/remotestorage/module',
+            'modules/dropbox/module'
         ],
         findNestedDependencies : true,
         generateSourceMaps     : true,
@@ -245,6 +247,7 @@ gulp.task('copy:deps', ['clean:dist'], function() {
             './app/bower_components/remotestorage.js/release/stable/remotestorage.js',
             './app/bower_components/tv4/tv4.js',
             './app/bower_components/bluebird/js/browser/bluebird.min.js',
+            './app/bower_components/dropbox/dropbox',
         ], options)
         .pipe(uglify({
             preserveComments: 'license'

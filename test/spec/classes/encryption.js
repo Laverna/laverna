@@ -111,6 +111,11 @@ define([
             it('decrypts', function() {
                 expect(radio.request('decrypt', encrypted)).to.be.equal(text);
             });
+
+            it('is compatible with the previous encryption', function() {
+                var str = '{\"iv\":\"bO7jQow1khvXgMOS9sXLxQ==\",\"v\":1,\"iter\":\"1000\",\"ks\":128,\"ts\":64,\"mode\":\"ccm\",\"adata\":\"\",\"cipher\":\"aes\",\"salt\":\"Npei1Tmze/M=\",\"ct\":\"fzMHGhl3zz8zfvAXdQ==\"}';
+                expect(radio.request('decrypt', str)).to.be.equal('hello');
+            });
         });
 
         function testCollection(Model, Collection) {

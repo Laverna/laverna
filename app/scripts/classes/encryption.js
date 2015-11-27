@@ -170,7 +170,7 @@ define([
                 return str;
             }
 
-            var key = this.options.key,
+            var key = this.options.key.toString(),
                 object;
 
             try {

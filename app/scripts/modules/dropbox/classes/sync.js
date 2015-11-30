@@ -189,11 +189,23 @@ define([
                 self.startWatch();
             })
             .fail(function(err) {
-                // Access was revoked
-                if (err && err.status === 401) {
-                    self.checkAuth();
+                if (err) {
+                    switch (err.status) {
+
+                        // If access was revoked, try to ask for it again
+                        case 401:
+                            self.checkAuth();
+                            break;
+
+                        // On connection error, increase watch interval
+                        case 0:
+                            self.configs.interval = self.configs.intervalMax;
+                            self.startWatch();
+                            break;
+                    }
                 }
 
+                Radio.trigger('sync', 'stop', 'dropbox');
                 Radio.trigger('sync', 'error', {cloud: 'dropbox', error: err});
                 console.error('Error', arguments);
             });

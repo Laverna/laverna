@@ -342,7 +342,7 @@ define([
          * Return encryption configs.
          */
         _getConfigs: function() {
-            return {
+            var p = {
                 mode   : 'ccm',
                 iter   : Number(this.configs.encryptIter),
                 ts     : Number(this.configs.encryptTag),
@@ -351,9 +351,18 @@ define([
                 v      : 1,
                 adata  : '',
                 cipher : 'aes',
+
                 // Random initialization vector every time
                 iv     : sjcl.random.randomWords(4, 0)
             };
+
+            // Salt should in HEX format
+            if (!/^[a-fA-F0-9 ]*$/.test(p.salt)) {
+                p.salt = this._hex(p.salt);
+            }
+
+            return p;
+
         },
 
         _hex: function(str) {

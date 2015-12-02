@@ -45,6 +45,16 @@ define([
             requirejs(['apps/help/about/app'], function(Module) {
                 startModule(Module);
             });
+        },
+
+        firstStart: function() {
+            if (!Number(Radio.request('configs', 'get:config', 'firstStart'))) {
+                return;
+            }
+
+            requirejs(['apps/help/firstStart/app'], function(Module) {
+                startModule(Module);
+            });
         }
     };
 
@@ -56,6 +66,8 @@ define([
 
     // Add initializer
     Radio.request('init', 'add', 'app', function() {
+        Radio.once('global', 'app:start', controller.firstStart, controller);
+
         Radio.reply('Help', {
             'show:about'        : controller.about,
             'show:keybindings'  : controller.keybindings

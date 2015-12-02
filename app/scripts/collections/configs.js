@@ -17,6 +17,7 @@ define([
 
         configNames: {
             'appVersion'        : '0.5.0',
+            'firstStart'        : '1',
             'appProfiles'       : JSON.stringify(['notes-db']),
             'appLang'           : '',
             'cloudStorage'      : '0',

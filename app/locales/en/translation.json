@@ -92,6 +92,7 @@
     "Keybindings": "Keybindings",
     "Sync": "Sync",
     "Profiles": "Profiles",
+    "Import": "Import",
     "Import & export": "Import & export",
     "Import settings": "Import settings",
     "Export settings": "Export settings",
@@ -155,5 +156,13 @@
     "dropbox": {
         "auth confirm": "Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.",
         "auth title": "Dropbox auth"
+    },
+    "help": {
+        "firststart title": "Welcome to Laverna",
+        "firststart import": "If you have already used Laverna before, you can import your old settings by clicking on 'import' button bellow.",
+        "firststart next": "If you have never used Laverna before, click on 'next' button to start installation process.",
+        "firstart encryption": "If you want to use encryption, please, provide encryption password.",
+        "firstart sync": "Since we don't store any data on our servers, you need to enable synchronization with one of the adapters to be able to view your notes on other devices.",
+        "firstart backup": "Everything is almost ready. You can download your settings backup and proceed to the last step."
     }
 }

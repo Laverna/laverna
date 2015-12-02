@@ -28,12 +28,14 @@ define([
      * 5. request: `save:objects`   - save several configs at once
      * 6. request: `create:profile` - create a new profile
      * 7. request: `remove:profile` - remove a profile
+     * 8. request: `save:object`
      */
     var Collection = ModuleObject.extend({
         Collection: Configs,
 
         reply: function() {
             return {
+                'save:object'    : this.saveObject,
                 'save:objects'   : this.saveObjects,
                 'create:profile' : this.createProfile,
                 'remove:profile' : this.removeProfile,
@@ -114,7 +116,7 @@ define([
             // return;
             _.forEach(objects, function(object) {
                 promises.push(
-                    new Q(self.saveObject(object, useDefault))
+                    new Q(self.saveObject(object, useDefault, {profile: useDefault.database.id}))
                 );
             }, this);
 
@@ -129,10 +131,10 @@ define([
          * @type object
          * @type object Backbone model
          */
-        saveObject: function(object, useDefault) {
+        saveObject: function(object, useDefault, options) {
             var self = this;
 
-            return this.getModel({name: object.name})
+            return this.getModel(_.extend({}, options || {}, {name: object.name}))
             .then(function(model) {
                 if (!model) {
                     return;
@@ -383,6 +385,10 @@ define([
             if (objects.encryptPass &&
                 configs.encryptPass.toString() === objects.encryptPass.value.toString()) {
                 delete changed.encryptPass;
+            }
+
+            if (!_.keys(changed).length) {
+                return;
             }
 
             /**

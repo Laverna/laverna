@@ -51,6 +51,7 @@ define([
         }
 
         Encrypt.currentApp = module;
+        args.profile       = args.profile || Radio.request('uri', 'profile');
         module.start(args);
 
         // If module has stopped, remove the variable

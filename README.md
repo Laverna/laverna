@@ -1,8 +1,10 @@
 # Laverna - note taking web app
 
+[![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna) [![Dependency Status](https://david-dm.org/Laverna/laverna.svg)](https://david-dm.org/Laverna/laverna) [![Code Climate](https://codeclimate.com/github/Laverna/laverna/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna)
+
 Laverna is a JavaScript note-taking web application with a Markdown editor and encryption support.  It's built to be an open source alternative to Evernote.
 
-The application stores all your notes in your browser local storage spaces such as indexedDB or localStorage, which is good for security reasons, because only you have access to them.
+The application stores all your notes in your browser databases such as indexedDB or localStorage, which is good for security reasons, because only you have access to them.
 
 **Demo**: https://laverna.cc/ OR http://laverna.github.io/static-laverna
 
@@ -12,7 +14,7 @@ The application stores all your notes in your browser local storage spaces such 
 * Markdown editor based on Pagedown
 * Manage your notes, even when you're offline
 * Secure client-side encryption
-* Synchronizes with cloud storage services (at this time only Dropbox and RemoteStorage are supported)
+* Synchronizes with cloud storage services (currently only with Dropbox and RemoteStorage)
 * Three editing modes: distraction free, preview, and normal mode
 * WYSIWYG control buttons
 * MathJax support
@@ -23,13 +25,34 @@ The application stores all your notes in your browser local storage spaces such 
 
 ## Installation
 ---------------
-You can use the application at laverna.cc, but we encourage you to install it on your own server or machine.
+There are several ways to start using Laverna:
 
-You can download the minified version of Laverna app from [Laverna/static-laverna][9] repository if you don't want to build it yourself:
+1. Open [laverna.cc][10] and start using it. No extra steps are needed.
+2. Use a desktop app.
+3. Use a prebuilt version from [Laverna/static-laverna][9] repository.
+4. Build it from the source code.
+
+### Desktop app installation
+---------------
+Download the latest [Laverna release][13] for your operating system. After downloading the archive, you need to unpack it. Then, in the unpacked folder you need to run an executable (laverna.exe for Windows, laverna for Linux and Mac).
+
+### Installation of a prebuilt version
+------------
+#### 1. Download
 
 ```bash
-$ git clone -b gh-pages https://github.com/Laverna/static-laverna
+$ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna.zip
 ```
+
+#### 2. Unpack the downloaded archive
+
+```bash
+$ unzip laverna.zip
+```
+
+#### 3. Open index.html in a browser
+Open in your favourite browser index.html file which is located inside *laverna* directory.
+
 
 ## Installation from source
 ---------------
@@ -41,66 +64,63 @@ To install, do the following:
 $ git clone git@github.com:Laverna/laverna.git
 ```
 
-#### 2. Switch to stable version:
-Please, make sure that you switched to 0.6.2 release. Master branch is not stable yet.
+#### 2. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 
-```bash
-$ git checkout 0.6.2
-```
-
-#### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
-
-#### 4. Ensure you have the bower and grunt packages installed:
+#### 3. Ensure you have the bower and gulp packages installed:
 
 ```bash
 $ npm install bower
-$ npm install grunt
-$ npm install grunt-cli
+$ npm install gulp
 ```
 
-#### 5. Install Laverna's dependencies:
+#### 4. Install Laverna's dependencies:
 
 ```bash
 $ npm install && bower install
 ```
 
-#### 6. Build minified version of Laverna:
+#### 5. Build minified version of Laverna:
 
 ```bash
-$ grunt build
+$ gulp build
 ```
-
-You can change the storage API keys in app/scripts/constants.js
 
 ## Support
 ---------------
-1. Hit star button on [github][6]
-2. Like us on [alternativeto.net][5]
-3. [Contribute][7]
 
-### Tips:
-[![Fund us on Gittip](https://raw.github.com/gittip/www.gittip.com/860a9f84d7987cea59bad16114aa71543934eca5/www/assets/gittip.png)](https://www.gittip.com/Laverna/ "Fund us on Gittip")
+* Hit star button on [github][6]
+* Like us on [alternativeto.net][5]
+* [Contribute][7]
 
-[Bitcoin][3]
+## Donation:
+-----------
+
+* [Bitcoin][3]
+* [BountySource][12]
 
 ## Security
 --------------
 Laverna uses the [SJCL] [1] library implementing the AES algorithm. You can review the code at:
-* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/auth.js
-* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/encrypt/modelEncrypt.js
+
+* https://github.com/Laverna/laverna/blob/master/app/scripts/classes/encryption.js
+* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/
 
 ## License
 --------------
-Published under GNU GPL v.3
+Published under [MPL-2.0 License][11].
 
-Laverna uses a lot of other libraries and each of these [libraries uses different licenses] [2].
+Laverna uses a lot of other libraries and each of these [libraries use different licenses][2].
 
 [1]: http://bitwiseshiftleft.github.io/sjcl/
 [2]: https://github.com/Laverna/laverna/blob/master/bower.json
-[3]: http://blockchain.info/address/18JpeKeSaoryHCkfV63XcvLZUgeuuATp86
+[3]: http://blockchain.info/address/1Q68HfLjNvWbLFr3KGK6nfXg7vc3hpDr11
 [4]: https://www.gittip.com/Laverna/
 [5]: http://alternativeto.net/software/laverna/
 [6]: https://github.com/Laverna/laverna
 [7]: https://github.com/Laverna/laverna/blob/master/CONTRIBUTE.md
 [8]: http://nodejs.org
 [9]: https://github.com/Laverna/static-laverna/archive/gh-pages.zip
+[10]: https://laverna.cc/index.html
+[11]: https://www.mozilla.org/en-US/MPL/2.0/
+[12]: https://www.bountysource.com/teams/laverna
+[13]: https://github.com/Laverna/laverna/releases

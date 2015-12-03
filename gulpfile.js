@@ -15,12 +15,15 @@ var gulp         = require('gulp'),
     manifest     = require('gulp-manifest'),
     htmlmin      = require('gulp-minify-html'),
     cssmin       = require('gulp-minify-css'),
+    pkg          = require('./package.json'),
+
+    // Electron
+    electron     = require('gulp-electron'),
 
     // Testing libraries
     jshint       = require('gulp-jshint'),
     mocha        = require('gulp-mocha-phantomjs'),
-    nightwatch   = require('gulp-nightwatch')
-    ;
+    nightwatch   = require('gulp-nightwatch');
 
 /**
  * Server for dist folder.
@@ -313,4 +316,55 @@ gulp.task(
 
 gulp.task('build', ['build:before', 'manifest'], function() {
     return;
+});
+
+/**
+ * ------------------
+ * Build Electron app.
+ * ------------------
+ */
+gulp.task('electron:copy', function() {
+    return gulp.src([
+        './node_modules/buffer-crc32/**',
+        './node_modules/bytes/**',
+        './node_modules/connect/**',
+        './node_modules/cookie/**',
+        './node_modules/cookie-signature/**',
+        './node_modules/debug/**',
+        './node_modules/electron-window-state/**',
+        './node_modules/fresh/**',
+        './node_modules/jsonfile/**',
+        './node_modules/mime/**',
+        './node_modules/on-headers/**',
+        './node_modules/parseurl/**',
+        './node_modules/range-parser/**',
+        './node_modules/send/**',
+        './node_modules/serve-static/**',
+        './node_modules/type-is/**',
+        './package.json'
+    ], {base: './'})
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('electron', ['electron:copy'], function() {
+    return gulp.src('./electron.js')
+    .pipe(replace('__dirname + \'/dist\'', '__dirname'))
+    .pipe(gulp.dest('./dist'))
+    .pipe(electron({
+        src         : './dist',
+        packageJson : pkg,
+        release     : './release',
+        cache       : './.tmp',
+        version     : 'v0.35.2',
+        packaging   : true,
+        // rebuild     : true,
+        platforms   : [
+            'darwin-x64',
+            // 'linux-arm',
+            'linux-ia32',
+            'linux-x64',
+            'win32-ia32',
+            'win32-x64'
+        ]
+    }));
 });

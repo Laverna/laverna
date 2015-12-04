@@ -21,7 +21,7 @@
                     <% _.forEach(items, function(conf) { %>
                     <tr>
                         <td>{{ i18n(conf.name) }}</td>
-                        <td>{{ conf.value }}</td>
+                        <td><kbd>{{ conf.value }}</kbd></td>
                     </tr>
                     <% }); %>
                 </tbody>

@@ -1,100 +1,45 @@
-//
-// Pagedown - markdown editor
-//
-.wmd-panel {
-	width: 100%;
+/**
+ * Pagedown module
+ */
+.pagedown--bar,
+.editor--fullscreen .pagedown--bar {
+    // Colors
+    background : @pagedown--bar--bg;
+    color      : @pagedown--bar--color;
+
+    border-top-width    : 1px;
+    border-bottom-width : 1px;
+    border-style        : solid;
+    border-color        : @pagedown--bar--border;
+    border-radius       : 0;
+
+    // Sizing
+    padding-top    : 4px;
+    padding-bottom : 4px;
+    min-height     : 20px;
+    height         : auto;
 }
 
-.wmd-group {
-    padding-left: 10px;
-    // margin-top: 15px;
-}
-
-#wmd-button-bar {
-    .make-row();
-    // background: -moz-linear-gradient(center top , rgb(245, 245, 245), rgb(238, 238, 238)) repeat scroll 0% 0% rgb(245, 245, 245);
-    background-color: rgb(238, 238, 238);
-    border-color: rgb(217, 217, 217);
-    // box-shadow: 0px 1px 0px 0px rgb(255, 255, 255) inset;
-    border-top: 1px solid rgb(229, 229, 229);
-    border-bottom: 1px solid rgb(229, 229, 229);
-    padding: 6px 0;
-    transition: top .3s;
-}
-
-// Fixed wmd bar
-#wmd-button-bar.wmd-bar-fixed {
-    position: absolute;
-    z-index: @zindex-navbar - 10;
-    top: 0px;
-    right: @grid-gutter-width - 6px;
-    left : @grid-gutter-width - 6px;
-}
-
-#wmd-button-bar .btn {
-    margin-left: 0;
-}
-
-.wmd-button-row {
-    margin-bottom: 0;
-    padding-left: 6px;
-}
-
-.wmd-button:hover{
-    background-color: #DDDDDD;
-    border-color: rgba(0, 0, 0, 0);
-    color: #545454;
-}
-
-.wmd-spacer {
-    padding-left : 4px;
-    padding-right: 4px;
-}
-
-#wmd-input, #wmd-preview {
-    // min-height: @pagedown-min-height;
-    width: 100%;
-}
-
-.wmd-input {
-    overflow: hidden;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    margin-left: 0;
-    border: none;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-}
-
-textarea.wmd-input {
-    overflow: auto;
-    height: 300px;
-}
-
-.ace_active-line {
-    margin-left: 4px;
-}
-
-// Syntax
-.ace_heading {
-    font-weight: bold;
-}
-
-//
-// Pagedown icons
-//
+// Buttons
 .wmd-button {
-    font-family: 'fontello';
+    box-shadow    : none;
+    border        : none;
+    border-radius : 0;
+    &:hover {
+        background : @pagedown--btn--hover--bg;
+        color      : @pagedown--btn--hover--color;
+    }
 }
-#wmd-italic-button span:before { content: '\e80a'; } /* '' */
-#wmd-bold-button span:before { content: '\e809'; } /* '' */
-#wmd-link-button span:before { content: '\e80b'; } /* '' */
-#wmd-quote-button span:before { content: '\e80c'; } /* '' */
-#wmd-code-button span:before { content: '\e80d'; } /* '' */
-#wmd-image-button span:before { content: '\e80e'; } /* '' */
-#wmd-olist-button span:before { content: '\e80f'; } /* '' */
-#wmd-ulist-button span:before { content: '\e810'; } /* '' */
-#wmd-heading-button span:before { content: '\e811'; } /* '' */
-#wmd-hr-button span:before { content: '\e812'; } /* '' */
-#wmd-undo-button span:before { content: '\e813'; } /* '' */
-#wmd-redo-button span:before { content: '\e814'; } /* '' */
+
+// Preview
+.pagedown--preview {
+    &:extend(.-text-big);
+}
+
+.editor--fullscreen .layout--body.-form {
+    top: @navbar-height + 40px;
+}
+
+.editor--fullscreen.-preview .layout--content {
+    background: @layout--form--bg;
+}

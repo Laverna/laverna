@@ -1,16 +1,18 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
 ], function () {
     'use strict';
 
     var NoteDB = {
-        id: 'notes-db',
-        description: 'The database for the Notes',
-
-        getDB: function (dbName) {
-            this.id = dbName ? dbName : 'notes-db';
-            return this;
-        },
+        id          : 'notes-db',
+        description : 'The database for the Notes',
 
         migrations: [
             {
@@ -53,7 +55,7 @@ define([
                 version: 4,
                 migrate: function(transaction, next) {
                     var store = transaction.objectStore('tags');
-                    store.createIndex('nameIndex', 'name', { unique: true});
+                    store.createIndex('nameIndex', 'name', {unique: true});
                     store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
@@ -64,7 +66,7 @@ define([
                 version: 5,
                 migrate: function(transaction, next) {
                     var store = transaction.db.createObjectStore('files');
-                    store = transaction.objectStore('files');
+                    store     = transaction.objectStore('files');
                     store.createIndex('synchronizedIndex', 'synchronized', { unique: false});
                     next();
                 }
@@ -79,7 +81,34 @@ define([
                         next();
                     }
                 }
-            }
+            },
+            // Configs store
+            // -------------
+            {
+                version: 7,
+                migrate: function(transaction, next) {
+                    var store = transaction.db.createObjectStore('configs');
+                    store     = transaction.objectStore('configs');
+                    store.createIndex('name', 'name', {unique: true});
+                    next();
+                }
+            },
+            // Tags store
+            {
+                version: 8,
+                migrate: function(transaction, next) {
+                    var tagStore      = transaction.objectStore('tags'),
+                        notebookStore = transaction.objectStore('notebooks');
+
+                    tagStore.deleteIndex('nameIndex');
+                    tagStore.createIndex('nameIndex', 'name', {unique: false});
+                    tagStore.createIndex('trashIndex', 'trash', {unique: false});
+
+                    notebookStore.createIndex('trashIndex', 'trash', {unique: false});
+
+                    next();
+                }
+            },
         ]
     };
 

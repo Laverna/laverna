@@ -1,0 +1,18 @@
+.make-visible(@resolution) {
+    @media (max-width: @resolution) {
+        .responsive-visibility();
+    }
+}
+
+.visible-500,
+.visible-400 {
+    .responsive-invisibility();
+}
+
+.visible-500 {
+    .make-visible(500px);
+}
+.visible-400 {
+    .make-visible(400px);
+}
+

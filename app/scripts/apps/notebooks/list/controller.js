@@ -1,81 +1,77 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
-    'jquery',
-    'app',
+    'q',
     'marionette',
-    'apps/notebooks/list/layout',
+    'backbone.radio',
+    'apps/notebooks/list/views/layout',
     'apps/notebooks/list/views/notebooksComposite',
-    'apps/notebooks/list/views/tagsComposite',
-    'collections/notebooks',
-    'collections/tags'
-], function(_, $, App, Marionette, Layout, NotebooksComposite, TagsComposite, Notebooks, Tags) {
+    'apps/notebooks/list/views/tagsComposite'
+], function(_, Q, Marionette, Radio, View, NotebooksView, TagsView) {
     'use strict';
 
-    var List = App.module('AppNotebook.List');
+    /**
+     * List controller.
+     *
+     * Triggers:
+     * 1. channel: `global`, event: `filter:change`
+     */
+    var Controller = Marionette.Object.extend({
 
-    List.Controller = Marionette.Controller.extend({
+        initialize: function(options) {
+            _.bindAll(this, 'show');
 
-        initialize: function() {
-            _.bindAll(this, 'list', 'show');
+            this.options = options;
 
-            // Collections of notebooks and tags
-            this.notebooks = new Notebooks([], {
-                comparator: App.settings.sortnotebooks
+            // Show the navbar and change document title
+            Radio.request('navbar', 'start', {
+                title  : 'Notebooks & Tags',
+                filter : 'notebook'
             });
-            this.tags = new Tags();
+
+            // Fetch
+            Q.all([
+                Radio.request('notebooks', 'get:all', options),
+                Radio.request('tags', 'get:all', options)
+            ]).spread(this.show)
+            .fail(function(e) {
+                console.error('Error:', e);
+            });
         },
 
         onDestroy: function() {
-            this.layout.trigger('destroy');
+            Radio.request('global', 'region:empty', 'sidebar');
         },
 
-        list: function(args) {
-            // Set profile
-            this.notebooks.database.getDB(args.profile);
-            this.tags.database.getDB(args.profile);
-
-            $.when(this.notebooks.fetch(), this.tags.fetch()).done(this.show);
-        },
-
-        show: function() {
-            var notebookView, tagsView;
-            this.notebooks.models = this.notebooks.getTree();
-
-            // Show layout
-            this.layout = new Layout({
-                settings: App.settings
+        show: function(notebooks, tags) {
+            this.view = new View({
+                notebooks : notebooks,
+                tags      : tags,
+                configs   : Radio.request('configs', 'get:object')
             });
 
-            App.sidebar.show(this.layout);
+            Radio.request('global', 'region:show', 'sidebar', this.view);
 
-            // Show notebooks list
-            notebookView = new NotebooksComposite({
-                collection: this.notebooks
-            });
+            // Show notebooks
+            this.view.notebooks.show(new NotebooksView({
+                collection: notebooks
+            }));
 
-            // Show tags list
-            tagsView = new TagsComposite({
-                collection: this.tags
-            });
-
-            // Render lists in layout
-            this.layout.notebooks.show(notebookView);
-            this.layout.tags.show(tagsView);
-
-            // Change value of document.title
-            App.setTitle('', $.t('Notebooks & Tags'));
-            App.AppNavbar.trigger('titleChange', {
-                filter: 'Notebooks & Tags'
-            });
-
-            this.layout.on('navigate', this.navigate, this);
-        },
-
-        navigate: function(uri) {
-            App.vent.trigger('navigate', uri);
+            // Show tags
+            this.view.tags.show(new TagsView({
+                collection: tags
+            }));
         }
+
     });
 
-    return List.Controller;
+    return Controller;
+
 });

@@ -1,198 +1,159 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
+    'q',
     'jquery',
-    'app',
+    'backbone.radio',
     'marionette',
-    'collections/notes',
-    'collections/tags',
-    'collections/notebooks',
-    'collections/files',
-    'models/note',
-    'apps/notes/form/formView',
-    'checklist',
-    'tags'
-], function (_, $, App, Marionette, NotesCollection, TagsCollection, NotebooksCollection, FilesCollection, NoteModel, View, Checklist, Tags) {
+    'apps/notes/form/views/formView',
+    'apps/notes/form/views/notebooks'
+], function (_, Q, $, Radio, Marionette, View, NotebooksView) {
     'use strict';
 
-    var Form = App.module('AppNote.Form');
+    /**
+     * Note form controller.
+     *
+     * Triggers the following events:
+     * 1. channel: notesForm, event: stop
+     *
+     * Listens to the following events:
+     * 1. channel: notes, event: save:after
+     *
+     * requests:
+     * 1. channel: notes, request: save
+     *    to save the changes.
+     */
+    var Controller = Marionette.Object.extend({
 
-    Form.Controller = Marionette.Controller.extend({
-        initialize: function () {
-            _.bindAll(this, 'addForm', 'editForm', 'show', 'fetchImages', 'redirect', 'confirmRedirect');
+        initialize: function(options) {
+            this.options = options;
 
-            this.tags = new TagsCollection();
-            this.notebooks = new NotebooksCollection();
-            this.files = new FilesCollection();
+            _.bindAll(this, 'show', 'redirect');
+
+            // Fetch everything
+            Q.all([
+                Radio.request('notes', 'get:model:full', options),
+                Radio.request('notebooks', 'get:all', _.pick(options, 'profile'))
+            ])
+            .spread(this.show)
+            .catch(function() {
+                console.error('Editor error', arguments);
+            });
+
+            // Events
+            this.listenTo(Radio.channel('notes'), 'update:model', this.redirect);
+            this.listenTo(Radio.channel('Confirm'), 'confirm', this.redirect);
+            this.listenTo(Radio.channel('Confirm'), 'cancel', this.onConfirmCancel);
         },
 
-        switchDatabase: function (db) {
-            this.model.database.getDB(db);
-            this.tags.database.getDB(db);
-            this.notebooks.database.getDB(db);
-            this.files.database.getDB(db);
+        onDestroy: function() {
+            this.stopListening();
+            this.view.trigger('destroy');
         },
 
-        /**
-         * Add a new note
-         */
-        addForm: function (args) {
-            this.model = new NoteModel();
-            this.switchDatabase(args.profile);
+        show: function(note, notebooks) {
+            var notebooksView;
+            note = note[0];
 
-            // Default notebook
-            if (args.notebookId) {
-                this.model.set('notebookId', args.notebookId);
+            // Set document title
+            Radio.request('global', 'set:title', note.get('title'));
+
+            // Use behaviours that are appropriate for a device.
+            if (Radio.request('global', 'is:mobile')) {
+                delete View.prototype.behaviors.Desktop;
             }
-
-            $.when(
-                this.tags.fetch(),
-                this.notebooks.fetch()
-            ).done(this.show);
-        },
-
-        /**
-         * Edit an existing note
-         */
-        editForm: function (args) {
-            this.model = new NoteModel({ id : args.id });
-            this.switchDatabase(args.profile);
-
-            $.when(
-                this.tags.fetch({ limit : 100 }),
-                this.notebooks.fetch(),
-                this.model.fetch()
-            ).done(this.fetchImages);
-        },
-
-        fetchImages: function () {
-            $.when(
-                this.files.fetchImages(this.model.get('images'))
-            ).done(this.show);
-        },
-
-        show: function () {
-            var decrypted = this.model.decrypt();
+            else {
+                delete View.prototype.behaviors.Mobile;
+            }
 
             this.view = new View({
-                model     : this.model,
-                profile   : this.model.database.id,
-                decrypted : decrypted,
-                tags      : this.tags,
-                notebooks : this.notebooks,
-                files     : this.files
+                model     : note,
+                profile   : note.database.id
             });
 
-            App.content.show(this.view);
+            // Show the view and trigger an event
+            Radio.request('global', 'region:show', 'content', this.view);
+            this.view.trigger('rendered');
 
-            this.model.on('save', this.save, this);
-
-            this.view.on('redirect', this.redirect, this);
-            this.view.on('uploadImages', this.uploadImages, this);
-            this.view.trigger('shown');
-        },
-
-        // Uploading images to indexDB
-        uploadImages: function (imgs) {
-            var self = this;
-            $.when(this.files.uploadImages(imgs.images)).done(function (data) {
-                self.model.trigger('attachImages', {
-                    images: data,
-                    callback: imgs.callback
-                });
-            });
-        },
-
-        save: function (data) {
-            var self = this,
-                checklist,
-                notebook;
-
-            // Get new data
-            data.title = this.view.ui.title.val().trim();
-            data.notebookId = this.view.ui.notebookId.val().trim();
-
-            if (data.title === '') {
-                data.title = $.t('Unnamed');
+            /*
+             * Resolve the notebook ID.
+             * If the current note doesn't have a notebook attached,
+             * try to use one from the filter if it specifies a notebook.
+             */
+            var activeId = note.get('notebookId');
+            if (activeId === '0' && this.options.filter === 'notebook') {
+                activeId = this.options.query;
             }
 
-            // New notebook
-            notebook = this.model.get('notebookId');
-            if (data.notebookId !== notebook) {
-                notebook = this.notebooks.get(data.notebookId);
-                data.notebookId = (notebook) ? notebook.get('id') : 0;
-            }
-
-            // Images
-            data.images = [];
-            this.view.options.files.forEach(function (img) {
-                data.images.push(img.get('id'));
+            // Show notebooks selector
+            notebooksView = new NotebooksView({
+                collection : notebooks,
+                activeId   : activeId
             });
+            this.view.notebooks.show(notebooksView);
 
-            // Tasks
-            checklist = new Checklist().count(data.content);
-            data.taskAll = checklist.all;
-            data.taskCompleted = checklist.completed;
+            // Listen to view events
+            this.listenTo(this.view, 'save', this.save);
+            this.listenTo(this.view, 'cancel', this.showConfirm);
+        },
 
-            // Tags
-            data.tags = $.merge(new Tags().getTags(data.content), new Tags().getTags(data.title));
-
-            // Encryption
-            this.model.set(data).encrypt();
-
-            // Save
-            this.model.trigger('update:any');
-
-            $.when(
-                // Save changes
-                this.model.save(),
-                // Add new tags
-                this.tags.saveAdd(data.tags)
-            ).done(function () {
-                self.redirect(data.redirect);
+        save: function() {
+            Radio.request('notes', 'save', this.view.model, this.getContent())
+            .fail(function(e) {
+                console.error('Error', e);
             });
         },
 
-        confirmRedirect: function (args) {
-            var self = this;
-            if (args.isUnchanged === true) {
-                this.redirect(args.mayRedirect);
-            } else {
-                App.Confirm.show({
-                    content : $.t('Are you sure? You have unsaved changes'),
-                    success : function () {
-                        self.redirect(args.mayRedirect);
-                    }
-                });
-            }
+        getContent: function() {
+            return _.extend(Radio.request('editor', 'get:content'), {
+                title      : this.view.ui.title.val().trim(),
+                notebookId : this.view.notebooks.currentView.ui.notebookId.val().trim(),
+            });
         },
 
-        redirect: function (showNote) {
-            var url = '/notes';
-            if (typeof showNote === 'object') {
-                return this.confirmRedirect(showNote);
+        /**
+         * Warn a user that they have made some changes.
+         */
+        showConfirm: function() {
+            var data  = _.pick(this.getContent(), 'title', 'content', 'notebookId'),
+                model = this.view.model.pick('title', 'content', 'notebookId');
+
+            if (_.isEqual(model, data)) {
+                return this.redirect();
             }
 
-            App.trigger('notes:added', this.model);
+            Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+        },
 
-            // Redirect to edit page
-            if (showNote === false) {
-                url += '/edit/' + this.model.get('id');
-                App.vent.trigger('navigate:link', url);
-            }
-            // Redirect to list
-            else if (typeof this.model.get('id') !== 'undefined') {
-                App.AppNote.trigger('navigate:back');
-            } else {
-                window.history.go(-1);
+        redirect: function() {
+            if (!this.view.getOption('redirect')) {
+                return;
             }
 
-            if (showNote !== false) {
-                App.content.reset();
+            // Stop the module and navigate back
+            Radio.trigger('notesForm', 'stop');
+            Radio.request('uri', 'back');
+        },
+
+        onConfirmCancel: function() {
+            // Rebind keybindings again because TW bootstrap modal overrites ESC.
+            this.view.trigger('bind:keys');
+            this.view.options.isClosed = false;
+
+            if (this.view.options.focus !== 'editor') {
+                return this.view.ui[this.view.options.focus].focus();
             }
+            Radio.trigger('editor', 'focus');
         }
 
     });
 
-    return Form.Controller;
+    return Controller;
 });

@@ -1,91 +1,73 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
     'jquery',
     'marionette',
-    'text!apps/settings/show/templates/showTemplate.html',
-    'apps/settings/show/views/basic',
-    'apps/settings/show/views/shortcuts',
-    'apps/settings/show/views/importExport',
-    'apps/settings/show/views/profiles'
-], function (_, $, Marionette, Tmpl, Basic, Shortcuts, Import, Profiles) {
+    'behaviors/content',
+    'text!apps/settings/show/templates/showTemplate.html'
+], function(_, $, Marionette, Behavior, Tmpl) {
     'use strict';
 
+    /**
+     * Settings layout view
+     */
     var View = Marionette.LayoutView.extend({
         template: _.template(Tmpl),
 
-        className: 'modal fade',
-
-        stayOnHashchange: true,
-
         regions: {
-            content: '#tab-content'
+            content: 'form'
+        },
+
+        behaviors: {
+            ContentBehavior: {
+                behaviorClass: Behavior
+            }
         },
 
         events: {
-            'click .ok'  : 'save',
-            'click .modal-header li a': 'viewTab'
+            'click .settings--save'   : 'save',
+            'click .settings--cancel' : 'cancel'
         },
 
-        triggers: {
-            'click .cancelBtn'  : 'close'
+        onRender: function() {
+            this.$cancel = $('.settings--cancel');
+            this.$cancel.on('click', _.bind(this.cancel, this));
         },
 
-        collectionEvents: {
-            'new:value': 'cacheChanges'
+        onBeforeDestroy: function() {
+            this.$cancel.off('click');
         },
 
-        initialize: function () {
-            this.changedSettings = [];
-
-            this.on('hidden.modal', this.redirect, this);
-            this.on('shown.modal', this.makeTabActive, this);
-            this.on('show:tab', this.showTab, this);
+        serializeData: function() {
+            return this.options;
         },
 
-        cacheChanges: function (data) {
-            this.changedSettings.push(data);
+        cancel: function(e) {
+            e.preventDefault();
+            console.warn('cancel');
+            this.trigger('cancel');
         },
 
-        showTab: function (args) {
-            var data = { collection: this.collection },
-                view;
+        save: function(e) {
+            var view = this.content.currentView;
+            e.preventDefault();
 
-            args = args || this.options.args;
-            switch (args.tab) {
-                case 'shortcuts':
-                    view = new Shortcuts(data);
-                    break;
-                case 'other':
-                    view = new Import(data);
-                    break;
-                case 'profiles':
-                    view = new Profiles(data);
-                    break;
-                default:
-                    view = new Basic(data);
-                    break;
+            /*
+             * If the password was autofilled by a user's browser, it usually will
+             * not trigger `change` event. This will fix it.
+             */
+            if (view.ui && view.ui.password) {
+                this.content.currentView.ui.password.trigger('change');
             }
 
-            this.content.show(view);
-        },
-
-        viewTab: function (e) {
-            var tab = this.$(e.target).attr('href').replace('#', '');
-            this.trigger('show:tab', {tab: tab});
-        },
-
-        makeTabActive: function () {
-            var tab = this.options.args.tab;
-            this.$('.modal-header ul a[href="#' + tab + '"]').click();
-        },
-
-        save: function () {
-            this.collection.trigger('save:all', this.changedSettings);
-        },
-
-        redirect: function () {
-            this.trigger('redirect', this.changedSettings);
+            this.trigger('save');
         }
     });
 

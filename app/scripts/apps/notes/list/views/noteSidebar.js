@@ -1,101 +1,158 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
-    'app',
     'marionette',
+    'backbone.radio',
+    'views/loader',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
-    'backbone.mousetrap'
-], function(_, App, Marionette, NoteSidebarItem, Template) {
+    'mousetrap'
+], function(_, Marionette, Radio, LoaderView, NoteSidebarItem, Tmpl, Mousetrap) {
     'use strict';
 
+    /**
+     * Sidebar composite view.
+     *
+     * Listens to
+     * -----------
+     * Events:
+     * 1. channel: `notes`, event: `model:navigate`
+     *    Makes the provided model active.
+     */
     var View = Marionette.CompositeView.extend({
-        template           :  _.template(Template),
-        className          :  'sidebar-notes',
+        template           :  _.template(Tmpl),
 
         childView          :  NoteSidebarItem,
-        childViewContainer :  '.notes-list',
-        childViewOptions   :  { },
-
-        keyboardEvents     :  { },
+        childViewContainer :  '.list',
+        childViewOptions   :  {},
+        emptyView          : LoaderView,
 
         ui: {
-            prevPage         : '#prevPage',
-            nextPage         : '#nextPage'
+            pageNav  : '#pageNav',
+            prevPage : '#prevPage',
+            nextPage : '#nextPage'
+        },
+
+        events: {
+            'click @ui.nextPage': 'nextPage',
+            'click @ui.prevPage': 'previousPage'
         },
 
         collectionEvents: {
-            'changeFocus' : 'changeFocus',
-            'change'      : 'render',
-            'nextPage'    : 'toNextPage',
-            'prevPage'    : 'toPrevPage',
+            'page:next'     : 'nextPage',
+            'page:previous' : 'previousPage',
+            'reset'         : 'updatePagination'
         },
 
-        initialize: function () {
-            // Navigation with keys
-            this.keyboardEvents[App.settings.navigateBottom] = 'navigateBottom';
-            this.keyboardEvents[App.settings.navigateTop] = 'navigateTop';
+        childEvents: {
+            'scroll:top': 'changeScrollTop'
+        },
 
-            // Options to childView
+        initialize: function() {
+            _.bindAll(this, 'toNextNote', 'toPreviousNote');
+
+            this.$scroll  = $('#sidebar .-scroll');
+            this.configs = Radio.request('configs', 'get:object');
+
+            // Shortcuts
+            Mousetrap.bind(this.configs.navigateBottom, this.toNextNote);
+            Mousetrap.bind(this.configs.navigateTop, this.toPreviousNote);
+
+            // Events
+            this.listenTo(Radio.channel('notes'), 'model:navigate', this.modelFocus, this);
+
+            // Pass options to childView
             this.childViewOptions.args = this.options.args;
         },
 
-        onRender: function () {
-            // Make sidebar active
-            if ( !this.options.args.id) {
-                $(App.content.el).removeClass('active-row');
-            }
-
-            this.changeFocus(this.options.args.id || null);
+        onDestroy: function() {
+            Mousetrap.unbind([this.configs.navigateBottom, this.configs.navigateTop]);
         },
 
-        toNextPage: function () {
-            App.vent.trigger('navigate', this.ui.nextPage.attr('href'));
-        },
-
-        toPrevPage: function () {
-            App.vent.trigger('navigate', this.ui.prevPage.attr('href'));
-        },
-
-        navigateBottom: function () {
-            this.collection.trigger('navigateBottom');
-        },
-
-        navigateTop: function () {
-            this.collection.trigger('navigateTop');
+        onBeforeRender: function() {
+            this.options.args = Radio.request('appNote', 'route:args') || this.options.args;
+            this.childViewOptions.args = this.options.args;
         },
 
         /**
-         * Trigger model
+         * Makes the provided model active.
          */
-        changeFocus: function (note) {
-            if ( typeof(note) === 'string') {
-                note = this.collection.get(note);
-            }
-            if (note) {
-                note.trigger('changeFocus');
-            }
+        modelFocus: _.debounce(function(model) {
+            this.options.args.id = model.id;
+            model.trigger('focus');
+        }, 10),
+
+        toNextNote: function() {
+            this.collection.getNextItem(this.options.args.id);
+            return false;
         },
 
-        serializeData: function () {
+        toPreviousNote: function() {
+            this.collection.getPreviousItem(this.options.args.id);
+            return false;
+        },
+
+        /**
+         * Updates pagination buttons
+         */
+        updatePagination: function() {
+            this.ui.pageNav.toggleClass('hidden', this.collection.state.totalPages <= 1);
+            this.ui.prevPage.toggleClass('disabled', !this.collection.hasPreviousPage());
+            this.ui.nextPage.toggleClass('disabled', !this.collection.hasNextPage());
+        },
+
+        /**
+         * Gets next page's models and resets the collection
+         */
+        nextPage: function() {
+            this.navigatePage(1);
+            this.collection.getNextPage();
+        },
+
+        /**
+         * Gets previous page's models and resets the collection
+         */
+        previousPage: function() {
+            this.navigatePage(-1);
+            this.collection.getPreviousPage();
+        },
+
+        /**
+         * Saves page status in window.location
+         */
+        navigatePage: function(number) {
+            this.options.args.page = this.collection.state.currentPage + number;
+
+            Radio.request(
+                'uri', 'navigate',
+                {options: this.options.args}, {trigger: false}
+            );
+        },
+
+        /**
+         * Changes scroll position.
+         */
+        changeScrollTop: function(view, scrollTop) {
+            this.$scroll.scrollTop(
+                scrollTop -
+                this.$scroll.offset().top +
+                this.$scroll.scrollTop() - 100
+            );
+        },
+
+        serializeData: function() {
             var viewData = {
-                title       : this.options.title,
-                args        : this.options.args,
-                pagination  : this.collection.length >= App.settings.pagination
+                collection  : this.collection,
+                args        : this.options.args
             };
             return viewData;
-        },
-
-        templateHelpers: function () {
-            return {
-                i18n: $.t,
-
-                // Generates the pagination url
-                pageUrl: function (page) {
-                    page = page || 0;
-                    return '#' + App.request('uri:note', this.args, page);
-                }
-            };
         }
 
     });

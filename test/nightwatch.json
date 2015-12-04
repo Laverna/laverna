@@ -1,0 +1,73 @@
+{
+    "output_folder"          : "reports",
+    "custom_commands_path"   : "test/spec-ui/commands",
+    "custom_assertions_path" : "",
+    "page_objects_path"      : "",
+    "globals_path"           : "",
+
+    "selenium" : {
+        "start_process" : false,
+        "server_path"   : "",
+        "log_path"      : "",
+        "host"          : "127.0.0.1",
+        "port"          : 4444,
+        "cli_args"      : {
+            "webdriver.chrome.driver" : "",
+            "webdriver.ie.driver"     : ""
+        }
+    },
+
+    "test_runner": {
+        "type"    : "mocha",
+        "options" : {
+            "ui"       : "bdd"
+        }
+    },
+
+    "test_settings" : {
+        "ci": {
+            "launch_url"            :  "http://localhost:9000",
+
+            "selenium_port"         :  80,
+            "selenium_host"         :  "ondemand.saucelabs.com",
+            "username"              :  "${SAUCE_USERNAME}",
+            "access_key"            :  "${SAUCE_ACCESS_KEY}",
+
+            "end_session_on_fail"   :  true,
+            "silent"                :  true,
+            "desiredCapabilities"   :  {
+                "name"              :  "CI",
+                "videoUploadOnPass" :  false,
+                "browserName"       :  "firefox",
+                "javascriptEnabled" :  true,
+                "acceptSslCerts"    :  true,
+                "tunnel-identifier" :  "${TRAVIS_JOB_NUMBER}",
+                "build"             :  "${TRAVIS_BUILD_NUMBER}"
+            }
+        },
+
+        "default" : {
+            "launch_url"            :  "http://localhost:9000",
+            "selenium_port"         :  4444,
+            "selenium_host"         :  "localhost",
+            "silent"                :  true,
+            "screenshots"           :  {
+                "enabled"           :  false,
+                "path"              :  ""
+            },
+            "desiredCapabilities"   :  {
+                "browserName"       :  "firefox",
+                "javascriptEnabled" :  true,
+                "acceptSslCerts"    :  true
+            }
+        },
+
+        "chrome" : {
+            "desiredCapabilities": {
+                "browserName"       : "chrome",
+                "javascriptEnabled" : true,
+                "acceptSslCerts"    : true
+            }
+        }
+    }
+}

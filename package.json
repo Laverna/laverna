@@ -1,44 +1,43 @@
 {
   "name": "laverna",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Laverna/laverna"
   },
+  "main": "electron.js",
   "dependencies": {
-    "phantomcss": "~0.5.0"
   },
   "devDependencies": {
-    "connect-livereload": "~0.2.0",
-    "grunt": "~0.4.1",
-    "grunt-bower-requirejs": "~0.7.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-connect": "~0.3.0",
-    "grunt-contrib-copy": "~0.4.0",
-    "grunt-contrib-cssmin": "~0.6.0",
-    "grunt-contrib-htmlmin": "~0.1.3",
-    "grunt-contrib-imagemin": "~0.2.0",
-    "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-jst": "~0.5.0",
-    "grunt-contrib-less": "~0.9.0",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-watch": "~0.5.2",
-    "grunt-manifest": "~0.4.0",
-    "grunt-mocha": "~0.4.1",
-    "grunt-open": "~0.2.0",
-    "grunt-phonegap": "^0.14.0",
-    "grunt-requirejs": "~0.4.0",
-    "grunt-responsive-images": "~0.1.1",
-    "grunt-rev": "~0.1.0",
-    "grunt-string-replace": "~0.2.7",
-    "grunt-usemin": "~0.1.10",
-    "jshint-stylish": "~0.1.3",
-    "load-grunt-tasks": "~0.1.0",
-    "time-grunt": "~0.2.1"
+    "chai": "^3.4.0",
+    "electron-window-state": "^0.1.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.0.2",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-electron": "0.0.9",
+    "gulp-jshint": "^1.11.2",
+    "gulp-less": "^3.0.3",
+    "gulp-manifest": "^0.1.0",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-minify-html": "^1.0.4",
+    "gulp-mocha-phantomjs": "^0.10.1",
+    "gulp-mocha-selenium": "^1.0.0",
+    "gulp-nightwatch": "^0.2.6",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-requirejs-optimize": "^0.3.0",
+    "gulp-uglify": "^1.4.1",
+    "jshint-stylish": "^0.1.5",
+    "merge-stream": "^1.0.0",
+    "nightwatch": "^0.8.6"
   },
   "engines": {
     "node": ">=0.8.0"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "resolutions": {
+    "underscore": "~1.7.0"
+  }
 }

@@ -1,0 +1,53 @@
+/**
+ * List module
+ */
+
+.list--item {
+    border-color: @list--border--color;
+
+    &.active,
+    &.active:hover,
+    &.active:focus {
+        background-color : @list--active--bg;
+        border-color     : @list--active--border;
+        box-shadow       : none;
+    }
+}
+
+// List of notes
+.list--item.-note {
+    padding-top    : 25px;
+    padding-bottom : 15px;
+    max-height     : 80px;
+    min-height     : 80px;
+}
+
+// Pagination buttons
+.list--pager--btn {
+    padding    : 15px;
+    background : transparent;
+}
+
+// List of notebooks
+.list--nested {
+    padding-left: 30px;
+
+    .list--item {
+        border-left-color: transparent;
+        margin-left: -30px * 4;
+        padding-left: 30px * 4;
+        &:last-child {
+            border-bottom-color: transparent;
+        }
+    }
+}
+
+// Navbars
+.list--navbar {
+    color         : @list--navbar--color;
+    background    : @list--navbar--bg;
+}
+.list--brand {
+    font-variant : small-caps;
+    color        : @list--navbar--brand;
+}

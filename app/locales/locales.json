@@ -55,6 +55,10 @@
         "name": "Norwegian Nynorsk",
         "nativeName": "Norsk nynorsk"
     },
+    "lv": {
+      "name": "Latvian",
+      "nativeName": "latviešu"
+    },
     "pt_br": {
         "name": "Portugisich (Brasilien)",
         "nativeName": "Portugisich (Brasilien)"

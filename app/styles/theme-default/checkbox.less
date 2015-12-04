@@ -1,0 +1,65 @@
+/**
+ * Checkbox module
+ */
+.checkbox {
+    position : relative;
+    cursor   : pointer;
+    &:hover {
+        color: lighten(@text-color, 15%);
+    }
+}
+
+// Text
+.checkbox--text {
+    margin-left: 25px;
+    font-weight: 300;
+
+    // Create checkbox border block
+    &::before {
+        content : ' ';
+        width   : @check--size;
+        height  : @check--size;
+
+        // Borders
+        border        : @check--border;
+        border-radius : @check--border-radius;
+
+        // Position
+        position : absolute;
+        left     : 0;
+        top      : 22%;
+    }
+}
+
+.checkbox--svg {
+    width    : @check--icon--size;
+    height   : @check--icon--size;
+    position : absolute;
+    top      : 28%;
+    left     : 3px;
+}
+
+.checkbox--path {
+    fill           : none;
+    stroke         : @check--color;
+    stroke-width   : 20px;
+    stroke-linecap : round;
+
+    stroke-dasharray  : 126.366, 126.366;
+    stroke-dashoffset : 126.366;
+    transition        : stroke-dashoffset 0.2s ease-in-out 0s;
+    stroke-linejoin   : round;
+}
+
+.checkbox--input {
+    opacity: 0;
+
+    &:checked {
+        & ~ .checkbox--text {
+            text-decoration: line-through;
+        }
+        & + svg path {
+            stroke-dashoffset: 0;
+        }
+    }
+}

@@ -1,0 +1,101 @@
+<div class="modal-dialog modal-lg" id="welcome--page">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title text-center">
+                {{i18n('help.firststart title')}}
+            </h2>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="col-xs-6">
+                    <p>{{i18n('help.firststart import')}}</p>
+                </div>
+                <div class="col-xs-6">
+                    <p>{{i18n('help.firststart next')}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="col-xs-6">
+                <button id="welcome--import" class="btn btn-lg btn-default pull-right">
+                    <i class="icon-cog"></i>
+                    {{i18n('Import')}}
+                </button>
+            </div>
+            <div class="col-xs-6">
+                <button id="welcome--next" class="btn btn-lg btn-success pull-left">
+                    {{i18n('Next')}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-dialog modal-lg hidden" id="welcome--settings">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title text-center">
+                {{i18n('help.firststart title')}}
+            </h2>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <form class="form">
+                    <div class="col-xs-12 form-group">
+                        <legend class="text-center">{{i18n('Encryption Password')}}</legend>
+                        <input type="password" placeholder="{{i18n('Encryption Password')}}" class="form-control col-xs-12" name="password"/>
+                        <p class="help-block">
+                            {{i18n('help.firststart encryption')}}
+                        </p>
+                    </div>
+                    <div class="col-xs-12 form-group">
+                        <legend class="text-center">{{i18n('Synchronization')}}</legend>
+                        <select class="form-control col-xs-12" name="cloudStorage">
+                            <option value="0">{{ i18n('No') }}</option>
+                            <option value="dropbox">Dropbox</option>
+                            <option value="remotestorage">RemoteStorage</option>
+                        </select>
+                        <p class="help-block">
+                            {{i18n('help.firststart sync')}}
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button id="welcome--save" class="btn btn-lg btn-success">
+                    {{i18n('Next')}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-dialog modal-lg hidden" id="welcome--backup">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title text-center">
+                {{i18n('help.firststart title')}}
+            </h2>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                {{i18n('help.firststart backup')}}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="text-center">
+                <button id="welcome--export" class="btn btn-lg btn-default">
+                    {{i18n('Download')}}
+                </button>
+                <button id="welcome--last" class="btn btn-lg btn-success">
+                    {{i18n('Next')}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

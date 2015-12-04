@@ -1,13 +1,20 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
     'jquery',
     'backbone',
-    'modalRegion',
-    'brandRegion',
+    'backbone.radio',
     'devicejs',
+    'regions/regionManager',
     'marionette'
-], function(_, $, Backbone, ModalRegion, BrandRegion, Device) {
+], function(_, $, Backbone, Radio, Device) {
     'use strict';
 
     var App = new Backbone.Marionette.Application();
@@ -16,46 +23,12 @@ define([
 
     // Customize underscore template
     _.templateSettings = {
-        interpolate: /\{\{(.+?)\}\}/g,
-        evaluate: /<%([\s\S]+?)%>/g
+        interpolate : /\{\{(.+?)\}\}/g,
+        evaluate    : /<%([\s\S]+?)%>/g
     };
-
-    // Regions
-    App.addRegions({
-        sidebarNavbar : '#sidebar-navbar',
-        sidebar       : '#sidebar-content',
-        content       : '#content',
-        brand         : BrandRegion,
-        modal         : ModalRegion
-    });
-
-    _.extend(App, {
-
-        // Debug
-        log: function(str) {
-            if (console && typeof console.log === 'function') {
-                console.log(str);
-            }
-        },
-
-        // Document title
-        setTitle: function(title, mainTitle) {
-            App.title = (App.title || {main: '', index: ''});
-            if (mainTitle) {
-                App.title.main = mainTitle;
-            }
-            App.title.index = (title ? title + ' - ' : App.title.index);
-            document.title = App.title.index + App.title.main;
-        }
-
-    });
 
     // Start a module
     App.startSubApp = function(appName, args) {
-        if (appName !== 'Encryption' && !App.Encryption.API.checkAuth()) {
-            return;
-        }
-
         var currentApp = appName ? App.module(appName) : null;
         if (App.currentApp === currentApp) { return; }
 
@@ -66,26 +39,33 @@ define([
 
         App.currentApp = currentApp;
         if (currentApp) {
-            App.vent.trigger('app:module', appName);
+            App.channel.trigger('app:module', appName);
             currentApp.start(args);
         }
     };
 
+    // Returns current app
+    Radio.reply('global', 'app:current', function() {
+        return App.currentApp;
+    });
+
     // @ToMove somewhere else
-    App.vent.on('app:start', function() {
-        $('.loading').removeClass('loading');
+    App.channel.on('app:start', function() {
+        $('.-loading').removeClass('-loading');
+    });
+
+    Radio.reply('global', 'is:mobile', function() {
+        return App.isMobile;
     });
 
     App.on('before:start', function() {
-        App.settings = App.request('configs');
-        App.constants = App.request('constants');
-        App.vent.trigger('app:init');
+        Radio.trigger('global', 'app:init');
     });
 
     App.on('start', function() {
         console.timeEnd('App');
-        Backbone.history.start({ pushState: false });
-        App.vent.trigger('app:start');
+        Backbone.history.start({pushState: false});
+        Radio.trigger('global', 'app:start');
     });
 
     return App;

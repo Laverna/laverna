@@ -1,10 +1,19 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
+    'jquery',
     'underscore',
     'backbone',
+    'backbone.radio',
     'collections/removed',
     'migrations/note'
-], function (_, Backbone, Removed, TagsDB) {
+], function($, _, Backbone, Radio, Removed, TagsDB) {
     'use strict';
 
     /**
@@ -17,53 +26,56 @@ define([
         storeName: 'tags',
 
         defaults: {
-            'id'           :  undefined,
-            'name'         :  '',
-            'count'        :  '',
-            'synchronized' :  0,
-            'updated'      : Date.now()
+            'type'         : 'tags',
+            'id'           : undefined,
+            'name'         : '',
+            'count'        : '',
+            'synchronized' : 0,
+            'trash'        : 0,
+            'created'      : 0,
+            'updated'      : 0
         },
 
-        initialize: function () {
-            this.on('update:name', this.doEscape());
+        encryptKeys: ['name'],
+
+        initialize: function() {
+            // this.on('update:name', this.doEscape());
         },
 
         /**
-         * Saves model's id for sync purposes, then destroys it
+         * Validates a tag.
+         * @type array
          */
-        destroySync: function () {
-            return new Removed().newObject(this, arguments);
-        },
+        validate: function(attrs) {
+            // It's not neccessary to validate when a model is about to be removed
+            if (attrs.trash && Number(attrs.trash) === 2) {
+                return;
+            }
 
-        updateDate: function () {
-            this.set('updated', Date.now());
-            this.set('synchronized', 0);
-        },
-
-        doEscape: function () {
-            this.set('name', _.escape(this.get('name')));
-        },
-
-        validate: function (attrs) {
             var errors = [];
-            if (attrs.name === '') {
+            if (!_.isUndefined(attrs.name) && !attrs.name.trim().length) {
                 errors.push('name');
             }
+
             if (errors.length > 0) {
                 return errors;
             }
         },
 
-        next: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) + 1);
-            }
+        /**
+         * Saves model's id for sync purposes, then destroys it
+         */
+        destroySync: function() {
+            return new Removed().newObject(this, arguments);
         },
 
-        prev: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) - 1);
-            }
+        updateDate: function() {
+            this.set('updated', Date.now());
+            this.set('synchronized', 0);
+        },
+
+        doEscape: function() {
+            this.set('name', _.escape(this.get('name')));
         }
 
     });

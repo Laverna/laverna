@@ -1,0 +1,21 @@
+/**
+ * Settings
+ */
+// List of settings
+.list--settings {
+    &:extend(.sidemenu--item all);
+
+    &.list-group-item.active {
+        background : lighten(@sidemenu--item--hover, 2%);
+    }
+}
+
+// Back button
+.header--settings--back:hover {
+    background: #f8f8f8;
+}
+
+// Content
+.container-fluid.-settings {
+    padding: 40px 30px;
+}

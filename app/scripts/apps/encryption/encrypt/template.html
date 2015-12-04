@@ -1,0 +1,44 @@
+<div class="container text-center -auth hide" id="encryption-progress">
+    <div class="page-progress">
+        <header>
+            <h1 class="header--brand"><i class="icon-lock"></i></h1>
+            <h1 class="header--brand">{{ i18n('Encryption') }}</h1>
+        </header>
+
+        <div class="progress progress-striped active">
+            <div class="progress-bar progress-bar-success" id="progress"
+                aria-valuenow="2" aria-valuemin="0" aria-valuemax=""
+                role="progressbar" style="width: 0%"></div>
+        </div>
+
+        <h4 class="text-center">{{ i18n('encryption.wait') }}</h4>
+        <p class="text-center" id="state"></p>
+    </div>
+</div>
+
+<div class="container text-center -auth" id="encryption-password">
+    <form action="#" class="form-wrapper" role="form" method="post">
+        <header>
+            <h1 class="header--brand"><i class="icon-lock"></i></h1>
+            <h1 class="header--brand">Laverna</h1>
+        </header>
+
+        <% if (needOldPassword()) { %>
+        <div class="form-group form--icon">
+            <input class="form-control input-lg input--brand" type="password" name="oldpass"
+            placeholder="{{ i18n('Your old encryption password') }}" autofocus />
+        </div>
+        <% } %>
+        <% if (needNewPassword()) { %>
+        <div class="form-group form--icon">
+            <input class="form-control input-lg input--brand" type="password" name="password"
+            placeholder="{{ i18n('Your new encryption password') }}" autofocus />
+        </div>
+        <% } %>
+
+        <div class="form-group">
+            <input class="btn btn-lg btn-block btn--brand" type="submit"
+            value="{{ i18n('Submit') }}"/>
+        </div>
+    </form>
+</div>

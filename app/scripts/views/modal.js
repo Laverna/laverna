@@ -1,11 +1,18 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
     'jquery',
     'marionette',
-    'Mousetrap',
+    'mousetrap',
     'bootstrap'
-], function (_, $, Marionette, Mousetrap) {
+], function(_, $, Marionette, Mousetrap) {
     'use strict';
 
     /**
@@ -15,11 +22,11 @@ define([
     var ModalRegion = Marionette.Region.extend({
         el: '#modal',
 
-        initialize: function () {
+        initialize: function() {
             this.$window = $(window);
         },
 
-        onShow: function (view) {
+        onShow: function(view) {
             view.$el.modal({
                 show     : true,
                 backdrop : 'static',
@@ -27,34 +34,34 @@ define([
             });
 
             // Trigger shown event
-            view.$el.on('shown.bs.modal', function () {
+            view.$el.on('shown.bs.modal', function() {
                 view.trigger('shown.modal');
             });
 
             // Trigger hidden event
-            view.$el.on('hidden.bs.modal', function () {
+            view.$el.on('hidden.bs.modal', function() {
                 view.trigger('hidden.modal');
             });
 
             // Hide on close event
-            view.on('close', function () {
+            view.on('close', function() {
                 view.$el.modal('hide');
             });
 
             // Close on ESC
-            Mousetrap.bind('esc', function () {
+            Mousetrap.bind('esc', function() {
                 view.$el.modal('hide');
             });
 
             // If url is changed we should close modal window
             if (view.stayOnHashchange !== true) {
-                this.$window.on('hashchange.modal', function () {
+                this.$window.on('hashchange.modal', function() {
                     view.$el.modal('hide');
                 });
             }
         },
 
-        onBeforeEmpty: function (view) {
+        onBeforeEmpty: function(view) {
             view.$el.modal('hide');
             this.onBeforeSwap();
         },
@@ -62,7 +69,7 @@ define([
         /**
          * Because sometimes backdrop is duplicated
          */
-        onBeforeSwap: function () {
+        onBeforeSwap: function() {
             var backdrop = $('.modal-backdrop');
             if (backdrop.length) {
                 backdrop.remove();

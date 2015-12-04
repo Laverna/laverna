@@ -1,57 +1,71 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
+    'backbone.radio',
     'apps/confirm/show/view'
-], function(_, App, Marionette, View) {
+], function(_, Marionette, Radio, View) {
     'use strict';
 
-    var Show = App.module('Confirm.Show');
+    /**
+     * Confirm controller.
+     *
+     * For default it triggers the following events on `Confirm` channel:
+     * 1. `confirm` - when a user clicks on "OK" button.
+     * 2. `cancel`  - when a user clicks on "Cancel" button.
+     */
+    var Controller = Marionette.Object.extend({
 
-    Show.Controller = Marionette.Controller.extend({
+        initialize: function(options) {
+            if (typeof options === 'string') {
+                options = {content: options};
+            }
 
-        initialize: function() {
-            _.bindAll(this, 'show');
+            // If instead of text a view was provided, render it
+            if (typeof options.content === 'object') {
+                options.content = options.content.render().$el.html();
+            }
+            // Try to make HTML from supposedly Markdown string
+            else {
+                options.content = Radio.request('editor', 'content:html', options.content);
+            }
+
+            this.options = options;
+            this.show();
         },
 
         onDestroy: function() {
+            this.stopListening(this.view);
             this.view.trigger('destroy');
         },
 
-        show: function(options) {
-            if (typeof options === 'string') {
-                options = { content : options };
-            }
-            this.options = options;
-
-            this.view = new View({
-                text : options.content
-            });
-
-            App.modal.show(this.view);
+        show: function() {
+            // Instantiate a view
+            this.view = new View(this.options);
+            Radio.request('global', 'region:show', 'modal', this.view);
 
             // Events
-            this.view.on('confirm', this.confirmed, this);
-            this.view.on('refuse', this.refused, this);
+            this.listenTo(this.view, 'click', this.triggerEvent);
         },
 
-        confirmed: function() {
-            if (this.options.success) {
-                this.options.success();
+        triggerEvent: function(event) {
+            if (this.options['on' + event]) {
+                this.options['on' + event]();
             }
-            App.Confirm.trigger('confirm');
-            App.Confirm.stop();
-        },
+            Radio.trigger('Confirm', event);
 
-        refused: function() {
-            if (this.options.error) {
-                this.options.error();
-            }
-            App.Confirm.trigger('refuse');
-            App.Confirm.stop();
+            // Stop itself
+            Radio.request('Confirm', 'stop');
         }
+
     });
 
-    return Show.Controller;
+    return Controller;
 });

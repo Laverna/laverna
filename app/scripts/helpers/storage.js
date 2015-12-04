@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define, Modernizr */
 define([
     'underscore',
@@ -12,7 +19,7 @@ define([
     /**
      * Check if browser has web storage support
      */
-    var channel = Backbone.Wreqr.radio.channel('global'),
+    var channel = Backbone.Radio.channel('global'),
         Storage;
 
     Storage = Backbone.Marionette.Controller.extend({
@@ -22,7 +29,7 @@ define([
             _.bindAll(this, 'check', 'getName');
 
             // Response to 'storage' request
-            channel.reqres.setHandler('storage', this.getName);
+            channel.reply('storage', this.getName);
         },
 
         getName: function() {
@@ -57,7 +64,7 @@ define([
                 console.error('Browser doesn\'t have web storage support');
 
                 this.storage = null;
-                channel.vent.trigger('storage:error');
+                channel.trigger('storage:error');
                 this.promise.reject();
             }
 
@@ -100,7 +107,7 @@ define([
             };
 
             this.storage = 'localstorage';
-            channel.vent.trigger('storage:local');
+            channel.trigger('storage:local');
             this.promise.resolve();
         }
     });

@@ -1,132 +1,187 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
-    'underscore',
     'jquery',
-    'backbone',
-    'helpers/uri',
-    'text!apps/navbar/show/template.html',
-    'backbone.mousetrap',
-    'marionette'
-], function (_, $, Backbone, URI, Tmpl) {
+    'underscore',
+    'marionette',
+    'backbone.radio',
+    'behaviors/sidemenu',
+    'text!apps/navbar/show/template.html'
+], function($, _, Marionette, Radio, Sidemenu, Tmpl) {
     'use strict';
 
-    var View = Backbone.Marionette.ItemView.extend({
+    /**
+     * Navbar view.
+     *
+     * Listens to:
+     * ----------
+     * Events:
+     * 1. channel: `global`, event: `show:search`
+     *    focuses on search form
+     *
+     * Triggers events:
+     * 1. channel: `global`, event: `search:shown`
+     *    when the user opens the search form.
+     * 2. channel: `global`, event: `search:hidden`
+     *    when the search form is hidden or the navbar view is destroyed.
+     * 3. event: `search:submit` to itself
+     *    when the search form is submitted.
+     * 4. channel: `global`, event: `search:change`
+     *    every time when the user types something on the search form.
+     *
+     * Requests:
+     * 1. channel: `uri`, request: `link:profile`
+     * 2. channel: `uri`, request: `profile`
+     */
+    var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
-        keyboardEvents:  { },
+        keyboardEvents:  {},
 
-        ui:  {
-            locationIcon     :  '#location-icon',
-            navbarSearchForm :  '.search-form',
-            navbarSearchInput:  '.search-form input',
-            syncBtn          :  '.sync-button',
-            syncStatus       :  '#syncStatus'
+        behaviors: {
+            Sidemenu: {
+                behaviorClass: Sidemenu
+            }
         },
 
-        events:  {
-            'click .btn-search'           : 'showSearch',
-            'blur .search-input'          : 'hideSearch',
-            'keyup @ui.navbarSearchInput' : 'searchKeyup',
-            'submit @ui.navbarSearchForm' : 'searchSubmit'
+        ui: {
+            navbar : '#sidebar--nav',
+            search : '#header--search--input',
+            title  : '#header--title',
+            icon   : '#header--icon',
+            sync   : '#header--sync--icon'
         },
 
-        triggers: {
-            'click @ui.syncBtn': 'syncWithCloud'
+        events: {
+            'click #header--add'     : 'navigateAdd',
+            'click #header--sbtn'    : 'showSearch',
+            'click #header--about'   : 'showAbout',
+            'blur @ui.search'        : 'hideSearch',
+            'keyup @ui.search'       : 'searchKeyup',
+            'submit #header--search' : 'searchSubmit',
+            'click #header--sync'    : 'triggerSync'
         },
 
-        initialize: function () {
-            this.keyboardEvents[this.options.settings.appSearch] = 'showSearch';
-
-            // Show sync status
-            this.on('sync:before', this.syncBefore, this);
-            this.on('sync:after', this.syncAfter, this);
+        collectionEvents: {
+            'change': 'render'
         },
 
-        onRender: function () {
-            var iconClass = (this.options.args.filter === null) ? 'note' : this.options.args.filter;
-            this.ui.locationIcon.removeClass();
-            this.ui.locationIcon.addClass('icon-' + iconClass);
+        initialize: function() {
+            this.listenTo(this, 'change:title', this.changeTitle);
+            this.listenTo(Radio.channel('global'), 'show:search', this.showSearch);
+
+            this.listenTo(Radio.channel('sync'), 'start', this.onSyncStart);
+            this.listenTo(Radio.channel('sync'), 'stop', this.onSyncStop);
+
+            // Re-render the view when notebooks collection has changed
+            this.listenTo(this.options.notebooks, 'change add remove', this.render);
         },
 
-        syncBefore: function () {
-            this.ui.syncStatus.addClass('animate-spin');
+        onDestroy: function() {
+            Radio.trigger('global', 'search:hidden');
         },
 
-        syncAfter: function () {
-            this.ui.syncStatus.removeClass('animate-spin');
+        triggerSync: function() {
+            Radio.request('sync', 'start');
         },
 
-        searchSubmit: function (e) {
+        onSyncStart: function() {
+            console.log('start spin');
+            this.ui.sync.toggleClass('animate-spin', true);
+        },
+
+        onSyncStop: function() {
+            console.log('stop spin');
+            this.ui.sync.toggleClass('animate-spin', false);
+        },
+
+        /**
+         * Trigger form:show event when add button is clicked.
+         */
+        navigateAdd: function() {
+            Radio.trigger('global', 'form:show');
+            return false;
+        },
+
+        /**
+         * Change navbar title
+         */
+        changeTitle: function(options) {
+            var icon = this.templateHelpers().getIcon.apply(options);
+
+            this.ui.title.text($.t(options.title));
+            this.ui.icon.attr('class', icon);
+            this.options.args = options.args;
+        },
+
+        searchSubmit: function() {
+            this.ui.search.blur();
+
+            this.trigger('search:submit', this.ui.search.val().trim());
+            Radio.trigger('global', 'search:hidden');
+
+            return false;
+        },
+
+        showSearch: function() {
+            this.ui.navbar.addClass('-search');
+            this.ui.search.focus().select();
+            Radio.trigger('global', 'search:shown');
+
+            return false;
+        },
+
+        hideSearch: function() {
+            this.ui.navbar.removeClass('-search');
+        },
+
+        showAbout: function(e) {
             e.preventDefault();
-            var text = this.ui.navbarSearchInput.val();
-            this.trigger('navigate', URI.link('/notes/f/search/q/' + text));
+            Radio.request('Help', 'show:about');
         },
 
-        searchKeyup: function (e) {
+        searchKeyup: function(e) {
             if (e.which === 27) {
-                this.ui.navbarSearchInput.blur();
+                Radio.trigger('global', 'search:hidden');
+                return this.ui.search.blur();
             }
+            Radio.trigger('global', 'search:change', this.ui.search.val());
         },
 
-        showSearch: function (e) {
-            if (typeof (e) !== 'undefined') {
-                e.preventDefault();
-            }
-
-            this.ui.navbarSearchForm.removeClass('hidden');
-            this.ui.navbarSearchForm.find('input').focus().select();
-            this.$('.navbar-nav').addClass('hidden');
-        },
-
-        hideSearch: function (e) {
-            if (this.ui.navbarSearchForm.hasClass('hidden')) {
-                return;
-            }
-
-            if (typeof (e) !== 'undefined') {
-                e.preventDefault();
-            }
-
-            this.ui.navbarSearchForm.addClass('hidden');
-            this.$('.navbar-nav').removeClass('hidden');
-        },
-
-        serializeData: function () {
+        serializeData: function() {
             return {
-                args: this.options.args,
-                settings: this.options.settings,
-                uri : URI.link('/'),
-                notebooks: (this.options.inNotebooks) ? null : this.options.notebooks,
-                profile: URI.getProfile()
+                args      : this.options.args,
+                configs   : this.collection.getConfigs(),
+                profiles  : this.options.profiles.getValueJSON(),
+                notebooks : _.first(this.options.notebooks.toJSON(), 5),
+                uri       : Radio.request('uri', 'link:profile', '/'),
+                profile   : Radio.request('uri', 'profile')
             };
         },
 
-        templateHelpers: function () {
+        templateHelpers: function() {
             return {
-                isSyncEnabled: function () {
-                    if (this.settings.cloudStorage.toString() === '0') {
-                        return 'hidden';
-                    }
+                getIcon: function() {
+                    return 'icon-' + (
+                        !this.args.filter ? 'note' : this.args.filter
+                    );
                 },
 
-                urlPage : function () {
-                    if (this.args.currentApp === 'AppNotebook') {
-                        return URI.link('/notebooks');
-                    } else {
-                        return URI.link('/notes');
-                    }
+                isSyncEnabled: function() {
+                    return this.configs.cloudStorage === 'dropbox';
                 },
 
-                pageNumber: function () {
-                    return (this.args.page || '');
-                },
-
-                notebook: function (model) {
-                    return model.decrypt().name;
-                },
-
-                link: function (profile) {
-                    return URI.link('/notes', profile);
+                profileLink: function(profileName) {
+                    return Radio.request(
+                        'uri', 'link:profile',
+                        this.args.currentUrl, profileName
+                    );
                 }
             };
         }

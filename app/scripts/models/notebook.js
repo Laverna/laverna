@@ -1,12 +1,18 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
     'backbone',
     'migrations/note',
     'collections/removed',
-    'apps/encryption/auth',
     'indexedDB'
-], function (_, Backbone, NotesDB, Removed, getAuth) {
+], function(_, Backbone, NotesDB, Removed) {
     'use strict';
 
     var Model = Backbone.Model.extend({
@@ -16,15 +22,25 @@ define([
         storeName: 'notebooks',
 
         defaults: {
+            'type'         : 'notebooks',
             'id'           : undefined,
-            'parentId'     : '',
+            'parentId'     : '0',
             'name'         : '',
             'synchronized' : 0,
             'count'        : 0,
-            'updated'      : Date.now()
+            'trash'        : 0,
+            'created'      : 0,
+            'updated'      : 0
         },
 
-        validate: function (attrs) {
+        encryptKeys: ['name'],
+
+        validate: function(attrs) {
+            // It's not neccessary to validate when a model is about to be removed
+            if (attrs.trash && Number(attrs.trash) === 2) {
+                return;
+            }
+
             var errors = [];
             if (attrs.name === '') {
                 errors.push('name');
@@ -37,33 +53,14 @@ define([
             }
         },
 
-        initialize: function () {
+        initialize: function() {
             if (typeof this.id === 'number') {
                 this.set('id', this.id.toString());
                 this.set('parentId', this.get('parentId').toString());
             }
-
-            this.on('removed:note', this.removeCount);
-            this.on('add:note', this.addCount);
         },
 
-        encrypt: function (data) {
-            data = data || this.toJSON();
-
-            this.set('name', getAuth().encrypt( _.escape(data.name) ));
-            this.set('parentId', data.parentId);
-            this.updateDate();
-        },
-
-        decrypt: function () {
-            var data = this.toJSON(),
-                auth = getAuth();
-
-            data.name = auth.decrypt(data.name);
-            return data;
-        },
-
-        updateDate: function () {
+        updateDate: function() {
             this.set('updated', Date.now());
             this.set('synchronized', 0);
         },
@@ -71,11 +68,11 @@ define([
         /**
          * Saves model's id for sync purposes, then destroys it
          */
-        destroySync: function () {
+        destroySync: function() {
             return new Removed().newObject(this, arguments);
         },
 
-        addCount: function () {
+        addCount: function() {
             if (this.get('id') === 0) {
                 return;
             }
@@ -84,25 +81,13 @@ define([
             });
         },
 
-        removeCount: function () {
+        removeCount: function() {
             if (this.get('id') === 0) {
                 return;
             }
             this.save({
                 'count': this.get('count') - 1
             });
-        },
-
-        next: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) + 1);
-            }
-        },
-
-        prev: function () {
-            if (this.collection) {
-                return this.collection.at(this.collection.indexOf(this) - 1);
-            }
         }
 
     });

@@ -1,223 +1,213 @@
-/*global define*/
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+/* global define, requirejs */
 define([
     'underscore',
     'jquery',
     'marionette',
     'app',
-    'enquire'
-], function(_, $,  Marionette, App, enquire) {
+    'backbone.radio',
+    'enquire',
+    'apps/notes/list/listApp'
+], function(_, $, Marionette, App, Radio, enquire, SidebarApp) {
     'use strict';
 
     /**
-     * Submodule which shows note content
+     * AppNote module.
+     *
+     * Listens to
+     * --------
+     * Events on channel `appNote`:
+     * 1. `form:show`    - shows a form where a user can add/edit new notes
+     * 2. `notes:toggle` - make the sidebar region active
+     *
+     * Replies on channel `appNote`:
+     * 1. `route:args`   - returns current route arguments
      */
     var AppNote = App.module('AppNote', { startWithParent: false }),
         executeAction,
         API;
-
-    AppNote.on('start', function() {
-        App.log('AppNote has started');
-
-        // Show navbar
-        App.AppNavbar.start();
-    });
-
-    AppNote.on('stop', function() {
-        App.vent.off('form:show');
-        App.log('AppNote has stoped');
-    });
 
     /**
      * The router
      */
     AppNote.Router = Marionette.AppRouter.extend({
         appRoutes: {
-            '': 'showIndex',
-            'p/:profile'                    : 'showNotes',
-            '(p/:profile/)notes/add'        : 'addNote',
-            '(p/:profile/)notes/edit/:id'   : 'editNote',
-            '(p/:profile/)notes/remove/:id' : 'removeNote',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)': 'showNotes',
-            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)': 'showNote'
+            ''           : 'showIndex',
+            'p/:profile' : 'filterNotes',
+
+            // Edit/Add notes
+            '(p/:profile/)notes/add'      : 'noteForm',
+            '(p/:profile/)notes/edit/:id' : 'noteForm',
+
+            // Filter notes
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)'            : 'filterNotes',
+            '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)(/show/:id)' : 'showNote'
         },
 
         // Start this module
         onRoute: function() {
-            App.startSubApp('AppNote');
+            if (!AppNote._isInitialized) {
+                var args = arguments[0] === 'noteForm' ? {} : arguments[2];
+                App.startSubApp('AppNote', API._getArgs.apply(this, args));
+            }
         }
     });
 
     /**
-     * Start application
+     * Starts a submodule
      */
-    executeAction = function(action, args) {
-        action(args);
+    executeAction = function(module, args) {
+        if (!module) {
+            return;
+        }
+
+        // Stop previous module
+        if (AppNote.currentApp) {
+            AppNote.currentApp.stop();
+        }
+
+        AppNote.currentApp = module;
+        module.start(args);
+
+        // If module has stopped, remove the variable
+        module.on('stop', function() {
+            AppNote.currentApp = null;
+        });
     };
 
     /**
-     * Controller
+     * Router's controller
      */
     API = {
-        notesArg: null,
+
+        // Index page
+        showIndex: function() {
+            this.filterNotes();
+        },
+
+        // Filter collection
+        filterNotes: function() {
+            var args = this._getArgs.apply(this, arguments);
+
+            // Wait until the SidebarApp has started
+            if (!SidebarApp._isInitialized) {
+                return SidebarApp.on('start', function() {
+                    API.filterNotes(args);
+                });
+            }
+
+            Radio.request('appNote', 'filter', args);
+        },
+
+        // Show a note
+        showNote: function() {
+            var args = this._getArgs.apply(this, arguments);
+
+            requirejs(['apps/notes/show/app'], function(Module) {
+                executeAction(Module, args);
+            });
+        },
+
+        // Shows a form for editing or adding notes
+        noteForm: function(profile, id) {
+            var args = _.extend({}, this.notesArg || {}, {
+                id      : id,
+                profile : profile
+            });
+
+            // Start 'Form' module
+            requirejs(['apps/notes/form/app'], function(Module) {
+                args.method = id ? 'edit' : 'add';
+                executeAction(Module, args);
+            });
+        },
+
+        // Remove an existing note
+        removeNote: function(id) {
+            requirejs(['apps/notes/remove/controller'], function(Controller) {
+                API.notesArg.id = null;
+                new Controller({id: id});
+            });
+        },
+
+        // Make sidebar active
+        _toggleSidebar: function(args) {
+            this.$content = this.$content || $(App.content.el);
+            this.$content.removeClass('active-row');
+            this.filterNotes.apply(this, args);
+        },
 
         // Builds an object from router arguments
-        getArgs: function(profile, filter, query, page, id) {
+        _getArgs: function(profile, filter, query, page, id) {
             if (arguments.length === 1 && typeof arguments[0] === 'object') {
                 return arguments[0];
             }
 
-            return {
-                id: id,
-                page: Number(page),
-                query: query,
-                filter: filter,
-                profile: profile || App.request('uri:profile'),
+            this.notesArg = {
+                id      : id,
+                page    : Number(page || 0),
+                query   : query,
+                filter  : filter,
+                profile : profile || Radio.request('uri', 'profile'),
             };
-        },
 
-        // Index page
-        showIndex: function() {
-            App.vent.trigger('notes:list');
-        },
-
-        // Show list of notes
-        showNotes: function() {
-            var args = this.getArgs.apply(this, arguments);
-
-            require(['apps/notes/list/controller'], function(List) {
-                API.notesArg = args;
-                executeAction(new List().listNotes, args);
-            });
-        },
-
-        // Show content of note
-        showNote: function() {
-            var args = this.getArgs.apply(this, arguments);
-
-            require(['apps/notes/show/showController'], function(Show) {
-                App.trigger('notes:show', args);
-                executeAction(new Show().showNote, args);
-            });
-        },
-
-        // Add new note
-        addNote: function(profile) {
-            require(['apps/notes/form/controller'], function(Form) {
-                var args = API.notesArg || {};
-                executeAction(new Form().addForm, {
-                    profile: profile,
-                    notebookId: (args.filter === 'notebook' ? args.query : null)
-                });
-                API.notesWhileEditing(profile);
-            });
-        },
-
-        // Edit an existing note
-        editNote: function(profile, id) {
-            require(['apps/notes/form/controller'], function(Form) {
-                executeAction(new Form().editForm, {id : id, profile: profile});
-                API.notesWhileEditing(profile);
-            });
-            App.log('edit note ' + id);
-        },
-
-        notesWhileEditing: function(profile) {
-            if ( !API.notesArg ) {
-                App.trigger('notes:show', {profile: profile});
-            }
-        },
-
-        // Remove an existing note
-        removeNote: function(profile, id) {
-            require(['apps/notes/remove/removeController'], function(Controller) {
-                executeAction(new Controller().remove, {id : id, profile: profile});
-            });
-        },
-
-        // Re-render sidebar only if necessary
-        checkShowSidebar: function(args) {
-            var current = _.omit(API.notesArg || {}, 'id');
-            API.notesArg = args;
-
-            if ( !_.isEqual(current,  _.omit(args, 'id')) ) {
-                API.showNotes(args);
-            }
+            return this.notesArg;
         }
     };
 
     /**
-     * Router events
+     * Module's initializer/finalizer
      */
-    App.vent.on('notes:list', function() {
-        App.vent.trigger('navigate:link', '/notes');
-    });
+    AppNote.on('before:start', function(options) {
+        // Show the sidebar
+        SidebarApp.start(options);
 
-    // Show sidebar with notes list only on big screen
-    App.on('notes:show', function(args) {
-        $(App.content.el).addClass('active-row');
-        enquire.register('screen and (min-width:768px)', {
-            match: function() {
-                API.checkShowSidebar(args);
-            },
-            unmatch: function() {
-                API.notesArg = args;
-            }
-        });
-    });
-
-    // Toggle to sidebar
-    App.on('notes:toggle', function(args) {
-        $(App.content.el).removeClass('active-row');
-        API.checkShowSidebar(args);
-    });
-
-    // Re render
-    App.on('notes:rerender', function() {
-        API.showNotes(API.notesArg || {});
-    });
-
-    // Re-render sidebar if new note has been added
-    App.on('notes:added', function(model) {
-        API.showNotes(_.extend(API.notesArg || {}, {id: model.get('id')}));
-    });
-
-    // Show form
-    App.vent.on('form:show', function() {
-        App.vent.trigger('navigate:link', '/notes/add');
-    });
-
-    // Navigate to last note
-    AppNote.on('navigate:back', function() {
-        var url = App.request('uri:note', API.notesArg, API.notesArg);
-        App.vent.trigger('navigate:link', url);
-    });
-
-    // Re-render sidebar's and note's content after sync:after event
-    App.on('sync:after', function() {
-
-        // Re-render sidebar and note's content
-        if ( App.currentApp.moduleName === 'AppNote' &&
-           !App.request('uri:route').match(/\/[edit|add]+/) ) {
-
-            var notesArg = _.extend(API.notesArg || {}, {
-                profile : App.request('uri:profile')
+        // Listen to events
+        this.listenTo(Radio.channel('appNote'), 'notes:toggle', API._toggleSidebar);
+        this.listenTo(Radio.channel('global'), 'form:show', function() {
+            Radio.request('uri', 'navigate', '/notes/add', {
+                trigger       : true,
+                includeProfile: true
             });
+        });
 
-            API.showNotes(notesArg);
-            if (notesArg.id) {
-                API.showNote(notesArg);
-            }
+        // Respond to requests and requests
+        Radio.channel('appNote')
+        .reply('remove:note', API.removeNote, API)
+        .reply('route:args', function() {return API.notesArg;}, API);
+    });
+
+    AppNote.on('before:stop', function() {
+        // Stop the sidebar app
+        SidebarApp.stop();
+
+        // Stop the current module
+        if (AppNote.currentApp) {
+            AppNote.currentApp.stop();
+            AppNote.currentApp = null;
         }
+
+        // Stop listenning to events
+        this.stopListening();
+
+        // Stop responding to requests and requests
+        Radio.channel('appNote')
+        .stopReplying('remove:note')
+        .stopReplying('route:args');
     });
 
     /**
      * Register the router
      */
-    App.addInitializer(function() {
+    App.on('before:start', function() {
         new AppNote.Router({
             controller: API
         });
     });
-
-    return AppNote;
 });

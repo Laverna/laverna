@@ -1,62 +1,84 @@
-/* global define */
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+/* global define, requirejs */
 define([
     'underscore',
     'marionette',
+    'backbone.radio',
     'app'
-], function (_, Marionette, App) {
+], function(_, Marionette, Radio, App) {
     'use strict';
 
-    var Help = App.module('AppHelp', {startWithParent: false, modal: true}),
-        executeAction, API;
+    var Help = App.module('AppHelp', {startWithParent: false}),
+        controller;
 
-    Help.on('start', function () {
-        App.vent.trigger('mousetrap:reset');
-        App.log('AppHelp module has started');
-    });
-
-    Help.on('stop', function () {
-        App.vent.trigger('mousetrap:restart');
-        App.log('AppHelp module has stoped');
-
-        API.controller.destroy();
-        delete API.controller;
-    });
-
-    // Router
-    Help.Router = Marionette.AppRouter.extend({
-        appRoutes: {
-            '(p/:profile/)help': 'showHelp',
-            '(p/:profile/)about': 'about'
+    function startModule(module, args) {
+        if (!module) {
+            return;
         }
-    });
 
-    // Start the application
-    executeAction = function (action, args) {
-        App.startSubApp('AppHelp');
-        action(args);
-    };
+        // Stop previous module
+        if (Help.currentApp) {
+            Help.currentApp.stop();
+        }
+        // Start this subapp
+        else {
+            Help.start();
+        }
 
-    // Controller
-    API = {
-        showHelp: function () {
-            require(['apps/help/show/controller'], function (Controller) {
-                API.controller = new Controller();
-                executeAction(API.controller.show);
+        Help.currentApp = module;
+        module.start(args);
+
+        // If module has stopped, remove the variable and stop itself
+        module.on('stop', function() {
+            Help.stop();
+            Help.currentApp = null;
+        });
+    }
+
+    controller = {
+        keybindings: function() {
+            requirejs(['apps/help/show/app'], function(Module) {
+                startModule(Module);
             });
         },
 
-        about: function () {
-            require(['apps/help/about/controller'], function (Controller) {
-                API.controller = new Controller();
-                executeAction(API.controller.show);
+        about: function() {
+            requirejs(['apps/help/about/app'], function(Module) {
+                startModule(Module);
+            });
+        },
+
+        firstStart: function() {
+            if (!Number(Radio.request('configs', 'get:config', 'firstStart'))) {
+                return;
+            }
+
+            requirejs(['apps/help/firstStart/app'], function(Module) {
+                startModule(Module);
             });
         }
     };
 
-    App.addInitializer(function () {
-        new Help.Router({
-            controller: API
-        });
+    Help.on('before:start', function() {
+    });
+
+    Help.on('before:stop', function() {
+    });
+
+    // Add initializer
+    Radio.request('init', 'add', 'app', function() {
+        Radio.once('global', 'app:start', controller.firstStart, controller);
+
+        Radio.reply('Help', {
+            'show:about'        : controller.about,
+            'show:keybindings'  : controller.keybindings
+        }, controller);
     });
 
     return Help;

@@ -79,7 +79,7 @@
     "Credits": "Titri",
     "List of contributors": "Līdzstrādnieku saraksts",
     "List of all used libraries": "Izmantoto bibliotēku saraksts",
-    "Are you sure?": "Vai esat pārliecināts?",
+    "Are you sure?": "Vai esat pārliecināts/-a?",
     "You have unsaved changes.": "Jums ir nesaglabātas izmaiņas.",
     "Dropbox API key": "Dropbox API atslēga",
     "Required": "Obligāts",
@@ -98,7 +98,7 @@
     "Export settings": "Eksporta iestatījumi",
     "Wrong format": "Nepareizs formāts",
     "useDefaultConfigs": "Izmantot iestatījumus no noklusējuma profila",
-    "File chould be in json format": "Failam vajadzētu būt JSON formātā",
+    "File chould be in json format": "Failam vajag būt JSON formātā",
     "Close": "Aizvērt",
     "Hyperlink": "Hipersaite",
     "Editor": "Redaktors",
@@ -107,13 +107,13 @@
     "encryption": {
         "wait": "Lūdzu uzgaidīt līdz šifrēšana būs pabeigta",
         "error": "Šifrēšanas kļūda",
-        "errorConfirm": "Kļūa šifrējot datus.\r\r Ja Jūs mainījāt šifrēšanas iestātījumus citā pārlūkā, **atjauniniet Jūsu iestatījumus** arī šajā pārlūkā vai arī mēģiniet importēt iestatījumus.\r\r Ja tas neko nemaina, **mēģiniet ielogoties** atkal.",
+        "errorConfirm": "Kļūda šifrējot datus.\r\r Ja Jūs mainījāt šifrēšanas iestātījumus citā pārlūkā, **atjauniniet Jūsu iestatījumus** arī šajā pārlūkā vai arī mēģiniet importēt iestatījumus.\r\r Ja tas neko nemaina, **mēģiniet ielogoties** atkal.",
         "errorConfirmSettings": "Mainīt šifrēšanas parametrus",
         "errorConfirmAuth": "Mēģiniet atkal",
         "backup": {
-            "title": "Datu dublējumkopija",
-            "content": "Lūdzu, pirms ejiet uz nākamo soli, lejupielādējiet Jūsu dublējumkopiju. Tā satur atšifrētus iepriekšējos datus un mainītos profilus. Glabājiet to drošā vietā.",
-            "next": "Turpināt nelejupielādējot dublējumkopiju"
+            "title": "Datu rezerves kopija",
+            "content": "Lūdzu, pirms ejiet uz nākamo soli, lejupielādējiet Jūsu rezerves kopiju. Tā satur atšifrētus iepriekšējos datus un mainītos profilus. Glabājiet to drošā vietā.",
+            "next": "Turpināt nelejupielādējot rezerves kopiju"
         },
         "state": {
             "decrypt": "Atšifrē visu",
@@ -143,7 +143,7 @@
         "add": "Pievienot jaunu piezīmju grāmatiņu",
         "edit": "Rediģēt piezīmju grāmatiņu",
         "name": "Lūdzu, sniedziet piezīmju grāmatiņai nosaukumu",
-        "confirm remove": "Piezīmju grāmatiņa **__name__** tiks izdzēsta **uz mūžīgiem laikiem**!",
+        "confirm remove": "Piezīmju grāmatiņa **__name__** tiks izdzēsta **uz visiem laikiem**!",
         "remove with notes": "Jā, izdzēst ar pievienotajām piezīmēm",
         "remove": "Jā, izdzēst"
     },
@@ -151,18 +151,18 @@
         "name": "Taga nosaukums ir obligāts",
         "add": "Pievienot jaunu tagu",
         "edit": "Rediģēt tagu",
-        "confirm remove": "Tags **__name__** tiks dzēsts **uz mūžīgiem laikiem**!"
+        "confirm remove": "Tags **__name__** tiks dzēsts **uz visiem laikiem**!"
     },
     "dropbox": {
-        "auth confirm": "Tagad Jūs tiksiet novirzīts uz **Dropbox** autorizācijas lapu.\r> Lūdzu noklikšķiniet **OK** pogu.",
+        "auth confirm": "Tagad Jūs tiksiet novirzīts/-a uz **Dropbox** autorizācijas lapu.\r> Lūdzu noklikšķiniet **OK** pogu.",
         "auth title": "Dropbox autentifikācija"
     },
     "help": {
         "firststart title": "Laipni lūgti Laverna",
-        "firststart import": "Ja Jūs jau esat izmantojis Laverna iepriekš, Jūs varat importēt Jūsu iepriekšējos iestatījumu klikšķinot 'importēt' pogu lejup.",
-        "firststart next": "Ja nekad neesat lietojis Laverna līdz šim, klikšķiniet uz 'nākamā' pogas lai sāktu instalācijas procesu.",
+        "firststart import": "Ja Jūs jau esat lietojis/-usi Laverna iepriekš, Jūs varat importēt Jūsu iepriekšējos iestatījumu klikšķinot 'importēt' pogu lejup.",
+        "firststart next": "Ja nekad neesat lietojis/-usi Laverna līdz šim, klikšķiniet uz 'nākamā' pogas lai sāktu instalācijas procesu.",
         "firstart encryption": "Ja vēlaties izmantot šifrēšanu, lūdzu sniedziet šifrēšans paroli.",
-        "firstart sync": "Tā kā mes neglabājam jebkādus datus mūsu serveros, Jums vajag ieslēgt sinhronizāciju ar vienu no noadapteriem lai verētu skatīt savus pierakstus arī uz citām ierīcēm.",
-        "firstart backup": "Viss ir gandrīz gatavs. Jūs varat lejupielādēt savu iestatījumu dublējumkopiju un turpināt uz nākamo soli."
+        "firstart sync": "Tā kā mes neglabājam jebkādus datus mūsu serveros, Jums vajag ieslēgt sinhronizāciju ar vienu no no adapteriem lai verētu skatīt savas piezīmes arī uz citām ierīcēm.",
+        "firstart backup": "Viss ir gandrīz gatavs. Jūs varat lejupielādēt savu iestatījumu rezerves kopiju un turpināt uz nākamo soli."
     }
 }

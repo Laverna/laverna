@@ -13,7 +13,7 @@
     "Cancel": "Atcelt",
     "Full screen": "Pilnekrānā",
     "Preview": "Priekšskatījums",
-    "Normal": "Parasts",
+    "Normal": "Parasts skats",
     "Select notebook": "Izvēlēties kladi",
     "Title": "Nosaukums",
     "Submit": "Iesniegt",
@@ -35,8 +35,8 @@
     "Cloud storage": "Mākoņglabātuve",
     "Notes per page": "Piezīmes uz lapu",
     "Sort notebooks": "Kārtot klades",
-    "Name": "Nosaukums",
-    "Created": "Izveidota",
+    "Name": "Pēc nosaukuma",
+    "Created": "Pēc izveidošanas datuma",
     "Default edit mode": "Noklusējuma rediģēšanas režīms",
     "Fullscreen with preview": "Pilnekrāna ar priekšskatījumu",
     "Use encryption": "Izmantot šifrēšanu",
@@ -160,7 +160,7 @@
     "help": {
         "firststart title": "Laipni lūgti Laverna",
         "firststart import": "Ja Jūs jau esat lietojis/-usi Laverna iepriekš, Jūs varat importēt Jūsu iepriekšējos iestatījumu klikšķinot 'importēt' pogu lejup.",
-        "firststart next": "Ja nekad neesat lietojis/-usi Laverna līdz šim, klikšķiniet uz 'nākamā' pogas lai sāktu instalācijas procesu.",
+        "firststart next": "Ja nekad neesat lietojis/-usi Laverna līdz šim, klikšķiniet uz 'nākamā' pogas, lai sāktu instalācijas procesu.",
         "firstart encryption": "Ja vēlaties izmantot šifrēšanu, lūdzu sniedziet šifrēšans paroli.",
         "firstart sync": "Tā kā mēs neglabājam jebkādus datus mūsu serveros, Jums vajag ieslēgt sinhronizāciju ar vienu no no adapteriem lai varētu skatīt savas piezīmes arī uz citām ierīcēm.",
         "firstart backup": "Viss ir gandrīz gatavs. Jūs varat lejupielādēt savu iestatījumu rezerves kopiju un turpināt uz nākamo soli."

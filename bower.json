@@ -1,6 +1,6 @@
 {
   "name": "laverna",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "dependencies": {
     "ace": "#79eda6d2a8c4f788530cb5e6b238af67bfcc609d",
     "backbone": "~1.2.3",

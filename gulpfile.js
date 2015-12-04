@@ -231,9 +231,14 @@ gulp.task('copy:deps', ['clean:dist'], function() {
     var options = {base: './app/bower_components/'};
 
     return merge.apply(merge, [
+        gulp.src([
+            './LICENSE'
+        ], {base: './'})
+        .pipe(gulp.dest('./dist')),
+
         // Copy
         gulp.src([
-            './app/images/**/*.+(png|jpg|gif)',
+            './app/images/**/*.+(png|jpg|gif|ico|icns)',
             './app/docs/**',
             './app/locales/**',
             './app/.htaccess',
@@ -341,6 +346,7 @@ gulp.task('electron:copy', function() {
         './node_modules/send/**',
         './node_modules/serve-static/**',
         './node_modules/type-is/**',
+        './node_modules/open/**',
         './package.json'
     ], {base: './'})
     .pipe(gulp.dest('./dist/'));
@@ -365,6 +371,21 @@ gulp.task('electron', ['electron:copy'], function() {
             'linux-x64',
             'win32-ia32',
             'win32-x64'
-        ]
+        ],
+        platformResources: {
+            darwin: {
+                CFBundleDisplayName : pkg.name,
+                CFBundleIdentifier  : pkg.name,
+                CFBundleName        : pkg.name,
+                CFBundleVersion     : pkg.version,
+                icon                : './app/images/icon/icon-512x512.icns'
+            },
+            win: {
+                'version-string'    : pkg.version,
+                'file-version'      : pkg.version,
+                'product-version'   : pkg.version,
+                'icon'              : './resources/app/images/icon/icon-120x120.png'
+            }
+        }
     }));
 });

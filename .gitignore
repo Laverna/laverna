@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
 dist
+release
 .tmp
 .sass-cache
 app/bower_components

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -160,7 +160,7 @@ define([
          */
         getConfig: function(name, defaultValue) {
             var config = this.getObject()[name];
-            return config ? config : defaultValue;
+            return !_.isUndefined(config) ? config : defaultValue;
         },
 
         /**
@@ -347,17 +347,59 @@ define([
          * Check whether there are any changes in encryption configs.
          */
         _getEncryption: function(collection) {
-            var encrSet = [
-                'encrypt'    , 'encryptPass', 'encryptSalt'  ,
-                'encryptIter', 'encryptTag' , 'encryptKeySize'
-            ];
-            return _.filter(collection, function(value, key) {
-                key = (typeof value === 'object' ? value.name : key);
-                return (
-                    _.indexOf(encrSet, key) > -1 ||
-                    _.indexOf(encrSet, value) > -1
-                );
-            });
+
+            // Don't create a backup if encryption is not used in both new and old configs
+            if ((!collection.encrypt || !Number(collection.encrypt.value)) &&
+                !Number(this.getConfig('encrypt'))) {
+
+                return [];
+            }
+
+            // Disable encryption if password is empty in both configs
+            if ((!collection.encryptPass || !collection.encryptPass.value.length) &&
+                !this.getConfig('encryptPass').length) {
+
+                collection.encrypt = {value : '0', name: 'encrypt'};
+                return [];
+            }
+
+            var self    = this,
+                encrSet = [
+                    'encrypt'    , 'encryptPass', 'encryptSalt'  ,
+                    'encryptIter', 'encryptTag' , 'encryptKeySize'
+                ];
+
+            return _.filter(collection, function(value) {
+
+                // Compare values
+                if (typeof value === 'object') {
+                    return (
+                        _.indexOf(encrSet, value.name) > -1 &&
+                        self.getConfig(value.name) !== value.value &&
+                        self._checkPassChanged(value)
+                    );
+                }
+
+                return (_.indexOf(encrSet, value) > -1);
+            }, this);
+        },
+
+        _checkPassChanged: function(object) {
+            if (object.name !== 'encryptPass') {
+                return true;
+            }
+
+            var pass = this.getConfig('encryptPass');
+            pass     = pass ? pass.toString() : pass;
+
+            // Password salt was saved
+            if (pass === object.value) {
+                return false;
+            }
+
+            // Additional check to make sure it's not the same password
+            var salt = Radio.request('encrypt', 'sha256', object.value);
+            return (salt.toString() !== pass);
         },
 
         /**
@@ -379,8 +421,14 @@ define([
         _backupEncryption: function(objects) {
             var changed = _.pluck(this._getEncryption(objects), 'name');
 
-            // Encryption configs have not changed
-            if (_.isEmpty(changed)) {
+            /*
+             * Don't create encryption backup if:
+             * Encryption configs have not changed
+             * or
+             * there is already a backup.
+             */
+            if (_.isEmpty(changed) ||
+                _.keys(this.getConfig('encryptBackup')).length) {
                 return;
             }
 

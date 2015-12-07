@@ -110,7 +110,7 @@ define([
             // Backup current encryption configs
             if (objects.useDefaultConfigs) {
                 promises.push(
-                    this._backupEncrypt(useDefault.database.id)
+                    this._backupEncrypt(useDefault.profileId)
                 );
             }
 
@@ -123,7 +123,7 @@ define([
             // return;
             _.forEach(objects, function(object) {
                 promises.push(
-                    new Q(self.saveObject(object, useDefault, {profile: useDefault.database.id}))
+                    new Q(self.saveObject(object, useDefault, {profile: useDefault.profileId}))
                 );
             }, this);
 
@@ -235,12 +235,12 @@ define([
          * returns only current profile.
          */
         getProfiles: function() {
-            var current = this.collection.database.id,
+            var current = this.collection.profileId,
                 backup  = this.collection.get('encryptBackup');
 
             // If it is not the default profile, return only current profile
-            if (current !== this.defaultDB || backup.database.id !== this.defaultDB) {
-                return new Q([backup.database]);
+            if (current !== this.defaultDB || backup.profileId !== this.defaultDB) {
+                return new Q([backup.profileId]);
             }
 
             /*
@@ -275,7 +275,7 @@ define([
                 profiles = _.filter(profiles, function(profile) {
                     return (
                         Number(profile.get('value')) === 1 ||
-                        profile.database.id === self.defaultDB
+                        profile.profileId === self.defaultDB
                     );
                 });
 

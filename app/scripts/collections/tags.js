@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,10 +11,8 @@ define([
     'backbone',
     'collections/pageable',
     'backbone.radio',
-    'models/tag',
-    'migrations/note',
-    'indexedDB'
-], function(_, Backbone, PageableCollection, Radio, Tag, TagsDB) {
+    'models/tag'
+], function(_, Backbone, PageableCollection, Radio, Tag) {
     'use strict';
 
     /**
@@ -23,8 +21,8 @@ define([
     var Tags = PageableCollection.extend({
         model: Tag,
 
-        database : TagsDB,
-        storeName: 'tags',
+        profileId : 'notes-db',
+        storeName : 'tags',
 
         state: {
             pageSize     : 20,

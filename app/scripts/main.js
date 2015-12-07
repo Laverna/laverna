@@ -57,6 +57,7 @@ requirejs.config({
 
         // Storage adapters
         localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
+        localforage           : '../bower_components/localforage/dist/localforage',
         indexedDB             : '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
         IndexedDBShim         : '../bower_components/IndexedDBShim/dist/indexeddbshim',
         remotestorage         : '../bower_components/remotestorage.js/release/stable/remotestorage',

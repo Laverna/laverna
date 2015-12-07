@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -81,19 +81,16 @@ define([
          */
         changeDatabase: function(options) {
             var profile  = options && options.profile ? options.profile : this.defaultDB,
-                database = _.extend({}, this.Collection.prototype.database, {
-                    id: profile
-                }),
                 model,
                 collection;
 
             model  = this.Collection.prototype.model.extend({
-                database : database
+                profileId : profile
             });
 
             collection = this.Collection.extend({
-                database : database,
-                model    : model
+                profileId : profile,
+                model     : model
             });
 
             return collection;
@@ -261,7 +258,7 @@ define([
 
             // In case if the collection isn't empty, get the model from there.
             if (this.collection &&
-                this.collection.database.id === model.database.id &&
+                this.collection.profileId === model.profileId &&
                 this.collection.get(options[idAttr])) {
                 return new Q(this.collection.get(options[idAttr]));
             }

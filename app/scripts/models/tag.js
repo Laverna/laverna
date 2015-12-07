@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,11 +9,8 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'backbone.radio',
-    'collections/removed',
-    'migrations/note'
-], function($, _, Backbone, Radio, Removed, TagsDB) {
+    'backbone'
+], function($, _, Backbone) {
     'use strict';
 
     /**
@@ -22,8 +19,8 @@ define([
     var Tag = Backbone.Model.extend({
         idAttribute: 'id',
 
-        database : TagsDB,
-        storeName: 'tags',
+        profileId : 'notes-db',
+        storeName : 'tags',
 
         defaults: {
             'type'         : 'tags',
@@ -60,13 +57,6 @@ define([
             if (errors.length > 0) {
                 return errors;
             }
-        },
-
-        /**
-         * Saves model's id for sync purposes, then destroys it
-         */
-        destroySync: function() {
-            return new Removed().newObject(this, arguments);
         },
 
         updateDate: function() {

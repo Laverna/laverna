@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,18 +8,15 @@
 /*global define*/
 define([
     'underscore',
-    'backbone',
-    'migrations/note',
-    'collections/removed',
-    'indexedDB'
-], function(_, Backbone, NotesDB, Removed) {
+    'backbone'
+], function(_, Backbone) {
     'use strict';
 
     var Model = Backbone.Model.extend({
         idAttribute: 'id',
 
-        database: NotesDB,
-        storeName: 'notebooks',
+        profileId : 'notes-db',
+        storeName : 'notebooks',
 
         defaults: {
             'type'         : 'notebooks',
@@ -63,13 +60,6 @@ define([
         updateDate: function() {
             this.set('updated', Date.now());
             this.set('synchronized', 0);
-        },
-
-        /**
-         * Saves model's id for sync purposes, then destroys it
-         */
-        destroySync: function() {
-            return new Removed().newObject(this, arguments);
         },
 
         addCount: function() {

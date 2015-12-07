@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -102,7 +102,7 @@ define([
             options.filter  = options.filter || 'active';
 
             // Do not fetch twice
-            if (this.collection && this.collection.database.id === options.profile) {
+            if (this.collection && this.collection.profileId === options.profile) {
                 this.collection.models = this.collection.getTree();
                 return new Q(
                     this.collection

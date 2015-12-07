@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -47,7 +47,7 @@ define([
 
             // Before saving the model, add tags
             return new Q(Radio.request('tags', 'add', data.tags || [], {
-                profile: model.database.id
+                profile: model.profileId
             }))
             .then(function() {
                 return saveFunc(model, data);
@@ -117,7 +117,7 @@ define([
                 conditions: {
                     notebookId: notebook.id
                 },
-                profile : notebook.database.id,
+                profile : notebook.profileId
             })
             .then(function(notes) {
                 if (notes.length === 0) {

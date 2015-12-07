@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,17 +8,14 @@
 /*global define*/
 define([
     'underscore',
-    'backbone',
-    'sjcl',
-    'migrations/note',
-    'indexedDB'
-], function(_, Backbone, sjcl, DB) {
+    'backbone'
+], function(_, Backbone) {
     'use strict';
 
     var Config = Backbone.Model.extend({
         idAttribute: 'name',
 
-        database  : DB,
+        profileId : 'notes-db',
         storeName : 'configs',
 
         defaults: {
@@ -42,8 +39,7 @@ define([
          * Switch to another profile
          */
         changeDB: function(id) {
-            this.database = _.extend({}, this.database);
-            this.database.id = id;
+            this.profileId = id;
         },
 
         /**

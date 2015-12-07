@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,17 +11,15 @@ define([
     'backbone',
     'backbone.radio',
     'collections/pageable',
-    'migrations/note',
     'models/note',
     'fuse',
-    'indexedDB'
-], function(_, Backbone, Radio, PageableCollection, NotesDB, Note, Fuse) {
+], function(_, Backbone, Radio, PageableCollection, Note, Fuse) {
     'use strict';
 
     var Notes = PageableCollection.extend({
         model: Note,
 
-        database  : NotesDB,
+        profileId : 'notes-db',
         storeName : 'notes',
 
         state: {

@@ -13,6 +13,7 @@ define([
     'backbone.radio',
     'app',
     'initializers',
+    'backbone.sync',
     'bootstrap'
 ], function($, Q, shim, Radio, App) {
     'use strict';
@@ -27,7 +28,6 @@ define([
     // Load all modules then start an application
     requirejs([
         // Helpers
-        'helpers/storage',
         'helpers/uri',
         'helpers/install',
         'helpers/title',
@@ -62,7 +62,7 @@ define([
         'modules/fuzzySearch/module',
         'modules/codePrettify/module',
         'modules/mathjax/module'
-    ], function(storage) {
+    ], function() {
         // Get profile name from location hash
         var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
         profile     = (!profile ? profile : profile[profile.index]);
@@ -70,7 +70,6 @@ define([
         console.warn('prof', profile);
 
         Radio.request('configs', 'get:all', {profile: profile})
-        .then(storage.check)
         .then(function() {
             var modules = [],
                 defer   = Q.defer();

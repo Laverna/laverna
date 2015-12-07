@@ -49,7 +49,7 @@ app.on('ready', function() {
         height               : windowState.height,
         x                    : windowState.x,
         y                    : windowState.y,
-        'node-integration'   : false,
+        'node-integration'   : true,
         'auto-hide-menu-bar' : true,
         'icon'               : './resources/app/images/icon/icon-120x120.png'
     });

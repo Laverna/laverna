@@ -72,7 +72,7 @@ define([
                 return self.getModel({id: id.join(''), profile: options.profile});
             })
             .then(function(model) {
-                if (!model) {
+                if (!model || !model.get('name').length) {
                     model = new (self.changeDatabase(options)).prototype.model();
                     return self.saveModel(model, {name: tag});
                 }

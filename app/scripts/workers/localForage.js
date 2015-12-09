@@ -57,6 +57,10 @@ requirejs([
                     return defer.reject(err);
                 }
 
+                if (!data) {
+                    defer.reject('not found');
+                }
+
                 return defer.resolve(data);
             });
 

@@ -273,7 +273,7 @@ define([
                 .thenResolve(model);
             })
             .fail(function(e) {
-                if (typeof e === 'string' && e.search('not found')) {
+                if (typeof e === 'string' && e.search('not found') > -1) {
                     return null;
                 }
                 throw new Error(e);

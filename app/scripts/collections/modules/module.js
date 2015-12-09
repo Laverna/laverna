@@ -226,6 +226,8 @@ define([
          */
         remove: function(model, options) {
             var self = this;
+
+            // Change model's attributes to default values (empty values)
             model = typeof model === 'string' ? model : model.id;
             model = new (this.changeDatabase(options)).prototype.model({id: model});
 

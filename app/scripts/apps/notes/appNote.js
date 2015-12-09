@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -132,7 +132,7 @@ define([
         removeNote: function(id) {
             requirejs(['apps/notes/remove/controller'], function(Controller) {
                 API.notesArg.id = null;
-                new Controller({id: id});
+                new Controller(_.extend({}, API.notesArg || {}, {id: id}));
             });
         },
 

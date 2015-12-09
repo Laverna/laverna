@@ -28,11 +28,15 @@ define([
         /**
          * Remove an existing notebook.
          * @type object Backbone model
+         * @type object options
          * @type boolean true if all attached notes should be removed
          */
-        remove: function(model, remove) {
+        remove: function(model, options, remove) {
             var self = this;
-            model = (typeof model === 'string' ? this.getModel(model) : model);
+
+            if (typeof model === 'string') {
+                model = this.getModel(_.extend({id: model}, options));
+            }
 
             /**
              * Move child models to a higher level.
@@ -49,7 +53,7 @@ define([
             })
             .then(function(model) {
                 var removeFunc = _.bind(ModuleObject.prototype.remove, self);
-                return removeFunc(model);
+                return removeFunc(model, options);
             });
         },
 
@@ -60,7 +64,7 @@ define([
         updateChildren: function(model) {
             var self = this;
 
-            return this.getChildren(model.id)
+            return this.getChildren(model.id, {profile: model.profileId})
             .then(function(collection) {
                 var promises = [];
 
@@ -79,7 +83,7 @@ define([
          * Returns models with the specified parent ID.
          * @type string
          */
-        getChildren: function(parentId) {
+        getChildren: function(parentId, options) {
             // Just filter an existing collection
             if (this.collection) {
                 var collection = this.collection.clone();
@@ -87,7 +91,10 @@ define([
                 return Q.resolve(collection);
             }
 
-            return this.fetch({conditions: {parentId: parentId}});
+            return this.fetch(_.extend(
+                {conditions: {parentId: parentId}},
+                options || {}
+            ));
         },
 
         /**

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -46,16 +46,15 @@ define([
             $(window).on('hashchange', this.checkProfile);
 
             // Replies
-            this.vent
-            .reply('navigate', this.navigate, this)
-            .reply('back', this.navigateBack, this);
-
-            // Replies
-            this.vent
-            .reply('profile', this.getProfile, this)
-            .reply('link:profile', this.getProfileLink, this)
-            .reply('link:file', this.getFileLink, this)
-            .reply('link', this.getLink, this);
+            this.vent.reply({
+                'navigate'      : this.navigate,
+                'back'          : this.navigateBack,
+                'profile'       : this.getProfile,
+                'link:profile'  : this.getProfileLink,
+                'link:file'     : this.getFileLink,
+                'link'          : this.getLink,
+                'get:current'   : this.getRoute,
+            }, this);
         },
 
         checkProfile: function() {

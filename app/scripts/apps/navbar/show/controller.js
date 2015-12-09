@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -64,13 +64,9 @@ define([
         },
 
         show: function(configs, notebooks, profiles, title) {
-            var currentApp = Radio.request('global', 'app:current').moduleName,
-                args;
+            var args;
 
             args = _.extend({title: title}, this.options);
-            args.currentUrl = Radio.request('uri', 'link:profile', (
-                currentApp === 'AppNotebooks' ? '/notebooks' : '/notes'
-            ));
 
             this.view = new View({
                 args       : args,

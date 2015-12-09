@@ -1,116 +1,84 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-/* global define, Modernizr */
+/* global define, requirejs, Modernizr */
 define([
     'underscore',
-    'jquery',
-    'backbone',
-    'marionette',
-    'IndexedDBShim',
-    'localStorage'
-], function(_, $, Backbone) {
+    'q',
+    'backbone'
+], function(_, Q, Backbone) {
     'use strict';
 
     /**
-     * Check if browser has web storage support
+     * Used for checking indexedDB support in a browser.
      */
-    var channel = Backbone.Radio.channel('global'),
-        Storage;
-
-    Storage = Backbone.Marionette.Controller.extend({
-        storage: 'indexeddb',
-
-        initialize: function() {
-            _.bindAll(this, 'check', 'getName');
-
-            // Response to 'storage' request
-            channel.reply('storage', this.getName);
-        },
-
-        getName: function() {
-            return this.storage;
-        },
+    var Storage = {
 
         /**
-         * Tests for web storage support
+         * If indexeddb isn't available use sync adapter without workers.
          * @return promise
          */
         check: function() {
-            this.promise = $.Deferred();
 
-            // Test if indexeddb is disabled
-            if (Modernizr.indexeddb) {
-                this.testIndexedDB();
-            }
-            // IndexedDB is not available but WebSQL is
-            else if (Modernizr.websqldatabase) {
-                console.warn('IndexedDB is not available, switched to WebSQL');
-
-                this.storage = 'websql';
-                window.shimIndexedDB.__useShim(true);
-                this.promise.resolve();
-            }
-            // Use localstorage if indexeddb is not available
-            else if (Modernizr.localstorage) {
-                this.useLocalStorage();
-            }
-            // It doesn't support neither indexeddb nor websql nor localstorage
-            else {
-                console.error('Browser doesn\'t have web storage support');
-
-                this.storage = null;
-                channel.trigger('storage:error');
-                this.promise.reject();
+            // Browser doesn't support indexeddb at all
+            if (!Modernizr.indexeddb) {
+                return this.switchDb('backbone.noworker.sync');
             }
 
-            return this.promise;
+            var self = this;
+
+            return this.testDb()
+            .then(function() {
+                return self.switchDb('backbone.sync');
+            })
+            .fail(function() {
+                return self.switchDb('backbone.noworker.sync');
+            });
         },
 
         /**
-         * If Firefox is used in private mode, indexedDB is not available
+         * Test if indexeddb can be used by opening a database.
+         * @return promise
          */
-        testIndexedDB: function() {
-            var request = window.indexedDB.open('isPrivateMode'),
-                self = this;
+        testDb: function() {
+            var defer   = Q.defer(),
+                request = window.indexedDB.open('isPrivateMode');
 
             request.onerror = function() {
-                self.useLocalStorage();
+                defer.reject();
             };
 
             request.onsuccess = function() {
-                self.promise.resolve();
+                defer.resolve();
             };
+
+            return defer.promise;
         },
 
         /**
-         * If Indexeddb is not available, use localstorage
+         * Override Backbone.sync with our own adapter.
+         * @return promise
          */
-        useLocalStorage: function() {
-            console.warn('IndexedDB is not available, switched to localStorage');
+        switchDb: function(syncFile) {
+            var defer = Q.defer();
 
-            // Rewrite sync method
-            Backbone.sync = function(method, model, options) {
-                if (model.storeName) {
-                    model.localStorage = new Backbone.LocalStorage(
-                        'laverna.' + model.storeName
-                    );
-                    model.store = model.storeName;
-                }
+            requirejs([syncFile], function(Adapter) {
 
-                return Backbone.getSyncMethod(model)
-                    .apply(this, [method, model, options]);
-            };
+                // Override Backbone's sync adapter
+                Backbone.ajaxSync = Backbone.sync;
+                Backbone.sync     = Adapter.sync();
 
-            this.storage = 'localstorage';
-            channel.trigger('storage:local');
-            this.promise.resolve();
-        }
-    });
+                defer.resolve();
+            });
 
-    return new Storage();
+            return defer.promise;
+        },
+
+    };
+
+    return Storage;
 });

@@ -8,9 +8,8 @@
 /* global define */
 define([
     'q',
-    'underscore',
-    'backbone'
-], function(Q, _, Backbone) {
+    'underscore'
+], function(Q) {
     'use strict';
 
     var Adapter = {
@@ -193,10 +192,6 @@ define([
         }
 
     };
-
-    // Override Backbone's sync adapter
-    Backbone.ajaxSync = Backbone.sync;
-    Backbone.sync     = Adapter.sync();
 
     return Adapter;
 });

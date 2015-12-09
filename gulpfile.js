@@ -171,6 +171,7 @@ gulp.task('build:js', ['clean:dist'], function() {
             'workers': 'empty:'
         },
         exclude                : [
+            'helpers/db',
             'mathjax',
             'dropbox',
             'tv4',
@@ -251,6 +252,7 @@ gulp.task('copy:deps', ['clean:dist'], function() {
 
         // Copy and minify
         gulp.src([
+            './app/scripts/helpers/db.js',
             './app/scripts/workers/localForage.js',
             './app/bower_components/requirejs/require.js',
             './app/bower_components/modernizr/modernizr.js',

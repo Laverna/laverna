@@ -166,8 +166,10 @@ gulp.task('build:js', ['clean:dist'], function() {
         name: 'main',
         baseUrl                : './app/scripts',
         mainConfigFile         : './app/scripts/main.js',
-        out                    : 'main.js',
         optimize               : 'none',
+        paths: {
+            'workers': 'empty:'
+        },
         exclude                : [
             'mathjax',
             'dropbox',
@@ -249,8 +251,12 @@ gulp.task('copy:deps', ['clean:dist'], function() {
 
         // Copy and minify
         gulp.src([
+            './app/scripts/workers/localForage.js',
             './app/bower_components/requirejs/require.js',
             './app/bower_components/modernizr/modernizr.js',
+            './app/bower_components/q/q.js',
+            './app/bower_components/underscore/underscore.js',
+            './app/bower_components/localforage/dist/localforage.js',
             './app/bower_components/dropbox/dropbox.js',
             './app/bower_components/remotestorage.js/release/stable/remotestorage.js',
             './app/bower_components/tv4/tv4.js',

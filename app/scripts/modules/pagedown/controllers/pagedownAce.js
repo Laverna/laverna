@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -118,7 +118,7 @@ define([
             // Configure it
             this.editor.getSession().setMode('ace/mode/markdown');
             this.editor.setTheme('ace/theme/github');
-            this.editor.setFontSize(16);
+            this.editor.setFontSize(14);
 
             // this.editor.setOption('spellcheck', true);
             this.editor.setHighlightActiveLine(true);

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -119,7 +119,7 @@ define([
          */
         initEncrypt: function() {
             var promises = [],
-                profile  = (this.profiles.length === 1 ? this.profiles[0].id : 'notes-db'),
+                profile  = (this.profiles.length === 1 ? this.profiles[0] : 'notes-db'),
                 self     = this;
 
             this.rawData = {};
@@ -135,7 +135,7 @@ define([
                     return self.vent.request('save:secureKey', self.passwords.old)
                     .then(function() {
                         return self.encryptProfile({
-                            profile: profile.id
+                            profile: profile
                         });
                     });
                 });

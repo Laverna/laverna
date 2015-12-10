@@ -279,7 +279,7 @@ define([
                     );
                 });
 
-                return _.pluck(profiles, 'database');
+                return _.pluck(profiles, 'profileId');
             });
         },
 

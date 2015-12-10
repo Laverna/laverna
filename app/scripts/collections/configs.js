@@ -71,8 +71,8 @@ define([
          * Switch to another profile
          */
         changeDB: function(id) {
-            this.database = _.extend({}, this.database, {id: id});
-            this.model.prototype.database = this.database;
+            this.profileId = id;
+            this.model.prototype.profileId = this.profileId;
         },
 
         /**

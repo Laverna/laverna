@@ -21,10 +21,14 @@
 }
 
 // Default view for all tables inside of notes
-.layout--body.-note {
+.layout--body.-note,
+.layout--body.-form {
     table {
         &:extend(.table all);
         &:extend(.table-striped all);
         &:extend(.table-hover all);
+    }
+    img {
+        &:extend(.img-responsive);
     }
 }

@@ -123,7 +123,10 @@ define([
         searchSubmit: function() {
             this.ui.search.blur();
 
-            this.trigger('search:submit', this.ui.search.val().trim());
+            if (this.ui.search.val().trim().length) {
+                this.trigger('search:submit', this.ui.search.val().trim());
+            }
+
             Radio.trigger('global', 'search:hidden');
 
             return false;

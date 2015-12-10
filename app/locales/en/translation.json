@@ -155,7 +155,11 @@
     },
     "dropbox": {
         "auth confirm": "Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.",
-        "auth title": "Dropbox auth"
+        "auth title": "Dropbox auth",
+        "api info 1": "You can have your own API key on",
+        "api info 2": "When you create a new app at Dropbox's Developer site you should keep in mind that:",
+        "api info li 1": "Type of app should be Dropbox API app",
+        "api info li 2": "Type of data should be Files and datastores"
     },
     "help": {
         "firststart title": "Welcome to Laverna",

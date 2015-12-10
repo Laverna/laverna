@@ -20,11 +20,11 @@
         <input id="dropboxKey" type="text" name="dropboxKey" class="form-control" value="{{ models.dropboxKey }}" placeholder="<% if(dropboxKeyNeed) { %>{{i18n('Required')}}!<% } else { %>{{i18n('Optional')}}<% } %>" />
     </div>
     <div class="popover-dropbox hidden">
-        <p>You can have your own API key <a target="_blank" href="https://www.dropbox.com/developers/apps">here</a>.</p>
-        <p>When you create a new app at Dropbox's Developer site you should keep in mind that:</p>
+        <p>{{i18n('dropbox.api info 1')}} <a target="_blank" href="https://www.dropbox.com/developers/apps">Dropbox</a></p>
+        <p>{{i18n('dropbox.api info 2')}}</p>
         <ol>
-            <li>Type of app should be <b>Dropbox API app</b></li>
-            <li>Type of data should be <b>Files and datastores</b></li>
+            <li>{{i18n('dropbox.api info li 1')}}</li>
+            <li>{{i18n('dropbox.api info li 2')}}</li>
         </ol>
     </div>
 </div>

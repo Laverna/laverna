@@ -82,8 +82,6 @@ requirejs.config({
         // Aliases
         'modalRegion'         : 'views/modal',
         'brandRegion'         : 'views/brand',
-        'checklist'           : 'libs/checklist',
-        'tags'                : 'libs/tags',
         'apps'                : 'apps',
         'locales'             : '../locales'
     },

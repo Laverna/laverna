@@ -29,7 +29,6 @@ define([
         // Helpers
         'helpers/storage',
         'helpers/uri',
-        'helpers/install',
         'helpers/title',
         'helpers/i18next',
         'helpers/keybindings',

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -30,11 +30,15 @@ define([
         title: {
             page : '',
             main : '',
+            db   : '',
             app  : 'Laverna'
         },
 
         initialize: function() {
             _.bindAll(this, '_makeTitle');
+
+            this.title.db = Radio.request('uri', 'profile');
+            this.title.db = this.title.db === 'notes-db' ? '' : this.title.db;
 
             this.vent = Radio.channel('global');
             this.vent.reply('get:title', this.getTitle, this);

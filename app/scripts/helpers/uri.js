@@ -164,7 +164,7 @@ define([
     /**
      * Add a new initializer
      */
-    Radio.request('init', 'add', 'app', function() {
+    Radio.request('init', 'add', 'app:before', function() {
         new Uri();
     });
 

@@ -3,7 +3,6 @@ define([
     'underscore',
     'jquery',
     'chai-jquery',
-    'IndexedDBShim',
     'i18next',
     'helpers/i18next',
     'bootstrap'

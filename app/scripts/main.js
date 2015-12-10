@@ -103,15 +103,6 @@ requirejs.config({
         },
 
         // Storage adapters
-        localStorage: {
-            deps: ['underscore', 'backbone']
-        },
-        indexedDB: {
-            deps: ['underscore', 'backbone']
-        },
-        'IndexedDBShim': {
-            exports: 'shimIndexedDB'
-        },
         dropbox: {
             exports: 'Dropbox'
         },

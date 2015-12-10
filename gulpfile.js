@@ -187,6 +187,8 @@ gulp.task('build:js', ['clean:dist'], function() {
             'apps/settings/show/views/profiles',
             'apps/settings/show/views/showView',
             'apps/settings/show/views/sync',
+            'backbone.sync',
+            'backbone.noworker.sync',
             'modules/remotestorage/module',
             'modules/dropbox/module'
         ],

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -34,7 +34,8 @@ define([
 
         reply: function() {
             return {
-                'get:files'  : this.getFiles
+                'get:files'  : this.getFiles,
+                'save:all'   : this.saveAll
             };
         },
 
@@ -79,17 +80,21 @@ define([
         saveAll: function(data, options) {
             var promises = [],
                 self     = this,
+                files    = [],
                 model;
 
             _.each(data, function(imgData) {
                 promises.push(function() {
                     model = new (self.changeDatabase(options)).prototype.model();
-                    return self.saveModel(model, imgData);
+                    return self.saveModel(model, imgData)
+                    .then(function(file) {
+                        files.push(file);
+                    });
                 });
             });
 
             return _.reduce(promises, Q.when, new Q())
-            .then(function(files) {
+            .then(function() {
                 Radio.trigger('files', 'saved:all');
                 return files;
             });

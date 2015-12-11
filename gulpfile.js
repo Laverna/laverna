@@ -300,7 +300,7 @@ gulp.task('copy:deps', ['clean:dist'], function() {
  * Generate HTML5 cache manifest file.
  */
 gulp.task('manifest', ['build:before'], function() {
-    return gulp.src('dist/**', {base: './'})
+    return gulp.src('dist/**', {base: './dist'})
     .pipe(manifest({
         hash         : true,
         preferOnline : true,

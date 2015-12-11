@@ -370,6 +370,7 @@ gulp.task('electron:copy', function() {
         './node_modules/serve-static/**',
         './node_modules/type-is/**',
         './node_modules/open/**',
+        './node_modules/mkdirp/**',
         './package.json'
     ], {base: './'})
     .pipe(gulp.dest('./dist/'));

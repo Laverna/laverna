@@ -11,7 +11,7 @@ script:
     - gulp build
     - gulp server:dist &
     - set -e
-    - gulp nightwatch --env ci
+    - gulp nightwatch --env ci; echo $?
     - killall gulp
 after_failure:
     - killall gulp

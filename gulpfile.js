@@ -22,6 +22,7 @@ var gulp         = require('gulp'),
 
     // Testing libraries
     jshint       = require('gulp-jshint'),
+    jsonlint     = require('gulp-jsonlint'),
     mocha        = require('gulp-mocha-phantomjs'),
     nightwatch   = require('gulp-nightwatch');
 
@@ -76,10 +77,22 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('fail'));
 });
 
+gulp.task('jsonlint', function() {
+    return gulp.src([
+        'app/manifest.webapp',
+        'bower.json',
+        'package.json',
+        'app/**/*.json'
+    ])
+    .pipe(jsonlint())
+    .pipe(jsonlint.failAfterError())
+    .pipe(jsonlint.reporter());
+});
+
 /**
  * Run unit tests.
  */
-gulp.task('mocha', ['jshint'], function() {
+gulp.task('mocha', ['jshint', 'jsonlint'], function() {
     return gulp.src('./test/index.html')
     .pipe(mocha({
     }))

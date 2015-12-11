@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - 'stable'
 before_install:
-    - npm install -g gulp bower
+    - npm install -g gulp bower jshint
 install:
     - npm install
     - bower install

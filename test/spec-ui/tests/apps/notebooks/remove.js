@@ -1,16 +1,18 @@
-/* global describe, before, after, it */
 'use strict';
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    notebookCount;
 
 /**
  * Notebook removal test
  */
-describe('#/notebooks/remove', function() {
-    var notebookCount;
+module.exports = {
 
-    before(function(client, done) {
-        client.urlHash('notes');
-        client.expect.element('#header--add').to.be.visible.before(50000);
+    before: function(client, done) {
+        client.closeWelcome();
+
+        client.urlHash('notes')
+        .expect.element('#header--add').to.be.visible.before(50000);
+
         client.urlHash('notebooks');
 
         client.expect.element('#header--add').to.be.visible.before(5000);
@@ -18,13 +20,13 @@ describe('#/notebooks/remove', function() {
             notebookCount = res.value.length;
             done();
         });
-    });
+    },
 
-    after(function(client, done) {
-        done();
-    });
+    after: function(client) {
+        client.end();
+    },
 
-    it('can remove a notebook', function(client) {
+    'can remove a notebook': function(client) {
         // Prepare a notebook to delete
         client.addNotebook({name: '1.ToRemove', parentId: 0});
 
@@ -46,18 +48,18 @@ describe('#/notebooks/remove', function() {
         client.pause(500);
 
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
-    });
+    },
 
-    it('deleted notebooks don\'t re-appear after url change', function(client) {
+    'deleted notebooks don\'t re-appear after url change': function(client) {
         client
         .urlHash('notes')
         .pause(1000)
         .urlHash('notebooks');
 
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
-    });
+    },
 
-    it('nested notebooks are not removed, but their parentId is changed', function(client) {
+    'nested notebooks are not removed, but their parentId is changed': function(client) {
         // Prepare notebooks
         client.addNotebook({name: '1.ToRemove', parentId: 0});
         client.addNotebook({name: '1.NestedRemove', parentId: '1.ToRemove'});
@@ -83,9 +85,9 @@ describe('#/notebooks/remove', function() {
         client.expect.element('#notebooks').text.not.to.contain('1.ToRemove').before(5000);
         client.expect.element('#notebooks').text.to.contain('1.NestedRemove').before(5000);
         client.expect.element('#notebooks').text.to.contain('1.RemoveNested').before(5000);
-    });
+    },
 
-    it('cleanup', function(client) {
+    'cleanup': function(client) {
         client
         .urlHash('notes')
         .pause(100)
@@ -114,7 +116,7 @@ describe('#/notebooks/remove', function() {
                 done();
             });
         });
-    });
+    },
 
     // @TODO add tests for notes behaviour after linked notebooks are deleted
-});
+};

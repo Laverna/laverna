@@ -1,20 +1,23 @@
-/* global describe, before, it */
 'use strict';
 var expect = require('chai').expect;
 
-describe('/notes/f/active/show/:id:', function() {
+module.exports = {
 
-    before(function(client, done) {
-        done();
-    });
+    before: function(client) {
+        client.closeWelcome();
+    },
 
-    it('wait', function(client) {
+    after: function(client) {
+        client.end();
+    },
+
+    'wait': function(client) {
         client
         .urlHash('notes')
         .expect.element('.list').to.be.present.before(50000);
-    });
+    },
 
-    it('can open a note from the list', function(client) {
+    'can open a note from the list': function(client) {
         client
         .addNote({title: 'A new note', content: 'Note content\r[ ] A task\r[ ] The second task'})
         .addNote({title: 'A second note', content: 'Note content 2\r[ ] A task\r[ ] The second task'})
@@ -30,43 +33,43 @@ describe('/notes/f/active/show/:id:', function() {
 
         client.expect.element('.layout--body.-note').to.be.present.before(2000);
         client.assert.urlContains('notes/f/active/show/');
-    });
+    },
 
-    it('shows edit button', function(client) {
+    'shows edit button': function(client) {
         client.expect.element('.note--edit').to.be.visible.before(2000);
-    });
+    },
 
-    it('shows remove button', function(client) {
+    'shows remove button': function(client) {
         client.expect.element('.note--remove').to.be.visible.before(2000);
-    });
+    },
 
-    it('shows "favourite" button', function(client) {
+    'shows "favourite" button': function(client) {
         client.expect.element('.btn--favourite').to.be.visible.before(2000);
-    });
+    },
 
-    it('has tasks', function(client) {
+    'has tasks': function(client) {
         client.expect.element('.layout--body.-note').to.be.present.before(5000);
         client.expect.element('.layout--body.-note .checkbox--input').to.be.present.before(5000);
-    });
+    },
 
-    it('shows the task progress', function(client) {
+    'shows the task progress': function(client) {
         client.expect.element('.layout--body.-note .progress-bar').to.be.visible.before(200);
         client.expect.element('.layout--body.-note .progress-bar').to.have.css('width', '0%');
-    });
+    },
 
-    it('changes a task\'s status when a checkbox is clicked', function(client) {
+    'changes a task\'s status when a checkbox is clicked': function(client) {
         client
         .click('.layout--body.-note .checkbox')
         .expect.element('.layout--body.-note .checkbox input:checked').to.be.present.before(5000);
 
         client.pause(500);
-    });
+    },
 
-    it('changes the task progress %', function(client) {
+    'changes the task progress %': function(client) {
         client.expect.element('.layout--body.-note .progress-bar').to.have.css('width').which.not.equal('0%');
-    });
+    },
 
-    it('opens the edit page if the edit button is clicked', function(client) {
+    'opens the edit page if the edit button is clicked': function(client) {
         client
         .click('.note--edit')
         .expect.element('.layout--body.-form').to.be.present.before(4000);
@@ -74,9 +77,9 @@ describe('/notes/f/active/show/:id:', function() {
         client
         .keys([client.Keys.ESCAPE])
         .expect.element('.layout--body.-form').not.to.be.present.before(4000);
-    });
+    },
 
-    it('removes a note if the remove button is clicked', function(client) {
+    'removes a note if the remove button is clicked': function(client) {
         client
         .click('.note--remove')
         .expect.element('.modal-dialog').to.be.present.before(2000);
@@ -84,9 +87,9 @@ describe('/notes/f/active/show/:id:', function() {
         client
         .keys([client.Keys.ESCAPE])
         .expect.element('.modal-dialog').not.to.be.present.before(2000);
-    });
+    },
 
-    it('changes favourite status if the button is clicked', function(client) {
+    'changes favourite status if the button is clicked': function(client) {
         client
         .perform(function(client, done) {
             client.getAttribute('.btn--favourite--icon', 'class', function(res) {
@@ -104,9 +107,9 @@ describe('/notes/f/active/show/:id:', function() {
                 return done();
             });
         });
-    });
+    },
 
-    it('opens edit page if "e" is pressed', function(client) {
+    'opens edit page if "e" is pressed': function(client) {
         client.expect.element('.layout--body.-note').to.be.present.before(2000);
 
         client
@@ -117,9 +120,9 @@ describe('/notes/f/active/show/:id:', function() {
         client
         .click('.editor--cancel')
         .expect.element('.layout--body.-form').not.to.be.present.before(4000);
-    });
+    },
 
-    it('shows delete dialog on "Shift+3" key combination', function(client) {
+    'shows delete dialog on "Shift+3" key combination': function(client) {
         client.expect.element('.layout--body.-note').to.be.present.before(2000);
 
         client
@@ -129,9 +132,9 @@ describe('/notes/f/active/show/:id:', function() {
         // Hit Shift key again to disable it
         .keys([client.Keys.SHIFT])
         .expect.element('.modal-dialog').to.be.present.before(2000);
-    });
+    },
 
-    it('deletes a note', function(client) {
+    'deletes a note': function(client) {
         client.expect.element('.modal-dialog .btn-success').to.be.present.before(2000);
 
         client
@@ -151,6 +154,6 @@ describe('/notes/f/active/show/:id:', function() {
                 });
             });
         });
-    });
+    },
 
-});
+};

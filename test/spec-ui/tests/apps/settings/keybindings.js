@@ -1,50 +1,50 @@
-/* global describe, before, after, it */
 'use strict';
-var expect = require('chai').expect;
+var keys;
 
 /**
  * Notebook list test
- */
+//  |)}>#
+module.exports = {
 
-describe('#/notebooks', function() {
-    var keys;
+    before: function(client) {
+        client.closeWelcome();
 
-    before(function(client, done) {
         keys = {
-            actionsEdit: "e",
-            actionsOpen: "o",
-            actionsRemove: "shift+3",
-            actionsRotateStar: "s",
-            appCreateNote: "c",
-            // appKeyboardHelp: "?",
-            // appSearch: "/",
-            jumpFavorite: "g f",
-            jumpInbox: "g i",
-            jumpNotebook: "g n",
-            jumpOpenTasks: "g o",
-            jumpRemoved: "g t",
-            navigateBottom: "j",
-            navigateTop: "k",
+            actionsEdit: 'e',
+            actionsOpen: 'o',
+            actionsRemove: 'shift+3',
+            actionsRotateStar: 's',
+            appCreateNote: 'c',
+            // appKeyboardHelp: '?',
+            // appSearch: '/',
+            jumpFavorite: 'g f',
+            jumpInbox: 'g i',
+            jumpNotebook: 'g n',
+            jumpOpenTasks: 'g o',
+            jumpRemoved: 'g t',
+            navigateBottom: 'j',
+            navigateTop: 'k',
         };
 
-        this.timeout(100000);
         client.urlHash('settings/keybindings');
         client.expect.element('.header--title').to.have.text.that.contains('Settings').before(50000);
-        client.perform(() => {done();})
-    });
+    },
 
-    after(function(client, done) {
-        done();
-    });
+    after: function(client) {
+        client.end();
+    },
 
-    it('keybindings tab is active in #/settings/keybindings', function(client) {
+    'keybindings tab is active in #/settings/keybindings': function(client) {
         client
         .expect.element('.list--settings.active').to.have.text.that.contains('Keybindings');
-    });
+    },
 
-    it('can change keybindings', function(client) {
+    'can change keybindings': function(client) {
         client.perform(function(client, done) {
             for (var name in keys) {
+                client
+                .expect.element('[name="' + name + '"]').to.be.present.before(5000);
+
                 client
                 .clearValue('[name="' + name + '"]')
                 .setValue('[name="' + name + '"]', keys[name].toUpperCase());
@@ -60,9 +60,9 @@ describe('#/notebooks', function() {
 
             client.perform(() => {done();});
         });
-    });
+    },
 
-    it('keybindings are saved', function(client) {
+    'keybindings are saved': function(client) {
         client.click('.settings--save');
         client.click('.settings--cancel');
 
@@ -72,17 +72,17 @@ describe('#/notebooks', function() {
 
         client.perform(function(client, done) {
             for (var name in keys) {
-                client.assert.value('[name="' + name + '"]', keys[name].toUpperCase())
+                client.assert.value('[name="' + name + '"]', keys[name].toUpperCase());
             }
 
-            client.assert.value('[name="appKeyboardHelp"]', '/')
-            client.assert.value('[name="appSearch"]', '?')
+            client.assert.value('[name="appKeyboardHelp"]', '/');
+            client.assert.value('[name="appSearch"]', '?');
 
             client.perform(() => {done();});
         });
-    });
+    },
 
-    it('change to old settings', function(client) {
+    'change to old settings': function(client) {
         client.perform(function(client, done) {
             for (var name in keys) {
                 client
@@ -105,5 +105,6 @@ describe('#/notebooks', function() {
         client.click('.settings--cancel');
 
         client.expect.element('#header--add').to.be.visible.before(50000);
-    });
-});
+    },
+};
+*/

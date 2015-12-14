@@ -313,13 +313,19 @@ gulp.task('copy:deps', ['clean:dist'], function() {
  * Generate HTML5 cache manifest file.
  */
 gulp.task('manifest', ['build:before'], function() {
-    return gulp.src('dist/**', {base: './dist'})
+    return gulp.src([
+        'dist/**',
+        '!dist/bower_components/MathJax/**'
+    ], {base: './dist'})
     .pipe(manifest({
         hash         : true,
         preferOnline : true,
         network      : ['*'],
         filename     : 'app.appcache',
-        exclude      : ['app.appcache', 'dropbox.html'],
+        exclude      : [
+            'app.appcache',
+            'dropbox.html'
+        ],
         timestamp    : true,
         master       : ['index.html'],
         fallback     : ['/ 404.html']

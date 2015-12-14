@@ -76,7 +76,9 @@ $ npm install gulp
 #### 4. Install Laverna's dependencies:
 
 ```bash
-$ npm install && bower install
+$ npm install
+$ bower install
+$ (cd test && bower install)
 ```
 
 #### 5. Build minified version of Laverna:

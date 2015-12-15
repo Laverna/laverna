@@ -6,7 +6,17 @@ const PORT = 9100;
 var app               = require('app'),
     connect           = require('connect'),
     windowStateKeeper = require('electron-window-state'),
-    BrowserWindow     = require('browser-window');
+    BrowserWindow     = require('browser-window'),
+    menu              = require('menu');
+
+    var menuTemplate = [{
+            label: "Edit",
+            submenu: [
+                { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+                { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+                { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+            ]}
+        ];
 
 // Start Server
 connect()
@@ -38,6 +48,9 @@ app.on('window-all-closed', function() {
  * initialization and is ready to create browser windows.
  */
 app.on('ready', function() {
+
+    menu.setApplicationMenu(menu.buildFromTemplate(menuTemplate));
+
     let windowState = windowStateKeeper('main', {
         width  : 1000,
         height : 600
@@ -98,4 +111,6 @@ app.on('ready', function() {
          */
         mainWindow = null;
     });
+
+
 });

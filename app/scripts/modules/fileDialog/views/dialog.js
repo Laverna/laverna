@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-/* global define */
+/* global define, Modernizr */
 define([
     'underscore',
     'marionette',
@@ -57,13 +57,17 @@ define([
         }, 250),
 
         onShown: function() {
-            new Dropzone('.dropzone', {
-                url             : '/#notes',
-                clickable       : true,
-                accept          : _.bind(this.getImage, this),
-                thumbnailWidth  : 100,
-                thumbnailHeight : 100
-            });
+
+            // File uploading is allowed only if either Indexeddb or WebSQL is supported
+            if (Modernizr.indexeddb || Modernizr.websqldatabase) {
+                new Dropzone('.dropzone', {
+                    url             : '/#notes',
+                    clickable       : true,
+                    accept          : _.bind(this.getImage, this),
+                    thumbnailWidth  : 100,
+                    thumbnailHeight : 100
+                });
+            }
         },
 
         /**

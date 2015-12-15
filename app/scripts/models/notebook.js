@@ -23,7 +23,6 @@ define([
             'id'           : undefined,
             'parentId'     : '0',
             'name'         : '',
-            'synchronized' : 0,
             'count'        : 0,
             'trash'        : 0,
             'created'      : 0,

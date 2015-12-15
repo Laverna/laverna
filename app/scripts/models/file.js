@@ -23,12 +23,14 @@ define([
         storeName : 'files',
 
         defaults: {
+            type         : 'files',
             id           : undefined,
             name         : '',
             src          : '',
-            type         : '',
-            updated      : Date.now(),
-            synchronized : 0
+            fileType     : '',
+            trash        : 0,
+            created      : 0,
+            updated      : 0
         },
 
         validate: function(attrs) {
@@ -37,8 +39,8 @@ define([
             if (attrs.src === '') {
                 errors.push('src');
             }
-            if (attrs.type === '') {
-                errors.push('type');
+            if (attrs.fileType === '') {
+                errors.push('fileType');
             }
 
             if (errors.length > 0) {

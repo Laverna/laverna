@@ -27,7 +27,6 @@ define([
             'id'           : undefined,
             'name'         : '',
             'count'        : '',
-            'synchronized' : 0,
             'trash'        : 0,
             'created'      : 0,
             'updated'      : 0

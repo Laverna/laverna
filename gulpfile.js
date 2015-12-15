@@ -185,6 +185,8 @@ gulp.task('build:js', ['clean:dist'], function() {
         },
         exclude                : [
             'helpers/db',
+            'helpers/migrate',
+            'migrate',
             'mathjax',
             'dropbox',
             'tv4',
@@ -268,6 +270,8 @@ gulp.task('copy:deps', ['clean:dist'], function() {
         // Copy and minify
         gulp.src([
             './app/scripts/helpers/db.js',
+            './app/scripts/helpers/migrate.js',
+            './app/scripts/migrate.js',
             './app/scripts/workers/localForage.js',
             './app/bower_components/requirejs/require.js',
             './app/bower_components/modernizr/modernizr.js',
@@ -278,7 +282,8 @@ gulp.task('copy:deps', ['clean:dist'], function() {
             './app/bower_components/remotestorage.js/release/stable/remotestorage.js',
             './app/bower_components/tv4/tv4.js',
             './app/bower_components/bluebird/js/browser/bluebird.min.js',
-            './app/bower_components/dropbox/dropbox',
+            './app/bower_components/dropbox/dropbox.js',
+            './app/bower_components/sjcl/sjcl.js',
         ], options)
         .pipe(uglify({
             preserveComments: 'license'

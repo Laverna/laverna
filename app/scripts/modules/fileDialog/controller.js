@@ -119,7 +119,7 @@ define([
         },
 
         isImage: function(model) {
-            return (model.get('type').indexOf('image') > -1);
+            return (model.get('fileType').indexOf('image') > -1);
         },
 
         /**

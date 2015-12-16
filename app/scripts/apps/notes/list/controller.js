@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -77,11 +77,12 @@ define([
          * Fetches data from `Notes` collection.
          */
         filter: _.debounce(function(options) {
-            var tOptions = this.view ? this.view.options.args : {},
-            isEqual = _.isEqual(
-                _.pick((tOptions), 'filter', 'profile', 'query', 'page'),
-                _.pick(options   , 'filter', 'profile', 'query', 'page')
-            );
+            options.profile = options.profile || Radio.request('uri', 'profile');
+            var tOptions    = this.view ? this.view.options.args : {},
+                isEqual     = _.isEqual(
+                    _.pick((tOptions), 'filter', 'profile', 'query', 'page'),
+                    _.pick(options   , 'filter', 'profile', 'query', 'page')
+                );
 
             // Do not fetch anything because nothing has changed
             if (isEqual) {

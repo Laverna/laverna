@@ -286,6 +286,12 @@ define([
          * Update pagination when a model is added
          */
         _onAddItem: function(model) {
+
+            // Don't add models from other profiles
+            if (this.profileId !== model.profileId) {
+                return;
+            }
+
             /**
              * Remove a model from the collection if it doesn't meet
              * the current filter condition.

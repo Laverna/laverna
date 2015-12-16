@@ -114,7 +114,7 @@ define([
             var pattern = new RegExp(letters, 'gim');
 
             return this.filter(function(model) {
-                Radio.request('encrypt', 'decrypt:model', model);
+                model = Radio.request('encrypt', 'decrypt:model', model);
                 pattern.lastIndex = 0;
                 return pattern.test(model.get('title')) || pattern.test(model.get('content'));
             });

@@ -60,6 +60,12 @@ define([
          * Got changes from RemoteStorage.
          */
         onRsChange: function(change) {
+
+            // Don't do anything if changes are originated from local storage
+            if (change.origin === 'local') {
+                return;
+            }
+
             var model   = change.newValue || change.oldValue,
                 path    = change.relativePath.split('/');
 
@@ -75,15 +81,16 @@ define([
          */
         onReady: function() {
             var promises = [],
-                self     = this;
+                self     = this,
+                profile  = (Radio.request('uri', 'profile') || 'notes-db');
 
-            RsModule.init(Radio.request('uri', 'profile') || 'notes-db');
+            RsModule.init(profile);
 
             // Synchronize all collections
             _.each(['notes', 'notebooks', 'tags'], function(module) {
                 promises.push(function() {
                     return Q.all([
-                        Radio.request(module, 'fetch', {encrypt: true}),
+                        Radio.request(module, 'fetch', {encrypt: true, profile: profile}),
                         new Q(RsModule.getAll(module))
                     ])
                     .spread(function(localData, remoteData) {

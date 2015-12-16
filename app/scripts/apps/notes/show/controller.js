@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -68,9 +68,21 @@ define([
             this.listenTo(this.view, 'model:restore', this.modelRestore);
         },
 
-        onSync: function(model) {
-            this.view.model.set(model.attributes);
-            this.view.model.trigger('synced');
+        /**
+         * After a model is synchronized, refetch the model again.
+         */
+        onSync: function() {
+            var self = this;
+
+            Radio.request('notes', 'get:model:full', this.options)
+            .spread(function(note, notebook) {
+                self.view.options.notebook = notebook;
+                self.view.model.set(note.attributes);
+                self.view.model.trigger('synced');
+            })
+            .fail(function(e) {
+                console.error('After sync error:', e);
+            });
         },
 
         modelRestore: function() {

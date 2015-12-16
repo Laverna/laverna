@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -61,12 +61,13 @@ define([
          */
         onRsChange: function(change) {
             var model   = change.newValue || change.oldValue,
-                profile = change.relativePath.split('/')[0];
+                path    = change.relativePath.split('/');
 
             if (change.newValue) {
                 change.newValue['@context'] = null;
             }
-            Radio.request(model.type, 'save:raw', change.newValue, {profile: profile});
+
+            Radio.request(model.type || path[1], 'save:raw', change.newValue, {profile: path[0]});
         },
 
         /**

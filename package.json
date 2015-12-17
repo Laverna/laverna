@@ -10,6 +10,7 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^3.4.0",
+    "electron-prebuilt": "^0.36.0",
     "electron-window-state": "^1.1.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.2",
@@ -41,5 +42,9 @@
   "optionalDependencies": {},
   "resolutions": {
     "underscore": "~1.7.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "package-darwin": "electron-packager . laverna --platform=darwin --arch=x64 --version=0.35.2 --overwrite --icon dist/images/icon/icon-512x512.icns"
   }
 }

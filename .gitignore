@@ -66,3 +66,6 @@ releases
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+## Electron build output
+laverna-darwin-x64/

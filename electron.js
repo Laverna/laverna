@@ -9,14 +9,31 @@ var app               = require('app'),
     BrowserWindow     = require('browser-window'),
     menu              = require('menu');
 
-var menuTemplate = [{
-    label: "Edit",
-    submenu: [
-        {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-        {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-        {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-    ]
-}];
+    var menuTemplate = [{
+        label: "Application",
+        submenu: [{
+            label: "Quit",
+            accelerator: "CmdOrCtrl+Q",
+            click: function() {
+                app.quit();
+            }
+        }]
+    }, {
+        label: "Edit",
+        submenu: [{
+            label: "Cut",
+            accelerator: "CmdOrCtrl+X",
+            selector: "cut:"
+        }, {
+            label: "Copy",
+            accelerator: "CmdOrCtrl+C",
+            selector: "copy:"
+        }, {
+            label: "Paste",
+            accelerator: "CmdOrCtrl+V",
+            selector: "paste:"
+        }]
+    }];
 
 // Start Server
 connect()

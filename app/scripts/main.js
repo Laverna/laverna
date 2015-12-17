@@ -83,6 +83,7 @@ requirejs.config({
         enquire               : '../bower_components/enquire/dist/enquire.min',
         hammerjs              : '../bower_components/hammerjs/hammer',
         devicejs              : '../bower_components/device.js/lib/device.min',
+        jszip                 : '../bower_components/jszip/dist/jszip',
 
         // Aliases
         'modalRegion'         : 'views/modal',

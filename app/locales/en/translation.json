@@ -104,6 +104,7 @@
     "Editor": "Editor",
     "Preview": "Preview",
     "Download": "Download",
+    "Everything": "Everything",
     "encryption": {
         "wait": "Please wait until the encryption is completed",
         "error": "Encryption error",

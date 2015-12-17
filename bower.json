@@ -39,7 +39,8 @@
     "to-markdown": "#jquery",
     "tv4": "~1.2.7",
     "underscore": "~1.8.3",
-    "xregexp": "~2.0.0"
+    "xregexp": "~2.0.0",
+    "jszip": "Stuk/jszip#~2.5.0"
   },
   "devDependencies": {},
   "resolutions": {

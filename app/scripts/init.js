@@ -60,6 +60,7 @@ define([
         'modules/fileDialog/module',
         'modules/fuzzySearch/module',
         'modules/codePrettify/module',
+        'modules/importExport/module',
         'modules/mathjax/module'
     ], function(storage) {
         // Get profile name from location hash

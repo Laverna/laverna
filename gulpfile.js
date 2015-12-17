@@ -387,7 +387,24 @@ gulp.task('electron:copy', function() {
     .pipe(gulp.dest('./dist/'));
 });
 
+/**
+ * To build an electron app for a specific platform, run:
+ * gulp electron --platform darwin-x64
+ */
 gulp.task('electron', ['electron:copy'], function() {
+    var platforms = [
+        'darwin-x64',
+        // 'linux-arm',
+        'linux-ia32',
+        'linux-x64',
+        'win32-ia32',
+        'win32-x64'
+    ];
+
+    if (util.env.platform) {
+        platforms = [util.env.platform];
+    }
+
     return gulp.src('./electron.js')
     .pipe(replace('__dirname + \'/dist\'', '__dirname'))
     .pipe(gulp.dest('./dist'))
@@ -399,14 +416,7 @@ gulp.task('electron', ['electron:copy'], function() {
         version     : 'v0.35.2',
         packaging   : true,
         // rebuild     : true,
-        platforms   : [
-            'darwin-x64',
-            // 'linux-arm',
-            'linux-ia32',
-            'linux-x64',
-            'win32-ia32',
-            'win32-x64'
-        ],
+        platforms   : platforms,
         platformResources: {
             darwin: {
                 CFBundleDisplayName : pkg.name,

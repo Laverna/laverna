@@ -87,6 +87,18 @@ $ (cd test && bower install)
 $ gulp build
 ```
 
+#### 6. Build desktop app
+
+Running for development:
+```bash
+$ npm start
+```
+
+Package for MACOS:
+```bash
+$ npm run package-darwin
+```
+
 ## Support
 ---------------
 

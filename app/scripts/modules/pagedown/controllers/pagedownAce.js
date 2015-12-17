@@ -11,14 +11,14 @@ define([
     'q',
     'backbone.radio',
     'marionette',
-    'modules/pagedown/views/editor',
     'modules/pagedown/libs/converter',
+    'modules/pagedown/controllers/controller',
     'ace',
-    'pagedown-ace',
+    'pagedown-ace/Markdown.Editor',
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
-], function(_, Q, Radio, Marionette, View, Converter, ace, Markdown) {
+], function(_, Q, Radio, Marionette, Converter, Controller, ace) {
     'use strict';
 
     /**
@@ -46,34 +46,13 @@ define([
      * 1. channel: editor, event: insert
      *    inserts text to the editor.
      */
-    var PagedownAce = Marionette.Object.extend({
+    var PagedownAce = Controller.extend({
 
         initialize: function() {
-            _.bindAll(this, 'onPreviewRefresh', 'triggerScroll', 'initAce', 'startEditor', 'onChange');
+            _.bindAll(this, 'initAce', 'startEditor');
 
-            // Get configs
-            this.configs = Radio.request('configs', 'get:object');
-
-            // Initialize the view
-            this.view = new View({
-                model   : Radio.request('notesForm', 'model'),
-                configs : this.configs
-            });
-
-            // Show the view and render Pagedown editor
-            Radio.request('notesForm', 'show:editor', this.view);
-
-            // Listen to events
-            this.vent = Radio.channel('editor');
-            this.listenTo(this.vent, 'focus', this.focus);
-
-            // Replies
-            this.vent.reply('get:content', this.getContent, this);
-            this.vent.reply('generate:link', this.getLinkCode, this);
-            this.vent.reply('generate:image', this.getImageCode, this);
-
-            // Replies
-            this.vent.reply('insert', this.insertText, this);
+            // Call parent initialize method
+            _.bind(Controller.prototype.initialize, this)();
 
             return new Q(this.initMdEditor())
             .then(this.initAce)
@@ -84,27 +63,10 @@ define([
         },
 
         onDestroy: function() {
-            this.stopListening();
-            this.vent.stopReplying('get:content');
             this.editor.destroy();
-            this.view.trigger('destroy');
-        },
 
-        /**
-         * Initialize Pagedown editor.
-         * @return promise
-         */
-        initMdEditor: function() {
-            var converter = Converter.getConverter(this.view.model);
-
-            // Start the Markdown editor
-            this.mdEditor = new Markdown.Editor(converter);
-
-            // Register hooks
-            this.mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);
-
-            // Start initializers
-            return Radio.request('init', 'start', 'editor:before', this.mdEditor, this.view.model)();
+            // Call parent onDestroy method
+            _.bind(Controller.prototype.onDestroy, this)();
         },
 
         /**
@@ -192,24 +154,6 @@ define([
             this.editor.resize();
         },
 
-        onPreviewRefresh: function() {
-            this.vent.trigger('preview:refresh');
-        },
-
-        onChange: function() {
-            this.triggerSave();
-        },
-
-        triggerSave: _.debounce(function() {
-            if (this.getContent() !== '') {
-                Radio.trigger('notesForm', 'save:auto');
-            }
-        }, 1000),
-
-        triggerScroll: function() {
-            Radio.trigger('editor', 'pagedown:scroll');
-        },
-
         getContent: function() {
             var data     = {};
             data.content = !this.editor ? '' : this.editor.getSession().getValue().trim();
@@ -221,14 +165,6 @@ define([
 
         focus: function() {
             this.editor.focus();
-        },
-
-        getLinkCode: function(data) {
-            return '[' + data.text + ']' + '(' + data.url + ')';
-        },
-
-        getImageCode: function(data) {
-            return '!' + this.getLinkCode(data);
         },
 
         insertText: function(text) {

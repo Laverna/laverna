@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,8 +12,9 @@ define([
     'marionette',
     'modules',
     'modules/pagedown/controllers/pagedownAce',
+    'modules/pagedown/controllers/pagedown',
     'modules/pagedown/libs/converter'
-], function(_, Radio, Marionette, Modules, PagedownAce, converter) {
+], function(_, Radio, Marionette, Modules, PagedownAce, Pagedown, converter) {
     'use strict';
 
     /**
@@ -25,19 +26,25 @@ define([
      * 2. reply: task:toggle
      *    returns an object with content and a number of completed tasks
      */
-    var Pagedown = Modules.module('Pagedown', {});
+    var Module = Modules.module('Pagedown', {});
 
     /**
      * Initializers & finalizers of the module
      */
-    Pagedown.on('start', function() {
+    Module.on('start', function() {
         console.info('Pagedown module has started');
-        Pagedown.controller = new PagedownAce();
+
+        if (Radio.request('global', 'is:mobile')) {
+            Module.controller = new Pagedown();
+        }
+        else {
+            Module.controller = new PagedownAce();
+        }
     });
 
-    Pagedown.on('stop', function() {
-        Pagedown.controller.destroy();
-        Pagedown.controller = null;
+    Module.on('stop', function() {
+        Module.controller.destroy();
+        Module.controller = null;
         console.info('Pagedown module has stoped');
     });
 
@@ -46,14 +53,14 @@ define([
         console.info('Pagedown module has been initialized');
 
         Radio.channel('notesForm')
-        .on('view:ready', Pagedown.start, Pagedown)
-        .on('view:destroy', Pagedown.stop, Pagedown);
+        .on('view:ready', Module.start, Module)
+        .on('view:destroy', Module.stop, Module);
 
         Radio.channel('editor')
         .reply('content:html', converter.toHtml, converter);
         // .reply('task:toggle', converter.toggleTask, converter);
     });
 
-    return Pagedown;
+    return Module;
 
 });

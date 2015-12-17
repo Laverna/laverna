@@ -39,6 +39,18 @@
     display: none;
 }
 
+// Textarea version of Pagedown
+.pagedown--input.-textarea {
+    height  : 100%;
+    border  : none;
+    padding : 15px 15px 80px;
+
+    &:active, &:focus, &:hover {
+        border  : none;
+        outline : none;
+    }
+}
+
 /**
  * WYSIWYG bar
  */
@@ -186,6 +198,18 @@
         .pagedown--show--column {
             display: block !important;
         }
+    }
+}
+
+.-pagedown--text {
+    .pagedown--input {
+        overflow: auto;
+        height  : 100%;
+    }
+
+    .pagedown--row,
+    .pagedown--layout.-left.-show {
+        height: 100%;
     }
 }
 

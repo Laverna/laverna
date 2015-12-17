@@ -19,7 +19,7 @@ define([
 
     var App = new Backbone.Marionette.Application();
 
-    App.isMobile = Device.mobile() === true || Device.tablet() === true;
+    App.isMobile = (Device.mobile() === true || Device.tablet() === true);
 
     // Customize underscore template
     _.templateSettings = {

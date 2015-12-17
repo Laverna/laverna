@@ -21,6 +21,12 @@ requirejs.config({
             location : '../bower_components/ace/lib/ace',
             main     : 'ace'
         },
+        // Pagedown editor
+        {
+            name     : 'pagedown',
+            location : '../bower_components/pagedown',
+            main     : 'Markdown.Editor'
+        },
         // Pagedown-ace editor
         {
             name     : 'pagedown-ace',
@@ -63,7 +69,6 @@ requirejs.config({
         dropbox               : '../bower_components/dropbox/dropbox',
 
         // Markdown
-        'pagedown'            : '../bower_components/pagedown/Markdown.Editor',
         'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
@@ -119,17 +124,26 @@ requirejs.config({
         ace: {
             exports: 'ace'
         },
-        'pagedown': {
+        'pagedown/Markdown.Editor': {
             exports: 'Markdown',
             deps: [ 'pagedown-extra' ]
         },
-        'pagedown-extra': [ 'pagedown-ace' ],
         'pagedown-ace/Markdown.Editor': {
             exports: 'Markdown',
-            deps: [ 'pagedown-ace/Markdown.Converter' ]
+            deps: [ 'pagedown-extra' ]
         },
-        'pagedown-ace/Markdown.Sanitizer': {
-            deps: [ 'pagedown-ace/Markdown.Converter' ]
+        'pagedown-extra': {
+            exports: 'Markdown',
+            deps: [
+                'pagedown/Markdown.Converter',
+                'pagedown/Markdown.Sanitizer'
+            ]
+        },
+        'pagedown/Markdown.Converter': {
+            exports: 'Markdown'
+        },
+        'pagedown/Markdown.Sanitizer': {
+            deps: [ 'pagedown/Markdown.Converter' ]
         },
         'to-markdown': {
             exports: 'toMarkdown'

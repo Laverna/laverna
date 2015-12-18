@@ -36,7 +36,7 @@ define([
             'encrypt'           : '0',
             'encryptPass'       : '',
             'encryptSalt'       : '',
-            'encryptIter'       : '1000',
+            'encryptIter'       : '10000',
             'encryptTag'        : '128',
             'encryptKeySize'    : '256',
             'encryptBackup'     : {},

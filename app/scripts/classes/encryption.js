@@ -162,7 +162,10 @@ define([
             }
 
             var p = this._getConfigs();
-            str   = this.decrypt(str);
+
+            // Try to decrypt first
+            str = this.decrypt(str);
+
             str   = sjcl.encrypt(this.options.hexKey, str, p);
 
             // Return only encrypted data and initialization vector
@@ -187,6 +190,9 @@ define([
                 str    = _.unescape(str);
                 object = JSON.parse(str);
             } catch (e) {
+            }
+
+            if (typeof object !== 'object') {
                 return str;
             }
 

@@ -90,7 +90,7 @@ define([
             this.editor.session.setNewLineMode('unix');
             this.editor.setShowPrintMargin(false);
 
-            this.editor.renderer.lineHeight = 20;
+            this.editor.renderer.lineHeight = 16;
             this.editor.renderer.setPrintMarginColumn(false);
             this.editor.renderer.setShowGutter(false);
 

@@ -15,6 +15,7 @@ var gulp         = require('gulp'),
     manifest     = require('gulp-manifest'),
     htmlmin      = require('gulp-minify-html'),
     cssmin       = require('gulp-minify-css'),
+    shell        = require('gulp-shell'),
     pkg          = require('./package.json'),
 
     // Electron
@@ -362,36 +363,11 @@ gulp.task('build', ['build:before', 'manifest'], function() {
  * Build Electron app.
  * ------------------
  */
-gulp.task('electron:copy', function() {
-    return gulp.src([
-        './node_modules/buffer-crc32/**',
-        './node_modules/bytes/**',
-        './node_modules/connect/**',
-        './node_modules/cookie/**',
-        './node_modules/cookie-signature/**',
-        './node_modules/debug/**',
-        './node_modules/electron-window-state/**',
-        './node_modules/fresh/**',
-        './node_modules/jsonfile/**',
-        './node_modules/mime/**',
-        './node_modules/on-headers/**',
-        './node_modules/parseurl/**',
-        './node_modules/range-parser/**',
-        './node_modules/send/**',
-        './node_modules/serve-static/**',
-        './node_modules/type-is/**',
-        './node_modules/open/**',
-        './node_modules/mkdirp/**',
-        './package.json'
-    ], {base: './'})
-    .pipe(gulp.dest('./dist/'));
-});
-
 /**
  * To build an electron app for a specific platform, run:
  * gulp electron --platform darwin-x64
  */
-gulp.task('electron', ['electron:copy'], function() {
+gulp.task('electron', ['copy:release'], function() {
     var platforms = [
         'darwin-x64',
         // 'linux-arm',
@@ -406,10 +382,10 @@ gulp.task('electron', ['electron:copy'], function() {
     }
 
     return gulp.src('./electron.js')
-    .pipe(replace('__dirname + \'/dist\'', '__dirname'))
-    .pipe(gulp.dest('./dist'))
+    // .pipe(replace('__dirname + \'/dist\'', '__dirname'))
+    .pipe(gulp.dest('./release/laverna'))
     .pipe(electron({
-        src         : './dist',
+        src         : './release/laverna',
         packageJson : pkg,
         release     : './release',
         cache       : './.tmp',
@@ -433,4 +409,46 @@ gulp.task('electron', ['electron:copy'], function() {
             }
         }
     }));
+});
+
+gulp.task('clean:release', ['build'], function() {
+    return gulp.src('./release/*', {read: false})
+    .pipe(clean());
+});
+
+gulp.task('copy:release', ['copy:dist'], function() {
+    return gulp.src([
+        './node_modules/node-static/**',
+        './node_modules/mime/**',
+        './node_modules/colors/**',
+        './node_modules/optimist/**',
+        './node_modules/electron-window-state/**',
+        './node_modules/open/**',
+        './node_modules/jsonfile/**',
+        './node_modules/mkdirp/**',
+        './server.js',
+        './package.json'
+    ], {base: './'})
+    .pipe(gulp.dest('./release/laverna'));
+});
+
+gulp.task('copy:dist', ['build', 'clean:release'], function() {
+    return gulp.src('./dist')
+    .pipe(shell([
+        'mkdir -p ./release/laverna',
+        'cp -R ./dist ./release/laverna/dist',
+    ]));
+});
+
+gulp.task('release', [
+    'build',
+    'clean:release',
+    'copy:dist',
+    'copy:release',
+    'electron'
+], function() {
+    return gulp.src('./release')
+    .pipe(shell([
+        'cd ./release && zip -r ../release/webapp.zip ./laverna',
+    ]));
 });

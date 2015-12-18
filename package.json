@@ -1,13 +1,18 @@
 {
   "name": "laverna",
-  "version": "0.7.1-rc",
+  "version": "0.7.1-rc2",
   "license": "MPL2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Laverna/laverna"
   },
+  "scripts": {
+    "start": "node ./server.js"
+  },
   "main": "electron.js",
-  "dependencies": {},
+  "dependencies": {
+    "node-static": "^0.7.7"
+  },
   "devDependencies": {
     "chai": "^3.4.0",
     "electron-window-state": "^1.1.0",
@@ -29,6 +34,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-requirejs-optimize": "^0.3.0",
+    "gulp-shell": "^0.5.1",
     "gulp-uglify": "^1.4.1",
     "jshint-stylish": "^2.1.0",
     "merge-stream": "^1.0.0",

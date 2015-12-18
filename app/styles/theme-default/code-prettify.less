@@ -1,11 +1,14 @@
 /**
  * Google code prettify styles
  */
+/* Tomorrow Theme */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
 .prettyprint {
-    // Colors
-    color               : #839496;
-    background-color    : #002b36;
-    // background-color : #FDF6E3; // light background
+    background  : white;
+    font-family : Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace;
+    font-size   : 12px;
+    line-height : 1.5;
+    background  : darken(#fff, 3);
 
     // Fonts and padding
     padding       : 15px 15px;
@@ -14,47 +17,133 @@
     border-radius : 0;
 }
 
-.prettyprint .pln {
-    color: inherit;
+.pln {
+    color: #4d4d4c;
 }
 
-.prettyprint .str,
-.prettyprint .lit,
-.prettyprint .atv {
-    color: #2aa198;
+@media screen {
+    .str {
+        color: #718c00;
+    }
+
+    .kwd {
+        color: #8959a8;
+    }
+
+    .com {
+        color: #8e908c;
+    }
+
+    .typ {
+        color: #4271ae;
+    }
+
+    .lit {
+        color: #f5871f;
+    }
+
+    .pun {
+        color: #4d4d4c;
+    }
+
+    .opn {
+        color: #4d4d4c;
+    }
+
+    .clo {
+        color: #4d4d4c;
+    }
+
+    .tag {
+        color: #c82829;
+    }
+
+    .atn {
+        color: #f5871f;
+    }
+
+    .atv {
+        color: #3e999f;
+    }
+
+    .dec {
+        color: #f5871f;
+    }
+
+    .var {
+        color: #c82829;
+    }
+
+    .fun {
+        color: #4271ae;
+    }
+}
+@media print, projection {
+    .str {
+        color: #006600;
+    }
+
+    .kwd {
+        color: #006;
+        font-weight: bold;
+    }
+
+    .com {
+        color: #600;
+        font-style: italic;
+    }
+
+    .typ {
+        color: #404;
+        font-weight: bold;
+    }
+
+    .lit {
+        color: #004444;
+    }
+
+    .pun, .opn, .clo {
+        color: #444400;
+    }
+
+    .tag {
+        color: #006;
+        font-weight: bold;
+    }
+
+    .atn {
+        color: #440044;
+    }
+
+    .atv {
+        color: #006600;
+    }
+}
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
-.prettyprint .kwd {
-    color: #268bd2;
+/* IE indents via margin-left */
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L4,
+li.L5,
+li.L6,
+li.L7,
+li.L8,
+li.L9 {
+    /* */
 }
 
-.prettyprint .com,
-.prettyprint .dec {
-    color: #586e75;
-    font-style: italic;
-}
-
-.prettyprint .typ {
-    color: #b58900;
-}
-
-.prettyprint .pun {
-    color: inherit;
-}
-
-.prettyprint .opn {
-    color: inherit;
-}
-
-.prettyprint .clo {
-    color: inherit;
-}
-
-.prettyprint .tag {
-    color: #268bd2;
-    font-weight: bold;
-}
-
-.prettyprint .atn {
-    color: inherit;
+/* Alternate shading for lines */
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 {
+    /* */
 }

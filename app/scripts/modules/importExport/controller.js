@@ -16,7 +16,6 @@ define([
 
         initialize: function(options) {
             this.options = options;
-
             this[options.method]();
         },
 
@@ -129,6 +128,10 @@ define([
          * Export all data to a ZIP archive.
          */
         export: function() {
+            if (this.options.data) {
+                return this.exportData();
+            }
+
             var profiles = Radio.request('configs', 'get:config', 'appProfiles'),
                 promises = [],
                 self     = this;
@@ -145,7 +148,7 @@ define([
             return _.reduce(promises, Q.when, new Q())
             .then(function() {
                 var content = self.zip.generate({type: 'blob'});
-                fileSaver(content, 'backup.zip');
+                fileSaver(content, 'laverna-backup.zip');
 
                 // Destroy this controller
                 self.zip = null;
@@ -154,12 +157,34 @@ define([
         },
 
         /**
+         * Export already fetched data.
+         */
+        exportData: function() {
+            if (!_.keys(this.options.data).length) {
+                return;
+            }
+
+            var content;
+            this.zip = new JSZip();
+
+            _.each(this.options.data, function(data, profile) {
+                this.addToZip(profile, data.notes, data.notebooks, data.tags, data.configs);
+            }, this);
+
+            content = this.zip.generate({type: 'blob'});
+            fileSaver(content, 'laverna-backup.zip');
+
+            // Destroy this controller
+            this.zip = null;
+            this.destroy();
+        },
+
+        /**
          * Export data from a profile.
          * @type string profile
          */
         exportProfile: function(profile) {
-            var self = this,
-                path = 'laverna-backups/' + profile + '/';
+            var self = this;
 
             return Q.all([
                 Radio.request('notes', 'fetch', {profile: profile}),
@@ -168,22 +193,33 @@ define([
                 Radio.request('configs', 'fetch', {profile: profile})
             ])
             .spread(function(notes, notebooks, tags, configs) {
-
-                // Save notes as JSON and Markdown files
-                _.each(notes.fullCollection.toJSON(), function(note) {
-                    self.zip.file(path + 'notes/' + note.id + '.md', note.content);
-                    self.zip.file(path + 'notes/' + note.id + '.json', JSON.stringify(_.omit(note, 'content')));
-                });
-
-                self.zip.file(path + 'notebooks.json', JSON.stringify(notebooks.toJSON()));
-                self.zip.file(path + 'tags.json', JSON.stringify(tags.toJSON()));
-                self.zip.file(path + 'configs.json', JSON.stringify(configs.toJSON()));
-
-                return;
+                notes = notes.fullCollection ? notes.fullCollection : notes;
+                return self.addToZip(profile, notes.toJSON(), notebooks.toJSON(), tags.toJSON(), configs.toJSON());
             })
             .fail(function(e) {
                 console.error('exportProfile:', e);
             });
+        },
+
+        /**
+         * Add collections to ZIP archive.
+         * @type string profile
+         */
+        addToZip: function(profile, notes, notebooks, tags, configs) {
+            var self = this,
+                path = 'laverna-backups/' + profile + '/';
+
+            // Save notes as JSON and Markdown files
+            _.each(notes, function(note) {
+                self.zip.file(path + 'notes/' + note.id + '.md', note.content);
+                self.zip.file(path + 'notes/' + note.id + '.json', JSON.stringify(_.omit(note, 'content')));
+            });
+
+            self.zip.file(path + 'notebooks.json', JSON.stringify(notebooks));
+            self.zip.file(path + 'tags.json', JSON.stringify(tags));
+            self.zip.file(path + 'configs.json', JSON.stringify(configs));
+
+            return;
         },
 
     });

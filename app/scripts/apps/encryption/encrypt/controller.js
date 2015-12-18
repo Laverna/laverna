@@ -11,10 +11,9 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
-    'fileSaver',
     'apps/encryption/encrypt/view',
     'apps/encryption/encrypt/backupView'
-], function(Q, _, Marionette, Radio, fileSaver, View, BackupView) {
+], function(Q, _, Marionette, Radio, View, BackupView) {
     'use strict';
 
     /**
@@ -123,7 +122,18 @@ define([
                 self     = this;
 
             this.rawData = {};
-            this.rawData[profile] = {configs: this.configs};
+            this.rawData[profile] = {configs: _.map(this.configs, function(item, key) {
+                if (key === 'encrypt') {
+                    item = '0';
+                }
+                if (key === 'encryptBackup') {
+                    item = {};
+                }
+                if (key === 'appProfiles') {
+                    item = JSON.stringify(item);
+                }
+                return {name: key, value: item};
+            })};
 
             // Re-encrypt every profile
             _.each(this.profiles, function(profile) {
@@ -276,11 +286,7 @@ define([
         },
 
         downloadBackup: function() {
-            var blob = new Blob(
-                [JSON.stringify(this.rawData)],
-                {type: 'text/plain;charset=utf8'}
-            );
-            fileSaver(blob, 'laverna-backup.json');
+            Radio.request('importExport', 'export', this.rawData);
         },
 
         /**

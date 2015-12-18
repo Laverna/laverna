@@ -18,7 +18,7 @@ define([
     'ace/mode/markdown',
     'ace/theme/github',
     'pagedown-extra'
-], function(_, Q, Radio, Marionette, Converter, Controller, ace) {
+], function(_, Q, Radio, Marionette, Converter, Controller, ace, Editor) {
     'use strict';
 
     /**
@@ -47,6 +47,7 @@ define([
      *    inserts text to the editor.
      */
     var PagedownAce = Controller.extend({
+        Editor: Editor,
 
         initialize: function() {
             _.bindAll(this, 'initAce', 'startEditor');

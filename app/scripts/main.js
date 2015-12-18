@@ -126,11 +126,11 @@ requirejs.config({
             exports: 'ace'
         },
         'pagedown/Markdown.Editor': {
-            exports: 'Markdown',
+            exports: 'Markdown.Editor',
             deps: [ 'pagedown-extra' ]
         },
         'pagedown-ace/Markdown.Editor': {
-            exports: 'Markdown',
+            exports: 'Markdown.Editor',
             deps: [ 'pagedown-extra' ]
         },
         'pagedown-extra': {

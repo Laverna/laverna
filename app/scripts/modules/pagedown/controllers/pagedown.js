@@ -8,13 +8,14 @@ define([
     'modules/pagedown/libs/converter',
     'modules/pagedown/controllers/controller',
     'pagedown/Markdown.Editor',
-], function(_, Q, Marionette, Radio, View, Converter, Controller) {
+], function(_, Q, Marionette, Radio, View, Converter, Controller, Editor) {
     'use strict';
 
     /**
      * Renders textarea version of Pagedown.
      */
     var Pagedown = Controller.extend({
+        Editor: Editor,
 
         initialize: function() {
             _.bindAll(this, 'startEditor', 'changeMode');

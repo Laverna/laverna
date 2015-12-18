@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-/* global define, Markdown */
+/* global define */
 define([
     'underscore',
     'marionette',
@@ -19,6 +19,11 @@ define([
      * Basic controller from which both PagedownAce and Pagedown extend.
      */
     var Controller = Marionette.Object.extend({
+
+        /**
+         * @type object Markdown.Editor
+         */
+        Editor: null,
 
         initialize: function() {
             _.bindAll(this, 'onPreviewRefresh', 'triggerScroll', 'onChange');
@@ -62,7 +67,7 @@ define([
             var converter = Converter.getConverter(this.view.model);
 
             // Start the Markdown editor
-            this.mdEditor = new Markdown.Editor(converter);
+            this.mdEditor = new this.Editor(converter);
 
             // Register hooks
             this.mdEditor.hooks.chain('onPreviewRefresh', this.onPreviewRefresh);

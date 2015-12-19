@@ -426,6 +426,7 @@ gulp.task('copy:release', ['copy:dist'], function() {
         './node_modules/open/**',
         './node_modules/jsonfile/**',
         './node_modules/mkdirp/**',
+        './node_modules/wordwrap/**',
         './server.js',
         './package.json'
     ], {base: './'})

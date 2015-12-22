@@ -11,7 +11,7 @@ define(['underscore'], function (_) {
 
     var constants = {};
 
-    constants.VERSION = '0.7.1-rc2';
+    constants.VERSION = '0.7.1';
     constants.URL = location.origin + location.pathname.replace('index.html', '');
 
     // List of hosts and urls where default dropbox API will work

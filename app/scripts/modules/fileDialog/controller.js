@@ -74,9 +74,7 @@ define([
 
                 // If there is only 1 file and its type is image
                 if (files.length === 1 && self.isImage(files[0])) {
-                    return self.attachImage(
-                        Radio.request('uri', 'link:file', files[0])
-                    );
+                    return self.attachImage(self.generateCode(files[0]));
                 }
 
                 // Otherwise, we will generate custom Markdown code
@@ -106,8 +104,7 @@ define([
                 }, this);
             }
 
-            Radio.request('editor', 'insert', str);
-            this.attachImage(null);
+            this.attachImage(str);
         },
 
         attachImage: function(url) {

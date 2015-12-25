@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,11 +8,12 @@
 /* global define */
 define([
     'underscore',
+    'q',
     'modules',
     'backbone.radio',
     'modules/fileDialog/controller',
     'modules/fileDialog/helper'
-], function(_, Modules, Radio, Controller, Helper) {
+], function(_, Q, Modules, Radio, Controller, Helper) {
     'use strict';
 
     /**
@@ -46,6 +47,8 @@ define([
     });
 
     FileDialog.on('before:stop', function() {
+        console.info('FileDialog stopped');
+
         Helper.revokeUrls();
         this.stopListening();
         FileDialog.controller = null;
@@ -70,22 +73,32 @@ define([
         });
     }
 
-    // Show custom dialog on `insertImageDialog` hook.
-    Radio.request('init', 'add', 'editor:before', function(editor, model) {
-        editor.hooks.set('insertImageDialog', function(fnc) {
-            FileDialog.start({callback: fnc, model: model});
-            return true;
-        });
-    });
+    // Radio.request('init', 'add', 'editor:before', function(editor, model) {
+    //     editor.hooks.set('insertImageDialog', function(fnc) {
+    //         return true;
+    //     });
+    // });
 
     Radio.request('init', 'add', 'module', function() {
+
+        // Stop the module when editor is closed.
+        Radio.on('editor', 'destroy', FileDialog.stop, FileDialog);
+
+        // Show custom dialog on `insertImageDialog` hook.
+        Radio.reply('editor', 'show:attachment', function(model) {
+            var defer = Q.defer();
+
+            FileDialog.start({model: model, callback: function(link) {
+                defer.resolve(link);
+            }});
+
+            return defer.promise;
+        });
+
         Radio.reply('editor', 'get:files', Helper.getFileIds, Helper);
 
         // When editor converter is initialized, add hooks
         Radio.on('editor', 'converter:init', addHook);
-
-        // Stop the module when editor is closed.
-        Radio.on('editor', 'destroy', FileDialog.stop, FileDialog);
 
         // Revoke all URLs when a note is closed.
         Radio.on('noteView', 'view:destroy', Helper.revokeUrls, Helper);

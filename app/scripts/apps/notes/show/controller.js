@@ -27,6 +27,10 @@ define([
      * 2. channel: appNote, request: `remove:note`
      *    in order to destroy a model
      * 3. channel: global, request: `set:title`
+     *
+     * Requests:
+     * 1. channel: markdown, request: render
+     *    it expects to receive HTML.
      */
     var Controller = Marionette.Object.extend({
 
@@ -45,11 +49,21 @@ define([
         },
 
         _show: function(note, notebook) {
+            var self = this;
+
+            Radio.request('markdown', 'render', note.get('content'))
+            .then(function(content) {
+                return self.render(note, content, notebook);
+            });
+        },
+
+        render: function(note, content, notebook) {
             // Trigger an event that the model is active
             Radio.trigger('appNote', 'model:active', note);
 
             this.view = new View({
                 model    : note,
+                content  : content,
                 notebook : notebook,
                 args     : this.options,
                 files    : [],

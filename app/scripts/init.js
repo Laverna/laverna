@@ -53,7 +53,9 @@ define([
         'apps/help/appHelp',
 
         // Optional modules
-        'modules/pagedown/module',
+        // 'modules/pagedown/module',
+        'modules/markdown/module',
+        'modules/codemirror/module',
         'modules/tags/module',
         'modules/tasks/module',
         'modules/linkDialog/module',

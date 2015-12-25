@@ -42,7 +42,15 @@
     "xregexp": "~2.0.0",
     "jszip": "Stuk/jszip#~2.5.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "ace": "~1.2.2",
+    "markdown-it": "~5.0.2",
+    "codemirror": "~5.10.0",
+    "highlightjs": "~9.0.0",
+    "prism": "~1.3.0",
+    "markdown-it-sanitizer": "~0.4.1",
+    "markdown-it-hashtag": "~0.4.0"
+  },
   "resolutions": {
     "backbone": "~1.2.3",
     "underscore": "~1.8.3"

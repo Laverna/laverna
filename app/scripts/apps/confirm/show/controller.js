@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,10 +8,11 @@
 /* global define */
 define([
     'underscore',
+    'q',
     'marionette',
     'backbone.radio',
     'apps/confirm/show/view'
-], function(_, Marionette, Radio, View) {
+], function(_, Q, Marionette, Radio, View) {
     'use strict';
 
     /**
@@ -24,21 +25,28 @@ define([
     var Controller = Marionette.Object.extend({
 
         initialize: function(options) {
+            var self = this;
+
             if (typeof options === 'string') {
                 options = {content: options};
             }
 
-            // If instead of text a view was provided, render it
-            if (typeof options.content === 'object') {
-                options.content = options.content.render().$el.html();
-            }
-            // Try to make HTML from supposedly Markdown string
-            else {
-                options.content = Radio.request('editor', 'content:html', options.content);
-            }
-
             this.options = options;
-            this.show();
+            new Q((function() {
+
+                // If instead of text a view was provided, render it
+                if (typeof options.content === 'object') {
+                    return options.content.render().$el.html();
+                }
+
+                // Try to make HTML from supposedly Markdown string
+                return Radio.request('markdown', 'render', options.content);
+            })())
+            .then(function(content) {
+                self.options.content = content;
+                return self.show();
+            });
+
         },
 
         onDestroy: function() {

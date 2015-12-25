@@ -21,6 +21,12 @@ requirejs.config({
             location : '../bower_components/ace/lib/ace',
             main     : 'ace'
         },
+        // Codemirror editor
+        {
+            name     : 'codemirror',
+            location : '../bower_components/codemirror',
+            main     : 'lib/codemirror'
+        },
         // Pagedown editor
         {
             name     : 'pagedown',
@@ -32,6 +38,12 @@ requirejs.config({
             name     : 'pagedown-ace',
             location : '../bower_components/pagedown-ace',
             main     : 'Markdown.Editor'
+        },
+        // Prismjs
+        {
+            name     : 'prism',
+            location : '../bower_components/prism',
+            main     : 'bundle'
         },
         // Xregexp
         {
@@ -69,12 +81,16 @@ requirejs.config({
         dropbox               : '../bower_components/dropbox/dropbox',
 
         // Markdown
+        'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it',
+        'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer',
+        'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag',
         'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
         dompurify             : '../bower_components/DOMPurify/src/purify',
         mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+        hljs                  : '../bower_components/highlightjs/highlight.pack',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
         dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',
         toBlob                : '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
@@ -168,6 +184,9 @@ requirejs.config({
         // Others
         sjcl: {
             exports: 'sjcl'
+        },
+        'prism/bundle': {
+            exports: 'Prism'
         },
         bootstrap: {
             deps: ['jquery']

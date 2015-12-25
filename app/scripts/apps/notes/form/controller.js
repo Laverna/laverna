@@ -105,16 +105,26 @@ define([
         },
 
         save: function() {
-            Radio.request('notes', 'save', this.view.model, this.getContent())
+            var self = this;
+
+            return this.getContent()
+            .then(function(data) {
+                return Radio.request('notes', 'save', self.view.model, data);
+            })
             .fail(function(e) {
                 console.error('Error', e);
             });
         },
 
         getContent: function() {
-            return _.extend(Radio.request('editor', 'get:content'), {
-                title      : this.view.ui.title.val().trim(),
-                notebookId : this.view.notebooks.currentView.ui.notebookId.val().trim(),
+            var self = this;
+
+            return Radio.request('editor', 'get:data')
+            .then(function(data) {
+                return _.extend(data, {
+                    title      : self.view.ui.title.val().trim(),
+                    notebookId : self.view.notebooks.currentView.ui.notebookId.val().trim(),
+                });
             });
         },
 

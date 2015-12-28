@@ -2,42 +2,10 @@
  * Pagedown module
  */
 
-/**
- * Mixin for creating columns
- */
-@pagedown-breakpoint: 500px;
-.make-pg-columns(@columns) {
-    .make-lg-column(@columns);
-    .make-md-column(@columns);
-    .make-sm-column(@columns);
-    .make-xs-column(@columns);
-
-    // Stretch columns on small screens
-    @media (max-width: @pagedown-breakpoint) {
-        width: percentage((12 / 12));
-    }
-}
 
 /**
  * Pagedown editor
  */
-.pagedown--input {
-    overflow: hidden;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    margin-left: 0;
-    border: none;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100%;
-}
-.pagedown--input,
-.pagedown--preview {
-    width: 100%;
-}
-.pagedown--preview {
-    display: none;
-}
 
 // Textarea version of Pagedown
 .pagedown--input.-textarea {
@@ -54,14 +22,6 @@
 /**
  * WYSIWYG bar
  */
-.pagedown--bar {
-    &:extend(.navbar);
-    margin-bottom: 0;
-    border-color: rgb(217, 217, 217);
-    border-top: 1px solid rgb(229, 229, 229);
-    border-bottom: 1px solid rgb(229, 229, 229);
-    padding: 6px 0;
-}
 .wmd-button-row {
     margin: 0;
     text-align: center;
@@ -93,115 +53,8 @@
  */
 .editor--fullscreen {
 
-    /**
-     * Show WYSIWG bar on top of everything
-     */
-    .pagedown--bar {
-        &:extend(.navbar-fixed-top);
-        top: @navbar-height;
-    }
-
-    /**
-     * Prevent WYSIWG bar from overflowing the main navbar
-     */
-    .layout--navbar {
-        z-index: @zindex-navbar-fixed + 1;
-    }
-
-    /**
-     * Since we have two navbars, we need to change the position
-     * of the form.
-     */
-    .layout--body.-form {
-        top: @navbar-height * 2;
-    }
 }
 
-/**
- * Pagedown in preview mode
- */
-.editor--fullscreen.-preview {
-    overflow: hidden;
-
-    // Main layout shouldn't have scrollbars
-    .layout--body.-form {
-        overflow: hidden;
-    }
-
-    .navbar-form {
-        padding: 0;
-    }
-
-    // This is the main wrapper now
-    .pagedown--row {
-        &:extend(.layout--body);
-    }
-
-    /**
-     * We use it to create a two column view:
-     * the editor and the preview.
-     */
-    .pagedown--layout {
-        .make-pg-columns(5.94);
-        position: absolute;
-        height: auto;
-        top: 0;
-        bottom: @navbar-height + 15px;
-        overflow: hidden;
-        background-color: #FFF;
-
-        &.-left {
-            left: 0;
-            padding-left: 0;
-            padding-right: 0;
-        }
-        &.-right {
-            right: 0;
-        }
-    }
-
-    /**
-     * Add scrollbars to Pagedown editor and its preview.
-     */
-    .pagedown--preview,
-    .pagedown--input {
-        background-color: #FFF;
-        width: 100%;
-        min-height: 1px;
-        position: absolute;
-        overflow: auto;
-        top: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    // Pagedown preview styles
-    .pagedown--preview {
-        display: block;
-        word-wrap: break-word;
-        padding: 15px 20px 100px;
-    }
-
-    // Preview mode on small screens
-    @media (max-width: @pagedown-breakpoint) {
-        // Fix the scrollbar
-        .pagedown--layout {
-            bottom: 100px;
-        }
-
-        // Hide both columns
-        .pagedown--layout.-left,
-        .pagedown--layout.-right {
-            display: none;
-        }
-
-        .-show,
-        .pagedown--layout.-show,
-        .pagedown--show--column {
-            display: block !important;
-        }
-    }
-}
 
 .-pagedown--text {
     .pagedown--input {

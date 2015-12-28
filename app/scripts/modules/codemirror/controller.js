@@ -72,6 +72,7 @@ define([
 
             // Events
             this.listenTo(this.view, 'editor:action', this.onViewAction);
+            this.listenTo(Radio.channel('notesForm'), 'set:mode', this.changeMode);
 
             // Show the view and render Pagedown editor
             Radio.request('notesForm', 'show:editor', this.view);
@@ -137,6 +138,10 @@ define([
 
             // Show the preview
             this.updatePreview();
+        },
+
+        changeMode: function() {
+            window.dispatchEvent(new Event('resize'));
         },
 
         /**

@@ -26,7 +26,8 @@ define([
         },
 
         events: {
-            'click .editor--btns .btn': 'triggerAction'
+            'click .editor--btns .btn' : 'triggerAction',
+            'click .editor--col--btn'  : 'showColumn'
         },
 
         initialize: function() {
@@ -49,6 +50,24 @@ define([
                 this.trigger('editor:action', action);
             }
         },
+
+        /**
+         * Shows either the preview or the editor.
+         */
+        showColumn: function(e) {
+            var $btn    = $(e.currentTarget),
+                col     = $btn.attr('data-col'),
+                hideCol = (col === 'left' ? 'right' : 'left');
+
+            // Add 'active' class to the button
+            this.$('.editor--col--btn.active').removeClass('active');
+            $btn.addClass('active');
+
+            // Show only one column
+            this.$('.-' + hideCol).removeClass('-show');
+            this.$('.-' + col).addClass('-show');
+        },
+
     });
 
     return View;

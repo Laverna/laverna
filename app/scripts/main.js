@@ -84,12 +84,13 @@ requirejs.config({
         'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it',
         'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer',
         'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag',
+        'markdown-it-math'    : '../bower_components/markdown-it-math/dist/markdown-it-math',
         'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
         dompurify             : '../bower_components/DOMPurify/src/purify',
-        mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
+        mathjax               : '../bower_components/MathJax/MathJax.js?config=MML_HTMLorMML',
         hljs                  : '../bower_components/highlightjs/highlight.pack',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
         dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',

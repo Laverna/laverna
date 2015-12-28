@@ -25,6 +25,7 @@ requirejs.config({
         'markdown-it'      : '../bower_components/markdown-it/dist/markdown-it',
         'markdown-it-san'  : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer',
         'markdown-it-hash' : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag',
+        'markdown-it-math' : '../bower_components/markdown-it-math/dist/markdown-it-math',
     },
     shim: {
         'prism/bundle': {

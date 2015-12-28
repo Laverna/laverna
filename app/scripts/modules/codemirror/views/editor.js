@@ -40,6 +40,12 @@ define([
 
         onEditorChange: function(content) {
             this.ui.preview.html(content);
+
+            if (!this.isFirst) {
+                this.isFirst = true;
+                return Radio.trigger('editor', 'view:render', this);
+            }
+            Radio.trigger('editor', 'preview:refresh');
         },
 
         triggerAction: function(e) {

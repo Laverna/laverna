@@ -56,12 +56,12 @@ define([
         // 'modules/pagedown/module',
         'modules/markdown/module',
         'modules/codemirror/module',
-        'modules/tags/module',
-        'modules/tasks/module',
+        // 'modules/tags/module',
+        // 'modules/tasks/module',
         'modules/linkDialog/module',
         'modules/fileDialog/module',
         'modules/fuzzySearch/module',
-        'modules/codePrettify/module',
+        // 'modules/codePrettify/module',
         'modules/importExport/module',
         'modules/mathjax/module'
     ], function(storage) {

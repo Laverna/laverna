@@ -22,7 +22,7 @@ define([
             var $divs;
 
             this.view = view || this.view;
-            $divs = this.view.$el.find('.mathjax');
+            $divs = this.view.$el.find('math');
 
             // Don't bother with processing MathJax
             if (!$divs.length) {

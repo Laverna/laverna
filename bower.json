@@ -40,7 +40,8 @@
     "tv4": "~1.2.7",
     "underscore": "~1.8.3",
     "xregexp": "~2.0.0",
-    "jszip": "Stuk/jszip#~2.5.0"
+    "jszip": "Stuk/jszip#~2.5.0",
+    "markdown-it-math": "~3.0.2"
   },
   "devDependencies": {
     "ace": "~1.2.2",

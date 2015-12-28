@@ -6,7 +6,8 @@ define([
     'prism/bundle',
     'markdown-it-san',
     'markdown-it-hash',
-], function(_, Q, MarkdownIt, Prism, sanitizer, hash) {
+    'markdown-it-math',
+], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math) {
     'use strict';
 
     /**
@@ -40,6 +41,12 @@ define([
         configure: function() {
             this.md
             .use(sanitizer)
+            .use(math, {
+                inlineOpen  : '$',
+                inlineClose : '$',
+                blockOpen   : '$$',
+                blockClose  : '$$',
+            })
             .use(hash)
             ;
 

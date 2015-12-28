@@ -57,6 +57,10 @@ define([
             return this._emit('render', content);
         },
 
+        parse: function(content) {
+            return this._emit('parse', content);
+        },
+
         /**
          * Send a message to the Webworker.
          *

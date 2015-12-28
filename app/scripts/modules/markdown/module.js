@@ -19,6 +19,7 @@ define([
 
         Radio.reply('markdown', {
             'render': md.render,
+            'parse' : md.parse,
         }, md);
 
         if (md.workerPromise) {

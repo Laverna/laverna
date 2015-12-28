@@ -264,11 +264,11 @@ define([
         getData: function() {
             var content = this.editor.getValue();
 
-            return Radio.request('markdown', 'render', content)
-            .then(function() {
+            return Radio.request('markdown', 'parse', content)
+            .then(function(env) {
                 return {
                     content: content,
-                    tags: [],
+                    tags: env.tags || [],
                     tasks: []
                 };
             });

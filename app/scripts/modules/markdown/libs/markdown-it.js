@@ -43,8 +43,14 @@ define([
             .use(hash)
             ;
 
-            this.md.renderer.rules.hashtag_open  = function(tokens, idx) { // jshint ignore:line
+            this.md.renderer.rules.hashtag_open  = function(tokens, idx, f, env) { // jshint ignore:line
                 var tagName = tokens[idx].content.toLowerCase();
+
+                if (env) {
+                    env.tags = env.tags || [];
+                    env.tags.push(tagName);
+                }
+
                 return '<a href="#/notes/f/tag/q/' + tagName + '" class="label label-default">';
             };
         },
@@ -58,10 +64,19 @@ define([
             );
         },
 
+        /**
+         * Parse Markdown for tags, tasks, etc.
+         */
         parse: function(content) {
+            var env = {};
+
             return new Q(
-                this.md.parse(content)
-            );
+                this.md.render(content, env)
+            )
+            .then(function() {
+                env.tags = _.uniq(env.tags);
+                return env;
+            });
         },
     });
 

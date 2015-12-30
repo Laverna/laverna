@@ -38,6 +38,10 @@ define([
             return {content: _.escape(this.model.get('content'))};
         },
 
+        onDestroy: function() {
+            Radio.trigger('editor', 'view:destroy');
+        },
+
         onEditorChange: function(content) {
             this.ui.preview.html(content);
 

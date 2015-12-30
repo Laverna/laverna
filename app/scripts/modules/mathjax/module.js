@@ -26,7 +26,7 @@ define([
         tex2jax : {
             inlineMath     : [['$', '$']],
             displayMath    : [['$$', '$$']],
-            processClass   : 'mathjax',
+            processClass   : 'math',
             ignoreClass    : 'layout',
             processEscapes : true
         }
@@ -44,6 +44,8 @@ define([
     });
 
     MathjaxModule.on('stop', function() {
+        console.info('MathJax has stopped');
+
         math.view = null;
         Radio.off('editor', 'preview:refresh');
     });
@@ -52,7 +54,6 @@ define([
      * Start listening to events.
      */
     Radio.request('init', 'add', 'module', function() {
-        // Radio.on('editor', 'converter:init', math.onInitConverter, math);
 
         // When a note is shown, start this module
         Radio.on('noteView', {

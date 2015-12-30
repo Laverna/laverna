@@ -90,8 +90,7 @@ requirejs.config({
 
         // Others
         dompurify             : '../bower_components/DOMPurify/src/purify',
-        mathjax               : '../bower_components/MathJax/MathJax.js?config=MML_HTMLorMML',
-        hljs                  : '../bower_components/highlightjs/highlight.pack',
+        mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
         dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',
         toBlob                : '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',

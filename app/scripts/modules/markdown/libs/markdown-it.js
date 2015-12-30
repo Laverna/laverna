@@ -42,10 +42,17 @@ define([
             this.md
             .use(sanitizer)
             .use(math, {
-                inlineOpen  : '$',
-                inlineClose : '$',
-                blockOpen   : '$$',
-                blockClose  : '$$',
+                inlineOpen       : '$',
+                inlineClose      : '$',
+                blockOpen        : '$$',
+                blockClose       : '$$',
+                renderingOptions : {},
+                inlineRenderer   : function(tokens) {
+                    return '<span class="math inline">$' + tokens + '$</span>';
+                },
+                blockRenderer    : function(tokens) {
+                    return '<div class="math block">$$' + tokens + '$$</div>';
+                },
             })
             .use(hash)
             ;

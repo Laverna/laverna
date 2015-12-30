@@ -91,7 +91,7 @@ define([
 
             if (errors) {
                 model.trigger('invalid', model, errors);
-                return Q.reject('Validation error', errors);
+                return Q.reject('Validation error: tags', errors);
             }
 
             // First, make sure that a model won't duplicate itself.

@@ -35,7 +35,7 @@
     "remotestorage.js": "git://github.com/remotestorage/remotestorage.js#0.12.1",
     "requirejs": "~2.1.15",
     "requirejs-text": "~2.0.13",
-    "sjcl": "~1.0.0",
+    "sjcl": "~1.0.3",
     "to-markdown": "#jquery",
     "tv4": "~1.2.7",
     "underscore": "~1.8.3",

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -214,7 +214,7 @@ define([
 
                 Radio.trigger('sync', 'stop', 'dropbox');
                 Radio.trigger('sync', 'error', {cloud: 'dropbox', error: err});
-                console.error('Error', arguments);
+                console.error('Error', arguments[0], arguments);
             });
         },
 

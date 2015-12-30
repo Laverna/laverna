@@ -124,7 +124,7 @@ define([
 
             if (errors) {
                 model.trigger('invalid', model, errors);
-                return Q.reject('Validation error', errors);
+                return Q.reject('Validation error:' + model.storeName, errors);
             }
 
             // Set new values
@@ -190,8 +190,15 @@ define([
          * @type object options
          */
         saveRaw: function(data, options) {
-            var self  = this,
-                model = new (this.changeDatabase(options)).prototype.model(data);
+            var self   = this,
+                model  = new (this.changeDatabase(options)).prototype.model(data),
+                errors = model.validate(data);
+
+            // Don't save data which can't be validated
+            if (errors) {
+                console.error('Validation failed:' + model.storeName, errors);
+                return Q.resolve();
+            }
 
             return this.save(model, data)
             .then(this.decryptModel)

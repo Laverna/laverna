@@ -7,7 +7,8 @@ define([
     'markdown-it-san',
     'markdown-it-hash',
     'markdown-it-math',
-], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math) {
+    'modules/markdown/libs/markdown-it-task',
+], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math, task) {
     'use strict';
 
     /**
@@ -55,6 +56,7 @@ define([
                 },
             })
             .use(hash)
+            .use(task)
             ;
 
             this.md.renderer.rules.hashtag_open  = function(tokens, idx, f, env) { // jshint ignore:line
@@ -88,7 +90,8 @@ define([
                 this.md.render(content, env)
             )
             .then(function() {
-                env.tags = _.uniq(env.tags);
+                env.tags    = _.uniq(env.tags);
+                env.taskAll = env.tasks.length;
                 return env;
             });
         },

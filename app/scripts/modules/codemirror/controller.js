@@ -266,11 +266,10 @@ define([
 
             return Radio.request('markdown', 'parse', content)
             .then(function(env) {
-                return {
-                    content: content,
-                    tags: env.tags || [],
-                    tasks: []
-                };
+                return _.extend(
+                    _.pick(env, 'tags', 'tasks', 'taskCompleted', 'taskAll'),
+                    {content: content}
+                );
             });
         },
 

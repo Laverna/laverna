@@ -56,7 +56,7 @@ define([
                 },
             })
             .use(hash)
-            .use(task)
+            .use(task.init)
             ;
 
             this.md.renderer.rules.hashtag_open  = function(tokens, idx, f, env) { // jshint ignore:line
@@ -75,9 +75,22 @@ define([
          * Convert Markdown to HTML.
          */
         render: function(content) {
+            // this.toggleTask(6, content);
             return new Q(
                 this.md.render(content)
             );
+        },
+
+        /**
+         * Toggle a task's status.
+         */
+        taskToggle: function(data) {
+            data.content = task.toggle(data);
+
+            return this.parse(data.content)
+            .then(function(env) {
+                return _.extend({content: data.content}, env);
+            });
         },
 
         /**

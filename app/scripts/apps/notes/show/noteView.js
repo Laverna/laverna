@@ -132,7 +132,7 @@ define([
          * Toggle the status of a task
          */
         toggleTask: _.debounce(function(e) {
-            var $task = $(e.target),
+            var $task  = $(e.target),
                 taskId = Number($task.attr('data-task'));
 
             $task.blur();

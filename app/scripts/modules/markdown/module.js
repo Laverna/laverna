@@ -18,10 +18,12 @@ define([
         var md = new Markdown();
 
         Radio.reply('markdown', {
-            'render': md.render,
-            'parse' : md.parse,
+            'render'     : md.render,
+            'parse'      : md.parse,
+            'task:toggle': md.taskToggle,
         }, md);
 
+        // Make the initilizer wait until the worker has spawned
         if (md.workerPromise) {
             return md.workerPromise.promise;
         }

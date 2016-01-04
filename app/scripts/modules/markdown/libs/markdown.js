@@ -61,6 +61,10 @@ define([
             return this._emit('parse', content);
         },
 
+        taskToggle: function(data) {
+            return this._emit('taskToggle', data);
+        },
+
         /**
          * Send a message to the Webworker.
          *

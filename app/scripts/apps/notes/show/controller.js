@@ -117,23 +117,19 @@ define([
          * counts of completed tasks and content with toggled task.
          */
         toggleTask: function(taskId) {
-            var model = this.view.model,
+            var model = this.view.model;
 
-                // Request the content with toggled task.
-                task = Radio.request('editor', 'task:toggle', {
-                    content : model.get('content'),
-                    taskId  : taskId
-                });
+            return Radio.request('markdown', 'task:toggle', {
+                content : model.get('content'),
+                taskId  : taskId
+            })
+            .then(function(data) {
+                if (!data) {
+                    return;
+                }
 
-            // No reply
-            if (!task) {
-                return;
-            }
-
-            // Save the note
-            Radio.request('notes', 'save', model, {
-                content       : task.content,
-                taskCompleted : task.completed
+                // Save the note
+                Radio.request('notes', 'save', model, _.pick(data, 'content', 'taskCompleted', 'taskAll'));
             });
         }
     });

@@ -3,7 +3,12 @@
 var app               = require('app'),
     windowStateKeeper = require('electron-window-state'),
     BrowserWindow     = require('browser-window'),
+    path              = require('path'),
     menu              = require('menu');
+
+require('electron-debug')({
+    showDevTools: false
+});
 
 // Start server
 require('./server');
@@ -73,7 +78,10 @@ app.on('ready', function() {
         height               : windowState.height,
         x                    : windowState.x,
         y                    : windowState.y,
-        'node-integration'   : true,
+        'web-preferences':{
+            'node-integration'   : true,
+            'preload': path.resolve(path.join(__dirname, 'preload.js'))
+        },
         'auto-hide-menu-bar' : true,
         'icon'               : './resources/app/images/icon/icon-120x120.png'
     });

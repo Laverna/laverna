@@ -7,9 +7,11 @@ var app               = require('app'),
     menu              = require('menu');
 
 // Uncomment to enable helpful F12 Chrome inspector debugging
-//require('electron-debug')({
-//    showDevTools: false
-//});
+if(process.env.NODE_ENV === 'dev'){
+	require('electron-debug')({
+	    showDevTools: true
+	});
+}
 
 // Start server
 require('./server');
@@ -72,7 +74,6 @@ app.on('ready', function() {
         width  : 1000,
         height : 600
     });
-
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width                : windowState.width,
@@ -84,7 +85,7 @@ app.on('ready', function() {
             'preload': path.resolve(path.join(__dirname, 'preload.js'))
         },
         'auto-hide-menu-bar' : true,
-        'icon'               : './resources/app/images/icon/icon-120x120.png'
+        'icon'               : path.join(__dirname, '/dist/images/icon/icon-120x120.png')
     });
 
     // Open all external links in a different browser

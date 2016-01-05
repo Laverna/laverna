@@ -6,9 +6,10 @@ var app               = require('app'),
     path              = require('path'),
     menu              = require('menu');
 
-require('electron-debug')({
-    showDevTools: false
-});
+// Uncomment to enable helpful F12 Chrome inspector debugging
+//require('electron-debug')({
+//    showDevTools: false
+//});
 
 // Start server
 require('./server');

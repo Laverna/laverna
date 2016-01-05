@@ -3,7 +3,15 @@
 var app               = require('app'),
     windowStateKeeper = require('electron-window-state'),
     BrowserWindow     = require('browser-window'),
+    path              = require('path'),
     menu              = require('menu');
+
+// Uncomment to enable helpful F12 Chrome inspector debugging
+if(process.env.NODE_ENV === 'dev'){
+	require('electron-debug')({
+	    showDevTools: true
+	});
+}
 
 // Start server
 require('./server');
@@ -66,16 +74,18 @@ app.on('ready', function() {
         width  : 1000,
         height : 600
     });
-
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width                : windowState.width,
         height               : windowState.height,
         x                    : windowState.x,
         y                    : windowState.y,
-        'node-integration'   : true,
+        'web-preferences':{
+            'node-integration'   : true,
+            'preload': path.resolve(path.join(__dirname, 'preload.js'))
+        },
         'auto-hide-menu-bar' : true,
-        'icon'               : './resources/app/images/icon/icon-120x120.png'
+        'icon'               : path.join(__dirname, '/dist/images/icon/icon-120x120.png')
     });
 
     // Open all external links in a different browser

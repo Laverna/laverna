@@ -27,6 +27,11 @@ var gulp         = require('gulp'),
     mocha        = require('gulp-mocha-phantomjs'),
     nightwatch   = require('gulp-nightwatch');
 
+const dev = !!util.env.dev; // Add --dev flag to enable
+
+gulp.task('sup', function () {
+    console.log(dev)
+});
 /**
  * Server for dist folder.
  */
@@ -215,7 +220,7 @@ gulp.task('build:js', ['clean:dist'], function() {
         preserveLicenseComments: true,
         wrap                   : true
     }))
-    .pipe(uglify({
+    .pipe(dev ? util.noop(): uglify({
         preserveComments: 'license'
     }))
     .pipe(gulp.dest('./dist/scripts'));
@@ -250,7 +255,6 @@ gulp.task('cssmin', ['clean:dist'], function() {
  */
 gulp.task('copy:deps', ['clean:dist'], function() {
     var options = {base: './app/bower_components/'};
-
     return merge.apply(merge, [
         gulp.src([
             './LICENSE'
@@ -286,7 +290,7 @@ gulp.task('copy:deps', ['clean:dist'], function() {
             './app/bower_components/dropbox/dropbox.js',
             './app/bower_components/sjcl/sjcl.js',
         ], options)
-        .pipe(uglify({
+        .pipe(dev ? util.noop() : uglify({
             preserveComments: 'license'
         }))
         .pipe(gulp.dest('./dist/bower_components/')),
@@ -443,6 +447,7 @@ gulp.task('copy:release', ['copy:dist'], function() {
         './node_modules/mkdirp/**',
         './node_modules/wordwrap/**',
         './server.js',
+        './preload.js',
         './package.json'
     ], {base: './'})
     .pipe(gulp.dest('./release/laverna'));

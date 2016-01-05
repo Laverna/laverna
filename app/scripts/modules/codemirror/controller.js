@@ -149,8 +149,9 @@ define([
          */
         updatePreview: function() {
             var self = this;
+            this.view.model.attributes.content = this.editor.getValue();
 
-            return Radio.request('markdown', 'render', this.editor.getValue())
+            return Radio.request('markdown', 'render', this.view.model)
             .then(function(content) {
                 self.view.trigger('editor:change', content);
             });
@@ -267,7 +268,7 @@ define([
             return Radio.request('markdown', 'parse', content)
             .then(function(env) {
                 return _.extend(
-                    _.pick(env, 'tags', 'tasks', 'taskCompleted', 'taskAll'),
+                    _.pick(env, 'tags', 'tasks', 'taskCompleted', 'taskAll', 'files'),
                     {content: content}
                 );
             });

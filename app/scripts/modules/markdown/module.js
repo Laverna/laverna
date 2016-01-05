@@ -7,9 +7,10 @@
  */
 /* global define */
 define([
+    'underscore',
     'backbone.radio',
     'modules/markdown/libs/markdown'
-], function(Radio, Markdown) {
+], function(_, Radio, Markdown) {
     'use strict';
 
     // Add a global module initializer
@@ -18,7 +19,13 @@ define([
         var md = new Markdown();
 
         Radio.reply('markdown', {
-            'render'     : md.render,
+            'render'     : function(model) {
+                var data   = (typeof model === 'string' ? {content: model} : _.clone(model.attributes));
+                data.files = _.pluck(model.files || [], 'attributes');
+
+                return md.render(data);
+            },
+
             'parse'      : md.parse,
             'task:toggle': md.taskToggle,
         }, md);

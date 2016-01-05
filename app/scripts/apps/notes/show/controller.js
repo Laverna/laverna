@@ -51,7 +51,7 @@ define([
         _show: function(note, notebook) {
             var self = this;
 
-            Radio.request('markdown', 'render', note.get('content'))
+            Radio.request('markdown', 'render', note)
             .then(function(content) {
                 return self.render(note, content, notebook);
             });

@@ -8,7 +8,8 @@ define([
     'markdown-it-hash',
     'markdown-it-math',
     'modules/markdown/libs/markdown-it-task',
-], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math, task) {
+    'modules/markdown/libs/markdown-it-file',
+], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math, task, file) {
     'use strict';
 
     /**
@@ -35,6 +36,7 @@ define([
     }
 
     _.extend(Markdown.prototype, {
+        objectURLs: {},
 
         /**
          * Configure MarkdownIt.
@@ -57,6 +59,7 @@ define([
             })
             .use(hash)
             .use(task.init)
+            .use(file.init)
             ;
 
             this.md.renderer.rules.hashtag_open  = function(tokens, idx, f, env) { // jshint ignore:line
@@ -74,10 +77,18 @@ define([
         /**
          * Convert Markdown to HTML.
          */
-        render: function(content) {
-            // this.toggleTask(6, content);
+        render: function(model) {
+            var env  = {
+                modelData : model,
+                objectURLs: this.objectURLs
+            };
+
+            if (model.id) {
+                file.revokeURLs(this.objectURLs, model);
+            }
+
             return new Q(
-                this.md.render(content)
+                this.md.render(model.content, env)
             );
         },
 
@@ -103,8 +114,9 @@ define([
                 this.md.render(content, env)
             )
             .then(function() {
-                env.tags    = _.uniq(env.tags);
-                env.taskAll = env.tasks.length;
+                env.tags    = env.tags ? _.uniq(env.tags) : [];
+                env.files   = env.files ? _.uniq(env.files) : [];
+                env.taskAll = env.tasks ? env.tasks.length : 0;
                 return env;
             });
         },

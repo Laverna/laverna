@@ -53,8 +53,8 @@ define([
     _.extend(Markdown.prototype, {
         promises: [],
 
-        render: function(content) {
-            return this._emit('render', content);
+        render: function(model) {
+            return this._emit('render', model);
         },
 
         parse: function(content) {

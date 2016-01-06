@@ -73,6 +73,7 @@ define([
             // Events
             this.listenTo(this.view, 'editor:action', this.onViewAction);
             this.listenTo(Radio.channel('notesForm'), 'set:mode', this.changeMode);
+            this.listenTo(Radio.channel('editor'), 'focus', this.focus);
 
             // Show the view and render Pagedown editor
             Radio.request('notesForm', 'show:editor', this.view);
@@ -148,10 +149,14 @@ define([
          * Update the preview.
          */
         updatePreview: function() {
-            var self = this;
-            this.view.model.attributes.content = this.editor.getValue();
+            var self = this,
+                data = _.pick(this.view.model, 'attributes', 'files');
 
-            return Radio.request('markdown', 'render', this.view.model)
+            return Radio.request('markdown', 'render', _.extend({}, data, {
+                attributes: {
+                    content: this.editor.getValue()
+                }
+            }))
             .then(function(content) {
                 self.view.trigger('editor:change', content);
             });
@@ -555,6 +560,13 @@ define([
          */
         undoAction: function() {
             this.editor.undo();
+        },
+
+        /**
+         * Focus on the editor.
+         */
+        focus: function() {
+            this.editor.focus();
         },
 
         generateLink: function(data) {

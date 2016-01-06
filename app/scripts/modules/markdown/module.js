@@ -20,7 +20,7 @@ define([
 
         Radio.reply('markdown', {
             'render'     : function(model) {
-                var data   = (typeof model === 'string' ? {content: model} : _.clone(model.attributes));
+                var data   = (typeof model === 'string' ? {content: model} : _.clone(model.attributes || model));
                 data.files = _.pluck(model.files || [], 'attributes');
 
                 return md.render(data);

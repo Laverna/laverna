@@ -132,14 +132,22 @@ define([
          * Warn a user that they have made some changes.
          */
         showConfirm: function() {
-            var data  = _.pick(this.getContent(), 'title', 'content', 'notebookId'),
-                model = this.view.model.pick('title', 'content', 'notebookId');
+            var self = this;
 
-            if (_.isEqual(model, data)) {
-                return this.redirect();
-            }
+            return this.getContent()
+            .then(function(data) {
+                var model = self.view.model.pick('title', 'content', 'notebookId');
+                data  = _.pick(data, 'title', 'content', 'notebookId');
 
-            Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+                if (_.isEqual(model, data)) {
+                    return self.redirect();
+                }
+
+                Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+            })
+            .fail(function(e) {
+                console.error('form ShowConfirm', e);
+            });
         },
 
         redirect: function() {

@@ -141,8 +141,9 @@ define([
             this.updatePreview();
         },
 
-        changeMode: function() {
+        changeMode: function(mode) {
             window.dispatchEvent(new Event('resize'));
+            this.view.trigger('change:mode', mode);
         },
 
         /**

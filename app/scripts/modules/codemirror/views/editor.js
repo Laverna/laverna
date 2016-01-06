@@ -23,7 +23,8 @@ define([
 
         ui: {
             preview       : '#wmd-preview',
-            previewScroll : '.editor--preview'
+            previewScroll : '.editor--preview',
+            bar           : '.editor--bar'
         },
 
         events: {
@@ -32,7 +33,13 @@ define([
         },
 
         initialize: function() {
+            this.options.mode = Radio.request('configs', 'get:config', 'editMode');
+
             this.listenTo(this, 'editor:change', this.onEditorChange);
+            this.listenTo(this, 'change:mode', this.onChangeMode);
+
+            this.$layoutBody = $('.layout--body.-scroll.-form');
+            this.$layoutBody.on('scroll', _.bind(this.onScroll, this));
         },
 
         serializeData: function() {
@@ -40,7 +47,39 @@ define([
         },
 
         onDestroy: function() {
+            this.$layoutBody.off('scroll');
             Radio.trigger('editor', 'view:destroy');
+        },
+
+        onChangeMode: function(mode) {
+            this.options.mode = mode;
+
+            if (mode !== 'normal') {
+
+                // Make the editor visible by scrolling back
+                this.$layoutBody.scrollTop(0);
+
+                // Change WYSIWYG bar width
+                this.ui.bar.css('width', 'initial');
+                return this.ui.bar.removeClass('-fixed');
+            }
+        },
+
+        onScroll: function() {
+
+            // If editor mode is not 'normal' mode, don't do anything
+            if (this.options.mode !== 'normal') {
+                return;
+            }
+
+            // Fix WYSIWYG bar on top
+            if (this.$layoutBody.scrollTop() > this.ui.bar.offset().top) {
+                this.ui.bar.css('width', this.$layoutBody.width());
+                return this.ui.bar.addClass('-fixed');
+            }
+
+            this.ui.bar.css('width', 'initial');
+            return this.ui.bar.removeClass('-fixed');
         },
 
         onEditorChange: function(content) {

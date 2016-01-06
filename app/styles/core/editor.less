@@ -32,6 +32,14 @@
     border-top    : 1px solid rgb(229, 229, 229);
     border-bottom : 1px solid rgb(229, 229, 229);
     padding       : 6px 0;
+
+    &.-fixed {
+        &:extend(.navbar-static-top);
+        position    : fixed;
+        z-index     : @zindex-navbar - 1;
+        top         : @navbar-height;
+        margin-left : -15px;
+    }
 }
 
 .editor--input {

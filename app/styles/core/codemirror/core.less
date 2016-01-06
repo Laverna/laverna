@@ -76,7 +76,7 @@ flickering artifacts. */
  * Paddings
  */
 .CodeMirror-lines {
-    padding    : 15px 10px 100px; // Vertical padding around content
+    padding    : 15px 0 100px; // Vertical padding around content
     cursor     : text;
     min-height : 1px;       // prevents collapsing before first draw
 }
@@ -329,5 +329,12 @@ div.CodeMirror-dragcursors {
     // Hide the cursor when printing
     .CodeMirror div.CodeMirror-cursors {
         visibility: hidden;
+    }
+}
+
+.editor--fullscreen.-preview {
+    .CodeMirror-lines {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }

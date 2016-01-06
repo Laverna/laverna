@@ -18,6 +18,15 @@
 .editor--bar {
     border-right-width : 0;
     border-left-width  : 0;
+
+    // Hide some buttons on small screens
+    max-height : @navbar-height - 6px;
+    height     : @navbar-height - 6px;
+    overflow   : hidden;
+}
+.editor--btns {
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .editor--fullscreen .layout--body.-form {
@@ -44,8 +53,8 @@
     border-radius       : 0;
 
     // Sizing
-    padding-top    : 4px;
-    padding-bottom : 4px;
+    padding-top    : 2px;
+    padding-bottom : 2px;
     min-height     : 20px;
     height         : auto;
 }

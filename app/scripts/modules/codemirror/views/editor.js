@@ -22,7 +22,8 @@ define([
         className: 'layout--body container-fluid',
 
         ui: {
-            preview    : '#wmd-preview',
+            preview       : '#wmd-preview',
+            previewScroll : '.editor--preview'
         },
 
         events: {

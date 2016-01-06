@@ -203,7 +203,7 @@ define([
 
             // Don't do any computations
             if (!e.doc.scrollTop) {
-                this.view.ui.preview.scrollTop(0);
+                this.view.ui.previewScroll.scrollTop(0);
                 return;
             }
 
@@ -237,13 +237,13 @@ define([
                  * change it according to the difference of scroll positions in the editor.
                  */
                 if (self.scrollTop && self.scrollPos === newPos) {
-                    self.view.ui.preview.scrollTop(self.view.ui.preview.scrollTop() + (e.doc.scrollTop - self.scrollTop));
+                    self.view.ui.previewScroll.scrollTop(self.view.ui.previewScroll.scrollTop() + (e.doc.scrollTop - self.scrollTop));
                     self.scrollTop = e.doc.scrollTop;
                     return;
                 }
 
                 // Scroll to the last visible element's position
-                self.view.ui.preview.animate({
+                self.view.ui.previewScroll.animate({
                     scrollTop: newPos
                 }, 70, 'swing');
 

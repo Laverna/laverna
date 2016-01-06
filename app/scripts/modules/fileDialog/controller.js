@@ -74,7 +74,7 @@ define([
 
                 // If there is only 1 file and its type is image
                 if (files.length === 1 && self.isImage(files[0])) {
-                    return self.attachImage(self.generateCode(files[0]));
+                    return self.attachText(self.generateCode(files[0]));
                 }
 
                 // Otherwise, we will generate custom Markdown code
@@ -104,11 +104,20 @@ define([
                 }, this);
             }
 
-            this.attachImage(str);
+            this.attachText(str);
         },
 
         attachImage: function(url) {
-            this.options.callback(url !== '' ? url : null);
+            var text = Radio.request('editor', 'generate:image', {
+                text : 'Alt description',
+                url  : url
+            });
+
+            this.attachText(text);
+        },
+
+        attachText: function(text) {
+            this.options.callback(text !== '' ? text : null);
 
             // Close the dialog
             this.options.callback = null;

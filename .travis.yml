@@ -9,7 +9,7 @@ install:
     - cd test && bower install && cd ../
 script:
     - gulp build
-    - gulp server:dist &
+    - gulp --root dist &
     - set -e
     - gulp nightwatch --env ci; echo $?
     - killall gulp

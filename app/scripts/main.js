@@ -63,10 +63,10 @@ requirejs.config({
         dropbox               : '../bower_components/dropbox/dropbox',
 
         // Markdown
-        'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it',
-        'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer',
-        'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag',
-        'markdown-it-math'    : '../bower_components/markdown-it-math/dist/markdown-it-math',
+        'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it.min',
+        'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer.min',
+        'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag.min',
+        'markdown-it-math'    : '../bower_components/markdown-it-math/dist/markdown-it-math.min',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others

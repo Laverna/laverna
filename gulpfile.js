@@ -65,6 +65,9 @@ gulp.task('release', plugins.sequence(
 
 /**
  * Gulp server.
- * ``gulp --root dist`` to server dist folder.
+ * ``gulp --root dist`` to serve dist folder.
  */
-gulp.task('default', ['reload:less', 'prism', 'reload:server']);
+gulp.task('default', plugins.sequence(
+    ['reload:less', 'prism'],
+    'reload:server'
+));

@@ -13,7 +13,7 @@ function getTask(task) {
     'less'   , 'prism'      , 'require'     , 'electron'  ,
     'htmlmin', 'cssmin'     , 'htmlManifest',
     'copy'   , 'copyRelease', 'copyDist'    ,
-    'reload' , 'clean'
+    'reload' , 'clean'      , 'npm'
 ]
 .forEach(function(task) {
     var taskFun = getTask(task);
@@ -59,6 +59,7 @@ gulp.task('release', plugins.sequence(
     'build',
     'clean:release',
     ['copyDist', 'copyRelease'],
+    'npm:install',
     'electron',
     'release:after'
 ));

@@ -11,7 +11,7 @@ exports.command = function() {
     this
     .click('.modal-header .close')
     .keys(this.Keys.ESCAPE)
-    .expect.element('#welcome--page').not.to.be.present.before(8000);
+    .expect.element('#welcome--page').not.to.be.present.before(10000);
 
     return this;
 };

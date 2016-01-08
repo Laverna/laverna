@@ -9,7 +9,7 @@ exports.command = function(item) {
     .expect.element('#editor--input--title').value.to.contain(item.title).before(2000);
 
     this
-    .click('.ace_content')
+    .click('.CodeMirror-lines')
     .keys(item.content);
 
     if (item.notebook) {

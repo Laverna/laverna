@@ -133,7 +133,7 @@ module.exports = {
         .expect.element('#editor--input--title').value.to.contain('Nightwatch').before(1000);
 
         client
-        .click('.ace_content')
+        .click('.CodeMirror-lines')
         .keys(['Nightwatch test content.']);
 
         client
@@ -165,7 +165,7 @@ module.exports = {
         .expect.element('#editor--input--title').value.to.contain('Night Watch').before(1000);
 
         client
-        .click('.ace_content')
+        .click('.CodeMirror-lines')
         .keys(['Added a new content.']);
 
         client

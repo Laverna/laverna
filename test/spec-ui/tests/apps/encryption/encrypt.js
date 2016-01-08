@@ -32,10 +32,11 @@ module.exports = {
     },
 
     'asks for a new password': function(client) {
-        client.expect.element('input[name=password]').to.be.present.before(5000);
+        client.expect.element('input[name="password"]').to.be.present.before(5000);
 
         client
-        .setValue('input[name=password]', '1')
+        .pause(100)
+        .setValue('input[name="password"]', '1')
         .click('[type="submit"]');
     },
 
@@ -57,6 +58,7 @@ module.exports = {
     },
 
     'shows notes in unencrypted format': function(client) {
+        client.pause(100);
         notes.forEach(function(note) {
             client.expect.element('.list').text.to.contain(note.title).before(5000);
             client.expect.element('.list').text.to.contain(note.content).before(5000);
@@ -131,5 +133,4 @@ module.exports = {
             client.expect.element('.list').text.to.contain(note.content).before(5000);
         });
     },
-
 };

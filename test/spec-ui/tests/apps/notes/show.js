@@ -59,8 +59,8 @@ module.exports = {
 
     'changes a task\'s status when a checkbox is clicked': function(client) {
         client
-        .click('.layout--body.-note .checkbox')
-        .expect.element('.layout--body.-note .checkbox input:checked').to.be.present.before(5000);
+        .click('.layout--body.-note .task--checkbox')
+        .expect.element('.layout--body.-note .task--checkbox input:checked').to.be.present.before(5000);
 
         client.pause(500);
     },
@@ -91,22 +91,8 @@ module.exports = {
 
     'changes favourite status if the button is clicked': function(client) {
         client
-        .perform(function(client, done) {
-            client.getAttribute('.btn--favourite--icon', 'class', function(res) {
-                var isFavourite = res.value.search('icon-favorite') > -1;
-
-                client
-                .click('.btn--favourite');
-
-                if (isFavourite) {
-                    client.expect.element('.btn--favourite--icon').to.have.attribute('class').which.contains('icon-favorite');
-                    return done();
-                }
-
-                client.expect.element('.btn--favourite--icon').to.have.attribute('class').which.does.not.contain('icon-favorite');
-                return done();
-            });
-        });
+        .click('.btn--favourite')
+        .expect.element('.btn--favourite--icon').to.have.attribute('class').which.contains('icon-favorite');
     },
 
     'opens edit page if "e" is pressed': function(client) {

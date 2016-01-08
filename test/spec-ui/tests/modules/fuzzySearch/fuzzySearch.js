@@ -1,13 +1,18 @@
-/* global describe, before, after, it */
 'use strict';
 
 /**
  * Test fuzzy search module
  */
-describe('FuzzySearch', function() {
+module.exports = {
+    before: function(client) {
+        client.closeWelcome();
+    },
 
-    before(function(client, done) {
-        this.timeout(100000);
+    after: function(client) {
+        client.end();
+    },
+
+    'wait': function(client) {
         client.urlHash('notes');
         client.expect.element('#header--add').to.be.visible.before(50000);
 
@@ -15,22 +20,17 @@ describe('FuzzySearch', function() {
         client.addNote({title: 'note2', content: 'content2'});
         client.addNote({title: 'note3', content: 'content3'});
         client.addNote({title: 'Nightwatch', content: 'Nightwatch'});
-        client.perform(() => {done();});
-    });
+    },
 
-    after(function(client, done) {
-        done();
-    });
-
-    it('can show search form', function(client) {
+    'can show search form': function(client) {
         client.expect.element('#header--sbtn').to.be.present.before(5000);
         client.click('#header--sbtn');
 
         client.expect.element('#header--search--input').to.be.present.before(5000);
         client.expect.element('#header--search--input').to.be.visible.before(5000);
-    });
+    },
 
-    it('can search by note\'s name', function(client) {
+    'can search by note\'s name': function(client) {
         client.clearValue('#header--search--input');
         client.expect.element('#sidebar--fuzzy').text.to.be.equal('');
 
@@ -42,15 +42,15 @@ describe('FuzzySearch', function() {
         client.expect.element('#sidebar--fuzzy').text.to.contain('note2');
         client.expect.element('#sidebar--fuzzy').text.to.contain('note3');
         client.expect.element('#sidebar--fuzzy').text.to.not.contain('Nightwatch');
-    });
+    },
 
-    it('can close fuzzySearch module on Escape', function(client) {
+    'can close fuzzySearch module on Escape': function(client) {
         client
         .setValue('#header--search--input', client.Keys.ESCAPE)
         .expect.element('#sidebar--fuzzy').text.to.be.equal('').before(5000);
-    });
+    },
 
-    it('can search by note\'s content', function(client) {
+    'can search by note\'s content': function(client) {
         client.click('#header--sbtn');
         client.expect.element('#header--search--input').to.be.present.before(5000);
         client.expect.element('#header--search--input').to.be.visible.before(5000);
@@ -61,9 +61,9 @@ describe('FuzzySearch', function() {
         client.expect.element('#sidebar--fuzzy').text.to.contain('note2');
         client.expect.element('#sidebar--fuzzy').text.to.contain('note3');
         client.expect.element('#sidebar--fuzzy').text.to.not.contain('Nightwatch');
-    });
+    },
 
-    it('after hitting ESCAPE notes are normally rendered', function(client) {
+    'after hitting ESCAPE notes are normally rendered': function(client) {
         client
         .clearValue('#header--search--input')
         .pause(1000)
@@ -77,9 +77,9 @@ describe('FuzzySearch', function() {
         client.expect.element('#sidebar--content').text.to.contain('note2').before(5000);
         client.expect.element('#sidebar--content').text.to.contain('note3').before(5000);
         client.expect.element('#sidebar--content').text.to.contain('Nightwatch').before(5000);
-    });
+    },
 
-    it('redirects to notes search page on `enter`', function(client) {
+    'redirects to notes search page on `enter`': function(client) {
         client.expect.element('#header--sbtn').to.be.visible.before(5000);
         client.click('#header--sbtn');
 
@@ -99,5 +99,5 @@ describe('FuzzySearch', function() {
         client
         .setValue('#header--search--input', client.Keys.ENTER)
         .assert.urlContains('notes/f/search/q/note');
-    });
-});
+    }
+};

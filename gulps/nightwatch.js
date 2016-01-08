@@ -12,7 +12,7 @@ module.exports = function(gulp, plugins) {
             .pipe(plugins.nightwatch({
                 configFile : './test/nightwatch.json',
                 cliArgs    : [
-                    // '--test ' + 'test/spec-ui/test.js',
+                    // '--test ' + './test/spec-ui/tests/apps/notes/show.js',
                     '--env ' + (plugins.util.env.env || 'default')
                 ]
             }))

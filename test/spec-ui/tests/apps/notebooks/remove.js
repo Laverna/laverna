@@ -93,10 +93,15 @@ module.exports = {
         .pause(100)
         .urlHash('notebooks');
 
-        for (var i = 0, len = 2; i < len; i++) {
+        for (var i = 0, len = 2; i <= len; i++) {
+            if (i === 2) {
+                return;
+            }
+
             client
-            .click('#notebooks .list--buttons .drop-edit')
-            .click('#notebooks .list--buttons .remove-link');
+            .keys('j')
+            .pause(100)
+            .keys([client.Keys.SHIFT, '3', client.Keys.SHIFT]);
 
             client.expect.element('#modal .modal-title').to.be.present.before(5000);
             client.expect.element('#modal .modal-title').to.be.visible.before(5000);
@@ -104,7 +109,9 @@ module.exports = {
             client.click('#modal .btn[data-event="confirm"]');
             client.pause(500);
         }
+    },
 
+    'shows notebooks in the navbar menu': function(client) {
         client
         .urlHash('notes')
         .pause(100)

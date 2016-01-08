@@ -22,7 +22,7 @@ define([
             var $divs;
 
             this.view = view || this.view;
-            $divs = this.view.$el.find('.mathjax');
+            $divs = this.view.$el.find('.math');
 
             // Don't bother with processing MathJax
             if (!$divs.length) {
@@ -77,27 +77,6 @@ define([
                 return;
             });
         },
-
-        /**
-         * Add hooks after converter is initialized.
-         * Place MathJax expressions inside div blocks.
-         */
-        onInitConverter: function(converter) {
-            converter.hooks.chain('preConversion', function(text) {
-
-                // Inline MathJax expressions with $
-                text = text.replace(/^\$.+?\$$/gm, function(str) {
-                    return '<div class="mathjax">' + str + '</div>';
-                });
-
-                // Multiline MathJax expressions with $$
-                text = text.replace(/^\$\$[^]+?\$\$$/gm, function(str) {
-                    return '<div class="mathjax">' + str + '</div>';
-                });
-
-                return text;
-            });
-        }
 
     };
 

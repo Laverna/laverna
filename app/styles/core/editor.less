@@ -1,11 +1,68 @@
 /**
  * Editor module
  */
+
+/**
+ * Mixin for creating columns
+ */
+@pagedown-breakpoint: 500px;
+.make-pg-columns(@columns) {
+    .make-lg-column(@columns);
+    .make-md-column(@columns);
+    .make-sm-column(@columns);
+    .make-xs-column(@columns);
+
+    // Stretch columns on small screens
+    @media (max-width: @pagedown-breakpoint) {
+        width: percentage((12 / 12));
+    }
+}
+
 .editor--form {
     margin-top: 15px;
 }
 
-// Fullscreen mode
+/**
+ * WYSIWYG bar
+ */
+.editor--bar {
+    &:extend(.navbar);
+    margin-bottom : 0;
+    border-color  : rgb(217, 217, 217);
+    border-top    : 1px solid rgb(229, 229, 229);
+    border-bottom : 1px solid rgb(229, 229, 229);
+    padding       : 6px 0;
+
+    &.-fixed {
+        &:extend(.navbar-static-top);
+        position    : fixed;
+        z-index     : @zindex-navbar - 1;
+        top         : @navbar-height;
+        margin-left : -15px;
+    }
+}
+
+.editor--input {
+    overflow    : hidden;
+    font-weight : 400;
+    font-size   : 14px;
+    line-height : 20px;
+    margin-left : 0;
+    border      : none;
+    transition  : border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width       : 100%;
+}
+.editor--input,
+.editor--preview {
+    width: 100%;
+}
+.editor--preview {
+    display: none;
+}
+
+/**
+ * Editor in fullscreen mode
+ */
 .editor--fullscreen {
     /**
      * We don't need to show the sidebar on fullscreen mode.
@@ -17,6 +74,117 @@
         width: 100%;
     }
 
+    /**
+     * Show WYSIWG bar on top of everything
+     */
+    .editor--bar {
+        &:extend(.navbar-fixed-top);
+        top: @navbar-height;
+    }
+
+    /**
+     * Prevent WYSIWG bar from overflowing the main navbar
+     */
+    .layout--navbar {
+        z-index: @zindex-navbar-fixed + 1;
+    }
+
+    /**
+     * Since we have two navbars, we need to change the position
+     * of the form.
+     */
+    .layout--body.-form {
+        top: @navbar-height * 2;
+    }
+}
+
+/**
+ * Pagedown in preview mode
+ */
+.editor--fullscreen.-preview {
+    overflow: hidden;
+
+    // Main layout shouldn't have scrollbars
+    .layout--body.-form {
+        overflow: hidden;
+    }
+
+    .navbar-form {
+        padding: 0;
+    }
+
+    // This is the main wrapper now
+    .editor--row {
+        &:extend(.layout--body);
+    }
+
+    /**
+     * We use it to create a two column view:
+     * the editor and the preview.
+     */
+    .editor--layout {
+        .make-pg-columns(5.94);
+        position: absolute;
+        height: auto;
+        top: 0;
+        bottom: @navbar-height + 15px;
+        overflow: hidden;
+        background-color: #FFF;
+
+        &.-left {
+            left: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        &.-right {
+            right: 0;
+        }
+    }
+
+    /**
+     * Add scrollbars to Pagedown editor and its preview.
+     */
+    .editor--preview,
+    .editor--input {
+        background-color: #FFF;
+        width: 100%;
+        min-height: 1px;
+        position: absolute;
+        overflow: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    // Pagedown preview styles
+    .editor--preview {
+        display: block;
+        word-wrap: break-word;
+        padding: 15px 20px 0;
+    }
+    .editor--preview--block {
+        padding-bottom: 100px;
+    }
+
+    // Preview mode on small screens
+    @media (max-width: @pagedown-breakpoint) {
+        // Fix the scrollbar
+        .editor--layout {
+            bottom: 100px;
+        }
+
+        // Hide both columns
+        .editor--layout.-left,
+        .editor--layout.-right {
+            display: none;
+        }
+
+        .-show,
+        .editor--layout.-show,
+        .editor--show--column {
+            display: block !important;
+        }
+    }
 }
 
 // Notebook list

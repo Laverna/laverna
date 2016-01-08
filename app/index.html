@@ -30,6 +30,7 @@
 
         <link rel="stylesheet" href="styles/core.css">
         <link rel="stylesheet" href="styles/theme-default.css">
+
         <script src="bower_components/modernizr/modernizr.js"></script>
     </head>
     <body class="-noscroll">
@@ -55,16 +56,6 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-        <script>
-            // Requirejs compatibility in Electron app
-            if (window.require) {
-                window.requireNode = window.require;
-                window.moduleNode  = window.module;
-
-                window.require = undefined;
-                window.module  = undefined;
-            }
-        </script>
         <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
     </body>
 </html>

@@ -27,9 +27,7 @@ define([
      * 2. channel: noteView, event: view:destroy
      *    before the view is destroyed.
      * Requests:
-     * 1. channel: editor, request: content:html
-     *    it expects to receive HTML.
-     * 2. channel: global, request: configs
+     * 1. channel: global, request: configs
      */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
@@ -134,7 +132,7 @@ define([
          * Toggle the status of a task
          */
         toggleTask: _.debounce(function(e) {
-            var $task = $(e.target),
+            var $task  = $(e.target),
                 taskId = Number($task.attr('data-task'));
 
             $task.blur();
@@ -154,9 +152,9 @@ define([
         },
 
         serializeData: function() {
-            var content = Radio.request('editor', 'content:html', this.model);
+            // var content = Radio.request('markdown', 'render', this.model);
             return _.extend(this.model.toJSON(), {
-                content  : content || this.model.get('content'),
+                content  : this.options.content || this.model.get('content'),
                 notebook : this.options.notebook.toJSON(),
                 uri      : Radio.request('uri', 'link:profile', '/')
             });

@@ -105,16 +105,26 @@ define([
         },
 
         save: function() {
-            Radio.request('notes', 'save', this.view.model, this.getContent())
+            var self = this;
+
+            return this.getContent()
+            .then(function(data) {
+                return Radio.request('notes', 'save', self.view.model, data);
+            })
             .fail(function(e) {
                 console.error('Error', e);
             });
         },
 
         getContent: function() {
-            return _.extend(Radio.request('editor', 'get:content'), {
-                title      : this.view.ui.title.val().trim(),
-                notebookId : this.view.notebooks.currentView.ui.notebookId.val().trim(),
+            var self = this;
+
+            return Radio.request('editor', 'get:data')
+            .then(function(data) {
+                return _.extend(data, {
+                    title      : self.view.ui.title.val().trim(),
+                    notebookId : self.view.notebooks.currentView.ui.notebookId.val().trim(),
+                });
             });
         },
 
@@ -122,14 +132,22 @@ define([
          * Warn a user that they have made some changes.
          */
         showConfirm: function() {
-            var data  = _.pick(this.getContent(), 'title', 'content', 'notebookId'),
-                model = this.view.model.pick('title', 'content', 'notebookId');
+            var self = this;
 
-            if (_.isEqual(model, data)) {
-                return this.redirect();
-            }
+            return this.getContent()
+            .then(function(data) {
+                var model = self.view.model.pick('title', 'content', 'notebookId');
+                data  = _.pick(data, 'title', 'content', 'notebookId');
 
-            Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+                if (_.isEqual(model, data)) {
+                    return self.redirect();
+                }
+
+                Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+            })
+            .fail(function(e) {
+                console.error('form ShowConfirm', e);
+            });
         },
 
         redirect: function() {

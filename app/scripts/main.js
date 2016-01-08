@@ -15,23 +15,17 @@ requirejs.config({
     nodeRequire: (typeof requireNode === 'undefined' ? null : requireNode),
 
     packages: [
-        // Ace editor
+        // Codemirror editor
         {
-            name     : 'ace',
-            location : '../bower_components/ace/lib/ace',
-            main     : 'ace'
+            name     : 'codemirror',
+            location : '../bower_components/codemirror',
+            main     : 'lib/codemirror'
         },
-        // Pagedown editor
+        // Prismjs
         {
-            name     : 'pagedown',
-            location : '../bower_components/pagedown',
-            main     : 'Markdown.Editor'
-        },
-        // Pagedown-ace editor
-        {
-            name     : 'pagedown-ace',
-            location : '../bower_components/pagedown-ace',
-            main     : 'Markdown.Editor'
+            name     : 'prism',
+            location : '../bower_components/prism',
+            main     : 'bundle'
         },
         // Xregexp
         {
@@ -69,7 +63,10 @@ requirejs.config({
         dropbox               : '../bower_components/dropbox/dropbox',
 
         // Markdown
-        'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
+        'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it.min',
+        'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer.min',
+        'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag.min',
+        'markdown-it-math'    : '../bower_components/markdown-it-math/dist/markdown-it-math.min',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
@@ -122,30 +119,6 @@ requirejs.config({
         },
 
         // Markdown
-        ace: {
-            exports: 'ace'
-        },
-        'pagedown/Markdown.Editor': {
-            exports: 'Markdown.Editor',
-            deps: [ 'pagedown-extra' ]
-        },
-        'pagedown-ace/Markdown.Editor': {
-            exports: 'Markdown.Editor',
-            deps: [ 'pagedown-extra' ]
-        },
-        'pagedown-extra': {
-            exports: 'Markdown',
-            deps: [
-                'pagedown/Markdown.Converter',
-                'pagedown/Markdown.Sanitizer'
-            ]
-        },
-        'pagedown/Markdown.Converter': {
-            exports: 'Markdown'
-        },
-        'pagedown/Markdown.Sanitizer': {
-            deps: [ 'pagedown/Markdown.Converter' ]
-        },
         'to-markdown': {
             exports: 'toMarkdown'
         },
@@ -168,6 +141,9 @@ requirejs.config({
         // Others
         sjcl: {
             exports: 'sjcl'
+        },
+        'prism/bundle': {
+            exports: 'Prism'
         },
         bootstrap: {
             deps: ['jquery']

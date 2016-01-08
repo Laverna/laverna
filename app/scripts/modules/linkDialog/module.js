@@ -8,10 +8,11 @@
 /* global define */
 define([
     'underscore',
+    'q',
     'modules',
     'backbone.radio',
     'modules/linkDialog/controller'
-], function(_, Modules, Radio, Controller) {
+], function(_, Q, Modules, Radio, Controller) {
     'use strict';
 
     /**
@@ -34,25 +35,25 @@ define([
     });
 
     LinkDialog.on('before:stop', function() {
+        console.info('LinkDialog stopped');
+
         this.stopListening();
         LinkDialog.controller = null;
-    });
-
-    Radio.request('init', 'add', 'editor:before', function(editor) {
-        if (!editor.hooks.insertLinkDialog) {
-            return;
-        }
-
-        // Register a hook
-        editor.hooks.set('insertLinkDialog', function(fnc) {
-            LinkDialog.start({callback: fnc});
-            return true;
-        });
     });
 
     // Stop the module when editor is closed
     Radio.request('init', 'add', 'module', function() {
         Radio.on('editor', 'destroy', LinkDialog.stop, LinkDialog);
+
+        Radio.reply('editor', 'show:link', function() {
+            var defer = Q.defer();
+
+            LinkDialog.start({callback: function(link) {
+                defer.resolve(link);
+            }});
+
+            return defer.promise;
+        });
     });
 
     return LinkDialog;

@@ -53,13 +53,11 @@ define([
         'apps/help/appHelp',
 
         // Optional modules
-        'modules/pagedown/module',
-        'modules/tags/module',
-        'modules/tasks/module',
+        'modules/markdown/module',
+        'modules/codemirror/module',
         'modules/linkDialog/module',
         'modules/fileDialog/module',
         'modules/fuzzySearch/module',
-        'modules/codePrettify/module',
         'modules/importExport/module',
         'modules/mathjax/module'
     ], function(storage) {

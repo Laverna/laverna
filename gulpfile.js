@@ -48,8 +48,8 @@ gulp.task('test', ['jsonlint', 'jshint', 'mocha']);
 gulp.task('build', plugins.sequence(
     'test',
     'clean:dist',
-    'prism',
-    ['less', 'copy', 'require', 'htmlmin', 'cssmin'],
+    ['prism', 'less'],
+    ['copy', 'require', 'htmlmin', 'cssmin'],
     'htmlManifest'
 ));
 

@@ -10,7 +10,9 @@ define([
     'use strict';
 
     var tests = [
+
         // Classes
+        'spec/classes/sjcl',
         'spec/classes/encryption',
 
         // Models

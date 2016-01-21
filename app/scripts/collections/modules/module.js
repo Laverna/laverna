@@ -132,7 +132,7 @@ define([
 
             return new Q(self.encryptModel(model))
             .then(function(model) {
-                return new Q(model.save(model.attributes))
+                return new Q(model.save(model.attributes, {validate: false}))
                 .thenResolve(model);
             });
         },
@@ -332,11 +332,17 @@ define([
 
             return new Q(collection.fetch(options))
             .then(function() {
+
                 // Return in decrypted format
                 if (!options.encrypt) {
                     return self.decryptModels(collection.fullCollection || collection)
+                    .then(function() {
+                        collection.trigger('decrypted');
+                        return;
+                    })
                     .thenResolve(collection);
                 }
+
                 return collection;
             });
         },
@@ -367,10 +373,7 @@ define([
                 return new Q(model);
             }
 
-            return this.decryptModel(model)
-            .then(function(model) {
-                return Radio.request('encrypt', 'encrypt:model', model);
-            });
+            return Radio.request('encrypt', 'encrypt:model', model);
         },
 
         /**

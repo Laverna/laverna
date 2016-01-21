@@ -140,14 +140,16 @@ define([
          * @type object options
          */
         getAll: function(options) {
-            var getAll = _.bind(ModuleObject.prototype.getAll, this);
+            var getAll = _.bind(ModuleObject.prototype.getAll, this),
+                self   = this;
+
             options.filter = options.filter || 'active';
 
-            options.beforeSuccess = (
-                !Notes.prototype.conditions[options.filter] ? this._filterOnFetch : null
-            );
-
-            return getAll(options);
+            return getAll(options)
+            .then(function(collection) {
+                self._filterOnFetch(collection, options);
+                return collection;
+            });
         },
 
         /**

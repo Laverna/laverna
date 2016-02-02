@@ -81,7 +81,11 @@ define([
          *
          * @return string
          */
-        randomize: function(number, paranoia) {
+        randomize: function(number, paranoia, noHex) {
+            if (noHex) {
+                return sjcl.random.randomWords(number, paranoia);
+            }
+
             return sjcl.codec.hex.fromBits(
                 sjcl.random.randomWords(number, paranoia)
             );

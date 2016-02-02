@@ -59,6 +59,14 @@ define([
             return {models  : this.collection.getConfigs()};
         },
 
+        templateHelpers: function() {
+            return {
+                hex: function(str) {
+                    return sjcl.codec.hex.fromBits(str);
+                }
+            };
+        },
+
         initialize: function() {
             sjcl.random.startCollectors();
         },
@@ -79,7 +87,7 @@ define([
          * Generate random salt.
          */
         randomize: function() {
-            var random = Radio.request('encrypt', 'randomize', 3, 0);
+            var random = Radio.request('encrypt', 'randomize', 5, 0);
             this.ui.saltInput.val(random).trigger('change');
             return false;
         }

@@ -52,7 +52,8 @@ define([
 
         events: {
             'click #useEncryption' : 'toggleSettings',
-            'click #randomize'     : 'randomize'
+            'click #randomize'     : 'randomize',
+            'blur @ui.password'    : 'randomizeOnPassword'
         },
 
         serializeData: function() {
@@ -81,6 +82,18 @@ define([
         toggleSettings: function() {
             var state = this.ui.settings.attr('disabled') !== 'disabled';
             this.ui.settings.attr('disabled', state);
+        },
+
+        /**
+         * Automatically generate new encryption salt every time the password is
+         * changed.
+         */
+        randomizeOnPassword: function() {
+            if (this.ui.password.val().trim() === this.collection.get('encryptPass').get('value').toString()) {
+                return;
+            }
+
+            this.randomize();
         },
 
         /**

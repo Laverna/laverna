@@ -207,6 +207,11 @@ define([
 
             // Encryption is disabled
             if (Number(this.configs.encrypt) === 0) {
+                _.each(this.collections, function(collection) {
+                    collection.each(function(model) {
+                        model.set('encryptedData', null);
+                    });
+                });
                 return;
             }
 

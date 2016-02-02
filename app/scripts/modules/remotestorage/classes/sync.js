@@ -130,11 +130,14 @@ define([
 
             // Find notes which don't exist in RemoteStorage and create them
             _.each(localData.models, function(lModel) {
-                if (lModel && !_.findWhere(remoteData, {id: lModel.id})) {
-                    promises.push(
-                        RsModule.save(module, lModel.attributes, lModel.encryptKeys)
-                    );
+                var model = _.findWhere(remoteData, {id: lModel.id});
+                if (model && model.updated >= lModel.updated) {
+                    return;
                 }
+
+                promises.push(
+                    RsModule.save(module, lModel.attributes, lModel.encryptKeys)
+                );
             });
 
             return Q.all(promises)

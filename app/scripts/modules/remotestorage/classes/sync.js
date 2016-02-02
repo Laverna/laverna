@@ -132,7 +132,7 @@ define([
             _.each(localData.models, function(lModel) {
                 if (lModel && !_.findWhere(remoteData, {id: lModel.id})) {
                     promises.push(
-                        RsModule.save(module, lModel.attributes)
+                        RsModule.save(module, lModel.attributes, lModel.encryptKeys)
                     );
                 }
             });
@@ -147,7 +147,7 @@ define([
          * Local model was updated.
          */
         onSave: function(model) {
-            return RsModule.save(model.storeName, model.attributes);
+            return RsModule.save(model.storeName, model.attributes, model.encryptKeys);
         },
 
     });

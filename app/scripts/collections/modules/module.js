@@ -192,20 +192,25 @@ define([
         saveRaw: function(data, options) {
             var self   = this,
                 model  = new (this.changeDatabase(options)).prototype.model(data),
-                errors = model.validate(data);
+                errors;
 
-            // Don't save data which can't be validated
-            if (errors) {
-                console.error('Validation failed:' + model.storeName, errors);
-                return Q.resolve();
-            }
+            return this.decryptModel(model)
+            .then(function() {
+                errors = model.validate(model.attributes);
 
-            return this.save(model, data)
-            .then(this.decryptModel)
-            .then(function(model) {
-                self.vent.trigger('update:model', model);
-                self.vent.trigger('synced:' + model.id, model);
-                return model;
+                // Don't save data which can't be validated
+                if (errors) {
+                    console.error('Validation failed:' + model.storeName, errors);
+                    return;
+                }
+
+                return self.save(model, data)
+                .then(self.decryptModel)
+                .then(function(model) {
+                    self.vent.trigger('update:model', model);
+                    self.vent.trigger('synced:' + model.id, model);
+                    return model;
+                });
             });
         },
 

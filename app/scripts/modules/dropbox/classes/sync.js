@@ -227,12 +227,16 @@ define([
          * @return promise
          */
         syncAll: function(localData, remoteData, module) {
-            var promises;
+            var promises,
+                encryptKeys = localData.model.prototype.encryptKeys;
 
             localData = (localData.fullCollection || localData).toJSON();
 
             promises = this.checkRemoteChanges(localData, remoteData, module);
-            promises.push.apply(promises, this.checkLocalChanges(localData, remoteData, module));
+            promises.push.apply(
+                promises,
+                this.checkLocalChanges(localData, remoteData, module, encryptKeys)
+            );
 
             return _.reduce(promises, Q.when, new Q())
             .then(function() {
@@ -276,7 +280,7 @@ define([
          * Save only models which don't exist on Dropbox or
          * which were updated locally.
          */
-        checkLocalChanges: function(localData, remoteData, module) {
+        checkLocalChanges: function(localData, remoteData, module, encryptKeys) {
             var promises = [];
 
             _.each(localData, function(lModel) {
@@ -287,7 +291,7 @@ define([
 
                 console.log('Dropbox local changes:', lModel);
                 promises.push(function() {
-                    return adapter.save(module, lModel);
+                    return adapter.save(module, lModel, encryptKeys);
                 });
             });
 
@@ -330,7 +334,7 @@ define([
          * Dropbox.
          */
         onSave: function(model) {
-            return adapter.save(model.storeName, model.attributes);
+            return adapter.save(model.storeName, model.attributes, model.encryptKeys);
         }
 
     });

@@ -63,6 +63,10 @@ define([
         templateHelpers: function() {
             return {
                 hex: function(str) {
+                    if (typeof str === 'string') {
+                        return str;
+                    }
+
                     return sjcl.codec.hex.fromBits(str);
                 }
             };

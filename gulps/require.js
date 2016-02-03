@@ -36,6 +36,7 @@ module.exports = function(gulp, plugins) {
                 'underscore',
                 'localforage',
                 'dropbox',
+                'classes/sjcl',
                 'sjcl',
                 'remotestorage',
                 'tv4',

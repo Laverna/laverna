@@ -34,6 +34,10 @@ module.exports = function(gulp, plugins) {
                 './app/scripts/modules/markdown/libs/markdown.js',
                 './app/scripts/modules/markdown/workers/markdown.js',
 
+                './app/scripts/workers/sjcl.js',
+                './app/scripts/classes/sjcl.js',
+                './app/scripts/classes/sjcl.worker.js',
+
                 './app/scripts/helpers/db.js',
                 './app/scripts/helpers/migrate.js',
                 './app/scripts/migrate.js',

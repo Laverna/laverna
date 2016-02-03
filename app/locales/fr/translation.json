@@ -18,6 +18,7 @@
     "Favourites": "Favoris",
     "Favorite": "Favori",
     "Trash": "Corbeille",
+    "Open tasks" : "Tâches en cours",
     "Notebooks": "Bloc-notes",
     "Settings": "Paramètres",
     "About": "À propos",
@@ -47,6 +48,9 @@
     "Basic": "Basique",
     "Cloud storage": "Stockage dans le cloud",
     "Notes per page": "Notes par page",
+    "Sort notebooks" : "Trier les bloc-notes",
+    "Name" : "Nom",
+    "Created" : "Créé",
     "Default edit mode": "Mode d'édition par défaut",
     "Fullscreen with preview": "Plein écran avec visualisation",
     "Use encryption": "Utiliser le chiffrement",
@@ -64,6 +68,8 @@
     "Shortcuts": "Raccourcis",
     "Newer": "Précédent",
     "Older": "Suivant",
+    "Previous" : "Précédent",
+    "Next" : "Suivant",
     "Navigation": "Navigation",
     "navigateTop": "Haut",
     "navigateBottom": "Bas",
@@ -72,11 +78,30 @@
     "jumpNotebook": "Aller à la liste de bloc-notes",
     "jumpFavorite": "Aller aux notes favoris",
     "jumpRemoved": "Aller aux notes supprimées",
+    "jumpOpenTasks" : "Aller aux tâches ouvertes",
     "Actions": "Actions",
+    "actionsEdit" : "Modifier",
+    "actionsRemove" : "Supprimer",
     "actionsOpen": "Ouvrir",
     "actionsRotateStar": "Ajouter/Supprimer des favoris",
     "App": "Application",
     "appCreateNote": "Créer une nouvelle note",
     "appSearch": "Rechercher une note",
-    "appKeyboardHelp": "Afficher les raccourcis clavier"
+    "appKeyboardHelp": "Afficher les raccourcis clavier",
+    "Remove profile": "Êtes-vous sûr de souhaiter supprimer le profile '__profile__'?", 
+    "Change shortcuts": "Changer le paramétrage des raccourcis", 
+    "Donate": "Faire un don", 
+    "Github page": "Page Github", 
+    "Report bugs and issues here": "Rapporter les bugs et les problèmes ici", 
+    "Report bugs through email": "Rapporter les bugs par email", 
+    "Credits": "Crédits", 
+    "List of contributors": "Liste des contributeurs", 
+    "List of all used libraries": "Liste de toutes les librairies utilisées", 
+    "notebooks": { 
+        "name": "S'il vous plaît, saissez le nom du bloc-notes" 
+    }, 
+    "tags": { 
+        "name": "Le nom du tag est requis" 
+    } 
+
 }

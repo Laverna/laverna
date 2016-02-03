@@ -92,6 +92,7 @@ module.exports = {
     'changes favourite status if the button is clicked': function(client) {
         client
         .click('.btn--favourite')
+        .pause(300)
         .expect.element('.btn--favourite--icon').to.have.attribute('class').which.contains('icon-favorite');
     },
 

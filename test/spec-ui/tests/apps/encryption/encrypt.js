@@ -36,16 +36,21 @@ module.exports = {
 
         client
         .pause(100)
-        .setValue('input[name="password"]', '1')
+        .click('input[name="password"]')
+        .keys('1')
+        // .setValue('input[name="password"]', '1')
         .click('[type="submit"]');
     },
 
     'shows backup': function(client) {
         client.expect.element('.-backup').to.be.present.before(50000);
+        client.expect.element('#btn--next').to.be.present.before(5000);
 
         client
+        .pause(300)
         .click('#btn--next')
-        .expect.element('.container.-auth').not.to.be.present.before(5000);
+        .pause(200)
+        .expect.element('.container.-auth').not.to.be.present.before(6000);
     },
 
     'asks for a new password again after encrypting': function(client) {
@@ -84,8 +89,10 @@ module.exports = {
         .click('[type="submit"]');
 
         client.expect.element('.-backup').to.be.present.before(50000);
+        client.expect.element('#btn--next').to.be.present.before(5000);
 
         client
+        .pause(300)
         .click('#btn--next')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
     },
@@ -123,8 +130,10 @@ module.exports = {
         .click('[type="submit"]');
 
         client.expect.element('.-backup').to.be.present.before(50000);
+        client.expect.element('#btn--next').to.be.present.before(5000);
 
         client
+        .pause(200)
         .click('#btn--next')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
 

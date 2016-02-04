@@ -4,13 +4,14 @@ var app               = require('app'),
     windowStateKeeper = require('electron-window-state'),
     BrowserWindow     = require('browser-window'),
     path              = require('path'),
-    menu              = require('menu');
+    menu              = require('menu'),
+    openUrl           = require('open');
 
 // Uncomment to enable helpful F12 Chrome inspector debugging
-if(process.env.NODE_ENV === 'dev'){
-	require('electron-debug')({
-	    showDevTools: true
-	});
+if (process.env.NODE_ENV === 'dev') {
+    require('electron-debug')({
+        showDevTools: true
+    });
 }
 
 // Start server
@@ -88,24 +89,26 @@ app.on('ready', function() {
         'icon'               : path.join(__dirname, '/dist/images/icon/icon-120x120.png')
     });
 
+    function checkUrl(url) {
+        return (
+            url.indexOf('localhost:9100') === -1 &&
+            url.indexOf('oauth') === -1 &&
+            url.indexOf('sign_in') === -1
+        );
+    }
+
     // Open all external links in a different browser
     mainWindow.webContents.on('will-navigate', function(e, url) {
-        if (url.indexOf('localhost:9100') === -1 &&
-           url.indexOf('oauth') === -1 &&
-           url.indexOf('sign_in') === -1) {
-
+        if (checkUrl(url)) {
             e.preventDefault();
-            require('open')(url);
+            openUrl(url);
         }
     });
 
     mainWindow.webContents.on('new-window', function(e, url) {
-        if (url.indexOf('localhost:9100') === -1 &&
-            url.indexOf('oauth') === -1 &&
-            url.indexOf('sign_in') === -1) {
-
+        if (checkUrl(url)) {
             e.preventDefault();
-            require('open')(url);
+            openUrl(url);
         }
     });
 

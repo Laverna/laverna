@@ -70,6 +70,10 @@
     "se": {
         "name": "Swedish",
         "nativeName": "Svenska"
+   },
+    "sq": {
+        "name": "Albanian",
+        "nativeName": "Shqip"
     },
     "tr": {
         "name": "Turkish",

@@ -66,14 +66,14 @@ define([
                 return;
             }
 
-            var model   = change.newValue || change.oldValue,
-                path    = change.relativePath.split('/');
+            var path    = change.relativePath.split('/'),
+                channel = (change.newValue || change.oldValue).type || path[1];
 
             if (change.newValue) {
                 change.newValue['@context'] = null;
             }
 
-            Radio.request(model.type || path[1], 'save:raw', change.newValue, {profile: path[0]});
+            Radio.request(channel, 'save:raw', change.newValue, {profile: path[0]});
         },
 
         /**
@@ -117,9 +117,11 @@ define([
 
             localData    = localData.fullCollection || localData;
 
-            // Find notes which don't exist in local storage
+            // Find notes which don't exist in local storage or were updated
+            // remotely.
             newData = _.filter(remoteData, function(rModel) {
-                return !_.findWhere(localData.models, {id: rModel.id});
+                var lmodel = _.findWhere(localData.models, {id: rModel.id});
+                return !lmodel || lmodel.attributes.updated < rModel.updated;
             });
 
             if (newData.length) {
@@ -128,10 +130,11 @@ define([
                 );
             }
 
-            // Find notes which don't exist in RemoteStorage and create them
+            // Find notes which don't exist in RemoteStorage or have been
+            // updated locally.
             _.each(localData.models, function(lModel) {
-                var model = _.findWhere(remoteData, {id: lModel.id});
-                if (model && model.updated >= lModel.updated) {
+                var rmodel = _.findWhere(remoteData, {id: lModel.id});
+                if (rmodel && rmodel.updated >= lModel.attributes.updated) {
                     return;
                 }
 

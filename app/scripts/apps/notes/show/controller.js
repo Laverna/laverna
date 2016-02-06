@@ -90,9 +90,13 @@ define([
 
             Radio.request('notes', 'get:model:full', this.options)
             .spread(function(note, notebook) {
-                self.view.options.notebook = notebook;
-                self.view.model.set(note.attributes);
-                self.view.model.trigger('synced');
+                Radio.request('markdown', 'render', note)
+                .then(function(content) {
+                    self.view.options.notebook = notebook;
+                    self.view.options.content = content;
+                    self.view.model.set(note.attributes);
+                    self.view.model.trigger('synced');
+                });
             })
             .fail(function(e) {
                 console.error('After sync error:', e);

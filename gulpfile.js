@@ -4,7 +4,7 @@ var gulp    = require('gulp'),
     plugins = require('gulp-load-plugins')();
 
 function getTask(task) {
-    return require(`./gulps/${task}`)(gulp, plugins, pkg);
+    return require('./gulps/' + task)(gulp, plugins, pkg);
 }
 
 // Add Gulp tasks

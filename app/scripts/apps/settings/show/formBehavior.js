@@ -7,8 +7,9 @@
  */
 /* global define */
 define([
-    'marionette'
-], function(Marionette) {
+    'marionette',
+    'sjcl'
+], function(Marionette, sjcl) {
     'use strict';
 
     /**
@@ -46,6 +47,10 @@ define([
             }
             else {
                 conf.value = (el.is(':checked')) ? 1 : 0;
+            }
+
+            if (el.hasClass('hex') && typeof conf.value === 'string') {
+                conf.value = sjcl.codec.hex.toBits(conf.value);
             }
 
             this.view.collection.trigger('new:value', conf);

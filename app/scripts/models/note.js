@@ -41,7 +41,9 @@ define([
 
         encryptKeys: [
             'title',
-            'content'
+            'content',
+            'tags',
+            'tasks'
         ],
 
         validate: function(attrs) {

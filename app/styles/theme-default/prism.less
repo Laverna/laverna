@@ -7,6 +7,7 @@
 code,
 pre[class*="language-"] {
     color: black;
+    background-color: #fdfdfd;
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     direction: ltr;
     text-align: left;
@@ -27,46 +28,39 @@ pre[class*="language-"] {
 }
 
 /* Code blocks */
-code {
-    position: relative;
-    margin: .5em 0;
-    -webkit-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
-    -moz-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
-    box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
-    border-left: 10px solid lighten(@color--info, 4%);
-    background-color: #fdfdfd;
-    background-image: -webkit-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-    background-image: -moz-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-    background-image: -ms-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-    background-image: -o-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-    background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-    background-size: 3em 3em;
-    background-origin: content-box;
-    overflow: visible;
-    max-height: 30em;
-    padding: 0;
-}
+.-note,
+.editor--preview {
+    pre {
+        display: block;
+        position: relative;
+        margin: .5em 0;
+        -webkit-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+        -moz-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+        box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+        border-left: 10px solid lighten(@color--info, 4%);
+        background-image: -webkit-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+        background-image: -moz-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+        background-image: -ms-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+        background-image: -o-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+        background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+        background-size: 3em 3em;
+        background-origin: content-box;
+        overflow: visible;
+        max-height: inherit;
+        height: 100%;
+        padding: 0 1em;
+        overflow: visible;
 
-code {
-    max-height: inherit;
-    height: 100%;
-    padding: 0 1em;
-    display: block;
-    overflow: auto;
-}
-
-/* Margin bottom to accomodate shadow */
-:not(pre) > code[class*="language-"],
-code {
-    background-color: #fdfdfd;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin-bottom: 1em;
+        /* Margin bottom to accomodate shadow */
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin-bottom: 1em;
+    }
 }
 
 /* Inline code */
-:not(pre) > code[class*="language-"] {
+:not(pre) > code {
     position: relative;
     padding: .2em;
     -webkit-border-radius: 0.3em;
@@ -99,7 +93,7 @@ code {
     transform: rotate(-2deg);
 }
 
-:not(pre) > code[class*="language-"]:after,
+:not(pre) > code:after,
 [class*="language-"]:after {
     right: 0.75em;
     left: auto;

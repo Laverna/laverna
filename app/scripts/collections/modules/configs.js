@@ -11,9 +11,10 @@ define([
     'q',
     'marionette',
     'backbone.radio',
+    'sjcl',
     'collections/modules/module',
     'collections/configs'
-], function(_, Q, Marionette, Radio, ModuleObject, Configs) {
+], function(_, Q, Marionette, Radio, sjcl, ModuleObject, Configs) {
     'use strict';
 
     /**
@@ -398,7 +399,7 @@ define([
             }
 
             // Additional check to make sure it's not the same password
-            var salt = Radio.request('encrypt', 'sha256', object.value);
+            var salt = sjcl.hash.sha256.hash(object.value);
             return (salt.toString() !== pass);
         },
 

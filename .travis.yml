@@ -11,7 +11,7 @@ script:
     - gulp build
     - gulp --root dist &
     - set -e
-    - gulp nightwatch --env ci; echo $?
+    - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && gulp nightwatch --env ci; echo $? || false'
     - killall gulp
 after_failure:
     - killall gulp

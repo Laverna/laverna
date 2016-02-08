@@ -5,7 +5,13 @@ requirejs.config({
     paths: {
         'chai-jquery' : '../../test/bower_components/chai-jquery/chai-jquery',
         'spec'        : '../../test/spec',
-        'init'        : '../../test/spec/init'
+        'init'        : '../../test/spec/init',
+    },
+
+    map: {
+        '*': {
+            'classes/sjcl.worker' : 'classes/sjcl'
+        }
     },
 
     shim: {

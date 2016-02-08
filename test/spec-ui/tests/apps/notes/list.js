@@ -36,20 +36,21 @@ module.exports = {
         .expect.element('.list--item.active').not.to.be.present.before(500);
 
         client
+        .pause(300)
         .keys(['j'])
-        .expect.element('.list--item.active').to.be.visible.before(2000);
+        .expect.element('.list--item.active').to.be.visible.before(5000);
     },
 
     'is possible to navigate by pressing "k" key': function(client) {
         client
         .pause(300)
         .keys(['j'])
-        .expect.element('.list--item:first-child').to.have.attribute('class').which.does.not.contain('active').before(2000);
+        .expect.element('.list--item:first-child').to.have.attribute('class').which.does.not.contain('active').before(5000);
 
         client
         .pause(300)
         .keys(['k'])
-        .expect.element('.list--item:first-child').to.have.attribute('class').which.contains('active').before(2000);
+        .expect.element('.list--item:first-child').to.have.attribute('class').which.contains('active').before(5000);
     },
 
     'if it reaches the last note on the page, it navigates to the next page': function(client) {

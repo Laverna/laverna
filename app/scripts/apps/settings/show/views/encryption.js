@@ -52,11 +52,31 @@ define([
 
         events: {
             'click #useEncryption' : 'toggleSettings',
-            'click #randomize'     : 'randomize'
+            'click #randomize'     : 'randomize',
+            'blur @ui.password'    : 'randomizeOnPassword'
         },
 
         serializeData: function() {
             return {models  : this.collection.getConfigs()};
+        },
+
+        templateHelpers: function() {
+            return {
+                hex: function(str) {
+                    if (typeof str === 'string') {
+                        return str;
+                    }
+
+                    return sjcl.codec.hex.fromBits(str);
+                },
+
+                passwordText: function() {
+                    if (this.models.encryptPass.length !== 0) {
+                        return $.t('encryption.change password');
+                    }
+                    return $.t('encryption.provide password');
+                },
+            };
         },
 
         initialize: function() {
@@ -76,10 +96,22 @@ define([
         },
 
         /**
+         * Automatically generate new encryption salt every time the password is
+         * changed.
+         */
+        randomizeOnPassword: function() {
+            if (!this.ui.password.val().trim().length) {
+                return;
+            }
+
+            this.randomize();
+        },
+
+        /**
          * Generate random salt.
          */
         randomize: function() {
-            var random = Radio.request('encrypt', 'randomize', 3, 0);
+            var random = Radio.request('encrypt', 'randomize', 5, 0);
             this.ui.saltInput.val(random).trigger('change');
             return false;
         }

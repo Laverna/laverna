@@ -84,7 +84,8 @@ define([
         },
 
         checkPasswords: function(data) {
-            var results = [];
+            var self     = this,
+                promises = [];
 
             /*
              * If encryption was enabled in old configs but the old password
@@ -97,20 +98,23 @@ define([
             // Switch to backup configs and check old password
             if (data.old) {
                 this.vent.request('change:configs', this.backup);
-                results.push(this.vent.request('check:password', data.old));
+                promises.push(this.vent.request('check:password', data.old));
             }
             // Switch to new configs and check new password
             if (data.password) {
                 this.vent.request('change:configs', this.configs);
-                results.push(this.vent.request('check:password', data.password));
+                promises.push(this.vent.request('check:password', data.password));
             }
 
-            if (!results.length || _.indexOf(results, false) > -1) {
-                return this.view.trigger('password:invalid', results);
-            }
+            return Q.all(promises)
+            .then(function(results) {
+                if (!results.length || _.indexOf(results, false) > -1) {
+                    return self.view.trigger('password:invalid', results);
+                }
 
-            this.passwords = data;
-            Radio.trigger('Encryption', 'password:valid');
+                self.passwords = data;
+                Radio.trigger('Encryption', 'password:valid');
+            });
         },
 
         /**
@@ -203,6 +207,11 @@ define([
 
             // Encryption is disabled
             if (Number(this.configs.encrypt) === 0) {
+                _.each(this.collections, function(collection) {
+                    collection.each(function(model) {
+                        model.set('encryptedData', null);
+                    });
+                });
                 return;
             }
 
@@ -234,16 +243,17 @@ define([
          * decrypting it, and comparing to the original value.
          */
         checkEncryption: function(collection) {
-            var model = collection.at(0),
-                mStr  = model.get(model.encryptKeys[0]),
-                str   = this.vent.request('decrypt', mStr);
-
-            if (str.length && mStr === str) {
-                console.error('Encryption error:', mStr, str);
-                throw new Error('Error with encryption');
+            if (!collection.length) {
+                return new Q();
             }
 
-            return true;
+            var model = collection.at(0);
+
+            return this.vent.request('decrypt:model', model)
+            .fail(function(e) {
+                console.error('Encryption error:', e);
+                throw new Error('Error with encryption');
+            });
         },
 
         /**

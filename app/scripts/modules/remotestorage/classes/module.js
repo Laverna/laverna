@@ -115,7 +115,13 @@ define([
                     this.profile = profile;
                 },
 
-                save: function(type, obj) {
+                /**
+                 * @type string type [notes|notebooks|tags]
+                 * @type object obj model.attributes
+                 * @type array  encryptKeys
+                 */
+                save: function(type, obj, encryptKeys) {
+                    obj = _.clone(obj);
                     obj.id = obj.id.toString();
 
                     if (typeof obj.notebookId !== 'undefined') {
@@ -123,6 +129,11 @@ define([
                     }
                     if (typeof obj.parentId !== 'undefined') {
                         obj.parentId = obj.parentId.toString();
+                    }
+
+                    // Send only encrypted data
+                    if (obj.encryptedData) {
+                        obj = _.omit(obj, encryptKeys);
                     }
 
                     return prClient.storeObject(type, this.profile + '/' + type + '/' + obj.id, obj);

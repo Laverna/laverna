@@ -60,13 +60,6 @@ define([
                 self    = this;
 
             options.success = function(resp) {
-                /*
-                 * Execute `beforeSuccess` callback.
-                 * The callback might be used to filter collection, for example.
-                 */
-                if (options.beforeSuccess) {
-                    options.beforeSuccess(self, options);
-                }
 
                 // Keep full collection in memory
                 self.fullCollection = self.clone();

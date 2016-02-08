@@ -122,8 +122,9 @@ define([
                 id      : model.id,
                 data    : model.toJSON(),
                 options : {
-                    profile   : options.profile || model.profileId,
-                    storeName : model.storeName,
+                    profile     : options.profile || model.profileId,
+                    storeName   : model.storeName,
+                    encryptKeys : model.encryptKeys
                 }
             });
         },

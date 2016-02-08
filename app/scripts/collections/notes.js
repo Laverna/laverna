@@ -47,21 +47,11 @@ define([
         },
 
         filterList: function(filter, options) {
-            filter = filter || 'active';
-            var cond = this.conditions[filter],
-                res;
-
-            if (cond) {
-                cond = (typeof cond === 'function' ? cond(options) : cond);
-                res = this.where(cond);
-            }
-            else if (this[filter + 'Filter']) {
-                res = this[filter + 'Filter'](options.query);
-            }
-            else {
+            if (!filter || !this[filter + 'Filter']) {
                 return;
             }
 
+            var res = this[filter + 'Filter'](options.query);
             return this.reset(res);
         },
 
@@ -114,7 +104,6 @@ define([
             var pattern = new RegExp(letters, 'gim');
 
             return this.filter(function(model) {
-                model = Radio.request('encrypt', 'decrypt:model', model);
                 pattern.lastIndex = 0;
                 return pattern.test(model.get('title')) || pattern.test(model.get('content'));
             });

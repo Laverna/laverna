@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -116,7 +116,7 @@ define([
         },
 
         savePassword: function(password) {
-            var encryptSalt = Radio.request('encrypt', 'randomize', 3, 0);
+            var encryptSalt = Radio.request('encrypt', 'randomize', 5, 0, true);
 
             return Q.all([
                 Radio.request('configs', 'save:object', {

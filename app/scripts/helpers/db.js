@@ -127,9 +127,14 @@ define([
          * @type object data
          */
         save: function(data) {
-            var defer  = Q.defer();
+            var defer = Q.defer(),
+                sData = data.data;
 
-            this.getDb(data.options).setItem(data.id, data.data, function(err, val) {
+            if (sData.encryptedData) {
+                sData = _.omit(sData, data.options.encryptKeys);
+            }
+
+            this.getDb(data.options).setItem(data.id, sData, function(err, val) {
                 if (err) {
                     return defer.reject(err);
                 }

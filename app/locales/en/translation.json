@@ -106,6 +106,8 @@
     "Download": "Download",
     "Everything": "Everything",
     "encryption": {
+        "provide password": "Please, provide your password",
+        "change password": "Type your password here to change it",
         "wait": "Please wait until the encryption is completed",
         "error": "Encryption error",
         "errorConfirm": "Error while decrypting data.\r\r If you changed encryption settings in another browser, **update your settings** in this browser too. Or try to import settings.\r\r And if you did not change anything, **try to login** again.",

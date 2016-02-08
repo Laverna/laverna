@@ -68,7 +68,14 @@ define([
                     }
 
                     return sjcl.codec.hex.fromBits(str);
-                }
+                },
+
+                passwordText: function() {
+                    if (this.models.encryptPass.length !== 0) {
+                        return $.t('encryption.change password');
+                    }
+                    return $.t('encryption.provide password');
+                },
             };
         },
 
@@ -93,7 +100,7 @@ define([
          * changed.
          */
         randomizeOnPassword: function() {
-            if (this.ui.password.val().trim() === this.collection.get('encryptPass').get('value').toString()) {
+            if (!this.ui.password.val().trim().length) {
                 return;
             }
 

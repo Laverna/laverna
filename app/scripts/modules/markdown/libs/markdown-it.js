@@ -88,7 +88,7 @@ define([
             }
 
             return new Q(
-                this.md.render(model.content, env)
+                this.md.render(_.unescape(model.content), env)
             );
         },
 
@@ -96,6 +96,7 @@ define([
          * Toggle a task's status.
          */
         taskToggle: function(data) {
+            data.content = _.unescape(data.content);
             data.content = task.toggle(data);
 
             return this.parse(data.content)
@@ -111,7 +112,7 @@ define([
             var env = {};
 
             return new Q(
-                this.md.render(content, env)
+                this.md.render(_.unescape(content), env)
             )
             .then(function() {
                 env.tags    = env.tags ? _.uniq(env.tags) : [];

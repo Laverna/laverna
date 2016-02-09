@@ -8,9 +8,8 @@
 /*global define*/
 define([
     'underscore',
-    'backbone',
-    'dompurify'
-], function(_, Backbone, Purify) {
+    'backbone'
+], function(_, Backbone) {
     'use strict';
 
     /**
@@ -89,7 +88,7 @@ define([
                 data.title = _.escape(_.unescape(data.title));
             }
             if (data.content) {
-                data.content = Purify.sanitize(data.content);
+                data.content = _.escape(_.unescape(data.content));
             }
 
             this.set(data);

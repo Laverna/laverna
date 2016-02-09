@@ -43,7 +43,7 @@ define([
         },
 
         serializeData: function() {
-            return {content: _.escape(this.model.get('content'))};
+            return {content: _.unescape(this.model.get('content'))};
         },
 
         onDestroy: function() {

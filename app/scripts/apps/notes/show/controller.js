@@ -41,10 +41,13 @@ define([
             // Fetch the note by ID
             Radio.request('notes', 'get:model:full', options)
             .spread(this._show);
+
+            this.listenTo(Radio.channel('notes'), 'destroy:model', this.onModelDestroy, this);
         },
 
         onDestroy: function() {
             this.stopListening(this.view);
+            this.stopListening(Radio.channel('notes'));
             Radio.request('global', 'region:empty', 'content');
         },
 
@@ -135,6 +138,15 @@ define([
                 // Save the note
                 Radio.request('notes', 'save', model, _.pick(data, 'content', 'taskCompleted', 'taskAll'));
             });
+        },
+
+        /**
+         * Destroy this controller if the model is destroyed.
+         */
+        onModelDestroy: function(model) {
+            if (this.view.model.attributes.id === model.attributes.id) {
+                this.destroy();
+            }
         }
     });
 

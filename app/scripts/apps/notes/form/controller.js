@@ -137,7 +137,11 @@ define([
             return this.getContent()
             .then(function(data) {
                 var model = self.view.model.pick('title', 'content', 'notebookId');
-                data  = _.pick(data, 'title', 'content', 'notebookId');
+                data      = _.pick(data, 'title', 'content', 'notebookId');
+
+                // To check if they are equal
+                model.content = _.unescape(model.content);
+                model.title   = _.unescape(model.title);
 
                 if (_.isEqual(model, data)) {
                     return self.redirect();

@@ -110,6 +110,10 @@ define([
          * Gets next page's models and resets the collection
          */
         nextPage: function() {
+            if (this.ui.nextPage.hasClass('disabled')) {
+                return false;
+            }
+
             this.navigatePage(1);
             this.collection.getNextPage();
         },
@@ -118,6 +122,10 @@ define([
          * Gets previous page's models and resets the collection
          */
         previousPage: function() {
+            if (this.ui.prevPage.hasClass('disabled')) {
+                return false;
+            }
+
             this.navigatePage(-1);
             this.collection.getPreviousPage();
         },

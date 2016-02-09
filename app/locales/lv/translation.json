@@ -98,7 +98,7 @@
     "Export settings": "Eksporta iestatījumi",
     "Wrong format": "Nepareizs formāts",
     "useDefaultConfigs": "Izmantot iestatījumus no noklusējuma profila",
-    "File chould be in json format": "Failam vajag būt JSON formātā",
+    "File should be in json format": "Failam vajag būt JSON formātā",
     "Close": "Aizvērt",
     "Hyperlink": "Hipersaite",
     "Editor": "Redaktors",

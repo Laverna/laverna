@@ -31,6 +31,9 @@ module.exports = function(gulp, plugins) {
                 'helpers/db',
                 'helpers/migrate',
 
+                'backbone',
+                'backbone.radio',
+                'jquery',
                 'prism',
                 'q',
                 'underscore',

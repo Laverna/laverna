@@ -9,8 +9,9 @@
 define([
     'underscore',
     'q',
-    'backbone'
-], function(_, Q, Backbone) {
+    'backbone',
+    'backbone.radio'
+], function(_, Q, Backbone, Radio) {
     'use strict';
 
     /**
@@ -25,7 +26,7 @@ define([
         check: function() {
 
             // Browser doesn't support indexeddb at all
-            if (!Modernizr.indexeddb || window.location.protocol === 'file:') {
+            if (!Modernizr.indexeddb || !Radio.request('global', 'use:webworkers')) {
                 return this.switchDb('backbone.noworker.sync');
             }
 

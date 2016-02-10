@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-/*global define*/
+/*global define, Modernizr*/
 define([
     'underscore',
     'jquery',
@@ -17,7 +17,9 @@ define([
 ], function(_, $, Backbone, Radio, Device) {
     'use strict';
 
-    var App = new Backbone.Marionette.Application();
+    var App        = new Backbone.Marionette.Application(),
+        isWebkit   = ('WebkitAppearance' in document.documentElement.style),
+        useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !isWebkit);
 
     App.isMobile = (Device.mobile() === true || Device.tablet() === true);
 
@@ -56,6 +58,10 @@ define([
 
     Radio.reply('global', 'is:mobile', function() {
         return App.isMobile;
+    });
+
+    Radio.reply('global', 'use:webworkers', function() {
+        return useWorkers;
     });
 
     App.on('before:start', function() {

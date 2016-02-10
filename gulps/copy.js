@@ -52,6 +52,9 @@ module.exports = function(gulp, plugins) {
             gulp.src([
                 './app/bower_components/markdown-it*/dist/*.min.js',
 
+                './app/bower_components/backbone/backbone.js',
+                './app/bower_components/jquery/dist/jquery.js',
+                './app/bower_components/backbone.radio/build/backbone.radio.min.js',
                 './app/bower_components/prism/bundle.js',
                 './app/bower_components/requirejs/require.js',
                 './app/bower_components/modernizr/modernizr.js',

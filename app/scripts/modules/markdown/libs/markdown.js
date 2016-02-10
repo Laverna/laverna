@@ -5,13 +5,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-/* global define, Modernizr */
+/* global define */
 define([
     'q',
     'underscore',
+    'backbone.radio',
     'modules/markdown/libs/markdown-it'
-], function(Q, _, MarkdownIt) {
+], function(Q, _, Radio, MarkdownIt) {
     'use strict';
+
+    // Parse Markdown without Webworkers
+    if (!Radio.request('global', 'use:webworkers')) {
+        return MarkdownIt;
+    }
 
     /**
      * Parse Markdown in WebWorker.
@@ -101,12 +107,6 @@ define([
         },
 
     });
-
-
-    // Parse Markdown without Webworkers
-    if (!Modernizr.webworkers || window.location.protocol === 'file:') {
-        return MarkdownIt;
-    }
 
     return Markdown;
 

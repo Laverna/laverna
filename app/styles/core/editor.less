@@ -188,13 +188,43 @@
 }
 
 // Notebook list
+.editor--notebooks {
+    position: relative;
+
+    &:before {
+        font-size   : 14px;
+        font-family : "fontello";
+        content     : '\e808';
+        position    : absolute;
+        top         : 6px;
+        left        : 7px;
+    }
+    &:after {
+        &:extend(.caret);
+        content  : ' ';
+        position : absolute;
+        top      : 15px;
+        right    : 7px;
+    }
+}
 .editor--notebooks--list {
-    max-width: 180px;
+    max-width    : 180px;
+    padding-left : 20px;
+
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
 }
 @media (max-width: 400px) {
+    .editor--notebooks {
+        &:after {
+            display: none;
+        }
+    }
     .editor--notebooks--list {
-        max-width: 52px;
-        padding: 6px;
+        max-width    : 52px;
+        padding      : 6px;
+        padding-left : 15px;
     }
 }
 

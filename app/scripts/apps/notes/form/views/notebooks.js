@@ -26,7 +26,7 @@ define([
         template: _.template(Tmpl),
 
         childView          :  ItemView,
-        childViewContainer :  '#editor--notebooks--group',
+        childViewContainer :  '.editor--notebooks--list',
 
         ui: {
             notebookId : '[name="notebookId"]'

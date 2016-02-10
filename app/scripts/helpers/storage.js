@@ -25,7 +25,7 @@ define([
         check: function() {
 
             // Browser doesn't support indexeddb at all
-            if (!Modernizr.indexeddb) {
+            if (!Modernizr.indexeddb || window.location.protocol === 'file:') {
                 return this.switchDb('backbone.noworker.sync');
             }
 

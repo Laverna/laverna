@@ -104,7 +104,7 @@ define([
 
 
     // Parse Markdown without Webworkers
-    if (!Modernizr.webworkers) {
+    if (!Modernizr.webworkers || window.location.protocol === 'file:') {
         return MarkdownIt;
     }
 

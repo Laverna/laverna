@@ -14,7 +14,7 @@ define([
     'use strict';
 
     // Use Sjcl without WebWorkers
-    if (!Modernizr.webworkers) {
+    if (!Modernizr.webworkers || window.location.protocol === 'file:') {
         return Sjcl;
     }
 

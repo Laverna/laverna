@@ -62,6 +62,14 @@ define([
             .use(file.init)
             ;
 
+            // Make table responsive
+            this.md.renderer.rules.table_open  = function() { // jshint ignore:line
+                return '<div class="table-responsive"><table>';
+            };
+            this.md.renderer.rules.table_close  = function() { // jshint ignore:line
+                return '</table></div>';
+            };
+
             this.md.renderer.rules.hashtag_open  = function(tokens, idx, f, env) { // jshint ignore:line
                 var tagName = tokens[idx].content.toLowerCase();
 

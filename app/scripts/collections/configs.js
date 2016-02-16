@@ -55,7 +55,9 @@ define([
             'actionsRotateStar' : 's',
             'appCreateNote'     : 'c',
             'appSearch'         : '/',
-            'appKeyboardHelp'   : '?'
+            'appKeyboardHelp'   : '?',
+
+            'modules'           : []
         },
 
         /**

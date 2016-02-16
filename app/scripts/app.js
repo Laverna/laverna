@@ -19,9 +19,16 @@ define([
 
     var App        = new Backbone.Marionette.Application(),
         isWebkit   = ('WebkitAppearance' in document.documentElement.style),
-        useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !isWebkit);
+        useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !isWebkit),
+        isMobile   = (Device.mobile() === true || Device.tablet() === true),
+        platform   = 'browser';
 
-    App.isMobile = (Device.mobile() === true || Device.tablet() === true);
+    if (isMobile) {
+        platform = 'mobile';
+    }
+    else if (window.requireNode) {
+        platform = 'electron';
+    }
 
     // Customize underscore template
     _.templateSettings = {
@@ -35,7 +42,7 @@ define([
         if (App.currentApp === currentApp) { return; }
 
         // Stop previous app if current app is not modal
-        if (App.currentApp && (!currentApp.options.modal || App.isMobile)) {
+        if (App.currentApp && (!currentApp.options.modal || isMobile)) {
             App.currentApp.stop();
         }
 
@@ -56,8 +63,8 @@ define([
         $('.-loading').removeClass('-loading');
     });
 
-    Radio.reply('global', 'is:mobile', function() {
-        return App.isMobile;
+    Radio.reply('global', 'platform', function() {
+        return platform;
     });
 
     Radio.reply('global', 'use:webworkers', function() {

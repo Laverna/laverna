@@ -66,7 +66,7 @@ define([
             Radio.request('global', 'set:title', note.get('title'));
 
             // Use behaviours that are appropriate for a device.
-            if (Radio.request('global', 'is:mobile')) {
+            if (Radio.request('global', 'platform') === 'mobile') {
                 delete View.prototype.behaviors.Desktop;
             }
             else {

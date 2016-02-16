@@ -34,6 +34,7 @@ define([
         'helpers/keybindings',
 
         // Classes
+        'moduleLoader',
         'classes/encryption',
 
         // Collection modules
@@ -43,7 +44,7 @@ define([
         'collections/modules/files',
         'collections/modules/configs',
 
-        // Modules
+        // Apps
         'apps/confirm/appConfirm',
         'apps/encryption/appEncrypt',
         'apps/navbar/appNavbar',
@@ -52,14 +53,12 @@ define([
         'apps/settings/appSettings',
         'apps/help/appHelp',
 
-        // Optional modules
+        // Modules
         'modules/markdown/module',
         'modules/codemirror/module',
         'modules/linkDialog/module',
         'modules/fileDialog/module',
-        'modules/fuzzySearch/module',
-        'modules/importExport/module',
-        'modules/mathjax/module'
+        'modules/importExport/module'
     ], function(storage) {
         // Get profile name from location hash
         var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
@@ -71,28 +70,9 @@ define([
         .then(function() {
             return Radio.request('configs', 'get:all', {profile: profile});
         })
+        // Load optional modules
         .then(function() {
-            var modules = [],
-                defer   = Q.defer();
-
-            switch (Radio.request('configs', 'get:config', 'cloudStorage')) {
-                case 'remotestorage':
-                    modules.push('modules/remotestorage/module');
-                    break;
-
-                case 'dropbox':
-                    modules.push('modules/dropbox/module');
-                    break;
-
-                default:
-                    return defer.resolve();
-            }
-
-            requirejs(modules, function() {
-                defer.resolve();
-            });
-
-            return defer.promise;
+            return Radio.request('init', 'start', 'load:modules')();
         })
         .then(Radio.request('init', 'start', 'app:before app auth module'))
         .then(function() {

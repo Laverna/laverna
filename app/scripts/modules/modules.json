@@ -1,0 +1,26 @@
+[
+    {
+        "id"          : "mathjax",
+        "name"        : "MathJax",
+        "description" : "MathJax",
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron",
+            "browser",
+            "mobile"
+        ]
+    },
+    {
+        "id"          : "fuzzySearch",
+        "name"        : "fuzzySearch",
+        "description" : "fuzzySearch module",
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron",
+            "browser",
+            "mobile"
+        ]
+    }
+]

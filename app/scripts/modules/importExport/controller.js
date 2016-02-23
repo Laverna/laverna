@@ -26,7 +26,8 @@ define([
 
             // Check file extension
             if (!this.options.files || !this.options.files.length ||
-               this.options.files[0].type !== 'application/zip') {
+               (this.options.files[0].type !== 'application/zip' &&
+               _.last(this.options.files[0].name.split('.')) !== 'zip')) {
                 return;
             }
 

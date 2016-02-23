@@ -17,17 +17,20 @@ define([
 ], function(_, $, Backbone, Radio, Device) {
     'use strict';
 
-    var App        = new Backbone.Marionette.Application(),
-        isWebkit   = ('WebkitAppearance' in document.documentElement.style),
-        useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !isWebkit),
-        isMobile   = (Device.mobile() === true || Device.tablet() === true),
-        platform   = 'browser';
+    var App = new Backbone.Marionette.Application(),
+        env = {
+            isWebkit : ('WebkitAppearance' in document.documentElement.style),
+            isMobile : (Device.mobile() === true || Device.tablet() === true),
+            platform : 'browser'
+        };
 
-    if (isMobile) {
-        platform = 'mobile';
+    env.useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !env.isWebkit);
+
+    if (env.isMobile) {
+        env.platform = 'mobile';
     }
     else if (window.requireNode) {
-        platform = 'electron';
+        env.platform = 'electron';
     }
 
     // Customize underscore template
@@ -42,7 +45,7 @@ define([
         if (App.currentApp === currentApp) { return; }
 
         // Stop previous app if current app is not modal
-        if (App.currentApp && (!currentApp.options.modal || isMobile)) {
+        if (App.currentApp && (!currentApp.options.modal || env.isMobile)) {
             App.currentApp.stop();
         }
 
@@ -63,12 +66,16 @@ define([
         $('.-loading').removeClass('-loading');
     });
 
+    Radio.reply('global', 'device', function(method) {
+        return Device[method]();
+    });
+
     Radio.reply('global', 'platform', function() {
-        return platform;
+        return env.platform;
     });
 
     Radio.reply('global', 'use:webworkers', function() {
-        return useWorkers;
+        return env.useWorkers;
     });
 
     App.on('before:start', function() {

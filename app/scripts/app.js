@@ -21,10 +21,15 @@ define([
         env = {
             isWebkit : ('WebkitAppearance' in document.documentElement.style),
             isMobile : (Device.mobile() === true || Device.tablet() === true),
-            platform : 'browser'
+            platform : 'browser',
+            ua       : window.navigator.userAgent
         };
 
     env.useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !env.isWebkit);
+
+    if (/(palemoon|sailfish)/i.test(env.ua)) {
+        env.useWorkers = false;
+    }
 
     if (env.isMobile) {
         env.platform = 'mobile';

@@ -30,15 +30,31 @@ define([
          * Check if directories exist. If they don't, create them.
          */
         checkDirs: function() {
-            if (!fs.existsSync(this.path)) {
+            if (!this.isDirSync(this.path)) {
                 fs.mkdirSync(this.path);
             }
 
             _.each(['notes', 'notebooks', 'tags', 'files'], function(dir) {
-                if (!fs.existsSync(this.path + dir)) {
+                if (!this.isDirSync(this.path + dir)) {
                     fs.mkdirSync(this.path + dir);
                 }
             }, this);
+        },
+
+        /**
+         * Check if a dir exists.
+         */
+        isDirSync: function(path) {
+            try {
+                return fs.statSync(path).isDirectory();
+            } catch (e) {
+                if (e.code === 'ENOENT') {
+                    return false;
+                }
+                else {
+                    throw e;
+                }
+            }
         },
 
         /**

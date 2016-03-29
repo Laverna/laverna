@@ -10,9 +10,20 @@
 
         <div class="col-xs-4">
             <% if (isEnabled(module)) {%>
-            <button class="btn btn-default -disable" data-id="{{module.id}}">Disable</button>
+
+            <% if (module.hasSettings) {%>
+            <a href="#/settings/module/{{module.id}}" class="btn btn-default">
+                Settings
+            </a>
+            <% } %>
+
+            <button class="btn btn-default -disable" data-id="{{module.id}}">
+                Disable
+            </button>
             <% } else { %>
-            <button class="btn btn-default -enable" data-id="{{module.id}}">Enable</button>
+            <button class="btn btn-default -enable" data-id="{{module.id}}">
+                Enable
+            </button>
             <% } %>
         </div>
     </div>

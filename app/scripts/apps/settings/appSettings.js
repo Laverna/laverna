@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -25,8 +25,10 @@ define([
      * The router
      */
     Settings.Router = Marionette.AppRouter.extend({
+
         appRoutes: {
-            '(p/:profile/)settings(/:tab)' : 'showSettings'
+            '(p/:profile/)settings(/:tab)'      : 'showSettings',
+            '(p/:profile/)settings/module/:tab' : 'showModule'
         },
 
         // Starts itself
@@ -50,6 +52,18 @@ define([
 
                 Settings.currentApp = Module;
                 Module.start(controller.getOptions(profile, tab));
+            });
+        },
+
+        showModule: function(profile, module) {
+            requirejs(['apps/settings/module/app'], function(Module) {
+                // Stop previously started module
+                if (Settings.currentApp) {
+                    Settings.currentApp.stop();
+                }
+
+                Settings.currentApp = Module;
+                Module.start({profile: profile, module: module});
             });
         },
 

@@ -22,5 +22,16 @@
             "browser",
             "mobile"
         ]
+    },
+    {
+        "id"          : "fs",
+        "name"        : "FS",
+        "description" : "Synchronizes everything to the file system",
+        "hasSettings" : true,
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron"
+        ]
     }
 ]

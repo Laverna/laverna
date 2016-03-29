@@ -7,81 +7,36 @@
  */
 /* global define, requirejs */
 define([
-    'jquery',
     'q',
     'underscore',
     'marionette',
     'backbone.radio',
+    'apps/settings/controller',
     'fileSaver',
-    'apps/settings/show/views/showView'
-], function($, Q, _, Marionette, Radio, saveAs, View) {
+], function(Q, _, Marionette, Radio, BasicController, saveAs) {
     'use strict';
 
     /**
      * Settings show controller.
-     *
-     * Replies:
-     * 1. channel: `AppSettings`, replies: `has:changes`
-     *    if there are some changes, show a confirm message
-     *
-     * requests:
-     * 1. channel: `AppSettings`, request: `activate`
-     * 2. channel: `global`, request: `region:empty`
-     * 3. channel: `global`, request: `region:show`
-     * 4. channel: `configs`, request: `create:profile`
-     * 5. channel: `configs`, request: `remove:profile`
-     * 6. channel: `configs`, request: `save:objects`
-     * 7. channel: `Confirm`, request: `start`
-     * 8. channel: `uri`, request: `navigate`
-     * 9. channel: `navbar`, request: `stop`
      */
-    var Controller = Marionette.Object.extend({
+    var Controller = BasicController.extend({
 
         initialize: function(options) {
-            _.bindAll(this, 'show', 'requireView', 'redirect');
 
-            this.options = options;
-            this.changes = {};
-            this.saves   = {};
+            // Execute parent initializer first
+            _.bind(BasicController.prototype.initialize, this)(options);
 
             // Activate tab in sidebar
             Radio.request('AppSettings', 'activate:tab', this.options.tab);
 
-            // Fetch configs
-            Q.all([
-                Radio.request('configs', 'get:all', options),
-                Radio.request('configs', 'get:model', {
-                    name    : 'useDefaultConfigs',
-                    profile : options.profile
-                }),
-                Radio.request('configs', 'get:model', 'appProfiles')
-            ])
-            .spread(this.requireView);
-
             // Events, replies
-            Radio.reply('AppSettings', 'has:changes', this.hasChanges, this);
             this.listenTo(Radio.channel('configs'), 'changed', this.onChangeConfigs);
         },
 
-        onDestroy: function() {
-            this.stopListening();
-            Radio.stopReplying('AppSettings', 'has:changes');
-            Radio.request('global', 'region:empty', 'content');
-        },
-
         /**
-         * Show layout view and load a tab view
+         * Load the tab view.
          */
-        requireView: function(configs, useDefault, profiles) {
-            this.configs    = configs;
-            this.profiles   = profiles;
-            this.useDefault = useDefault;
-
-            // Instantiate layout view and show it
-            this.layout = new View(this.options);
-            Radio.request('global', 'region:show', 'content', this.layout);
-
-            // Load tab view
+        requireView: function() {
             requirejs(['apps/settings/show/views/' + this.options.tab], this.show);
         },
 
@@ -89,40 +44,15 @@ define([
          * Show settings.
          */
         show: function(TabView) {
-            // Instantiate tab view
-            this.view = new TabView({
-                collection : this.configs,
-                profiles   : this.profiles,
-                useDefault : this.useDefault
-            });
 
-            this.layout.content.show(this.view);
-
-            // Collection events
-            this.listenTo(this.configs, 'new:value', this.onChange);
-
-            // Layout events
-            this.listenTo(this.layout, 'cancel', this.confirmRedirect);
-            this.listenTo(this.layout, 'save', this.save);
+            // Execute parent function first
+            _.bind(BasicController.prototype.show, this)(TabView);
 
             // View events
             this.listenTo(this.view, 'remove:profile', this.confirmRmProfile);
             this.listenTo(this.view, 'create:profile', this.createProfile);
             this.listenTo(this.view, 'import', this.import);
             this.listenTo(this.view, 'export', this.export);
-        },
-
-        /**
-         * Reload the page when config 'useDefaultConfigs' is changed
-         */
-        onChangeConfigs: function(changes) {
-            if (changes.useDefaultConfigs) {
-                window.location.reload();
-            }
-        },
-
-        onChange: function(data) {
-            this.changes[data.name] = data;
         },
 
         /**
@@ -151,19 +81,6 @@ define([
          */
         removeProfile: function(name) {
             Radio.request('configs', 'remove:profile', this.profiles, name);
-        },
-
-        save: function() {
-            // Do nothing if there are not any changes
-            if (_.isEmpty(this.changes)) {
-                return;
-            }
-
-            Radio.channel('configs')
-            .request('save:objects', this.changes, this.useDefault);
-
-            this.saves = _.union(this.saves, this.changes);
-            this.changes = {};
         },
 
         /**
@@ -204,27 +121,6 @@ define([
          */
         confirmRedirect: function() {
             this.showConfirm(this.redirect);
-        },
-
-        /**
-         * If there are any changes, show a confirm message.
-         */
-        hasChanges: function() {
-            var defer = Q.defer();
-            this.showConfirm(defer.resolve, defer.reject);
-            return defer.promise;
-        },
-
-        showConfirm: function(onconfirm, onreject) {
-            if (_.isEmpty(this.changes)) {
-                return onconfirm();
-            }
-
-            Radio.request('Confirm', 'start', {
-                content   : $.t('You have unsaved changes.'),
-                onconfirm : onconfirm,
-                onreject  : onreject
-            });
         },
 
         redirect: function() {

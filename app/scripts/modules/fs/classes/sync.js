@@ -22,9 +22,18 @@ define([
 
         initialize: function() {
 
+            FS.path = Radio.request('configs', 'get:config', 'module:fs:folder');
+
+            /**
+             * @todo Show a message or something.
+             * For now disable synchronizing.
+             */
+            if (!FS.path) {
+                return;
+            }
+
             // Create current profile's folder
-            FS.path = Radio.request('configs', 'get:config', 'module:fs:folder') + '/' || FS.path;
-            FS.path = FS.path + (Radio.request('uri', 'profile') || 'notes-db') + '/';
+            FS.path = FS.path + '/' + (Radio.request('uri', 'profile') || 'notes-db') + '/';
             FS.checkDirs();
 
             // Check for changes on file system

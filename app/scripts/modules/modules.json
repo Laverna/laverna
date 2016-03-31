@@ -33,5 +33,16 @@
         "platforms"   : [
             "electron"
         ]
+    },
+    {
+        "id"          : "electronSearch",
+        "name"        : "Electron Search",
+        "description" : "",
+        "hasSettings" : false,
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron"
+        ]
     }
 ]

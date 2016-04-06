@@ -5,17 +5,25 @@ var app               = require('app'),
     BrowserWindow     = require('browser-window'),
     path              = require('path'),
     menu              = require('menu'),
-    openUrl           = require('open');
+    openUrl           = require('open'),
+    port              = 9000;
 
-// Uncomment to enable helpful F12 Chrome inspector debugging
-if (process.env.NODE_ENV === 'dev') {
+// Port was provided
+if (process.argv.indexOf('--port') >= 0) {
+    port = process.argv[process.argv.indexOf('--port') + 1];
+}
+
+// Show development tools
+if (process.env.NODE_ENV === 'dev' || process.argv.indexOf('--dev') >= 0) {
     require('electron-debug')({
         showDevTools: true
     });
 }
 
-// Start server
-require('./server');
+// Start the server
+if (process.argv.indexOf('--no-server') === -1) {
+    require('./server')(port);
+}
 
 var menuTemplate = [{
     label: 'Application',
@@ -91,7 +99,7 @@ app.on('ready', function() {
 
     function checkUrl(url) {
         return (
-            url.indexOf('localhost:9100') === -1 &&
+            url.indexOf('localhost:' + port) === -1 &&
             url.indexOf('oauth') === -1 &&
             url.indexOf('sign_in') === -1
         );
@@ -117,7 +125,7 @@ app.on('ready', function() {
     }
 
     // and load the index.html of the app.
-    mainWindow.loadURL('http://localhost:9100/');
+    mainWindow.loadURL('http://localhost:' + port + '/');
 
     // Open the DevTools.
     // mainWindow.openDevTools();

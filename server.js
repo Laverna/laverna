@@ -1,5 +1,4 @@
 'use strict';
-const PORT = 9100;
 
 var finalhandler = require('finalhandler'),
     http         = require('http'),
@@ -7,13 +6,14 @@ var finalhandler = require('finalhandler'),
     serve,
     server;
 
-serve  = serveStatic(__dirname + '/dist', {index: ['index.html']});
+serve  = serveStatic(__dirname + '/app', {index: ['index.html']});
 
 server = http.createServer(function(req, res) {
     var done = finalhandler(req, res);
     serve(req, res, done);
 });
 
-server.listen(PORT);
-
-console.log('Server is running on port: ' + PORT);
+module.exports = function(port) {
+    console.log('Server is running on port: ' + port);
+    return server.listen(port);
+};

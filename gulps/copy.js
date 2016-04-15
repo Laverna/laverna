@@ -16,6 +16,13 @@ module.exports = function(gulp, plugins) {
 
             // Copy
             gulp.src([
+                './app/scripts/modules/fs/**/*.*',
+                './app/scripts/modules/electronSearch/**/*.*',
+                './app/scripts/modules/fuzzySearch/**/*.*',
+                './app/scripts/modules/mathjax/**/*.*',
+
+                './app/scripts/modules/modules.json',
+
                 './app/bower_components/prism/themes/prism.css',
                 './app/images/**/*.+(png|jpg|gif|ico|icns)',
                 './app/docs/**',

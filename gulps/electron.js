@@ -23,7 +23,7 @@ module.exports = function(gulp, plugins, pkg) {
             packageJson : pkg,
             release     : './release',
             cache       : './.tmp',
-            version     : 'v0.35.2',
+            version     : 'v0.37.5',
             packaging   : true,
             // rebuild     : true,
             platforms   : platforms,

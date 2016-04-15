@@ -1,6 +1,6 @@
 {
   "name": "laverna",
-  "version": "0.7.2-RC3",
+  "version": "0.7.2-RC4",
   "license": "MPL-2.0",
   "dependencies": {
     "backbone": "~1.2.3",

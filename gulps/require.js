@@ -55,6 +55,11 @@ module.exports = function(gulp, plugins) {
                 'apps/settings/show/views/profiles',
                 'apps/settings/show/views/showView',
                 'apps/settings/show/views/sync',
+                'apps/settings/show/views/modules',
+
+                'apps/settings/module/app',
+                'apps/settings/module/controller',
+
                 'backbone.sync',
                 'backbone.noworker.sync',
                 'modules/remotestorage/module',

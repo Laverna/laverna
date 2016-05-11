@@ -165,10 +165,11 @@ define([
                 id: data.data.id
             })
             .then(function(model) {
-                data.data = _.extend(model.attributes, data.data);
+                data.data = _.extend({}, model.attributes, data.data);
 
+                // Don't parse content
                 if (!data.data.content) {
-                    return data;
+                    return [data, model];
                 }
 
                 // Parse tasks and tags
@@ -179,10 +180,16 @@ define([
                         _.pick(env, 'tags', 'tasks', 'taskCompleted', 'taskAll', 'files')
                     );
 
-                    return data;
+                    return [data, model];
                 });
             })
-            .then(function(data) {
+            .spread(function(data, model) {
+
+                // Nothing's changed
+                if (_.isEqual(data.data, model.attributes)) {
+                    return;
+                }
+
                 return Radio.request(data.storeName, 'save:raw', data.data);
             })
             .fail(function(e) {

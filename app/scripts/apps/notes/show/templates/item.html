@@ -45,7 +45,7 @@
     <div class="content container-fluid -note" data-id="{{id}}">
         <header>
             <h1 class="page-header -note">
-                {{title}}
+                {{cleanXSS(title)}}
                 <small class="note--date">{{createdDate()}}</small>
                 <button type="button" class="btn btn-link btn--favourite pull-right">
                     <span class="btn--favourite--icon icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
@@ -67,7 +67,7 @@
         <p class="note--notebook">
             <% if (notebook && notebook.id) { %>
             <a href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
-                <i class="icon-notebook"></i> {{notebook.name}}
+                <i class="icon-notebook"></i> {{cleanXSS(notebook.name)}}
             </a>
             <% } %>
         </p>

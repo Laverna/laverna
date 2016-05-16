@@ -43,7 +43,9 @@ define([
         },
 
         serializeData: function() {
-            return {content: _.unescape(this.model.get('content'))};
+            return {
+                content: _.cleanXSS(this.model.get('content'), true)
+            };
         },
 
         onDestroy: function() {

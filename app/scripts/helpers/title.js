@@ -9,7 +9,7 @@
 define([
     'jquery',
     'q',
-    'underscore',
+    'helpers/underscore-util',
     'marionette',
     'backbone.radio'
 ], function($, Q, _, Marionette, Radio) {
@@ -68,7 +68,7 @@ define([
 
             // Prepare an array of titles and remove empty ones
             title = _.compact(_.values(this.title));
-            document.title = title.join(' - ');
+            document.title = _.cleanXSS(title.join(' - '));
         },
 
         getTitle: function(args) {

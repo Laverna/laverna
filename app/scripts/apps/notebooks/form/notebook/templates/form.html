@@ -15,14 +15,17 @@
             <div class="container-fluid modal--container">
                 <form action="#" class="form-horizontal modal--form" method="post">
                     <div class="form-group modal--group">
-                        <input name="name" class="form-control modal--input" type="text" value="{{name}}" placeholder="{{ i18n('Title') }}" />
+                        <input name="name" class="form-control modal--input"
+                            type="text" value="{{cleanXSS(name)}}" placeholder="{{ i18n('Title') }}" />
                     </div>
 
                     <div class="form-group modal--group">
                         <select name="parentId" class="form-control modal--input">
                             <option value="0">{{ i18n('Parent') }}: {{ i18n('Root') }}</option>
                             <% _.each(notebooks, function (notebook) { %>
-                            <option value="{{notebook.id}}"{{isParent(notebook.id) }}>{{ i18n('Parent') }}: {{notebook.name}}</option>
+                            <option value="{{notebook.id}}"{{isParent(notebook.id) }}>
+                                {{ i18n('Parent') }}: {{cleanXSS(notebook.name)}}
+                            </option>
                             <% }); %>
                         </select>
                     </div>

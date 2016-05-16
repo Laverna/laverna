@@ -1,6 +1,6 @@
 <a class="list--item -notebook list-group-item" href="#{{ uri }}notes/f/notebook/q/{{id}}" data-id="{{id}}">
     <i class="icon-notebook"></i>
-    {{ name }}
+    {{cleanXSS(name)}}
 </a>
 
 <div class="list--buttons btn-group dropdown">

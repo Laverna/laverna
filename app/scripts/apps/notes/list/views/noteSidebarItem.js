@@ -68,11 +68,6 @@ define([
                     return _.escape(_.unescape(this.content).substring(0, 50));
                 },
 
-                // Strip from HTML tags the title
-                getTitle: function() {
-                    return this.title.replace(/<(?:.|\n)*?>/gm, '');
-                },
-
                 // Generate link
                 link: function() {
                     return Radio.request('uri', 'link', this.args, this);

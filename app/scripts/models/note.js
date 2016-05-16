@@ -84,11 +84,12 @@ define([
          * Purify user inputs
          */
         setEscape: function(data) {
+
             if (data.title) {
-                data.title = _.escape(_.unescape(data.title));
+                data.title = _.cleanXSS(data.title, true);
             }
             if (data.content) {
-                data.content = _.escape(_.unescape(data.content));
+                data.content = _.cleanXSS(data.content, true);
             }
 
             this.set(data);

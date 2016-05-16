@@ -56,6 +56,15 @@ define([
             }
         },
 
+        setEscape: function(data) {
+            if (data.name) {
+                data.name = _.cleanXSS(data.name, true);
+            }
+
+            this.set(data);
+            return this;
+        },
+
         updateDate: function() {
             this.set('updated', Date.now());
             this.set('synchronized', 0);

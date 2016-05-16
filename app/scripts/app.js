@@ -7,13 +7,14 @@
  */
 /*global define, Modernizr*/
 define([
-    'underscore',
+    'helpers/underscore-util',
     'jquery',
     'backbone',
     'backbone.radio',
     'devicejs',
     'regions/regionManager',
-    'marionette'
+    'marionette',
+    'i18next'
 ], function(_, $, Backbone, Radio, Device) {
     'use strict';
 
@@ -23,7 +24,8 @@ define([
             isMobile : (Device.mobile() === true || Device.tablet() === true),
             platform : 'browser',
             ua       : window.navigator.userAgent
-        };
+        },
+        render;
 
     env.useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !env.isWebkit);
 
@@ -42,6 +44,22 @@ define([
     _.templateSettings = {
         interpolate : /\{\{(.+?)\}\}/g,
         evaluate    : /<%([\s\S]+?)%>/g
+    };
+
+    /**
+     * Overrite renderer in order to have access to
+     * additional functions in templates (like, i18n).
+     */
+    render = Backbone.Marionette.Renderer.render;
+
+    Backbone.Marionette.Renderer.render = function(template, data) {
+        data = _.extend(data, {
+            i18n      : $.t,
+            cleanXSS  : _.cleanXSS,
+            stripTags : _.stripTags
+        });
+
+        return render(template, data);
     };
 
     // Start a module

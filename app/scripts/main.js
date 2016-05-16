@@ -70,7 +70,7 @@ requirejs.config({
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
-        dompurify             : '../bower_components/DOMPurify/src/purify',
+        xss                   : '../bower_components/xss/dist/xss',
         mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
         dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',
@@ -144,6 +144,9 @@ requirejs.config({
         },
         'prism/bundle': {
             exports: 'Prism'
+        },
+        xss: {
+            exports: 'filterXSS'
         },
         bootstrap: {
             deps: ['jquery']

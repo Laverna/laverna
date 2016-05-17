@@ -65,11 +65,6 @@ define([
             return this;
         },
 
-        updateDate: function() {
-            this.set('updated', Date.now());
-            this.set('synchronized', 0);
-        },
-
         addCount: function() {
             if (this.get('id') === 0) {
                 return;

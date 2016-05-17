@@ -63,15 +63,6 @@ define([
             }
         },
 
-        updateDate: function() {
-            this.set('updated', Date.now());
-            this.set('synchronized', 0);
-        },
-
-        doEscape: function() {
-            this.set('name', _.escape(this.get('name')));
-        }
-
     });
 
     return Tag;

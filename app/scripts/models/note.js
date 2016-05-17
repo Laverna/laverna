@@ -61,23 +61,8 @@ define([
             }
         },
 
-        initialize: function() {
-        },
-
-        /**
-         * Note's last modified time
-         */
-        updateDate: function() {
-            this.set('updated', Date.now());
-            this.setSync();
-        },
-
         toggleFavorite: function() {
             return {isFavorite: (this.get('isFavorite') === 1) ? 0 : 1};
-        },
-
-        setSync: function() {
-            this.set('synchronized', 0);
         },
 
         /**

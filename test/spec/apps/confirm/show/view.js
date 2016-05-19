@@ -1,4 +1,4 @@
-/* global chai, define, describe, before, it */
+/* global define, chai, describe, before, it */
 define([
     'underscore',
     'apps/confirm/show/view'
@@ -10,35 +10,38 @@ define([
     describe('Confirm view', function() {
         var view;
 
+        function checkEvent(needEv, done) {
+            view.once('click', function(ev) {
+                expect(ev).to.be.equal(needEv);
+                done();
+            });
+        }
+
         before(function() {
             view = new View({
                 el: $('<div>'),
-                text: 'A **markdown** content.'
+                content: 'A **markdown** content.'
             });
             view.render();
         });
 
-        describe('render()', function() {
-            it('converts Markdown to HTML', function() {
-                expect(view.$('.modal-body')).to.have('strong');
-            });
-        });
-
         describe('triggers events', function() {
-            it(':refuse when .refuse button was clicked', function(done) {
-                view.once('refuse', done);
-                view.ui.refuse.click();
+
+            it('cancel if cancel button is clicked', function(done) {
+                checkEvent('cancel', done);
+                view.$('[data-event="cancel"]').click();
             });
 
-            it(':refuse on :hidden.modal', function(done) {
-                view.once('refuse', done);
+            it('confirm if confirm button is clicked', function(done) {
+                checkEvent('confirm', done);
+                view.$('[data-event="confirm"]').click();
+            });
+
+            it('cancel on `hidden.modal`', function(done) {
+                checkEvent('cancel', done);
                 view.trigger('hidden.modal');
             });
 
-            it(':confirm when .confirm button was clicked', function(done) {
-                view.once('confirm', done);
-                view.ui.confirm.click();
-            });
         });
     });
 });

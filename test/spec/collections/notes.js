@@ -2,7 +2,7 @@
 define([
     'require',
     'collections/notes'
-], function (require, Notes) {
+], function(require, Notes) {
     'use strict';
 
     var expect = chai.expect,
@@ -12,10 +12,10 @@ define([
         dummy text ever since the 1500s, when an unknown printer took a galley\
         of type and scrambled it to make a type specimen book.';
 
-    describe('Notes collection', function () {
+    describe('Notes collection', function() {
         var notes;
 
-        before(function () {
+        before(function() {
             var models = [];
 
             for (var i = 0; i < 20; i++) {
@@ -30,27 +30,27 @@ define([
             notes.add(models);
         });
 
-        describe('search', function () {
+        describe('search', function() {
 
-            it('collection is not empty', function () {
+            it('collection is not empty', function() {
                 expect(notes.length !== 0).to.be.equal(true);
             });
 
-            it('can search', function () {
-                expect(notes.search('Test note').length).to.be.equal(notes.length);
-                expect(notes.search('number ' + String(notes.length - 1)).length).to.be.equal(1);
+            it('can search', function() {
+                expect(notes.searchFilter('Test note').length).to.be.equal(notes.length);
+                expect(notes.searchFilter('number ' + String(notes.length - 1)).length).to.be.equal(1);
             });
 
-            it('case insensetive search', function () {
-                expect(notes.search('test').length).to.be.equal(notes.length);
-                expect(notes.search('NotE').length).to.be.equal(notes.length);
-                expect(notes.search('NUMBER').length).to.be.equal(notes.length);
+            it('case insensetive search', function() {
+                expect(notes.searchFilter('test').length).to.be.equal(notes.length);
+                expect(notes.searchFilter('NotE').length).to.be.equal(notes.length);
+                expect(notes.searchFilter('NUMBER').length).to.be.equal(notes.length);
             });
 
-            it('full text search', function () {
-                expect(notes.search('content').length).to.be.equal(notes.length);
-                expect(notes.search('lorem').length).to.be.equal(notes.length);
-                expect(notes.search('content' + String(notes.length - 1)).length).to.be.equal(1);
+            it('full text search', function() {
+                expect(notes.searchFilter('content').length).to.be.equal(notes.length);
+                expect(notes.searchFilter('lorem').length).to.be.equal(notes.length);
+                expect(notes.searchFilter('content' + String(notes.length - 1)).length).to.be.equal(1);
             });
 
         });

@@ -210,4 +210,7 @@ define([
             controller: API
         });
     });
+
+    return AppNote;
+
 });

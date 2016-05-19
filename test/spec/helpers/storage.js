@@ -1,74 +1,61 @@
-/* global define, chai, describe, it, Modernizr */
+/* global define, chai, describe, it, after, before, beforeEach, Modernizr */
 define([
+    'q',
     'helpers/storage',
-    'backbone',
-    'backbone.wreqr'
-], function(Storage, Backbone) {
+    'backbone.radio'
+], function(Q, storage, Radio) {
     'use strict';
 
-    var expect = chai.expect,
-        channel = Backbone.Wreqr.radio.channel('global');
+    var expect = chai.expect;
+
+    function checkFile(needFile, done) {
+        storage.switchDb = function(file) {
+            expect(file).to.be.equal(needFile);
+            done();
+        };
+    }
 
     describe('Storage helper', function() {
-        it('has "storage" response', function() {
-            var storage = channel.reqres.request('storage');
-            expect(storage).to.be.equal('indexeddb');
-        });
+        var switchDb;
 
-        it('should use indexeddb if it is available', function(done) {
-            Modernizr.indexeddb = true;
-            Storage.check().then(function() {
-                expect(Storage.storage).to.be.equal('indexeddb');
-                done();
-            });
-        });
+        before(function() {
+            switchDb = storage.switchDb;
 
-        it('should use websql if indexeddb is not available', function(done) {
-            Modernizr.indexeddb = false;
-            Modernizr.websqldatabase = true;
-            window.shimIndexedDB = { __useShim: function() {} };
-
-            Storage.check().then(function() {
-                expect(Storage.storage).to.be.equal('websql');
-                done();
-            });
-        });
-
-        it(
-            'should use localstorage if neither indexeddb nor websql are available',
-            function(done) {
-                Modernizr.indexeddb = false;
-                Modernizr.websqldatabase = false;
-
-                Storage.check().then(function() {
-                    expect(Storage.storage).to.be.equal('localstorage');
-                    done();
-                });
+            if (!window.indexedDB) {
+                storage.testDb = function() {
+                    return Q.resolve();
+                };
             }
-        );
+        });
 
-        it('should fail if it doesn\'t support web storages', function(done) {
+        beforeEach(function() {
+            Modernizr.indexeddb = true;
+            Radio.replyOnce('global', 'use:webworkers', function() { return true; });
+        });
+
+        after(function() {
+            Modernizr.indexeddb = true;
+            storage.switchDb = switchDb;
+        });
+
+        it('uses backbone.sync if IndexedDB can be used', function(done) {
+            checkFile('backbone.sync', done);
+            storage.check();
+        });
+
+        it('uses backbone.noworker.sync if IndexedDB can\'t be used', function(done) {
             Modernizr.indexeddb = false;
-            Modernizr.websqldatabase = false;
-            Modernizr.localstorage = false;
 
-            Storage.check().fail(function() {
-                expect(Storage.storage).to.be.equal(null);
-                done();
-            });
+            checkFile('backbone.noworker.sync', done);
+            storage.check();
         });
 
-        describe('Events', function() {
-            it('should trigger "storage:error" event', function(done) {
-                channel.vent.on('storage:error', done);
-                Storage.check();
-            });
+        it('uses backbone.noworker.sync if WebWorkers can\'t be used', function(done) {
+            Radio.replyOnce('global', 'use:webworkers', function() { return false; });
 
-            it('should trigger "storage:local" event', function(done) {
-                Modernizr.localstorage = true;
-                channel.vent.on('storage:local', done);
-                Storage.check();
-            });
+            checkFile('backbone.noworker.sync', done);
+            storage.check();
         });
+
     });
 });

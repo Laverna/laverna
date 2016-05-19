@@ -1,14 +1,15 @@
 /* global chai, define, describe, before, it, Mousetrap */
 define([
     'underscore',
+    'backbone.radio',
     'collections/configs',
-    'apps/notebooks/list/layout',
+    'apps/notebooks/list/views/layout',
     'apps/notebooks/list/views/notebooksComposite',
     'apps/notebooks/list/views/tagsComposite',
     'collections/notebooks',
     'collections/tags',
-    'Mousetrap'
-], function(_, Configs, Layout, NotebooksComp, TagsComp, Notebooks, Tags) {
+    'mousetrap'
+], function(_, Radio, Configs, Layout, NotebooksComp, TagsComp, Notebooks, Tags) {
     'use strict';
 
     var expect = chai.expect;
@@ -16,23 +17,31 @@ define([
     describe('NotebookLayout view', function() {
         var layout,
             notebookView,
-            tagsView;
+            tagsView,
+            notebooks,
+            tags;
 
         before(function() {
+
+            notebooks = new Notebooks([{id: '1', name: 'Test'}]);
+            tags = new Tags([{id: '1', name: 'Test'}]);
+
             // Show layout
             layout = new Layout({
-                settings: Configs.prototype.configNames
+                configs   : Configs.prototype.configNames,
+                notebooks : notebooks,
+                tags      : tags
             });
             layout.render();
 
             // Show notebooks list
             notebookView = new NotebooksComp({
-                collection: new Notebooks([{id: '1', name: 'Test'}])
+                collection: notebooks
             });
 
             // Show tags list
             tagsView = new TagsComp({
-                collection: new Tags([{id: '1', name: 'Test'}])
+                collection: tags
             });
 
             // Render lists in layout
@@ -41,60 +50,47 @@ define([
         });
 
         describe('Keybindings', function() {
-            function listenNavigateOpen(done) {
-                layout.once('navigate', function(url) {
-                    var $a = layout.$('.list-group-item.active');
-                    expect($a.length).to.be.ok();
-                    expect(url).to.be.equal($a.attr('href'));
-                    done();
-                });
-            }
 
-            it('when user hits "Enter", opens active element', function(done) {
-                listenNavigateOpen(done);
-                notebookView.collection.at(0).trigger('active');
-                Mousetrap.trigger('enter');
-            });
+            it('triggers "navigate:next" event on "j" key', function(done) {
+                layout[layout.activeRegion].currentView
+                    .once('navigate:next', done);
 
-            it('when user hits "o", opens active element', function(done) {
-                listenNavigateOpen(done);
-                Mousetrap.trigger('o');
-            });
-
-            it('when user hits "e", redirects to edit page', function(done) {
-                layout.once('navigate', function(url) {
-                    var $a = this.$('.list-group-item.active')
-                        .parent()
-                        .find('.edit-link');
-
-                    expect($a.length).to.be.ok();
-                    expect(url).to.be.equal($a.attr('href'));
-                    done();
-                });
-                Mousetrap.trigger('e');
-            });
-
-            it('triggers "next" event when "j" was typed', function(done) {
-                layout.notebooks.currentView
-                .once(
-                    'next',
-                    function() {
-                        done();
-                    }
-                );
                 Mousetrap.trigger('j');
             });
 
-            it('triggers "prev" event when "k" was typed', function(done) {
-                layout.notebooks.currentView
-                .once(
-                    'prev',
-                    function() {
-                        done();
-                    }
-                );
+            it('triggers "navigate:previous" event on "k" key', function(done) {
+                layout[layout.activeRegion].currentView
+                    .once('navigate:previous', done);
+
                 Mousetrap.trigger('k');
             });
+
+            it('"o", opens active element', function(done) {
+                Radio.replyOnce('uri', 'navigate', function(url) {
+                    var $a = layout.$('.list-group-item.active');
+                    expect($a.length !== 0).to.be.equal(true);
+                    expect(url).to.be.equal($a.attr('href'));
+                    done();
+                });
+
+                layout.$('.list-group-item:first').addClass('active');
+                Mousetrap.trigger('o');
+            });
+
+            it('"e" redirects to edit page', function(done) {
+                Radio.replyOnce('uri', 'navigate', function(url) {
+                    var $a = layout.$('.list-group-item.active').parent().find('.edit-link:first');
+
+                    expect($a.length !== 0).to.be.equal(true);
+
+                    expect(url).to.be.equal($a.attr('href'));
+                    done();
+                });
+
+                layout.$('.list-group-item:first').addClass('active');
+                Mousetrap.trigger('e');
+            });
+
         });
 
     });

@@ -29,7 +29,11 @@ define([
                 configs : _.clone(configs)
             });
 
-            view.render();
+            try {
+                view.render();
+            } catch (e) {
+                console.log(e);
+            }
         });
 
         it('is ok', function() {

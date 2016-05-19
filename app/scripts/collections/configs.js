@@ -137,7 +137,7 @@ define([
         resetFromJSON: function(jsonSettings) {
             var newConfs = [];
             _.forEach(jsonSettings, function(val, key) {
-                newConfs.push({name: key, val: val});
+                newConfs.push({name: key, value: val});
             });
             this.reset(newConfs);
         },

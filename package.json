@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "node ./server.js",
-    "electron": "NODE_ENV=dev electron ."
+    "electron": "NODE_ENV=dev electron .",
+    "karma": "./node_modules/.bin/karma start",
+    "test:karma": "./node_modules/.bin/karma start --single-run"
   },
   "main": "electron.js",
   "dependencies": {
@@ -46,6 +48,11 @@
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.7",
     "jshint-stylish": "^2.1.0",
+    "karma": "^0.13.22",
+    "karma-coverage": "^1.0.0",
+    "karma-mocha": "^1.0.1",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-requirejs": "^1.0.0",
     "merge-stream": "^1.0.0",
     "nightwatch": "^0.8.9"
   },

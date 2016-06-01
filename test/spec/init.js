@@ -25,6 +25,7 @@ requirejs([
         // Core
         'spec/app',
         'spec/moduleLoader',
+        'spec/initializers',
 
     ], function() {
         if (window.__karma__) {

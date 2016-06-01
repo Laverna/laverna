@@ -53,7 +53,7 @@ define([
     render = Backbone.Marionette.Renderer.render;
 
     Backbone.Marionette.Renderer.render = function(template, data) {
-        data = _.extend(data, {
+        data = _.extend(data || {}, {
             i18n      : $.t,
             cleanXSS  : _.cleanXSS,
             stripTags : _.stripTags
@@ -77,6 +77,8 @@ define([
             App.channel.trigger('app:module', appName);
             currentApp.start(args);
         }
+
+        return true;
     };
 
     // Returns current app

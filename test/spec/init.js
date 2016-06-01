@@ -19,6 +19,10 @@ requirejs([
     window.should = chai.should();
 
     requirejs([
+
+        // Core
+        'spec/app',
+
     ], function() {
         if (window.__karma__) {
             return window.__karma__.start();

@@ -27,6 +27,9 @@ requirejs([
         'spec/moduleLoader',
         'spec/initializers',
 
+        // Helpers
+        'spec/helpers/underscore-util',
+
     ], function() {
         if (window.__karma__) {
             return window.__karma__.start();

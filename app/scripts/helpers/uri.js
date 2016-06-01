@@ -139,7 +139,7 @@ define([
          * Generates a link from provided options
          */
         getLink: function(options, model) {
-            options = _.extend({}, options);
+            options = _.extend({}, options || {});
             var url = '/notes',
                 filters = {
                     filter  : '/f/',

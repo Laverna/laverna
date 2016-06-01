@@ -31,6 +31,7 @@ requirejs([
         'spec/helpers/underscore-util',
         'spec/helpers/db',
         'spec/helpers/storage',
+        'spec/helpers/uri',
 
     ], function() {
         if (window.__karma__) {

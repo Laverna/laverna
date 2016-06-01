@@ -15,6 +15,8 @@ requirejs.config({
         'chai'         : dir.test + 'test/bower_components/chai/chai',
         'chai-jquery'  : dir.test + 'test/bower_components/chai-jquery/chai-jquery',
         'chai-promise' : dir.test + 'test/bower_components/chai-as-promised/lib/chai-as-promised',
+        'sinon-chai'   : dir.test + 'test/bower_components/sinon-chai/lib/sinon-chai',
+        'sinon'        : dir.test + 'test/bower_components/sinonjs/sinon',
         'spec'         : dir.test + 'test/spec',
         'init'         : dir.test + 'test/spec/init',
     },

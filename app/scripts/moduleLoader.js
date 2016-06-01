@@ -82,4 +82,6 @@ define([
         return ModuleLoader.init();
     });
 
+    return ModuleLoader;
+
 });

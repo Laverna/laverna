@@ -4,8 +4,9 @@ requirejs([
     'underscore',
     'chai-jquery',
     'chai-promise',
+    'sinon-chai',
     'helpers/radio.shim',
-], function(chai, _, chaiJquery, chaiAsPromised) {
+], function(chai, _, chaiJquery, chaiAsPromised, sinon) {
     'use strict';
 
     // Setup Mocha and Chai
@@ -13,6 +14,7 @@ requirejs([
     mocha.bail(false);
     chai.use(chaiJquery);
     chai.use(chaiAsPromised);
+    chai.use(sinon);
 
     // Make `expect` and `should` globally available
     window.expect = chai.expect;
@@ -22,6 +24,7 @@ requirejs([
 
         // Core
         'spec/app',
+        'spec/moduleLoader',
 
     ], function() {
         if (window.__karma__) {

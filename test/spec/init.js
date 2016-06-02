@@ -38,6 +38,7 @@ requirejs([
         'spec/models/notebook',
         'spec/models/tag',
         'spec/models/file',
+        'spec/models/config',
 
     ], function() {
         if (window.__karma__) {

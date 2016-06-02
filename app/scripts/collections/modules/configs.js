@@ -54,6 +54,11 @@ define([
             };
         },
 
+        encryptionKeys: [
+            'encrypt'    , 'encryptPass', 'encryptSalt'  ,
+            'encryptIter', 'encryptTag' , 'encryptKeySize'
+        ],
+
         /**
          * Reset encryptBackup
          */
@@ -64,6 +69,8 @@ define([
 
         /**
          * Create a new profile
+         *
+         * @type object Backbone.model - appProfiles model
          */
         createProfile: function(model, name) {
             return model.createProfile(name);
@@ -210,13 +217,9 @@ define([
              * Before fetching configs collection, find out whether
              * we should use configs from the default profile.
              */
-            return this.getModel({name: 'useDefaultConfigs', profile: options.profile})
-            .then(function(model) {
-                // Use default profile
-                if (!model || Number(model.get('value'))) {
-                    options.profile = null;
-                }
-
+            return this.useDefaultConfigs(options.profile)
+            .then(function(profile) {
+                options.profile = profile;
                 return getFunc(options);
             })
             .then(function() {
@@ -227,6 +230,18 @@ define([
             })
             .fail(function(e) {
                 console.error('Error:', e);
+            });
+        },
+
+        /**
+         * Return null if configs from the default profile should be used.
+         *
+         * @type string profile
+         */
+        useDefaultConfigs: function(profile) {
+            return this.getModel({name: 'useDefaultConfigs', profile: profile})
+            .then(function(model) {
+                return (!model || Number(model.get('value')) ? null : profile);
             });
         },
 
@@ -364,24 +379,18 @@ define([
                 return [];
             }
 
-            var self    = this,
-                encrSet = [
-                    'encrypt'    , 'encryptPass', 'encryptSalt'  ,
-                    'encryptIter', 'encryptTag' , 'encryptKeySize'
-                ];
-
             return _.filter(collection, function(value) {
 
                 // Compare values
                 if (typeof value === 'object') {
                     return (
-                        _.indexOf(encrSet, value.name) > -1 &&
-                        self.getConfig(value.name) !== value.value &&
-                        self._checkPassChanged(value)
+                        _.indexOf(this.encryptionKeys, value.name) > -1 &&
+                        this.getConfig(value.name) !== value.value &&
+                        this._checkPassChanged(value)
                     );
                 }
 
-                return (_.indexOf(encrSet, value) > -1);
+                return (_.indexOf(this.encryptionKeys, value) > -1);
             }, this);
         },
 
@@ -407,7 +416,9 @@ define([
          * Backup current encryption configs to current profile.
          */
         _backupEncrypt: function(profile) {
-            var encrypt = this._getEncryption(this.collection.pluck('name')),
+            var encrypt = _.pluck(this.collection.filter(function(model) {
+                    return (_.indexOf(this.encryptionKeys, model.get('name')) > -1);
+                }, this), 'id'),
                 model   = this.collection.get('encryptBackup');
 
             model.changeDB(profile);
@@ -455,6 +466,8 @@ define([
                 name  : 'encryptBackup',
                 value : _.extend({}, changed, configs.encryptBackup)
             };
+
+            return objects;
         },
 
     });

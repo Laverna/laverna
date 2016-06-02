@@ -47,6 +47,9 @@ requirejs([
         'spec/collections/configs',
         'spec/collections/pageable',
 
+        // Collection module
+        'spec/collections/modules/configs',
+
     ], function() {
         if (window.__karma__) {
             return window.__karma__.start();

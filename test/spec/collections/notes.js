@@ -1,58 +1,145 @@
-/* global chai, define, describe, before, it */
+/*jshint expr: true*/
+/* global expect, define, describe, beforeEach, before, it */
 define([
-    'require',
+    'sinon',
+    'underscore',
     'collections/notes'
-], function(require, Notes) {
+], function(sinon, _, Collection) {
     'use strict';
 
-    var expect = chai.expect,
-        /*jshint multistr: true */
-        lorem = 'Lorem Ipsum is simply dummy text of the printing and \
+    /*jshint multistr: true */
+    var lorem = 'Lorem Ipsum is simply dummy text of the printing and \
         typesetting industry. Lorem Ipsum has been the industry\'s standard \
         dummy text ever since the 1500s, when an unknown printer took a galley\
         of type and scrambled it to make a type specimen book.';
 
-    describe('Notes collection', function() {
-        var notes;
+    describe('collections/notes', function() {
+        var collection;
 
-        before(function() {
-            var models = [];
-
-            for (var i = 0; i < 20; i++) {
-                models.push({
-                    'id': i,
-                    'title': 'Test note number ' + i,
-                    'content': lorem + ' ' + i + ' content test content' + i
-                });
-            }
-
-            notes = new Notes();
-            notes.add(models);
+        beforeEach(function() {
+            collection = new Collection();
         });
 
-        describe('search', function() {
+        describe('.conditions', function() {
 
-            it('collection is not empty', function() {
-                expect(notes.length !== 0).to.be.equal(true);
+            it('.notebook returns {notebookId: `query`, trash: 0}', function() {
+                var res = collection.conditions.notebook({query: 'tasks'});
+
+                expect(res.notebookId).to.be.equal('tasks');
+                expect(res.trash).to.be.equal(0);
             });
 
-            it('can search', function() {
-                expect(notes.searchFilter('Test note').length).to.be.equal(notes.length);
-                expect(notes.searchFilter('number ' + String(notes.length - 1)).length).to.be.equal(1);
+        });
+
+        describe('.filterList()', function() {
+
+            it('does nothing if filter argument was not provided', function() {
+                expect(collection.filterList()).to.be.an('undefined');
             });
 
-            it('case insensetive search', function() {
-                expect(notes.searchFilter('test').length).to.be.equal(notes.length);
-                expect(notes.searchFilter('NotE').length).to.be.equal(notes.length);
-                expect(notes.searchFilter('NUMBER').length).to.be.equal(notes.length);
+            it('does nothing if a filter method does not exist', function() {
+                expect(collection.filterList('all404')).to.be.an('undefined');
             });
 
-            it('full text search', function() {
-                expect(notes.searchFilter('content').length).to.be.equal(notes.length);
-                expect(notes.searchFilter('lorem').length).to.be.equal(notes.length);
-                expect(notes.searchFilter('content' + String(notes.length - 1)).length).to.be.equal(1);
+            it('executes filter method', function() {
+                var spy = sinon.spy(collection, 'taskFilter');
+                collection.filterList('task', {query: 'testing'});
+                expect(spy).to.have.been.calledWith('testing');
             });
 
+            it('resets the collection', function(done) {
+                collection.add([{isOk: false}, {isOk: true}]);
+                sinon.stub(collection, 'taskFilter').returns([collection.at(0)]);
+
+                collection.once('reset', function() {
+                    expect(collection.length).to.be.equal(1);
+                    done();
+                });
+                collection.filterList('task', {});
+            });
+
+        });
+
+        it('.taskFilter()', function() {
+            collection.add([
+                {taskCompleted: 1, taskAll: 10},
+                {taskCompleted: 9, taskAll: 10},
+                {taskCompleted: 20, taskAll: 20},
+            ]);
+
+            expect(collection.taskFilter().length).to.be.equal(2);
+        });
+
+        describe('.tagFilter()', function() {
+
+            it('requires notes to have tags', function() {
+                collection.add([{id: '1'}, {id: '2'}]);
+                expect(collection.tagFilter('tag').length).to.be.equal(0);
+            });
+
+            it('returns notes which are tagged with the tag', function() {
+                collection.add([
+                    {trash: 0, tags: ['test', 'test2']},
+                    {trash: 1, tags: ['test']},
+                    {trash: 0, tags: ['test2', 'test3']},
+                    {trash: 0, tags: ['test2', 'test3', 'test']},
+                ]);
+
+                expect(collection.tagFilter('test').length).to.be.equal(2);
+            });
+
+        });
+
+        describe('.searchFilter()', function() {
+            var models;
+
+            before(function() {
+                models = [];
+                for (var i = 0; i < 20; i++) {
+                    models.push({
+                        'id': i,
+                        'title': 'Test note number title ' + i,
+                        'content': lorem + ' ' + i + ' content test content' + i
+                    });
+                }
+            });
+
+            beforeEach(function() {
+                collection.add(models);
+            });
+
+            it('does nothing if letters argument is empty', function() {
+                expect(collection.searchFilter().length).to.be.equal(models.length);
+                expect(collection.searchFilter('').length).to.be.equal(models.length);
+            });
+
+            it('can find a string in the title', function() {
+                expect(collection.searchFilter('title 10').length).to.be.equal(1);
+            });
+
+            it('can find a string in the content', function() {
+                expect(collection.searchFilter('content19').length).to.be.equal(1);
+            });
+
+            it('can perform case-insensetive search', function() {
+                expect(collection.searchFilter('test').length).to.be.equal(models.length);
+                expect(collection.searchFilter('NotE').length).to.be.equal(models.length);
+                expect(collection.searchFilter('NUMBER tITle 11').length).to.be.equal(1);
+            });
+
+        });
+
+        it('.fuzzySearch()', function() {
+            collection.add([
+                {id: 1, title: 'The Great Gatsby. Test'},
+                {id: 2, title: 'The DaVinci Code. Test'},
+                {id: 3, title: 'Angels & Demons'},
+            ]);
+            collection.fullCollection = collection.clone();
+
+            expect(collection.fuzzySearch('gaby').length).to.be.equal(1);
+            expect(collection.fuzzySearch('gaby')[0].id).to.be.equal(1);
+            expect(collection.fuzzySearch('tst').length).to.be.equal(2);
         });
 
     });

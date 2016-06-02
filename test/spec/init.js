@@ -40,6 +40,9 @@ requirejs([
         'spec/models/file',
         'spec/models/config',
 
+        // Collections
+        'spec/collections/notes',
+
     ], function() {
         if (window.__karma__) {
             return window.__karma__.start();

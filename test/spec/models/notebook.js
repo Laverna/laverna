@@ -1,13 +1,11 @@
-/* global chai, define, describe, beforeEach, it */
-'use strict';
+/* global expect, define, describe, beforeEach, it */
 define([
-    'underscore',
+    'helpers/underscore-util',
     'models/notebook'
 ], function(_, Model) {
+    'use strict';
 
-    var expect = chai.expect;
-
-    describe('Notebook Model', function() {
+    describe('models/notebook', function() {
         var notebook;
 
         beforeEach(function() {
@@ -15,12 +13,21 @@ define([
         });
 
         describe('instance', function() {
+
             it('should be instance of Notebook Model', function() {
-                expect(notebook instanceof Model).to.be.equal(true);
+                expect(notebook).to.be.instanceof(Model);
             });
+
+            it('converts `id` and `parentId` to string on start', function() {
+                var n = new Model({id: 2, parentId: 1});
+                expect(n.get('id')).to.be.a('string');
+                expect(n.get('parentId')).to.be.a('string');
+            });
+
         });
 
         describe('default values', function() {
+
             it('id is undefined', function() {
                 expect(notebook.get('id')).to.be.equal(undefined);
             });
@@ -55,25 +62,37 @@ define([
 
         });
 
-        describe('validate()', function() {
+        describe('.validate()', function() {
 
             it('"name" shouldn\'t be empty', function() {
                 expect(notebook.validate({name: ''}).length > 0).to.be.equal(true);
-                expect(_.indexOf(notebook.validate({name: ''}), 'name') > -1).to.be.equal(true);
+                expect(notebook.validate({name: ''})).to.contain('name');
             });
 
             it('doesn\'t validate if "trash" is equal to 2', function() {
                 expect(notebook.validate({name: '', trash: 2})).to.be.equal(undefined);
-                expect(typeof notebook.validate({name: '', trash: 2})).not.to.be.equal('object');
+                expect(notebook.validate({name: '', trash: 2})).not.to.be.an('object');
             });
 
             it('it can\'t have itself as parent', function(done) {
-                notebook.on('invalid', function(m, error) {
-                    expect(_.indexOf(error, 'parentId') !== -1).to.be.equal(true);
+                notebook.once('invalid', function(m, error) {
+                    expect(error).to.contain('parentId');
                     done();
                 });
                 notebook.set({id: '1', parentId: '1'});
                 notebook.save();
+            });
+
+        });
+
+        describe('.setEscape()', function() {
+
+            it('sanitizes data to prevent XSS', function() {
+                var data = {name: '<b href="javascript:alert(1)" title="javascript:alert(2)">Hello</b>\n'};
+                notebook.setEscape(_.extend({}, data));
+
+                expect(notebook.get('name')).to.be.equal(_.cleanXSS(data.name));
+                expect(notebook.get('name')).not.to.contain(data.name);
             });
 
         });

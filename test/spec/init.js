@@ -33,6 +33,10 @@ requirejs([
         'spec/helpers/storage',
         'spec/helpers/uri',
 
+        // Models
+        'spec/models/note',
+        'spec/models/notebook',
+
     ], function() {
         if (window.__karma__) {
             return window.__karma__.start();

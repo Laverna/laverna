@@ -1,4 +1,4 @@
-/* global chai, define, describe, beforeEach, it */
+/* global expect, define, describe, beforeEach, it */
 define([
     'require',
     'helpers/underscore-util',
@@ -6,9 +6,7 @@ define([
 ], function(require, _, Note) {
     'use strict';
 
-    var expect = chai.expect;
-
-    describe('Note Model', function() {
+    describe('models/note', function() {
         var note;
 
         beforeEach(function() {
@@ -18,7 +16,7 @@ define([
         describe('instance', function() {
 
             it('should be instance of Note Model', function() {
-                expect(note instanceof Note).to.be.equal(true);
+                expect(note).to.be.instanceof(Note);
             });
 
         });
@@ -26,7 +24,7 @@ define([
         describe('default values', function() {
 
             it('"id" is undefined', function() {
-                expect(typeof note.get('id')).to.be.equal('undefined');
+                expect(note.get('id')).to.be.an('undefined');
             });
 
             it('"title" and "content" are be empty strings', function() {
@@ -35,7 +33,7 @@ define([
             });
 
             it('"notebookId" is equal to "0"', function() {
-                expect(note.get('notebookId') === '0').to.be.equal(true);
+                expect(note.get('notebookId')).to.be.equal('0');
             });
 
             it('should be equal to 0', function() {
@@ -44,9 +42,9 @@ define([
                 });
             });
 
-            it('type of these properties must be equal to "object"', function() {
-                expect(typeof note.get('tags')).to.be.equal('object');
-                expect(typeof note.get('files')).to.be.equal('object');
+            it('tags and files are arrays', function() {
+                expect(note.get('tags')).to.be.an('array');
+                expect(note.get('files')).to.be.an('array');
             });
 
         });
@@ -65,21 +63,21 @@ define([
 
         });
 
-        describe('validate()', function() {
+        describe('.validate()', function() {
 
             it('"title" shouldn\'t be empty', function() {
                 expect(note.validate({title: ''}).length > 0).to.be.equal(true);
-                expect(_.indexOf(note.validate({title: ''}), 'title') > -1).to.be.equal(true);
+                expect(note.validate({title: ''})).to.include.members(['title']);
             });
 
             it('doesn\'t validate if "trash" is equal to 2', function() {
                 expect(note.validate({title: '', trash: 2})).to.be.equal(undefined);
-                expect(typeof note.validate({title: '', trash: 2})).not.to.be.equal('object');
+                expect(note.validate({title: '', trash: 2})).not.to.be.an('object');
             });
 
         });
 
-        describe('toggleFavorite()', function() {
+        describe('.toggleFavorite()', function() {
 
             it('toggles favourite status', function() {
                 note.set('isFavorite', 0);
@@ -91,7 +89,7 @@ define([
 
         });
 
-        describe('setEscape()', function() {
+        describe('.setEscape()', function() {
             var data;
 
             beforeEach(function() {
@@ -106,7 +104,7 @@ define([
 
                 _.each(['title', 'content'], function(name) {
                     expect(note.get(name)).to.be.equal(_.cleanXSS(data[name]));
-                    expect(note.get(name).search(data[name]) === -1).to.be.equal(true);
+                    expect(note.get(name)).not.to.contain(data[name]);
                 });
             });
 
@@ -122,7 +120,7 @@ define([
 
                 _.each(['title', 'content'], function(name) {
                     expect(note.get(name)).to.be.equal(_.cleanXSS(data[name]));
-                    expect(note.get(name).search(data[name]) === -1).to.be.equal(true);
+                    expect(note.get(name)).not.to.contain(data[name]);
                 });
             });
 

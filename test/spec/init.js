@@ -42,6 +42,7 @@ requirejs([
 
         // Collections
         'spec/collections/notes',
+        'spec/collections/notebooks',
 
     ], function() {
         if (window.__karma__) {

@@ -39,9 +39,6 @@ define([
             }
         },
 
-        initialize: function() {
-        },
-
         comparator: function(model) {
             return -model.get('created');
         },
@@ -58,8 +55,8 @@ define([
         /**
          * Show notes with unfinished tasks
          */
-        taskFilter: function () {
-            return this.filter(function (note) {
+        taskFilter: function() {
+            return this.filter(function(note) {
                 return note.get('taskCompleted') < note.get('taskAll');
             });
         },
@@ -80,24 +77,10 @@ define([
         },
 
         /**
-         * Filter: only unencrypted, JSON data probably encrypted data
-         */
-        getUnEncrypted: function() {
-            return this.filter(function(note) {
-                try {
-                    JSON.parse(note.get('title'));
-                    return false;
-                } catch (e) {
-                    return true;
-                }
-            });
-        },
-
-        /**
          * Search
          */
         searchFilter: function(letters) {
-            if (letters === '') {
+            if (!letters || letters === '') {
                 return this;
             }
 

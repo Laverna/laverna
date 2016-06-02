@@ -36,9 +36,6 @@ define([
             active: {trash: 0}
         },
 
-        initialize: function() {
-        },
-
         _onAddItem: function(model) {
             PageableCollection.prototype._onAddItem.apply(this, arguments);
             Radio.trigger('tags', 'model:navigate', model);
@@ -61,11 +58,12 @@ define([
 
             // Reset the collection so the view could re-render itself
             this.reset(models);
+            return true;
         },
 
         /**
          * Sets state.currentPage to the given number.
-         * Then, it overrites models of the current collection.
+         * Then, it overwrites models of the current collection.
          */
         getPage: function(number) {
             // Calculate page number

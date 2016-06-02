@@ -129,20 +129,6 @@ define([
             });
         },
 
-        /**
-         * Filter: only unencrypted, JSON data probably encrypted data
-         */
-        getUnEncrypted: function() {
-            return this.filter(function(notebook) {
-                try {
-                    JSON.parse(notebook.get('name'));
-                    return false;
-                } catch (e) {
-                    return true;
-                }
-            });
-        }
-
     });
 
     return Notebooks;

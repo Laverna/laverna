@@ -65,24 +65,6 @@ define([
             return this;
         },
 
-        addCount: function() {
-            if (this.get('id') === 0) {
-                return;
-            }
-            this.save({
-                'count': this.get('count') + 1
-            });
-        },
-
-        removeCount: function() {
-            if (this.get('id') === 0) {
-                return;
-            }
-            this.save({
-                'count': this.get('count') - 1
-            });
-        }
-
     });
 
     return Model;

@@ -45,6 +45,7 @@ requirejs([
         'spec/collections/notebooks',
         'spec/collections/tags',
         'spec/collections/configs',
+        'spec/collections/pageable',
 
     ], function() {
         if (window.__karma__) {

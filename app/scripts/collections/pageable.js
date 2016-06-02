@@ -98,6 +98,8 @@ define([
             this.listenTo(this.vent, 'update:model' , this._onAddItem, this);
             this.listenTo(this.vent, 'destroy:model', this._navigateOnRemove, this);
             this.listenTo(this.vent, 'restore:model', this._onRestore, this);
+
+            return this;
         },
 
         /**
@@ -115,6 +117,8 @@ define([
             // Remove all the event listeners
             this.stopListening();
             this.stopListening(this.vent);
+
+            return this;
         },
 
         getNextPage: function() {
@@ -129,7 +133,7 @@ define([
 
         /**
          * Sets state.currentPage to the given number.
-         * Then, it overrites models of the current collection.
+         * Then, it overwrites models of the current collection.
          */
         getPage: function(number) {
             // Calculate page number
@@ -199,7 +203,7 @@ define([
         getNextItem: function(id) {
             // The collection is empty
             if (this.length === 0) {
-                return;
+                return false;
             }
 
             var model  = this.get(id),
@@ -218,7 +222,7 @@ define([
         getPreviousItem: function(id) {
             // The collection is empty
             if (this.length === 0) {
-                return;
+                return false;
             }
 
             var model = this.get(id),
@@ -242,7 +246,7 @@ define([
         _navigateOnRemove: function(model) {
             model     = this.get(model.id);
             if (!model) {
-                return;
+                return false;
             }
 
             var coll  = this.fullCollection || this,

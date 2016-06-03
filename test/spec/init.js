@@ -48,6 +48,7 @@ requirejs([
         'spec/collections/pageable',
 
         // Collection module
+        'spec/collections/modules/notes',
         'spec/collections/modules/configs',
 
     ], function() {

@@ -51,6 +51,7 @@ requirejs([
         'spec/collections/modules/notes',
         'spec/collections/modules/notebooks',
         'spec/collections/modules/tags',
+        'spec/collections/modules/files',
         'spec/collections/modules/configs',
 
     ], function() {

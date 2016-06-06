@@ -47,12 +47,13 @@ requirejs([
         'spec/collections/configs',
         'spec/collections/pageable',
 
-        // Collection module
+        // Collection modules
         'spec/collections/modules/notes',
         'spec/collections/modules/notebooks',
         'spec/collections/modules/tags',
         'spec/collections/modules/files',
         'spec/collections/modules/configs',
+        'spec/collections/modules/module',
 
     ], function() {
         if (window.__karma__) {

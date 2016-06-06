@@ -119,7 +119,7 @@ define([
          */
         save: function(model, data) {
             var self   = this,
-                set    = model.setEscape ? 'setEscape' : 'set',
+                setF   = model.setEscape ? 'setEscape' : 'set',
                 errors = model.validate(data);
 
             if (errors) {
@@ -128,7 +128,7 @@ define([
             }
 
             // Set new values
-            model[set](data);
+            model[setF](data);
 
             return new Q(self.encryptModel(model))
             .then(function(model) {
@@ -361,12 +361,13 @@ define([
                 return false;
             }
 
-            var configs = Radio.request('configs', 'get:object');
+            var configs = Radio.request('configs', 'get:object'),
+                backup  = {encrypt: configs.encryptBackup.encrypt || 0};
             model       = model || this.Collection.prototype.model.prototype;
 
             return (
-                model.encryptKeys &&
-                (Number(configs.encrypt) || Number(configs.encryptBackup.encrypt))
+                !_.isUndefined(model.encryptKeys) &&
+                (Number(configs.encrypt) || Number(backup.encrypt)) === 1
             );
         },
 

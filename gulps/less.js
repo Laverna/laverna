@@ -23,6 +23,7 @@ module.exports = function(gulp, plugins) {
             remove   : false,
             add      : true
         }))
-        .pipe(gulp.dest('./app/styles/'));
+        .pipe(gulp.dest('./app/styles/'))
+        .pipe(plugins.browserSync.stream());
     };
 };

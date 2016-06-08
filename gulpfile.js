@@ -3,6 +3,8 @@ var gulp    = require('gulp'),
     pkg     = require('./package.json'),
     plugins = require('gulp-load-plugins')();
 
+plugins.browserSync = require('browser-sync').create();
+
 function getTask(task) {
     return require(`./gulps/${task}`)(gulp, plugins, pkg);
 }
@@ -13,7 +15,7 @@ function getTask(task) {
     'less'   , 'prism'      , 'require'     , 'electron'  ,
     'htmlmin', 'cssmin'     , 'htmlManifest',
     'copy'   , 'copyRelease', 'copyDist'    ,
-    'reload' , 'clean'      , 'npm'
+    'serve'  , 'clean'      , 'npm'
 ]
 .forEach(function(task) {
     var taskFun = getTask(task);

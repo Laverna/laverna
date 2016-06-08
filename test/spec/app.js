@@ -76,6 +76,7 @@ define([
 
             before(function(done) {
                 render = Backbone.Marionette.Renderer.render;
+                $.t = i18n.t.bind(i18n);
                 i18n.init({}, function() { done(); });
             });
 

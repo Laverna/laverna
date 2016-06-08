@@ -20,6 +20,7 @@ module.exports = function(config) {
             'test/spec/test.js',
             {pattern: 'app/**/*.js', included: false, served: true},
             {pattern: 'app/scripts/modules/modules.json', included: false, served: true},
+            {pattern: 'app/locales/**/*.json', included: false, served: true},
             {pattern: 'test/spec/**/*.js', included: false, served: true},
             {pattern: 'test/bower_components/**/*.js', included: false, served: true}
         ],

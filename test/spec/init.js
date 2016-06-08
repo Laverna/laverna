@@ -28,9 +28,10 @@ requirejs([
         'spec/initializers',
 
         // Helpers
-        'spec/helpers/underscore-util',
         'spec/helpers/db',
+        'spec/helpers/i18next',
         'spec/helpers/storage',
+        'spec/helpers/underscore-util',
         'spec/helpers/uri',
 
         // Models

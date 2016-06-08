@@ -40,7 +40,8 @@ requirejs.config({
         jquery                : '../bower_components/jquery/dist/jquery',
         q                     : '../bower_components/q/q',
         bootstrap             : '../bower_components/bootstrap/dist/js/bootstrap.min',
-        i18next               : '../bower_components/i18next/i18next.amd.withJQuery.min',
+        i18next               : '../bower_components/i18next/i18next',
+        i18nextXHRBackend     : '../bower_components/i18next-xhr-backend/i18nextXHRBackend',
 
         // Backbone
         underscore            : '../bower_components/underscore/underscore',

@@ -20,7 +20,7 @@
         <select class="form-control" name="appLang" id="appLang">
         <% _.forEach(locales, function(val, locale) { %>
         <option value="{{ locale }}"{{ isLocaleActive(locale) }}>
-            {{ i18n(val.nativeName) }}
+            {{ val.nativeName }}
         </option>
         <% }); %>
         </select>

@@ -9,20 +9,72 @@
 define([
     'underscore',
     'jquery',
+    'q',
     'backbone.radio',
-    'i18next'
-], function(_, $, Radio, i18n) {
+    'i18next',
+    'i18nextXHRBackend',
+    'text!locales/locales.json'
+], function(_, $, Q, Radio, i18n, XHR, locales) {
     'use strict';
 
+    var __ = {
+
+        /**
+         * Initialize i18next
+         */
+        init: function() {
+            $.t = i18n.t.bind(i18n);
+
+            return i18n
+            .use(XHR)
+            .init({
+                compatibilityAPI : 'v1',
+                lng              : __.getLang(),
+                fallbackLng      : ['en'],
+                backend          : {
+                    loadPath     : '../locales/{{lng}}/{{ns}}.json'
+                },
+            });
+        },
+
+        /**
+         * Get language either from configs or
+         * autodetect it from browser settings.
+         */
+        getLang: function() {
+            var lng = Radio.request('configs', 'get:config', 'appLang');
+
+            if (lng || typeof window.navigator === 'undefined') {
+                return lng;
+            }
+
+            // Language keys in navigator
+            lng     = ['languages', 'language', 'userLanguage', 'browserLanguage'];
+
+            // Available locales
+            locales = _.keys(JSON.parse(locales));
+
+            return _.chain(window.navigator)
+            .pick(lng)
+            .values()
+            .flatten()
+            .compact()
+            .map(function(key) {
+                return key.replace('-', '_').toLowerCase();
+            })
+            .find(function(key) {
+                return _.contains(locales, key);
+            })
+            .value();
+        },
+
+    };
+
     /**
-     * Init i18next
+     * Init i18next on `app:before` initialize request.
      */
-    Radio.request('init', 'add', 'app:before', function() {
-        return i18n.init({
-            lng             : Radio.request('configs', 'get:config', 'appLang'),
-            fallbackLng     : 'en',
-            useCookie       : false,
-            useLocalStorage : false
-        });
-    });
+    Radio.request('init', 'add', 'app:before', __.init);
+
+    return __;
+
 });

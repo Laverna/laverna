@@ -28,11 +28,12 @@ define([
             return i18n
             .use(XHR)
             .init({
-                compatibilityAPI : 'v1',
-                lng              : __.getLang(),
-                fallbackLng      : ['en'],
-                backend          : {
-                    loadPath     : '../locales/{{lng}}/{{ns}}.json'
+                lng          : __.getLang(),
+                fallbackLng  : ['en'],
+                ns           : [''],
+                defaultNS    : '',
+                backend      : {
+                    loadPath : '../locales/{{lng}}/translation.json'
                 },
             });
         },

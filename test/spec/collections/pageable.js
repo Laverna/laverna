@@ -44,8 +44,9 @@ define([
 
             it('starts listening to events', function() {
                 page.stopListening();
-                expect(page._events).to.be.an('undefined');
-                expect(page.vent._events).to.be.an('undefined');
+
+                expect((page._events || {})['change:isFavorite']).to.be.an('undefined');
+                expect((page.vent._events || {})['update:model']).to.be.an('undefined');
 
                 page.registerEvents();
                 expect(page._events).to.be.an('object');
@@ -70,8 +71,8 @@ define([
             it('stops listening to events', function() {
                 page.registerEvents().removeEvents();
 
-                expect(page._events).to.be.an('undefined');
-                expect(page.vent._events).to.be.an('undefined');
+                expect((page._events || {})['change:isFavorite']).to.be.an('undefined');
+                expect((page.vent._events || {})['update:model']).to.be.an('undefined');
             });
 
             it('resets .fullCollection', function() {

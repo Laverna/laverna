@@ -15,10 +15,10 @@
   "main": "electron.js",
   "dependencies": {
     "chokidar": "^1.5.1",
-    "electron-debug": "^1.0.0",
     "electron-window-state": "^3.0.3",
     "finalhandler": "^0.4.1",
     "glob": "^7.0.3",
+    "minimist": "^1.2.0",
     "open": "0.0.5",
     "serve-static": "^1.10.3"
   },

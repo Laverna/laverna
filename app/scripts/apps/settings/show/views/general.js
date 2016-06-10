@@ -30,9 +30,11 @@ define([
         },
 
         serializeData: function() {
+            var appLang = this.collection.get('appLang');
             return {
                 locales    : JSON.parse(locales),
                 models     : this.collection.getConfigs(),
+                appLang    : (appLang.get('value') || i18n.language) || 'en',
                 useDefault : this.options.useDefault.toJSON()
             };
         },
@@ -45,9 +47,8 @@ define([
                 },
 
                 isLocaleActive: function(locale) {
-                    this.models.appLang = this.models.appLang || i18n.language;
-                    if (this.models.appLang === locale ||
-                        this.models.appLang.indexOf(locale) >= 0) {
+                    if (this.appLang === locale ||
+                        this.appLang.search(locale) >= 0) {
                         return ' selected';
                     }
                 }

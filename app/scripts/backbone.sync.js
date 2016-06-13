@@ -9,11 +9,11 @@
 define([
     'q',
     'underscore'
-], function(Q) {
+], function(Q, _) {
     'use strict';
 
     var Adapter = {
-        promises: [],
+        promises: {},
 
         /**
          * Create a new worker and start listening to its events.
@@ -21,49 +21,65 @@ define([
          * @return function
          */
         sync: function() {
-            var self = this,
-                sync;
+            _.bindAll(this, 'listenToWorker', 'backboneSync');
 
             this.worker = new Worker('scripts/workers/localForage.js');
 
             // Promise which signifies whether the worker is ready
             this.workerPromise = Q.defer();
 
-            this.worker.onmessage = function(data) {
-                var msg = data.data;
-
-                switch (msg.msg) {
-
-                    // Database webworker is ready
-                    case 'ready':
-                        self.workerPromise.resolve();
-                        break;
-
-                    // Request was fullfilled
-                    case 'done':
-                        self.promises[msg.promiseId].resolve(msg.data);
-                        delete self.promises[msg.promiseId];
-                        break;
-
-                    // Request failed with errors
-                    case 'fail':
-                        self.promises[msg.promiseId].reject(msg.data);
-                        delete self.promises[msg.promiseId];
-                        break;
-
-                    default:
-                }
-            };
+            // Start listening to WebWorker events
+            this.worker.onmessage = this.listenToWorker;
 
             // A function for Backbone sync
-            sync = function(method, model, options) {
-                return self.workerPromise.promise
-                .then(function() {
-                    return self[method](model, options);
-                });
-            };
+            return this.backboneSync;
+        },
 
-            return sync;
+        /**
+         * Resolve promises after receiving WebWorker messages.
+         *
+         * @type object data
+         */
+        listenToWorker: function(data) {
+            var msg = data.data;
+
+            switch (msg.msg) {
+
+                // Database webworker is ready
+                case 'ready':
+                    this.workerPromise.resolve();
+                    break;
+
+                // Request was fullfilled
+                case 'done':
+                    this.promises[msg.promiseId].resolve(msg.data);
+                    delete this.promises[msg.promiseId];
+                    break;
+
+                // Request failed with errors
+                case 'fail':
+                    this.promises[msg.promiseId].reject(msg.data);
+                    delete this.promises[msg.promiseId];
+                    break;
+
+                default:
+            }
+        },
+
+        /**
+         * With this method Backbone.sync will be overriden.
+         *
+         * @return promise
+         */
+        backboneSync: function(method, model, options) {
+
+            // First, make sure WebWorker is ready
+            return this.workerPromise.promise
+            .then(_.bind(function() {
+
+                // Execute the method (read, create, update)
+                return this[method](model, options);
+            }, this));
         },
 
         /**

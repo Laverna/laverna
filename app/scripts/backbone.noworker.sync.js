@@ -14,7 +14,7 @@ define([
 ], function(Q, _, Sync, DB) {
     'use strict';
 
-    var Adapter = _.extend(Sync, {
+    var Adapter = _.extend({}, Sync, {
         promises: [],
 
         /**

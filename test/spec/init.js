@@ -26,6 +26,7 @@ requirejs([
         'spec/app',
         'spec/moduleLoader',
         'spec/initializers',
+        'spec/backbone.sync',
 
         // Helpers
         'spec/helpers/db',

@@ -43,7 +43,7 @@
     "Encryption parameters": "Šifrēšanas parametri",
     "Encryption Password": "Šifrēšanas parole",
     "Salt": "Sāls",
-    "Random": "Nejaušs",
+    "Random": "Nejauša",
     "Key size": "Atslēgas garums",
     "Strengthen by a factor of": "Stiprināt par koeficientu",
     "Authentication strength": "Autentifikācijas stiprums",
@@ -56,7 +56,7 @@
     "Navigation": "Navigācija",
     "navigateTop": "Uz augšu",
     "navigateBottom": "Uz leju",
-    "Jump": "Pārklēkt",
+    "Jump": "Pārlēkt",
     "jumpInbox": "Iet uz iesūtni",
     "jumpNotebook": "Iet uz klažu sarakstu",
     "jumpFavorite": "Iet uz piezīmju izlasi",
@@ -105,7 +105,7 @@
     "Preview": "Priekšskatījums",
     "Download": "Lejupielāde",
     "encryption": {
-        "wait": "Lūdzu uzgaidīt līdz šifrēšana būs pabeigta",
+        "wait": "Lūdzu uzgaidīt, līdz šifrēšana būs pabeigta",
         "error": "Šifrēšanas kļūda",
         "errorConfirm": "Kļūda šifrējot datus.\r\r Ja Jūs mainījāt šifrēšanas iestātījumus citā pārlūkā, **atjauniniet Jūsu iestatījumus** arī šajā pārlūkā vai arī mēģiniet importēt iestatījumus.\r\r Ja tas neko nemaina, **mēģiniet ielogoties** atkal.",
         "errorConfirmSettings": "Mainīt šifrēšanas parametrus",
@@ -113,7 +113,7 @@
         "backup": {
             "title": "Datu rezerves kopija",
             "content": "Lūdzu, pirms ejiet uz nākamo soli, lejupielādējiet Jūsu rezerves kopiju. Tā satur atšifrētus iepriekšējos datus un mainītos profilus. Glabājiet to drošā vietā.",
-            "next": "Turpināt nelejupielādējot rezerves kopiju"
+            "next": "Turpināt, nelejupielādējot rezerves kopiju"
         },
         "state": {
             "decrypt": "Atšifrē visu",
@@ -163,6 +163,6 @@
         "firststart next": "Ja nekad neesat lietojis/-usi Laverna līdz šim, klikšķiniet uz 'nākamā' pogas, lai sāktu instalācijas procesu.",
         "firststart encryption": "Ja vēlaties izmantot šifrēšanu, lūdzu sniedziet šifrēšans paroli.",
         "firststart sync": "Tā kā mēs neglabājam jebkādus datus mūsu serveros, Jums vajag ieslēgt sinhronizāciju ar vienu no no adapteriem lai varētu skatīt savas piezīmes arī uz citām ierīcēm.",
-        "firststart backup": "Viss ir gandrīz gatavs. Jūs varat lejupielādēt savu iestatījumu rezerves kopiju un turpināt uz nākamo soli."
+        "firststart backup": "Viss ir gandrīz gatavs. Jūs varat lejupielādēt savu iestatījumu rezerves kopiju un pāriet uz nākamo soli."
     }
 }

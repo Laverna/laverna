@@ -6,7 +6,7 @@ var gulp    = require('gulp'),
 plugins.browserSync = require('browser-sync').create();
 
 function getTask(task) {
-    return require(`./gulps/${task}`)(gulp, plugins, pkg);
+    return require('./gulps/' + task)(gulp, plugins, pkg);
 }
 
 // Add Gulp tasks

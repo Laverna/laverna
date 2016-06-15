@@ -7,7 +7,7 @@ const electron        = require('electron'),
 
 const {app, BrowserWindow, Menu, Tray} = electron;
 
-let argv = require('minimist')(process.argv.slice(2)),
+let argv = require('minimist')(process.argv.slice(1)),
     port = 9000,
     win  = null,
     appHelper;

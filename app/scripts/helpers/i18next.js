@@ -23,19 +23,27 @@ define([
          * Initialize i18next
          */
         init: function() {
-            $.t = i18n.t.bind(i18n);
+            var defer = Q.defer();
+            $.t       = i18n.t.bind(i18n);
 
-            return i18n
+            i18n
             .use(XHR)
-            .init({
-                lng          : __.getLang(),
-                fallbackLng  : ['en'],
-                ns           : [''],
-                defaultNS    : '',
-                backend      : {
-                    loadPath : '../locales/{{lng}}/translation.json'
+            .init(
+                {
+                    lng          : __.getLang(),
+                    fallbackLng  : ['en'],
+                    ns           : [''],
+                    defaultNS    : '',
+                    backend      : {
+                        loadPath : 'locales/{{lng}}/translation.json'
+                    },
                 },
-            });
+                function() {
+                    defer.resolve();
+                }
+            );
+
+            return defer.promise;
         },
 
         /**

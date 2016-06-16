@@ -242,7 +242,7 @@ appHelper = {
         win.webContents.on('new-window', appHelper.onNavigate.bind(appHelper));
 
         // Disable nodeIntegration
-        win.webContents.on('new-window', appHelper.onNewWindow.bind(appHelper));
+        // win.webContents.on('new-window', appHelper.onNewWindow.bind(appHelper));
     },
 
     /**

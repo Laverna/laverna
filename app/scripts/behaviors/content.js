@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -19,6 +19,7 @@ define([
     var Content = Marionette.Behavior.extend({
 
         events: {
+            'swiperight'          : 'showSidebar',
             'click #show--sidebar': 'showSidebar',
         },
 
@@ -30,6 +31,11 @@ define([
 
             this.listenTo(channel, 'sidebar:shown', this.listenActive);
             this.listenTo(channel, 'content:hidden', this.showSidebar);
+            this.listenTo(channel, 'content:shown', this.showContent);
+        },
+
+        onRender: function() {
+            this.view.$el.hammer();
         },
 
         /**

@@ -10,10 +10,11 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
+    'behaviors/sidebar',
     'apps/notes/list/views/noteSidebarItem',
     'text!apps/notes/list/templates/sidebarList.html',
     'mousetrap'
-], function(_, Marionette, Radio, NoteSidebarItem, Tmpl, Mousetrap) {
+], function(_, Marionette, Radio, Behavior, NoteSidebarItem, Tmpl, Mousetrap) {
     'use strict';
 
     /**
@@ -31,6 +32,12 @@ define([
         childView          :  NoteSidebarItem,
         childViewContainer :  '.list',
         childViewOptions   :  {},
+
+        behaviors: {
+            SidebarBehavior: {
+                behaviorClass: Behavior
+            }
+        },
 
         ui: {
             pageNav  : '#pageNav',

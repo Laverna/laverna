@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,8 +10,9 @@ define([
     'underscore',
     'jquery',
     'marionette',
+    'backbone.radio',
     'mousetrap'
-], function(_, $, Marionette, Mousetrap) {
+], function(_, $, Marionette, Radio, Mousetrap) {
     'use strict';
 
     /**
@@ -24,10 +25,32 @@ define([
             sidemenu: '.sidemenu'
         },
 
+        defaults: {
+            events: {
+                'swipeleft'  : 'hideMenu',
+            }
+        },
+
         events: {
             'click .sidemenu--open'  : 'showMenu',
             'click .sidemenu--close' : 'hideMenu',
             'click .sidemenu a'      : 'hideMenu'
+        },
+
+        initialize: function() {
+            this.listenTo(Radio.channel('sidemenu'), 'show', this.showMenu);
+        },
+
+        onRender: function() {
+
+            // To avoid bugginess, add hammer events to the backdrop el too
+            var hammer  = $('.layout--backdrop').hammer(),
+                hammer2 = this.$el.hammer();
+
+            _.each(this.options.events, function(func, ev) {
+                hammer.bind(ev,  _.bind(this.view[func] || this[func], this));
+                hammer2.bind(ev, _.bind(this.view[func] || this[func], this));
+            }, this);
         },
 
         onShow: function() {

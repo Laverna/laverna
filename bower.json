@@ -42,7 +42,9 @@
     "markdown-it-sanitizer": "~0.4.1",
     "markdown-it-hashtag": "~0.4.0",
     "xss": "^0.2.13",
-    "i18next-xhr-backend": "^0.5.5"
+    "i18next-xhr-backend": "^0.5.5",
+    "fastclick": "^1.0.6",
+    "jquery-hammerjs": "jquery.hammer.js#^2.0.0"
   },
   "devDependencies": {},
   "resolutions": {

@@ -9,12 +9,13 @@
 define([
     'jquery',
     'q',
+    'fastclick',
     'helpers/radio.shim',
     'backbone.radio',
     'app',
     'initializers',
     'bootstrap'
-], function($, Q, shim, Radio, App) {
+], function($, Q, FastClick, shim, Radio, App) {
     'use strict';
 
     var hash = document.location.hash;
@@ -23,6 +24,9 @@ define([
     });
 
     console.time('App');
+
+    // Remove 300ms delay
+    FastClick.attach(document.body);
 
     // Load all modules then start an application
     requirejs([

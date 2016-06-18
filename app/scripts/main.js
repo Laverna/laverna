@@ -80,6 +80,8 @@ requirejs.config({
         fileSaver             : '../bower_components/FileSaver/FileSaver',
         enquire               : '../bower_components/enquire/dist/enquire.min',
         hammerjs              : '../bower_components/hammerjs/hammer',
+        jHammer               : '../bower_components/jquery-hammerjs/jquery.hammer',
+        fastclick             : '../bower_components/fastclick/lib/fastclick',
         devicejs              : '../bower_components/device.js/lib/device.min',
         jszip                 : '../bower_components/jszip/dist/jszip',
 
@@ -100,7 +102,7 @@ requirejs.config({
             exports: '_'
         },
         backbone: {
-            deps: ['underscore', 'jquery'],
+            deps: ['underscore', 'jquery', 'jHammer'],
             exports: 'Backbone'
         },
 

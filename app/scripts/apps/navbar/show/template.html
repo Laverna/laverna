@@ -66,7 +66,7 @@
         <div class="list-group-item sidemenu--item -disabled">{{i18n('Notebooks')}}</div>
         <% notebooks.forEach(function(notebook) { %>
         <a class="list-group-item sidemenu--item" href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
-            <i class="icon-notebook"></i>  {{notebook.name}}
+            <i class="icon-notebook"></i>  {=cleanXSS(notebook.name)}
         </a>
         <% }); } %>
 

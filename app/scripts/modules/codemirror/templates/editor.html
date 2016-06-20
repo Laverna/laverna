@@ -60,7 +60,7 @@
 
 <div class="editor--row">
     <div class="editor--layout -left -show">
-        <textarea class="editor--input" id="editor--input" name="content">{{content}}</textarea>
+        <textarea class="editor--input" id="editor--input" name="content">{=cleanXSS(content)}</textarea>
     </div>
 
     <div class="editor--layout -right">

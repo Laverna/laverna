@@ -42,12 +42,6 @@ define([
             this.$layoutBody.on('scroll', _.bind(this.onScroll, this));
         },
 
-        serializeData: function() {
-            return {
-                content: _.cleanXSS(this.model.get('content'), true)
-            };
-        },
-
         onDestroy: function() {
             this.$layoutBody.off('scroll');
             Radio.trigger('editor', 'view:destroy');

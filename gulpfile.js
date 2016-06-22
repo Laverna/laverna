@@ -14,7 +14,7 @@ function getTask(task) {
 [
     'jshint' , 'jsonlint'   , 'mocha'       , 'nightwatch',
     'less'   , 'prism'      , 'require'     , 'electron'  ,
-    'htmlmin', 'cssmin'     , 'htmlManifest',
+    'htmlmin', 'cssmin'     , 'htmlManifest', 'mobile'    ,
     'copy'   , 'copyRelease', 'copyDist'    ,
     'serve'  , 'clean'      , 'npm'
 ]

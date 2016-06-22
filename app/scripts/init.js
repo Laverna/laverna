@@ -14,7 +14,8 @@ define([
     'backbone.radio',
     'app',
     'initializers',
-    'bootstrap'
+    'bootstrap',
+    'jHammer'
 ], function($, Q, FastClick, shim, Radio, App) {
     'use strict';
 

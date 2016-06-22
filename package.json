@@ -25,6 +25,7 @@
   "devDependencies": {
     "browser-sync": "^2.13.0",
     "chai": "^3.5.0",
+    "cordova-lib": "^6.2.0",
     "del": "^2.2.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",

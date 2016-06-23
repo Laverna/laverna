@@ -51,6 +51,10 @@
         "name": "Hindi",
         "nativeName": "Hindi"
     },
+    "ko": {
+        "name": "Korean",
+        "nativeName": "한국어"
+    },
     "mr_in": {
         "name": "Marathi",
         "nativeName": "Marathi"

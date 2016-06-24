@@ -58,10 +58,16 @@ define([
             });
 
             // Configure auth
-            this.client.authDriver(new Dropbox.AuthDriver.Popup({
-                receiverUrl  : (location.origin + location.pathname.replace('index.html', '') + 'dropbox.html'),
-                rememberUser : true
-            }));
+            if (window.cordova) {
+                window.open = window.cordova.InAppBrowser.open;
+                this.client.authDriver(new Dropbox.AuthDriver.Cordova());
+            }
+            else {
+                this.client.authDriver(new Dropbox.AuthDriver.Popup({
+                    receiverUrl  : (location.origin + location.pathname.replace('index.html', '') + 'dropbox.html'),
+                    rememberUser : true
+                }));
+            }
 
             // Replies
             Radio.reply('sync', 'start', this.startSync, this);

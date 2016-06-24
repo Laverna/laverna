@@ -19,13 +19,21 @@ module.exports = function(gulp, plugins, pkg) {
         .pipe(gulp.dest('./cordova'));
     });
 
+    gulp.task('mobile:replace', function() {
+        return gulp.src('./cordova/www/index.html')
+        .pipe(plugins.replace('<!-- {{cordova}} -->', '<script src="cordova.js"></script>'))
+        .pipe(plugins.replace(' manifest=\'app.appcache\'', ''))
+        .pipe(gulp.dest('./cordova/www'));
+    });
+
     gulp.task('mobile:cordova', function() {
         process.chdir('./cordova');
 
         return cordova.platform('add', ['android'])
         .then(function() {
             return cordova.plugins('add', [
-                'cordova-plugin-crosswalk-webview'
+                'cordova-plugin-crosswalk-webview',
+                'cordova-plugin-inappbrowser',
             ]);
         });
     });
@@ -34,13 +42,16 @@ module.exports = function(gulp, plugins, pkg) {
         'mobile:clean',
         'build',
         ['mobile:copy', 'mobile:config'],
+        'mobile:replace',
         'mobile:cordova'
     ));
 
     gulp.task('mobile:build', ['mobile:create'], function() {
         return cordova.build({
             platforms: ['android'],
-            // options  : ['--release']
+            options  : {
+                // argv : ['--release']
+            }
         });
     });
 

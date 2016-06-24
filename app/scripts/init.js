@@ -10,13 +10,14 @@ define([
     'jquery',
     'q',
     'fastclick',
+    'hammerjs',
     'helpers/radio.shim',
     'backbone.radio',
     'app',
     'initializers',
     'bootstrap',
     'jHammer'
-], function($, Q, FastClick, shim, Radio, App) {
+], function($, Q, FastClick, Hammer, shim, Radio, App) {
     'use strict';
 
     var hash = document.location.hash;
@@ -28,6 +29,9 @@ define([
 
     // Remove 300ms delay
     FastClick.attach(document.body);
+
+    // Enable text selection
+    delete Hammer.defaults.cssProps.userSelect;
 
     // Load all modules then start an application
     requirejs([

@@ -5,7 +5,7 @@
             <h3 class="modal-title">{{ getTitle() }}</h3>
         </div>
         <div class="modal-body">
-            <p>{{content}}</p>
+            <p>{= cleanXSS(content) }</p>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-event="cancel">

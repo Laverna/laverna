@@ -59,6 +59,7 @@ module.exports = function(gulp, plugins) {
 
                 'apps/settings/module/app',
                 'apps/settings/module/controller',
+                'views/loader',
 
                 'backbone.sync',
                 'backbone.noworker.sync',

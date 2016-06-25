@@ -5,37 +5,25 @@ const electron        = require('electron'),
     path              = require('path'),
     openUrl           = require('open');
 
-const {app, BrowserWindow, Menu, Tray} = electron;
+const {app, BrowserWindow, Menu, Tray, protocol} = electron;
 
 let argv = require('minimist')(process.argv.slice(1)),
-    port = 9000,
     win  = null,
     appHelper;
 
 // Show command line help
 if (argv.help || argv.h) {
     console.log('Usage: laverna [options]\r\n');
-    console.log('--port', 'Change port of the server. Example: --port=9000');
     console.log('--dev ', 'Show developer tools automatically on start');
     console.log('--tray', 'Hide to tray on start');
 
     return app.quit();
 }
 
-// Port was provided
-if (Number(argv.port) > 1024) {
-    port = Number(argv.port) || port;
-}
-
-// Start the server
-if (!argv.noServer) {
-    require('./server')(port);
-}
-
 appHelper = {
 
     // The page which will be loaded in the window
-    page: 'http://localhost:' + port + '/',
+    page: 'http://localhost:9000/',
 
     // Icon of the app
     icon: path.join(__dirname, '/dist/images/icon/icon-120x120.png'),
@@ -129,10 +117,36 @@ appHelper = {
      */
     onReady: function() {
         this
+        .interceptProtocol()
         .createWindow()
         .createMenu()
         .createTray()
         .registerEvents();
+    },
+
+    /**
+     * Override HTTP protocol. The reason:
+     * In order to make oAuth authentifications to Dropbox/RemoteStorage,
+     * we need to serve the app from https? protocol and have relative paths.
+     */
+    interceptProtocol: function() {
+        protocol.interceptHttpProtocol('http', function(req, callback) {
+
+            if (req.url.search(appHelper.page) > - 1) {
+
+                // Remove the domain, path, and hash location
+                req.url = req.url.replace(appHelper.page, '');
+                req.url = req.url.split('#')[0] || 'index.html';
+
+                // Serve the resource from the file system
+                req.url = 'file:///' + path.normalize(__dirname + '/dist/' + (req.url || 'index.html'));
+            }
+
+            callback(req);
+
+        });
+
+        return this;
     },
 
     /**

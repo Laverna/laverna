@@ -14,10 +14,32 @@ let argv = require('minimist')(process.argv.slice(1)),
 // Show command line help
 if (argv.help || argv.h) {
     console.log('Usage: laverna [options]\r\n');
+    console.log('--help', 'Show this help');
     console.log('--dev ', 'Show developer tools automatically on start');
     console.log('--tray', 'Hide to tray on start');
+    console.log(
+        '--data-dir',
+        'Directory where data is stored.',
+        'Example: laverna --data-dir=../data'
+    );
 
     return app.quit();
+}
+
+// Allow to change the directory where the data is stored
+if (argv['data-dir'] && argv['data-dir'].trim()) {
+    let dataDir = argv['data-dir'].trim();
+
+    // The same or parent directory
+    if (dataDir.search(/^\./) > - 1) {
+
+        // Always store data in a separate directory
+        dataDir += (dataDir.search(/^\.{1,2}$/) > -1 ? '/laverna-data' : '');
+
+        dataDir = path.join(__dirname, dataDir);
+    }
+
+    app.setPath('userData', path.normalize(dataDir));
 }
 
 appHelper = {

@@ -161,7 +161,7 @@ appHelper = {
                 req.url = req.url.split('#')[0] || 'index.html';
 
                 // Serve the resource from the file system
-                req.url = 'file:///' + path.normalize(__dirname + '/dist/' + (req.url || 'index.html'));
+                req.url = 'file:///' + path.normalize(__dirname + '/dist/' + req.url);
             }
 
             callback(req);

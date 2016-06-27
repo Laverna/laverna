@@ -18,6 +18,7 @@
     "electron-window-state": "^3.0.3",
     "finalhandler": "^0.4.1",
     "glob": "^7.0.3",
+    "graceful-fs": "^4.1.4",
     "minimist": "^1.2.0",
     "open": "0.0.5",
     "serve-static": "^1.10.3"

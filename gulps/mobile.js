@@ -34,6 +34,7 @@ module.exports = function(gulp, plugins, pkg) {
             return cordova.plugins('add', [
                 'cordova-plugin-crosswalk-webview',
                 'cordova-plugin-inappbrowser',
+                'cordova-plugin-file',
             ]);
         });
     });

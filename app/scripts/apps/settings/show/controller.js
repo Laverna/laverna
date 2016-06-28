@@ -12,8 +12,8 @@ define([
     'marionette',
     'backbone.radio',
     'apps/settings/controller',
-    'fileSaver',
-], function(Q, _, Marionette, Radio, BasicController, saveAs) {
+    'helpers/fileSaver',
+], function(Q, _, Marionette, Radio, BasicController, fileSaver) {
     'use strict';
 
     /**
@@ -113,7 +113,7 @@ define([
                 [JSON.stringify(this.configs)],
                 {type: 'text/plain;charset=utf8'}
             );
-            saveAs(blob, 'laverna-settings.json');
+            fileSaver(blob, 'laverna-settings.json');
         },
 
         /**

@@ -1,6 +1,6 @@
 {
     "src_folders": ["test/spec-ui/tests"],
-    "output_folder"          : "reports",
+    "output_folder"          : ".reports",
     "custom_commands_path"   : "test/spec-ui/commands",
     "custom_assertions_path" : "",
     "page_objects_path"      : "",

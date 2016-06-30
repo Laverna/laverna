@@ -1,6 +1,7 @@
 'use strict';
 
 var cordova = require('cordova-lib').cordova.raw,
+    fs      = require('fs'),
     devip   = require('dev-ip');
 
 module.exports = function(gulp, plug, pkg) {
@@ -31,10 +32,30 @@ module.exports = function(gulp, plug, pkg) {
         .pipe(gulp.dest('./cordova'));
     });
 
+    /**
+     * Copy build.json in which one can store keystore configs.
+     */
+    gulp.task('mobile:buildConfig', function() {
+        try {
+            fs.statSync('./build.json');
+            return gulp.src(['./build.json'])
+            .pipe(gulp.dest('./cordova'));
+        } catch (e) {
+            return plug.util.noop();
+        }
+    });
+
     gulp.task('mobile:replace', function() {
         return gulp.src('./cordova/www/index.html')
         .pipe(plug.replace('<!-- {{cordova}} -->', '<script src="cordova.js"></script>'))
         .pipe(plug.replace(' manifest=\'app.appcache\'', ''))
+
+        // Use different name for debugging
+        .pipe(
+            plug.util.env.dev ?
+                plug.replace('<name>Laverna', '<name>Laverna dev') :
+                plug.util.noop()
+        )
         .pipe(gulp.dest('./cordova/www'));
     });
 
@@ -54,7 +75,7 @@ module.exports = function(gulp, plug, pkg) {
     gulp.task('mobile:create', plug.sequence(
         'mobile:clean',
         'build',
-        ['mobile:copy', 'mobile:config'],
+        ['mobile:copy', 'mobile:config', 'mobile:buildConfig'],
         'mobile:replace',
         'mobile:cordova'
     ));
@@ -63,7 +84,7 @@ module.exports = function(gulp, plug, pkg) {
         return cordova.build({
             platforms: ['android'],
             options  : {
-                // argv : ['--release']
+                release: !plug.util.env.dev
             }
         });
     });

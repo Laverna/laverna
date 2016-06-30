@@ -1,4 +1,8 @@
 
+# Cordova build configs and keys
+build.json
+**/*.keystore
+
 # Compiled files
 app/styles/**/*.css
 dist/

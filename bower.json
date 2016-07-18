@@ -35,6 +35,7 @@
     "underscore": "~1.8.3",
     "xregexp": "~3.1.1",
     "jszip": "Stuk/jszip#~2.5.0",
+    "markdown-it-imsize": "~2.0.1",
     "markdown-it-math": "~4.0.0",
     "markdown-it": "~6.0.5",
     "codemirror": "~5.15.2",

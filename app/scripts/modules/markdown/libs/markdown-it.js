@@ -7,9 +7,10 @@ define([
     'markdown-it-san',
     'markdown-it-hash',
     'markdown-it-math',
+    'markdown-it-imsize',
     'modules/markdown/libs/markdown-it-task',
     'modules/markdown/libs/markdown-it-file',
-], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math, task, file) {
+], function(_, Q, MarkdownIt, Prism, sanitizer, hash, math, imsize, task, file) {
     'use strict';
 
     /**
@@ -44,6 +45,7 @@ define([
         configure: function() {
             this.md
             .use(sanitizer)
+            .use(imsize)
             .use(math, {
                 inlineOpen       : '$',
                 inlineClose      : '$',

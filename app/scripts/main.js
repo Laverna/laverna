@@ -68,6 +68,7 @@ requirejs.config({
         'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer.min',
         'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag.min',
         'markdown-it-math'    : '../bower_components/markdown-it-math/dist/markdown-it-math.min',
+        'markdown-it-imsize'  : '../bower_components/markdown-it-imsize/dist/markdown-it-imsize.min',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others

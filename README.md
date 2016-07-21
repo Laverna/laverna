@@ -68,7 +68,7 @@ $ git clone git@github.com:Laverna/laverna.git
 
 #### 2. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 
-#### 3. Ensure you have the bower and gulp packages installed:
+#### 3. Ensure you have the bower and gulp packages installed (locally and globally):
 
 ```bash
 $ npm install bower
@@ -87,6 +87,12 @@ $ (cd test && bower install)
 
 ```bash
 $ gulp build
+```
+
+#### 6. Start Laverna:
+
+```bash
+$ gulp
 ```
 
 ## Support

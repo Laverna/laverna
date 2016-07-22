@@ -104,7 +104,17 @@
     "Editor": "Editor",
     "Download": "Download",
     "Everything": "Alles",
+    "Other": "Sonstiges",
+    "Default": "Standard",
+    "Modules": "Module",
+    "Import data": "Importiere Daten",
+    "Export data": "Exportiere Daten",
+    "Everything": "Alles",
+    "Enabled": "Aktiviert",
+    "Disabled": "Deaktiviert",
     "encryption": {
+        "provide password": "Bitte, geben Sie Ihr Passwort ein",
+        "change password": "Geben Sie Ihr Passwort hier ein, um es zu ändern",
         "wait": "Bitte warten, bis die Verschlüsselung abgeschlossen ist",
         "error": "Verschüsselungsfehler",
         "errorConfirm": "Fehler beim Verschlüsseln der Daten.\r\r Falls Sie die Verschlüsselungseinstellungen in einem anderen Browser geändert haben, **ändern Sie die Einstellungen** auch in diesem Browser. Oder probieren Sie andere Einstellungen.\r\r Und falls Sie nichts verändert haben, versuchen Sie, sich **erneut anzumelden**.",
@@ -112,7 +122,7 @@
         "errorConfirmAuth": "Nochmal versuchen",
         "backup": {
             "title": "Datensicherung",
-            "content": "Bevor Sie fortfahren laden Sie bitte Ihre Sicherungsdatei herunter. Sie enthält die entschlüsselten vorherigen Daten veränderter Profile. Verwahren Sie diese an einem sicheren Ort.",
+            "content": "Bevor Sie fortfahren, laden Sie bitte Ihre Sicherungsdatei herunter. Sie enthält die entschlüsselten vorherigen Daten veränderter Profile. Verwahren Sie diese an einem sicheren Ort.",
             "next": "Fortfahren, ohne die Sicherungsdatei herunterzuladen"
         },
         "state": {
@@ -154,12 +164,12 @@
         "confirm remove": "Der Tag **__name__** wird **endgültig** gelöscht!"
     },
     "dropbox": {
-        "auth confirm": "Sie werden jetzt zur **Dropbox** Autorisierungsseite umgeleitet.\r> Bitt klicken Sie den **OK** Button.",
+        "auth confirm": "Sie werden jetzt zur **Dropbox** Autorisierungsseite umgeleitet.\r> Bitte klicken Sie den **OK** Button.",
         "auth title": "Dropbox auth",
         "api info 1": "Sie können Ihren eigenen API-Schlüssel haben bei",
         "api info 2": "Wenn Sie eine neue App auf der Entwicklerwebsite von Dropbox erstellen, beachten Sie, dass:",
-        "api info li 1": "der App-Typ Dropbox API app sein sollte",
-        "api info li 2": "der Datentyp Files and datastores sein sollte"
+        "api info li 1": "der API-Typ \"Dropbox API\" sein sollte",
+        "api info li 2": "der \"type of access\" \"Full Dropbox\" sein sollte"
     },
     "help": {
         "firststart title": "Willkommen zu Laverna",

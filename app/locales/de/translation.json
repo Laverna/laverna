@@ -51,8 +51,8 @@
     "Your new encryption password": "Ihr neues Verschlüsselungspasswort",
     "Your old encryption password": "Ihr altes Verschlüsselungspasswort",
     "Show sidebar": "Seitenleiste anzeigen",
-    "Previous": "Vorherige",
-    "Next": "Nächste",
+    "Previous": "Zurück",
+    "Next": "Weiter",
     "Navigation": "Navigation",
     "navigateTop": "Nach oben",
     "navigateBottom": "Nach unten",
@@ -164,7 +164,7 @@
     "help": {
         "firststart title": "Willkommen zu Laverna",
         "firststart import": "Wenn Sie Laverna bereits verwendet haben, können Sie Ihre alten Einstellungen über den 'Import' Button unten importieren.",
-        "firststart next": "Wenn Sie Laverna noch nie benutzt haben, klicken Sie auf 'Nächste' um die Installation zu starten.",
+        "firststart next": "Wenn Sie Laverna noch nie benutzt haben, klicken Sie auf 'Weiter' um die Installation zu starten.",
         "firststart encryption": "Falls Sie Verschlüsselung verwenden wollen, geben Sie bitte das Verschlüsselungspasswort an.",
         "firststart sync": "Damit Sie Ihre Notizen auch auf anderen Geräten sehen können, müssen Sie die Synchronisierung mit einem Adapter aktivieren, da wir keine Daten auf unseren Servern speichern.",
         "firststart backup": "Fast fertig. Sie können Ihre Einstellungen herunterladen und mit dem letzten Schritt fortfahren."

@@ -156,7 +156,7 @@ define([
             }
 
             Radio.request('Confirm', 'start', {
-                content   : $.t('You have unsaved changes.'),
+                content   : $.t('You have unsaved changes'),
                 onconfirm : onconfirm,
                 onreject  : onreject
             });

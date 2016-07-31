@@ -132,7 +132,7 @@
         }
     },
     "profile": {
-        "confirm remove": "Le profile **__profile__** sera supprimé avec toutes les données qu'il contient, en particulier les notes, les étiquettes, et les bloc-notes. Cette action est irreversible!",
+        "confirm remove": "Le profile **{{profile}}** sera supprimé avec toutes les données qu'il contient, en particulier les notes, les étiquettes, et les bloc-notes. Cette action est irreversible!",
         "type name": "Saisir le nom du profile"
     },
     "files": {
@@ -142,8 +142,8 @@
         "attachImage": "Joindre en tant qu'image"
     },
     "notes": {
-        "confirm trash": "La note **__title__** va être déplacée dans la corbeille.",
-        "confirm remove": "La note **__title__** va être supprimée **pour toujours**!",
+        "confirm trash": "La note **{{title}}** va être déplacée dans la corbeille.",
+        "confirm remove": "La note **{{title}}** va être supprimée **pour toujours**!",
         "create and attach": "Créer une note et joindre son lien",
         "create": "Créer une nouvelle note",
         "hyperlink-dialog": "Titre d'une note ou URL"
@@ -153,7 +153,7 @@
         "add": "Créer un nouveau bloc-notes",
         "edit": "Modifier un bloc-notes",
         "name": "Veuillez saisir le nom du bloc-notes",
-        "confirm remove": "Le bloc-notes **__name__** sera supprimé **pour toujours**!",
+        "confirm remove": "Le bloc-notes **{{name}}** sera supprimé **pour toujours**!",
         "remove with notes": "Oui, supprimer avec les notes attachées",
         "remove": "Oui, supprimer"
     },
@@ -161,7 +161,7 @@
         "name": "Le nom de l'étiquette est requis",
         "add": "Créer une nouvelle étiquette",
         "edit": "Modifier une étiquette",
-        "confirm remove": "L'étiquette **__name__** sera supprimée **pour toujours**!"
+        "confirm remove": "L'étiquette **{{name}}** sera supprimée **pour toujours**!"
     },
     "dropbox": {
         "auth confirm": "Vous allez maintenant être redirigé sur la page d'autorisation de **Dropbox**.\r> Veuillez cliquer sur le bouton **OK**.",

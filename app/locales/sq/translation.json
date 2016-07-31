@@ -123,7 +123,7 @@
         }
     },
     "profile": {
-        "confirm remove": "Profili **__profile__** do të hiqet me gjithë të dhënat, përfshi shënime, etiketa dhe blloqe shënimesh. Ky veprim është i pakthyeshëm!",
+        "confirm remove": "Profili **{{profile}}** do të hiqet me gjithë të dhënat, përfshi shënime, etiketa dhe blloqe shënimesh. Ky veprim është i pakthyeshëm!",
         "type name": "Shtypni emër profili"
     },
     "files": {
@@ -133,8 +133,8 @@
         "attachImage": "Bashkëngjiteni si figurë"
     },
     "notes": {
-        "confirm trash": "Shënimi **__title__** do të kalohet te hedhurinat.",
-        "confirm remove": "Shënimi **__title__** do të hiqet **përgjithmonë**!",
+        "confirm trash": "Shënimi **{{title}}** do të kalohet te hedhurinat.",
+        "confirm remove": "Shënimi **{{title}}** do të hiqet **përgjithmonë**!",
         "create and attach": "Krijoni një shënim të ri dhe bashkëngjitni lidhjen e tij",
         "create": "Krijoni një shënim të ri",
         "hyperlink-dialog": "Titulli i një shënimi ose URL-je"
@@ -144,7 +144,7 @@
         "add": "Shtoni një bllok të ri shënimesh",
         "edit": "Përpunoni një bllok shënimesh",
         "name": "Ju lutemi, jepni emrin e bllokut të shënimeve",
-        "confirm remove": "Blloku i shënimeve **__name__** do të hiqet **përgjithmonë**!",
+        "confirm remove": "Blloku i shënimeve **{{name}}** do të hiqet **përgjithmonë**!",
         "remove with notes": "Po, hiqe me gjithë shënimet e bashkëngjitura",
         "remove": "Po, hiqe"
     },
@@ -152,7 +152,7 @@
         "name": "Emri i etiketës është i domosdoshëm",
         "add": "Shtoni një etiketë të re",
         "edit": "Përpunoni etiketë",
-        "confirm remove": "Etiketa **__name__** do të hiqet **përgjithmonë**!"
+        "confirm remove": "Etiketa **{{name}}** do të hiqet **përgjithmonë**!"
     },
     "dropbox": {
         "auth confirm": "Tani do të ridrejtoheni për te faqja e autorizimeve **Dropbox**.\r> Ju lutemi, klikoni mbi butonin **OK**.",

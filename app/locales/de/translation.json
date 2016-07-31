@@ -132,7 +132,7 @@
         }
     },
     "profile": {
-        "confirm remove": "Das Profil **__profile__** wird mit allen Daten inklusive Notizen, Tags und Notizbüchern gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden!",
+        "confirm remove": "Das Profil **{{profile}}** wird mit allen Daten inklusive Notizen, Tags und Notizbüchern gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden!",
         "type name": "Profilnamen eingeben"
     },
     "files": {
@@ -142,8 +142,8 @@
         "attachImage": "Als Bild anhängen"
     },
     "notes": {
-        "confirm trash": "Die Notiz **__title__** wird in den Papierkorb verschoben.",
-        "confirm remove": "Die Notiz **__title__** wird **endgültig** gelöscht!",
+        "confirm trash": "Die Notiz **{{title}}** wird in den Papierkorb verschoben.",
+        "confirm remove": "Die Notiz **{{title}}** wird **endgültig** gelöscht!",
         "create and attach": "Neue Notiz erstellen und deren Link anhängen",
         "create": "Neue Notiz erstellen",
         "hyperlink-dialog": "Titel einer Notiz oder URL"
@@ -153,7 +153,7 @@
         "add": "Neues Notizbuch hinzufügen",
         "edit": "Notizbuch bearbeiten",
         "name": "Bitte geben Sie den Namen des Notizbuchs an",
-        "confirm remove": "Das Notizbuch **__name__** wird **endgültig** gelöscht!",
+        "confirm remove": "Das Notizbuch **{{name}}** wird **endgültig** gelöscht!",
         "remove with notes": "Ja, mit angehängten Notizen löschen",
         "remove": "Ja, löschen"
     },
@@ -161,7 +161,7 @@
         "name": "Tagname ist erforderlich",
         "add": "Neuen Tag hinzufügen",
         "edit": "Tag bearbeiten",
-        "confirm remove": "Der Tag **__name__** wird **endgültig** gelöscht!"
+        "confirm remove": "Der Tag **{{name}}** wird **endgültig** gelöscht!"
     },
     "dropbox": {
         "auth confirm": "Sie werden jetzt zur **Dropbox** Autorisierungsseite umgeleitet.\r> Bitte klicken Sie den **OK** Button.",

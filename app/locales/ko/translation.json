@@ -134,7 +134,7 @@
         }
     },
     "profile": {
-        "confirm remove": "**__profile__** 프로필이 지워집니다. 프로필에 포함된 노트, 태그, 노트북 등 모든 데이터가 삭제되고, 되돌릴 수 없어요!",
+        "confirm remove": "**{{profile}}** 프로필이 지워집니다. 프로필에 포함된 노트, 태그, 노트북 등 모든 데이터가 삭제되고, 되돌릴 수 없어요!",
         "type name": "새로운 프로필 이름을 입력하세요"
     },
     "files": {
@@ -144,8 +144,8 @@
         "attachImage": "이미지로 첨부"
     },
     "notes": {
-        "confirm trash": "**__title__** 노트가 휴지통으로 이동합니다.",
-        "confirm remove": "**__title__** 노트가 **영원히** 지워집니다!",
+        "confirm trash": "**{{title}}** 노트가 휴지통으로 이동합니다.",
+        "confirm remove": "**{{title}}** 노트가 **영원히** 지워집니다!",
         "create and attach": "새 노트를 만들고 링크를 연결합니다",
         "create": "새 노트 만들기",
         "hyperlink-dialog": "노트 제목 또는 URL"
@@ -155,7 +155,7 @@
         "add": "노트북 추가",
         "edit": "노트북 편집",
         "name": "노트북 이름을 입력해주세요",
-        "confirm remove": "**__name__** 노트북이 **영원히** 지워집니다!",
+        "confirm remove": "**{{name}}** 노트북이 **영원히** 지워집니다!",
         "remove with notes": "네, 포함된 노트도 함께 지워주세요",
         "remove": "네, 지워주세요"
     },
@@ -163,7 +163,7 @@
         "name": "태그 이름을 입력해주세요",
         "add": "태그 추가",
         "edit": "태그 편집",
-        "confirm remove": "**__name__** 태그가 **영원히** 지워집니다!"
+        "confirm remove": "**{{name}}** 태그가 **영원히** 지워집니다!"
     },
     "dropbox": {
         "auth confirm": "이제 **Dropbox** 권한 승인 페이지로 이동합니다.\r> **OK** 버튼을 눌러주세요.",

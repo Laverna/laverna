@@ -134,7 +134,7 @@
         }
     },
     "profile": {
-        "confirm remove": "Profile **__profile__** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
+        "confirm remove": "Profile **{{profile}}** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
         "type name": "Įvesti profilio pavadimą"
     },
     "files": {
@@ -144,8 +144,8 @@
         "attachImage": "Pridėti kaip vaizdą"
     },
     "notes": {
-        "confirm trash": "Užrašai **__title__** bus perkelti į šiukšlinę.",
-        "confirm remove": "Užrašai **__title__** bus pašalinti **visam laikui**!",
+        "confirm trash": "Užrašai **{{title}}** bus perkelti į šiukšlinę.",
+        "confirm remove": "Užrašai **{{title}}** bus pašalinti **visam laikui**!",
         "create and attach": "Sukurti naujus užrašus ir pridėti jų nuorodą",
         "create": "Sukurti naujus užrašus",
         "hyperlink-dialog": "Užrašų pavadinimas arba URL"
@@ -155,7 +155,7 @@
         "add": "Pridėti naują užrašinę",
         "edit": "Keisti užrašinę",
         "name": "Prašome įvesti užrašinės pavadinimą",
-        "confirm remove": "Užrašinė **__name__** bus pašalinta **visam laikui**!",
+        "confirm remove": "Užrašinė **{{name}}** bus pašalinta **visam laikui**!",
         "remove with notes": "Taip, pašalinti priskirtus užrašus",
         "remove": "Taip, pašalinti"
     },
@@ -163,7 +163,7 @@
         "name": "Gairės pavadinimas yra būtinas",
         "add": "Pridėti naują gairę",
         "edit": "Keisti gairę",
-        "confirm remove": "Gairė **__name__** bus pašalinta **visam laikui**!"
+        "confirm remove": "Gairė **{{name}}** bus pašalinta **visam laikui**!"
     },
     "dropbox": {
         "auth confirm": "Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.",

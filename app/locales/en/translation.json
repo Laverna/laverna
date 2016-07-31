@@ -134,6 +134,7 @@
         }
     },
     "profile": {
+		"profile name": "Profile name",
         "confirm remove": "Profile **__profile__** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
         "type name": "Type profile name"
     },

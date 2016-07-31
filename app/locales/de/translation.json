@@ -132,6 +132,7 @@
         }
     },
     "profile": {
+		"profile name": "Profilname",
         "confirm remove": "Das Profil **__profile__** wird mit allen Daten inklusive Notizen, Tags und Notizbüchern gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden!",
         "type name": "Profilnamen eingeben"
     },

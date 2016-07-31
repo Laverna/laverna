@@ -92,9 +92,11 @@
     "Profiles": "Профили",
     "Import settings": "Импортировать настройки",
     "Export settings": "Экспортировать настройки",
-    "Profile name": "Имя профиля",
     "Action": "Действие",
     "Trashed": "Корзина",
     "New notebook": "Новый блокнот",
-    "Are you sure? You have unsaved changes": "Вы уверены? У вас есть несохраненные изменения"
+    "Are you sure? You have unsaved changes": "Вы уверены? У вас есть несохраненные изменения",
+	"profile": {
+		"profile name": "Имя профиля"
+	}
 }

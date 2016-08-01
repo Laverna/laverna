@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -39,8 +39,18 @@ define([
             this.listenTo(Radio.channel('Confirm'), 'confirm', this.remove);
 
             // Fetch the note by ID
+            var self = this;
             Radio.request('notes', 'get:model', options)
-            .then(this.showConfirm);
+            .then(function(model){
+                // Delete note without dialog when new note was canceled
+                if(self.options.deleteDirect){
+                    Radio.request('notes', 'remove',model);
+                }
+                // Or else show the dialog
+                else{
+                    self.showConfirm(model);
+                }
+            });
         },
 
         /**

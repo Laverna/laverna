@@ -135,7 +135,7 @@
     },
     "profile": {
 		"profile name": "Profile name",
-        "confirm remove": "Profile **__profile__** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
+        "confirm remove": "Profile **{{profile}}** will be removed with all the data, including notes, tags, and notebooks. This action is irreversible!",
         "type name": "Type profile name"
     },
     "files": {
@@ -145,8 +145,8 @@
         "attachImage": "Attach as an image"
     },
     "notes": {
-        "confirm trash": "The note **__title__** will be moved to trash.",
-        "confirm remove": "The note **__title__** will be removed **for ever**!",
+        "confirm trash": "The note **{{title}}** will be moved to trash.",
+        "confirm remove": "The note **{{title}}** will be removed **for ever**!",
         "create and attach": "Create a new note and attach its link",
         "create": "Create a new note",
         "hyperlink-dialog": "Title of a note or URL"
@@ -156,7 +156,7 @@
         "add": "Add a new notebook",
         "edit": "Edit a notebook",
         "name": "Please, provide notebook's name",
-        "confirm remove": "The notebook **__name__** will be removed **for ever**!",
+        "confirm remove": "The notebook **{{name}}** will be removed **for ever**!",
         "remove with notes": "Yes, remove with attached notes",
         "remove": "Yes, remove"
     },
@@ -164,7 +164,7 @@
         "name": "Tag name is required",
         "add": "Add a new tag",
         "edit": "Edit a tag",
-        "confirm remove": "The tag **__name__** will be removed **for ever**!"
+        "confirm remove": "The tag **{{name}}** will be removed **for ever**!"
     },
     "dropbox": {
         "auth confirm": "Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.",

@@ -147,7 +147,7 @@ define([
                     return self.redirect();
                 }
 
-                Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+                Radio.request('Confirm', 'start', $.t('You have unsaved changes'));
             })
             .fail(function(e) {
                 console.error('form ShowConfirm', e);

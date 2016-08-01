@@ -109,6 +109,11 @@ define([
 
             return this.getContent()
             .then(function(data) {
+                if (data.title === '') {
+                    var title = 'New-Note-' + new Date().toLocaleDateString();
+                    data.title = title;
+                    Radio.request('global', 'set:title', title);
+                }
                 return Radio.request('notes', 'save', self.view.model, data);
             })
             .fail(function(e) {

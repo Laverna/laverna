@@ -42,8 +42,9 @@ define([
 
     // Customize underscore template
     _.templateSettings = {
-        interpolate : /\{\{(.+?)\}\}/g,
-        evaluate    : /<%([\s\S]+?)%>/g
+        evaluate    : /<%([\s\S]+?)%>/g,
+        interpolate : /\{=([\s\S]+?)\}/g,
+        escape      : /\{\{([\s\S]+?)\}\}/g,
     };
 
     /**

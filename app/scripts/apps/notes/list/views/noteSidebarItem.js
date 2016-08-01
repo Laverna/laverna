@@ -65,7 +65,7 @@ define([
             return {
                 // Show only first 50 characters of the content
                 getContent: function() {
-                    return _.escape(_.unescape(this.content).substring(0, 50));
+                    return _.unescape(this.content).substring(0, 50);
                 },
 
                 // Generate link

@@ -13,7 +13,7 @@ define([
     'use strict';
 
     var View = Marionette.ItemView.extend({
-        template : _.template('{{cleanXSS(name)}}'),
+        template : _.template('{=cleanXSS(name)}'),
         tagName  : 'option',
 
         onRender : function() {

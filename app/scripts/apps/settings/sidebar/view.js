@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,8 +11,9 @@ define([
     'q',
     'marionette',
     'backbone.radio',
+    'behaviors/sidebar',
     'text!apps/settings/sidebar/template.html'
-], function(_, Q, Marionette, Radio, Tmpl) {
+], function(_, Q, Marionette, Radio, Behavior, Tmpl) {
     'use strict';
 
     /**
@@ -20,6 +21,12 @@ define([
      */
     var View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
+
+        behaviors: {
+            SidebarBehavior: {
+                behaviorClass: Behavior
+            }
+        },
 
         events: {
             'click a': 'confirm'

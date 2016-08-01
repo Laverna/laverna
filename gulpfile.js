@@ -3,6 +3,7 @@ var gulp    = require('gulp'),
     pkg     = require('./package.json'),
     plugins = require('gulp-load-plugins')();
 
+plugins.del         = require('del');
 plugins.browserSync = require('browser-sync').create();
 
 function getTask(task) {
@@ -13,7 +14,7 @@ function getTask(task) {
 [
     'jshint' , 'jsonlint'   , 'mocha'       , 'nightwatch',
     'less'   , 'prism'      , 'require'     , 'electron'  ,
-    'htmlmin', 'cssmin'     , 'htmlManifest',
+    'htmlmin', 'cssmin'     , 'htmlManifest', 'mobile'    ,
     'copy'   , 'copyRelease', 'copyDist'    ,
     'serve'  , 'clean'      , 'npm'
 ]
@@ -21,14 +22,9 @@ function getTask(task) {
     var taskFun = getTask(task);
 
     // It has several tasks
-    if (typeof taskFun === 'object') {
-        for (var key in taskFun) {
-            gulp.task(task + ':' + key, taskFun[key]);
-        }
-        return;
+    if (typeof taskFun === 'function') {
+        gulp.task(task, taskFun);
     }
-
-    gulp.task(task, taskFun);
 });
 
 gulp.task('release:after', function() {

@@ -5,37 +5,47 @@ const electron        = require('electron'),
     path              = require('path'),
     openUrl           = require('open');
 
-const {app, BrowserWindow, Menu, Tray} = electron;
+const {app, BrowserWindow, Menu, Tray, protocol} = electron;
 
 let argv = require('minimist')(process.argv.slice(1)),
-    port = 9000,
     win  = null,
     appHelper;
 
 // Show command line help
 if (argv.help || argv.h) {
     console.log('Usage: laverna [options]\r\n');
-    console.log('--port', 'Change port of the server. Example: --port=9000');
+    console.log('--help', 'Show this help');
     console.log('--dev ', 'Show developer tools automatically on start');
     console.log('--tray', 'Hide to tray on start');
+    console.log(
+        '--data-dir',
+        'Directory where data is stored.',
+        'Example: laverna --data-dir=../data'
+    );
 
     return app.quit();
 }
 
-// Port was provided
-if (Number(argv.port) > 1024) {
-    port = Number(argv.port) || port;
-}
+// Allow to change the directory where the data is stored
+if (argv['data-dir'] && argv['data-dir'].trim()) {
+    let dataDir = argv['data-dir'].trim();
 
-// Start the server
-if (!argv.noServer) {
-    require('./server')(port);
+    // The same or parent directory
+    if (dataDir.search(/^\./) > - 1) {
+
+        // Always store data in a separate directory
+        dataDir += (dataDir.search(/^\.{1,2}$/) > -1 ? '/laverna-data' : '');
+
+        dataDir = path.join(__dirname, dataDir);
+    }
+
+    app.setPath('userData', path.normalize(dataDir));
 }
 
 appHelper = {
 
     // The page which will be loaded in the window
-    page: 'http://localhost:' + port + '/',
+    page: 'http://localhost:9000/',
 
     // Icon of the app
     icon: path.join(__dirname, '/dist/images/icon/icon-120x120.png'),
@@ -129,10 +139,36 @@ appHelper = {
      */
     onReady: function() {
         this
+        .interceptProtocol()
         .createWindow()
         .createMenu()
         .createTray()
         .registerEvents();
+    },
+
+    /**
+     * Override HTTP protocol. The reason:
+     * In order to make oAuth authentifications to Dropbox/RemoteStorage,
+     * we need to serve the app from https? protocol and have relative paths.
+     */
+    interceptProtocol: function() {
+        protocol.interceptHttpProtocol('http', function(req, callback) {
+
+            if (req.url.search(appHelper.page) > - 1) {
+
+                // Remove the domain, path, and hash location
+                req.url = req.url.replace(appHelper.page, '');
+                req.url = req.url.split('#')[0] || 'index.html';
+
+                // Serve the resource from the file system
+                req.url = 'file:///' + path.normalize(__dirname + '/dist/' + req.url);
+            }
+
+            callback(req);
+
+        });
+
+        return this;
     },
 
     /**

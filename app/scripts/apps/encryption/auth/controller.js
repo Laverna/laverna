@@ -46,7 +46,7 @@ define([
             Radio.request('encrypt', 'check:password', pwd)
             .then(function(isAuth) {
                 if (!isAuth) {
-                    return this.view.trigger('invalid:password');
+                    return self.view.trigger('invalid:password');
                 }
 
                 self.onAuth(pwd);

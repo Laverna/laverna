@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2015 Laverna project Authors.
- * 
+ *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -45,18 +45,16 @@ define([
 		wrongPwd: function(){
 			// Create the shake function from jQuery-UI
 			// without using the whole package
-			jQuery.fn.shake = function(shakes, distance, duration) {
+			jQuery.fn.shake = function(duration, shakes, distance) {
+			    duration = duration || 10;
 			    shakes = shakes || 10;
 			    distance = distance || 5;
-			    duration = duration || 10;
-			    this.each(function() {
-				        for (var x=1; x<=shakes; x++) {
-						        $(this)	.animate({left:(distance*-1)},
-												(((duration/shakes)/4)))
-						    			.animate({left:distance}, ((duration/shakes)/2))
-						    			.animate({left:0}, (((duration/shakes)/4)));
-						    }
-				  });
+				this.css("position","relative");
+				for (var x=1; x<=shakes; x++) {
+					this.animate({left:(distance*-1)},(((duration/shakes)/4)))
+						.animate({left:distance}, ((duration/shakes)/2))
+						.animate({left:0}, (((duration/shakes)/4)));
+				}
 			return this;
 			};
 

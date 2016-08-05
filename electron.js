@@ -53,7 +53,7 @@ appHelper = {
     // The main menu
     menu: [
         {
-            label   : 'File',
+            label   : '&File',
             submenu : [
                 {
                     label       : 'Quit',
@@ -65,7 +65,7 @@ appHelper = {
             ]
         },
         {
-            label: 'Edit',
+            label: '&Edit',
             submenu: [
                 {
                     label       : 'Undo',
@@ -102,7 +102,7 @@ appHelper = {
             ]
         },
         {
-            label: 'View',
+            label: '&View',
             submenu: [
                 {
                     label       : 'Reload',

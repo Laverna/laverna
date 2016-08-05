@@ -160,7 +160,7 @@ define([
                 // User perhaps wants to cancel editing,
                 // if not, deleteData will be set false again in onConfirmCancel
                 self.deleteData = true;
-                Radio.request('Confirm', 'start', $.t('You have unsaved changes.'));
+                Radio.request('Confirm', 'start', $.t('You have unsaved changes'));
             })
             .fail(function(e) {
                 console.error('form ShowConfirm', e);

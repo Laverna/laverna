@@ -59,7 +59,10 @@ define([
                     return '<div class="math block">$$' + tokens + '$$</div>';
                 },
             })
-            .use(hash)
+            .use(hash, {
+				hashtagRegExp: '[\\u0021-\\uFFFF\\w\\-]+|<3',
+				preceding: '^|\\s'
+				})
             .use(task.init)
             .use(file.init)
             ;

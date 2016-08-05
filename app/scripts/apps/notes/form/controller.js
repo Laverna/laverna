@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-/* global define */
+/* global define, requirejs */
 define([
     'underscore',
     'q',
@@ -176,7 +176,7 @@ define([
             // Stop the module and navigate back
             if(this.deleteData){
                 this.deleteData = false; // TODO wichtig?
-                if(this.options.method === "add") {
+                if (this.options.method === 'add') {
                     // Delete the note if editing of a new note was canceled
                     var self = this;
                     requirejs(['apps/notes/remove/controller'], function(Controller) {
@@ -184,7 +184,7 @@ define([
                                 {id: self.view.model.id, deleteDirect: true}));
                     });
                 }
-                else if(this.options.method === "edit") {
+                else if (this.options.method === 'edit') {
                     // Save the note without any change
                     // if editing of an existing note was canceled
                     Radio.request('notes', 'save', this.view.model, this.dataBeforeChange);

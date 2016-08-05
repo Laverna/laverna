@@ -49,7 +49,7 @@ define([
 			    duration = duration || 10;
 			    shakes = shakes || 10;
 			    distance = distance || 5;
-				this.css("position","relative");
+				this.css('position', 'relative');
 				for (var x=1; x<=shakes; x++) {
 					this.animate({left:(distance*-1)},(((duration/shakes)/4)))
 						.animate({left:distance}, ((duration/shakes)/2))

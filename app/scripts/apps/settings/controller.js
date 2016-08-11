@@ -124,6 +124,7 @@ define([
 
             // Do nothing if there are not any changes
             if (_.isEmpty(this.changes)) {
+				this.confirmRedirect();
                 return;
             }
 
@@ -132,6 +133,7 @@ define([
 
             this.saves = _.union(this.saves, this.changes);
             this.changes = {};
+			this.confirmRedirect();
         },
 
         /**

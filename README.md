@@ -62,8 +62,13 @@ To install, do the following:
 
 #### 1. Clone repository:
 
+For those who plan on contributing to the project's development , hit the fork button at the top of the page first (others can go on to the next step). Open a terminal, or command line, and navigate to the desired location of where you want to download the repository. Then enter the following commands to clone the repo.
+
 ```bash
+//clone the repository
 $ git clone git@github.com:Laverna/laverna.git
+//navigate to the project directory
+cd laverna
 ```
 
 #### 2. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].

@@ -156,6 +156,10 @@ define([
                 return;
             }
 
+			// Don't save tags when auto save notes
+			// so that no unfinished tags are saved
+			this.options.saveTags = false;
+
             this.options.redirect = false;
             console.log('Auto saving the note...');
             this.trigger('save');
@@ -166,6 +170,7 @@ define([
                 e.preventDefault();
             }
 
+			this.options.saveTags = true;
             this.options.isClosed = true;
             this.options.redirect = true;
             this.trigger('save');

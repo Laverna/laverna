@@ -125,7 +125,7 @@ define([
 
             return this.getContent()
             .then(function(data) {
-                return Radio.request('notes', 'save', self.view.model, data);
+                return Radio.request('notes', 'save', self.view.model, data, self.view.options.saveTags);
             })
             .fail(function(e) {
                 console.error('Error', e);

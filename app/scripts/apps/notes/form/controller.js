@@ -111,7 +111,7 @@ define([
             return this.getContent()
             .then(function(data) {
                 if (data.title === '') {
-                    var title = i18n.t('New Note');
+                    var title = i18n.t('Untitled');
                     data.title = title;
                     Radio.request('global', 'set:title', title);
                 }

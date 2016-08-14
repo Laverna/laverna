@@ -114,6 +114,7 @@
     "Everything": "Everything",
     "Enabled": "Enabled",
     "Disabled": "Disabled",
+    "Untitled": "Untitled",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

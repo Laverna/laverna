@@ -48,7 +48,9 @@ appHelper = {
     page: 'http://localhost:9000/',
 
     // Icon of the app
-    icon: path.join(__dirname, '/dist/images/icon/icon-120x120.png'),
+    icon: path.join(__dirname, '/dist/images/icon/',
+      process.platform === 'darwin' ? 'IconMenubarTemplate.png' : 'icon-120x120.png'
+    ),
 
     // The main menu
     menu: [

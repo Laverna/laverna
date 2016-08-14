@@ -42,16 +42,25 @@ define([
          * @type object Backbone model
          * @type object new values
          */
-        saveModel: function(model, data) {
+        saveModel: function(model, data, saveTags) {
+			if(saveTags == null){
+				saveTags = true;
+			}
             var saveFunc = _.bind(ModuleObject.prototype.saveModel, this);
 
-            // Before saving the model, add tags
-            return new Q(Radio.request('tags', 'add', data.tags || [], {
-                profile: model.profileId
-            }))
-            .then(function() {
-                return saveFunc(model, data);
-            });
+			if(saveTags){
+            	// Before saving the model, add tags
+				return new Q(Radio.request('tags', 'add', data.tags || [], {
+					profile: model.profileId
+				}))
+				.then(function() {
+					return saveFunc(model, data);
+				});
+			}
+
+			// Save model without tags
+			return saveFunc(model,data);
+
         },
 
         /**

@@ -113,6 +113,7 @@
     "Enabled": "Aktiviert",
     "Disabled": "Deaktiviert",
     "Untitled": "Unbenannt",
+    "Line of": "Zeile {{currentLine}} von {{numberOfLines}}",
     "encryption": {
         "provide password": "Bitte, geben Sie Ihr Passwort ein",
         "change password": "Geben Sie Ihr Passwort hier ein, um es zu ändern",

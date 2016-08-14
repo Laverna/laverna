@@ -8,6 +8,7 @@
 /* global define */
 define([
     'underscore',
+	'jquery',
     'marionette',
     'backbone.radio',
     'codemirror/lib/codemirror',
@@ -16,7 +17,7 @@ define([
     'codemirror/mode/markdown/markdown',
     'codemirror/addon/edit/continuelist',
     'codemirror/addon/mode/overlay',
-], function(_, Marionette, Radio, CodeMirror, View) {
+], function(_, $, Marionette, Radio, CodeMirror, View) {
     'use strict';
 
     /**
@@ -83,6 +84,13 @@ define([
                 'generate:link' : this.generateLink,
                 'generate:image': this.generateImage
             }, this);
+
+			// Init footer to show current line numbers
+			// but first of hide it, because when you open/add a note
+			// the title is focused, not the editor
+			this.footer = $('#editor--footer');
+			this.footer.hide();
+
         },
 
         onDestroy: function() {
@@ -188,6 +196,13 @@ define([
                 this['$btn' + state[i]] = this['$btn' + state[i]] || $('.editor--btns [data-state="' + state[i] + '"]');
                 this['$btn' + state[i]].addClass('btn-primary');
             }
+
+			// Update lines in footer
+			this.footer.show();
+			var currentLine = this.editor.getCursor('start').line + 1;
+			var numberOfLines = this.editor.lineCount();
+			this.footer.html($.t('Line of',
+				{currentLine: currentLine, numberOfLines: numberOfLines}));
         },
 
         /**

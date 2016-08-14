@@ -126,6 +126,8 @@
     "Export data": "导出数据",
     "Enabled": "启用",
     "Disabled": "停用",
+    "Untitled": "无标题",
+    "Line of": "Line {{currentLine}} of {{numberOfLines}}",
     "encryption": {
         "provide password": "请提供你的密码",
         "change password": "输入新密码",

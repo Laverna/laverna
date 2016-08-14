@@ -114,6 +114,8 @@
     "Everything": "Everything",
     "Enabled": "Enabled",
     "Disabled": "Disabled",
+    "Untitled": "Untitled",
+    "Line of": "Line {{currentLine}} of {{numberOfLines}}",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

@@ -1,5 +1,5 @@
 {
-    "Search": "Rechercher",
+    "Search": "Chercher",
     "All notes": "Toutes les notes",
     "Favourites": "Favoris",
     "Favorite": "Favori",
@@ -14,7 +14,7 @@
     "Full screen": "Plein écran",
     "Preview": "Prévisualisation",
     "Normal": "Normal",
-    "Select notebook": "Selectionner un bloc-notes",
+    "Select notebook": "Sélectionner un bloc-notes",
     "Title": "Titre",
     "Submit": "Envoyer",
     "Tags": "Étiquettes",
@@ -40,7 +40,7 @@
     "Default edit mode": "Mode d'édition par défaut",
     "Fullscreen with preview": "Plein écran avec visualisation",
     "Use encryption": "Utiliser le chiffrement",
-    "Encryption parameters": "Parametres de chiffrement",
+    "Encryption parameters": "Paramètres de chiffrement",
     "Encryption Password": "Mot de passe de chiffrement",
     "Salt": "Salage",
     "Random": "Aléatoire",
@@ -75,19 +75,19 @@
     "Donate": "Faire un don",
     "Github page": "Page Github",
     "Report bugs and issues here": "Rapporter les bugs et les problèmes ici",
-    "Report bugs through email": "Rapporter les bugs par email",
+    "Report bugs through email": "Rapporter les bugs par courriel",
     "Credits": "Crédits",
     "List of contributors": "Liste des contributeurs",
     "List of all used libraries": "Liste de toutes les librairies utilisées",
-    "Are you sure?": "Eêts-vous sûr(e)",
+    "Are you sure?": "Êtes-vous sûr",
     "You have unsaved changes": "Certaines modifications ne sont pas sauvegardées.",
     "Dropbox API key": "Clé de l'API Dropbox",
     "Required": "Requis",
     "Optional": "Optionel",
     "Language": "Langue",
     "Action": "Action",
-    "Select": "Selectionner",
-    "General": "General",
+    "Select": "Sélectionner",
+    "General": "Général",
     "Encryption": "Chiffrement",
     "Keybindings": "Raccourcis claviers",
     "Sync": "Synchroniser",
@@ -101,28 +101,28 @@
     "File should be in json format": "Le fichier devrait être au format json",
     "Close": "Fermer",
     "Hyperlink": "Hyperlien",
-    "Editor": "Editeur",
+    "Editor": "Éditeur",
     "Download": "Télécharger",
     "Everything": "Tout",
-    "Find in page": "Find in page",
-    "Other": "Other",
-    "Default": "Default",
+    "Find in page": "Chercher dans la page",
+    "Other": "Divers",
+    "Default": "Par défaut",
     "Modules": "Modules",
     "Import data": "Import data",
     "Export data": "Export data",
-    "Enabled": "Enabled",
-    "Disabled": "Disabled",
+    "Enabled": "Activé",
+    "Disabled": "Désactivé",
     "encryption": {
-        "provide password": "Veuillez saisir votr emot de passe",
+        "provide password": "Veuillez saisir votre mot de passe",
         "change password": "Saisissez votre mot de passe ici pour le modifier",
         "wait": "Veuillez attendre que le chiffrement soit terminé",
         "error": "Erreur de chiffrement",
-        "errorConfirm": "Erreur lors du déchiffrement des données.\r\r Si vous avez changé les paramètres de chiffrement sur un autre navigateur, veuillez aussi **mettre à jour vos paramètres** dans ce navigateur. Ou essayez d'importer les parmaètres.\r\r Et si vous n'avez rien changé, **essayez de vous connecter** à nouveau.",
+        "errorConfirm": "Erreur lors du déchiffrement des données.\r\r Si vous avez changé les paramètres de chiffrement sur un autre navigateur, veuillez aussi **mettre à jour vos paramètres** dans ce navigateur. Ou essayez d'importer les paramètres.\r\r Et si vous n'avez rien changé, **essayez de vous connecter** à nouveau.",
         "errorConfirmSettings": "Changer les paramètres de chiffrement",
         "errorConfirmAuth": "Réessayer",
         "backup": {
             "title": "Sauvegarder les données",
-            "content": "Veuillez télécharger votre fichier de sauvegarde avant de passer à l'étape suivante. Il contienr des données déchiffrées préalablement au changement de profile. Gardez le en lieu sûr.",
+            "content": "Veuillez télécharger votre fichier de sauvegarde avant de passer à l'étape suivante. Il contient des données déchiffrées préalablement au changement de profile. Gardez le en lieu sûr.",
             "next": "Continuer sans télécharger le fichier de sauvegarde"
         },
         "state": {
@@ -132,7 +132,7 @@
         }
     },
     "profile": {
-        "confirm remove": "Le profile **{{profile}}** sera supprimé avec toutes les données qu'il contient, en particulier les notes, les étiquettes, et les bloc-notes. Cette action est irreversible!",
+        "confirm remove": "Le profile **{{profile}}** sera supprimé avec toutes les données qu'il contient, en particulier les notes, les étiquettes, et les bloc-notes. Cette action est irréversible !",
         "type name": "Saisir le nom du profile"
     },
     "files": {
@@ -149,7 +149,7 @@
         "hyperlink-dialog": "Titre d'une note ou URL"
     },
     "notebooks": {
-        "select": "Selectionner un bloc-notes",
+        "select": "Sélectionner un bloc-notes",
         "add": "Créer un nouveau bloc-notes",
         "edit": "Modifier un bloc-notes",
         "name": "Veuillez saisir le nom du bloc-notes",
@@ -173,10 +173,11 @@
     },
     "help": {
         "firststart title": "Bienvenue sur Laverna",
-        "firststart import": "Si vous avez déja utilisé Laverna auparavant, vous pouvez importer vos paramètres en cliquand sur le bouton 'importer' ci-dessous.",
+        "firststart import": "Si vous avez déja utilisé Laverna auparavant, vous pouvez importer vos paramètres en cliquant sur le bouton 'importer' ci-dessous.",
         "firststart next": "Si vous n'avez jamais utilisé auparavant, cliquez sur le bouton 'suivant' et commencez le processus d'installation.",
         "firststart encryption": "Si vous voulez utiliser le chiffrement, veuillez fournir un mot de passe de chiffrement.",
         "firststart sync": "Comme nous ne stockons aucune donnée sur nos serveurs, vous devez activer la synchronisation avec l'un des services pour pouvoir visualiser vos notes sur d'autres terminaux.",
         "firststart backup": "L'installation est presque terminée. Vous pouvez télécharger une sauvegarde de vos paramètres et continuer à la prochaine étape."
     }
 }
+

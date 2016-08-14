@@ -12,9 +12,10 @@ define([
     'jquery',
     'backbone.radio',
     'marionette',
+    'i18next',
     'apps/notes/form/views/formView',
     'apps/notes/form/views/notebooks'
-], function (_, Q, $, Radio, Marionette, View, NotebooksView) {
+], function (_, Q, $, Radio, Marionette, i18n, View, NotebooksView) {
     'use strict';
 
     /**
@@ -125,7 +126,13 @@ define([
 
             return this.getContent()
             .then(function(data) {
-                return Radio.request('notes', 'save', self.view.model, data);
+                if (data.title === '') {
+                    var title = i18n.t('Untitled');
+                    data.title = title;
+                    Radio.request('global', 'set:title', title);
+                }
+
+                return Radio.request('notes', 'save', self.view.model, data, self.view.options.saveTags);
             })
             .fail(function(e) {
                 console.error('Error', e);

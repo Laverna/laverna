@@ -116,6 +116,7 @@
     "Disabled": "Disabled",
     "Untitled": "Untitled",
     "Line of": "Line {{currentLine}} of {{numberOfLines}}",
+	"Drop files": "Drop files here to upload",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

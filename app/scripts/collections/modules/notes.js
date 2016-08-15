@@ -43,7 +43,7 @@ define([
          * @type object new values
          */
         saveModel: function(model, data, saveTags) {
-			if(saveTags == null){
+			if(saveTags === undefined || saveTags === null){
 				saveTags = true;
 			}
             var saveFunc = _.bind(ModuleObject.prototype.saveModel, this);

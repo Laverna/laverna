@@ -65,7 +65,24 @@
 // Loading
 .layout--brand.-loading {
     &:after {
-        content: 'Loading...';
         &:extend(.header--brand);
     }
+}
+
+.-loading {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+#loading--image {
+	bottom: 65%;
+	width: 25%;
+	height: auto;
+}
+
+#loading--circle {
+	bottom: 20%;
+	margin: auto;
 }

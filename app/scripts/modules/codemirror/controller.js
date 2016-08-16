@@ -17,6 +17,9 @@ define([
     'codemirror/mode/markdown/markdown',
     'codemirror/addon/edit/continuelist',
     'codemirror/addon/mode/overlay',
+    'codemirror/keymap/vim',
+    'codemirror/keymap/emacs',
+    'codemirror/keymap/sublime'
 ], function(_, $, Marionette, Radio, CodeMirror, View) {
     'use strict';
 
@@ -59,6 +62,7 @@ define([
 
         initialize: function() {
             _.bindAll(this, 'onChange', 'onScroll', 'onCursor', 'boldAction', 'italicAction', 'linkAction', 'headingAction', 'attachmentAction', 'codeAction', 'hrAction', 'listAction', 'numberedListAction');
+
 
             // Get configs
             this.configs = Radio.request('configs', 'get:object');
@@ -103,6 +107,7 @@ define([
                     name        : 'gfm',
                     gitHubSpice : false
                 },
+				keyMap: this.configs.textEditor || "default",
                 lineNumbers   : false,
                 matchBrackets : true,
                 lineWrapping  : true,

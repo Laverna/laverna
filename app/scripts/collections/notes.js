@@ -107,6 +107,15 @@ define([
                 }
             });
             return fuse.search(text);
+        },
+
+        registerEvents: function() {
+            if (this.sortField === 'updated') {
+                // Sort the collection again when updated
+                this.listenTo(this, 'change:updated', this.sortItOut);
+            }
+
+            return this;
         }
 
     });

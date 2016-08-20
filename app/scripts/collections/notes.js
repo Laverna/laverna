@@ -39,8 +39,10 @@ define([
             }
         },
 
+        sortField: 'created',
+
         comparator: function(model) {
-            return -model.get('created');
+            return -model.get(this.sortField);
         },
 
         filterList: function(filter, options) {

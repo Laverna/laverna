@@ -25,6 +25,12 @@ The application stores all your notes in your browser databases such as indexedD
 * Web based
 * Keybindings
 
+## Tools
+
+On the front-end this project uses JavaScript and the [Marionette JS](http://marionettejs.com/) framework while [Node JS](https://nodejs.org/en/), [Bower](https://bower.io/), and [Gulp.js](http://gulpjs.com/) are used on the back-end.  The test runner used is [karma](https://karma-runner.github.io/1.0/index.html) however,
+contributors are free to utilize whatever testing tools they desire.
+
+
 ## Installation
 ---------------
 There are several ways to start using Laverna:
@@ -106,6 +112,11 @@ $ gulp
 * Hit star button on [github][6]
 * Like us on [alternativeto.net][5]
 * [Contribute][7]
+
+###Coding Style Guidelines
+
+For those wanting to contribute code, we ask that you use either plain JavaScript or the Marionette.js framework. (For more details on the preferred coding style see [.editorconfig](https://github.com/Laverna/laverna/blob/master/.editorconfig)). Also, all experimental changes are being pushed on the **dev** branch, so any feature changes are preferred to be done on either this branch or a branch that uses the dev branch as its parent.  
+
 
 ## Donation:
 -----------

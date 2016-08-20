@@ -13,6 +13,7 @@ script:
     - gulp --root dist &
     - set -e
     - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && gulp nightwatch --env ci; echo $? || false'
+    - sleep 1
     - killall gulp
 after_failure:
     - killall gulp

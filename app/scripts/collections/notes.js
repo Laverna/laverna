@@ -26,8 +26,7 @@ define([
             pageSize     : 10,
             firstPage    : 0,
             currentPage  : 0,
-            totalRecords : 0,
-            comparator   : {'created' : 'desc', 'isFavorite' : 'desc'}
+            totalRecords : 0
         },
 
         conditions: {
@@ -39,8 +38,16 @@ define([
             }
         },
 
+        sortField: 'created',
+
+        initialize: function() {
+            this.state.comparator = {};
+            this.state.comparator[this.sortField] = 'desc';
+            this.state.comparator.isFavorite = 'desc';
+        },
+
         comparator: function(model) {
-            return -model.get('created');
+            return -model.get(this.sortField);
         },
 
         filterList: function(filter, options) {
@@ -100,6 +107,15 @@ define([
                 }
             });
             return fuse.search(text);
+        },
+
+        registerEvents: function() {
+            if (this.sortField === 'updated') {
+                // Sort the collection again when updated
+                this.listenTo(this, 'change:updated', this.sortItOut);
+            }
+
+            return this;
         }
 
     });

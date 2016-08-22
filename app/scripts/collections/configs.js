@@ -28,6 +28,7 @@ define([
             'cloudStorage'      : '0',
             'dropboxKey'        : '',
             'pagination'        : '10',
+            'sortnotes'         : 'created',
             'sortnotebooks'     : 'name',
             'editMode'          : 'preview',
             'useDefaultConfigs' : '1',

@@ -1,0 +1,49 @@
+'use strict';
+
+/**
+ * @file Create HTML related tasks.
+ *
+ * @example gulp html // copy and minify HTML files
+ * @example gulp html:manifest:create // create HTML manifest file (caching)
+ * @example gulp:manifest // create manifest and reference to it from files
+ */
+module.exports = function(gulp, $) {
+    gulp.task('html', () => {
+        return gulp.src('./app/*.html')
+        .pipe(!$.util.env.prod ? $.util.noop() : $.htmlmin({
+            collapseWhitespace : true,
+            quoteCharacter     : '\'',
+        }))
+        .pipe(gulp.dest('./dist'))
+        .pipe($.browserSync.stream());
+    });
+
+    gulp.task('html:manifest:create', () => {
+        return gulp.src([
+            'dist/**',
+            '!dist/bower_components/MathJax/**',
+        ])
+        .pipe($.manifest({
+            hash         : true,
+            preferOnline : true,
+            network      : ['*'],
+            filename     : 'app.appcache',
+            exclude      : [
+                'app.appcache',
+                'dropbox.html',
+            ],
+            timestamp    : true,
+            master       : ['index.html'],
+            fallback     : ['/ 404.html'],
+        }))
+        .pipe(gulp.dest('dist'));
+    });
+
+    gulp.task('html:manifest', ['html:manifest:create'], () => {
+        const manifest = '<html manifest="app.appcache" class="no-js">';
+
+        return gulp.src('./dist/*.html')
+        .pipe($.replace('<html class="no-js">', manifest))
+        .pipe(gulp.dest('dist'));
+    });
+};

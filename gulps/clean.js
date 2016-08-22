@@ -1,16 +1,14 @@
 'use strict';
 
 /**
- * Tasks for cleaning up.
+ * @file Tasks for cleaning up.
+ * @example gulp clean:dist // Clean dist directory
+ * @example gulp clean:release // Clean release directory
  */
 module.exports = function(gulp, plugins) {
 
-    gulp.task('clean:dist', function() {
-        return plugins.del(['./dist']);
-    });
+    gulp.task('clean:dist', () => plugins.del(['./dist']));
 
-    gulp.task('clean:release', function() {
-        return plugins.del(['./release/*']);
-    });
+    gulp.task('clean:release', () => plugins.del(['./release/*']));
 
 };

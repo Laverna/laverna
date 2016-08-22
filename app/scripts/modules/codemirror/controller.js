@@ -137,11 +137,14 @@ define([
                     'Cmd-D'  : this.hrAction,
                     'Ctrl-D' : this.hrAction,
 
-					// Ctrl+. - indent line
-					'Ctrl-.' 		: 'indentMore',
-					'Shift-Ctrl-.' 	: 'indentLess',
-					'Cmd-.' 		: 'indentMore',
-					'Shift-Cmd-.'	: 'indentLess',
+					// Ctrl+8,9 - indent Line
+					// The Numbers were chosen
+					// because they are the primary function
+					// of the '[' and ']' keys on a german keyboard
+					'Ctrl-8' 		: 'indentMore',
+					'Ctrl-9' 	: 'indentLess',
+					'Cmd-8' 		: 'indentMore',
+					'Cmd-9' 	: 'indentLess',
 
                     'Enter' : 'newlineAndIndentContinueMarkdownList',
 

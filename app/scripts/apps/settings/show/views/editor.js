@@ -26,8 +26,25 @@ define([
             }
         },
 
+        ui: {
+            indentUnit: '#indentUnit',
+            indentUnitLowWarning: '#indentUnit-low-warning'
+        },
+
+        events: {
+            'change #indentUnit' : 'checkIndentUnit'
+        },
+
         serializeData: function() {
             return { models: this.collection.getConfigs() };
+        },
+
+        checkIndentUnit: function() {
+            if (this.ui.indentUnit.val() < 3) {
+                this.ui.indentUnitLowWarning.show();
+            } else {
+                this.ui.indentUnitLowWarning.hide();
+            }
         }
     });
 

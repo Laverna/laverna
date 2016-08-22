@@ -34,7 +34,7 @@ define([
 
             // Editor settings
             'editMode'          : 'preview',
-            'indentUnit'        : '2',
+            'indentUnit'        : '3',
 
             // Encryption settings
             'encrypt'           : '0',

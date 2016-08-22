@@ -13,5 +13,6 @@
     <label class="col-sm-2 control-label" for="indentUnit">{{ i18n('Spaces per indent') }}</label>
     <div class="col-sm-10">
         <input type="number" id="indentUnit" name="indentUnit" value="{{models.indentUnit}}" class="form-control" >
+        <div id="indentUnit-low-warning" class="text-warning" <%if(models.indentUnit >= 3){%>style="display: none;"<%}%>>{{ i18n('Recommended 3 or more, for indenting numbered lists') }}</div>
     </div>
 </div>

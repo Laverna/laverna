@@ -53,14 +53,14 @@ $ unzip laverna.zip
 ```
 
 #### 3. Open index.html in a browser
-Open in your favourite browser index.html file which is located inside *laverna* directory.
+Open in your favorite browser the index.html file which is located inside *laverna* directory.
 
 
 ## Installation from source
 ---------------
 To install, do the following:
 
-#### 1. (Windows only) How to install Git
+#### 1. How to install Git (Windows PCs Only)
 
 1. Download the latest Git version from their [website][14].
 2. Install the program (you don't have to change anything).

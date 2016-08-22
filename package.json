@@ -63,6 +63,7 @@
     "karma-requirejs": "^1.0.0",
     "merge-stream": "^1.0.0",
     "nightwatch": "^0.9.6",
+    "raw-loader": "^0.5.1",
     "webpack-stream": "^3.2.0"
   },
   "engines": {

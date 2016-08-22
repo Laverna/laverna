@@ -110,6 +110,10 @@ $ gulp build
 $ gulp
 ```
 
+## Do you have questions?
+---------------
+Please have a look in our [wiki][15].
+
 ## Support
 ---------------
 
@@ -150,3 +154,4 @@ Laverna uses a lot of other libraries and each of these [libraries use different
 [12]: https://www.bountysource.com/teams/laverna
 [13]: https://github.com/Laverna/laverna/releases
 [14]: https://git-scm.com/
+[15]: https://github.com/Laverna/laverna/wiki

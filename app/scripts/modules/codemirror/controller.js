@@ -63,7 +63,6 @@ define([
         initialize: function() {
             _.bindAll(this, 'onChange', 'onScroll', 'onCursor', 'boldAction', 'italicAction', 'linkAction', 'headingAction', 'attachmentAction', 'codeAction', 'hrAction', 'listAction', 'numberedListAction');
 
-
             // Get configs
             this.configs = Radio.request('configs', 'get:object');
 
@@ -107,7 +106,7 @@ define([
                     name        : 'gfm',
                     gitHubSpice : false
                 },
-				keyMap: this.configs.textEditor || "default",
+				keyMap: this.configs.textEditor || 'default',
                 lineNumbers   : false,
                 matchBrackets : true,
                 lineWrapping  : true,

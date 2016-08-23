@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node ./server.js",
     "electron": "NODE_ENV=dev electron .",
-    "eslint": "eslint app/scripts/ || true",
+    "jsdoc": "jsdoc app/scripts -r -d ./jsdoc || true",
+    "eslint": "eslint ./app/scripts/ || true",
     "karma": "./node_modules/.bin/karma start",
     "test:karma": "./node_modules/.bin/karma start --single-run"
   },

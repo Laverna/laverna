@@ -34,7 +34,7 @@
     "Basic": "Basic",
     "Cloud storage": "Cloud storage",
     "Notes per page": "Notes per page",
-    "Sort notebooks": "Sort notebooks",
+    "Sort notebooks": "Sort notebooks by",
     "Name": "Name",
     "Created": "Created",
     "Default edit mode": "Default edit mode",
@@ -118,6 +118,9 @@
     "Line of": "Line {{currentLine}} of {{numberOfLines}}",
 	"Drop files": "Drop files here to upload",
 	"Spaces per indent": "Spaces per indent",
+	"Sort notes": "Sort notes by",
+	"Updated date": "Modification date",
+	"Created date": "Creation date",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

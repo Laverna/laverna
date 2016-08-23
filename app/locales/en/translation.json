@@ -117,6 +117,7 @@
     "Untitled": "Untitled",
     "Line of": "Line {{currentLine}} of {{numberOfLines}}",
 	"Drop files": "Drop files here to upload",
+	"Spaces per indent": "Spaces per Indent",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

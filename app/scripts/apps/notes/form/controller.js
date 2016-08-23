@@ -182,7 +182,7 @@ define([
 
             // Stop the module and navigate back
             if(this.deleteData){
-                this.deleteData = false; // TODO wichtig?
+                this.deleteData = false;
                 if (this.options.method === 'add') {
                     // Delete the note if editing of a new note was canceled
                     var self = this;

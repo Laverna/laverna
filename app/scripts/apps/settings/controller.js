@@ -118,13 +118,15 @@ define([
             if (changes.useDefaultConfigs) {
                 window.location.reload();
             }
+
+            this.redirect();
         },
 
         save: function() {
 
             // Do nothing if there are not any changes
             if (_.isEmpty(this.changes)) {
-				this.confirmRedirect();
+                this.redirect();
                 return;
             }
 
@@ -133,7 +135,6 @@ define([
 
             this.saves = _.union(this.saves, this.changes);
             this.changes = {};
-			this.confirmRedirect();
         },
 
         /**

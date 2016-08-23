@@ -60,7 +60,13 @@ Open in your favourite browser index.html file which is located inside *laverna*
 ---------------
 To install, do the following:
 
-#### 1. Clone repository:
+#### 1. (Windows only) How to install Git
+
+1. Download the latest Git version from their [website][14].
+2. Install the program (you don't have to change anything).
+3. Add the location of the Git/bin folder to the PATH variable of your PC.
+
+#### 2. Clone repository:
 
 For those who plan on contributing to the project's development , hit the fork button at the top of the page first (others can go on to the next step). Open a terminal, or command line, and navigate to the desired location of where you want to download the repository. Then enter the following commands to clone the repo.
 
@@ -71,34 +77,42 @@ $ git clone git@github.com:Laverna/laverna.git
 cd laverna
 ```
 
-#### 2. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
+#### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
 
-#### 3. Ensure you have the bower and gulp packages installed (locally and globally):
+#### 4. Ensure you have the bower and gulp packages installed (locally and globally):
 
 ```bash
 $ npm install bower
+$ npm install -g bower
 $ npm install gulp
+$ npm install -g gulp
 ```
 
-#### 4. Install Laverna's dependencies:
+#### 5. Install Laverna's dependencies:
 
 ```bash
 $ npm install
 $ bower install
-$ (cd test && bower install)
+$ cd test
+$ bower install
+$ cd ..
 ```
 
-#### 5. Build minified version of Laverna:
+#### 6. Build minified version of Laverna:
 
 ```bash
 $ gulp build
 ```
 
-#### 6. Start Laverna:
+#### 7. Start Laverna:
 
 ```bash
 $ gulp
 ```
+
+## Do you have questions?
+---------------
+Please have a look in our [wiki][15].
 
 ## Support
 ---------------
@@ -139,3 +153,5 @@ Laverna uses a lot of other libraries and each of these [libraries use different
 [11]: https://www.mozilla.org/en-US/MPL/2.0/
 [12]: https://www.bountysource.com/teams/laverna
 [13]: https://github.com/Laverna/laverna/releases
+[14]: https://git-scm.com/
+[15]: https://github.com/Laverna/laverna/wiki

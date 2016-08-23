@@ -57,10 +57,10 @@ define([
             'actionsOpen'       : 'o',
             'actionsRemove'     : 'shift+3',
             'actionsRotateStar' : 's',
-			'textEditor'		: 'default',
             'appCreateNote'     : 'c',
             'appSearch'         : '/',
             'appKeyboardHelp'   : '?',
+			'textEditor'		: 'default',
 
             'modules'           : []
         },

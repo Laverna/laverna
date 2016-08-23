@@ -115,7 +115,7 @@
     "Untitled": "Unbenannt",
     "Line of": "Zeile {{currentLine}} von {{numberOfLines}}",
 	"Drop files": "Ziehen Sie hier die Dateien zum Hochladen hinein",
-	"Spaces per indent": "Spaces per Indent",
+	"Spaces per indent": "Anzahl Leerzeichen pro Einrückung",
     "encryption": {
         "provide password": "Bitte, geben Sie Ihr Passwort ein",
         "change password": "Geben Sie Ihr Passwort hier ein, um es zu ändern",

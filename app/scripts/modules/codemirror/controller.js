@@ -106,7 +106,7 @@ define([
                 lineNumbers   : false,
                 matchBrackets : true,
                 lineWrapping  : true,
-				indentUnit	  : 4,
+                indentUnit    : parseInt(this.configs.indentUnit, 10),
                 extraKeys     : {
                     'Cmd-B'  : this.boldAction,
                     'Ctrl-B' : this.boldAction,

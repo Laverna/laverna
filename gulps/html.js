@@ -19,6 +19,11 @@ module.exports = function(gulp, $) {
     });
 
     gulp.task('html:manifest:create', () => {
+        // Don't generate manifest for Electron app
+        if ($.util.env.electron) {
+            return $.util.noop();
+        }
+
         return gulp.src([
             'dist/**',
             '!dist/bower_components/MathJax/**',
@@ -40,10 +45,11 @@ module.exports = function(gulp, $) {
     });
 
     gulp.task('html:manifest', ['html:manifest:create'], () => {
+        const htmlStr  = '<html class="no-js">';
         const manifest = '<html manifest="app.appcache" class="no-js">';
 
         return gulp.src('./dist/*.html')
-        .pipe($.replace('<html class="no-js">', manifest))
+        .pipe($.util.env.electron ? $.util.noop() : $.replace(htmlStr, manifest))
         .pipe(gulp.dest('dist'));
     });
 };

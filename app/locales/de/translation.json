@@ -119,6 +119,10 @@
 	"Sort notes": "Notizen sortieren nach",
 	"Updated date": "Änderungsdatum",
 	"Created date": "Erstelldatum",
+	"Text editor": "Texteditor",
+	"Vim": "Vim",
+	"Emacs": "Emacs",
+	"Sublime": "Sublime",
     "encryption": {
         "provide password": "Bitte, geben Sie Ihr Passwort ein",
         "change password": "Geben Sie Ihr Passwort hier ein, um es zu ändern",

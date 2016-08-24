@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Webpack configuration file.
+ *
+ * @file
+ */
 const path  = require('path'),
     webpack = require('webpack'),
     pkg     = require('./package.json');

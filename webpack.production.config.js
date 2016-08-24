@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Webpack configuration file for production.
+ *
+ * @file
+ */
 const webpack = require('webpack'),
     config    = require('./webpack.config');
 

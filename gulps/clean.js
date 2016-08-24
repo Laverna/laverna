@@ -5,10 +5,10 @@
  * @example gulp clean:dist // Clean dist directory
  * @example gulp clean:release // Clean release directory
  */
-module.exports = function(gulp, plugins) {
+module.exports = function(gulp, $) {
 
-    gulp.task('clean:dist', () => plugins.del(['./dist']));
+    gulp.task('clean:dist', () => $.del(['./dist']));
 
-    gulp.task('clean:release', () => plugins.del(['./release/*']));
+    gulp.task('clean:release', () => $.del(['./release/*']));
 
 };

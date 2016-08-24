@@ -3,9 +3,9 @@
 const webpackStream = require('webpack-stream');
 
 /**
- * Bundle JS files.
- *
- * @example gulp bundle
+ * @file Bundle JS files.
+ * @example gulp bundle // Bundle JS files
+ * @example gulp bundle --prod // Bundle JS for production (minify, uglify)
  * @returns {Function}
  */
 module.exports = (gulp, $) => {

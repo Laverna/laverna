@@ -1,118 +1,64 @@
+import {Application} from 'backbone.marionette';
+import {history} from 'backbone';
+import deb from 'debug';
+import Radio from 'backbone.radio';
+
+const log = deb('lav:App');
+
 /**
- * Copyright (C) 2015 Laverna project Authors.
+ * The main app (core).
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @class App
+ * @extends Application
+ * @license MPL-2.0
  */
-/*global define, Modernizr*/
-define([
-    'helpers/underscore-util',
-    'jquery',
-    'backbone',
-    'backbone.radio',
-    'devicejs',
-    'regions/regionManager',
-    'marionette',
-    'i18next'
-], function(_, $, Backbone, Radio, Device) {
-    'use strict';
+export default class App extends Application {
 
-    var App = new Backbone.Marionette.Application(),
-        env = {
-            isWebkit : ('WebkitAppearance' in document.documentElement.style),
-            isMobile : (Device.mobile() === true || Device.tablet() === true),
-            platform : 'browser',
-            ua       : window.navigator.userAgent
-        },
-        render;
-
-    env.useWorkers = (Modernizr.webworkers && window.location.protocol !== 'file:' && !env.isWebkit);
-
-    if (/(palemoon|sailfish)/i.test(env.ua)) {
-        env.useWorkers = false;
+    get radio() {
+        return Radio.channel('App');
     }
-
-    if (env.isMobile) {
-        env.platform = 'mobile';
-    }
-    else if (window.requireNode) {
-        env.platform = 'electron';
-    }
-
-    // Customize underscore template
-    _.templateSettings = {
-        evaluate    : /<%([\s\S]+?)%>/g,
-        interpolate : /\{=([\s\S]+?)\}/g,
-        escape      : /\{\{([\s\S]+?)\}\}/g,
-    };
 
     /**
-     * Overrite renderer in order to have access to
-     * additional functions in templates (like, i18n).
+     * It's called after instantiating the class.
+     *
+     * @fires App#init
      */
-    render = Backbone.Marionette.Renderer.render;
+    initialize() {
+        log('initialized');
 
-    Backbone.Marionette.Renderer.render = function(template, data) {
-        data = _.extend(data || {}, {
-            i18n      : $.t,
-            cleanXSS  : _.cleanXSS,
-            stripTags : _.stripTags
-        });
+        /**
+         * App was initialized but hasn't started yet.
+         *
+         * @event App#init
+         */
+        this.radio.trigger('init');
+    }
 
-        return render(template, data);
-    };
+    /**
+     * Start routers and notify other components that the app has started.
+     *
+     * @fires App#start
+     */
+    onStart() {
+        history.start({pushStart: false});
 
-    // Start a module
-    App.startSubApp = function(appName, args) {
-        var currentApp = appName ? App.module(appName) : null;
-        if (App.currentApp === currentApp) { return; }
+        /**
+         * App has started.
+         *
+         * @event App#start
+         */
+        this.radio.trigger('start');
+    }
 
-        // Stop previous app if current app is not modal
-        if (App.currentApp && (!currentApp.options.modal || env.isMobile)) {
-            App.currentApp.stop();
-        }
+    /**
+     * Lazy start the app.
+     * Wait until other components complete their tasks, then start the app.
+     *
+     * @returns {Promise}
+     * @todo wait for initializers
+     */
+    lazyStart() {
+        return Promise.resolve(this.start());
+    }
 
-        App.currentApp = currentApp;
-        if (currentApp) {
-            App.channel.trigger('app:module', appName);
-            currentApp.start(args);
-        }
-
-        return true;
-    };
-
-    // Returns current app
-    Radio.reply('global', 'app:current', function() {
-        return App.currentApp;
-    });
-
-    // @ToMove somewhere else
-    App.channel.on('app:start', function() {
-        $('.-loading').removeClass('-loading');
-    });
-
-    Radio.reply('global', 'device', function(method) {
-        return Device[method]();
-    });
-
-    Radio.reply('global', 'platform', function() {
-        return env.platform;
-    });
-
-    Radio.reply('global', 'use:webworkers', function() {
-        return env.useWorkers;
-    });
-
-    App.on('before:start', function() {
-        Radio.trigger('global', 'app:init');
-    });
-
-    App.on('start', function() {
-        console.timeEnd('App');
-        Backbone.history.start({pushState: false});
-        Radio.trigger('global', 'app:start');
-    });
-
-    return App;
-});
+}

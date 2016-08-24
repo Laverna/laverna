@@ -6,6 +6,9 @@ import FastClick from 'fastclick';
 import Hammer from 'hammerjs';
 import deb from 'debug';
 
+// The core app
+import App from './App';
+
 const log = deb('lav:main');
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,4 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Enable text selection
     delete Hammer.defaults.cssProps.userSelect;
+
+    // Start the app
+    const app = new App();
+    app.lazyStart();
 });

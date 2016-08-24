@@ -115,6 +115,10 @@
     "Untitled": "Unbenannt",
     "Line of": "Zeile {{currentLine}} von {{numberOfLines}}",
 	"Drop files": "Ziehen Sie hier die Dateien zum Hochladen hinein",
+	"Spaces per indent": "Leerzeichen pro Einrückung",
+	"Sort notes": "Notizen sortieren nach",
+	"Updated date": "Änderungsdatum",
+	"Created date": "Erstelldatum",
     "encryption": {
         "provide password": "Bitte, geben Sie Ihr Passwort ein",
         "change password": "Geben Sie Ihr Passwort hier ein, um es zu ändern",

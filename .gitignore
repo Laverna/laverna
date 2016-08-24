@@ -1,3 +1,5 @@
+# Development related files (JSDoc, coverage reports...)
+_dev/
 
 # Cordova build configs and keys
 build.json

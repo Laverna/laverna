@@ -5,6 +5,7 @@
  *
  * @example gulp eslint // JavaScript linter
  * @example gulp jsonlint // JSON linter
+ * @example gulp lint // Run all linters
  */
 module.exports = (gulp, $) => {
     gulp.task('eslint', $.shell.task(['npm run eslint']));
@@ -20,4 +21,6 @@ module.exports = (gulp, $) => {
         .pipe($.jsonlint.failAfterError())
         .pipe($.jsonlint.reporter());
     });
+
+    gulp.task('lint', ['jsonlint', 'eslint']);
 };

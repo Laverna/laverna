@@ -24,6 +24,7 @@ function createTask(name) {
     }
 }
 
+// Load and create tasks
 [
     'bundle',
     'clean',
@@ -31,6 +32,7 @@ function createTask(name) {
     'html',
     'lint',
     'serve',
+    'test',
 ].forEach(createTask);
 
 gulp.task('release:after', () => {
@@ -39,11 +41,6 @@ gulp.task('release:after', () => {
         'cd ./release && zip -r ../release/webapp.zip ./laverna',
     ]));
 });
-
-/**
- * Unit tests.
- */
-gulp.task('test', ['jsonlint', 'jshint', 'mocha']);
 
 /**
  * Build the app.

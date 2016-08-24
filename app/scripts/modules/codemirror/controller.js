@@ -17,6 +17,9 @@ define([
     'codemirror/mode/markdown/markdown',
     'codemirror/addon/edit/continuelist',
     'codemirror/addon/mode/overlay',
+    'codemirror/keymap/vim',
+    'codemirror/keymap/emacs',
+    'codemirror/keymap/sublime'
 ], function(_, $, Marionette, Radio, CodeMirror, View) {
     'use strict';
 
@@ -103,6 +106,7 @@ define([
                     name        : 'gfm',
                     gitHubSpice : false
                 },
+				keyMap: this.configs.textEditor || 'default',
                 lineNumbers   : false,
                 matchBrackets : true,
                 lineWrapping  : true,

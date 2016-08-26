@@ -73,9 +73,9 @@ This project requires that you have the latest version of git installed. To do s
 For those who plan on contributing to the project's development , hit the fork button at the top of the page first (others can go on to the next step). Open a terminal, or command line, and navigate to the desired location of where you want to download the repository. Then enter the following commands to clone the repo:
 
 ```bash
-//clone the repository
+# clone the repository
 $ git clone git@github.com:Laverna/laverna.git
-//navigate to the project directory
+# navigate to the project directory
 cd laverna
 ```
 

@@ -1,0 +1,32 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="editMode">{{ i18n('Default edit mode') }}</label>
+    <div class="col-sm-10">
+        <select id="editMode" class="form-control" name="editMode" checked="{{models.editMode}}">
+            <option value="normal">{{ i18n('Normal') }}</option>
+            <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>{{ i18n('Fullscreen') }}</option>
+            <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>{{ i18n('Fullscreen with preview') }}</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="indentUnit">{{ i18n('Spaces per indent') }}</label>
+    <div class="col-sm-10">
+        <input type="number" id="indentUnit" name="indentUnit" value="{{models.indentUnit}}" class="form-control" >
+        <div id="indentUnit-low-warning" class="text-warning" <%if(models.indentUnit >= 3){%>style="display: none;"<%}%>>{{ i18n('Recommended 3 or more, for indenting numbered lists') }}</div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="textEditor">{{ i18n('Text editor') }}</label>
+    <div class="col-sm-10">
+		<!-- TODO Change editMode in Zeile drunter-->
+		<!-- TODO Add translation-->
+        <select id="textEditor" class="form-control" name="textEditor" checked="{{models.textEditor}}">
+            <option value="default">{{ i18n('Default') }}</option>
+			<option value="vim" <%if(models.textEditor === 'vim'){%>selected<%}%>>{{ i18n('Vim') }}</option>
+			<option value="emacs" <%if(models.textEditor === 'emacs'){%>selected<%}%>>{{ i18n('Emacs') }}</option>
+			<option value="sublime" <%if(models.textEditor === 'sublime'){%>selected<%}%>>{{ i18n('Sublime') }}</option>
+        </select>
+    </div>
+</div>

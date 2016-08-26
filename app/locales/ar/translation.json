@@ -93,7 +93,7 @@
     "Sync": "مزامنة",
     "Profiles": "ملفات التعريف",
     "Import": "استيراد",
-    "Import & export": "استيراد وتصدير",
+    "Transfer data": "استيراد وتصدير",
     "Import settings": "استيراد الإعدادات",
     "Export settings": "تصدير الإعدادات",
     "Wrong format": "صيغة خطأ",
@@ -104,7 +104,7 @@
     "Editor": "المحرر",
     "Preview": "معاينة",
     "Download": "سحب",
-    "Everything": "كل شيء",
+    "Transfer everything": "كل شيء",
     "encryption": {
         "wait": "فضلاً انتظر حتى يكتمل التشفير",
         "error": "خطأ في التشفير",

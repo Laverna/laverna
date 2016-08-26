@@ -30,8 +30,11 @@ define([
             'pagination'        : '10',
             'sortnotes'         : 'created',
             'sortnotebooks'     : 'name',
-            'editMode'          : 'preview',
             'useDefaultConfigs' : '1',
+
+            // Editor settings
+            'editMode'          : 'preview',
+            'indentUnit'        : '4',
 
             // Encryption settings
             'encrypt'           : '0',
@@ -57,6 +60,7 @@ define([
             'appCreateNote'     : 'c',
             'appSearch'         : '/',
             'appKeyboardHelp'   : '?',
+			'textEditor'		: 'default',
 
             'modules'           : []
         },

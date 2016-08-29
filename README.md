@@ -53,27 +53,29 @@ $ unzip laverna.zip
 ```
 
 #### 3. Open index.html in a browser
-Open in your favourite browser index.html file which is located inside *laverna* directory.
+Open in your favorite browser the index.html file which is located inside *laverna* directory.
 
 
 ## Installation from source
 ---------------
 To install, do the following:
 
-#### 1. (Windows only) How to install Git
+#### 1. Install Git
 
-1. Download the latest Git version from their [website][14].
-2. Install the program (you don't have to change anything).
-3. Add the location of the Git/bin folder to the PATH variable of your PC.
+This project requires that you have the latest version of git installed. To do so, see [Installing Git][14] (First-time users of git might want to check out the next section for configuring git.).
+
+**Note:** Windows users will have to set the PATH variable for git after installing it.
+
+
 
 #### 2. Clone repository:
 
-For those who plan on contributing to the project's development , hit the fork button at the top of the page first (others can go on to the next step). Open a terminal, or command line, and navigate to the desired location of where you want to download the repository. Then enter the following commands to clone the repo.
+For those who plan on contributing to the project's development , hit the fork button at the top of the page first (others can go on to the next step). Open a terminal, or command line, and navigate to the desired location of where you want to download the repository. Then enter the following commands to clone the repo:
 
 ```bash
-//clone the repository
+# clone the repository
 $ git clone git@github.com:Laverna/laverna.git
-//navigate to the project directory
+# navigate to the project directory
 cd laverna
 ```
 
@@ -153,5 +155,5 @@ Laverna uses a lot of other libraries and each of these [libraries use different
 [11]: https://www.mozilla.org/en-US/MPL/2.0/
 [12]: https://www.bountysource.com/teams/laverna
 [13]: https://github.com/Laverna/laverna/releases
-[14]: https://git-scm.com/
+[14]: https://git-scm.com/book/en/v2
 [15]: https://github.com/Laverna/laverna/wiki

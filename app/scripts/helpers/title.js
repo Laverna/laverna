@@ -84,7 +84,7 @@ define([
 
         _makeTitle: function(args) {
             // Translate the title to other languages
-            var title = args.title || (args.filter && args.filter !== 'active' ? args.filter : 'All notes');
+            var title = args.title || (args.filter && args.filter !== 'active' ? args.filter : 'All Notes');
             title = $.t(title.substr(0, 1).toUpperCase() + title.substr(1));
 
             if (!args.title && args.query && args.filter !== 'search') {

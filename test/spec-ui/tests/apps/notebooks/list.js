@@ -136,7 +136,7 @@ module.exports = {
 
         client
         .expect.element('#header--title')
-        .to.have.text.that.equals('All notes')
+        .to.have.text.that.equals('All Notes')
         .before(5000);
     },
 

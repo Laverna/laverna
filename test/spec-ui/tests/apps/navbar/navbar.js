@@ -59,19 +59,19 @@ module.exports = {
         });
     },
 
-    'can change title in favourite notes page': function(client) {
+    'can change title in favorite notes page': function(client) {
         client.urlHash('notes/f/favorite');
 
         client
         .expect.element('#header--title')
-        .to.have.text.that.equals('Favourites')
+        .to.have.text.that.equals('Favorites')
         .before(5000);
 
         client.expect.element('#header--add').to.be.present.before(5000);
         client.expect.element('#header--add').to.be.visible.before(5000);
 
         client.getTitle(function(title) {
-            this.assert.equal(title, 'Favourites - Laverna');
+            this.assert.equal(title, 'Favorites - Laverna');
         });
     },
 

@@ -53,7 +53,7 @@ $ unzip laverna.zip
 ```
 
 #### 3. Open index.html in a browser
-Open in your favourite browser index.html file which is located inside *laverna* directory.
+Open in your favorite browser index.html file which is located inside *laverna* directory.
 
 
 ## Installation from source

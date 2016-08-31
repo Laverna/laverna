@@ -32,15 +32,17 @@
     ]
   },
   "dependencies": {
-    "backbone.marionette": "^2.4.7",
-    "backbone.radio": "^1.0.5",
+    "backbone": "^1.3.3",
+    "backbone.marionette": "^3.0.0",
+    "backbone.radio": "^2.0.0",
     "bootstrap": "^3.3.7",
     "debug": "^2.2.0",
     "es6-promise": "^3.2.1",
     "fastclick": "^1.0.6",
     "hammerjs": "^2.0.8",
     "jquery": "^3.1.0",
-    "jquery-hammerjs": "^2.0.0"
+    "jquery-hammerjs": "^2.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

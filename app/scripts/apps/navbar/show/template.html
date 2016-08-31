@@ -40,11 +40,13 @@
     <div class="list-group">
         <div class="list-group-item sidemenu--item -disabled sidemenu--close">
             <i class="icon-left-open-big"></i>
-            {{i18n('Close')}}
+            {{i18n('Menu')}}
             <button type="button" class="close" aria-hidden="true">
                 &times;
             </button>
         </div>
+
+        <div class="list-group-item sidemenu--item -disabled">{{i18n('General')}}</div>
 
         <a class="list-group-item sidemenu--item" href="#{{uri}}notes">
             <i class="icon-note"></i> {{i18n('All Notes')}}

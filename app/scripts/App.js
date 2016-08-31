@@ -1,7 +1,6 @@
 import {Application} from 'backbone.marionette';
 import {history} from 'backbone';
 import deb from 'debug';
-import Radio from 'backbone.radio';
 
 const log = deb('lav:App');
 
@@ -14,8 +13,12 @@ const log = deb('lav:App');
  */
 export default class App extends Application {
 
-    get radio() {
-        return Radio.channel('App');
+    get channelName() {
+        return 'App';
+    }
+
+    get channel() {
+        return this.getChannel();
     }
 
     /**
@@ -24,14 +27,14 @@ export default class App extends Application {
      * @fires App#init
      */
     initialize() {
-        log('initialized');
+        log('initialized', this.channel);
 
         /**
          * App was initialized but hasn't started yet.
          *
          * @event App#init
          */
-        this.radio.trigger('init');
+        this.channel.trigger('init');
     }
 
     /**
@@ -47,7 +50,7 @@ export default class App extends Application {
          *
          * @event App#start
          */
-        this.radio.trigger('start');
+        this.channel.trigger('start');
     }
 
     /**

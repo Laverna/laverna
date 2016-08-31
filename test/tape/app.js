@@ -16,9 +16,11 @@ test('App: before()', t => {
 });
 
 test('App: initialize()', t => {
-    t.equal(typeof App.prototype.radio, 'object', 'creates App channel');
+    t.equal(App.prototype.channelName, 'App', 'creates App channel');
 
-    const trigger = sand.stub(App.prototype.radio, 'trigger');
+    const trigger = sand.stub();
+    sand.stub(App.prototype, 'getChannel').returns({trigger});
+
     const spy     = sand.spy(App.prototype, 'initialize');
     const app     = new App();
 
@@ -31,7 +33,9 @@ test('App: initialize()', t => {
 });
 
 test('App: onStart()', t => {
-    const trigger = sand.stub(App.prototype.radio, 'trigger');
+    const trigger = sand.stub();
+    sand.stub(App.prototype, 'getChannel').returns({trigger});
+
     const app     = new App();
     const spy     = sand.spy(app, 'onStart');
 

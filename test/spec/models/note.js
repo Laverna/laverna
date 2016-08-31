@@ -79,7 +79,7 @@ define([
 
         describe('.toggleFavorite()', function() {
 
-            it('toggles favourite status', function() {
+            it('toggles favorite status', function() {
                 note.set('isFavorite', 0);
                 expect(note.toggleFavorite().isFavorite).to.be.equal(1);
 

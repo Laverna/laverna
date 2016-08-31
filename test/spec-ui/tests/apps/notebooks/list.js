@@ -136,7 +136,7 @@ module.exports = {
 
         client
         .expect.element('#header--title')
-        .to.have.text.that.equals('All notes')
+        .to.have.text.that.equals('All Notes')
         .before(5000);
     },
 
@@ -149,12 +149,12 @@ module.exports = {
         .before(5000);
     },
 
-    'can navigate to favourite notes': function(client) {
+    'can navigate to favorite notes': function(client) {
         client.keys(['g', 'f']);
 
         client
         .expect.element('#header--title')
-        .to.have.text.that.equals('Favourites')
+        .to.have.text.that.equals('Favorites')
         .before(5000);
 
         client.keys(['g', 'n']);

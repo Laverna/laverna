@@ -10,7 +10,7 @@
     "start": "node ./server.js",
     "setup": "npm install && gulp build",
     "electron": "NODE_ENV=dev electron .",
-    "test": "gulp test",
+    "test": "gulp test:run",
     "cover": "rm -rf _dev/cover && npm run cover:generate",
     "cover:generate": "nyc --reporter=lcov --require babel-register gulp tape && nyc report",
     "cover:check": "npm run cover && nyc check-coverage --lines 95 --functions 95 --branches 95",

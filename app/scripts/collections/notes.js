@@ -46,10 +46,6 @@ define([
             this.state.comparator.isFavorite = 'desc';
         },
 
-        comparator: function(model) {
-            return -model.get(this.sortField);
-        },
-
         filterList: function(filter, options) {
             if (!filter || !this[filter + 'Filter']) {
                 return;

@@ -12,5 +12,6 @@ jsdom.env({
         global.document = window.document;
 
         require('./app');
+        require('./utils/initializer');
     },
 });

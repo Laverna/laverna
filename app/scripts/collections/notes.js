@@ -42,12 +42,8 @@ define([
 
         initialize: function() {
             this.state.comparator = {};
-            this.state.comparator[this.sortField] = 'desc';
+            this.state.comparator[this.sortField] = this.sortField === 'title' ? 'asc' : 'desc';
             this.state.comparator.isFavorite = 'desc';
-        },
-
-        comparator: function(model) {
-            return -model.get(this.sortField);
         },
 
         filterList: function(filter, options) {

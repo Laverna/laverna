@@ -11,16 +11,20 @@ const log = deb('lav:utils/Initializer');
  * @example
  * // Add a new callback to an array of callbacks.
  * // It can be found later by the key app:before
- * Radio.request('utils/Initializer', 'add', 'app:before', promise);
+ * Radio.request('utils/Initializer', 'add', {
+ *     name    : 'app:before',
+ *     callback: asyncCallback,
+ * });
  * @example
  * // Start the previously added callbacks.
- * // In this example it executes all callbacks with the key app:before
- * Radio.request('utils/Initializer', 'start', 'app:before', options);
- * @module Initializer
- * @class
+ * // In this example it executes all callbacks with the key App:before
+ * Radio.request('utils/Initializer', 'start', {
+ *     inits  : ['App:before'],
+ *     options: {},
+ * );
  * @license MPL-2.0
  */
-export default class Initializer {
+class Initializer {
 
     /**
      * Channel to which it replies and triggers events.
@@ -32,8 +36,6 @@ export default class Initializer {
     }
 
     /**
-     * Constructor.
-     *
      * @listens utils/Initializer#add - schedule a callback
      * @listens utils/Initializer#start - execute scheduled callbacks
      * @fires utils/Initializer#init
@@ -59,30 +61,36 @@ export default class Initializer {
      * Schedule a callback.
      * i.e. attach to an array of callbacks.
      *
-     * @param {String} name - name of the initializer
-     * @param {Function} initializer
+     * @param {Object} init - object with init information
+     * @param {String} init.name - a key of the initializer
+     * to which the callback needs to be attached.
+     * @param {Function} init.callback - a function-callback which
+     * needs to be attached to an initializer.
      */
-    add(name, initializer) {
-        this._inits[name] = this._inits[name] || [];
-        this._inits[name].push(initializer);
-        log(`added a callback to ${name}`);
+    add(init) {
+        this._inits[init.name] = this._inits[init.name] || [];
+        this._inits[init.name].push(init.callback);
+        log(`added a callback to ${init.name} array`);
     }
 
     /**
      * Start an initializer(s).
      * i.e. execute all scheduled callbacks with a key name/s.
      *
-     * @param {String} name - name(s) of the initializer
-     * @param {Object} options - options for scheduled callbacks
+     * @param {(String|Object)} data - key(s) of the initializer or object
+     * that contains keys of initializers and options
+     * @param {Array} data.names - array with keys of initializers
+     * which should be started
+     * @param {Object} data.options - options for callbacks
      * @returns {Promise} it will be resolved once all callbacks complete their tasks
      */
-    start(name, options) {
-        const names   = name.split(' ');
+    start(data) {
+        const dataObj = _.isObject(data) ? data : {names: data.split(' ')};
         const promise = Promise.resolve();
-        log(`starting ${name} initializer/s`);
+        log(`starting ${dataObj.name} initializer/s`);
 
-        _.each(names, name => {
-            promise.then(() => this.startInit(name, options));
+        _.each(dataObj.names, name => {
+            promise.then(() => this.startInit(name, data.options || {}));
         });
 
         return promise;
@@ -108,3 +116,10 @@ export default class Initializer {
     }
 
 }
+
+/**
+ * Start listening to requests after the core app is initialized.
+ */
+Radio.once('App', 'init', () => new Initializer());
+
+export default Initializer;

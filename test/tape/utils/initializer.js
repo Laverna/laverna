@@ -25,13 +25,14 @@ test('Initializer: constructor()', t => {
     t.equal(init.channel.trigger.calledWith('init'), true,
         'triggers init event');
 
+    init.channel.stopReplying('add', 'start');
     t.end();
 });
 
 test('Initializer: add()', t => {
     const init = new Initializer();
 
-    init.add('test', () => {});
+    init.add({name: 'test', callback: () => {}});
 
     t.equal(typeof init._inits.test, 'object',
         'creates a new array of callbacks');
@@ -41,7 +42,7 @@ test('Initializer: add()', t => {
     t.end();
 });
 
-test('Initializer: start()', t => {
+test('Initializer: start() - object as argument', t => {
     const init = new Initializer();
     sand.spy(init, 'startInit');
     const stub  = sand.stub().returns(Promise.resolve());
@@ -49,10 +50,13 @@ test('Initializer: start()', t => {
 
     t.plan(4);
 
-    init.add('test', stub);
-    init.add('test2', stub2);
+    init.add({name: 'test', callback: stub});
+    init.add({name: 'test2', callback: stub2});
 
-    init.start('test test2', {t: 1})
+    init.start({
+        names   : ['test', 'test2'],
+        options : {t: 1},
+    })
     .then(() => {
         t.equal(init.startInit.calledWith('test'), true, 'calls the first initializer');
         t.equal(init.startInit.calledWith('test2'), true, 'calls the second initializer');
@@ -67,18 +71,31 @@ test('Initializer: start()', t => {
     .catch(err => t.comment(`error ${err}`));
 });
 
+test('Initializer: start() - string as argument', t => {
+    const init = new Initializer();
+    const stub  = sand.stub().returns(Promise.resolve());
+    init.add({name: 'test', callback: stub});
+
+    t.plan(1);
+    init.start('test')
+    .then(() => t.equal(stub.called, true));
+});
+
 test('Initializer: startInit()', t => {
     const init  = new Initializer();
     const stub  = sand.stub().returns('');
     const stub2 = sand.stub().returns(Promise.resolve());
-    t.plan(2);
+    t.plan(3);
 
-    init.add('test', stub);
-    init.add('test', stub2);
+    init.add({name: 'test', callback: stub});
+    init.add({name: 'test', callback: stub2});
 
     init.startInit('test', {t: 1})
     .then(() => {
-        t.equal(stub.calledWith({t: 1}), true, 'executes the first callback');
+        t.equal(stub.called, true, 'executes the first callback');
         t.equal(stub2.called, true, 'executes the second callback');
+
+        t.equal(typeof init.startInit('test2').then, 'function',
+            'returns a promise even if there are no initilizers with a key');
     });
 });

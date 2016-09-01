@@ -5,6 +5,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 import proxyquire from 'proxyquire';
+import Radio from 'backbone.radio';
 
 const Backbone = {history: {start: sinon.stub()}};
 const App = proxyquire('../../app/scripts/App.js', {backbone: Backbone}).default;
@@ -49,17 +50,35 @@ test('App: onStart()', t => {
     t.end();
 });
 
-test('App: lazyStart()', t => {
-    t.plan(2);
-
+test('App: lazyStart() - success', t => {
     const app  = new App();
     const stub = sand.stub(app, 'start');
+    const init = sand.stub().returns(Promise.resolve());
+    Radio.replyOnce('utils/Initializer', 'start', init);
 
     const res = app.lazyStart();
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
+        t.equal(init.calledWith({names: ['App:before']}), true,
+            'starts initializers');
         t.equal(stub.called, true, 'eventually calls start()');
         sand.restore();
+        t.end();
+    });
+});
+
+test('App: lazyStart() - reject', t => {
+    const app  = new App();
+    const stub = sand.stub(app, 'start');
+    const init = sand.stub().returns(Promise.reject());
+    Radio.replyOnce('utils/Initializer', 'start', init);
+
+    app.lazyStart()
+    .then(() => {
+        t.equal(stub.called, false, 'does not start the app');
+        t.equal(init.called, true, 'handles rejects');
+        sand.restore();
+        t.end();
     });
 });

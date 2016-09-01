@@ -1,5 +1,6 @@
 import {Application} from 'backbone.marionette';
 import {history} from 'backbone';
+import Radio from 'backbone.radio';
 import deb from 'debug';
 
 const log = deb('lav:App');
@@ -61,7 +62,11 @@ export default class App extends Application {
      * @todo wait for initializers
      */
     lazyStart() {
-        return Promise.resolve(this.start());
+        return Radio.request('utils/Initializer', 'start', {
+            names: ['App:before'],
+        })
+        .then(() => this.start())
+        .catch(err => log('error', err));
     }
 
 }

@@ -87,7 +87,7 @@ class Initializer {
     start(data) {
         const dataObj = _.isObject(data) ? data : {names: data.split(' ')};
         const promise = Promise.resolve();
-        log(`starting ${dataObj.name} initializer/s`);
+        log(`starting ${dataObj.names.join(' ')} initializer/s`);
 
         _.each(dataObj.names, name => {
             promise.then(() => this.startInit(name, data.options || {}));
@@ -108,7 +108,7 @@ class Initializer {
         const promises = [];
 
         // Get all callbacks by key name and execute
-        _.each(this._inits[name], fnc => {
+        _.each(this._inits[name] || [], fnc => {
             promises.push(fnc(options));
         });
 

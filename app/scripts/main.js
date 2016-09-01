@@ -9,6 +9,9 @@ import deb from 'debug';
 // The core app
 import App from './App';
 
+// Utils
+import './utils/Initializer';
+
 const log = deb('lav:main');
 
 document.addEventListener('DOMContentLoaded', () => {

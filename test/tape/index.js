@@ -13,5 +13,6 @@ jsdom.env({
 
         require('./app');
         require('./utils/initializer');
+        require('./utils/underscore');
     },
 });

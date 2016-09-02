@@ -11,6 +11,7 @@ import App from './App';
 
 // Utils
 import './utils/Initializer';
+import './utils/underscore';
 
 const log = deb('lav:main');
 

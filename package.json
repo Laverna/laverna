@@ -42,7 +42,8 @@
     "hammerjs": "^2.0.8",
     "jquery": "^3.1.0",
     "jquery-hammerjs": "^2.0.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "xss": "^0.2.13"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

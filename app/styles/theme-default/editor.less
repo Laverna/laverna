@@ -1,0 +1,85 @@
+/**
+ * Editor module
+ */
+#editor--input--title {
+    height    : auto;
+    padding   : 0;
+    font-size : 36px;
+}
+
+// Leave some space from the top
+.editor--container {
+    &:first-child {
+        margin-top: 30px;
+    }
+}
+
+// Remove borders from Pagedown bar
+.editor--bar {
+    border-right-width : 0;
+    border-left-width  : 0;
+
+    // Hide some buttons on small screens
+    max-height : @navbar-height - 6px;
+    height     : @navbar-height - 6px;
+    overflow   : hidden;
+}
+.editor--btns {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.editor--fullscreen .layout--body.-form {
+    top: @navbar-height + 40px;
+}
+
+.editor--fullscreen.-preview .layout--content {
+    background: @layout--form--bg;
+}
+
+/**
+ * Editor WYSIWG bar
+ */
+.editor--bar,
+.editor--fullscreen .editor--bar {
+    // Colors
+    background : @pagedown--bar--bg;
+    color      : @pagedown--bar--color;
+
+    border-top-width    : 1px;
+    border-bottom-width : 1px;
+    border-style        : solid;
+    border-color        : @pagedown--bar--border;
+    border-radius       : 0;
+
+    // Sizing
+    padding-top    : 2px;
+    padding-bottom : 2px;
+    min-height     : 20px;
+    height         : auto;
+}
+
+// Fullscree mode
+.editor--fullscreen {
+    // Reduce font size of the title
+    #editor--input--title {
+        font-size: 1.8em;
+    }
+
+    // Remove space from the top
+    .editor--container {
+        margin-top: 0;
+    }
+
+    // Remove shadows from the main navbar
+    .header.-form {
+        box-shadow: none;
+    }
+}
+
+// Preview mode
+.editor--fullscreen.-preview {
+    #editor--input--title {
+        padding: 0 12px;
+    }
+}

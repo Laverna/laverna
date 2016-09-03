@@ -1,15 +1,35 @@
 /* global chai, define, describe, before, it */
 define([
-    'require',
-    'jquery',
+    'marionette',
     'models/notebook',
     'collections/notebooks',
     'apps/notebooks/list/views/notebooksItem',
     'apps/notebooks/list/views/notebooksComposite'
-], function(require, $, Notebook, Notebooks, ItemView, ListView) {
+], function(Marionette, Notebook, Notebooks, ItemView, ListView) {
     'use strict';
 
     var expect = chai.expect;
+
+    // Fragments don't work properly in PhantomJS
+    if (!document.createDocumentFragment().getElementById) {
+        ListView.prototype.showCollection = function() {
+            var frag = document.createDocumentFragment(),
+                fake = {
+                    appendChild: function(el) {
+                        return frag.appendChild(el);
+                    },
+                    getElementById: function(ar) {
+                        return frag.querySelector('#' + ar);
+                    },
+                };
+
+            Marionette.CompositeView.prototype.showCollection.apply(this, arguments);
+            this.children.each(function(view) {
+                this.attachFragment(this, view, fake);
+            }, this);
+            this.$(this.childViewContainer).append(frag);
+        };
+    }
 
     describe('NotebooksItem view', function() {
         var notebook,
@@ -31,7 +51,7 @@ define([
 
         describe('instantiated', function() {
             it('should exist', function() {
-                expect(view).to.be.ok();
+                expect(view instanceof ItemView).to.be.equal(true);
             });
 
             it('model was passed', function() {
@@ -41,21 +61,21 @@ define([
 
         describe('render()', function() {
             it('is not empty', function() {
-                expect(view.$el.html() !== '').to.be.ok();
+                expect(view.$el.html() !== '').to.be.equal(true);
             });
 
             it('model', function() {
                 var regx = new RegExp(notebook.get('name'), 'gi');
-                expect(regx.test(view.$el.html())).to.be.ok();
+                expect(regx.test(view.$el.html())).to.be.equal(true);
             });
 
-            it('makes itself active after event model:active', function(done) {
-                notebook.on('active', function() {
+            it('makes itself active after `focus` event', function(done) {
+                notebook.once('focus', function() {
                     var $item = view.$('.list-group-item[data-id=' + notebook.get('id') + ']');
-                    expect($item).to.have.class('active');
+                    expect($item.hasClass('active')).to.be.equal(true);
                     done();
                 });
-                notebook.trigger('active');
+                notebook.trigger('focus');
             });
         });
 
@@ -68,11 +88,11 @@ define([
 
         before(function() {
 
-            for (var i = 1; i <= 10; i++) {
+            for (var i = 1; i <= 2; i++) {
                 models.push({
-                    id: i,
+                    id: 'notebook-' + i.toString(),
                     name: 'Notebook #' + i.toString(),
-                    parentId: (i.toString() - 1)
+                    parentId: 'notebook-' + (i.toString() - 1)
                 });
             }
 
@@ -88,83 +108,35 @@ define([
 
         describe('instantiated', function() {
             it('collection is not empty', function() {
-                expect(view.collection.length).to.be.ok(models.length);
+                expect(view.collection.length).to.be.equal(models.length);
             });
 
             it('is was rendered', function() {
-                expect(view.isRendered).to.be.ok();
-                expect(view.$el.html() !== '').to.be.ok();
+                expect(view.isRendered).to.be.equal(true);
+                expect(view.$el.html() !== '').to.be.equal(true);
             });
         });
 
         describe('nested view', function() {
+
             it('items are nested', function() {
                 var div,
                     id;
 
                 for (var i = 0; i < collection.length; i++) {
                     id = collection.at(i).get('id');
-                    div = view.$el.find('div.tags[data-id=' + id + '] .list-group-item');
+                    div = view.$el.find('.list--nested[data-id=' + id + '] .list-group-item');
                     expect(div.length).to.be.equal(collection.length - 1 - i);
                 }
             });
+
         });
 
         describe('behaviors', function() {
             it('has a behavior', function() {
-                expect(view.behaviors.hasOwnProperty('CompositeBehavior')).to.be.ok();
-            });
-
-            function testActive (model) {
-                var item = view.$('[data-id=' + model.get('id') + ']');
-                expect(item.length > 0).to.be.ok();
-                expect(item).to.have.class('active');
-            }
-
-            function changeRegion (trigger) {
-                it('triggers event :changeRegion when there are no objects left', function(done) {
-                    view.once('changeRegion', function(region) {
-                        expect(region).to.be.equal('tags');
-                        done();
-                    });
-                    view.trigger(trigger);
-                });
-            }
-
-            describe('navigation', function() {
-                it('listens to "next" event', function(done) {
-                    this.timeout(300 * collection.length);
-                    collection.each(function(model, i) {
-                        model.once('active', function() {
-                            testActive(model);
-                            if (i === collection.length - 1) {
-                                done();
-                            }
-                        });
-                        view.trigger('next');
-                    });
-                });
-
-                changeRegion('next');
-
-                it('listens to "prev" event', function(done) {
-                    this.timeout(300 * collection.length);
-
-                    $('.active', view.$el).removeClass('active');
-                    collection.each(function(model, i) {
-                        i = i + 1;
-                        collection.at(collection.length - i).once('active', function() {
-                            testActive(collection.at(collection.length - i));
-                            if (collection.length - i === 0) {
-                                done();
-                            }
-                        });
-                        view.trigger('prev');
-                    });
-                });
-
-                changeRegion('prev');
+                expect(view.behaviors.hasOwnProperty('CompositeBehavior')).to.be.equal(true);
             });
         });
+
     });
 });

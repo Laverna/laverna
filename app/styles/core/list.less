@@ -1,0 +1,66 @@
+/**
+ * List module
+ */
+.list {
+}
+
+.list--group {
+    margin-bottom: 0;
+    position: relative;
+
+    &:last-child .list--item {
+        border-bottom-width: 1px;
+    }
+}
+
+.list--item {
+    border-right-width  : 0;
+    border-bottom-width : 0;
+}
+
+.list--item.-note {
+    min-height: 60px;
+    max-height: 60px;
+}
+
+.list--item--title.-note {
+    overflow    : hidden;
+    white-space : nowrap;
+    width       : 90%;
+    &:extend(.pull-left);
+}
+
+.list--item--favorite {
+    width: 7%;
+    &:extend(.pull-right);
+}
+
+.list--item--text {
+    max-width: 80%;
+    &:extend(.-text-elipsis);
+}
+
+// Button groups
+.list--buttons {
+    position : absolute;
+    top      : 0;
+    right    : 4px;
+    padding  : 8px 4px 8px 0;
+}
+
+// Navbars
+.list--navbar {
+    z-index       : inherit;
+    margin-bottom : 0;
+    padding-top   : 20px;
+}
+.list--nav {
+    margin-right: 2px;
+}
+
+// Pagination bar
+.list--pager {
+    margin-top   : 15px;
+    margin-left  : 10px;
+    margin-right : 10px;
+}

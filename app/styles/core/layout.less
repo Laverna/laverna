@@ -1,0 +1,114 @@
+/**
+ * Layout module
+ */
+
+/**
+ * Grids
+ */
+.make-cols(@lg, @md, @sm, @xs) {
+    .make-lg-column(@lg);
+    .make-md-column(@md);
+    .make-sm-column(@sm);
+    .make-xs-column(@xs);
+    transition: left 0.3s ease;
+}
+.layout--sidebar {
+    .make-cols(3, 4, 4.2, 12);
+}
+.layout--content {
+    .make-cols(9, 8, 7.8, 12);
+}
+
+.layout {
+}
+
+.layout--row {
+    overflow : hidden;
+    position : absolute;
+    top      : 0;
+    bottom   : 0;
+    padding  : 0;
+    height   : 100%;
+}
+
+// Sidebar
+.layout--sidebar {
+    &:extend(.layout--row);
+    left: 0;
+    border-right: 1px solid darken(#FFF, 10%);
+}
+
+// Content
+.layout--content {
+    &:extend(.layout--row);
+    right  : 0;
+    height : 100%;
+}
+
+.layout--navbar {
+}
+
+.layout--body {
+    height     : 100%;
+    width      : 100%;
+    position   : relative;
+
+    &.-scroll {
+        height   : auto;
+        position : absolute;
+        bottom   : 0;
+        top      : @navbar-height;
+    }
+}
+
+// Brand layout
+.layout--brand {
+    &:extend(.layout--row);
+    overflow-y : auto;
+    z-index    : @zindex-navbar-fixed;
+    width      : 100%;
+    display    : none;
+}
+
+// Layout Backdrop
+.layout--backdrop {
+    display    : none;
+    background : rgba(0,0,0,0.4);
+
+    // Position and z-index
+    position : absolute;
+    top      : 0;
+    bottom   : 0;
+    left     : 0;
+    right    : 0;
+    z-index  : @zindex--backdrop;
+
+    // Transition
+    opacity    : 0;
+    transition : opacity 0.3s ease;
+
+    &.-show {
+        display: block;
+        opacity: 1;
+    }
+}
+
+// Loading
+.layout--brand.-loading {
+    display         : flex;
+    align-items     : center;
+    text-align      : center;
+    justify-content : center;
+    z-index         : @zindex-navbar-fixed + 3;
+}
+
+.container.-backup {
+    max-width      : 400px;
+    padding-top    : 10%;
+    padding-bottom : 20px;
+}
+
+// Notes
+.note--date {
+    display: inline-block;
+}

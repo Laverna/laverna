@@ -1,41 +1,55 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
     'marionette',
+    'backbone.radio',
     'text!apps/settings/show/templates/profiles.html'
-], function (_, Marionette, Tmpl) {
+], function(_, Marionette, Radio, Tmpl) {
     'use strict';
 
+    /**
+     * Show, add, remove profiles
+     */
     var Profiles = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
         ui: {
-            profileName: '#profileName'
+            profile : '#profileName'
         },
 
         events: {
-            'keypress @ui.profileName': 'createProfile',
-            'click .removeProfile': 'removeProfile'
+            'keypress @ui.profile' : 'createProfile',
+            'click .removeProfile' : 'removeProfile'
         },
 
-        collectionEvents: {
-            'change': 'render'
+        initialize: function() {
+            this.listenTo(this.options.profiles, 'change', this.render);
         },
 
-        removeProfile: function (e) {
-            this.collection.trigger('remove:profile', $(e.currentTarget).attr('data-profile'));
-            e.preventDefault();
+        removeProfile: function(e) {
+            this.trigger('remove:profile', $(e.currentTarget).attr('data-profile'));
+            return false;
         },
 
-        createProfile: function (e) {
+        createProfile: function(e) {
             if (e.which === 13) {
                 e.preventDefault();
-                this.collection.trigger('create:profile', this.ui.profileName.val());
+                this.trigger('create:profile', this.ui.profile.val().trim());
+                this.ui.profile.val('').blur();
             }
         },
 
-        serializeData: function () {
-            return this.collection.getConfigs();
+        serializeData: function() {
+            return {
+                appProfiles: this.options.profiles.getValueJSON()
+            };
         }
     });
 

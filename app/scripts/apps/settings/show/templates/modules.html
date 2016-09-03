@@ -1,0 +1,31 @@
+<% _.each(modules, function(module) { %>
+<div class="media">
+    <div class="media-left">
+    </div>
+    <div class="media-body">
+        <div class="col-xs-8">
+        <h4 class="media-heading">{{module.name}}</h4>
+        <p>{{module.description}}</p>
+        </div>
+
+        <div class="col-xs-4">
+            <% if (isEnabled(module)) {%>
+
+            <% if (module.hasSettings) {%>
+            <a href="#/settings/module/{{module.id}}" class="btn btn-default">
+                {{i18n('Settings')}}
+            </a>
+            <% } %>
+
+            <button class="btn btn-success -disable" data-id="{{module.id}}">
+                {{i18n('Enabled')}}
+            </button>
+            <% } else { %>
+            <button class="btn btn-default -enable" data-id="{{module.id}}">
+                {{i18n('Disabled')}}
+            </button>
+            <% } %>
+        </div>
+    </div>
+</div>
+<% }) %>

@@ -1,0 +1,36 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">
+                {{i18n('files.attach')}}
+            </h4>
+        </div>
+        <div class="modal-body">
+            <form action="#" class="form" method="post">
+                <div class="form-group">
+                    <input name="url" class="form-control" type="text" value="" placeholder="{{ i18n('files.file-url') }}" />
+                </div>
+            </form>
+
+            <form class="dropzone--container" action="">
+                <div class="dropzone row">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default cancelBtn">{{ i18n('Cancel') }}</button>
+            <button class="btn btn-success ok" id="ok-btn">{{ i18n('OK') }}</button>
+
+            <div id="btn-attach" class="btn-group hidden">
+                <button class="btn btn-default attach-file">
+                    {{ i18n('files.attachLink') }}
+                </button>
+                <button class="btn btn-success ok">
+                    <i class="icon icon-picture"></i>
+                    {{ i18n('files.attachImage') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

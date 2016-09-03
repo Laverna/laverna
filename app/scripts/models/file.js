@@ -1,10 +1,15 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
-    'backbone',
-    'migrations/note',
-    'collections/removed'
-], function (_, Backbone, FilesDB, Removed) {
+    'backbone'
+], function(_, Backbone) {
     'use strict';
 
     /**
@@ -13,40 +18,42 @@ define([
     var File = Backbone.Model.extend({
         idAttribute: 'id',
 
-        database : FilesDB,
-        storeName: 'files',
+        profileId : 'notes-db',
+        storeName : 'files',
 
         defaults: {
+            type         : 'files',
             id           : undefined,
+            name         : '',
             src          : '',
-            type         : '',
-            updated      : Date.now(),
-            synchronized : 0
+            fileType     : '',
+            trash        : 0,
+            created      : 0,
+            updated      : 0
         },
 
-        validate: function (attrs) {
+        validate: function(attrs) {
             var errors = [];
+
             if (attrs.src === '') {
                 errors.push('src');
             }
-            if (attrs.type === '') {
-                errors.push('type');
+            if (attrs.fileType === '') {
+                errors.push('fileType');
             }
+
             if (errors.length > 0) {
                 return errors;
             }
         },
 
-        updateDate: function () {
-            this.set('updated', Date.now());
-            this.set('synchronized', 0);
-        },
+        setEscape: function(data) {
+            if (data.name) {
+                data.name = _.cleanXSS(data.name, true);
+            }
 
-        /**
-         * Saves model's id for sync purposes, then destroys it
-         */
-        destroySync: function () {
-            return new Removed().newObject(this, arguments);
+            this.set(data);
+            return this;
         }
 
     });

@@ -1,0 +1,71 @@
+<div class="editor--bar dropdown text-center">
+    <div class="btn-group editor--btns">
+        <span data-action="bold" data-state="strong" class="btn btn--wysiwyg">
+            <i class="icon-bold"></i>
+        </span>
+        <span data-action="italic" data-state="em" class="btn btn--wysiwyg">
+            <i class="icon-italic"></i>
+        </span>
+        <span data-action="heading" data-state="header" class="btn btn--wysiwyg">
+            <i class="icon-font"></i>
+        </span>
+    </div>
+
+    <div class="btn-group editor--btns">
+        <span data-action="link" data-state="link" class="btn btn--wysiwyg">
+            <i class="icon-globe"></i>
+        </span>
+        <span data-action="attachment" class="btn btn--wysiwyg">
+            <i class="icon-picture"></i>
+        </span>
+        <span data-action="code" data-state="comment" class="btn btn--wysiwyg">
+            <i class="icon-code"></i>
+        </span>
+    </div>
+
+    <div class="btn-group editor--btns">
+        <span data-action="numberedList" data-state="ordered-list" class="btn btn--wysiwyg">
+            <i class="icon-list-numbered"></i>
+        </span>
+        <span data-action="list" data-state="unordered-list" class="btn btn--wysiwyg">
+            <i class="icon-list-bullet"></i>
+        </span>
+        <span data-action="hr" data-state="hr" class="btn btn--wysiwyg">
+            <i class="icon-minus"></i>
+        </span>
+    </div>
+
+    <div class="btn-group editor--btns">
+        <span data-action="undo" class="btn btn--wysiwyg">
+            <i class="icon-reply"></i>
+        </span>
+        <span data-action="redo" class="btn btn--wysiwyg">
+            <i class="icon-share"></i>
+        </span>
+    </div>
+</div>
+
+<div class="btn-group btn-group-justified hidden -show">
+    <div class="btn-group">
+        <button data-col="left" class="btn btn-default active editor--col--btn">
+            {{i18n('Editor')}}
+        </button>
+    </div>
+    <div class="btn-group">
+        <button data-col="right" class="btn btn-default editor--col--btn">
+            {{i18n('Preview')}}
+        </button>
+    </div>
+</div>
+
+<div class="editor--row">
+    <div class="editor--layout -left -show">
+        <textarea class="editor--input" id="editor--input" name="content">{=cleanXSS(content)}</textarea>
+    </div>
+
+    <div class="editor--layout -right">
+        <div class="editor--preview">
+            <div id="wmd-preview" class="editor--preview--block"></div>
+        </div>
+    </div>
+</div>

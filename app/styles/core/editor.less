@@ -1,0 +1,262 @@
+/**
+ * Editor module
+ */
+
+/**
+ * Mixin for creating columns
+ */
+@pagedown-breakpoint: 500px;
+.make-pg-columns(@columns) {
+    .make-lg-column(@columns);
+    .make-md-column(@columns);
+    .make-sm-column(@columns);
+    .make-xs-column(@columns);
+
+    // Stretch columns on small screens
+    @media (max-width: @pagedown-breakpoint) {
+        width: percentage((12 / 12));
+    }
+}
+
+.editor--form {
+    margin-top: 15px;
+}
+
+/**
+ * WYSIWYG bar
+ */
+.editor--bar {
+    &:extend(.navbar);
+    margin-bottom : 0;
+    border-color  : rgb(217, 217, 217);
+    border-top    : 1px solid rgb(229, 229, 229);
+    border-bottom : 1px solid rgb(229, 229, 229);
+    padding       : 6px 0;
+
+    &.-fixed {
+        &:extend(.navbar-static-top);
+        position    : fixed;
+        z-index     : @zindex-navbar - 1;
+        top         : @navbar-height;
+        margin-left : -15px;
+    }
+}
+
+.editor--input {
+    overflow    : hidden;
+    font-weight : 400;
+    font-size   : 14px;
+    line-height : 20px;
+    margin-left : 0;
+    border      : none;
+    transition  : border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width       : 100%;
+}
+.editor--input,
+.editor--preview {
+    width: 100%;
+}
+.editor--preview {
+    display: none;
+}
+
+/**
+ * Editor in fullscreen mode
+ */
+.editor--fullscreen {
+    /**
+     * We don't need to show the sidebar on fullscreen mode.
+     */
+    .layout--sidebar {
+        display: none;
+    }
+    .layout--content {
+        width: 100%;
+    }
+
+    /**
+     * Show WYSIWG bar on top of everything
+     */
+    .editor--bar {
+        &:extend(.navbar-fixed-top);
+        top: @navbar-height;
+    }
+
+    /**
+     * Prevent WYSIWG bar from overflowing the main navbar
+     */
+    .layout--navbar {
+        z-index: @zindex-navbar-fixed + 1;
+    }
+
+    /**
+     * Since we have two navbars, we need to change the position
+     * of the form.
+     */
+    .layout--body.-form {
+        top: @navbar-height * 2;
+    }
+}
+
+/**
+ * Pagedown in preview mode
+ */
+.editor--fullscreen.-preview {
+    overflow: hidden;
+
+    // Main layout shouldn't have scrollbars
+    .layout--body.-form {
+        overflow: hidden;
+    }
+
+    .navbar-form {
+        padding: 0;
+    }
+
+    // This is the main wrapper now
+    .editor--row {
+        &:extend(.layout--body);
+    }
+
+    /**
+     * We use it to create a two column view:
+     * the editor and the preview.
+     */
+    .editor--layout {
+        .make-pg-columns(5.94);
+        position: absolute;
+        height: auto;
+        top: 0;
+        bottom: @navbar-height + 35px; // Leave room for footer
+        overflow: hidden;
+        background-color: #FFF;
+
+        &.-left {
+            left: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        &.-right {
+            right: 0;
+        }
+    }
+
+    /**
+     * Add scrollbars to Pagedown editor and its preview.
+     */
+    .editor--preview,
+    .editor--input {
+        background-color: #FFF;
+        width: 100%;
+        min-height: 1px;
+        position: absolute;
+        overflow: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    // Pagedown preview styles
+    .editor--preview {
+        display: block;
+        word-wrap: break-word;
+        padding: 15px 20px 0;
+    }
+    .editor--preview--block {
+        padding-bottom: 100px;
+    }
+
+    // Preview mode on small screens
+    @media (max-width: @pagedown-breakpoint) {
+        // Fix the scrollbar
+        .editor--layout {
+            bottom: 100px;
+        }
+
+        // Hide both columns
+        .editor--layout.-left,
+        .editor--layout.-right {
+            display: none;
+        }
+
+        .-show,
+        .editor--layout.-show,
+        .editor--show--column {
+            display: block !important;
+        }
+    }
+}
+
+// Notebook list
+.editor--notebooks {
+    position: relative;
+
+    &:before {
+        font-size   : 14px;
+        font-family : "fontello";
+        content     : '\e808';
+        position    : absolute;
+        top         : 6px;
+        left        : 7px;
+    }
+    &:after {
+        &:extend(.caret);
+        content  : ' ';
+        position : absolute;
+        top      : 15px;
+        right    : 7px;
+    }
+}
+.editor--notebooks--list {
+    max-width    : 180px;
+    padding-left : 20px;
+
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+}
+@media (max-width: 400px) {
+    .editor--notebooks {
+        &:after {
+            display: none;
+        }
+    }
+    .editor--notebooks--list {
+        max-width    : 52px;
+        padding      : 6px;
+        padding-left : 15px;
+    }
+}
+
+@media (min-width: @screen-xs) {
+    // Center the editor in fullscreen mode
+    .editor--fullscreen {
+        .editor--container {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    .editor--fullscreen.-preview {
+        .editor--container {
+            width: 100%;
+        }
+    }
+}
+
+#editor--footer{
+	position:absolute;
+	bottom:0;
+	margin-left:auto;
+	padding-left: 15px;
+	overflow:visible;
+    font-size   : 14px;
+    font-family : "fontello";
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+  	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

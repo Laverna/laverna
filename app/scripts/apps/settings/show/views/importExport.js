@@ -1,35 +1,67 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
     'marionette',
+    'backbone.radio',
     'text!apps/settings/show/templates/importExport.html'
-], function (_, Marionette, Tmpl) {
+], function (_, Marionette, Radio, Tmpl) {
     'use strict';
 
+    /**
+     * Import or export settings
+     */
     var ImportExport = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
         ui: {
-            importBtn : '#do-import',
-            importFile: '#import-file'
+            importBtn  : '#do-import',
+            import     : '#import-file',
+
+            // Export  / import buttons
+            importData : '#import-data-file',
+            exportData : '#export-data',
         },
 
         events: {
-            'click #do-export'        : 'exportTrigger',
-            'click @ui.importBtn'     : 'importTrigger',
-            'change @ui.importFile'   : 'importFile'
+            'click .btn--import'    : 'triggerClick',
+            'change @ui.import'     : 'triggerImport',
+            'change @ui.importData' : 'triggerImportData',
+            'click @ui.exportData'  : 'triggerExportData'
         },
 
-        exportTrigger: function () {
-            this.collection.trigger('export');
+        triggers: {
+            'click #do-export'  : 'export'
         },
 
-        importFile: function (e) {
-            this.collection.trigger('import', e.target);
+        triggerImport: function(e) {
+            if (!e.target.files.length) {
+                return;
+            }
+            this.trigger('import', e.target);
         },
 
-        importTrigger: function () {
-            this.ui.importFile.click();
+        triggerImportData: function(e) {
+            if (!e.target.files.length) {
+                return;
+            }
+
+            Radio.request('importExport', 'import', e.target.files);
+        },
+
+        triggerExportData: function() {
+            Radio.request('importExport', 'export');
+        },
+
+        triggerClick: function(e) {
+            var file = $(e.currentTarget).attr('data-file');
+            $(file).click();
         }
     });
 

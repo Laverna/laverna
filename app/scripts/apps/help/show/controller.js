@@ -1,44 +1,50 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
-    'helpers/uri',
-    'collections/configs',
+    'backbone.radio',
     'apps/help/show/view'
-], function (_, App, Marionette, URI, Configs, View) {
+], function(_, Marionette, Radio, View) {
     'use strict';
 
-    var Show = App.module('AppHelp.Show');
+    /**
+     * Keybindings help controller.
+     */
+    var Controller = Marionette.Object.extend({
 
-    Show.Controller = Marionette.Controller.extend({
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'show');
+
+            // Fetch configs
+            Radio.request('configs', 'get:all', {
+                profile: Radio.request('uri', 'profile')
+            }).then(this.show);
         },
 
-        onDestroy: function () {
-            this.view.trigger('destroy');
-            delete this.view;
+        onDestroy: function() {
+            Radio.request('global', 'region:empty', 'modal');
         },
 
-        show: function () {
-            var collection = new Configs();
+        show: function(configs) {
+            configs = configs.clone();
+            configs.reset(configs.shortcuts());
 
-            // We don't have to fetch settings because they are already in memory
-            collection.resetFromJSON(App.settings);
-            collection.reset(collection.shortcuts());
+            this.view = new View({
+                collection: configs
+            });
 
-            this.view = new View({ collection: collection });
-            App.modal.show(this.view);
-
-            this.view.on('redirect', this.redirect, this);
-        },
-
-        redirect: function () {
-            App.vent.trigger('navigate:back', '/notes');
+            Radio.request('global', 'region:show', 'modal', this.view);
+            this.listenTo(this.view, 'redirect', this.destroy);
         }
 
     });
 
-    return Show.Controller;
+    return Controller;
 });

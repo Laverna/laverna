@@ -1,0 +1,22 @@
+<div><div class="modal-dialog modal-mini">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="modal-title">{{ getTitle() }}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{{content}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-event="cancel">
+                {{ i18n('Cancel') }}
+            </button>
+            <button type="button" class="btn btn-danger" data-event="confirmNotes">
+                {{ i18n('notebooks.remove with notes') }}
+            </button>
+            <button type="button" class="btn btn-success" data-event="confirm">
+                {{ i18n('notebooks.remove') }}
+            </button>
+        </div>
+    </div>
+</div></div>

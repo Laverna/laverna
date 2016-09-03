@@ -1,0 +1,56 @@
+/**
+ * Buttons
+ */
+.btn-default {
+    border-color: @btn--border--color;
+}
+
+// Success button
+.btn.btn-success {
+    background-color : @btn--success;
+    border-color     : @btn--success--border;
+    &:hover,
+    &:focus {
+        background-color: @btn--success--hover;
+    }
+}
+
+/**
+ * Change button styles in note view
+ */
+.btn.-note {
+    background   : @btn--note--bg;
+    border       : none;
+    box-shadow   : none;
+    padding      : 7px 15px;
+    margin-right : 5px;
+    &:hover {
+        background: @btn--note--hover;
+    }
+}
+
+/**
+ * Favourite button
+ */
+.btn--favourite {
+    color     : @btn--favourite;
+    font-size : 1em;
+    padding   : 0;
+    &:hover,
+    &:focus {
+        outline : none;
+        color   : @btn--favourite--hover;
+    }
+}
+
+/**
+ * WYSIWYG buttons
+ */
+.btn--wysiwyg {
+    border-radius : 0;
+    transition    : background .3s ease-in-out;
+
+    &:hover {
+        background : @pagedown--btn--hover--bg;
+    }
+}

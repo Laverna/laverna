@@ -4,17 +4,17 @@ define([
     'underscore',
     'jquery',
     'models/tag',
-    'apps/notebooks/tagsForm/formView'
-], function (require, _, $, Tag, FormView) {
+    'apps/notebooks/form/tag/formView'
+], function(require, _, $, Tag, FormView) {
     'use strict';
 
     var expect = chai.expect;
 
-    describe('Tag form view', function () {
+    describe('Tag form view', function() {
         var tag,
             view;
 
-        before(function () {
+        before(function() {
             tag = new Tag({
                 id  : 1,
                 name: 'Tag name'
@@ -29,23 +29,23 @@ define([
             view.render();
         });
 
-        describe('View is rendered', function () {
-            it('is rendered', function () {
-                expect(view).to.be.ok();
+        describe('View is rendered', function() {
+            it('is rendered', function() {
+                expect(view instanceof FormView).to.be.equal(true);
                 expect(view.$el.length).not.to.be.equal(0);
             });
 
-            it('model was passed', function () {
+            it('model was passed', function() {
                 expect(view.model).to.be.equal(tag);
             });
 
-            it('Shows tags name', function () {
+            it('Shows tags name', function() {
                 expect(view.ui.name).to.have.value(tag.get('name'));
             });
 
-            it('Shows validation errors', function (done) {
-                tag.once('invalid', function (model, errors) {
-                    _.forEach(errors, function (err) {
+            it('Shows validation errors', function(done) {
+                tag.once('invalid', function(model, errors) {
+                    _.forEach(errors, function(err) {
                         expect(view.ui[err].parent()).to.have.class('has-error');
                         if (errors[errors.length - 1] === err) {
                             done();
@@ -58,30 +58,30 @@ define([
             });
         });
 
-        describe('Triggers events', function () {
-            it('view:save when user submits the form', function (done) {
-                view.once('save', function () {
+        describe('Triggers events', function() {
+            it('view:save when user submits the form', function(done) {
+                view.once('save', function() {
                     done();
                 });
                 $('.form-horizontal', view.$el).submit();
             });
 
-            it('view:save when user hits OK button', function (done) {
-                view.once('save', function () {
+            it('view:save when user hits OK button', function(done) {
+                view.once('save', function() {
                     done();
                 });
                 $('.ok', view.$el).click();
             });
 
-            it('view:redirect', function (done) {
-                view.once('redirect', function () {
+            it('view:redirect', function(done) {
+                view.once('redirect', function() {
                     done();
                 });
                 view.trigger('hidden.modal');
             });
 
-            it('view:close when user hits cancel', function (done) {
-                view.once('close', function () {
+            it('view:close when user hits cancel', function(done) {
+                view.once('close', function() {
                     done();
                 });
                 $('.cancelBtn', view.$el).click();

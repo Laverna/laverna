@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
@@ -8,17 +15,15 @@ define([
     'use strict';
 
     var BrandRegion = Backbone.Marionette.Region.extend({
-        el : '#brand-layer',
+        el : '#layout--brand',
 
         onShow: function () {
-            $('#wrapper').hide();
             // this.$el.html(view.el);
             this.$el.slideDown('fast');
         },
 
         onEmpty: function () {
             this.$el.slideUp('fast');
-            $('#wrapper').show();
         }
 
     });

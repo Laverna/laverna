@@ -1,0 +1,18 @@
+engines:
+    eslint:
+        enabled: true
+    duplication:
+        enabled: true
+        config :
+            languages:
+                - javascript
+
+languages:
+    JavaScript: true
+
+ratings:
+    paths:
+        - app/scripts/**
+
+exclude_paths:
+    - test/**

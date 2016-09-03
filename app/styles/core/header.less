@@ -1,0 +1,95 @@
+/**
+ * Navbar styles
+ */
+.header {
+}
+
+/**
+ * "Grid" system for elements in the navbar
+ */
+.header--col--left {
+    max-width: 70%;
+
+    .header--col--left--drawer {
+      max-width: 85%;
+    }
+
+    .header--col--left--search {
+      max-width: 15%;
+    }
+}
+
+/**
+ * Fix margins and paddings of .navbar-right or .navbar-left
+ */
+.header--right {
+    margin-right : 2px;
+    margin-left  : auto;
+}
+.header--left {
+    padding-left: 0;
+}
+
+/**
+ * Button styles
+ */
+.header--btn {
+    &:extend(.navbar-btn);
+    margin-left: 5px;
+}
+// Search button
+.header--sbtn {
+    background-color: transparent;
+}
+
+/**
+ * Search form
+ */
+.header--search {
+    &:extend(.navbar-form);
+    display : none;
+    width   : 100%;
+}
+.header--search--input {
+}
+
+/**
+ * Hide everything else in the navbar and
+ * show the search form.
+ */
+.header.-search {
+    .navbar-right,
+    .navbar-left {
+        display: none;
+    }
+
+    .header--search {
+        display: block;
+    }
+}
+
+/**
+ * Settings navbar
+ */
+.header--settings {
+    .container-fluid  {
+        padding-left: 0;
+    }
+}
+
+.header--container {
+    display: flex;
+}
+
+/**
+ * Navbar title
+ */
+.header--title {
+    font-size: 18px;
+    margin-left: 0;
+    width: 100%;
+}
+
+#header--title {
+    margin-left: 15px;
+}

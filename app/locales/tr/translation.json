@@ -92,7 +92,6 @@
     "Profiles": "Profiller",
     "Import settings": "Ayarları içeri aktar",
     "Export settings": "Ayarları dışarı aktar",
-    "Profile name": "Profil adı",
     "Action": "Eylem",
     "Remove profile": "'__profile__' profilini silmek istediğinden emin misin?",
     "Change shortcuts": "Kısayol ayarlarını değiştir",
@@ -102,6 +101,9 @@
     "Credits": "Katkılar",
     "List of contributors": "Katkıda bulunanlar",
     "List of all used libraries": "Kullanılan kütüphaneler",
+	"profile": {
+    	"profile name": "Profil adı"
+	},
     "notebooks": {
         "name": "Not defteri adı verin"
     },

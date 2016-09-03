@@ -1,0 +1,56 @@
+/**
+ * Header module
+ */
+.header--bg(@bg, @shadow, @border, @color) {
+    background : @bg;
+    box-shadow : @shadow;
+    border     : @border;
+    color      : @color;
+
+    .header--title {
+        &:hover,
+        &:focus {
+            background-color: darken(@bg, 5%);
+        }
+    }
+
+    .navbar-nav > li > a,
+    .navbar-btn,
+    .navbar-link,
+    .navbar-text,
+    .btn-link {
+        color : @color;
+        &:hover,
+        &:focus {
+            color : @color;
+        }
+    }
+}
+
+/**
+ * Left Navbar
+ */
+.header.-left {
+    .header--bg(@header--left--bg, @header--left--shadow, @header--left--border, @header--left--color);
+}
+.header--container.-left {
+    padding-left: 0;
+}
+.header--search {
+    padding-right: 0;
+}
+
+/**
+ * Right Navbar
+ */
+.header.-right,
+.header.-note {
+    .header--bg(@header--right--bg, @header--right--shadow, @header--right--border, @header--right--color);
+}
+
+/**
+ * The main navbar in note form, pagedown
+ */
+.header.-form {
+    .header--bg(@header--right--bg, @header--right--shadow, @header--right--border, @header--right--color);
+}

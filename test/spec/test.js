@@ -1,19 +1,36 @@
 /* global requirejs */
-requirejs.config({
-    baseUrl: '../app/scripts',
+var dir = {
+    base  : (window.__karma__ ? '/base/' : '../'),
+    other : (window.__karma__ ? '/base/app/' : '../'),
+    test  : (window.__karma__ ? '/base/' : '../../'),
+};
 
-    paths: {
-        'chai-jquery' : '../../test/bower_components/chai-jquery/chai-jquery',
-        'spec'        : '../../test/spec',
-        'init'        : '../../test/spec/init'
+requirejs.config({
+    baseUrl : dir.base + 'app/scripts',
+    urlArgs : 'bust=' + (new Date()).getTime(),
+    deps    : ['modernizr'],
+
+    paths   : {
+        'modernizr'    : dir.other + 'bower_components/modernizr/modernizr',
+        'chai'         : dir.test + 'test/bower_components/chai/chai',
+        'chai-jquery'  : dir.test + 'test/bower_components/chai-jquery/chai-jquery',
+        'chai-promise' : dir.test + 'test/bower_components/chai-as-promised/lib/chai-as-promised',
+        'sinon-chai'   : dir.test + 'test/bower_components/sinon-chai/lib/sinon-chai',
+        'sinon'        : dir.test + 'test/bower_components/sinonjs/sinon',
+        'spec'         : dir.test + 'test/spec',
+        'init'         : dir.test + 'test/spec/init',
+    },
+
+    map: {
+        '*': {
+            'classes/sjcl.worker' : 'classes/sjcl'
+        }
     },
 
     shim: {
         'chai-jquery': ['jquery'],
     },
 
-    urlArgs: 'bust=' + (new Date()).getTime(),
-    waitSeconds: 15
 });
 
 /**

@@ -1,37 +1,36 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /* global define */
 define([
     'underscore',
-    'app',
     'marionette',
-    'helpers/uri',
-    'apps/help/about/view'
-], function (_, App, Marionette, URI, View) {
+    'backbone.radio',
+    'apps/help/about/view',
+    'constants'
+], function(_, Marionette, Radio, View, constants) {
     'use strict';
 
-    var About = App.module('AppHelp.About');
+    var Controller = Marionette.Object.extend({
 
-    About.Controller = Marionette.Controller.extend({
-        initialize: function () {
-            _.bindAll(this, 'show');
-        },
-
-        onDestroy: function () {
-            this.view.trigger('destroy');
-            delete this.view;
-        },
-
-        show: function () {
+        initialize: function() {
             this.view = new View({
-                appVersion : App.constants.VERSION
+                appVersion: constants.VERSION
             });
-            App.modal.show(this.view);
-            this.view.on('redirect', this.redirect, this);
+
+            Radio.request('global', 'region:show', 'modal', this.view);
+            this.listenTo(this.view, 'redirect', this.destroy);
         },
 
-        redirect: function () {
-            App.vent.trigger('navigate:back', '/notes');
+        onDestroy: function() {
+            Radio.request('global', 'region:empty', 'modal');
         }
+
     });
 
-    return About.Controller;
+    return Controller;
 });

@@ -1,17 +1,18 @@
 /* global chai, define, describe, before, it */
 define([
     'underscore',
+    'backbone.radio',
     'apps/settings/show/views/importExport',
     'collections/configs'
-], function (_, Import, Configs) {
+], function(_, Radio, Import, Configs) {
     'use strict';
 
     var expect = chai.expect;
 
-    describe('Import and export tab view', function () {
+    describe('Import and export tab view', function() {
         var view;
 
-        before(function () {
+        before(function() {
             view = new Import({
                 el: $('<div>'),
                 collection: new Configs()
@@ -19,35 +20,31 @@ define([
             view.render();
         });
 
-        describe('instantiated', function () {
-            it('ok', function () {
-                expect(view).to.be.ok();
-                expect(view.$el.length).to.be.ok();
+        describe('instantiated', function() {
+            it('ok', function() {
+                expect(view instanceof Import).to.be.equal(true);
+                expect(view.$el.length !== 0).to.be.equal(true);
             });
         });
 
-        describe('Triggers events', function () {
-            it('collection:export', function (done) {
-                view.collection.once('export', function () {
+        describe('Triggers requests', function() {
+
+            it('`export` on `importExport` channel', function(done) {
+                Radio.replyOnce('importExport', 'export', function() {
                     done();
                 });
-                $('#do-export', view.$el).click();
+                view.ui.exportData.trigger('click');
             });
 
-            it('collection:import', function (done) {
-                view.collection.once('import', function () {
+            /*
+            it('`import` on `importExport` channel', function(done) {
+                Radio.replyOnce('importExport', 'import', function() {
                     done();
                 });
-                view.ui.importFile.trigger('change');
+                view.ui.importData.trigger('change', {target: {files: ['1']}});
             });
+            */
 
-            it('click on @ui.importFile', function (done) {
-                view.ui.importFile.on('click', function (e) {
-                    e.preventDefault();
-                    done();
-                });
-                view.ui.importBtn.click();
-            });
         });
     });
 });

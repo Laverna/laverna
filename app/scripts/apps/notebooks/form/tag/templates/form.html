@@ -1,0 +1,26 @@
+<div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title">
+            <% if (id) { %>
+            {{ i18n('tags.edit') }}
+            <% } else { %>
+            {{ i18n('tags.add') }}
+            <% } %>
+        </h3>
+    </div>
+    <div class="modal-body modal--body">
+        <div class="container-fluid modal--container">
+            <form action="#" class="form-horizontal modal--form" method="POST">
+                <div class="form-group modal--group">
+                    <input name="name" class="form-control modal--input"
+                        type="text" value="{=cleanXSS(name)}" placeholder="{{ i18n('Title') }}" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default cancelBtn" href="#">{{ i18n('Cancel') }}</button>
+        <button class="btn btn-danger ok" href="#">{{ i18n('Save') }}</button>
+    </div>
+</div></div>

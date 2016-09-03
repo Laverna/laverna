@@ -1,0 +1,48 @@
+[
+    {
+        "id"          : "mathjax",
+        "name"        : "MathJax",
+        "description" : "MathJax",
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron",
+            "browser",
+            "mobile"
+        ]
+    },
+    {
+        "id"          : "fuzzySearch",
+        "name"        : "fuzzySearch",
+        "description" : "fuzzySearch module",
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron",
+            "browser",
+            "mobile"
+        ]
+    },
+    {
+        "id"          : "fs",
+        "name"        : "FS",
+        "description" : "Synchronizes everything to the file system",
+        "hasSettings" : true,
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron"
+        ]
+    },
+    {
+        "id"          : "electronSearch",
+        "name"        : "Electron Search",
+        "description" : "",
+        "hasSettings" : false,
+        "minVersion"  : "",
+        "maxVersion"  : "",
+        "platforms"   : [
+            "electron"
+        ]
+    }
+]

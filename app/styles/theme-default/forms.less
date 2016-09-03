@@ -1,287 +1,94 @@
-//
-// forms.less
-//
-.has-error input[type=text] {
-    .placeholder(@brand-danger);
-}
-.pretty-form {
-    .form-group {
-        border-bottom: 1px solid @modal-header-border-color;
-        margin-bottom: 0;
-        textarea{
-            resize: vertical;
-        }
-    }
-    .border-0 {
-        border-bottom-width: 0;
-    }
-    .form-control, .form-control:active,.form-control:focus, input, textarea {
-        border-width: 0;
-        .box-shadow(none);
-    }
-}
-.article .pretty-form {
-    .form-group {
-        padding-bottom: 4px;
-        padding-top: 4px;
-    }
-    .btn {
-        margin-left: 10px;
-    }
-}
-#inputTitle {
-    height: 60px;
-    font-size: @font-size-h1;
-    border: none;
-    box-shadow: none;
-}
-
-.saveBtnGroup {
-    .btn {
-        margin-left: 0!important;
+/**
+ * Form styles
+ */
+.form-control {
+    &:focus {
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(189, 189, 189, 0.6);
+        border-color: #BDBDBD;
+        outline: 0px none;
     }
 }
 
-//
-// Animated Checkboxes
-// http://thecodeplayer.com/walkthrough/custom-animated-checkbox-inputs-using-css-iconfonts
-@task-size: 16px;
-.task {
-    display: block;
-    margin-bottom: @task-size - 10;
-    padding-left: @task-size * 1.3;
-    padding-top: 2px;
-    position: relative;
-    font-weight: normal;
-    font-size: @task-size;
-    cursor: pointer;
+input.-borderless {
+    // Borders
+    border-radius : 0;
+    box-shadow    : none;
+    border        : none;
+
+    // Font
+    font-weight : 700;
+    font-size   : 1.8em;
+
+    &:hover,
+    &:focus {
+        box-shadow: none;
+    }
 }
-.task input[type=checkbox] {
-    display: none;
+
+/**
+ * Brand forms
+ */
+.input--brand {
+    background    : transparent;
+    box-shadow    : none;
+    border        : none;
+    border-bottom : 2px solid #FFF;
+    color         : #FFF;
+    border-radius : 0;
+    text-align    : center;
+    .placeholder(darken(#FFF, 10));
+
+    &:hover,
+    &:focus,
+    &.focus {
+        box-shadow   : none;
+        border-color : #FFF;
+    }
 }
-.task input[type=checkbox] + span:before,
-.task input[type=checkbox] + span:after {
-    font-family: 'fontello';
-    font-size: 20px;
-    color: darken(@brand-success, 6%);
+
+.btn--brand {
+    margin-top     : 33px;
+    padding-top    : 17px;
+    padding-bottom : 17px;
+
+    border         : none;
+    border-radius  : 9px;
+    border         : 2px solid #fff;
+
+    background     : transparent;
+    box-shadow     : 0;
+    color          : #fff;
+
+    font-variant   : small-caps;
+    font-size      : 1.5em;
+
+    &:hover, &:focus, &:active {
+        background : #fff;
+        color      : #303030;
+        outline    : none;
+    }
+}
+
+#module--electronSearch {
     position: absolute;
     top: 0;
     left: 0;
-}
-.task input[type=checkbox] + span:before {
-    content: "\e826";
-}
-.task input[type=checkbox] + span:after {
-    content: "\e825";
-    margin-bottom: 7px;
- 	max-width: 0;
-	overflow: hidden;
-	opacity: 0.5;
-	transition: all 0.35s;   transition: all 0.35s;
-}
-.task input[type=checkbox]:checked + span {
-    text-decoration: line-through;
-    &:after {
-        max-width: 25px;
-        opacity: 1;
-    }
-}
-//
-// Search form
-//
-.search-form {
-    .icon-search {
-        margin-left: 10px;
-        width: 3%;
-        color: darken(#FFF, 20%);
-        &.active {
-            color: #101010;
-        }
-    }
-    .search-group {
-        width: 90%;
-    }
-    .search-input {
-        width: 100%;
-        border-radius: @border-radius-base;
-        border-width: 0;
-        box-shadow: none;
-        &:focus, &:active {
-            border-width: 1px;
-            .form-control-focus();
-        }
-    }
-}
+    z-index: 9999;
 
-//
-// Distraction free mode
-//
-.preview-col {
-    display: none; // For default hide preview
-}
-// Do not show save button in pagedown bar
-#wmd-button-bar {
-    .wmd-hidden {
-        display: none;
-    }
-}
-.distraction-free {
-    background-color: #FFF;
-    #sidebar, .navbar-static-top {
-        display: none;
-    }
-    #content {
-        width: 100%;
-    }
-    #content .article {
-        width: 70%;
-        margin: 0 auto;
-    }
-    #wmd-button-bar {
-        margin: 0;
-        text-align: center;
-        padding: 0;
-    }
-    .pretty-form .form-group {
-        padding-right: 10px;
-        border: 0;
-        // box-shadow: 0 0 2px darken(#FFF, 6%);
-    }
-    #inputTitle {
-        height: auto;
-        font-size: @font-size-h3;
+    .search--close {
+        font-size: 21px;
+        line-height: 1;
         font-weight: bold;
     }
-    // Save button
-    #wmd-button-bar {
-        .wmd-hidden {
-            display: inline-block;
-        }
-    }
-}
-//
-// Two column mode
-//
-.make-pagedown-column(@columns) {
-    .make-lg-column(@columns);
-    .make-md-column(@columns);
-    .make-sm-column(@columns);
-    .make-xs-column(@columns);
-}
-.distraction-free.two-column {
-    background-color: #EDECE4;
-    #content .article {
-        width: 100%;
-        min-height: 1px;
-        padding-top: 0;
-        background: transparent;
-    }
-    #noteForm {
-        padding-top: 20px;
-    }
-    // Make two columns
-    .wmd-group {
-        .make-row();
-    }
-    .ui-scroll-y {
-        overflow: hidden;
-    }
-    .markdown-col, .preview-col {
-        .make-pagedown-column(5.84);
-        min-height: 1px;
-        position: absolute;
-        top: @navbar-height * 2.4;
-        bottom: 0;
-        overflow: hidden;
-    }
-    .markdown-col {
-        background-color: #FFF;
-        left: 1%;
-    }
-    .preview-col {
-        right: 1%;
-        display: block;
-    }
-    .wmd-preview,
-    .wmd-input {
-        background-color: #FFF;
-        width: 100%;
-        min-height: 1px;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-    }
-    textarea.wmd-input {
-        height: 100%;
-        padding-left: 15px;
-    }
-    .wmd-preview {
-        overflow: auto;
-    }
-    #wmd-preview {
-        padding: 15px 20px 100px;
-        word-wrap: break-word;
+
+    .electron--search {
+        border-radius: 0 0 8px 0;
+
+        border: 1px solid #ccc;
+        border-top-width: 0;
+        border-left-width: 0;
+        background: #fff;
+        padding: 8px;
     }
 }
 
-//
-// Responsive pagedown buttons
-//
-.invisible-wmd-btn (@max-width) {
-    .responsive-visibility();
-    @media (max-width: @max-width) {
-        .responsive-invisibility();
-    }
-}
-// Hide buttons one by one
-.distraction-free {
-    #wmd-undo-button,
-    #wmd-redo-button,
-    .wmd-spacer3 {
-        .invisible-wmd-btn(920px);
-    }
-    #wmd-hr-button,
-    #wmd-heading-button {
-        .invisible-wmd-btn(836px);
-    }
-    #wmd-ulist-button,
-    #wmd-olist-button,
-    .wmd-spacer2 {
-        .invisible-wmd-btn(752px);
-    }
-    #wmd-image-button,
-    #wmd-code-button {
-        .invisible-wmd-btn(668px);
-    }
-    #wmd-quote-button,
-    #wmd-link-button,
-    .wmd-spacer1 {
-        .invisible-wmd-btn(584px);
-    }
-    #wmd-bold-button,
-    #wmd-italic-button {
-        .invisible-wmd-btn(440px);
-    }
-}
-
-//
-// Dropzone area
-//
-
-.dropzone {
-    border: 10px dashed #CCC;
-    min-height: 100px;
-    margin: 20px auto;
-    cursor: pointer;
-    padding: 20px;
-}
-.dz-preview {
-    cursor: default;
-    display: inline-block;
-    margin: 0 auto;
-
-    img{
-        margin: 0 10px 10px 0;
-    }
-}

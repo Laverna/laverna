@@ -1,22 +1,31 @@
-/* global requirejs */
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+/* global requirejs, requireNode */
 requirejs.config({
 
     // Find all nested dependencies
     findNestedDependencies: true,
     waitSeconds: 10,
 
+    nodeRequire: (typeof requireNode === 'undefined' ? null : requireNode),
+
     packages: [
-        // Ace editor
+        // Codemirror editor
         {
-            name     : 'ace',
-            location : '../bower_components/ace/lib/ace',
-            main     : 'ace'
+            name     : 'codemirror',
+            location : '../bower_components/codemirror',
+            main     : 'lib/codemirror'
         },
-        // Pagedown-ace editor
+        // Prismjs
         {
-            name     : 'pagedown-ace',
-            location : '../bower_components/pagedown-ace',
-            main     : 'Markdown.Editor'
+            name     : 'prism',
+            location : '../bower_components/prism',
+            main     : 'bundle'
         },
         // Xregexp
         {
@@ -29,51 +38,64 @@ requirejs.config({
         sjcl                  : '../bower_components/sjcl/sjcl',
         text                  : '../bower_components/requirejs-text/text',
         jquery                : '../bower_components/jquery/dist/jquery',
+        q                     : '../bower_components/q/q',
         bootstrap             : '../bower_components/bootstrap/dist/js/bootstrap.min',
-        i18next               : '../bower_components/i18next/i18next.amd.withJQuery.min',
+        i18next               : '../bower_components/i18next/i18next',
+        i18nextXHRBackend     : '../bower_components/i18next-xhr-backend/i18nextXHRBackend',
 
         // Backbone
         underscore            : '../bower_components/underscore/underscore',
         backbone              : '../bower_components/backbone/backbone',
         marionette            : '../bower_components/marionette/lib/core/backbone.marionette',
-        'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/backbone.wreqr',
+        'backbone.radio'      : '../bower_components/backbone.radio/build/backbone.radio.min',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
-        'backbone.mousetrap'  : '../bower_components/backbone.mousetrap/backbone.mousetrap',
+        fuse                  : '../bower_components/fuse/src/fuse',
 
         // Mousetrap
-        'Mousetrap'           : '../bower_components/mousetrap/mousetrap',
-        'mousetrap-pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
+        'mousetrap'           : '../bower_components/mousetrap/mousetrap',
+        'mousetrap.pause'     : '../bower_components/mousetrap/plugins/pause/mousetrap-pause',
+        'mousetrap.global'    : '../bower_components/mousetrap/plugins/global-bind/mousetrap-global-bind',
 
         // Storage adapters
-        localStorage          : '../bower_components/backbone.localStorage/backbone.localStorage',
-        indexedDB             : '../bower_components/indexeddb-backbonejs-adapter/backbone-indexeddb',
-        IndexedDBShim         : '../bower_components/IndexedDBShim/dist/IndexedDBShim',
-        remotestorage         : '../bower_components/remotestorage.js/release/0.10.0-beta3/remotestorage-nocache.amd',
-        dropbox               : 'libs/dropbox',
+        localforage           : '../bower_components/localforage/dist/localforage',
+        remotestorage         : '../bower_components/remotestorage.js/release/stable/remotestorage',
+        bluebird              : '../bower_components/bluebird/js/browser/bluebird.min',
+        tv4                   : '../bower_components/tv4/tv4',
+        dropbox               : '../bower_components/dropbox/dropbox',
 
         // Markdown
-        'pagedown'            : '../bower_components/pagedown/Markdown.Editor',
-        'pagedown-extra'      : '../bower_components/pagedown-extra/Markdown.Extra',
+        'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it.min',
+        'markdown-it-san'     : '../bower_components/markdown-it-sanitizer/dist/markdown-it-sanitizer.min',
+        'markdown-it-hash'    : '../bower_components/markdown-it-hashtag/dist/markdown-it-hashtag.min',
+        'markdown-it-math'    : '../bower_components/markdown-it-math/dist/markdown-it-math.min',
+        'markdown-it-imsize'  : '../bower_components/markdown-it-imsize/dist/markdown-it-imsize.min',
         'to-markdown'         : '../bower_components/to-markdown/src/to-markdown',
 
         // Others
+        xss                   : '../bower_components/xss/dist/xss',
         mathjax               : '../bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML',
         prettify              : '../bower_components/google-code-prettify/src/prettify',
-        dropzone              : '../bower_components/dropzone/downloads/dropzone.min',
+        dropzone              : '../bower_components/dropzone/dist/dropzone-amd-module',
         toBlob                : '../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob',
         blobjs                : '../bower_components/Blob/Blob',
         fileSaver             : '../bower_components/FileSaver/FileSaver',
         enquire               : '../bower_components/enquire/dist/enquire.min',
         hammerjs              : '../bower_components/hammerjs/hammer',
+        jHammer               : '../bower_components/jquery-hammerjs/jquery.hammer',
+        fastclick             : '../bower_components/fastclick/lib/fastclick',
         devicejs              : '../bower_components/device.js/lib/device.min',
+        jszip                 : '../bower_components/jszip/dist/jszip',
 
         // Aliases
         'modalRegion'         : 'views/modal',
         'brandRegion'         : 'views/brand',
-        'checklist'           : 'libs/checklist',
-        'tags'                : 'libs/tags',
         'apps'                : 'apps',
         'locales'             : '../locales'
+    },
+    map: {
+        '*': {
+            'backbone.wreqr' : 'backbone.radio'
+        }
     },
     shim: {
         // Backbone
@@ -84,49 +106,23 @@ requirejs.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
-        'backbone.mousetrap': {
-            deps: ['Mousetrap', 'mousetrap-pause', 'backbone']
-        },
-
-        // Mousetrap
-        'Mousetrap': { },
-        'mousetrap-pause': {
-            deps: ['Mousetrap']
-        },
 
         // Storage adapters
-        localStorage: {
-            deps: ['underscore', 'backbone']
-        },
-        indexedDB: {
-            deps: ['underscore', 'backbone']
-        },
-        'IndexedDBShim': {
-            exports: 'shimIndexedDB'
-        },
         dropbox: {
             exports: 'Dropbox'
         },
-        remotestorage: {
-            exports: 'remoteStorage'
+        'remotestorage': {
+            exports: 'RemoteStorage',
+            deps: [
+                'tv4',
+                'bluebird',
+            ]
+        },
+        tv4: {
+            exports: 'tv4'
         },
 
         // Markdown
-        ace: {
-            exports: 'ace'
-        },
-        'pagedown': {
-            exports: 'Markdown',
-            deps: [ 'pagedown-extra' ]
-        },
-        'pagedown-extra': [ 'pagedown-ace' ],
-        'pagedown-ace/Markdown.Editor': {
-            exports: 'Markdown',
-            deps: [ 'pagedown-ace/Markdown.Converter' ]
-        },
-        'pagedown-ace/Markdown.Sanitizer': {
-            deps: [ 'pagedown-ace/Markdown.Converter' ]
-        },
         'to-markdown': {
             exports: 'toMarkdown'
         },
@@ -139,10 +135,22 @@ requirejs.config({
             deps: ['xregexp/xregexp'],
             exports: 'XRegExp'
         },
+        'xregexp/addons/unicode/unicode-categories': {
+            deps: [
+                'xregexp/addons/unicode/unicode-base'
+            ],
+            exports: 'XRegExp'
+        },
 
         // Others
         sjcl: {
             exports: 'sjcl'
+        },
+        'prism/bundle': {
+            exports: 'Prism'
+        },
+        xss: {
+            exports: 'filterXSS'
         },
         bootstrap: {
             deps: ['jquery']

@@ -1,43 +1,99 @@
-//
-// Variables for less
-//
-@screen-xxs-max: 500px;
-@border-radius-base: 3px;
+/**
+ * Variables
+ */
+@color--brand: #00a693;
+@color--info : #1693A7;
 
-// Brand colors
-// -------------------------
-@brand-primary:         #428bca;
-@brand-success:         #00A693;
-@brand-warning:         #E6781E;
-// @brand-danger:          #D14334;
-@brand-danger:          darken(#D9534F, 5%);
-@brand-info:            #1693A7;
 
-@baseGreenColor: @brand-success;
+/**
+ * Layout
+ */
+@layout--note--bg    : #fff;
+@layout--note--color : #2c3130;
+@layout--form--bg    : #EDECE4;
+@layout--brand--bg   : #007164;
+@layout--brand--color: #fff;
 
-// Default buttons
-@btn-default-bg: #FFF;
-@btn-default-border: darken(#FFF, 10%);
+/**
+ * Header
+ */
+@header--bg     : #fff;
+@header--border : none;
+@header--color  : #333333;
+@header--shadow : 1px 1px 10px -6px #939393;
 
-// Links
-@link-color:            darken(@brand-success, 8%);
-@link-hover-color:      darken(@link-color, 2%);
+// Left header
+@header--left--bg     : @header--bg;
+@header--left--border : @header--border;
+@header--left--color  : @header--color;
+@header--left--shadow : @header--shadow;
 
-// Success buttons
-@btn-success-bg: @baseGreenColor;
-@btn-success-border: lighten(@baseGreenColor, 1%);
+// Right header
+@header--right--bg     : @header--bg;
+@header--right--border : @header--border;
+@header--right--color  : @header--color;
+@header--right--shadow : 0px -5px 10px 1px #cccccc;
 
-// List group
-@list-group-active-bg: @brand-success;
-@list-group-active-border: @brand-success;
-@list-group-border-radius: 0;
+/**
+ * Buttons
+ */
+@btn--border--color   : #f2f2f2;
 
-// Forms
-@input-border-radius: 0;
-@input-border-focus: darken(#CCC, 6%);
-@pagedown-min-height: 1056px;
+// Success button
+@btn--success         : @color--brand;
+@btn--success--border : lighten(@color--brand, 1%);
+@btn--success--hover  : darken(@color--brand, 5%);
 
-@article-min-height: 500px;
+// Buttons in note view
+@btn--note--bg         : #f8f8f8;
+@btn--note--hover      : #f3f3f3;
 
-// Glyphicons
-@icon-font-path: "../bower_components/bootstrap/fonts/";
+// Favourite button
+@btn--favourite        : #515151;
+@btn--favourite--hover : #6a6a6a;
+
+/**
+ * Checkbox module
+ */
+@check--border        : 2px solid @color--brand;
+@check--size          : @font-size-base + 4px;
+@check--icon--size    : @font-size-base - 2px;
+@check--border-radius : 2px;
+@check--border-radius : 2px;
+@check--color         : @color--brand;
+
+/**
+ * List module
+ */
+@list--border--color  : #f2f2f2;
+@list--active--bg     : @color--brand;
+@list--active--border : @color--brand;
+
+// List navbar
+@list--navbar--color  : #1f1f1f;
+@list--navbar--bg     : transparent;
+@list--navbar--brand  : #1f1f1f;
+
+/**
+ * Sidemenu
+ */
+@sidemenu--bg                 : #fff;
+@sidemenu--item               : #fff;
+@sidemenu--item--color        : #333333;
+@sidemenu--item--border       : none;
+@sidemenu--item--hover        : @color--brand;
+@sidemenu--item--hover--color : #fff;
+@sidemenu--disabled           : @sidemenu--item;
+@sidemenu--disabled--color    : #838383;
+
+/**
+ * Pagedown module
+ */
+// Pagedown bar
+@pagedown--bar--bg    : #f5f5f5;
+@pagedown--bar--border: #e6e6e6;
+@pagedown--bar--color : #000;
+
+// Buttons
+@pagedown--btn--hover--bg    : #ccccce;
+@pagedown--btn--hover--color : #07111a;

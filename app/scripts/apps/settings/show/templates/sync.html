@@ -1,0 +1,30 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="cloudStorage">
+        <i class="fa fa-cloud"></i> {{ i18n('Cloud storage') }}
+    </label>
+    <div class="col-sm-10">
+        <select class="form-control show-onselect" data-option="dropbox" name="cloudStorage" id="cloudStorage">
+            <option value="0">{{ i18n('No') }}</option>
+            <option data-show="#group-dropboxKey" value="dropbox"<% if(models.cloudStorage === 'dropbox'){ %> selected<% } %>>Dropbox</option>
+            <option value="remotestorage"<%if(models.cloudStorage === 'remotestorage'){ %> selected<% } %>>RemoteStorage</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group <% if (models.cloudStorage !== 'dropbox') { %> hidden<% } %>" id="group-dropboxKey">
+    <label class="col-sm-2 control-label" for="dropboxKey">
+        <span class="pull-left">{{ i18n('Dropbox API key') }}</span>
+        <button type="button" class="btn btn-link popover-key" role="button" data-title="Dropbox API Key" data-container="#group-dropboxKey">?</button>
+    </label>
+    <div class="col-sm-10">
+        <input id="dropboxKey" type="text" name="dropboxKey" class="form-control" value="{{ models.dropboxKey }}" placeholder="<% if(dropboxKeyNeed) { %>{{i18n('Required')}}!<% } else { %>{{i18n('Optional')}}<% } %>" />
+    </div>
+    <div class="popover-dropbox hidden">
+        <p>{{i18n('dropbox.api info 1')}} <a target="_blank" href="https://www.dropbox.com/developers/apps">Dropbox</a></p>
+        <p>{{i18n('dropbox.api info 2')}}</p>
+        <ol>
+            <li>{{i18n('dropbox.api info li 1')}}</li>
+            <li>{{i18n('dropbox.api info li 2')}}</li>
+        </ol>
+    </div>
+</div>

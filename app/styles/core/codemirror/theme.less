@@ -1,0 +1,72 @@
+/**
+ * Default theme for Codemirror.
+ */
+
+/**
+ * Headers
+ */
+.cm-s-default .cm-header {
+    color: #000;
+}
+.cm-s-default .cm-header-1 {
+    &:extend(h1);
+    line-height: floor((@font-size-h1 * @line-height-base));
+}
+.cm-s-default .cm-header-2 {
+    &:extend(h2);
+    line-height: floor((@font-size-h2 * @line-height-base));
+}
+.cm-s-default .cm-header-3 {
+    &:extend(h3);
+    line-height: floor((@font-size-h3 * @line-height-base));
+}
+.cm-s-default .cm-header-4 {
+    &:extend(h4);
+    line-height: floor((@font-size-h4 * @line-height-base));
+}
+.cm-s-default .cm-header-5 {
+    &:extend(h5);
+    line-height: floor((@font-size-h5 * @line-height-base));
+}
+.cm-s-default .cm-header-6 {
+    &:extend(h6);
+    line-height: floor((@font-size-h6 * @line-height-base));
+}
+
+/**
+ * Other styles
+ */
+.CodeMirror-composing {
+    border-bottom: 2px solid;
+}
+
+.cm-header,
+.cm-strong:extend(strong) {}
+
+.cm-em {
+    font-style: italic;
+}
+
+.cm-strikethrough {
+    text-decoration: line-through;
+}
+
+.cm-link {
+    text-decoration: underline;
+}
+
+/**
+ * Default styles for common addons
+ */
+div.CodeMirror span.CodeMirror-matchingbracket {
+    color: #0f0;
+}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {
+    color: #f22;
+}
+.CodeMirror-matchingtag {
+    background: rgba(255, 150, 0, .3);
+}
+.CodeMirror-activeline-background {
+    background: #e8f2ff;
+}

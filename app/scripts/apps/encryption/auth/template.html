@@ -1,11 +1,19 @@
-<div class="container">
+<div class="container text-center -auth">
     <form action="#" class="form-wrapper" role="form" method="post">
-        <h1><i class="icon-lock"></i></h1>
-        <h1>Laverna</h1>
-        <div class="form-password">
-            <i class="icon icon-lock"></i>
-            <input class="form-control input-lg" type="password" name="password" placeholder="{{ i18n('Encryption Password') }}" required="" autofocus />
+        <header>
+            <h1 class="header--brand"><i class="icon-lock"></i></h1>
+            <h1 class="header--brand">Laverna</h1>
+        </header>
+
+        <div class="form-group form--icon">
+            <input class="form-control input-lg input--brand" type="password" name="password"
+            placeholder="{{ i18n('Encryption Password') }}" required="" autofocus />
         </div>
-        <button class="btn btn-lg btn-block btn-success" type="submit">{{ i18n('Unlock') }}</button>
+
+        <div class="form-group">
+            <button class="btn btn-lg btn-block btn--brand" type="submit">
+                {{ i18n('Unlock') }}
+            </button>
+        </div>
     </form>
 </div>

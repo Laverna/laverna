@@ -1,103 +1,97 @@
+/**
+ * Copyright (C) 2015 Laverna project Authors.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 /*global define*/
 define([
     'underscore',
-    'jquery',
     'backbone',
-    'models/tag',
-    'migrations/note',
-    'indexedDB'
-], function (_, $, Backbone, Tag, TagsDB) {
+    'collections/pageable',
+    'backbone.radio',
+    'models/tag'
+], function(_, Backbone, PageableCollection, Radio, Tag) {
     'use strict';
 
     /**
      * Tags collection
      */
-    var Tags = Backbone.Collection.extend({
+    var Tags = PageableCollection.extend({
         model: Tag,
 
-        database : TagsDB,
-        storeName: 'tags',
+        profileId : 'notes-db',
+        storeName : 'tags',
 
-        comparator: 'name',
-
-        initialize: function () {
+        state: {
+            pageSize     : 20,
+            firstPage    : 0,
+            currentPage  : 0,
+            totalRecords : 0,
+            comparator   : {'updated': 'desc'}
         },
 
-        /**
-         * Do not add if already exists
-         */
-        saveAdd: function (tags) {
-            var done = $.Deferred(),
-                model;
+        conditions: {
+            active: {trash: 0}
+        },
 
-            if (tags.length === 0) {
-                done.resolve(true);
+        _onAddItem: function(model) {
+            PageableCollection.prototype._onAddItem.apply(this, arguments);
+            Radio.trigger('tags', 'model:navigate', model);
+        },
+
+        sortFullCollection: function() {
+            if (!this.fullCollection) {
+                return;
             }
 
-            _.each(tags, function (tag, iter) {
-                tag = tag.trim();
-                model = this.findWhere({name : tag});
-                if (tag !== '' && model === undefined) {
-                    model = new this.model({ name : tag });
-                    model.save();
-                }
+            // Sort the full collection again
+            this.fullCollection.sortItOut();
 
-                if (iter === (tags.length - 1)) {
-                    done.resolve(true);
-                }
-            }, this);
+            // Update pagination state
+            this._updateTotalPages();
 
-            return done;
+            var models = this.fullCollection.models.slice(
+                0, this.state.pageSize * (this.state.currentPage + 1)
+            );
+
+            // Reset the collection so the view could re-render itself
+            this.reset(models);
+            return true;
         },
 
         /**
-         * Find tag by name and return id's
+         * Sets state.currentPage to the given number.
+         * Then, it overwrites models of the current collection.
          */
-        getTagsId: function (tagNames) {
-            var tags = [],
-                that = this,
-                tag;
+        getPage: function(number) {
+            // Calculate page number
+            var pageStart = this.getOffset(number),
+                models;
 
-            _.each(tagNames, function (name) {
-                tag = that.where({name: name});
+            // Save where we currently are
+            this.state.currentPage = number;
 
-                if (tag.length !== 0) {
-                    tags.push(tag[0].get('id'));
-                }
-            });
+            // Slice an array of models
+            models = this.fullCollection.models.slice(pageStart, pageStart + this.state.pageSize);
 
-            return tags;
-        },
-
-        /**
-         * Return only tag names
-         */
-        getNames: function (tags) {
-            var names = [];
-
-            if (tags === undefined) {
-                tags = this.toArray();
+            if (number === 0) {
+                this.reset(models);
+            }
+            else {
+                this.add(models);
             }
 
-            _.each(tags, function (tag) {
-                if (tag !== undefined) {
-                    names.push(tag.get('name'));
-                }
-            });
-
-            return names;
+            return this.models;
         },
 
-        checkExist: function (tagNames) {
-            var names = [];
-
-            _.each(tagNames, function (name) {
-                if (this.get({name : name})) {
-                    names.push(name);
-                }
-            });
-
-            return names;
+        /**
+         * This collection is never going to have a previous page
+         * because it uses inifinite pagination.
+         */
+        hasPreviousPage: function() {
+            return false;
         }
 
     });

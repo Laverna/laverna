@@ -1,0 +1,21 @@
+<div><div class="modal-dialog modal-mini">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="modal-title">{{ getTitle() }}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{{content}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-event="openSettings">
+                <i class="icon-cog"></i>
+                {{ i18n('encryption.errorConfirmSettings') }}
+            </button>
+            <button type="button" class="btn btn-success" data-event="auth">
+                <i class="icon-lock"></i>
+                {{ i18n('encryption.errorConfirmAuth') }}
+            </button>
+        </div>
+    </div>
+</div></div>

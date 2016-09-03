@@ -1,82 +1,101 @@
 /* global chai, define, describe, before, it */
 define([
-    'require',
+    'underscore',
     'jquery',
+    'backbone.radio',
     'collections/configs',
     'collections/notebooks',
     'apps/navbar/show/view'
-], function (require, $, Configs, Notebooks, NavbarView) {
+], function(_, $, Radio, Configs, Notebooks, NavbarView) {
     'use strict';
 
     var expect = chai.expect;
 
-    describe('Navbar view', function () {
-        var view;
+    describe('Navbar view', function() {
+        var view,
+            configs;
 
-        before(function () {
+        before(function() {
+            configs = new Configs();
+            configs.resetFromJSON(_.extend({}, configs.configNames, {cloudStorage: 'dropbox'}));
+
             view = new NavbarView({
-                el: $('<div>'),
-                settings: Configs.prototype.configNames,
-                notebooks: null,
-                args: {},
+                el         : $('<div>'),
+                collection : configs,
+                profiles   : configs.get('appProfiles'),
+                notebooks  : new Notebooks(),
+                args       : {},
             });
+
             view.render();
         });
 
-        describe('instantiated', function () {
-            it('should exist', function () {
-                expect(view).to.be.ok();
+        describe('instantiated', function() {
+            it('should exist', function() {
+                expect(view instanceof NavbarView).to.be.equal(true);
             });
         });
 
-        describe('Triggers events', function () {
-            it('syncWithCloud event', function (done) {
-                view.on('syncWithCloud', function () {
+        describe('Triggers events', function() {
+
+            it('`sync`:`start` event', function(done) {
+                Radio.replyOnce('sync', 'start', function() {
                     done();
                 });
-                view.ui.syncBtn.click();
+                view.$('#header--sync').trigger('click');
             });
 
-            it('view:navigate when a form was submitted', function (done) {
-                view.on('navigate', function () {
+            it('`search:hidden` after search form is submitted', function(done) {
+                Radio.once('global', 'search:hidden', function() {
                     done();
                 });
-                view.ui.navbarSearchForm.trigger('submit');
+                view.$('#header--search').trigger('submit');
+            });
+
+            it('`search:submit` after search form is submitted and text is not empty', function(done) {
+                view.once('search:submit', function() {
+                    done();
+                });
+                view.ui.search.val('Test');
+                view.$('#header--search').trigger('submit');
+            });
+
+        });
+
+        describe('Shows sync status', function() {
+
+            it('`sync`:`start` event', function(done) {
+                Radio.once('sync', 'start', function() {
+                    expect(view.ui.sync).to.have.class('animate-spin');
+                    done();
+                });
+                Radio.trigger('sync', 'start');
+            });
+
+            it('`sync`:`stop` event', function(done) {
+                Radio.once('sync', 'stop', function() {
+                    expect(view.ui.sync).not.to.have.class('animate-spin');
+                    done();
+                });
+                Radio.trigger('sync', 'stop');
             });
         });
 
-        describe('Shows sync status', function () {
-            it('"sync:before" event', function (done) {
-                view.on('sync:before', function () {
-                    expect(view.ui.syncStatus).to.have.class('animate-spin');
+        describe('Search form', function() {
+
+            it('is invisible', function() {
+                expect(view.$('#sidebar--nav').hasClass('-search')).to.equal(false);
+            });
+
+            it('will appear if the search button is clicked', function(done) {
+                Radio.once('global', 'search:shown', function() {
+                    expect(view.$('#sidebar--nav').hasClass('-search')).to.equal(true);
                     done();
                 });
-                view.trigger('sync:before');
+
+                view.$('#header--sbtn').click();
             });
 
-            it('"sync:after" event', function (done) {
-                view.on('sync:after', function () {
-                    expect(view.ui.syncStatus).not.to.have.class('animate-spin');
-                    done();
-                });
-                view.trigger('sync:after');
-            });
-        });
-
-        describe('Search form', function () {
-            it('is invisible', function () {
-                expect(view.ui.navbarSearchForm).to.have.class('hidden');
-            });
-
-            describe('will appear', function () {
-                it('if user hits search button', function (done) {
-                    $('.btn-search', view.$el).click();
-                    setTimeout(function () {
-                        expect(view.ui.navbarSearchForm).not.to.have.class('hidden');
-                        done();
-                    }, 100);
-                });
-            });
         });
     });
 

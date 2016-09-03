@@ -1,0 +1,52 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label" for="useEncryption">{{ i18n('Use encryption') }}</label>
+    <div class="col-sm-10 checkbox">
+         <label class="control-label">
+             <input id="useEncryption" type="checkbox" name="encrypt" <% if(Number(models.encrypt) === 1) { %> checked<% } %> >
+             {{ i18n('Yes') }}
+         </label>
+    </div>
+</div>
+
+<fieldset id="encryptOpt" <% if(Number(models.encrypt) === 0) { %>disabled="disabled"<% } %>>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="encryptPass">{{ i18n('Encryption Password') }}</label>
+        <div class="col-sm-10">
+            <input type="password" id="encryptPass" name="encryptPass" value="" placeholder="{{passwordText()}}" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="encryptSalt">{{ i18n('Salt') }}</label>
+        <div class="col-sm-10">
+            <input class="form-control hex" disabled type="text" name="encryptSalt" id="encryptSalt" value="{{hex(models.encryptSalt)}}" >
+
+            <a id="randomize" href="#">{{ i18n('Random') }}</a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="encryptIter">{{ i18n('Strengthen by a factor of') }}</label>
+        <div class="col-sm-10">
+            <input type="number" name="encryptIter" id="encryptIter" value="{{models.encryptIter}}" class="form-control" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="encryptKeySize">{{ i18n('Key size') }}</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="encryptKeySize" id="encryptKeySize">
+                <option value="128"<%if(models.encryptKeySize === '128'){ %> selected<% } %>>128</option>
+                <option value="192"<%if(models.encryptKeySize === '192'){ %> selected<% } %>>192</option>
+                <option value="256"<%if(models.encryptKeySize === '256'){ %> selected<% } %>>256</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="encryptTag">{{ i18n('Authentication strength') }}</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="encryptTag" id="encryptTag">
+                <option value="64"<%if(models.encryptTag === '64'){ %> selected<% } %>>64</option>
+                <option value="96"<%if(models.encryptTag === '96'){ %> selected<% } %>>96</option>
+                <option value="128"<%if(models.encryptTag === '128'){ %> selected<% } %>>128</option>
+            </select>
+        </div>
+    </div>
+</fieldset>

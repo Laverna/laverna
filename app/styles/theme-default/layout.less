@@ -1,0 +1,79 @@
+/**
+ * Layout module
+ */
+
+// Note layout styles
+.layout--body.-note {
+    // Colors
+    background : @layout--note--bg;
+    color      : @layout--note--color;
+}
+
+.container-fluid.-note {
+    padding-left   : 30px;
+    padding-right  : 30px;
+    padding-bottom : 50px;
+}
+
+.page-header.-note {
+    margin-top    : 30px;
+    border-bottom : none;
+}
+
+/**
+ * Brand layout
+ */
+.layout--brand {
+    background : @layout--brand--bg;
+    color      : @layout--brand--color;
+}
+
+.form--icon {
+    position: relative;
+    .icon {
+        z-index   : @zindex-navbar-fixed + 1;
+        position  : absolute;
+        top       : 10px;
+        left      : 6px;
+        font-size : 20px;
+        color     : #CCC;
+    }
+    .input--icon {
+        padding-left: 30px;
+    }
+}
+
+.header--brand {
+    font-size     : @navbar-height;
+    font-variant  : small-caps;
+
+    // Margins
+    margin-top    : 0;
+    margin-bottom : 10px;
+
+    &:last-child {
+        margin-bottom: 40px;
+    }
+}
+
+.container.-auth {
+    max-width      : 400px;
+    padding-top    : 10%;
+    padding-bottom : 20px;
+}
+
+// Loading
+.layout--brand.-loading {
+    &:after {
+        &:extend(.header--brand);
+    }
+}
+
+#loading--circle {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+}

@@ -10,8 +10,8 @@ import deb from 'debug';
 import App from './App';
 
 // Utils
-import './utils/Initializer';
 import './utils/underscore';
+import './utils/i18next';
 
 const log = deb('lav:main');
 

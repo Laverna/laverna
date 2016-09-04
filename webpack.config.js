@@ -55,6 +55,12 @@ module.exports = {
                 test:  /\.html$/,
                 loader: 'raw-loader',
             },
+
+            // JSON
+            {
+                test: /\.json$/,
+                loader: 'json',
+            },
         ],
     },
 };

@@ -74,6 +74,7 @@
     "gulp-util": "^3.0.7",
     "jsdoc": "^3.4.0",
     "jsdom": "^9.4.2",
+    "json-loader": "^0.5.4",
     "merge-stream": "^1.0.0",
     "nightwatch": "^0.9.6",
     "nyc": "^8.1.0",

@@ -60,8 +60,11 @@ test('App: lazyStart() - success', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
-        t.equal(init.calledWith({names: ['App:before']}), true,
-            'starts initializers');
+        t.equal(init.calledWith(
+            {names: ['App:core', 'App:utils', 'App:components']}),
+            true,
+            'starts initializers'
+        );
         t.equal(stub.called, true, 'eventually calls start()');
         sand.restore();
         t.end();

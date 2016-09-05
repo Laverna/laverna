@@ -10,6 +10,7 @@
                 </span>
             </a>
         </li>
+
         <li class="header--col--left--search">
             <button id="header--sbtn" class="btn navbar-btn header--sbtn" title="{{i18n('Search')}}">
                 <i class="icon-search"></i>
@@ -17,10 +18,12 @@
         </li>
     </ul>
 
+
     <form id="header--search" class="header--search" role="search">
         <input id="header--search--input" class="header--search--input form-control"
             type="text" placeholder="{{i18n('Search')}}" value="{{args.query}}" />
     </form>
+
 
     <div class="navbar-right header--right navbar-btn">
         <% if (isSyncEnabled()) { %>

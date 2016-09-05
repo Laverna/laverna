@@ -1,5 +1,6 @@
 import jsdom from 'jsdom';
 import {readFileSync as read} from 'fs';
+import glob from 'glob';
 
 /**
  * Create DOM environment.
@@ -11,9 +12,9 @@ jsdom.env({
         global.window   = window;
         global.document = window.document;
 
-        require('./app');
-        require('./utils/initializer');
-        require('./utils/underscore');
-        require('./utils/i18n');
+        // Automatically require all test files
+        glob.sync(`${__dirname}/**/*.js`)
+        .filter(file => file.indexOf('index.js') === -1)
+        .forEach(file => require(file));
     },
 });

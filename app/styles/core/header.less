@@ -42,6 +42,7 @@
     background-color: transparent;
 }
 
+
 /**
  * Search form
  */
@@ -49,6 +50,13 @@
     &:extend(.navbar-form);
     display : none;
     width   : 100%;
+    position: absolute;
+    right: 0px;
+    left: auto;
+    padding-left: 160px;
+    padding-top: 45px;
+
+
 }
 .header--search--input {
 }
@@ -60,7 +68,7 @@
 .header.-search {
     .navbar-right,
     .navbar-left {
-        display: none;
+        position: relative;
     }
 
     .header--search {

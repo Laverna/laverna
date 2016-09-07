@@ -84,6 +84,13 @@ module.exports = {
         'no-case-declarations' : 2,
         'no-nested-ternary'    : 2,
         'no-unneeded-ternary'  : 2,
+
+        // Complexity
+        'max-statements': [2, 20],
+        'max-params'    : [2, 3],
+        'complexity'    : [2, 4],
+        'max-depth'     : [2, 4],
+        'max-nested-callbacks': [2, 3],
     },
 
     'globals': {

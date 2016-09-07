@@ -4,16 +4,21 @@
  */
 import FastClick from 'fastclick';
 import Hammer from 'hammerjs';
+import Promise from 'es6-promise';
 import deb from 'debug';
 
 // The core app
 import App from './App';
 
 // Utils
-import './utils/Initializer';
 import './utils/Env';
+import './utils/underscore';
+import './utils/I18n';
 
 const log = deb('lav:main');
+
+// Enable promise polyfill
+Promise.polyfill();
 
 document.addEventListener('DOMContentLoaded', () => {
     // Enable debugging

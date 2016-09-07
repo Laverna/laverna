@@ -1,0 +1,78 @@
+/**
+ * Test utils/underscore.js
+ * @file
+ */
+import test from 'tape';
+import sinon from 'sinon';
+import _ from '../../../app/scripts/utils/underscore';
+
+let sand;
+test('underscore: before()', t => {
+    sand = sinon.sandbox.create();
+    t.end();
+});
+
+test('underscore: templateSettings', t => {
+    t.equal(_.template('{{test}}')({test: 'Test'}), 'Test', 'compiles {{myVar}}');
+    t.equal(_.template('{{test}}')({test: '<b>Test</b>'}), _.escape('<b>Test</b>'),
+        'escapes special characters for {{myVar}}');
+
+    t.equal(_.template('{=test}')({test: 'Test'}), 'Test', 'compiles {=myVar}');
+    t.equal(_.template('{=test}')({test: '<b>Test</b>'}), '<b>Test</b>',
+        'does not escape characters for {=myVar}');
+
+    const tmpl = _.template('<% if (res) { %>Test<% } %>');
+    t.equal(tmpl({res: true}), 'Test', 'executes JS code');
+
+    t.end();
+});
+
+test('underscore: cleanXSS() - sanitize', t => {
+    const safeTags   = '<b>Bold</b><a href="https://laverna.cc"></a>';
+    const unsafeTags = '<b onclick="alert("yes")">Hello</b>';
+    const text = `<script>alert("yes")</script>${safeTags}${unsafeTags}`;
+
+    t.notEqual(_.cleanXSS(text), text, 'sanitizes XSS');
+    t.notEqual(_.cleanXSS(text).search(safeTags), -1,
+        'does not remove safe HTML tags');
+    t.equal(_.cleanXSS(text).search(unsafeTags), -1,
+        'removes unsafe HTML');
+
+    t.end();
+});
+
+test('underscore: cleanXSS() - unescape', t => {
+    const spy  = sand.spy(_, 'runTimes');
+    const text = _.escape('<b>Bold</b>');
+
+    t.equal(_.cleanXSS(text, true), '<b>Bold</b>', 'unescapes escaped characters');
+    t.equal(spy.called, true, 'executes _.runTimes()');
+    sand.restore();
+    t.end();
+});
+
+test('underscore: cleanXSS() - stripTags', t => {
+    const text = '<b>Bold</b>';
+    t.equal(_.cleanXSS(text, false, true), 'Bold', 'removes HTML tags');
+    t.end();
+});
+
+test('underscore: runTimes()', t => {
+    const stub = sand.stub().returns('Test');
+    t.equal(_.runTimes(stub, 2), 'Test');
+    t.equal(stub.calledTwice, true,
+        'executes a callback the specified amount of times');
+
+    const stubWith = sand.stub();
+    _.runTimes(stubWith, 2, 'hello', 'world');
+    t.equal(stubWith.calledWith('hello', 'world'), true,
+        'executes a callback with arguments');
+
+    t.end();
+});
+
+test('underscore: stripTags()', t => {
+    const text = '<b>Bold</b><script></script>';
+    t.equal(_.stripTags(text), 'Bold', 'removes HTML tags');
+    t.end();
+});

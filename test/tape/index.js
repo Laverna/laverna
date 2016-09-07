@@ -1,5 +1,9 @@
 import jsdom from 'jsdom';
 import {readFileSync as read} from 'fs';
+import glob from 'glob';
+import {LocalStorage} from 'node-localstorage';
+
+global.localStorage = new LocalStorage(`${__dirname}/../../_dev/scratch`);
 
 /**
  * Create DOM environment.
@@ -10,8 +14,11 @@ jsdom.env({
     done : (err, window) => {
         global.window   = window;
         global.document = window.document;
+        global.window.localStorage = global.localStorage;
 
-        require('./app');
-        require('./utils/initializer');
+        // Automatically require all test files
+        glob.sync(`${__dirname}/**/*.js`)
+        .filter(file => file.indexOf('index.js') === -1)
+        .forEach(file => require(file));
     },
 });

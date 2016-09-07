@@ -26,6 +26,7 @@ module.exports = {
 
     resolve: {
         alias: {
+            modernizr: path.resolve(__dirname, '.modernizrrc'),
         },
     },
 
@@ -48,6 +49,12 @@ module.exports = {
                 exclude : /(node_modules|bower_components)/,
                 loader  : 'babel',
                 query   : pkg.babel,
+            },
+
+            // Modernizr
+            {
+                test: /\.modernizrrc$/,
+                loader: 'modernizr',
             },
 
             // Templates

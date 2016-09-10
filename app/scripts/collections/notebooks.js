@@ -38,7 +38,11 @@ define([
         sortField: 'name',
 
         comparator: function(model) {
-            return -model.get(this.sortField);
+            if (this.sortField === 'name') {
+                return model.get(this.sortField);
+            } else {
+                return -model.get(this.sortField);
+            }
         },
 
         sortItOut: function() {

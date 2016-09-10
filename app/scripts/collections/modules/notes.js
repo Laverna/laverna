@@ -43,7 +43,7 @@ define([
          * @type object new values
          */
         saveModel: function(model, data, saveTags) {
-			if(saveTags == null){
+			if(saveTags === undefined || saveTags === null){
 				saveTags = true;
 			}
             var saveFunc = _.bind(ModuleObject.prototype.saveModel, this);
@@ -149,10 +149,13 @@ define([
          * @type object options
          */
         getAll: function(options) {
-            var getAll = _.bind(ModuleObject.prototype.getAll, this),
-                self   = this;
+            var getAll    = _.bind(ModuleObject.prototype.getAll, this),
+                self      = this,
+                sortField = Radio.request('configs', 'get:config', 'sortnotes');
 
             options.filter = options.filter || 'active';
+
+            this.Collection.prototype.sortField = sortField;
 
             return getAll(options)
             .then(function(collection) {

@@ -158,11 +158,12 @@ define([
         },
 
         serializeData: function() {
+            var maxNotebooks = parseInt(Radio.request('configs', 'get:config', 'navbarNotebooksMax'), 10);
             return {
                 args      : this.options.args,
                 configs   : this.collection.getConfigs(),
                 profiles  : this.options.profiles.getValueJSON(),
-                notebooks : _.first(this.options.notebooks.toJSON(), 5),
+                notebooks : _.first(this.options.notebooks.toJSON(), maxNotebooks),
                 uri       : Radio.request('uri', 'link:profile', '/'),
                 profile   : Radio.request('uri', 'profile')
             };

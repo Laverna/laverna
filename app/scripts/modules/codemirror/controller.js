@@ -17,6 +17,9 @@ define([
     'codemirror/mode/markdown/markdown',
     'codemirror/addon/edit/continuelist',
     'codemirror/addon/mode/overlay',
+    'codemirror/keymap/vim',
+    'codemirror/keymap/emacs',
+    'codemirror/keymap/sublime'
 ], function(_, $, Marionette, Radio, CodeMirror, View) {
     'use strict';
 
@@ -103,9 +106,11 @@ define([
                     name        : 'gfm',
                     gitHubSpice : false
                 },
+				keyMap: this.configs.textEditor || 'default',
                 lineNumbers   : false,
                 matchBrackets : true,
                 lineWrapping  : true,
+                indentUnit    : parseInt(this.configs.indentUnit, 10),
                 extraKeys     : {
                     'Cmd-B'  : this.boldAction,
                     'Ctrl-B' : this.boldAction,
@@ -136,7 +141,14 @@ define([
                     'Cmd-D'  : this.hrAction,
                     'Ctrl-D' : this.hrAction,
 
-                    'Enter': 'newlineAndIndentContinueMarkdownList'
+					// Ctrl+. - indent line
+					'Ctrl-.' 		: 'indentMore',
+					'Shift-Ctrl-.' 	: 'indentLess',
+					'Cmd-.' 		: 'indentMore',
+					'Shift-Cmd-.'	: 'indentLess',
+
+                    'Enter' : 'newlineAndIndentContinueMarkdownList',
+
                 }
             });
 

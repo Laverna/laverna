@@ -93,7 +93,7 @@
     "Sync": "Synkronisering",
     "Profiles": "Profiler",
     "Import": "Importer",
-    "Import & export": "Importer & exporter",
+    "Transfer data": "Importer & exporter",
     "Import settings": "Importer indstillinger",
     "Export settings": "Export indstillinger",
     "Wrong format": "Forkert format",
@@ -104,7 +104,7 @@
     "Editor": "Redigeringsvidue",
     "Preview": "Smugkig",
     "Download": "Download",
-    "Everything": "Alt",
+    "Transfer everything": "Alt",
     "encryption": {
         "wait": "Vent venligst indtil krypteringen er fuldført",
         "error": "Krypteringsfejl",

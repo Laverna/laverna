@@ -93,7 +93,7 @@
     "Sync": "Njëkohësim",
     "Profiles": "Profile",
     "Import": "Importim",
-    "Import & export": "Import & eksport",
+    "Transfer data": "Import & eksport",
     "Import settings": "Rregullime importimesh",
     "Export settings": "Rregullime eksportimesh",
     "Wrong format": "Format i gabuar",
@@ -104,7 +104,7 @@
     "Editor": "Përpunues",
     "Preview": "Paraparje",
     "Download": "Shkarkim",
-    "Everything": "Gjithçka",
+    "Transfer everything": "Gjithçka",
     "encryption": {
         "wait": "Ju lutemi, pritni deri sa të plotësohet fshehtëzimi",
         "error": "Gabim fshehtëzimi",

@@ -71,6 +71,7 @@ gulp.task('release', $.sequence(
  * ``gulp --root dist`` to serve dist folder.
  */
 gulp.task('default', $.sequence(
+    'clean:dist',
     ['css', 'html', 'bundle'],
     ['serve']
 ));

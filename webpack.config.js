@@ -19,8 +19,8 @@ module.exports = {
     },
 
     output: {
-        path       : path.join(__dirname, 'dist/scripts'),
-        publicPath : path.join(__dirname, 'dist'),
+        path       : '/scripts/',
+        publicPath : '/scripts/',
         filename   : 'main.js',
     },
 
@@ -43,6 +43,12 @@ module.exports = {
 
     module: {
         loaders: [
+            // WebWorkers
+            {
+                test: /worker\.js$/,
+                loader: 'worker',
+            },
+
             // Babel
             {
                 test    : /\.js?$/,

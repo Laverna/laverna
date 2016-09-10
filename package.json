@@ -45,9 +45,9 @@
     "i18next-xhr-backend": "^1.1.0",
     "jquery": "^3.1.0",
     "jquery-hammerjs": "^2.0.0",
+    "localforage": "^1.4.2",
     "modernizr": "^3.3.1",
     "modernizr-loader": "0.0.5",
-    "localforage": "^1.4.2",
     "underscore": "^1.8.3",
     "xss": "^0.2.13"
   },
@@ -91,7 +91,8 @@
     "sinon": "^1.17.5",
     "tape": "^4.6.0",
     "webpack": "^1.13.2",
-    "webpack-stream": "^3.2.0"
+    "webpack-stream": "^3.2.0",
+    "worker-loader": "^0.7.1"
   },
   "engines": {
     "node": ">=0.8.0"

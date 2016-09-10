@@ -68,7 +68,7 @@ To install, do the following:
 
 #### 1. Install Git
 
-This project requires that you have the latest version of git installed. To do so, see [Installing Git][14] (First-time users of git might want to check out the next section for configuring git.).
+This project requires that you have the latest version of git installed. To do so, see [Installing Git][14] (first-time users of git might want to check out the next section for configuring git).
 
 **Note:** Windows users will have to set the PATH variable for git after installing it.
 
@@ -85,9 +85,9 @@ $ git clone git@github.com:Laverna/laverna.git
 cd laverna
 ```
 
-#### 3. Ensure you have the node.js platform installed. See OS-specific instructions on their [website][8].
+**3. Ensure you have the node.js platform installed.** (See OS-specific instructions on their [website][8]).
 
-#### 4. Ensure you have the bower and gulp packages installed (locally and globally):
+**4. Ensure you have the bower and gulp packages installed** (locally and globally):
 
 ```bash
 $ npm install bower

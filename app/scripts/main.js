@@ -15,6 +15,8 @@ import './utils/Env';
 import './utils/underscore';
 import './utils/I18n';
 
+import './workers/Delegator';
+
 const log = deb('lav:main');
 
 // Enable promise polyfill

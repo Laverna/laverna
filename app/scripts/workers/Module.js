@@ -1,5 +1,4 @@
 import Radio from 'backbone.radio';
-import Modernizr from 'modernizr';
 import _ from 'underscore';
 
 /**
@@ -64,11 +63,12 @@ class Module {
     processRequest(method, args) {
         /*
          * Execute local method if:
-         * 1. WebWorkers are not supported
-         * 2. It's a WebWorker instance
+         * 1. It's a WebWorker instance
+         * 2. WebWorkers are not supported
          */
-        if (!Modernizr.webworkers ||
-            ('WorkerLocation' in window && location instanceof window.WorkerLocation)) {
+        /* global WorkerLocation */
+        if ((WorkerLocation && location instanceof WorkerLocation) ||
+            !!window.Worker) {
             return this[method].apply(this, args);
         }
 

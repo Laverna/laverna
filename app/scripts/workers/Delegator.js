@@ -150,7 +150,7 @@ class Delegator {
         // Resolve/reject a promise
         if (promise[msg.action]) {
             worker.unresolved -= 1; // eslint-disable-line
-            return promise[msg.action].apply(promise, msg.data);
+            return promise[msg.action](msg.data);
         }
 
         log('unknown action', msg);

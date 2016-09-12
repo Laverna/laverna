@@ -1,15 +1,25 @@
 import localforage from 'localforage';
 import _ from 'underscore';
+import uuid from 'uuid';
+
+import WorkerModule from '../workers/Module';
 
 /**
  * LocalForage Adapter.
  *
  * @class
  * @license MPL-2.0
+ * @extends WorkerModule
  */
-class Db {
+class Db extends WorkerModule {
+
+    get fileName() {
+        return 'models/Db';
+    }
 
     constructor() {
+        super();
+
         // Store database instances in this property
         this.dbs = {};
     }
@@ -80,9 +90,13 @@ class Db {
      * @returns {Promise}
      */
     save(options) {
-        const {data} = options;
-        data.id      = data.id || options.id;
-        return this.getDb(options).setItem(options.id, data);
+        const {data, idAttribute} = options;
+
+        // Generate a new ID if it wasn't provided
+        data[idAttribute] = (data[idAttribute] || options.id) || uuid.v1();
+
+        return this.getDb(options).setItem(data[idAttribute], data)
+        .then(() => data);
     }
 
 }

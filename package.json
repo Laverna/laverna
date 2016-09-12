@@ -49,6 +49,7 @@
     "modernizr": "^3.3.1",
     "modernizr-loader": "0.0.5",
     "underscore": "^1.8.3",
+    "uuid": "^2.0.2",
     "xss": "^0.2.13"
   },
   "devDependencies": {

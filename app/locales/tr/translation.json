@@ -12,7 +12,6 @@
     "Save & Exit": "Kaydet & Çık",
     "Cancel": "İptal",
     "Full screen": "Tam Ekran",
-    "Preview": "Önizleme",
     "Normal": "Normal",
     "Select notebook": "Not defteri seç",
     "Title": "Başlık",
@@ -104,7 +103,6 @@
     "Editor": "Editör",
     "Preview": "Önizleme",
     "Download": "İndir",
-    "Everything": "Herşey",
     "Find in page": "Sayfada ara",
     "Other": "Diğer",
     "Default": "Varsayılan",
@@ -179,7 +177,7 @@
     "help": {
         "firststart title": "Laverna'ya hoş geldin!",
         "firststart import": "Eğer daha önce Laverna kullanıysan, aşağıdaki 'veri aktara' tıklayarak önceki ayarlarını kullanabilirsin.",
-        "firststart next": "Eğer daha önce Laverna kullanıysan, 'ileri' butonuna tıklayarak yükleme işlemine bağlayabilirsin,
+        "firststart next": "Eğer daha önce Laverna kullanıysan, 'ileri' butonuna tıklayarak yükleme işlemine bağlayabilirsin",
         "firststart encryption": "Eğer şifrelemeyi kullanmak istiyorsan, lütfen şifrenizi tanımlayınız.",
         "firststart sync": "Sunucumuzda veri depolamadığımızdan beri, notlarını diğer cihazlarda görüntülemek için senkronizasyonu adaptörlerden biriyle çalışır kılman gerekiyor.",
         "firststart backup": "Herşey neredeyse hazır. Ayarlarının yedeğini indirdikten sonra sonra adıma geçebilirsin"

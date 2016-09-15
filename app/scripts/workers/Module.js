@@ -1,5 +1,8 @@
 import Radio from 'backbone.radio';
 import _ from 'underscore';
+import deb from 'debug';
+
+const log = deb('lav:workers/Module');
 
 /**
  * Worker module. All classes that use WebWorkers should use this class.
@@ -15,13 +18,17 @@ import _ from 'underscore';
  */
 class Module {
 
+    get fileName() {
+        return 'workers/module';
+    }
+
     /**
      * Radio channel for requests and events. Mandatory property.
      *
      * @returns {String}
      */
     get channelName() {
-        return 'workers/module';
+        return this.fileName;
     }
 
     /**
@@ -66,9 +73,8 @@ class Module {
          * 1. It's a WebWorker instance
          * 2. WebWorkers are not supported
          */
-        /* global WorkerLocation */
-        if ((WorkerLocation && location instanceof WorkerLocation) ||
-            !!window.Worker) {
+        if (typeof importScripts !== 'undefined' || !window.Worker) {
+            log('not using workers');
             return this[method].apply(this, args);
         }
 

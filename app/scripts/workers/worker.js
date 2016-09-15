@@ -4,6 +4,12 @@
  */
 import Db from '../models/Db';
 
+function log(...args) {
+    args.unshift('%cworkers/worker', 'color:red;background:gray');
+    // eslint-disable-next-line
+    console.log.apply(console, args);
+}
+
 /**
  * Delegate methods to classes.
  *
@@ -28,7 +34,8 @@ const delegator = {
      * @param {String} action - (resolve|reject)
      */
     postResponse(promiseId, data, action) {
-        self.postMessage({data, promiseId, action});
+        const sdata = JSON.stringify({data, promiseId, action});
+        self.postMessage(sdata);
     },
 
     /**
@@ -62,7 +69,8 @@ const delegator = {
  * @param {Object} evt
  */
 function onMessage(evt) {
-    const msg = evt.data;
+    const msg = JSON.parse(evt.data);
+    log('received a message from the main thread', msg);
 
     switch (msg.action) {
         case 'execute':
@@ -70,8 +78,7 @@ function onMessage(evt) {
             break;
 
         default:
-            // eslint-disable-next-line
-            console.log('Unhandled message from the main thread', msg);
+            log('Unhandled message from the main thread', msg);
     }
 }
 
@@ -79,5 +86,10 @@ function onMessage(evt) {
  * @event worker#message
  */
 self.addEventListener('message', evt => onMessage(evt));
+
+/**
+ * @event worker#error
+ */
+self.addEventListener('error', err => log('error', err));
 
 export default {delegator, onMessage};

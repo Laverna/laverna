@@ -26,15 +26,12 @@ class Delegator {
     /**
      * @param {Object} options = {}
      * @listens worker/Delegator#execute
-     * @fires worker/Delegator#init
      */
     constructor(options = {}) {
         log('initialized');
 
         this.options  = options;
         this.promises = [];
-
-        this.spawnWorkers();
 
         // Start listening to requests
         this.channel.reply({
@@ -55,6 +52,7 @@ class Delegator {
      * @returns {Promise}
      */
     delegateMethod(data) {
+        log(`delegating method '${data.method}' to workers`);
         return this.postMessage('execute', data);
     }
 
@@ -78,7 +76,8 @@ class Delegator {
 
             // Post the message to the worker
             const promiseId = this.promises.length - 1;
-            worker.instance.postMessage({action, data, promiseId});
+            const sdata  = JSON.stringify({action, promiseId, data});
+            worker.instance.postMessage(sdata);
         });
     }
 
@@ -102,7 +101,7 @@ class Delegator {
      *
      * @listens Worker#message
      * @listens Worker#error
-     * @returns {Object} WebWorker instance
+     * @returns {Object} worker instance
      */
     spawnWorker() {
         /**
@@ -138,13 +137,29 @@ class Delegator {
      * @param {Event} evt
      */
     onMessage(worker, evt) {
-        const msg = evt.data;
+        const msg = JSON.parse(evt.data);
 
-        if (!msg.promiseId || !msg.action) {
-            log('received a message without promiseId or action', msg);
-            return;
+        switch (msg.action) {
+            case 'resolve':
+                this.onPromise(worker, msg);
+                break;
+
+            case 'reject':
+                this.onPromise(worker, msg);
+                break;
+
+            default:
+                log('unhandled message from a worker', msg);
         }
+    }
 
+    /**
+     * Resolve/reject a promise.
+     *
+     * @param {Object} worker - Worker instance
+     * @param {Object} msg - Message posted by a worker.
+     */
+    onPromise(worker, msg) {
         const promise = this.getPromise(msg.promiseId);
 
         // Resolve/reject a promise
@@ -152,8 +167,6 @@ class Delegator {
             worker.unresolved -= 1; // eslint-disable-line
             return promise[msg.action](msg.data);
         }
-
-        log('unknown action', msg);
     }
 
     /**
@@ -209,7 +222,7 @@ const initializer = () => {
         return false;
     }
 
-    return new Delegator();
+    return new Delegator().spawnWorkers();
 };
 
 Radio.once('App', 'init', () => {

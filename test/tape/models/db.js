@@ -6,11 +6,10 @@ import test from 'tape';
 import sinon from 'sinon';
 import localforage from 'localforage';
 
-import Db from '../../../app/scripts/utils/Db';
+import Db from '../../../app/scripts/models/Db';
 
 let sand;
-const options = {profile: 'test', storeName: 'tests'};
-test('Initializer: before()', t => {
+test('Db: before()', t => {
     sand = sinon.sandbox.create();
     localStorage.clear();
     t.end();
@@ -19,6 +18,12 @@ test('Initializer: before()', t => {
 test('Db: constructor()', t => {
     const db = new Db();
     t.equal(typeof db.dbs, 'object', 'creates dbs property');
+    t.end();
+});
+
+test('Db: fileName()', t => {
+    const db = new Db();
+    t.equal(db.fileName, 'models/Db', 'returns relative path');
     t.end();
 });
 
@@ -36,8 +41,8 @@ test('Db: getDb()', t => {
 });
 
 test('Db: getDb() - old instance', t => {
-    const db  = new Db();
-    const spy = sand.spy(localforage, 'createInstance');
+    const db       = new Db();
+    const spy      = sand.spy(localforage, 'createInstance');
     const instance = {test: 1};
     db.dbs['test/tests'] = instance;
 
@@ -54,7 +59,7 @@ test('Db: findItem()', t => {
     const stub = sand.stub().returns(Promise.resolve());
     sand.stub(db, 'getDb').returns({getItem: stub});
 
-    const opt = Object.assign(options, {id: 'test-id'});
+    const opt = {storeName: 'findItem', profile: 'test', id: 'test-id'};
     const res = db.findItem(opt);
 
     t.equal(db.getDb.calledWith(opt), true, 'gets a localforage instance first');
@@ -68,7 +73,7 @@ test('Db: findItem()', t => {
 test('Db: find()', t => {
     const db  = new Db();
     const spy = sand.spy(db, 'getDb');
-    const opt = Object.assign(options, {});
+    const opt = {storeName: 'find', profile: 'test', id: '1'};
     const res = db.find(opt);
 
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -85,15 +90,12 @@ test('Db: find()', t => {
 test('Db: save()', t => {
     const db  = new Db();
     const spy = sand.spy(db, 'getDb');
-    const opt = Object.assign(options, {
-        id        : 'test-id-1',
-        data      : {title: 'Test id'},
-    });
+    const opt = {storeName: 'save', profile: 'test', id: '1'};
 
-    const res = db.save(opt);
+    const res = db.save(Object.assign({data: {t: '1'}}, opt));
 
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(spy.calledWith(opt), true, 'gets a localforage instance');
+    t.equal(spy.calledWithMatch(opt), true, 'gets a localforage instance');
 
     res.then(() => {
         sand.restore();
@@ -101,43 +103,61 @@ test('Db: save()', t => {
     });
 });
 
-test('Db: findItem() - can find', t => {
-    const db   = new Db();
-    const data = {title: 'Test id'};
+test('Db: save() - generates ID if it is empty', t => {
+    const db  = new Db();
+    const opt = {storeName: 'save-generate-id', profile: 'test'};
 
-    db.save(Object.assign(options, {data, id: '1'}))
-    .then(() => db.findItem(Object.assign(options, {id: '1'})))
+    db.save(Object.assign({data: {title: 'Test'}}, opt))
+    .then(data => {
+        t.equal(typeof data.id, 'string', 'ID is not empty');
+        t.equal(data.id.length >= 32, true, 'contains at least 32 characters');
+        t.end();
+    });
+});
+
+test('Db: findItem() - can find', t => {
+    const db  = new Db();
+    const opt = {storeName: 'findItem-can-find', profile: 'test', id: '1'};
+
+    db.save(Object.assign({data: {title: 'Test'}}, opt))
+    .then(() => db.findItem(opt))
     .then(res => {
+        t.comment(`res ${res}`);
         t.equal(typeof res, 'object', 'resolves with an object');
-        t.equal(res.title, data.title, 'has a title');
+        t.equal(res.title, 'Test', 'has a title');
         t.equal(res.id, '1', 'has an ID');
         t.end();
     });
 });
 
 test('Db: find() - can find', t => {
-    const db   = new Db();
-    const data = {title: 'Test id'};
+    const db  = new Db();
+    const opt = {storeName: 'find-can-find', profile: 'test'};
 
-    db.save(Object.assign(options, {data, id: '1'}))
-    .then(() => db.find(Object.assign(options, {})))
+    Promise.all([
+        db.save(Object.assign({data: {fav: 'no'}, id: '1'}, opt)),
+        db.save(Object.assign({data: {fav: 'no'}, id: '2'}, opt)),
+        db.save(Object.assign({data: {fav: 'no'}, id: '3'}, opt)),
+    ])
+    .then(() => db.find(opt))
     .then(res => {
+        t.comment(`length is ${res.length}`);
         t.equal(Array.isArray(res), true, 'resolves with an array');
-        t.equal(res.length > 0, true, 'the array is not empty');
+        t.equal(res.length, 3, 'the array is not empty');
         t.end();
     });
 });
 
 test('Db: find() - filters the results', t => {
-    const db   = new Db();
-    const data = {title: 'Test id', isFav: true};
+    const db  = new Db();
+    const opt = {storeName: 'find-filters', profile: 'test'};
 
     Promise.all([
-        db.save(Object.assign(options, {data, id: 'f1'})),
-        db.save(Object.assign(options, {data, id: 'f2'})),
-        db.save(Object.assign(options, {data: {}, id: 'f3'})),
+        db.save(Object.assign({data: {isFav: true}, id: '1'}, opt)),
+        db.save(Object.assign({data: {isFav: true}, id: '2'}, opt)),
+        db.save(Object.assign({data: {title: 'yes'}, id: '3'}, opt)),
     ])
-    .then(() => db.find(Object.assign(options, {conditions: {isFav: true}})))
+    .then(() => db.find(Object.assign({conditions: {isFav: true}}, opt)))
     .then(res => {
         t.equal(Array.isArray(res), true, 'resolves with an array');
         t.comment(`result length is: ${res.length}`);
@@ -152,5 +172,6 @@ test('Db: find() - filters the results', t => {
 
 test('Db: after()', t => {
     localStorage.clear();
+    sand.restore();
     t.end();
 });

@@ -49,7 +49,7 @@ define([
                     done();
                     return [];
                 });
-                controller.filter({filter: 'favourite'});
+                controller.filter({filter: 'favorite'});
             });
 
             it('event `navigate` on `global` channel', function(done) {

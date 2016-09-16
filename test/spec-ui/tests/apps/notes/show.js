@@ -43,8 +43,8 @@ module.exports = {
         client.expect.element('.note--remove').to.be.visible.before(2000);
     },
 
-    'shows "favourite" button': function(client) {
-        client.expect.element('.btn--favourite').to.be.visible.before(2000);
+    'shows "favorite" button': function(client) {
+        client.expect.element('.btn--favorite').to.be.visible.before(2000);
     },
 
     'has tasks': function(client) {
@@ -89,11 +89,11 @@ module.exports = {
         .expect.element('.modal-dialog').not.to.be.present.before(2000);
     },
 
-    'changes favourite status if the button is clicked': function(client) {
+    'changes favorite status if the button is clicked': function(client) {
         client
-        .click('.btn--favourite')
+        .click('.btn--favorite')
         .pause(300)
-        .expect.element('.btn--favourite--icon').to.have.attribute('class').which.contains('icon-favorite');
+        .expect.element('.btn--favorite--icon').to.have.attribute('class').which.contains('icon-favorite');
     },
 
     'opens edit page if "e" is pressed': function(client) {

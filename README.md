@@ -131,7 +131,7 @@ Please have a look in our [wiki][15].
 
 ###Coding Style Guidelines
 
-For those wanting to contribute code, we ask that you use either plain JavaScript or the Marionette.js framework. (For more details on the preferred coding style see [.editorconfig](https://github.com/Laverna/laverna/blob/master/.editorconfig)). Also, all experimental changes are being pushed on the **dev** branch, so any feature changes are preferred to be done on either this branch or a branch that uses the dev branch as its parent.  
+For those wanting to contribute code, we ask that you use either plain JavaScript or the Marionette.js framework. (For more details on the preferred coding style see [.editorconfig](https://github.com/Laverna/laverna/blob/master/.editorconfig)). Also, all experimental changes are being pushed on the **dev** branch, so any feature changes are preferred to be done on either this branch or a branch that uses the dev branch as its parent.
 
 
 ## Donation:

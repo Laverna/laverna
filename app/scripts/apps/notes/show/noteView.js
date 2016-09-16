@@ -41,7 +41,7 @@ define([
         },
 
         ui: {
-            favorite : '.btn--favourite--icon',
+            favorite : '.btn--favorite--icon',
             body     : '.-scroll',
 
             // Tasks
@@ -55,7 +55,7 @@ define([
         },
 
         events: {
-            'click .btn--favourite' : 'favorite',
+            'click .btn--favorite' : 'favorite',
             'click @ui.tasks'       : 'onClickTask',
             'click @ui.rmBtn'       : 'rmNote'
         },

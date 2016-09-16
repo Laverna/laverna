@@ -66,7 +66,7 @@ class Config extends Model {
      * @returns {Boolean}
      */
     isPassword(data) {
-        return this.get('name') === 'encryptsPass' || data.name === 'encryptPass';
+        return this.get('name') === 'encryptPass' || data.name === 'encryptPass';
     }
 
     /**

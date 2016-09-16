@@ -38,9 +38,12 @@
     <label class="col-sm-2 control-label" for="sortnotes">{{ i18n('Sort notes') }}</label>
     <div class="col-sm-10">
         <select id="sortnotes" class="form-control" name="sortnotes" checked="{{models.sortnotes}}">
-            <option value="created">{{ i18n('Created') }}</option>
+            <option value="created">{{ i18n('Created date') }}</option>
             <option value="updated" <%if(models.sortnotes === 'updated'){%>selected<%}%>>
-            {{ i18n('Updated') }}
+            {{ i18n('Updated date') }}
+            </option>
+            <option value="title" <%if(models.sortnotes === 'title'){%>selected<%}%>>
+            {{ i18n('Title') }}
             </option>
         </select>
     </div>
@@ -52,19 +55,15 @@
         <select id="sortnotebooks" class="form-control" name="sortnotebooks" checked="{{models.sortnotebooks}}">
             <option value="name">{{ i18n('Name') }}</option>
             <option value="created" <%if(models.sortnotebooks === 'created'){%>selected<%}%>>
-            {{ i18n('Created') }}
+            {{ i18n('Created date') }}
             </option>
         </select>
     </div>
 </div>
 
 <div class="form-group">
-    <label class="col-sm-2 control-label" for="editMode">{{ i18n('Default edit mode') }}</label>
+    <label class="col-sm-2 control-label" for="navbarNotebooksMax">{{ i18n('Notebooks in drawer') }}</label>
     <div class="col-sm-10">
-        <select id="editMode" class="form-control" name="editMode" checked="{{models.editMode}}">
-            <option value="normal">{{ i18n('Normal') }}</option>
-            <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>{{ i18n('Fullscreen') }}</option>
-            <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>{{ i18n('Fullscreen with preview') }}</option>
-        </select>
+        <input type="number" id="navbarNotebooksMax" name="navbarNotebooksMax" value="{{models.navbarNotebooksMax}}" class="form-control" >
     </div>
 </div>

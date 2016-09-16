@@ -10,7 +10,7 @@ import Db from './Db';
  * @example
  * class MyModel extend Backbone.Model {
  *     get sync() {
- *         return Sync.set();
+ *         return Sync.use();
  *     }
  * }
  */
@@ -31,7 +31,7 @@ class Sync {
      * @static
      * @returns {Function}
      */
-    static set() {
+    static use() {
         const sync = new Sync();
         return _.bind(sync.sync, sync);
     }

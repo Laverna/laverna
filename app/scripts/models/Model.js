@@ -16,7 +16,7 @@ class Model extends BModel {
      * @returns {Function}
      */
     get sync() {
-        return Sync.set();
+        return Sync.use();
     }
 
     /**

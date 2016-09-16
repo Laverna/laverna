@@ -92,4 +92,4 @@ self.addEventListener('message', evt => onMessage(evt));
  */
 self.addEventListener('error', err => log('error', err));
 
-export default {delegator, onMessage};
+export {delegator, onMessage};

@@ -90,7 +90,8 @@ class Db extends WorkerModule {
      * @returns {Promise}
      */
     save(options) {
-        const {data, idAttribute} = options;
+        const {data}      = options;
+        const idAttribute = options.idAttribute || 'id';
 
         // Generate a new ID if it wasn't provided
         data[idAttribute] = (data[idAttribute] || options.id) || uuid.v1();

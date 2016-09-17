@@ -40,22 +40,8 @@ class Config extends Model {
         return 'configs';
     }
 
-    /**
-     * Validate the model.
-     *
-     * @param {Object} attributes
-     * @returns {(Array|)} - return array of validation errors
-     */
-    validate(attributes) {
-        const errors = [];
-
-        if (attributes.name === '') {
-            errors.push('name');
-        }
-
-        if (errors.length > 0) {
-            return errors;
-        }
+    get validateAttributes() {
+        return ['name'];
     }
 
     /**

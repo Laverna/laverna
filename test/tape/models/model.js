@@ -31,3 +31,52 @@ test('Model: profileId() - set', t => {
 
     t.end();
 });
+
+test('Model: validateAttributes()', t => {
+    const model = new Model();
+    t.equal(Array.isArray(model.validateAttributes), true, 'is an array');
+    t.end();
+});
+
+test('Model: escapeAttributes()', t => {
+    const model = new Model();
+    t.equal(Array.isArray(model.escapeAttributes), true, 'is an array');
+    t.end();
+});
+
+test('Model: validate()', t => {
+    const model = new Model();
+    Object.defineProperty(model, 'validateAttributes', {
+        get: () => {
+            return ['title'];
+        },
+    });
+
+    t.equal(model.validate({trash: 2}), undefined,
+        'returns undefined if trash is equal to 2');
+
+    t.equal(Array.isArray(model.validate({title: ''})), true,
+        'returns an array if validation failed');
+
+    t.equal(model.validate({title: 'Test'}), undefined,
+        'returns undefined if there are no errors');
+
+    t.end();
+});
+
+test('Model: setEscape()', t => {
+    const model = new Model();
+    Object.defineProperty(model, 'escapeAttributes', {
+        get: () => {
+            return ['title'];
+        },
+    });
+
+    model.setEscape({title: 'Test<script></script>', name: 'Test'});
+    t.notEqual(model.get('title'), 'Test<script></script>', 'filters XSS');
+
+    model.setEscape({title: '', name: 'Test'});
+    t.equal(model.get('title'), '', 'does nothing if an attribute is empty');
+
+    t.end();
+});

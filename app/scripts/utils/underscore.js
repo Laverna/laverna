@@ -78,6 +78,16 @@ _.mixin({
         return str.replace(/<\/?[^>]+>/g, '');
     },
 
+    /**
+     * Convert the first letter of a string to uppercase.
+     *
+     * @param {String} str
+     * @returns {String}
+     */
+    capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+
 });
 
 export default _;

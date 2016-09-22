@@ -76,3 +76,9 @@ test('underscore: stripTags()', t => {
     t.equal(_.stripTags(text), 'Bold', 'removes HTML tags');
     t.end();
 });
+
+test('Underscore: capitalize()', t => {
+    t.equal(_.capitalize('hello world'), 'Hello world',
+        'Convert the first letter of a string to uppercase');
+    t.end();
+});

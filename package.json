@@ -40,6 +40,7 @@
     "device-detect.js": "^0.2.7",
     "es6-promise": "^3.2.1",
     "fastclick": "^1.0.6",
+    "fuse.js": "^2.5.0",
     "hammerjs": "^2.0.8",
     "i18next": "^3.4.1",
     "i18next-xhr-backend": "^1.1.0",

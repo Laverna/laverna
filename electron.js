@@ -7,8 +7,9 @@ const electron        = require('electron'),
 
 const {app, BrowserWindow, Menu, Tray, protocol} = electron;
 
-let argv = require('minimist')(process.argv.slice(1)),
-    win  = null,
+let argv        = require('minimist')(process.argv.slice(1)),
+    contextMenu = require('electron-context-menu')({}),
+    win         = null,
     appHelper;
 
 // Show command line help

@@ -1,4 +1,9 @@
+/**
+ * @module collections/Collection
+ */
 import Backbone from 'backbone';
+import Radio from 'backbone.radio';
+import _ from 'underscore';
 import Sync from '../models/Sync';
 
 /**
@@ -8,7 +13,7 @@ import Sync from '../models/Sync';
  * @extends Backbone.Collection
  * @license MPL-2.0
  */
-class Collection extends Backbone.Collection {
+export default class Collection extends Backbone.Collection {
 
     /**
      * Override Backbone.sync.
@@ -47,6 +52,28 @@ class Collection extends Backbone.Collection {
         return this.model.prototype.storeName;
     }
 
-}
+    /**
+     * Radio channel.
+     *
+     * @returns {Object}
+     */
+    get channel() {
+        const name = _.capitalize(this.storeName);
+        return Radio.channel(`collections/${name}`);
+    }
 
-export default Collection;
+    /**
+     * @param {Array} models
+     * @param {Object} options = {}
+     * @param {String} (options.sortField) - field by which notebooks will be sorted
+     * @param {String} (options.sortDirection) - (asc|desc)
+     * @param {String} (options.profileId) - profile ID
+     */
+    constructor(models, options = {}) {
+        super(models, options);
+
+        this.options   = options;
+        this.profileId = options.profileId;
+    }
+
+}

@@ -20,7 +20,7 @@ const delegator = {
     /**
      * Holds class instances with their relative paths.
      *
-     * @property
+     * @param {Object}
      */
     modules: {
         'models/Db': new Db(),

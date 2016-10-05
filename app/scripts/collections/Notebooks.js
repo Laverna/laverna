@@ -1,3 +1,7 @@
+/**
+ * @module collections/Notebooks
+ * @license MPL-2.0
+ */
 import _ from 'underscore';
 import Pageable from './Pageable';
 import Notebook from '../models/Notebook';
@@ -6,10 +10,10 @@ import Notebook from '../models/Notebook';
  * Notebooks collection.
  *
  * @class
- * @extends Pageable
+ * @extends module:collections/Pageable
  * @license MPL-2.0
  */
-class Notebooks extends Pageable {
+export default class Notebooks extends Pageable {
 
     get model() {
         return Notebook;
@@ -38,22 +42,11 @@ class Notebooks extends Pageable {
         };
     }
 
-    constructor(options) {
-        super(options);
+    constructor(...args) {
+        super(...args);
 
         // Disable pagination
         this.pagination = {perPage: 0};
-    }
-
-    /**
-     * Initialize.
-     *
-     * @param {Object} options
-     * @param {String} (options.sortField) - field by which notebooks will be sorted
-     * @param {String} (options.sortDirection) - (asc|desc)
-     */
-    initialize(options) {
-        this.options = options;
     }
 
     /**
@@ -121,5 +114,3 @@ class Notebooks extends Pageable {
     }
 
 }
-
-export default Notebooks;

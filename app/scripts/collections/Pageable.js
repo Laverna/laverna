@@ -1,25 +1,17 @@
+/**
+ * @module collections/Pageable
+ */
 import Collection from './Collection';
 import _ from 'underscore';
-import Radio from 'backbone.radio';
 
 /**
  * Add pagination support to Backbone collections.
  *
  * @class
- * @extends Collection
+ * @extends module:collections/Collection
  * @license MPL-2.0
  */
-class Pageable extends Collection {
-
-    /**
-     * Radio channel.
-     *
-     * @returns {Object}
-     */
-    get channel() {
-        const name = _.capitalize(this.storeName);
-        return Radio.channel(`collections/${name}`);
-    }
+export default class Pageable extends Collection {
 
     /**
      * Sort collection models by multiple fields.
@@ -42,8 +34,8 @@ class Pageable extends Collection {
         this._comparators = options;
     }
 
-    constructor(options = {}) {
-        super(options);
+    constructor(...args) {
+        super(...args);
 
         /**
          * Pagination settings.
@@ -158,9 +150,12 @@ class Pageable extends Collection {
     /**
      * After a model was updated/added, re-sort the collection.
      *
-     * @param {Object} model - Backbone model
+     * @param {Object} data
+     * @param {Object} data.model - Backbone model
      */
-    onUpdateModel(model) {
+    onUpdateModel(data) {
+        const {model} = data;
+
         // Don't add models from other profiles
         if (this.profileId !== model.profileId) {
             return;
@@ -170,7 +165,7 @@ class Pageable extends Collection {
          * the current filter condition.
          */
         if (!model.matches(this.currentCondition || {trash: 0})) {
-            return this.onDestroyModel(model);
+            return this.onDestroyModel({model});
         }
 
         return this.updateCollectionModel();
@@ -200,23 +195,24 @@ class Pageable extends Collection {
     /**
      * Remove a model from the collection after it is destroyed.
      *
-     * @param {Object} model - Backbone model.
+     * @param {Object} data
+     * @param {Object} data.model - Backbone model.
      */
-    onDestroyModel(model) {
-        const collection      = this.fullCollection || this;
-        const collectionModel = collection.get(model.id);
+    onDestroyModel(data) {
+        const collection = this.fullCollection || this;
+        const model      = collection.get(data.model.id);
 
         // Do nothing if the model doesn't exist in the collection
-        if (!collectionModel) {
+        if (!model) {
             return false;
         }
 
         // Remove the model from the collection and re-sort
-        collection.remove(collectionModel);
+        collection.remove(model);
         this.paginate();
 
         // Navigate to the previous model
-        this.navigateOnRemove(collectionModel);
+        this.navigateOnRemove(model);
     }
 
     /**
@@ -246,17 +242,18 @@ class Pageable extends Collection {
     /**
      * A model was restored from trash.
      *
-     * @param {Object} model - Backbone model
+     * @param {Object} data
+     * @param {Object} data.model - Backbone model
      */
-    onRestoreModel(model) {
+    onRestoreModel(data) {
         if (this.conditionFilter !== 'trashed') {
-            this.onUpdateModel(model);
+            this.onUpdateModel(data);
         }
         /* If the filter condition is equal to trashed,
          * remove the model from the collection.
          */
         else if (this.length > 1) {
-            this.onDestroyModel(model);
+            this.onDestroyModel(data);
         }
     }
 
@@ -392,5 +389,3 @@ class Pageable extends Collection {
     }
 
 }
-
-export default Pageable;

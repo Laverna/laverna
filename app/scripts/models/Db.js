@@ -1,3 +1,6 @@
+/**
+ * @module models/Db
+ */
 import localforage from 'localforage';
 import _ from 'underscore';
 import uuid from 'uuid';
@@ -9,9 +12,9 @@ import WorkerModule from '../workers/Module';
  *
  * @class
  * @license MPL-2.0
- * @extends WorkerModule
+ * @extends module:workers/Module
  */
-class Db extends WorkerModule {
+export default class Db extends WorkerModule {
 
     get fileName() {
         return 'models/Db';
@@ -33,12 +36,12 @@ class Db extends WorkerModule {
      * @returns {Object} localforage instance
      */
     getDb(options) {
-        const {profile, storeName} = options;
-        const id = `${profile}/${storeName}`;
+        const {profileId, storeName} = options;
+        const id = `${profileId}/${storeName}`;
 
         this.dbs[id] = this.dbs[id] || localforage.createInstance({
             storeName,
-            name: profile,
+            name: profileId,
         });
 
         return this.dbs[id];
@@ -48,7 +51,7 @@ class Db extends WorkerModule {
      * Find an item by id.
      *
      * @param {Object} options
-     * @param {String} options.profile - used for setting database name
+     * @param {String} options.profileId - used for setting database name
      * @param {String} options.storeName - notes, tags, notebooks, etc
      * @param {String} options.id - ID of an item.
      * @returns {Promise}
@@ -61,7 +64,7 @@ class Db extends WorkerModule {
      * Find several items.
      *
      * @param {Object} options
-     * @param {String} options.profile - used for setting database name
+     * @param {String} options.profileId - used for setting database name
      * @param {String} options.storeName - notes, tags, notebooks, etc
      * @param {Object} [options.conditions] - conditions which should be met.
      * It will filter items by those conditions.
@@ -83,7 +86,7 @@ class Db extends WorkerModule {
      * Save an item.
      *
      * @param {Object} options
-     * @param {String} options.profile - used for setting database name
+     * @param {String} options.profileId - used for setting database name
      * @param {String} options.storeName - notes, tags, notebooks, etc
      * @param {String} options.id - id of an item
      * @param {Object} options.data - data that should be saved
@@ -101,5 +104,3 @@ class Db extends WorkerModule {
     }
 
 }
-
-export default Db;

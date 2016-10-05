@@ -1,3 +1,6 @@
+/**
+ * @module models/Model
+ */
 import {Model as BModel} from 'backbone';
 import Sync from './Sync';
 import _ from 'underscore';
@@ -9,7 +12,7 @@ import _ from 'underscore';
  * @extends BModel Backbone model
  * @license MPL-2.0
  */
-class Model extends BModel {
+export default class Model extends BModel {
 
     /**
      * Override Backbone.sync.
@@ -56,6 +59,13 @@ class Model extends BModel {
         return [];
     }
 
+    constructor(data, options = {}) {
+        super(data, options);
+
+        // Set profile id
+        this.profileId = options.profileId;
+    }
+
     /**
      * Validate a model.
      *
@@ -89,7 +99,7 @@ class Model extends BModel {
      * @returns {Object} this
      */
     setEscape(attrs) {
-        const data = attrs;
+        const data = _.pick(attrs, _.keys(this.defaults));
 
         // Filter from XSS
         _.each(this.escapeAttributes, attr => {
@@ -100,9 +110,22 @@ class Model extends BModel {
 
         // Set new attributes
         this.set(data);
+        this.setDate();
+
         return this;
     }
 
-}
+    /**
+     * Set the time when a model was updated/created.
+     */
+    setDate() {
+        // Do nothing if the model doesn't have date fields
+        if (_.isUndefined(this.defaults.created)) {
+            return;
+        }
 
-export default Model;
+        this.set('updated', Date.now());
+        this.set('created', this.get('created') || Date.now());
+    }
+
+}

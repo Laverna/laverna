@@ -1,3 +1,6 @@
+/**
+ * @module collections/Tags
+ */
 import Pageable from './Pageable';
 import Tag from '../models/Tag';
 
@@ -5,10 +8,10 @@ import Tag from '../models/Tag';
  * Tags collection.
  *
  * @class
- * @extends Pageable
+ * @extends module:collections/Pageable
  * @license MPL-2.0
  */
-class Tags extends Pageable {
+export default class Tags extends Pageable {
 
     get model() {
         return Tag;
@@ -36,11 +39,11 @@ class Tags extends Pageable {
         };
     }
 
-    constructor(options = {}) {
-        super(options);
+    constructor(...args) {
+        super(...args);
 
         // Change the number of tags shown per page
-        this.pagination.perPage = options.perPage || 20;
+        this.pagination.perPage = this.options.perPage || 20;
     }
 
     /**
@@ -71,5 +74,3 @@ class Tags extends Pageable {
     }
 
 }
-
-export default Tags;

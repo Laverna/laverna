@@ -1,3 +1,6 @@
+/**
+ * @module collections/Notes
+ */
 import _ from 'underscore';
 import Fuse from 'fuse.js';
 import Pageable from './Pageable';
@@ -7,10 +10,10 @@ import Note from '../models/Note';
  * Notes collection.
  *
  * @class
- * @extends Pageable
+ * @extends module:collections/Pageable
  * @license MPL-2.0
  */
-class Notes extends Pageable {
+export default class Notes extends Pageable {
 
     get model() {
         return Note;
@@ -45,22 +48,11 @@ class Notes extends Pageable {
         };
     }
 
-    constructor(options = {}) {
-        super(options);
+    constructor(...args) {
+        super(...args);
 
         // Change the number of models shown per page
-        this.pagination.perPage = options.perPage || 10;
-    }
-
-    /**
-     * Initialize.
-     *
-     * @param {Object} options
-     * @param {String} (options.sortField) - field by which notebooks will be sorted
-     * @param {String} (options.sortDirection) - (asc|desc)
-     */
-    initialize(options) {
-        this.options = options;
+        this.pagination.perPage = this.options.perPage || 10;
     }
 
     /**
@@ -146,5 +138,3 @@ class Notes extends Pageable {
     }
 
 }
-
-export default Notes;

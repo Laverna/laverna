@@ -1,3 +1,6 @@
+/**
+ * @module models/Sync
+ */
 import _ from 'underscore';
 import Db from './Db';
 
@@ -14,7 +17,7 @@ import Db from './Db';
  *     }
  * }
  */
-class Sync {
+export default class Sync {
 
     /**
      * Database instance.
@@ -51,7 +54,7 @@ class Sync {
      */
     sync(method, model, options = {}) {
         const opt = _.extend({
-            profile     : model.profileId,
+            profileId   : model.profileId,
             storeName   : model.storeName,
         }, options);
 
@@ -142,5 +145,3 @@ class Sync {
     }
 
 }
-
-export default Sync;

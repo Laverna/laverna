@@ -42,7 +42,7 @@ test('Notes: comparators', t => {
     t.equal(comparators.created, 'desc', 'uses the default comparator');
     t.equal(comparators.isFavorite, 'desc', 'uses isFavorite comparator');
 
-    const notes = new Notes({sortField: 'updated', sortDirection: 'asc'});
+    const notes = new Notes(null, {sortField: 'updated', sortDirection: 'asc'});
     t.equal(notes.comparators.updated, 'asc', 'uses options');
     t.equal(notes.comparators.isFavorite, 'desc');
 
@@ -53,7 +53,7 @@ test('Notes: constructor()', t => {
     t.equal(new Notes().pagination.perPage, 10,
         'changes the number of models shown per page');
 
-    t.equal(new Notes({perPage: 11}).pagination.perPage, 11,
+    t.equal(new Notes(null, {perPage: 11}).pagination.perPage, 11,
         'uses perPage parameter');
 
     t.end();

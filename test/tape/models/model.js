@@ -71,12 +71,34 @@ test('Model: setEscape()', t => {
             return ['title'];
         },
     });
+    Object.defineProperty(model, 'defaults', {
+        get: () => {
+            return {title: ''};
+        },
+    });
 
     model.setEscape({title: 'Test<script></script>', name: 'Test'});
     t.notEqual(model.get('title'), 'Test<script></script>', 'filters XSS');
 
     model.setEscape({title: '', name: 'Test'});
     t.equal(model.get('title'), '', 'does nothing if an attribute is empty');
+
+    t.end();
+});
+
+test('Model: setDate()', t => {
+    const model = new Model();
+    Object.defineProperty(model, 'defaults', {
+        get: () => {
+            return {created: 0, updated: 0};
+        },
+    });
+
+    model.setDate();
+    t.equal(typeof model.get('updated'), 'number',
+        'changes "updated" attribute');
+    t.equal(typeof model.get('created'), 'number',
+        'changes "created" attribute');
 
     t.end();
 });

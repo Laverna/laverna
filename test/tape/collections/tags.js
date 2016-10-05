@@ -27,7 +27,7 @@ test('Tags: conditions', t => {
 
 test('Tags: constructor()', t => {
     t.equal(new Tags().pagination.perPage, 20, 'uses the default perPage settings');
-    t.equal(new Tags({perPage: 12}).pagination.perPage, 12,
+    t.equal(new Tags(null, {perPage: 12}).pagination.perPage, 12,
         'uses the perPage option');
     t.end();
 });

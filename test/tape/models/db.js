@@ -31,7 +31,7 @@ test('Db: getDb()', t => {
     const db  = new Db();
     const spy = sand.spy(localforage, 'createInstance');
 
-    const res = db.getDb({profile: 'test', storeName: 'tests'});
+    const res = db.getDb({profileId: 'test', storeName: 'tests'});
     t.equal(spy.calledWith({name: 'test', storeName: 'tests'}), true,
         'creates a new localforage instance');
     t.equal(typeof res, 'object', 'returns localforage instance');
@@ -46,7 +46,7 @@ test('Db: getDb() - old instance', t => {
     const instance = {test: 1};
     db.dbs['test/tests'] = instance;
 
-    const res = db.getDb({profile: 'test', storeName: 'tests'});
+    const res = db.getDb({profileId: 'test', storeName: 'tests'});
     t.equal(spy.notCalled, true, 'does not create a new instance');
     t.equal(res, instance, 'uses an existing instance');
 
@@ -59,7 +59,7 @@ test('Db: findItem()', t => {
     const stub = sand.stub().returns(Promise.resolve());
     sand.stub(db, 'getDb').returns({getItem: stub});
 
-    const opt = {storeName: 'findItem', profile: 'test', id: 'test-id'};
+    const opt = {storeName: 'findItem', profileId: 'test', id: 'test-id'};
     const res = db.findItem(opt);
 
     t.equal(db.getDb.calledWith(opt), true, 'gets a localforage instance first');
@@ -73,7 +73,7 @@ test('Db: findItem()', t => {
 test('Db: find()', t => {
     const db  = new Db();
     const spy = sand.spy(db, 'getDb');
-    const opt = {storeName: 'find', profile: 'test', id: '1'};
+    const opt = {storeName: 'find', profileId: 'test', id: '1'};
     const res = db.find(opt);
 
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -90,7 +90,7 @@ test('Db: find()', t => {
 test('Db: save()', t => {
     const db  = new Db();
     const spy = sand.spy(db, 'getDb');
-    const opt = {storeName: 'save', profile: 'test', id: '1'};
+    const opt = {storeName: 'save', profileId: 'test', id: '1'};
 
     const res = db.save(Object.assign({data: {t: '1'}}, opt));
 
@@ -105,7 +105,7 @@ test('Db: save()', t => {
 
 test('Db: save() - generates ID if it is empty', t => {
     const db  = new Db();
-    const opt = {storeName: 'save-generate-id', profile: 'test'};
+    const opt = {storeName: 'save-generate-id', profileId: 'test'};
 
     db.save(Object.assign({data: {title: 'Test'}}, opt))
     .then(data => {
@@ -117,7 +117,7 @@ test('Db: save() - generates ID if it is empty', t => {
 
 test('Db: findItem() - can find', t => {
     const db  = new Db();
-    const opt = {storeName: 'findItem-can-find', profile: 'test', id: '1'};
+    const opt = {storeName: 'findItem-can-find', profileId: 'test', id: '1'};
 
     db.save(Object.assign({data: {title: 'Test'}}, opt))
     .then(() => db.findItem(opt))
@@ -132,7 +132,7 @@ test('Db: findItem() - can find', t => {
 
 test('Db: find() - can find', t => {
     const db  = new Db();
-    const opt = {storeName: 'find-can-find', profile: 'test'};
+    const opt = {storeName: 'find-can-find', profileId: 'test'};
 
     Promise.all([
         db.save(Object.assign({data: {fav: 'no'}, id: '1'}, opt)),
@@ -150,7 +150,7 @@ test('Db: find() - can find', t => {
 
 test('Db: find() - filters the results', t => {
     const db  = new Db();
-    const opt = {storeName: 'find-filters', profile: 'test'};
+    const opt = {storeName: 'find-filters', profileId: 'test'};
 
     Promise.all([
         db.save(Object.assign({data: {isFav: true}, id: '1'}, opt)),

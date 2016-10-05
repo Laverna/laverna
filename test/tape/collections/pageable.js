@@ -158,7 +158,7 @@ test('Pageable: onUpdateModel()', t => {
     const model = new Note();
 
     model.profileId = 'testing';
-    t.equal(page.onUpdateModel(model), undefined,
+    t.equal(page.onUpdateModel({model}), undefined,
         'does nothing if the model has a different profile ID');
 
     sand.restore();
@@ -171,7 +171,7 @@ test('Pageable: onUpdateModel() -> onDestroyModel()', t => {
 
     const destroySpy = sand.spy(page, 'onDestroyModel');
 
-    page.onUpdateModel(model);
+    page.onUpdateModel({model});
     t.equal(destroySpy.called, true,
         'removes the model from the collection if it does not meet filter condition');
 
@@ -184,7 +184,7 @@ test('Pageable: onUpdateModel() -> updateCollectionModel()', t => {
     const model = new Note();
 
     const updateSpy = sand.stub(page, 'updateCollectionModel');
-    page.onUpdateModel(model);
+    page.onUpdateModel({model});
     t.equal(updateSpy.called, true, 'executes updateCollectionModel method');
 
     sand.restore();
@@ -215,13 +215,13 @@ test('Pageable: updateCollectionModel()', t => {
 test('Pageable: onDestroyModel()', t => {
     const page = new Pageable();
 
-    t.equal(page.onDestroyModel({id: 42}), false,
+    t.equal(page.onDestroyModel({model: {id: 42}}), false,
         'does nothing if a model does not exist in the collection');
 
     page.add({id: 1});
     const pageSpy     = sand.stub(page, 'paginate');
     const navigateSpy = sand.stub(page, 'navigateOnRemove');
-    page.onDestroyModel({id: 1});
+    page.onDestroyModel({model: {id: 1}});
 
     t.equal(typeof page.get(1), 'undefined', 'msg');
     t.equal(pageSpy.called, true, 'updates pagination');
@@ -277,14 +277,14 @@ test('Pageable: onRestoreModel()', t => {
     page.add([model, model.clone()]);
 
     const updateSpy = sand.stub(page, 'onUpdateModel');
-    page.onRestoreModel(model);
-    t.equal(updateSpy.calledWith(model), true,
+    page.onRestoreModel({model});
+    t.equal(updateSpy.calledWith({model}), true,
         'executes onUpdateModel() if the current condition is not equal to "trashed"');
 
     const destroySpy     = sand.stub(page, 'onDestroyModel');
     page.conditionFilter = 'trashed';
-    page.onRestoreModel(model);
-    t.equal(destroySpy.calledWith(model), true,
+    page.onRestoreModel({model});
+    t.equal(destroySpy.calledWith({model}), true,
         'executes onDestroyModel() if the current condition is equal to "trashed"');
 
     sand.restore();
@@ -468,7 +468,7 @@ test('Pageable: navigatePreviousModel()', t => {
     const page        = new Pageable();
     const trigger     = sand.stub(page.channel, 'trigger');
     const hasPrevious = sand.stub(page, 'hasPreviousPage');
-    page.add([{id: '1'}, {id: '2'}]);
+    page.add([{id: '1'}, {id: '2'}, {id: '3'}, {id: '4'}]);
 
     // Does nothing
     hasPrevious.returns(false);
@@ -477,12 +477,13 @@ test('Pageable: navigatePreviousModel()', t => {
         it is the 1st model and there are no previous pages left`);
 
     // Navigate to the previous model
-    page.navigatePreviousModel('2');
-    t.equal(trigger.calledWith('model:navigate', page.get('1')), true,
+    page.navigatePreviousModel('3');
+    t.equal(trigger.called, true, 'navigate');
+    t.equal(trigger.calledWith('model:navigate', page.get('2')), true,
         'triggers model:navigate event if it is not the first model on the page');
 
     page.navigatePreviousModel('5');
-    t.equal(trigger.calledWith('model:navigate', page.at(1)), true,
+    t.equal(trigger.calledWith('model:navigate', page.get('4')), true,
         `triggers model:navigate with the last model if a model with
         the specified ID does not exist`);
 

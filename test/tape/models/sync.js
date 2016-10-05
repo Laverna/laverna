@@ -42,7 +42,7 @@ test('Sync: sync()', t => {
     const called = stub.calledWithMatch(model, {
         idAttribute : 'id',
         test        : 1,
-        profile     : model.profileId,
+        profileId   : model.profileId,
         storeName   : model.storeName,
     });
     t.equal(called, true, 'proxies methods');
@@ -57,7 +57,7 @@ test('Sync: sync() - collection', t => {
 
     sync.sync('read', {profileId: 'test', storeName: 'sync'});
     const called = stub.calledWithMatch({}, {
-        profile   : 'test',
+        profileId : 'test',
         storeName : 'sync',
     });
     t.equal(called, true, 'can handle collections');

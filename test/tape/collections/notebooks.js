@@ -30,7 +30,7 @@ test('Notebooks: comparators', t => {
     t.equal(new Notebooks().comparators.name, 'desc', 'uses default comparators');
 
     const opt = {sortField: 'created', sortDirection: 'asc'};
-    t.equal(new Notebooks(opt).comparators.created, 'asc',
+    t.equal(new Notebooks(null, opt).comparators.created, 'asc',
         'uses options');
 
     t.end();

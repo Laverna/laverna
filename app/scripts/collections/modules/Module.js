@@ -123,7 +123,7 @@ export default class Module {
         this.collection = new this.Collection(null, {profileId: options.profileId});
 
         // Filter conditions
-        if (opt.filter) {
+        if (opt.filter && this.collection.conditions) {
             const cond = this.collection.conditions[opt.filter];
             opt.conditions = _.isFunction(cond) ? cond(opt) : cond;
         }

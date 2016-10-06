@@ -1,3 +1,6 @@
+/**
+ * @module utils/Initializer
+ */
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 import deb from 'debug';
@@ -24,7 +27,7 @@ const log = deb('lav:utils/Initializer');
  * );
  * @license MPL-2.0
  */
-class Initializer {
+export default class Initializer {
 
     /**
      * Channel to which it replies and triggers events.
@@ -116,5 +119,3 @@ class Initializer {
     }
 
 }
-
-export default Initializer;

@@ -1,3 +1,6 @@
+/**
+ * @module collections/Configs
+ */
 import _ from 'underscore';
 import Collection from './Collection';
 import Config from '../models/Config';
@@ -10,7 +13,7 @@ import {flattenConfigs, configNames} from './configNames';
  * @extends Collection
  * @license MPL-2.0
  */
-class Configs extends Collection {
+export default class Configs extends Collection {
 
     /**
      * Config model.
@@ -139,5 +142,3 @@ class Configs extends Collection {
     }
 
 }
-
-export default Configs;

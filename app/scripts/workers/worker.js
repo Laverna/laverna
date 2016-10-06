@@ -1,5 +1,5 @@
 /**
- * @file
+ * @module workers/worker
  * @license MPL-2.0
  */
 import Db from '../models/Db';

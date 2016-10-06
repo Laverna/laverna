@@ -1,3 +1,6 @@
+/**
+ * @module utils/Env
+ */
 import device from 'device-detect.js';
 import Modernizr from 'modernizr';
 import Radio from 'backbone.radio';
@@ -9,7 +12,7 @@ import Radio from 'backbone.radio';
  * @class
  * @license MPL-2.0
  */
-class Env {
+export default class Env {
 
     /**
      * @listens utils/Env#isMobile - returns true if it's a mobile device
@@ -103,5 +106,3 @@ class Env {
 }
 
 Radio.once('App', 'init', () => new Env());
-
-export default Env;

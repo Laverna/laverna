@@ -1,3 +1,6 @@
+/**
+ * @module workers/Module
+ */
 import Radio from 'backbone.radio';
 import _ from 'underscore';
 import deb from 'debug';
@@ -16,7 +19,7 @@ const log = deb('lav:workers/Module');
  * class MyClass extends WorkerModule {
  * }
  */
-class Module {
+export default class Module {
 
     get fileName() {
         return 'workers/module';
@@ -106,5 +109,3 @@ class Module {
     }
 
 }
-
-export default Module;

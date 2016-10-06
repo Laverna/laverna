@@ -1,3 +1,6 @@
+/**
+ * @module models/Tag
+ */
 import Model from './Model';
 
 /**
@@ -7,7 +10,7 @@ import Model from './Model';
  * @extends Model
  * @license MPL-2.0
  */
-class Tag extends Model {
+export default class Tag extends Model {
 
     get storeName() {
         return 'tags';
@@ -55,5 +58,3 @@ class Tag extends Model {
     }
 
 }
-
-export default Tag;

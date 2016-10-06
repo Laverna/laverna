@@ -1,3 +1,6 @@
+/**
+ * @module collections/Files
+ */
 import File from '../models/File';
 import Collection from './Collection';
 
@@ -8,7 +11,7 @@ import Collection from './Collection';
  * @extends Collection
  * @license MPL-2.0
  */
-class Files extends Collection {
+export default class Files extends Collection {
 
     /**
      * File model.
@@ -20,5 +23,3 @@ class Files extends Collection {
     }
 
 }
-
-export default Files;

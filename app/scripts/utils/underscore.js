@@ -1,3 +1,6 @@
+/**
+ * @module utils/underscore
+ */
 import _ from 'underscore';
 import xss from 'xss';
 
@@ -18,7 +21,6 @@ _.templateSettings = {
 /**
  * Add some helper functions to Underscore.
  *
- * @module Underscore
  * @license MPL-2.0
  */
 _.mixin({

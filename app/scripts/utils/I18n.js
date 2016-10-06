@@ -1,3 +1,6 @@
+/**
+ * @module utils/I18n
+ */
 import _ from 'underscore';
 import i18next from 'i18next';
 import i18nextXhr from 'i18next-xhr-backend';
@@ -14,7 +17,7 @@ const log = deb('lav:utils/I18n');
  * @class
  * @license MPL-2.0
  */
-class I18n {
+export default class I18n {
 
     /**
      * Initialize i18next.
@@ -108,4 +111,4 @@ Radio.once('App', 'init', () => {
     });
 });
 
-export {I18n as default, initializer};
+export {initializer};

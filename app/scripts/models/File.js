@@ -1,3 +1,6 @@
+/**
+ * @module models/File
+ */
 import Model from './Model';
 
 /**
@@ -7,7 +10,7 @@ import Model from './Model';
  * @extends Model
  * @license MPL-2.0
  */
-class File extends Model {
+export default class File extends Model {
 
     /**
      * Store name.
@@ -53,5 +56,3 @@ class File extends Model {
     }
 
 }
-
-export default File;

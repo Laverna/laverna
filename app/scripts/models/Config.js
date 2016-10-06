@@ -1,3 +1,6 @@
+/**
+ * @module models/Config
+ */
 import _ from 'underscore';
 import Model from './Model';
 
@@ -8,7 +11,7 @@ import Model from './Model';
  * @extends Model
  * @license MPL-2.0
  */
-class Config extends Model {
+export default class Config extends Model {
 
     /**
      * Use name as ID.
@@ -71,5 +74,3 @@ class Config extends Model {
     }
 
 }
-
-export default Config;

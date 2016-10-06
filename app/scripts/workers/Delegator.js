@@ -1,3 +1,6 @@
+/**
+ * @module workers/Delegator
+ */
 import Radio from 'backbone.radio';
 import WebWorker from './worker.js';
 import Modernizr from 'modernizr';
@@ -12,7 +15,7 @@ const log = deb('lav:workers/Delegator');
  * @class
  * @license MPL-2.0
  */
-class Delegator {
+export default class Delegator {
 
     /**
      * Radio channel for events/requests.
@@ -232,4 +235,4 @@ Radio.once('App', 'init', () => {
     });
 });
 
-export {initializer, Delegator as default};
+export {initializer};

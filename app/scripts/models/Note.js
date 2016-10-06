@@ -1,3 +1,6 @@
+/**
+ * @module models/Note
+ */
 import Model from './Model';
 
 /**
@@ -7,7 +10,7 @@ import Model from './Model';
  * @extends Model {
  * @license MPL-2.0
  */
-class Note extends Model {
+export default class Note extends Model {
 
     get storeName() {
         return 'notes';
@@ -83,5 +86,3 @@ class Note extends Model {
     }
 
 }
-
-export default Note;

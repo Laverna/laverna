@@ -1,3 +1,6 @@
+/**
+ * @module App
+ */
 import {Application} from 'backbone.marionette';
 import {history} from 'backbone';
 import Radio from 'backbone.radio';
@@ -10,7 +13,7 @@ const log = deb('lav:App');
 /**
  * The main app (core).
  *
- * @class App
+ * @class
  * @extends Application
  * @license MPL-2.0
  */

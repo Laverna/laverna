@@ -10,7 +10,7 @@ import {flattenConfigs, configNames} from './configNames';
  * Config collection.
  *
  * @class
- * @extends Collection
+ * @extends module:collections/Collection
  * @license MPL-2.0
  */
 export default class Configs extends Collection {

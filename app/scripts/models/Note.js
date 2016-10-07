@@ -7,7 +7,7 @@ import Model from './Model';
  * Note model.
  *
  * @class
- * @extends Model {
+ * @extends module:models/Model
  * @license MPL-2.0
  */
 export default class Note extends Model {

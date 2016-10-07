@@ -8,7 +8,7 @@ import Model from './Model';
  * Config model.
  *
  * @class
- * @extends Model
+ * @extends module:models/Model
  * @license MPL-2.0
  */
 export default class Config extends Model {

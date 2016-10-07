@@ -7,7 +7,7 @@ import Model from './Model';
  * File model.
  *
  * @class
- * @extends Model
+ * @extends module:models/Model
  * @license MPL-2.0
  */
 export default class File extends Model {

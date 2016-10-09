@@ -269,7 +269,7 @@ test('Module: saveFromArray()', t => {
 
 test('Module: remove() - model', t => {
     const mod   = new Module();
-    const model = new mod.Model({id: '1'});
+    const model = {id: '1'};
 
     sand.stub(mod, 'saveModel').returns(Promise.resolve());
     sand.stub(mod.channel, 'trigger');
@@ -278,9 +278,9 @@ test('Module: remove() - model', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
-        t.equal(mod.saveModel.calledWith({model, data: {trash: 2}}), true,
+        t.equal(mod.saveModel.calledWithMatch({model, data: {trash: 2}}), true,
             'changes trash status');
-        t.equal(mod.channel.trigger.calledWith('destroy:model', {model}), true,
+        t.equal(mod.channel.trigger.calledWithMatch('destroy:model', {model}), true,
             'triggers destroy:model event');
 
         sand.restore();

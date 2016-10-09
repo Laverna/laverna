@@ -26,7 +26,7 @@ test('Notebooks: remove()', t => {
     sand.stub(mod, 'updateChildren').returns(Promise.resolve());
     const remove = sand.stub(ModuleOrig.prototype, 'remove');
     const reply  = sand.stub();
-    Radio.replyOnce('collections/Notes', 'change:notebookId', reply);
+    Radio.replyOnce('collections/Notes', 'changeNotebookId', reply);
 
     const opt = {model: {id: '1'}};
     const res = mod.remove(opt);
@@ -38,7 +38,7 @@ test('Notebooks: remove()', t => {
 
         t.equal(reply.calledAfter(mod.updateChildren), true,
             'request notebookId change after updating the child notebooks');
-        t.equal(reply.calledWith(opt), true,
+        t.equal(reply.calledWithMatch(opt), true,
             'removes notes attached to the notebook or changes their notebookId to 0');
 
         t.equal(remove.calledAfter(reply), true,

@@ -45,7 +45,7 @@ export default class Tags extends Module {
     addTags(options) {
         const promise = Promise.resolve();
 
-        _.each(options.tags, name => {
+        _.each(options.tags || [], name => {
             promise.then(() => this.addTag(_.extend({name}, options)));
         });
 

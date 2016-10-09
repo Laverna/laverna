@@ -38,7 +38,7 @@ export default class Notebooks extends Module {
      */
     remove(options) {
         return this.updateChildren(options.model)
-        .then(() => Radio.request('collections/Notes', 'change:notebookId', options))
+        .then(() => Radio.request('collections/Notes', 'changeNotebookId', options))
         .then(() => super.remove(options));
     }
 

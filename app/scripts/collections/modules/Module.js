@@ -171,13 +171,16 @@ export default class Module {
      *
      * @param {Object} options = {}
      * @param {Object} options.collection - Backbone collection
+     * @param {Object} (options.data) - with this every model in a collection
+     * will be updated
      * @fires channel#save:collection - after saving a model
      * @returns {Promise}
      */
     save(options = {}) {
         const collection = options.collection || this.collection;
+        const data       = options.data || {};
         const promises   = [];
-        collection.each(model => promises.push(this.saveModel({model})));
+        collection.each(model => promises.push(this.saveModel({model, data})));
 
         return Promise.all(promises)
         .then(() => this.channel.trigger('save:collection', {collection}));
@@ -218,7 +221,8 @@ export default class Module {
     }
 
     /**
-     * Remove a model from database.
+     * Remove a model from database. It doesn't actually remove a model.
+     * Instead, it changes a model's attributes to the default ones.
      *
      * @param {Object} options
      * @param {Object} (options.model) - Backbone.model
@@ -227,13 +231,11 @@ export default class Module {
      * @returns {Promise}
      */
     remove(options) {
-        let {model} = options;
+        const idAttr = this.idAttribute;
+        const data   = {[idAttr]: options[idAttr] || options.model[idAttr]};
+        const model  = new this.Model(data, {profileId: options.profileId});
 
-        if (!model) {
-            model = new this.Model({id: options.id}, {profileId: options.profileId});
-        }
-
-        const data = {trash: 2};
+        data.trash = 2;
         return this.saveModel({model, data})
         .then(() => this.channel.trigger('destroy:model', {model}));
     }

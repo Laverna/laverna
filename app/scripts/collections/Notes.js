@@ -63,16 +63,18 @@ export default class Notes extends Pageable {
      *
      * @param {String} filter
      * @param {Object} options = {}
+     * @returns {Object} this
      */
     filterList(filter, options = {}) {
         // Do nothing if a method does not exist
         if (!filter || !this[`${filter}Filter`]) {
-            return;
+            return this;
         }
 
         // Filter and reset
         const models = this[`${filter}Filter`](options.query);
         this.reset(models);
+        return this;
     }
 
     /**

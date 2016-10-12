@@ -91,6 +91,10 @@ export default class Sync {
     findItem(model, options) {
         return this.db.processRequest('findItem', [options])
         .then(data => {
+            if (!data) {
+                return Promise.reject('not found');
+            }
+
             model.set(data || {});
             return model;
         });

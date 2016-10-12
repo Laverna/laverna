@@ -115,7 +115,7 @@ export default class Module {
      */
     find(options = {}) {
         // Stop listening to events
-        if (this.collection) {
+        if (this.collection && this.collection.removeEvents) {
             this.collection.removeEvents();
         }
 

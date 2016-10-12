@@ -150,7 +150,7 @@ export default class Notes extends Module {
      */
     find(options) {
         const sortField = Radio.channel('collections/Configs').request(
-            'getConfig', 'sortnotes'
+            'findConfig', {name: 'sortnotes'}
         );
         const opt = _.extend({sortField}, options);
 

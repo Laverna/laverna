@@ -18,7 +18,7 @@ const configNames = {
     /**
      * Main configs.
      *
-     * @prop {String} appProfiles - profile names stored in JSON format
+     * @prop {Array} appProfiles - profile names stored in JSON format
      * @prop {String} appLang - localization (en|fr...etc)
      * @prop {String} useDefaultConfigs - (0|1) 1 if the profile should
      * use settings from the main profile.
@@ -29,7 +29,7 @@ const configNames = {
      * in the navbar
      */
     general: {
-        appProfiles        : JSON.stringify(['notes-db']),
+        appProfiles        : ['notes-db'],
         appLang            : '',
         useDefaultConfigs  : '1',
 

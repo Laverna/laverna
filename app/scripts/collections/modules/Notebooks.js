@@ -91,7 +91,7 @@ export default class Notebooks extends Module {
      */
     find(options) {
         const sortField = Radio.channel('collections/Configs').request(
-            'getConfig', 'sortnotebooks'
+            'findConfig', {name: 'sortnotebooks'}
         );
         const opt = _.extend({sortField}, options);
 

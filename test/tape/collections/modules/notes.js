@@ -158,7 +158,7 @@ test('Notes: find()', t => {
     const find       = sand.stub(ModuleOrig.prototype, 'find');
     find.returns(Promise.resolve(collection));
     sand.spy(collection, 'filterList');
-    Radio.replyOnce('collections/Configs', 'getConfig', () => 'id');
+    Radio.replyOnce('collections/Configs', 'findConfig', () => 'id');
 
     const opt = {profileId: 'test', filter: 'yes'};
     return mod.find(opt)

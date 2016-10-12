@@ -110,7 +110,7 @@ test('Notebooks: find()', t => {
         .returns(Promise.resolve(coll));
     sand.spy(coll, 'getTree');
 
-    Radio.replyOnce('collections/Configs', 'getConfig', () => 'parentId');
+    Radio.replyOnce('collections/Configs', 'findConfig', () => 'parentId');
 
     const opt = {profileId: 'test', conditions: '1'};
     mod.find(opt)

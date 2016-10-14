@@ -83,16 +83,15 @@ test('Sync: read()', t => {
     t.end();
 });
 
-test('Sync: findItem()', t => {
+test('Sync: findItem() - not found', t => {
     const sync  = new Sync();
     const model = new Model({id: '1', title: 'Test'});
-    sand.spy(model, 'set');
 
     const res = sync.findItem(model, {id: '1'});
     t.equal(typeof res.then, 'function', 'returns a promise');
 
-    res.then(() => {
-        t.equal(model.set.calledWith({}), true, 'changes model attributes');
+    res.catch(err => {
+        t.equal(err, 'not found', 'returns "not found" error');
         sand.restore();
         t.end();
     });
@@ -102,7 +101,7 @@ test('Sync: find()', t => {
     const sync = new Sync();
     const coll = {model: Model};
 
-    const res = sync.find(coll, {profile: 'test', storeName: 'sync-find'});
+    const res = sync.find(coll, {profileId: 'test', storeName: 'sync-find'});
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(res => {
@@ -128,7 +127,7 @@ test('Sync: create() + update()', t => {
 test('Sync: save()', t => {
     const sync  = new Sync();
     const model = new Model({id: '1'});
-    const opt   = {profile: 'test', storeName: 'sync-save'};
+    const opt   = {profileId: 'test', storeName: 'sync-save'};
 
     model.set('title', 'Test');
     sand.spy(model, 'set');
@@ -147,7 +146,7 @@ test('Sync: save()', t => {
 
 test('Sync: find()', t => {
     const sync = new Sync();
-    const opt  = {profile: 'test', storeName: 'sync-save'};
+    const opt  = {profileId: 'test', storeName: 'sync-save'};
     const coll = {model: Model};
     coll.add   = sand.stub();
 

@@ -9,13 +9,15 @@ import deb from 'debug';
 
 // The core app
 import App from './App';
+import './workers/Delegator';
 
 // Utils
 import './utils/Env';
 import './utils/underscore';
 import './utils/I18n';
 
-import './workers/Delegator';
+// Collections
+import './collections/modules/main';
 
 const log = deb('lav:main');
 

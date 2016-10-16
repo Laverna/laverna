@@ -31,6 +31,34 @@
     font-size  : 1.3em;
 }
 
+.sidemenu--item.list-child-item {
+    padding-top : 0px;
+    padding-bottom : 0px;
+    min-height  : 0px;
+}
+
+.label-branch {
+    letter-spacing: -0.11em;
+}
+.label-branch-last {
+    .label-branch;
+}
+
+/* Center right pipe symbol (verticle box middle right) */
+.label-branch:before {
+    content: "\251C";
+}
+
+/* Bottom right pipe symbol (verticle box right) */
+.label-branch-last:before {
+    content: "\2514";
+}
+
+.label-branch-indent {
+    display: inline-block;
+}
+
+
 .sidemenu--close {
     cursor: pointer;
 }

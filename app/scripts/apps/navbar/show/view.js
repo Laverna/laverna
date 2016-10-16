@@ -183,6 +183,15 @@ define([
                 profileLink: function(profileName) {
                     return Radio.request('uri', 'link:profile', '/notes', profileName);
                 }
+
+                /*
+                getChildLevel: function(notebook) {
+                    notebooks = this.options.notebooks;
+                    if (notebook.parentId !== "0") {
+                        return 1;
+                    }
+                    return 0;
+                } */
             };
         }
     });

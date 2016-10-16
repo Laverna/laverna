@@ -69,11 +69,52 @@
 
         <% if (notebooks !== null && notebooks.length) { %>
         <div class="list-group-item sidemenu--item -disabled">{{i18n('Notebooks')}}</div>
-        <% notebooks.forEach(function(notebook) { %>
-        <a class="list-group-item sidemenu--item" href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
+        <%
+        // Draw the tree
+        lastId = "0";
+        parentStack = [];
+        level = 0;
+        lastIndentOffset = -0.15; // End pipe has less indent
+        indentOffset = 0.3;
+        indentScale = 2.3; // multipler for level in em
+        indentInEm = function(level, lastIndent) {
+            return (level - 1) * indentScale + indentOffset + (lastIndent ? lastIndentOffset : 0);
+        };
+        notebooks.forEach(function(notebook, index) {
+            extraClass = (notebook.parentId !== "0")? "list-child-item" : ""; %>
+        <a class="list-group-item {{extraClass}} sidemenu--item"
+            href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
+            <% if (notebook.parentId !== "0") {
+                if (lastId === notebook.parentId) {
+                    level++;
+                    if (parentStack.length === 0 ||
+                        parentStack[parentStack.length - 1] !== notebook.parentId) {
+                        parentStack.push(lastId);
+                    }
+                } else {
+                    // Pop off the stack until we find the parent
+                    while (level > 0 && parentStack.length &&
+                        parentStack[parentStack.length - 1] !== notebook.parentId) {
+                        parentStack.pop();
+                        level--;
+                    }
+                }
+                lastChild = index == notebooks.length - 1;
+                if (level > 0) { %>
+                <span class="label-branch-indent" style="width:{{indentInEm(level,lastChild)}}em;" ></span>
+                <% }
+                if (lastChild) { %>
+                <span class="label-branch-last">----</span>
+                <% } else { %>
+                <span class="label-branch">----</span>
+                <% }
+            } else {
+                level = 0;
+            } %>
             <i class="icon-notebook"></i>  {=cleanXSS(notebook.name)}
         </a>
-        <% }); } %>
+        <% lastId = notebook.id;
+        }); } %>
 
         <div class="list-group-item sidemenu--item -disabled">{{i18n('Profiles')}}</div>
         <a class="list-group-item sidemenu--item<% if (profile === 'notes-db' || !profile) { %> active<% } %>" href="#/notes">

@@ -69,11 +69,31 @@
 
         <% if (notebooks !== null && notebooks.length) { %>
         <div class="list-group-item sidemenu--item -disabled">{{i18n('Notebooks')}}</div>
-        <% notebooks.forEach(function(notebook) { %>
-        <a class="list-group-item sidemenu--item" href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
+        <% // Draw the tree
+        for (var i = 0; i < notebooks.length; i++) {
+        var notebook = notebooks[i],
+            childLevel = getChildLevel(notebook.parentId),
+            lastChild = false,
+            lastNotebook = i == notebooks.length - 1;
+        if (childLevel > 0 && (lastNotebook ||
+            notebook.parentId !== notebooks[i + 1].parentId)) {
+            lastChild = true;
+        }
+        var extraClass = (childLevel > 0)? "list-child-item" : "";
+        %>
+        <a class="list-group-item {{extraClass}} sidemenu--item"
+            href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
+            <% if (childLevel > 0) { 
+            var indentInEm = getChildIndentEm(childLevel, lastChild);
+            %>
+            <span class="label-branch-indent" style="width:{{indentInEm}}em;" ></span>
+            <% lastStr = (lastChild)? "-last" : "";
+            %>
+            <span class="label-branch{{lastStr}}">----</span>
+            <% } %>
             <i class="icon-notebook"></i>  {=cleanXSS(notebook.name)}
         </a>
-        <% }); } %>
+        <% } } %>
 
         <div class="list-group-item sidemenu--item -disabled">{{i18n('Profiles')}}</div>
         <a class="list-group-item sidemenu--item<% if (profile === 'notes-db' || !profile) { %> active<% } %>" href="#/notes">

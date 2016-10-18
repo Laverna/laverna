@@ -182,6 +182,31 @@ define([
 
                 profileLink: function(profileName) {
                     return Radio.request('uri', 'link:profile', '/notes', profileName);
+                },
+
+                getChildLevel: function(parentId) {
+                    var level = 0,
+                        findParent = function(n) {
+                        if (parentId === n.id) {
+                            parentId = n.parentId;
+                            level++;
+                            return true;
+                        }
+                        return false;
+                    };
+                    while (parentId !== '0') {
+                        // Search for the parent
+                        this.notebooks.some(findParent);
+                    }
+                    return level;
+                },
+
+                getChildIndentEm: function(level, lastChild) {
+                    var lastIndentOffset = -0.15, // End pipe has less indent
+                        indentOffset = 0.3,
+                        indentScale = 2.3; // multipler for level in em
+                    return (level - 1) * indentScale + indentOffset +
+                        (lastChild ? lastIndentOffset : 0);
                 }
             };
         }

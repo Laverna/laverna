@@ -9,11 +9,13 @@ global.localStorage = new LocalStorage(`${__dirname}/../../_dev/scratch`);
  * Create DOM environment.
  */
 jsdom.env({
+    url  : 'http://localhost/#',
     html : read(`${__dirname}/../../app/index.html`, 'utf8'),
 
     done : (err, window) => {
-        global.window   = window;
-        global.document = window.document;
+        global.window    = window;
+        global.location  = window.location;
+        global.document  = window.document;
         global.window.localStorage = global.localStorage;
 
         // Automatically require all test files

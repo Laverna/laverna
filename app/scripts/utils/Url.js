@@ -1,172 +1,210 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module utils/Url
  */
-/* global define */
-define([
-    'underscore',
-    'backbone',
-    'backbone.radio',
-    'marionette',
-], function(_, Backbone, Radio, Marionette) {
-    'use strict';
+import Backbone from 'backbone';
+import Radio from 'backbone.radio';
+import _ from 'underscore';
+import $ from 'jquery';
+
+/**
+ * URL helper.
+ *
+ * @class
+ * @license MPL-2.0
+ */
+export default class Url {
 
     /**
-     * Uri helper. It is a convenient module that we use to navigate
-     * or do some URI related stuff.
-     * It listens to requests on `uri` channel.
+     * Radio channel.
      *
-     * Responds to:
-     * -----------
-     *
-     * Requests:
-     * 1. request: `profile`
-     *    returns current profile name.
-     * 2. request: `link:profile`
-     *    returns a link to a profile.
-     * 3. request: `link`
-     *    generates and returns a link to notes list or to a note.
-     * 4. request: `link:file`
-     *    generate file URL.
-     * 5. request: `navigate`
-     *    navigate to provided URL.
-     * 6. request: `back`
-     *    it navigates to the previous page.
+     * @returns {Object} utils/Url
      */
-    var Uri = Marionette.Object.extend({
+    get channel() {
+        return Radio.channel('utils/Url');
+    }
 
-        initialize: function() {
-            this.vent    = Radio.channel('uri');
-            this.profile = this.getProfile();
+    /**
+     * Notes filter parameters with their route fragments.
+     *
+     * @returns {Object}
+     */
+    get noteFilters() {
+        return {
+            filter : '/f/',
+            query  : '/q/',
+            page   : '/p',
+        };
+    }
 
-            _.bindAll(this, 'checkProfile');
-            $(window).on('hashchange', this.checkProfile);
+    constructor() {
+        // Save the original location hash
+        this.hashOnStart = document.location.hash;
 
-            // Replies
-            this.vent.reply({
-                'navigate'      : this.navigate,
-                'back'          : this.navigateBack,
-                'profile'       : this.getProfile,
-                'link:profile'  : this.getProfileLink,
-                'link:file'     : this.getFileLink,
-                'link'          : this.getLink,
-                'get:current'   : this.getRoute,
-            }, this);
-        },
+        // Reload the page if profileId has changed
+        this.profileId = this.getProfileId();
+        $(window).on('hashchange', () => this.checkProfile());
 
-        checkProfile: function() {
-            if (this.getProfile() !== this.profile) {
-                window.location.reload();
-            }
-        },
+        // Start replying to requests
+        this.channel.reply({
+            getHashOnStart : () => this.hashOnStart,
+            navigate       : this.navigate,
+            navigateBack   : this.navigateBack,
+            getProfileId   : this.getProfileId,
+            getProfileLink : this.getProfileLink,
+            getNotesLink   : this.getNotesLink,
+            getNoteLink    : this.getNoteLink,
+            getFileLink    : this.getFileLink,
+        }, this);
+    }
 
-        /**
-         * Navigate to url
-         */
-        navigate: function(uri, options) {
-            options = options || {};
-            if (typeof options.trigger === 'undefined') {
-                options.trigger = true;
-            }
+    /**
+     * Reload the page if profileId has changed.
+     */
+    checkProfile() {
+        if (this.getProfileId() !== this.profileId) {
+            window.location.reload();
+        }
+    }
 
-            // Build URL to notes list or a note
-            if (_.isObject(uri)) {
-                uri = (uri.model || uri.options) ? uri : {options: uri};
-                uri = this.getLink(uri.options, uri.model);
-            }
+    /**
+     * Navigate to a URL.
+     *
+     * @param {Object} options
+     * @param {String} (options.url)
+     * @param {Object} (options.filterArgs)
+     * @param {Boolean} (options.includeProfile) - prepend the profile link
+     * to the URL
+     */
+    navigate(options) {
+        let {url} = options;
 
-            // Include profile link
-            if (options.includeProfile) {
-                uri = this.getProfileLink(uri);
-                options.includeProfile = null;
-            }
-
-            Backbone.history.navigate(uri, options);
-        },
-
-        navigateBack: function(url) {
-            var history = window.history;
-            if (history.length === 0) {
-                return this.navigate(url || '/notes', arguments[1]);
-            }
-            history.back();
-        },
-
-        /**
-         * Generate file URL.
-         */
-        getFileLink: function(model, blob) {
-            // Just generate pseudo URL
-            if (!blob) {
-                return '#file:' + model.id;
-            }
-
-            var url = window.URL || window.webkitURL,
-                src = (model.src || model.get('src'));
-
-            return url.createObjectURL(src);
-        },
-
-        /**
-         * Generates a link to a profile
-         */
-        getProfileLink: function(uri, profile) {
-            profile = profile || this.getProfile();
-            uri     = (uri[0] !== '/' ? '/' + uri : uri);
-
-            return !profile ? uri : '/p/' + profile + uri.replace(/\/?p\/[^/]*\//, '/');
-        },
-
-        /**
-         * Returns current profile's name
-         */
-        getProfile: function() {
-            var profile = document.location.hash.match(/\/?p\/([^/]*)\//);
-            return (!profile ? profile : profile[profile.index]);
-        },
-
-        /**
-         * Returns current route
-         */
-        getRoute: function() {
-            return Backbone.history.fragment;
-        },
-
-        /**
-         * Generates a link from provided options
-         */
-        getLink: function(options, model) {
-            options = _.extend({}, options || {});
-            var url = '/notes',
-                filters = {
-                    filter  : '/f/',
-                    query   : '/q/',
-                    page    : '/p'
-                };
-
-            options.page = isNaN(options.page) ? 0 : options.page;
-
-            _.each(filters, function(value, filter) {
-                if (_.has(options, filter) && options[filter]) {
-                    url += value + options[filter];
-                }
-            });
-
-            url += model ? '/show/' + model.id : '';
-            return this.getProfileLink(url, options.profile);
+        // For default, trigger = true
+        if (_.isUndefined(options.trigger)) {
+            options.trigger = true; // eslint-disable-line
         }
 
-    });
+        // Generate link to a note
+        if (options.filterArgs) {
+            url = this.getNoteLink();
+        }
+
+        // Prepend the profile link
+        if (options.includeProfile) {
+            url = this.getProfileLink({url});
+        }
+
+        Backbone.history.navigate(url, options);
+    }
 
     /**
-     * Add a new initializer
+     * Navigate back.
+     *
+     * @param {Object} options
+     * @param {String} (options.url) - this URL will be used if history is empty
      */
-    Radio.request('init', 'add', 'app:before', function() {
-        new Uri();
-    });
+    navigateBack(options) {
+        if (this.historyLength() === 0) {
+            const url = options.url || '/notes';
+            return this.navigate({url, includeProfile: true});
+        }
 
-    return Uri;
-});
+        window.history.back();
+    }
+
+    /**
+     * Return window.history.length
+     *
+     * @returns {Number}
+     */
+    historyLength() {
+        return window.history.length;
+    }
+
+    /**
+     * Prepend the profile link to the provided URL.
+     *
+     * @param {Object} options
+     * @param {String} options.url
+     * @param {String} (options.profileId)
+     * @returns {String} /p/profileName/my-url
+     */
+    getProfileLink(options) {
+        const profileId = options.profileId || this.getProfileId();
+
+        // Remove the leading slash and profile link
+        const url = options.url
+            .replace(/^\//, '')
+            .replace(/\/?p\/[^/]*\//, '');
+
+        return !profileId ? url : `/p/${profileId}/${url}`;
+    }
+
+    /**
+     * Return current profile ID.
+     *
+     * @returns {String}
+     */
+    getProfileId() {
+        const profileId = document.location.hash.match(/\/?p\/([^/]*)\//);
+        return (!profileId ? profileId : profileId[profileId.index]);
+    }
+
+    /**
+     * Generate a link to a particular note.
+     *
+     * @param {Object} options
+     * @param {Object} (options.filterArgs) - filter parameters
+     * @param {Object} (options.model) - note model
+     * @param {String} (options.id) - ID of a note
+     * @returns {String}
+     */
+    getNoteLink(options) {
+        const url = this.getNotesLink(options);
+        const id  = options.model ? options.model.id : options.id;
+
+        return id ? `${url}/show/${id}` : url;
+    }
+
+    /**
+     * Generate a link to notes list from filter parameters.
+     *
+     * @param {Object} options
+     * @param {Object} (options.filterArgs) - filter parameters
+     * @returns {String}
+     */
+    getNotesLink(options) {
+        const filterArgs = options.filterArgs || {};
+        let url          = '/notes';
+
+        _.each(this.noteFilters, (value, filter) => {
+            if (_.has(filterArgs, filter) && filterArgs[filter]) {
+                url += `${value}${filterArgs[filter]}`;
+            }
+        });
+
+        return this.getProfileLink({url, profileId: filterArgs.profileId});
+    }
+
+    /**
+     * Generate a link to a file.
+     *
+     * @param {Object} options
+     * @param {Boolean} (options.blob) - true if Object URL should be generated
+     * @param {Object} (options.model) - file model
+     * @param {String} (options.src)
+     * @returns {String}
+     */
+    getFileLink(options) {
+        if (!options.blob) {
+            return `#file:${options.model.id}`;
+        }
+
+        const url = window.URL || window.webkitURL;
+        const src = (options.src || options.model.get('src'));
+        return url.createObjectURL(src);
+    }
+
+}
+
+// Instantiate automatically
+Radio.once('App', 'init', () => new Url());

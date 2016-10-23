@@ -1,122 +1,117 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module utils/Keybindings
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'backbone.radio',
-    'mousetrap',
-    'mousetrap.pause'
-], function(_, Marionette, Radio, Mousetrap) {
-    'use strict';
+import Radio from 'backbone.radio';
+import _ from 'underscore';
+import Mousetrap from 'mousetrap';
+import 'mousetrap/plugins/pause/mousetrap-pause';
+
+/**
+ * Keybindings helper.
+ *
+ * @class
+ * @license MPL-2.0
+ */
+export default class Keybindings {
 
     /**
-     * Keybindings helper.
+     * Radio channel.
      *
-     * Replies to requests on `global` channel:
-     * 1. `mousetrap:toggle`  - pause or unpause Mousetrap.
-     * 2. `mousetrap:restart` - rebind the keys.
-     * 3. `mousetrap:reset`   - reset the keys.
+     * @returns {Object} utils/Keybindings
      */
-    var Controller = Marionette.Object.extend({
-
-        initialize: function() {
-            // Fetch configs and bind the keys
-            this.configs = Radio.request('configs', 'get:object');
-            this.bind();
-
-            Radio.reply('global', {
-                'mousetrap:toggle'  : this.toggle,
-                'mousetrap:restart' : this.restart,
-                'mousetrap:reset'   : Mousetrap.reset
-            }, this);
-        },
-
-        /**
-         * Reset Mousetrap keys and bind them again.
-         */
-        restart: function() {
-            Mousetrap.reset();
-            this.bind();
-        },
-
-        /**
-         * Pause or unpause Mousetrap
-         */
-        toggle: function() {
-            Mousetrap[(this.paused ? 'unpause' : 'pause')]();
-            this.paused = (this.paused ? false : true);
-        },
-
-        navigate: function(uri) {
-            Radio.request('uri', 'navigate', uri, {
-                includeProfile : true,
-                trigger        : true
-            });
-        },
-
-        /**
-         * Register keybindings.
-         */
-        bind: function() {
-            var self = this;
-
-            // Help
-            Mousetrap.bind(this.configs.appKeyboardHelp, function(e) {
-                e.preventDefault();
-                Radio.request('Help', 'show:keybindings');
-            });
-
-            // Focus on search form
-            Mousetrap.bind(this.configs.appSearch, function(e) {
-                e.preventDefault();
-                Radio.trigger('global', 'show:search');
-            });
-
-            // Add or edit notes or notebooks
-            Mousetrap.bind(this.configs.appCreateNote, function() {
-                Radio.trigger('global', 'form:show');
-            });
-
-            // Redirect to notes list
-            Mousetrap.bind(this.configs.jumpInbox, function() {
-                self.navigate('/notes');
-            });
-
-            // Redirect to favorite notes
-            Mousetrap.bind(this.configs.jumpFavorite, function() {
-                self.navigate('/notes/f/favorite');
-            });
-
-            // Redirect to removed list of notes
-            Mousetrap.bind(this.configs.jumpRemoved, function() {
-                self.navigate('/notes/f/trashed');
-            });
-
-            // Redirect to list of notes with open tasks
-            Mousetrap.bind(this.configs.jumpOpenTasks, function() {
-                self.navigate('/notes/f/task');
-            });
-
-            // Redirect to notebooks list
-            Mousetrap.bind(this.configs.jumpNotebook, function() {
-                self.navigate('/notebooks');
-            });
-        }
-
-    });
+    get channel() {
+        return Radio.channel('utils/Keybindings');
+    }
 
     /**
-     * Initializer
+     * Links used with jump keybindings.
+     *
+     * @returns {Object}
      */
-    Radio.request('init', 'add', 'app:before', function() {
-        new Controller();
-    });
+    get jumpLinks() {
+        return {
+            jumpInbox     : '/notes',
+            jumpFavorite  : '/notes/f/favorite',
+            jumpRemoved   : '/notes/f/trashed',
+            jumpOpenTasks : '/notes/f/task',
+            jumpNotebook  : '/notebooks',
+        };
+    }
 
-    return Controller;
+    constructor() {
+        this.channel.reply({
+            toggle: this.toggle,
+        }, this);
+    }
+
+    /**
+     * Pause or unpause Mousetrap.
+     */
+    toggle() {
+        Mousetrap[(this.paused ? 'unpause' : 'pause')]();
+        this.paused = !this.paused;
+    }
+
+    /**
+     * Bind shortcuts.
+     *
+     * @returns {Promise}
+     */
+    bind() {
+        return Radio.request('collections/Configs', 'find')
+        .then(collection => this.collection = collection)
+        .then(() => this.bindApp())
+        .then(() => this.bindJump());
+    }
+
+    /**
+     * Bind application shortcuts.
+     */
+    bindApp() {
+        const models = this.collection.appShortcuts();
+
+        _.each(models, model => {
+            Mousetrap.bind(model.get('value'), () => {
+                this.channel.trigger(model.get('name'));
+            });
+        });
+    }
+
+    /**
+     * Bind jump shortcuts.
+     */
+    bindJump() {
+        _.each(this.jumpLinks, (link, name) => {
+            const model = this.collection.get(name);
+            Mousetrap.bind(model.get('value'), () => this.navigate(link));
+        });
+    }
+
+    /**
+     * Navigate to a page.
+     *
+     * @param {String} url
+     */
+    navigate(url) {
+        Radio.request('utils/Url', 'navigate', {url, includeProfile: true});
+    }
+
+}
+
+/**
+ * Initializer.
+ *
+ * @returns {Promise}
+ */
+function initializer() {
+    return new Keybindings().bind();
+}
+
+Radio.once('App', 'init', () => {
+    Radio.request('utils/Initializer', 'add', {
+        name    : 'App:utils',
+        callback: initializer,
+    });
 });
+
+export {initializer};

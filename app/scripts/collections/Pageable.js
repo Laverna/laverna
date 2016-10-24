@@ -231,7 +231,7 @@ export default class Pageable extends Collection {
         }
 
         if (this.at(index)) {
-            this.channel.trigger('model:navigate', this.at(index));
+            this.channel.trigger('model:navigate', {model: this.at(index)});
         }
         // Navigate to the previous page if a model at `index` doesn't exist
         else if (this.hasPreviousPage()) {
@@ -360,7 +360,7 @@ export default class Pageable extends Collection {
         const index = model ? this.indexOf(model) + 1 : 0;
 
         if (index <= this.models.length - 1) {
-            this.channel.trigger('model:navigate', this.at(index));
+            this.channel.trigger('model:navigate', {model: this.at(index)});
         }
         // If it is the last model on the page, navigate to the next page
         else if (this.hasNextPage()) {
@@ -380,7 +380,7 @@ export default class Pageable extends Collection {
         const index = model ? this.indexOf(model) - 1 : this.models.length - 1;
 
         if (index > 0) {
-            this.channel.trigger('model:navigate', this.at(index));
+            this.channel.trigger('model:navigate', {model: this.at(index)});
         }
         // If it is the first model on the page, navigate to the previous page
         else if (this.hasPreviousPage()) {

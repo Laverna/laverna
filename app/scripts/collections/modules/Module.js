@@ -252,7 +252,7 @@ export default class Module {
             return false;
         }
 
-        const configs = Radio.request('collections/Configs', 'getValues');
+        const configs = Radio.request('collections/Configs', 'findConfigs');
         const backup  = {encrypt: configs.encryptBackup.encrypt || 0};
 
         // Encryption is enabled either in the current configs or backup

@@ -31,7 +31,7 @@ function initializer() {
 // Add a new initializer
 Radio.once('App', 'init', () => {
     Radio.request('utils/Initializer', 'add', {
-        name    : 'App:components',
+        name    : 'App:core',
         callback: initializer,
     });
 });

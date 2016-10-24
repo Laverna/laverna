@@ -2,6 +2,7 @@
  * @module utils/underscore
  */
 import _ from 'underscore';
+import i18next from 'i18next';
 import xss from 'xss';
 
 /**
@@ -24,6 +25,16 @@ _.templateSettings = {
  * @license MPL-2.0
  */
 _.mixin({
+
+    /**
+     * I18next.
+     *
+     * @param {String} str
+     * @returns {String}
+     */
+    i18n(str) {
+        return i18next.t(str);
+    },
 
     /**
      * Sanitize HTML to prevent XSS.

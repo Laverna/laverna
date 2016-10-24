@@ -5,10 +5,19 @@
 import test from 'tape';
 import sinon from 'sinon';
 import _ from '../../../app/scripts/utils/underscore';
+import i18next from 'i18next';
 
 let sand;
 test('underscore: before()', t => {
     sand = sinon.sandbox.create();
+    t.end();
+});
+
+test('underscore: i18n()', t => {
+    const spy = sand.spy(i18next, 't');
+    _.i18n('hello');
+    t.equal(spy.called, true, 'uses i18next');
+    sand.restore();
     t.end();
 });
 

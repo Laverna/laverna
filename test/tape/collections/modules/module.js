@@ -307,7 +307,7 @@ test('Module: isEncryptEnabled()', t => {
     const rad = Radio.channel('collections/Configs');
 
     let configs = {encryptBackup: {encrypt: 1}};
-    rad.reply('getValues', () => configs);
+    rad.reply('findConfigs', () => configs);
 
     t.equal(mod.isEncryptEnabled({}), false,
         'returns false if a model does not have encryptKeys property');

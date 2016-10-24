@@ -240,12 +240,12 @@ test('Pageable: navigateOnRemove()', t => {
     }
 
     page.navigateOnRemove(page.at(2));
-    t.equal(trigger.calledWith('model:navigate', page.at(2)), true,
+    t.equal(trigger.calledWith('model:navigate', {model: page.at(2)}), true,
         'triggers "model:navigate" with a model');
 
     page.remove(page.at(4));
     page.navigateOnRemove(page.at(4));
-    t.equal(trigger.calledWith('model:navigate', page.at(3)), true,
+    t.equal(trigger.calledWith('model:navigate', {model: page.at(3)}), true,
         'triggers "model:navigate" with the previous model');
 
     sand.restore();
@@ -435,7 +435,7 @@ test('Pageable: getOffset()', t => {
 test('Pageable: navigateNextModel()', t => {
     const page    = new Pageable();
     const trigger = sand.stub(page.channel, 'trigger');
-    const hasNext = sand.stub(page, 'hasNextPage');
+    const hasNext = sand.stub(page, 'hasNextPage').returns(false);
     page.add([{id: '1'}, {id: '2'}]);
 
     // Does nothing
@@ -446,11 +446,11 @@ test('Pageable: navigateNextModel()', t => {
 
     // Navigate to the next model
     page.navigateNextModel('1');
-    t.equal(trigger.calledWith('model:navigate', page.get('2')), true,
+    t.equal(trigger.calledWith('model:navigate', {model: page.get('2')}), true,
         'triggers model:navigate event if it is not the last model on the page');
 
     page.navigateNextModel('3');
-    t.equal(trigger.calledWith('model:navigate', page.at(0)), true,
+    t.equal(trigger.calledWith('model:navigate', {model: page.at(0)}), true,
         `triggers model:navigate with the first model if a model with
         the specified ID does not exist`);
 
@@ -467,7 +467,7 @@ test('Pageable: navigateNextModel()', t => {
 test('Pageable: navigatePreviousModel()', t => {
     const page        = new Pageable();
     const trigger     = sand.stub(page.channel, 'trigger');
-    const hasPrevious = sand.stub(page, 'hasPreviousPage');
+    const hasPrevious = sand.stub(page, 'hasPreviousPage').returns(false);
     page.add([{id: '1'}, {id: '2'}, {id: '3'}, {id: '4'}]);
 
     // Does nothing
@@ -479,11 +479,11 @@ test('Pageable: navigatePreviousModel()', t => {
     // Navigate to the previous model
     page.navigatePreviousModel('3');
     t.equal(trigger.called, true, 'navigate');
-    t.equal(trigger.calledWith('model:navigate', page.get('2')), true,
+    t.equal(trigger.calledWith('model:navigate', {model: page.get('2')}), true,
         'triggers model:navigate event if it is not the first model on the page');
 
     page.navigatePreviousModel('5');
-    t.equal(trigger.calledWith('model:navigate', page.get('4')), true,
+    t.equal(trigger.calledWith('model:navigate', {model: page.get('4')}), true,
         `triggers model:navigate with the last model if a model with
         the specified ID does not exist`);
 

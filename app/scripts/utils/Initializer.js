@@ -89,11 +89,11 @@ export default class Initializer {
      */
     start(data) {
         const dataObj = _.isObject(data) ? data : {names: data.split(' ')};
-        const promise = Promise.resolve();
+        let promise   = Promise.resolve();
 
         _.each(dataObj.names, name => {
             log(`starting ${name}`);
-            promise.then(() => this.startInit(name, data.options || {}));
+            promise = promise.then(() => this.startInit(name, data.options || {}));
         });
 
         return promise;

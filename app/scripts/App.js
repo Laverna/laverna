@@ -4,9 +4,11 @@
 import {Application} from 'backbone.marionette';
 import {history} from 'backbone';
 import Radio from 'backbone.radio';
+import $ from 'jquery';
 import deb from 'debug';
 
 import Initializer from './utils/Initializer';
+import LayoutView from './views/Layout';
 
 const log = deb('lav:App');
 
@@ -28,6 +30,16 @@ export default class App extends Application {
     }
 
     /**
+     * The main layout view.
+     *
+     * @see module:views/Layout
+     * @returns {Object}
+     */
+    get layout() {
+        return new LayoutView();
+    }
+
+    /**
      * It's called after instantiating the class.
      *
      * @fires App#init
@@ -44,6 +56,9 @@ export default class App extends Application {
          * @event App#init
          */
         this.channel.trigger('init');
+
+        // Render the layout
+        this.layout.render();
     }
 
     /**
@@ -61,6 +76,9 @@ export default class App extends Application {
          * @event App#start
          */
         this.channel.trigger('start');
+
+        // Remove loading class
+        $('.-loading').removeClass('-loading');
     }
 
     /**

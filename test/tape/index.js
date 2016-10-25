@@ -2,8 +2,10 @@ import jsdom from 'jsdom';
 import {readFileSync as read} from 'fs';
 import glob from 'glob';
 import {LocalStorage} from 'node-localstorage';
+import overrideTemplate from './overrideTemplate';
 
-global.localStorage = new LocalStorage(`${__dirname}/../../_dev/scratch`);
+global.localStorage     = new LocalStorage(`${__dirname}/../../_dev/scratch`);
+global.overrideTemplate = overrideTemplate;
 
 /**
  * Create DOM environment.

@@ -8,7 +8,11 @@ import proxyquire from 'proxyquire';
 import Radio from 'backbone.radio';
 
 const Backbone = {history: {start: sinon.stub()}};
-const App = proxyquire('../../app/scripts/App.js', {backbone: Backbone}).default;
+const App  = proxyquire('../../app/scripts/App.js', {
+    backbone: Backbone,
+}).default;
+const view = {render: sinon.stub()};
+Object.defineProperty(App.prototype, 'layout', {get: () => view});
 
 let sand;
 test('App: before()', t => {
@@ -28,6 +32,7 @@ test('App: initialize()', t => {
     t.equal(typeof app, 'object', 'is an object');
     t.equal(spy.called, true, 'calls initialize()');
     t.equal(trigger.calledWith('init'), true, 'triggers "init" event');
+    t.equal(view.render.called, true, 'renders the layout');
 
     sand.restore();
     t.end();
@@ -54,7 +59,14 @@ test('App: lazyStart() - success', t => {
     const app  = new App();
     const stub = sand.stub(app, 'start');
     const init = sand.stub().returns(Promise.resolve());
-    Radio.replyOnce('utils/Initializer', 'start', init);
+    Radio.replyOnce('utils/Initializer', 'start', (...args) => {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                init(...args);
+                resolve();
+            }, 250);
+        });
+    });
 
     const res = app.lazyStart();
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -65,7 +77,7 @@ test('App: lazyStart() - success', t => {
             true,
             'starts initializers'
         );
-        t.equal(stub.called, true, 'eventually calls start()');
+        t.equal(stub.calledAfter(init), true, 'eventually calls start()');
         sand.restore();
         t.end();
     });

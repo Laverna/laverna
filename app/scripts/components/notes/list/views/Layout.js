@@ -1,174 +1,62 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/notes/list/views/Layout
  */
-/*global define*/
-define([
-    'underscore',
-    'marionette',
-    'backbone.radio',
-    'behaviors/sidebar',
-    'apps/notes/list/views/noteSidebarItem',
-    'text!apps/notes/list/templates/sidebarList.html',
-    'mousetrap'
-], function(_, Marionette, Radio, Behavior, NoteSidebarItem, Tmpl, Mousetrap) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import deb from 'debug';
+
+import NotesView from './NotesView';
+import Pagination from '../../../../behaviors/Pagination';
+
+const log = deb('lav:components/notes/list/views/Layout');
+
+/**
+ * Sidebar layout that shows a list of notes.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class Layout extends Mn.View {
+
+    get template() {
+        const tmpl = require('../templates/layout.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * Sidebar composite view.
+     * Behaviors.
      *
-     * Listens to
-     * -----------
-     * Events:
-     * 1. channel: `notes`, event: `model:navigate`
-     *    Makes the provided model active.
+     * @see module:behaviors/Pagination
+     * @returns {Array}
      */
-    var View = Marionette.CompositeView.extend({
-        template           :  _.template(Tmpl),
+    behaviors() {
+        return [Pagination];
+    }
 
-        childView          :  NoteSidebarItem,
-        childViewContainer :  '.list',
-        childViewOptions   :  {},
+    /**
+     * Regions.
+     *
+     * @returns {Object}
+     */
+    regions() {
+        return {
+            notes: '.list',
+        };
+    }
 
-        behaviors: {
-            SidebarBehavior: {
-                behaviorClass: Behavior
-            }
-        },
+    /**
+     * Show notes collection view.
+     */
+    onRender() {
+        log('rendering notes collection view', this.options);
+        this.showChildView('notes', new NotesView(this.options));
+    }
 
-        ui: {
-            pageNav  : '#pageNav',
-            prevPage : '#prevPage',
-            nextPage : '#nextPage'
-        },
+    templateContext() {
+        return {
+            collection: this.collection,
+        };
+    }
 
-        events: {
-            'click @ui.nextPage': 'nextPage',
-            'click @ui.prevPage': 'previousPage'
-        },
-
-        collectionEvents: {
-            'page:next'     : 'nextPage',
-            'page:previous' : 'previousPage',
-            'reset'         : 'updatePagination'
-        },
-
-        childEvents: {
-            'scroll:top': 'changeScrollTop'
-        },
-
-        initialize: function() {
-            _.bindAll(this, 'toNextNote', 'toPreviousNote');
-
-            this.$scroll  = $('#sidebar .-scroll');
-            this.configs = Radio.request('configs', 'get:object');
-
-            // Shortcuts
-            Mousetrap.bind(this.configs.navigateBottom, this.toNextNote);
-            Mousetrap.bind(this.configs.navigateTop, this.toPreviousNote);
-
-            // Events
-            this.listenTo(Radio.channel('notes'), 'model:navigate', this.modelFocus, this);
-
-            // Pass options to childView
-            this.childViewOptions.args = this.options.args;
-        },
-
-        onDestroy: function() {
-            Mousetrap.unbind([this.configs.navigateBottom, this.configs.navigateTop]);
-        },
-
-        onBeforeRender: function() {
-            this.options.args = Radio.request('appNote', 'route:args') || this.options.args;
-            this.childViewOptions.args = this.options.args;
-        },
-
-        /**
-         * Makes the provided model active.
-         */
-        modelFocus: _.debounce(function(model) {
-            this.options.args.id = model.id;
-            model.trigger('focus');
-        }, 10),
-
-        toNextNote: function() {
-            this.collection.getNextItem(this.options.args.id);
-            return false;
-        },
-
-        toPreviousNote: function() {
-            this.collection.getPreviousItem(this.options.args.id);
-            return false;
-        },
-
-        /**
-         * Updates pagination buttons
-         */
-        updatePagination: function() {
-            this.ui.pageNav.toggleClass('hidden', this.collection.state.totalPages <= 1);
-            this.ui.prevPage.toggleClass('disabled', !this.collection.hasPreviousPage());
-            this.ui.nextPage.toggleClass('disabled', !this.collection.hasNextPage());
-        },
-
-        /**
-         * Gets next page's models and resets the collection
-         */
-        nextPage: function() {
-            if (this.ui.nextPage.hasClass('disabled')) {
-                return false;
-            }
-
-            this.navigatePage(1);
-            this.collection.getNextPage();
-        },
-
-        /**
-         * Gets previous page's models and resets the collection
-         */
-        previousPage: function() {
-            if (this.ui.prevPage.hasClass('disabled')) {
-                return false;
-            }
-
-            this.navigatePage(-1);
-            this.collection.getPreviousPage();
-        },
-
-        /**
-         * Saves page status in window.location
-         */
-        navigatePage: function(number) {
-            this.options.args.page = this.collection.state.currentPage + number;
-
-            Radio.request(
-                'uri', 'navigate',
-                {options: this.options.args}, {trigger: false}
-            );
-        },
-
-        /**
-         * Changes scroll position.
-         */
-        changeScrollTop: function(view, scrollTop) {
-            this.$scroll.scrollTop(
-                scrollTop -
-                this.$scroll.offset().top +
-                this.$scroll.scrollTop() - 100
-            );
-        },
-
-        serializeData: function() {
-            var viewData = {
-                collection  : this.collection,
-                args        : this.options.args
-            };
-            return viewData;
-        }
-
-    });
-
-    return View;
-});
+}

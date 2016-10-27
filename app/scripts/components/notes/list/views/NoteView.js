@@ -1,85 +1,88 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/notes/list/views/NoteView
  */
-/*global define*/
-define([
-    'underscore',
-    'backbone.radio',
-    'marionette',
-    'text!apps/notes/list/templates/sidebarListItem.html',
-], function(_, Radio, Marionette, Tmpl) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import Radio from 'backbone.radio';
+
+import ModelFocus from '../../../../behaviors/ModelFocus';
+
+/**
+ * Note item view.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class NoteView extends Mn.View {
+
+    get template() {
+        const tmpl = require('../templates/noteView.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * Sidebar item view.
+     * Behaviors.
+     *
+     * @see module:behaviors/ModelFocus
+     * @returns {Array}
      */
-    var View = Marionette.ItemView.extend({
-        template: _.template(Tmpl),
+    behaviors() {
+        return [ModelFocus];
+    }
 
-        className: 'list-group list--group',
+    ui() {
+        return {
+            favorite  : '.favorite',
+        };
+    }
 
-        ui: {
-            favorite : '.favorite',
-        },
+    events() {
+        return {
+            'click @ui.favorite': 'toggleFavorite',
+        };
+    }
 
-        events: {
-            'click @ui.favorite': 'toggleFavorite'
-        },
+    modelEvents() {
+        return {
+            change         : 'render',
+            'change:trash' : 'remove',
+        };
+    }
 
-        modelEvents: {
-            'change'            : 'render',
-            'change:trash'      : 'remove',
-            'focus'             : 'onChangeFocus'
-        },
+    /**
+     * Toggle favorite status of a note.
+     *
+     * @returns {Promise}
+     */
+    toggleFavorite() {
+        this.model.toggleFavorite();
+        return Radio.request('collections/Notes', 'saveModel', {model: this.model});
+    }
 
-        initialize: function() {
-            this.options.args.page = this.model.collection.state.currentPage;
-        },
+    serializeData() {
+        return _.extend({}, this.model.attributes, {
+            filterArgs: this.options.filterArgs,
+        });
+    }
 
-        toggleFavorite: function() {
-            Radio.request('notes', 'save', this.model, this.model.toggleFavorite());
-            return false;
-        },
+    templateContext() {
+        return {
+            // Return the first 50 characters of the content
+            getContent() {
+                return _.unescape(this.content).substring(0, 50);
+            },
 
-        onChangeFocus: function() {
-            var $listGroup = this.$('.list-group-item');
+            // Return the link to a note
+            link() {
+                return Radio.request('utils/Url', 'getNoteLink', this);
+            },
 
-            $('.list-group-item.active').removeClass('active');
-            $listGroup.addClass('active');
+            // Return "active" string if the note is currently active (focused)
+            isActive() {
+                return this.filterArgs.id === this.id ? 'active' : '';
+            },
+        };
+    }
 
-            this.trigger('scroll:top', $listGroup.offset().top);
-        },
-
-        serializeData: function() {
-            // Decrypting
-            return _.extend(this.model.toJSON(), {
-                args    : this.options.args
-            });
-        },
-
-        templateHelpers: function() {
-            return {
-                // Show only first 50 characters of the content
-                getContent: function() {
-                    return _.unescape(this.content).substring(0, 50);
-                },
-
-                // Generate link
-                link: function() {
-                    return Radio.request('uri', 'link', this.args, this);
-                },
-
-                isActive: function() {
-                    return this.args.id === this.id ? 'active' : '';
-                }
-            };
-        }
-
-    });
-
-    return View;
-});
+}

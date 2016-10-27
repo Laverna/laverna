@@ -16,6 +16,7 @@ jsdom.env({
 
     done : (err, window) => {
         global.window    = window;
+        global.navigator = window.navigator;
         global.location  = window.location;
         global.document  = window.document;
         global.window.localStorage = global.localStorage;

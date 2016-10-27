@@ -8,7 +8,6 @@ import _ from 'underscore';
 import Configs from '../../../app/scripts/collections/Configs';
 import Radio from 'backbone.radio';
 
-global.navigator    = global.window.navigator;
 const Mousetrap     = require('mousetrap');
 global.Mousetrap    = Mousetrap;
 
@@ -143,10 +142,5 @@ test('Keybindings: << initializer()', t => {
 
     Radio.channel('utils/Keybindings').stopReplying();
     sand.restore();
-    t.end();
-});
-
-test('Keybindings: after()', t => {
-    global.navigator = undefined;
     t.end();
 });

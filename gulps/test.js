@@ -15,6 +15,10 @@ module.exports = function(gulp, $) {
         'babel-node ./test/tape/index.js | faucet',
     ]));
 
+    gulp.task('tape:debug', $.shell.task([
+        'export TAP_DIAG=1 && babel-node ./test/tape/index.js',
+    ]));
+
     gulp.task('test:run', [/* 'lint', */'tape']);
 
     gulp.task('test', ['test:run'], () => {

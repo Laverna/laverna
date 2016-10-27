@@ -85,7 +85,7 @@ export default class Url {
 
         // Generate link to a note
         if (options.filterArgs) {
-            url = this.getNoteLink();
+            url = this.getNoteLink(options);
         }
 
         // Prepend the profile link

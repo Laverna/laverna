@@ -15,9 +15,13 @@ import './workers/Delegator';
 import './utils/Env';
 import './utils/underscore';
 import './utils/I18n';
+import './utils/Url';
 
 // Collections
 import './collections/modules/main';
+
+// Components
+import './components/notes/Router';
 
 const log = deb('lav:main');
 

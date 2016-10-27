@@ -1,9 +1,10 @@
 /**
  * @module utils/Env
  */
+/* global Modernizr */
 import device from 'device-detect.js';
-import Modernizr from 'modernizr';
 import Radio from 'backbone.radio';
+// import Modernizr from 'modernizr';
 // import deb from 'debug';
 
 // const log = deb('lav:utils/Env');

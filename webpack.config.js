@@ -38,6 +38,7 @@ module.exports = {
             $               : 'jquery',
             jQuery          : 'jquery',
             'window.jQuery' : 'jquery',
+            Modernizr       : 'modernizr',
         }),
     ],
 

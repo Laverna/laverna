@@ -128,7 +128,7 @@ test('Pageable: startListening()', t => {
         'listens to Radio channel events');
 
     // Listens to Radio events
-    ['update:model', 'destroy:model', 'restore:model'].forEach(event => {
+    ['save:model', 'destroy:model', 'restore:model'].forEach(event => {
         t.equal(listenSpy.calledWith(page.channel, event), true,
             `listens to "${event}" event on Radio channel`);
     });
@@ -197,13 +197,13 @@ test('Pageable: updateCollectionModel()', t => {
     // Existing model
     page.add({id: 1, title: 'Test'});
     const setSpy = sand.spy(page.get(1), 'set');
-    page.updateCollectionModel({id: 1});
+    page.updateCollectionModel({model: {id: 1}});
     t.equal(setSpy.called, true, 'updates an existing model');
 
     // A new model
     const model   = new Note({id: 2, title: 'Test 2'});
     const pageSpy = sand.stub(page, 'paginate');
-    page.updateCollectionModel(model);
+    page.updateCollectionModel({model});
 
     t.equal(typeof page.get(2), 'object', 'adds a new model to the collection');
     t.equal(pageSpy.called, true, 'updates pagination');

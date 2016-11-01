@@ -172,8 +172,8 @@ test('Module: saveModel()', t => {
             'encrypts the model');
         t.equal(model.save.calledWith(model.attributes, {validate: false}), true,
             'saves the model');
-        t.equal(mod.channel.trigger.calledWith('update:model', {model}), true,
-            'triggers update:model event');
+        t.equal(mod.channel.trigger.calledWith('save:model', {model}), true,
+            'triggers save:model event');
 
         mod.channel.stopReplying();
         sand.restore();
@@ -227,8 +227,9 @@ test('Module: saveModelObject()', t => {
     const mod  = new Module();
     const data = {id: '1', title: 'Test'};
 
+    const trigger = sand.stub(mod.channel, 'trigger');
     sand.stub(mod, 'decryptModel').returns(Promise.resolve());
-    sand.stub(mod, 'saveModel');
+    sand.stub(mod, 'saveModel').returns(Promise.resolve());
 
     const res = mod.saveModelObject({data, profileId: 'test'});
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -240,6 +241,8 @@ test('Module: saveModelObject()', t => {
             'saves after decrypting');
         t.equal(mod.saveModel.calledWithMatch({model: {id: '1'}}), true,
             'saves the model');
+        t.equal(trigger.calledWith('save:object:1'), true,
+            'triggers "save:object:1" event');
 
         sand.restore();
         mod.channel.stopReplying();

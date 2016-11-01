@@ -163,7 +163,7 @@ export default class Module {
         // Encrypt the model and save
         return this.encryptModel(model)
         .then(() => model.save(model.attributes, {validate: false}))
-        .then(() => this.channel.trigger('update:model', {model}));
+        .then(() => this.channel.trigger('save:model', {model}));
     }
 
     /**
@@ -192,13 +192,15 @@ export default class Module {
      * @param {Object} options
      * @param {Object} options.data - an object with a model's values
      * @param {String} options.profileId - profile name
+     * @fires collections/{Name}#save:object:{modelId}
      * @returns {Promise}
      */
     saveModelObject(options) {
         const model = new this.Model(options.data, {profileId: options.profileId});
 
         return this.decryptModel(model)
-        .then(() => this.saveModel({model}));
+        .then(() => this.saveModel({model}))
+        .then(() => this.channel.trigger(`save:object:${model.id}`, {model}));
     }
 
     /**

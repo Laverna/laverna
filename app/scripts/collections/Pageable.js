@@ -124,7 +124,7 @@ export default class Pageable extends Collection {
         this.listenTo(this, 'reset', this.sortByComparators, this);
 
         // Listen to Radio channel events
-        this.listenTo(this.channel, 'update:model', this.onUpdateModel, this);
+        this.listenTo(this.channel, 'save:model', this.onUpdateModel, this);
         this.listenTo(this.channel, 'destroy:model', this.onDestroyModel, this);
         this.listenTo(this.channel, 'restore:model', this.onRestoreModel, this);
 
@@ -168,15 +168,17 @@ export default class Pageable extends Collection {
             return this.onDestroyModel({model});
         }
 
-        return this.updateCollectionModel();
+        return this.updateCollectionModel({model});
     }
 
     /**
      * Update a model in the collection or add it if it doesn't exist.
      *
-     * @param {Object} model - Backbone model.
+     * @param {Object} data
+     * @param {Object} data.model - Backbone model.
      */
-    updateCollectionModel(model) {
+    updateCollectionModel(data) {
+        const model = data.model;
         const collection      = this.fullCollection || this;
         const collectionModel = collection.get(model.id);
 

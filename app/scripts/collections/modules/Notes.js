@@ -185,6 +185,7 @@ export default class Notes extends Module {
      * 1. model.notebook - a notebook model
      * 2. model.fileModels - all file models attached to the note
      *
+     * @todo render markdown content
      * @param {Object} options
      * @param {Object} options.model
      * @returns {Promise} - resolves with the model

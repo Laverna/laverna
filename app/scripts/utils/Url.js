@@ -124,7 +124,7 @@ export default class Url {
      * Prepend the profile link to the provided URL.
      *
      * @param {Object} options
-     * @param {String} options.url
+     * @param {String} (options.url)
      * @param {String} (options.profileId)
      * @returns {String} /p/profileName/my-url
      */
@@ -132,7 +132,7 @@ export default class Url {
         const profileId = options.profileId || this.getProfileId();
 
         // Remove the leading slash and profile link
-        const url = options.url
+        const url = (options.url || '/')
             .replace(/^\//, '')
             .replace(/\/?p\/[^/]*\//, '');
 

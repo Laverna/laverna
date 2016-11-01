@@ -4,13 +4,10 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import proxyquire from 'proxyquire';
 import Radio from 'backbone.radio';
+import Backbone from 'backbone';
+import App from '../../app/scripts/App.js';
 
-const Backbone = {history: {start: sinon.stub()}};
-const App  = proxyquire('../../app/scripts/App.js', {
-    backbone: Backbone,
-}).default;
 const view = {render: sinon.stub()};
 Object.defineProperty(App.prototype, 'layout', {get: () => view});
 
@@ -41,6 +38,7 @@ test('App: initialize()', t => {
 test('App: onStart()', t => {
     const trigger = sand.stub();
     sand.stub(App.prototype, 'getChannel').returns({trigger});
+    sand.stub(Backbone.history, 'start');
 
     const app     = new App();
     const spy     = sand.spy(app, 'onStart');
@@ -96,4 +94,9 @@ test('App: lazyStart() - reject', t => {
         sand.restore();
         t.end();
     });
+});
+
+test('App: after()', t => {
+    Backbone.history.stop();
+    t.end();
 });

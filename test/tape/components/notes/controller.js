@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import _ from 'underscore';
 import controller from '../../../../app/scripts/components/notes/controller';
 import List from '../../../../app/scripts/components/notes/list/Controller';
+import Show from '../../../../app/scripts/components/notes/show/Controller';
 
 let sand;
 test('notes/Controller: before()', t => {
@@ -83,10 +84,12 @@ test('notes/Controller: filterHasChanged()', t => {
 });
 
 test('notes/Controller: showNote()', t => {
+    const init      = sand.stub(Show.prototype, 'init');
     const showNotes = sand.stub(controller, 'showNotes');
 
     controller.showNote();
     t.equal(showNotes.called, true, 'shows the sidebar');
+    t.equal(init.called, true, 'msg');
 
     sand.restore();
     t.end();

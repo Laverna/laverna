@@ -1,24 +1,24 @@
 <nav class="layout--navbar header navbar navbar-static-top -note">
 <div class="container-fluid">
     <div class="navbar-left header--left navbar-btn">
-        <button title="{{i18n('Show sidebar')}}" id="show--sidebar" class="btn -note btn-default visible-xs">
+        <button title="{{_.i18n('Show sidebar')}}" id="show--sidebar" class="btn -note btn-default visible-xs">
             <span class="icon-left-open"></span>
         </button>
     </div>
 
     <div class="navbar-right header--right navbar-btn dropdown">
-        <a href="#{{uri}}notes/edit/{{id}}" class="btn -note btn-default note--edit">
+        <a href="#{{profileLink}}notes/edit/{{id}}" class="btn -note btn-default note--edit">
             <span class="icon-pencil"></span>
-            <span class="hidden-xs">{{i18n('Edit')}}</span>
+            <span class="hidden-xs">{{_.i18n('Edit')}}</span>
         </a>
         <a href="#" class="btn -note btn-default note--remove">
             <span class="icon-trashed"></span>
-            <span class="hidden-xs"><% if (trash === 0) { %>{{i18n('Delete')}}<% } else { %> {{i18n('Forever')}}<% } %></span>
+            <span class="hidden-xs"><% if (trash === 0) { %>{{_.i18n('Delete')}}<% } else { %> {{_.i18n('Forever')}}<% } %></span>
         </a>
         <% if (trash !== 1) { %>
-        <a href="#{{uri}}settings" class="btn -note btn-default">
+        <a href="#{{profileLink}}settings" class="btn -note btn-default">
             <span class="icon-cog"></span>
-            <span>{{i18n('Settings')}}</span>
+            <span>{{_.i18n('Settings')}}</span>
         </a>
         <% } else { %>
         <a href="#" class="btn -note btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -28,11 +28,11 @@
             <div class="btn-group">
                 <a href="#" class="note--restore btn">
                     <span class="icon-undo icon--block"></span>
-                    {{i18n('Restore')}}
+                    {{_.i18n('Restore')}}
                 </a>
-                <a href="#{{uri}}settings" class="btn">
+                <a href="#{{profileLink}}settings" class="btn">
                     <span class="icon-cog icon--block"></span>
-                    {{i18n('Settings')}}
+                    {{_.i18n('Settings')}}
                 </a>
             </div>
         </div>
@@ -45,7 +45,7 @@
     <div class="content container-fluid -note" data-id="{{id}}">
         <header>
             <h1 class="page-header -note">
-                {=cleanXSS(title)}
+                {=_.cleanXSS(title)}
                 <small class="note--date">{{createdDate()}}</small>
                 <button type="button" class="btn btn-link btn--favorite pull-right">
                     <span class="btn--favorite--icon icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
@@ -66,8 +66,8 @@
 
         <p class="note--notebook">
             <% if (notebook && notebook.id) { %>
-            <a href="#{{uri}}notes/f/notebook/q/{{notebook.id}}">
-                <i class="icon-notebook"></i> {=cleanXSS(notebook.name)}
+            <a href="#{{profileLink}}notes/f/notebook/q/{{notebook.id}}">
+                <i class="icon-notebook"></i> {=_.cleanXSS(notebook.name)}
             </a>
             <% } %>
         </p>

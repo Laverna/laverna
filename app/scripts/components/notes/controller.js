@@ -6,6 +6,7 @@ import _ from 'underscore';
 import deb from 'debug';
 
 import List from './list/Controller';
+import Show from './show/Controller';
 
 const log = deb('lav:components/notes/controller');
 
@@ -73,7 +74,10 @@ export default {
     showNote(...args) {
         // Show the sidebar
         this.showNotes(...args);
-        log('showNote', {id: args[4]});
+
+        // Show the note
+        log('show the note');
+        new Show(this.options).init();
     },
 
     showForm() {

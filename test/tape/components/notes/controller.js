@@ -5,9 +5,17 @@
 import test from 'tape';
 import sinon from 'sinon';
 import _ from 'underscore';
-import controller from '../../../../app/scripts/components/notes/controller';
-import List from '../../../../app/scripts/components/notes/list/Controller';
-import Show from '../../../../app/scripts/components/notes/show/Controller';
+
+// Fix mousetrap bug
+const Mousetrap     = require('mousetrap');
+global.Mousetrap    = Mousetrap;
+
+/* eslint-disable */
+const controller = require('../../../../app/scripts/components/notes/controller').default;
+const List       = require('../../../../app/scripts/components/notes/list/Controller').default;
+const Show       = require('../../../../app/scripts/components/notes/show/Controller').default;
+const Form       = require('../../../../app/scripts/components/notes/form/Controller').default;
+/* eslint-enable */
 
 let sand;
 test('notes/Controller: before()', t => {
@@ -90,6 +98,28 @@ test('notes/Controller: showNote()', t => {
     controller.showNote();
     t.equal(showNotes.called, true, 'shows the sidebar');
     t.equal(init.called, true, 'msg');
+
+    sand.restore();
+    t.end();
+});
+
+test('notes/Controller: showForm()', t => {
+    const init      = sand.stub(Form.prototype, 'init');
+    const showNotes = sand.stub(controller, 'showNotes');
+
+    controller.options = ['testdb'];
+    controller.showForm('testdb', 'id-1');
+    t.equal(_.isEmpty(controller.options), false, 'options object is not empty');
+    t.equal(showNotes.notCalled, true,
+        'does not show the sidebar if it is already shown');
+    t.equal(init.called, true, 'shows the form');
+
+    controller._args = {};
+    controller.showForm('testdb', 'id-1');
+    t.equal(_.isEmpty(controller.options), true, 'options object is empty');
+    t.equal(showNotes.called, true,
+        'does not show the sidebar if it is already shown');
+    t.equal(init.called, true, 'shows the form');
 
     sand.restore();
     t.end();

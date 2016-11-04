@@ -7,6 +7,7 @@ import deb from 'debug';
 
 import List from './list/Controller';
 import Show from './show/Controller';
+import Form from './form/Controller';
 
 const log = deb('lav:components/notes/controller');
 
@@ -80,8 +81,20 @@ export default {
         new Show(this.options).init();
     },
 
-    showForm() {
-        log('showForm');
+    /**
+     * Add/edit a note.
+     *
+     * @param {String} profileId
+     * @param {String} id
+     */
+    showForm(profileId, id) {
+        // Show the sidebar if it isn't shown yet
+        if (_.isEmpty(this.options)) {
+            this.showNotes(profileId, id);
+        }
+
+        log('showForm', {profileId, id});
+        new Form(_.extend({}, this.options, {profileId, id})).init();
     },
 
 };

@@ -226,3 +226,19 @@ test('Notes: findAttachments()', t => {
         t.end();
     });
 });
+
+test('Notes: findAttachments() - do not make requests', t => {
+    const mod   = new Module();
+    const model = new mod.Model({id: '1'}, {profileId: 'test'});
+    const req   = sand.stub(Radio, 'request');
+
+    mod.findAttachments({model})
+    .then(() => {
+        t.equal(req.notCalled, true,
+            'does not make requests if notebookId=0, there are no attached files');
+
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end();
+    });
+});

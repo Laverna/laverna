@@ -191,18 +191,26 @@ export default class Notes extends Module {
      * @returns {Promise} - resolves with the model
      */
     findAttachments(options) {
-        const {model} = options;
+        const {model}  = options;
+        const promises = [];
 
-        return Promise.all([
-            Radio.request('collections/Notebooks', 'findModel', {
+        // Fetch the notebook
+        if (model.get('notebookId') !== '0') {
+            promises.push(Radio.request('collections/Notebooks', 'findModel', {
                 profileId : model.profileId,
                 id        : model.get('notebookId'),
-            }),
-            Radio.request('collections/Files', 'findFiles', {
+            }));
+        }
+
+        // Fetch files
+        if (!_.isEmpty(model.get('files'))) {
+            promises.push(Radio.request('collections/Files', 'findFiles', {
                 profileId : model.profileId,
                 ids       : model.get('files'),
-            }),
-        ])
+            }));
+        }
+
+        return Promise.all(promises)
         .then(results => {
             model.notebook   = results[0];
             model.fileModels = results[1];

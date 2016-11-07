@@ -16,6 +16,7 @@ import './utils/Env';
 import './utils/underscore';
 import './utils/I18n';
 import './utils/Url';
+import './utils/Title';
 
 // Collections
 import './collections/modules/main';

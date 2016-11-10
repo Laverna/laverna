@@ -25,7 +25,7 @@ test('notes/list/Controller: configs', t => {
 });
 
 test('notes/list/Controller: init()', t => {
-    const con   = new Controller({profileId: 'test'});
+    const con   = new Controller({filterArgs: {profileId: 'test', filter: 'tag'}});
     const notes = new Notes([
         {id: '1', title: 'Test 1'},
         {id: '2', title: 'Test 2'},
@@ -41,7 +41,7 @@ test('notes/list/Controller: init()', t => {
 
     const res = con.init();
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(find.calledWith({perPage: 10, profileId: 'test'}), true,
+    t.equal(find.calledWith({perPage: 10, profileId: 'test', filter: 'tag'}), true,
         'requests notes collection');
 
     res.then(() => {
@@ -61,13 +61,12 @@ test('notes/list/Controller: show()', t => {
     const collection = new Notes();
 
     const request = sand.stub(Radio, 'request');
-    const trigger = sand.stub(Radio, 'trigger');
 
     con.show(collection);
     t.equal(request.calledWithMatch('Layout', 'show', {region: 'sidebar'}), true,
         'renders the view in "sidebar" region');
-    t.equal(trigger.calledWith('components/notes', 'show:sidebar'), true,
-        'triggers "show:sidebar" event');
+    t.equal(request.calledWith('components/navbar', 'show'), true,
+        'makes "show" request to components/navbar channel');
 
     sand.restore();
     t.end();
@@ -86,6 +85,10 @@ test('notes/list/Controller: listenToEvents()', t => {
         con.navigateForm
     );
     t.equal(key, true, 'listens to "appCreateNote" event from keybindgins channel');
+
+    const navbarForm = listen.calledWith(Radio.channel('components/navbar'),
+        'show:form', con.navigateForm);
+    t.equal(navbarForm, true, 'shows the form on show:form event');
 
     const col = listen.calledWith(con.view.collection.channel, 'model:navigate');
     t.equal(col, true, 'listens to "model:navigate" event on collection channel');

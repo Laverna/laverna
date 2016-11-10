@@ -17,11 +17,15 @@ import './utils/underscore';
 import './utils/I18n';
 import './utils/Url';
 import './utils/Title';
+import './utils/Keybindings';
 
 // Collections
 import './collections/modules/main';
 
 // Components
+import './components/navbar/Controller';
+
+// Router based components
 import './components/notes/Router';
 
 const log = deb('lav:main');

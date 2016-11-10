@@ -32,7 +32,7 @@ export default {
         this._argsOld = this._args;
         this._args    = {
             profileId : args[0],
-            filter    : args[1],
+            filter    : args[1] || 'active',
             query     : args[2],
             page      : args[3],
             id        : args[4],

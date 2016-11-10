@@ -35,11 +35,13 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     init() {
+        const opt = this.options.filterArgs;
+
         // Fetch notes
-        return Radio.request('collections/Notes', 'find', {
+        return Radio.request('collections/Notes', 'find', _.extend({}, opt, {
             perPage   : this.configs.pagination,
-            profileId : this.options.profileId || 'notes-db',
-        })
+            profileId : opt.profileId || 'notes-db',
+        }))
         .then(collection => this.show(collection))
         .then(() => this.listenToEvents())
         .catch(err => log('Error', err));
@@ -62,7 +64,7 @@ export default class Controller extends Mn.Object {
         }, this.options));
 
         Radio.request('Layout', 'show', {region: 'sidebar', view: this.view});
-        Radio.trigger('components/notes', 'show:sidebar', this.options);
+        Radio.request('components/navbar', 'show', this.options.filterArgs);
     }
 
     /**
@@ -71,6 +73,10 @@ export default class Controller extends Mn.Object {
     listenToEvents() {
         // Show note form on "c" keybinding
         this.listenTo(Radio.channel('utils/Keybindings'), 'appCreateNote',
+            this.navigateForm);
+
+        // Show note form if add buttons in the navbar is clicked
+        this.listenTo(Radio.channel('components/navbar'), 'show:form',
             this.navigateForm);
 
         // Open a note on model:navigate event

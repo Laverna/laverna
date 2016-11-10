@@ -128,7 +128,7 @@ export default class Url {
      * @param {String} (options.profileId)
      * @returns {String} /p/profileName/my-url
      */
-    getProfileLink(options) {
+    getProfileLink(options = {}) {
         const profileId = options.profileId || this.getProfileId();
 
         // Remove the leading slash and profile link

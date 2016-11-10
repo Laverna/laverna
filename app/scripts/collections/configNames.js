@@ -117,6 +117,7 @@ const configNames = {
         appCreateNote      : 'c',
         appSearch          : '/',
         appKeyboardHelp    : '?',
+        appShowSidemenu    : 's m',
     },
 };
 

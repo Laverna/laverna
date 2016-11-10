@@ -127,7 +127,10 @@ export default class Configs extends Collection {
      * @returns {Array}
      */
     appShortcuts() {
-        const names = ['appCreateNote', 'appSearch', 'appKeyboardHelp'];
+        const names = _.filter(_.keys(configNames.keybindings), name => {
+            return /^app/.test(name);
+        });
+
         return this.filter(model => _.contains(names, model.get('name')));
     }
 

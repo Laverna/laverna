@@ -89,7 +89,8 @@ test('Keybindings: bindApp()', t => {
 
     key.bindApp();
     t.equal(spy.called, true, 'gets app shortcut configs');
-    t.equal(bind.callCount, 3, 'binds all shortcuts');
+    t.equal(bind.callCount, key.collection.appShortcuts().length,
+        'binds all shortcuts');
 
     key.channel.once('appCreateNote', () => {
         sand.restore();

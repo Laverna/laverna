@@ -381,7 +381,7 @@ export default class Pageable extends Collection {
         const model = this.get(id);
         const index = model ? this.indexOf(model) - 1 : this.models.length - 1;
 
-        if (index > 0) {
+        if (index >= 0) {
             this.channel.trigger('model:navigate', {model: this.at(index)});
         }
         // If it is the first model on the page, navigate to the previous page

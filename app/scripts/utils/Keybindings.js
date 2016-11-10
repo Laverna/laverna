@@ -73,6 +73,7 @@ export default class Keybindings {
         _.each(models, model => {
             Mousetrap.bind(model.get('value'), () => {
                 this.channel.trigger(model.get('name'));
+                return false;
             });
         });
     }

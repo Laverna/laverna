@@ -118,7 +118,7 @@ test('Configs: appShortcuts()', t => {
     const res     = configs.appShortcuts();
 
     t.equal(Array.isArray(res), true, 'returns an array');
-    t.equal(res.length, 3);
+    t.equal(res.length, 4);
 
     t.end();
 });

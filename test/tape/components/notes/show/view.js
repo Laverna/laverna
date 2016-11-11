@@ -165,7 +165,7 @@ test('View: toggleTask() - throttled', t => {
         view.destroy();
         sand.restore();
         t.end();
-    }, 200);
+    }, 300);
 });
 
 test('View: onChangeFavorite()', t => {
@@ -243,10 +243,10 @@ test('View: navigateEdit()', t => {
 
 test('View: triggerRemove()', t => {
     const view    = new View({configs, model: new Note({id: '3'})});
-    const trigger = sand.stub(Radio, 'trigger');
+    const request = sand.stub(Radio, 'request');
 
     view.triggerRemove();
-    t.equal(trigger.calledWith('components/notes', 'remove', {
+    t.equal(request.calledWith('components/notes', 'remove', {
         model: view.model,
     }), true, 'triggers "remove" event');
 

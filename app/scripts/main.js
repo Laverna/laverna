@@ -6,6 +6,7 @@ import FastClick from 'fastclick';
 import Hammer from 'hammerjs';
 import Promise from 'es6-promise';
 import deb from 'debug';
+import 'bootstrap';
 
 // The core app
 import App from './App';
@@ -23,6 +24,7 @@ import './utils/Keybindings';
 import './collections/modules/main';
 
 // Components
+import './components/confirm/Controller';
 import './components/navbar/Controller';
 
 // Router based components

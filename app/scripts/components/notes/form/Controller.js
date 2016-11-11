@@ -202,11 +202,11 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     showCancelConfirm() {
-        return Radio.request('components/Confirm', 'show', {
+        return Radio.request('components/confirm', 'show', {
             title: _.i18n('You have unsaved changes'),
         })
         .then(res => {
-            if (res) {
+            if (res === 'confirm') {
                 return this.redirect();
             }
 

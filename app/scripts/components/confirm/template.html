@@ -5,15 +5,14 @@
             <h3 class="modal-title">{{ getTitle() }}</h3>
         </div>
         <div class="modal-body">
-            <p>{= cleanXSS(content) }</p>
+            <p>{= _.cleanXSS(content) }</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-event="cancel">
-                {{ i18n('Cancel') }}
+            <% _.each(buttons, function(btn) { %>
+            <button type="button" class="btn {{btn.class || 'btn-default'}}" data-event="{{btn.event}}">
+                {{ _.i18n(btn.name) }}
             </button>
-            <button type="button" class="btn btn-success" data-event="confirm">
-                {{ i18n('OK') }}
-            </button>
+            <% }) %>
         </div>
     </div>
 </div>

@@ -81,9 +81,9 @@ export default class Controller {
     removeModel(options) {
         const {model} = options;
 
-        return (options.force ? Promise.resolve(true) : this.showConfirm(model))
+        return (options.force ? Promise.resolve('confirm') : this.showConfirm(model))
         .then(res => {
-            if (!res) {
+            if (res !== 'confirm') {
                 return;
             }
 

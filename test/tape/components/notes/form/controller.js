@@ -246,15 +246,15 @@ test('notes/form/Controller: showCancelConfirm()', t => {
     sand.stub(con, 'redirect');
     sand.stub(con, 'onRejectCancel');
 
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve(true));
+    const req = sand.stub(Radio, 'request').returns(Promise.resolve('confirm'));
 
     con.showCancelConfirm()
     .then(() => {
-        t.equal(req.calledWith('components/Confirm', 'show'), true,
+        t.equal(req.calledWith('components/confirm', 'show'), true,
             'shows the confirmation dialog');
         t.equal(con.redirect.called, true, 'redirects to the previous');
 
-        req.returns(Promise.resolve(false));
+        req.returns(Promise.resolve('reject'));
         return con.showCancelConfirm();
     })
     .then(() => {

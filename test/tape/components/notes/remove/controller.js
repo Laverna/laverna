@@ -92,7 +92,7 @@ test('Controller: removeModel()', t => {
     const con   = new Controller();
     const model = new Note({id: '1'});
     const req   = sand.stub(Radio, 'request');
-    sand.stub(con, 'showConfirm').returns(Promise.resolve(false));
+    sand.stub(con, 'showConfirm').returns(Promise.resolve('reject'));
 
     con.removeModel({model: {id: '2'}})
     .then(() => {
@@ -107,7 +107,7 @@ test('Controller: removeModel()', t => {
         t.equal(req.calledWith('collections/Notes', 'remove', {model}), true,
             'makes "remove" request');
 
-        con.showConfirm.returns(Promise.resolve(true));
+        con.showConfirm.returns(Promise.resolve('resolve'));
         return con.removeModel({model});
     })
     .then(() => {

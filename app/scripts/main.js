@@ -29,6 +29,7 @@ import './components/navbar/Controller';
 
 // Router based components
 import './components/notes/Router';
+import './components/notebooks/Router';
 
 const log = deb('lav:main');
 

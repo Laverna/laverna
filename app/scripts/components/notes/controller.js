@@ -8,6 +8,7 @@ import deb from 'debug';
 import List from './list/Controller';
 import Show from './show/Controller';
 import Form from './form/Controller';
+import './remove/Controller';
 
 const log = deb('lav:components/notes/controller');
 

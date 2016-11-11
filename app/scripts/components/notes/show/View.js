@@ -48,7 +48,7 @@ export default class View extends Mn.View {
         return {
             'click .btn--favourite' : 'toggleFavorite',
             'click @ui.tasks'       : 'toggleTask',
-            'click @ui.rmBtn'       : 'rmNote',
+            'click @ui.rmBtn'       : 'triggerRemove',
         };
     }
 
@@ -169,7 +169,8 @@ export default class View extends Mn.View {
      * @fires components/notes#remove
      */
     triggerRemove() {
-        Radio.trigger('components/notes', 'remove', {model: this.model});
+        Radio.request('components/notes', 'remove', {model: this.model});
+        return false;
     }
 
     serializeData() {

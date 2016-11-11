@@ -1,83 +1,64 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module views/Modal
  */
-/*global define*/
-define([
-    'underscore',
-    'jquery',
-    'marionette',
-    'mousetrap',
-    'bootstrap'
-], function(_, $, Marionette, Mousetrap) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import $ from 'jquery';
+
+/**
+ * Modal region.
+ *
+ * @class
+ * @extends Marionette.Region
+ * @license MPL-2.0
+ */
+export default class Modal extends Mn.Region {
 
     /**
-     * Modal region
-     * @source: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
+     * Show the modal window.
      */
-    var ModalRegion = Marionette.Region.extend({
-        el: '#modal',
+    onShow() {
+        this.currentView.$el.modal({
+            show     : true,
+            backdrop : 'static',
+            keyboard : true,
+        });
 
-        initialize: function() {
-            this.$window = $(window);
-        },
+        this.currentView.$el.on('shown.bs.modal', () => this.onModalShown());
+        this.currentView.$el.on('hidden.bs.modal', () => this.onModalHidden());
+    }
 
-        onShow: function(view) {
-            view.$el.modal({
-                show     : true,
-                backdrop : 'static',
-                keyboard : false
-            });
+    /**
+     * Trigger "shown:modal" event after showing the modal window.
+     */
+    onModalShown() {
+        this.currentView.triggerMethod('shown:modal');
+    }
 
-            // Trigger shown event
-            view.$el.on('shown.bs.modal', function() {
-                view.trigger('shown.modal');
-            });
+    /**
+     * Empty the region immediately after closing the modal window.
+     */
+    onModalHidden() {
+        this.empty();
+    }
 
-            // Trigger hidden event
-            view.$el.on('hidden.bs.modal', function() {
-                view.trigger('hidden.modal');
-            });
+    /**
+     * Hide the modal window before emptying the region.
+     */
+    onBeforeEmpty() {
+        this.currentView.$el.off(['hidden.bs.modal']);
+        this.currentView.$el.modal('hide');
+        this.removeBackdrop();
+    }
 
-            // Hide on close event
-            view.on('close', function() {
-                view.$el.modal('hide');
-            });
+    /**
+     * Remove modal backdrop if it is still there.
+     */
+    removeBackdrop() {
+        const $backdrop = $('.modal-backdrop');
 
-            // Close on ESC
-            Mousetrap.bind('esc', function() {
-                view.$el.modal('hide');
-            });
-
-            // If url is changed we should close modal window
-            if (view.stayOnHashchange !== true) {
-                this.$window.on('hashchange.modal', function() {
-                    view.$el.modal('hide');
-                });
-            }
-        },
-
-        onBeforeEmpty: function(view) {
-            view.$el.modal('hide');
-            this.onBeforeSwap();
-        },
-
-        /**
-         * Because sometimes backdrop is duplicated
-         */
-        onBeforeSwap: function() {
-            var backdrop = $('.modal-backdrop');
-            if (backdrop.length) {
-                backdrop.remove();
-            }
-            this.$window.off('hashchange.modal');
+        if ($backdrop.length) {
+            $backdrop.remove();
         }
+    }
 
-    });
-
-    return ModalRegion;
-});
+}

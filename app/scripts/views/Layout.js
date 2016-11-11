@@ -7,6 +7,8 @@ import $ from 'jquery';
 import Radio from 'backbone.radio';
 import deb from 'debug';
 
+import Modal from './Modal';
+
 const log = deb('lav:views/Layout');
 
 /**
@@ -51,6 +53,7 @@ export default class Layout extends Mn.View {
             sidebarNavbar : '#sidebar--navbar',
             sidebar       : '#sidebar--content',
             content       : '#content',
+            modal         : {regionClass: Modal, el: '#layout--modal'},
         };
     }
 

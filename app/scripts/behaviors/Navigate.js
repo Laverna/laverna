@@ -38,6 +38,8 @@ export default class Navigate extends Mn.Behavior {
 
         // Child view events
         this.listenTo(this.view, 'childview:scroll:top', this.onScrollTop);
+        this.listenTo(this.view, 'navigate:next', this.navigateNextModel);
+        this.listenTo(this.view, 'navigate:previous', this.navigatePreviousModel);
     }
 
     /**

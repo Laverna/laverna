@@ -368,6 +368,9 @@ export default class Pageable extends Collection {
         else if (this.hasNextPage()) {
             this.channel.trigger('page:next');
         }
+        else {
+            this.channel.trigger('page:end');
+        }
     }
 
     /**
@@ -387,6 +390,9 @@ export default class Pageable extends Collection {
         // If it is the first model on the page, navigate to the previous page
         else if (this.hasPreviousPage()) {
             this.channel.trigger('page:previous');
+        }
+        else {
+            this.channel.trigger('page:start');
         }
     }
 

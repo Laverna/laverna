@@ -54,15 +54,17 @@ export default class Notebooks extends Pageable {
      *
      * @param {Array} parents = this.getRoots()
      * @param {Array} tree = []
+     * @param {Number} level = 1
      */
-    getTree(parents = this.getRoots(), tree = []) {
+    getTree(parents = this.getRoots(), tree = [], level = 1) {
         _.each(parents, model => {
+            model.set('level', level);
             tree.push(model);
 
             // Every child notebook can have its own children
             const children = this.getChildren(model.id);
             if (children.length > 0) {
-                this.getTree(children, tree);
+                this.getTree(children, tree, level + 1);
             }
         });
 

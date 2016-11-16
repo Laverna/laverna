@@ -52,10 +52,13 @@ test('Notebooks: getTree()', t => {
     sand.spy(notebooks, 'getRoots');
     sand.spy(notebooks, 'getChildren');
 
+    const set = sand.stub(Notebooks.prototype.model.prototype, 'set');
     const res = notebooks.getTree();
 
     t.equal(notebooks.getRoots.called, true, 'gets only root notebooks first');
     t.equal(notebooks.getChildren.called, true, 'includes children of a notebook');
+    t.equal(set.calledWith('level', 1), true, 'sets the nest level of a notebook model');
+    t.equal(set.calledWith('level', 2), true, 'sets the nest level of a notebook model');
 
     t.equal(Array.isArray(res), true, 'is an array');
     t.equal(res.length, models.length, 'has the same amount of models');

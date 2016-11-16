@@ -42,6 +42,10 @@ test('behaviors/Navigate: initialize()', t => {
         'listens to model:navigate event on collection channel');
     t.equal(listen.calledWith(view, 'childview:scroll:top', navigate.onScrollTop), true,
         'listens to childview:scroll:top event');
+    t.equal(listen.calledWith(view, 'navigate:next', navigate.navigateNextModel),
+        true, 'listens to navigate:next event');
+    t.equal(listen.calledWith(view, 'navigate:previous', navigate.navigatePreviousModel),
+        true, 'listens to navigate:previous event');
 
     sand.restore();
     t.end();

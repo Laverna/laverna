@@ -441,8 +441,8 @@ test('Pageable: navigateNextModel()', t => {
     // Does nothing
     hasNext.returns(false);
     page.navigateNextModel('2');
-    t.equal(trigger.notCalled, true, `does not trigger any events if
-        it is the last model and there are no next pages left`);
+    t.equal(trigger.calledWith('page:end'), true,
+        'triggers page:end event if there are no next pages left');
 
     // Navigate to the next model
     page.navigateNextModel('1');
@@ -473,8 +473,8 @@ test('Pageable: navigatePreviousModel()', t => {
     // Does nothing
     hasPrevious.returns(false);
     page.navigatePreviousModel('1');
-    t.equal(trigger.notCalled, true, `does not trigger any events if
-        it is the 1st model and there are no previous pages left`);
+    t.equal(trigger.calledWith('page:start'), true, `triggers page:start event
+        if it is the first model and there are not previous pages left`);
 
     // Navigate to the previous model
     page.navigatePreviousModel('3');

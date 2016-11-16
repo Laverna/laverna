@@ -4,6 +4,8 @@
  */
 import deb from 'debug';
 
+import List from './list/Controller';
+
 const log = deb('lav:components/notebooks/controller');
 
 export default {
@@ -15,6 +17,7 @@ export default {
      */
     showList(profileId) {
         log('showList', {profileId});
+        return new List({profileId}).init();
     },
 
     /**

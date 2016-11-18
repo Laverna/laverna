@@ -12,6 +12,11 @@ import './remove/Controller';
 
 const log = deb('lav:components/notes/controller');
 
+import Radio from 'backbone.radio';
+Radio.reply('components/editor', 'get:data', () => {
+    return Promise.resolve('');
+});
+
 export default {
 
     /**
@@ -52,7 +57,22 @@ export default {
         }
 
         log('showNotes', this.options);
-        new List({filterArgs: this.options}).init();
+        const controller = new List({filterArgs: this.options});
+        controller.once('destroy', () => this.onListDestroy());
+        return controller.init();
+    },
+
+    /**
+     * Reset filter options once a user navigates to another component's page
+     * (notebooks, settings, etc.)
+     */
+    onListDestroy() {
+        const url = Radio.request('utils/Url', 'getHash');
+
+        if (url.search('notes') === -1) {
+            log('reset options');
+            this.options = [];
+        }
     },
 
     /**

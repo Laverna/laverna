@@ -15,6 +15,13 @@ test('notebooks/list/views/Tag: extends from ItemView', t => {
     t.end();
 });
 
+test('Notebook: modelEvents()', t => {
+    const modelEvents = View.prototype.modelEvents();
+    t.equal(typeof modelEvents, 'object', 'returns an object');
+    t.equal(modelEvents.change, 'render', 're-renders itself if the model has changed');
+    t.end();
+});
+
 test('notebooks/list/views/Notebook: templateContext()', t => {
     const context = View.prototype.templateContext();
 

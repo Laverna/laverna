@@ -47,6 +47,7 @@ export default class Url {
         // Start replying to requests
         this.channel.reply({
             getHashOnStart : () => this.hashOnStart,
+            getHash        : this.getHash,
             navigate       : this.navigate,
             navigateBack   : this.navigateBack,
             getProfileId   : this.getProfileId,
@@ -55,6 +56,15 @@ export default class Url {
             getNoteLink    : this.getNoteLink,
             getFileLink    : this.getFileLink,
         }, this);
+    }
+
+    /**
+     * Return the current history hash.
+     *
+     * @returns {String}
+     */
+    getHash() {
+        return Backbone.history.fragment;
     }
 
     /**

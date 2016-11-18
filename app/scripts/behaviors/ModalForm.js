@@ -1,72 +1,71 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module behavior/ModalForm
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'behaviors/modal'
-], function(_, Marionette, ModalBehavior) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
 
-    var ModalForm = Marionette.Behavior.extend({
-        behaviors: {
-            ModalBehavior: {
-                behaviorClass: ModalBehavior
-            }
-        },
+/**
+ * Modal form behavior.
+ *
+ * @class
+ * @extends Marionette.Behavior
+ * @license MPL-2.0
+ */
+export default class ModalForm extends Mn.Behavior {
 
-        defaults: {
-            uiFocus: 'name'
-        },
+    get uiFocus() {
+        return this.view.uiFocus || 'name';
+    }
 
-        events: {},
-
-        triggers: {
+    triggers() {
+        return {
             'submit form'      : 'save',
             'click .ok'        : 'save',
-            'click .cancelBtn' : 'close'
-        },
+            'click .cancelBtn' : 'cancel',
+        };
+    }
 
-        modelEvents: {
-            'invalid': 'showErrors'
-        },
+    modelEvents() {
+        return {
+            invalid: 'showErrors',
+        };
+    }
 
-        initialize: function() {
-            this.events['keyup @ui.' + this.options.uiFocus] = 'closeOnEsc';
-            this.view.on('shown.modal', this.onFormShown, this);
-        },
+    constructor(...args) {
+        super(...args);
 
-        onFormShown: function() {
-            this.view.ui[this.options.uiFocus].focus();
-        },
+        this.events = {
+            [`keyup @ui.${this.uiFocus}`]: 'closeOnEsc',
+        };
+    }
 
-        /**
-         * Triggers 'close' event when user hits ESC
-         */
-        closeOnEsc: function(e) {
-            if (e.which === 27) {
-                this.view.trigger('close');
-            }
-        },
+    /**
+     * Focus on an ui element.
+     */
+    onShownModal() {
+        this.view.ui[this.uiFocus].focus();
+    }
 
-        /**
-         * Shows validation errors
-         */
-        showErrors: function(model, errors) {
-            _.forEach(errors, function(err) {
-                this.view.ui[err].parent().addClass('has-error');
-
-                if (this.view.ui[err].attr('type') === 'text') {
-                    this.view.ui[err].attr('placeholder', $.t(model.storeName + '.' + err));
-                }
-            }, this);
+    /**
+     * Trigger "cancel" event if user hits Escape.
+     */
+    closeOnEsc(e) {
+        if (e.which === 27) {
+            this.view.trigger('cancel');
         }
-    });
+    }
 
-    return ModalForm;
-});
+    /**
+     * Indicate that validation errors occured by highlighting
+     * form elements with red color.
+     *
+     * @param {Object} data
+     * @param {Object} data.errors
+     */
+    showErrors(data) {
+        _.each(data.errors, err => {
+            this.view.ui[err].parent().addClass('has-error');
+        });
+    }
+
+}

@@ -45,7 +45,7 @@ export default class Modal extends Mn.Region {
      * Hide the modal window before emptying the region.
      */
     onBeforeEmpty() {
-        this.currentView.$el.off(['hidden.bs.modal']);
+        this.currentView.$el.off(['hidden.bs.modal', 'shown.bs.modal']);
         this.currentView.$el.modal('hide');
         this.removeBackdrop();
     }

@@ -29,6 +29,8 @@ export default class Controller extends Mn.Object {
     }
 
     onDestroy() {
+        this.view.options.notebooks.removeEvents();
+        this.view.options.tags.removeEvents();
         log('destroyed');
     }
 
@@ -71,6 +73,7 @@ export default class Controller extends Mn.Object {
         });
 
         Radio.request('Layout', 'show', {region: 'sidebar', view: this.view});
+        Radio.request('Layout', 'empty', {region: 'content'});
         Radio.request('components/navbar', 'show', {section: _.i18n('Notebooks & tags')});
     }
 
@@ -78,6 +81,10 @@ export default class Controller extends Mn.Object {
      * Start listening to events.
      */
     listenToEvents() {
+        // Start listening to collection events
+        this.view.options.notebooks.startListening();
+        this.view.options.tags.startListening();
+
         // Show notebook form on "c" keybinding
         this.listenTo(Radio.channel('utils/Keybindings'), 'appCreateNote',
             this.onCreateKeybinding);

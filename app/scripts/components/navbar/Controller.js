@@ -56,6 +56,10 @@ export default class Controller extends Mn.Object {
         }, this);
     }
 
+    onDestroy() {
+        this.notebooks.removeEvents();
+    }
+
     /**
      * Either instantiate the view or just change navbar title.
      *
@@ -153,6 +157,7 @@ export default class Controller extends Mn.Object {
      * Start listening to events.
      */
     listenToEvents() {
+        this.notebooks.startListening();
         this.listenTo(this.view, 'destroy', this.destroy);
         this.listenTo(this.view, 'submit:search', this.navigateSearch);
     }

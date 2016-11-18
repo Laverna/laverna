@@ -49,6 +49,7 @@ export default class Controller extends Mn.Object {
 
     onDestroy() {
         log('destroy the controller');
+        this.view.collection.removeEvents();
     }
 
     /**
@@ -71,6 +72,8 @@ export default class Controller extends Mn.Object {
      * Listen to various events.
      */
     listenToEvents() {
+        this.view.collection.startListening();
+
         // Show note form on "c" keybinding
         this.listenTo(Radio.channel('utils/Keybindings'), 'appCreateNote',
             this.navigateForm);

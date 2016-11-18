@@ -71,8 +71,7 @@ export default class Pageable extends Collection {
 
         // Do not use pagination
         if (this.pagination.perPage === 0) {
-            return super.fetch(options)
-            .then(() => this.startListening());
+            return super.fetch(options);
         }
 
         return super.fetch(options)
@@ -89,7 +88,6 @@ export default class Pageable extends Collection {
         this.fullCollection = this.clone();
         this.paginate();
 
-        this.startListening();
         return this;
     }
 
@@ -190,8 +188,10 @@ export default class Pageable extends Collection {
         // Add the model to the beginning
         collection.add(model, {at: 0});
 
-        // Re-sort and create pagination pagination again
-        this.paginate();
+        // Re-sort and create pagination again
+        if (this.pagination.perPage) {
+            this.paginate();
+        }
     }
 
     /**

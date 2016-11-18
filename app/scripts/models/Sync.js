@@ -53,10 +53,10 @@ export default class Sync {
      * @returns {Promise}
      */
     sync(method, model, options = {}) {
-        const opt = _.extend({
+        const opt = _.extend({}, options, {
             profileId   : model.profileId,
             storeName   : model.storeName,
-        }, options);
+        });
 
         if (model.idAttribute) {
             opt.idAttribute = model.idAttribute,

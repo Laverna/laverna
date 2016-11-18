@@ -114,11 +114,6 @@ export default class Module {
      * @returns {Promise}
      */
     find(options = {}) {
-        // Stop listening to events
-        if (this.collection && this.collection.removeEvents) {
-            this.collection.removeEvents();
-        }
-
         const opt       = options;
         this.collection = new this.Collection(null, {profileId: options.profileId});
 

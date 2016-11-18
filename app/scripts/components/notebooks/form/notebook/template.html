@@ -4,9 +4,9 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3 class="modal-title">
                 <% if (id) { %>
-                {{ i18n('notebooks.edit') }}
+                {{ _.i18n('notebooks.edit') }}
                 <% } else { %>
-                {{ i18n('notebooks.add') }}
+                {{ _.i18n('notebooks.add') }}
                 <% } %>
             </h3>
         </div>
@@ -16,15 +16,15 @@
                 <form action="#" class="form-horizontal modal--form" method="post">
                     <div class="form-group modal--group">
                         <input name="name" class="form-control modal--input"
-                            type="text" value="{=cleanXSS(name)}" placeholder="{{ i18n('Title') }}" />
+                            type="text" value="{=_.cleanXSS(name)}" placeholder="{{ _.i18n('Title') }}" />
                     </div>
 
                     <div class="form-group modal--group">
                         <select name="parentId" class="form-control modal--input">
-                            <option value="0">{{ i18n('Parent') }}: {{ i18n('Root') }}</option>
+                            <option value="0">{{ _.i18n('Parent') }}: {{ _.i18n('Root') }}</option>
                             <% _.each(notebooks, function (notebook) { %>
                             <option value="{{notebook.id}}"{{isParent(notebook.id) }}>
-                                {{ i18n('Parent') }}: {=cleanXSS(notebook.name)}
+                                {{ _.i18n('Parent') }}: {=_.cleanXSS(notebook.name)}
                             </option>
                             <% }); %>
                         </select>
@@ -34,11 +34,11 @@
         </div>
 
         <div class="modal-footer">
-            <button class="btn btn-default cancelBtn" href="#">
-                {{ i18n('Cancel') }}
+            <button class="btn btn-default cancelBtn">
+                {{ _.i18n('Cancel') }}
             </button>
-            <button class="btn btn-danger ok" href="#">
-                {{ i18n('Save') }}
+            <button class="btn btn-danger ok">
+                {{ _.i18n('Save') }}
             </button>
         </div>
     </div>

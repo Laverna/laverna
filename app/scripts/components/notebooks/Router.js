@@ -44,5 +44,10 @@ export default class Router extends Mn.AppRouter {
 
 }
 
-// Instantiate the router automatically
-Radio.once('App', 'init', () => new Router());
+Radio.once('App', 'init', () => {
+    // Instantiate the router
+    new Router();
+
+    // Start replying to "notebookForm" request
+    Radio.reply('components/notebooks', 'notebookForm', controller.notebookFormReply);
+});

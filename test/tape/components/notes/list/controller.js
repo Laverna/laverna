@@ -56,6 +56,17 @@ test('notes/list/Controller: init()', t => {
     });
 });
 
+test('notes/list/Controller/Controller: onDestroy()', t => {
+    const con = new Controller();
+    con.view  = {collection: {removeEvents: sand.stub()}};
+
+    con.destroy();
+    t.equal(con.view.collection.removeEvents.called, true,
+        'stops listening to collection events');
+
+    t.end();
+});
+
 test('notes/list/Controller: show()', t => {
     const con        = new Controller({profileId: 'test'});
     const collection = new Notes();
@@ -75,9 +86,13 @@ test('notes/list/Controller: show()', t => {
 test('notes/list/Controller: listenToEvents()', t => {
     const con = new Controller({profileId: 'test'});
     con.view  = {collection: new Notes()};
+    sand.stub(con.view.collection, 'startListening');
 
     const listen = sand.stub(con, 'listenTo');
     con.listenToEvents();
+
+    t.equal(con.view.collection.startListening.called, true,
+        'starts listening collection events');
 
     const key = listen.calledWith(
         Radio.channel('utils/Keybindings'),

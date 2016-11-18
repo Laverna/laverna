@@ -169,8 +169,11 @@ test('navbar/Controller: listenToEvents()', t => {
     const con    = new Controller({id: '1'});
     con.view     = {model: 'test'};
     const listen = sand.stub(con, 'listenTo');
+    con.notebooks = {startListening: sand.stub()};
 
     con.listenToEvents();
+    t.equal(con.notebooks.startListening.called, true,
+        'starts listening to notebooks collection events');
     t.equal(listen.calledWith(con.view, 'destroy', con.destroy), true,
         'destroyes itself if the view is destroyed');
     t.equal(listen.calledWith(con.view, 'submit:search', con.navigateSearch), true,

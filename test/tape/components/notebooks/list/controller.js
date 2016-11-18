@@ -28,6 +28,22 @@ test('notebooks/list/Controller: configs', t => {
     t.end();
 });
 
+test('notebooks/list/Controller: onDestroy()', t => {
+    const con       = new Controller();
+    const notebooks = {removeEvents: sand.stub()};
+    const tags      = {removeEvents: sand.stub()};
+    con.view        = {options: {notebooks, tags}};
+
+    con.destroy();
+    t.equal(notebooks.removeEvents.called, true,
+        'stops listening to notebooks collection events');
+    t.equal(tags.removeEvents.called, true,
+        'stops listening to tags collection events');
+
+    sand.restore();
+    t.end();
+});
+
 test('notebooks/list/Controller: init()', t => {
     const con = new Controller();
     sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
@@ -86,11 +102,19 @@ test('notebooks/list/Controller: show()', t => {
 });
 
 test('notebooks/list/Controller: listenToEvents()', t => {
-    const con    = new Controller();
-    con.view     = {el: 'test'};
-    const listen = sand.stub(con, 'listenTo');
+    const con       = new Controller();
+    const notebooks = {startListening: sand.stub()};
+    const tags      = {startListening: sand.stub()};
+    con.view        = {el: 'test', options: {notebooks, tags}};
+    const listen    = sand.stub(con, 'listenTo');
 
     con.listenToEvents();
+
+    t.equal(notebooks.startListening.called, true,
+        'starts listening to notebooks pagination events');
+
+    t.equal(tags.startListening.called, true,
+        'starts listening to tags pagination events');
 
     const keyChannel = Radio.channel('utils/Keybindings');
     t.equal(listen.calledWith(keyChannel, 'appCreateNote', con.onCreateKeybinding), true,

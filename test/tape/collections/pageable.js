@@ -80,13 +80,11 @@ test('Pageable: fetch() - paginate', t => {
 test('Pageable: onFetch()', t => {
     const page           = new Pageable();
     const paginate       = sand.spy(page, 'paginate');
-    const startListening = sand.spy(page, 'startListening');
 
     t.equal(page.onFetch(), page, 'returns itself');
     t.equal(typeof page.fullCollection, 'object',
         'clones itself to fullCollection property');
     t.equal(paginate.called, true, 'creates pagination');
-    t.equal(startListening.called, true, 'starts listening to events');
 
     sand.restore();
     page.stopListening();

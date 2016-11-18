@@ -120,21 +120,6 @@ test('Module: find()', t => {
     });
 });
 
-test('Module: find() - removeEvents', t => {
-    const mod      = new Module();
-    mod.collection = new mod.Collection(null, {profileId: 'test'});
-    const remove   = sand.stub(mod.collection, 'removeEvents');
-    sand.stub(mod, 'decryptCollection', coll => coll);
-
-    mod.find().then(() => {
-        t.equal(remove.called, true, 'stops listening to events');
-
-        sand.restore();
-        mod.channel.stopReplying();
-        t.end();
-    });
-});
-
 test('Module: find() - filter', t => {
     const mod = new Module();
     sand.stub(mod, 'decryptCollection', coll => coll);

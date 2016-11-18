@@ -5,6 +5,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 import _ from 'underscore';
+import Radio from 'backbone.radio';
 
 // Fix mousetrap bug
 const Mousetrap     = require('mousetrap');
@@ -54,6 +55,7 @@ test('notes/Controller: showNotes()', t => {
     const init    = sand.stub(List.prototype, 'init');
     const oldArgs = _.clone(controller._args);
     const changed = sand.stub(controller, 'filterHasChanged');
+    const once    = sand.stub(List.prototype, 'once');
 
     changed.returns(false);
     controller.showNotes();
@@ -64,6 +66,27 @@ test('notes/Controller: showNotes()', t => {
     controller.showNotes('showNotes');
     t.notDeepEqual(controller.options, oldArgs, 'changes filter options');
     t.equal(init.called, true, 'initializes list controller');
+    t.equal(once.calledWith('destroy'), true,
+        'listens to controllers destroy event');
+
+    sand.restore();
+    t.end();
+});
+
+test('notes/Controller: onListDestroy()', t => {
+    const req = sand.stub(Radio, 'request').returns('notes');
+
+    controller.options = ['test-profile'];
+    controller.onListDestroy();
+    t.equal(req.calledWith('utils/Url', 'getHash'), true,
+        'makes getHash request');
+    t.equal(controller.options.profileId, 'test-profile',
+        'does not change filter options');
+
+    req.returns('notebooks');
+    controller.onListDestroy();
+    t.notEqual(controller.options.profileId, 'test-profile',
+        'resets filter options');
 
     sand.restore();
     t.end();

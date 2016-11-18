@@ -8,6 +8,7 @@ import sinon from 'sinon';
 /* eslint-disable */
 import controller from '../../../../app/scripts/components/notebooks/controller';
 import List from '../../../../app/scripts/components/notebooks/list/Controller';
+import NotebookForm from '../../../../app/scripts/components/notebooks/form/notebook/Controller';
 /* eslint-enable */
 
 let sand;
@@ -24,14 +25,30 @@ test('notebooks/Controller', t => {
 test('Controller: showList()', t => {
     const init = sand.stub(List.prototype, 'init');
     controller.showList();
-    t.equal(init.called, true, 'msg');
+    t.equal(init.called, true);
 
     sand.restore();
     t.end();
 });
 
 test('Controller: notebookForm()', t => {
+    const init = sand.stub(NotebookForm.prototype, 'init');
     controller.notebookForm();
+    t.equal(init.called, true);
+
+    sand.restore();
+    t.end();
+});
+
+test('Controller: notebookFormReply()', t => {
+    sand.stub(controller, 'notebookForm');
+
+    const res = controller.notebookFormReply({profileId: 'test', id: '1'});
+    t.equal(typeof res.then, 'function', 'returns a promise');
+    t.equal(controller.notebookForm.calledWith('test', '1'), true,
+        'calls notebookForm method');
+
+    sand.restore();
     t.end();
 });
 

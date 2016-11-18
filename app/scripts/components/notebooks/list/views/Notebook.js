@@ -18,6 +18,12 @@ export default class Notebook extends ItemView {
         return _.template(tmpl);
     }
 
+    modelEvents() {
+        return {
+            change: 'render',
+        };
+    }
+
     templateContext() {
         return {
             getPadding() {

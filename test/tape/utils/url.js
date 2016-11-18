@@ -40,6 +40,17 @@ test('Url: constructor()', t => {
     t.end();
 });
 
+test('Url: getHash()', t => {
+    const url = new Url();
+    Backbone.history.fragment = '/notes';
+
+    t.equal(url.getHash(), Backbone.history.fragment);
+
+    Backbone.history.fragment = null;
+    url.channel.stopReplying();
+    t.end();
+});
+
 test('Url: checkProfile()', t => {
     const reload = sand.stub(window.location, 'reload');
     const url = new Url();

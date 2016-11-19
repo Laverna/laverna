@@ -9,6 +9,7 @@ import sinon from 'sinon';
 import controller from '../../../../app/scripts/components/notebooks/controller';
 import List from '../../../../app/scripts/components/notebooks/list/Controller';
 import NotebookForm from '../../../../app/scripts/components/notebooks/form/notebook/Controller';
+import TagForm from '../../../../app/scripts/components/notebooks/form/tag/Controller';
 /* eslint-enable */
 
 let sand;
@@ -53,6 +54,10 @@ test('Controller: notebookFormReply()', t => {
 });
 
 test('Controller: tagForm()', t => {
+    const init = sand.stub(TagForm.prototype, 'init');
     controller.tagForm();
+    t.equal(init.called, true);
+
+    sand.restore();
     t.end();
 });

@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 import '../../../../../../app/scripts/utils/underscore';
+import Notebooks from '../../../../../../app/scripts/collections/Notebooks';
 import View from '../../../../../../app/scripts/components/notes/form/views/Notebooks';
 
 let sand;
@@ -18,7 +19,7 @@ test('notes/form/views/Notebooks: before()', t => {
 test('notes/form/views/Notebooks: regions()', t => {
     const regions = View.prototype.regions();
     t.equal(typeof regions, 'object', 'returns an object');
-    t.equal(regions.list, '.editor--notebooks--select');
+    t.deepEqual(regions.list, {el: '.editor--notebooks--select', replaceElement: true});
 
     t.end();
 });
@@ -35,16 +36,6 @@ test('notes/form/views/Notebooks: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object', 'returns an object');
     t.equal(events['change @ui.notebookId'], 'addNotebook');
-
-    t.end();
-});
-
-test('notes/form/views/Notebooks: collectionEvents()', t => {
-    const collectionEvents = View.prototype.collectionEvents();
-    t.equal(typeof collectionEvents, 'object', 'returns an object');
-    t.equal(collectionEvents.change, 'render',
-        're-renders the view if something has changed');
-    t.equal(collectionEvents['add:model'], 'selectModel');
 
     t.end();
 });
@@ -77,13 +68,14 @@ test('notes/form/views/Notebooks: selectModel()', t => {
 });
 
 test('notes/form/views/Notebooks: addNotebook()', t => {
-    const view = new View({notebookId: '1'});
+    const collection = new Notebooks();
+    const view = new View({notebookId: '1', collection});
     const is   = sand.stub();
     view.ui    = {notebookId: {
         find : sand.stub().returns({is}),
         val  : sand.stub().returns('2'),
     }};
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve({id: '2'}));
+    const req = sand.stub(Radio, 'request').returns(Promise.resolve({model: {id: '2'}}));
     sand.stub(view, 'selectModel');
 
     is.returns(false);
@@ -95,7 +87,7 @@ test('notes/form/views/Notebooks: addNotebook()', t => {
     const res = view.addNotebook();
     t.equal(view.ui.notebookId.val.calledWith('1'), true,
         'makes the previously selected notebook active again');
-    t.equal(req.calledWith('components/notebooks', 'add'), true,
+    t.equal(req.calledWith('components/notebooks', 'notebookForm'), true,
         'tries to add a new notebook');
 
     res.then(() => {

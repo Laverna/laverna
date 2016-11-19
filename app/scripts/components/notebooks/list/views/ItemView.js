@@ -3,6 +3,7 @@
  */
 import Mn from 'backbone.marionette';
 import _ from 'underscore';
+import Radio from 'backbone.radio';
 import ModelFocus from '../../../../behaviors/ModelFocus';
 
 /**
@@ -16,6 +17,12 @@ export default class ItemView extends Mn.View {
 
     get className() {
         return 'list--group list-group';
+    }
+
+    events() {
+        return {
+            'click .remove-link': 'removeModel',
+        };
     }
 
     /**
@@ -35,6 +42,14 @@ export default class ItemView extends Mn.View {
      */
     serializeData() {
         return _.extend({}, this.options, this.model.attributes);
+    }
+
+    /**
+     * Remove a model.
+     */
+    removeModel() {
+        Radio.request('components/notebooks', 'remove', {model: this.model});
+        return false;
     }
 
 }

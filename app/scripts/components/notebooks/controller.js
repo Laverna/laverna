@@ -7,6 +7,7 @@ import deb from 'debug';
 import List from './list/Controller';
 import NotebookForm from './form/notebook/Controller';
 import TagForm from './form/tag/Controller';
+import './remove/Controller';
 
 const log = deb('lav:components/notebooks/controller');
 

@@ -2,6 +2,7 @@
  * @module components/notes/form/views/NotebooksCollection
  */
 import Mn from 'backbone.marionette';
+import _ from 'underscore';
 import Notebook from './Notebook';
 
 /**
@@ -13,6 +14,14 @@ import Notebook from './Notebook';
  */
 export default class NotebooksCollection extends Mn.CollectionView {
 
+    get tagName() {
+        return 'optgroup';
+    }
+
+    get className() {
+        return 'editor--notebooks--select';
+    }
+
     /**
      * Child view.
      *
@@ -21,6 +30,10 @@ export default class NotebooksCollection extends Mn.CollectionView {
      */
     childView() {
         return Notebook;
+    }
+
+    onRender() {
+        this.$el.attr('label', _.i18n('Notebooks'));
     }
 
 }

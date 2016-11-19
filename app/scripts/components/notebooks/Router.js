@@ -49,5 +49,7 @@ Radio.once('App', 'init', () => {
     new Router();
 
     // Start replying to "notebookForm" request
-    Radio.reply('components/notebooks', 'notebookForm', controller.notebookFormReply);
+    Radio.reply('components/notebooks', 'notebookForm', opt => {
+        return controller.notebookFormReply(opt);
+    });
 });

@@ -49,11 +49,12 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     fetch() {
+        const {profileId} = this.options;
         return Promise.all([
             Radio.request('collections/Notes', 'findModel', _.extend({
                 findAttachments: !_.isNull(this.options.id),
             }, this.options)),
-            Radio.request('collections/Notebooks', 'find', this.options),
+            Radio.request('collections/Notebooks', 'find', {profileId}),
         ]);
     }
 

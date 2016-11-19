@@ -106,9 +106,10 @@ export default class Form extends Mn.View {
      * Show notebooks selector.
      */
     onRender() {
-        this.showChildView('notebooks', new Notebooks(
-            _.pick(this.options, 'notebooks', 'notebookId', 'filterArgs')
-        ));
+        const opt = _.extend({}, _.omit(this.options, 'model'), {
+            collection: this.options.notebooks,
+        });
+        this.showChildView('notebooks', new Notebooks(opt));
     }
 
     /**

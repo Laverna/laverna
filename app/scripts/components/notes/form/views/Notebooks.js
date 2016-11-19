@@ -23,7 +23,10 @@ export default class Notebooks extends Mn.View {
 
     regions() {
         return {
-            list: '.editor--notebooks--select',
+            list: {
+                el: '.editor--notebooks--select',
+                replaceElement: true,
+            },
         };
     }
 
@@ -36,13 +39,6 @@ export default class Notebooks extends Mn.View {
     events() {
         return {
             'change @ui.notebookId': 'addNotebook',
-        };
-    }
-
-    collectionEvents() {
-        return {
-            change      : 'render',
-            'add:model' : 'selectModel',
         };
     }
 
@@ -75,10 +71,12 @@ export default class Notebooks extends Mn.View {
         }
 
         this.ui.notebookId.val(this.options.notebookId);
-        return Radio.request('components/notebooks', 'add')
-        .then(model => {
-            if (model) {
-                this.selectModel(model);
+        return Radio.request('components/notebooks', 'notebookForm', {
+            profileId: this.collection.profileId,
+        })
+        .then(data => {
+            if (data.model) {
+                this.selectModel(data.model);
             }
         });
     }

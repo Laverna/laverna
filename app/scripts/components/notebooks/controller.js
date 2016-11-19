@@ -6,6 +6,7 @@ import deb from 'debug';
 
 import List from './list/Controller';
 import NotebookForm from './form/notebook/Controller';
+import TagForm from './form/tag/Controller';
 
 const log = deb('lav:components/notebooks/controller');
 
@@ -55,6 +56,7 @@ export default {
      */
     tagForm(profileId, id) {
         log('tagForm', {profileId, id});
+        return new TagForm({id, profileId}).init();
     },
 
 };

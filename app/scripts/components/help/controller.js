@@ -5,6 +5,7 @@
 import Radio from 'backbone.radio';
 
 import About from './about/Controller';
+import Keybindings from './keybindings/Controller';
 
 let controller;
 export default controller = {
@@ -15,6 +16,9 @@ export default controller = {
             showFirstStart  : this.showFirstStart,
             showKeybindings : this.showKeybindings,
         }, this);
+
+        // Show keybinding help if "?" key is pressed
+        Radio.on('utils/Keybindings', 'appKeyboardHelp', () => this.showKeybindings());
     },
 
     /**
@@ -30,7 +34,8 @@ export default controller = {
     /**
      * Shows keybinding help.
      */
-    showKeybindings() {
+    showKeybindings(...args) {
+        return new Keybindings(...args).init();
     },
 
 };

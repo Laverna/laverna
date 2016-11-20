@@ -26,6 +26,7 @@ import './collections/modules/main';
 // Components
 import './components/confirm/Controller';
 import './components/navbar/Controller';
+import './components/help/controller';
 
 // Router based components
 import './components/notes/Router';

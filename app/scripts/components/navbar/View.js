@@ -91,7 +91,8 @@ export default class View extends Mn.View {
      * @fires components/help#show:about
      */
     showAbout() {
-        Radio.request('components/help', 'show:about');
+        Radio.request('components/help', 'showAbout');
+        return false;
     }
 
     /**

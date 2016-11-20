@@ -119,7 +119,7 @@ test('navbar/View: showAbout()', t => {
     const req  = sand.stub(Radio, 'request');
 
     view.showAbout();
-    t.equal(req.calledWith('components/help', 'show:about'), true,
+    t.equal(req.calledWith('components/help', 'showAbout'), true,
         'shows "about" page');
 
     view.destroy();

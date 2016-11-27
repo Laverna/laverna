@@ -122,6 +122,7 @@ export default class View extends Mn.View {
         $task.blur();
         $task.prop('checked', $task.is(':checked') === false);
         this.trigger('toggle:task', {taskId});
+        $task.prop('checked', !$task.is(':checked'));
     }
 
     /**

@@ -135,11 +135,13 @@ export default class Controller extends Mn.Object {
         const {model}  = this.view;
         const {taskId} = data;
 
-        return Radio.request('markdown', 'task:toggle', {
+        return Radio.request('components/markdown', 'toggleTask', {
             taskId,
             content: model.get('content'),
         })
         .then((data = {}) => {
+            model.htmlContent = data.htmlContent;
+
             return Radio.request('collections/Notes', 'saveModel', {
                 model,
                 data: _.pick(data, 'content', 'taskCompleted', 'taskAll'),

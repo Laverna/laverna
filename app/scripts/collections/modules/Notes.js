@@ -194,28 +194,52 @@ export default class Notes extends Module {
         const {model}  = options;
         const promises = [];
 
+        // Convert Markdown content to HTML
+        promises.push(
+            Radio.request('components/markdown', 'render', model.attributes)
+            .then(content => model.htmlContent = content)
+        );
+
         // Fetch the notebook
         if (model.get('notebookId') !== '0') {
-            promises.push(Radio.request('collections/Notebooks', 'findModel', {
-                profileId : model.profileId,
-                id        : model.get('notebookId'),
-            }));
+            promises.push(this.findNotebook(model));
         }
 
         // Fetch files
         if (!_.isEmpty(model.get('files'))) {
-            promises.push(Radio.request('collections/Files', 'findFiles', {
-                profileId : model.profileId,
-                ids       : model.get('files'),
-            }));
+            promises.push(this.findFiles(model));
         }
 
         return Promise.all(promises)
-        .then(results => {
-            model.notebook   = results[0];
-            model.fileModels = results[1];
-            return model;
-        });
+        .then(() => model);
+    }
+
+    /**
+     * Find a notebook attached to a note model.
+     *
+     * @param {Object} model
+     * @returns {Promise}
+     */
+    findNotebook(model) {
+        return Radio.request('collections/Notebooks', 'findModel', {
+            profileId : model.profileId,
+            id        : model.get('notebookId'),
+        })
+        .then(notebook => model.notebook = notebook); // eslint-disable-line
+    }
+
+    /**
+     * Find file models attached to a note model.
+     *
+     * @param {Object} model
+     * @returns {Promise}
+     */
+    findFiles(model) {
+        return Radio.request('collections/Files', 'findFiles', {
+            profileId : model.profileId,
+            ids       : model.get('files'),
+        })
+        .then(files => model.fileModels = files); // eslint-disable-line
     }
 
 }

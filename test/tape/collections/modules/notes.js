@@ -207,19 +207,18 @@ test('Notes: findAttachments()', t => {
         {id: '1', files: ['1', '2'], notebookId: '12'},
         {profileId: 'test'}
     );
-    const replyNotebook = sand.stub().returns('notebook');
-    const replyFiles    = sand.stub().returns('files');
-    Radio.replyOnce('collections/Notebooks', 'findModel', replyNotebook);
-    Radio.replyOnce('collections/Files', 'findFiles', replyFiles);
+    const req = sand.stub(Radio, 'request').returns(Promise.resolve('html'));
+    sand.stub(mod, 'findNotebook');
+    sand.stub(mod, 'findFiles');
 
     mod.findAttachments({model})
     .then(() => {
-        t.equal(replyNotebook.calledWith({profileId: 'test', id: '12'}), true,
-            'fetches a notebook');
-        t.equal(replyFiles.calledWith({profileId: 'test', ids: ['1', '2']}), true,
-            'fetches files');
-        t.equal(model.notebook, 'notebook', 'creates notebook property');
-        t.equal(model.fileModels, 'files', 'creates fileModels property');
+        t.equal(req.calledWith('components/markdown', 'render', model.attributes), true,
+            'converts markdown to HTML');
+        t.equal(mod.findNotebook.calledWith(model), true,
+            'fetches the attached notebook');
+        t.equal(mod.findFiles.calledWith(model), true,
+            'fetches the attached file models');
 
         sand.restore();
         mod.channel.stopReplying();
@@ -230,12 +229,57 @@ test('Notes: findAttachments()', t => {
 test('Notes: findAttachments() - do not make requests', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1'}, {profileId: 'test'});
-    const req   = sand.stub(Radio, 'request');
+    const req   = sand.stub(Radio, 'request').returns(Promise.resolve(''));
+    sand.stub(mod, 'findNotebook');
+    sand.stub(mod, 'findFiles');
 
     mod.findAttachments({model})
     .then(() => {
-        t.equal(req.notCalled, true,
-            'does not make requests if notebookId=0, there are no attached files');
+        t.equal(req.calledWith('components/markdown', 'render', model.attributes), true,
+            'converts content from Markdown to HTML');
+        t.equal(model.htmlContent, '', 'creates htmlContent property');
+        t.equal(mod.findNotebook.notCalled, true,
+            'does not try to fetch a notebook if the note does not have notebookId');
+        t.equal(mod.findFiles.notCalled, true,
+            'does not try to fetch file models if the note does not have any files');
+
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end();
+    });
+});
+
+test('Notes: findNotebook()', t => {
+    const mod   = new Module();
+    const model = new mod.Model({notebookId: '1'}, {profileId: 'test'});
+    const req   = sand.stub(Radio, 'request').returns(Promise.resolve({}));
+
+    mod.findNotebook(model)
+    .then(() => {
+        t.equal(req.calledWith('collections/Notebooks', 'findModel', {
+            profileId : 'test',
+            id        : '1',
+        }), true, 'fetches the notebook');
+        t.equal(typeof model.notebook, 'object', 'creates notebook property');
+
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end();
+    });
+});
+
+test('Notes: findFiles()', t => {
+    const mod   = new Module();
+    const model = new mod.Model({files: ['1', '2']}, {profileId: 'test'});
+    const req   = sand.stub(Radio, 'request').returns(Promise.resolve([]));
+
+    mod.findFiles(model)
+    .then(() => {
+        t.equal(req.calledWithMatch('collections/Files', 'findFiles', {
+            profileId : 'test',
+            ids       : model.get('files'),
+        }), true, 'fetches files');
+        t.equal(Array.isArray(model.fileModels), true, 'creates fileModels property');
 
         sand.restore();
         mod.channel.stopReplying();

@@ -172,10 +172,10 @@ test('notes/show/Controller: toggleTask()', t => {
     const res = con.toggleTask({taskId: 1});
     t.equal(typeof res.then, 'function', 'returns a promise');
 
-    t.equal(request.calledWithMatch('markdown', 'task:toggle', {
+    t.equal(request.calledWithMatch('markdown', 'toggleTask', {
         taskId  : 1,
         content : con.view.model.get('content'),
-    }), true, 'makes task:toggle request');
+    }), true, 'makes toggleTask request');
 
     res.then(() => {
         t.equal(request.calledWithMatch('collections/Notes', 'saveModel', {

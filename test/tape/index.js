@@ -3,9 +3,11 @@ import {readFileSync as read} from 'fs';
 import glob from 'glob';
 import {LocalStorage} from 'node-localstorage';
 import overrideTemplate from './overrideTemplate';
+import raf from 'raf';
 
 global.localStorage     = new LocalStorage(`${__dirname}/../../_dev/scratch`);
 global.overrideTemplate = overrideTemplate;
+global.requestAnimationFrame = raf;
 
 /**
  * Create DOM environment.

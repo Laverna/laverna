@@ -3,6 +3,7 @@
  * @license MPL-2.0
  */
 import Db from '../models/Db';
+import Markdown from '../components/markdown/Markdown';
 
 function log(...args) {
     args.unshift('%cworkers/worker', 'color:red;background:gray');
@@ -24,6 +25,7 @@ const delegator = {
      */
     modules: {
         'models/Db': new Db(),
+        'components/markdown': new Markdown(),
     },
 
     /**

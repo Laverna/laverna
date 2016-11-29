@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node ./server.js",
+    "prepublish": "bower install && cd test &&  bower install",
     "electron": "NODE_ENV=dev electron .",
     "karma": "./node_modules/.bin/karma start",
     "test:karma": "./node_modules/.bin/karma start --single-run"
@@ -24,6 +25,7 @@
     "serve-static": "^1.11.1"
   },
   "devDependencies": {
+    "bower": "^1.8.0",
     "browser-sync": "^2.14.0",
     "chai": "^3.5.0",
     "cordova-lib": "^6.3.0",

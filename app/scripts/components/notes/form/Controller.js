@@ -149,7 +149,7 @@ export default class Controller extends Mn.Object {
         const notebookId = this.view.getChildView('notebooks').ui
             .notebookId.val().trim();
 
-        return Radio.request('components/editor', 'get:data')
+        return Radio.request('components/editor', 'getData')
         .then(data => {
             return _.extend({}, data, {
                 notebookId,

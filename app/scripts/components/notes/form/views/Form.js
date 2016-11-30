@@ -209,7 +209,7 @@ export default class Form extends Mn.View {
         this[`${mode}Mode`]();
 
         // Trigger an event that the editor mode has changed
-        this.channel.trigger('mode:changed', {mode});
+        this.channel.trigger('change:mode', {mode});
         return false;
     }
 

@@ -38,6 +38,7 @@
     "blob-polyfill": "^1.0.20150320",
     "blueimp-canvas-to-blob": "^3.3.0",
     "bootstrap": "^3.3.7",
+    "codemirror": "^5.21.0",
     "debug": "^2.2.0",
     "device-detect.js": "^0.2.7",
     "es6-promise": "^3.2.1",

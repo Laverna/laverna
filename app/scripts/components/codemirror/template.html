@@ -48,19 +48,19 @@
 <div class="btn-group btn-group-justified hidden -show">
     <div class="btn-group">
         <button data-col="left" class="btn btn-default active editor--col--btn">
-            {{i18n('Editor')}}
+            {{_.i18n('Editor')}}
         </button>
     </div>
     <div class="btn-group">
         <button data-col="right" class="btn btn-default editor--col--btn">
-            {{i18n('Preview')}}
+            {{_.i18n('Preview')}}
         </button>
     </div>
 </div>
 
 <div class="editor--row">
     <div class="editor--layout -left -show">
-        <textarea class="editor--input" id="editor--input" name="content">{=cleanXSS(content)}</textarea>
+        <textarea class="editor--input" id="editor--input" name="content">{=_.cleanXSS(content)}</textarea>
     </div>
 
     <div class="editor--layout -right">

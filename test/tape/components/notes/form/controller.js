@@ -182,7 +182,7 @@ test('notes/form/Controller: getData()', t => {
     });
 
     const reply = sand.stub().returns(Promise.resolve({content: 'Test'}));
-    Radio.replyOnce('components/editor', 'get:data', reply);
+    Radio.replyOnce('components/editor', 'getData', reply);
 
     const res = con.getData();
     t.equal(typeof res.then, 'function', 'returns a promise');

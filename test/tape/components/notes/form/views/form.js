@@ -234,8 +234,8 @@ test('notes/form/views/Form: switchMode()', t => {
     t.equal(view.ui.form.trigger.calledWith('click'), true,
         'makes the form active again');
     t.equal(view.previewMode.called, true, 'switches to another edit mode');
-    t.equal(view.channel.trigger.calledWith('mode:changed', {mode: 'preview'}), true,
-        'triggers mode:changed event');
+    t.equal(view.channel.trigger.calledWith('change:mode', {mode: 'preview'}), true,
+        'triggers change:mode event');
 
     sand.restore();
     t.end();

@@ -29,6 +29,7 @@ import './components/navbar/Controller';
 import './components/help/controller';
 import './components/markdown/main';
 import './components/codemirror/main';
+import './components/linkDialog/main';
 
 // Router based components
 import './components/notes/Router';

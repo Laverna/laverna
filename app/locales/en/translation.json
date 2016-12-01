@@ -160,7 +160,8 @@
         "confirm remove": "The note **{{title}}** will be removed **for ever**!",
         "create and attach": "Create a new note and attach its link",
         "create": "Create a new note",
-        "hyperlink-dialog": "Title of a note or URL"
+        "hyperlink-dialog": "Title of a note or URL",
+        "hyperlink-help": "Please, provide a link or start typing the title of a note."
     },
     "notebooks": {
         "select": "Select a Notebook",

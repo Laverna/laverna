@@ -195,7 +195,8 @@ export default class Module {
 
         return this.decryptModel(model)
         .then(() => this.saveModel({model}))
-        .then(() => this.channel.trigger(`save:object:${model.id}`, {model}));
+        .then(() => this.channel.trigger(`save:object:${model.id}`, {model}))
+        .then(() => model);
     }
 
     /**

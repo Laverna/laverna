@@ -30,6 +30,7 @@ import './components/help/controller';
 import './components/markdown/main';
 import './components/codemirror/main';
 import './components/linkDialog/main';
+import './components/fileDialog/main';
 
 // Router based components
 import './components/notes/Router';

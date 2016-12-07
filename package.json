@@ -41,6 +41,7 @@
     "codemirror": "^5.21.0",
     "debug": "^2.2.0",
     "device-detect.js": "^0.2.7",
+    "dropzone": "^4.3.0",
     "es6-promise": "^3.2.1",
     "fastclick": "^1.0.6",
     "fuse.js": "^2.5.0",

@@ -20,6 +20,10 @@
       "workers/dataworkers",
       "workers/sharedworkers",
       "workers/transferables",
-      "workers/webworkers"
+      "workers/webworkers",
+      "indexeddb",
+      "storage/localstorage",
+      "storage/sessionstorage",
+      "storage/websqldatabase"
   ]
 }

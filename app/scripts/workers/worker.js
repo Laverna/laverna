@@ -3,7 +3,11 @@
  * @license MPL-2.0
  */
 import Db from '../models/Db';
-import Markdown from '../components/markdown/Markdown';
+
+// Prevent Prismjs from using our Webworker messages
+const addEventListener = self.addEventListener;
+self.addEventListener  = undefined;
+const Markdown = require('../components/markdown/Markdown').default;
 
 function log(...args) {
     args.unshift('%cworkers/worker', 'color:red;background:gray');
@@ -36,7 +40,7 @@ const delegator = {
      * @param {String} action - (resolve|reject)
      */
     postResponse(promiseId, data, action) {
-        const sdata = JSON.stringify({data, promiseId, action});
+        const sdata = {data, promiseId, action};
         self.postMessage(sdata);
     },
 
@@ -71,7 +75,7 @@ const delegator = {
  * @param {Object} evt
  */
 function onMessage(evt) {
-    const msg = JSON.parse(evt.data);
+    const msg = evt.data;
     log('received a message from the main thread', msg);
 
     switch (msg.action) {
@@ -87,11 +91,11 @@ function onMessage(evt) {
 /**
  * @event worker#message
  */
-self.addEventListener('message', evt => onMessage(evt));
+addEventListener('message', evt => onMessage(evt));
 
 /**
  * @event worker#error
  */
-self.addEventListener('error', err => log('error', err));
+addEventListener('error', err => log('error', err));
 
 export {delegator, onMessage};

@@ -67,14 +67,14 @@ export default class Markdown extends WorkerModule {
     }
 
     processRequest(method, args) {
-        const [data]    = args;
-        data.fileModels = _.pluck(data.fileModels || [], 'attributes');
+        const [data] = args;
 
         // Do nothing if content is empty
         if (!data.content || !data.content.length) {
             return Promise.resolve('');
         }
 
+        data.clonedFiles = _.pluck(data.fileModels || [], 'attributes');
         return super.processRequest(method, [data]);
     }
 
@@ -173,24 +173,25 @@ export default class Markdown extends WorkerModule {
     toggleTask(data) {
         let content = _.unescape(data.content);
         content     = task.toggle(data);
-        return this.parse(content);
+        return this.parse({content});
     }
 
     /**
      * Parse Markdown text for tags, task, etc...
      *
-     * @param {String} content
+     * @param {Object} data
+     * @param {String} data.content
      * @returns {Promise} - resolves with an object that contains tags and tasks
      */
-    parse(content) {
-        const text = _.unescape(content);
+    parse(data) {
+        const text = _.unescape(data.content);
         const env  = {};
 
         return Promise.resolve(this.md.render(text, env))
         .then(htmlContent => {
             return _.extend(env, {
-                content,
                 htmlContent,
+                content : data.content,
                 tags    : env.tags ? _.uniq(env.tags)   : [],
                 files   : env.files ? _.uniq(env.files) : [],
                 taskAll : env.tasks ? env.tasks.length  : 0,

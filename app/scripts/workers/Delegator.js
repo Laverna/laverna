@@ -79,7 +79,8 @@ export default class Delegator {
 
             // Post the message to the worker
             const promiseId = this.promises.length - 1;
-            const sdata  = JSON.stringify({action, promiseId, data});
+            const sdata  = {action, promiseId, data};
+            log('sending data:', sdata);
             worker.instance.postMessage(sdata);
         });
     }
@@ -140,7 +141,7 @@ export default class Delegator {
      * @param {Event} evt
      */
     onMessage(worker, evt) {
-        const msg = JSON.parse(evt.data);
+        const msg = evt.data;
 
         switch (msg.action) {
             case 'resolve':

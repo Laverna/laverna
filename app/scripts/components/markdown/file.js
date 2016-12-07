@@ -32,13 +32,13 @@ const file = {
      * @param {Object} md - markdown-it instance
      */
     init(md) {
-        this.md = md;
+        file.md = md;
         /**
          * The original image rule.
          *
          * @prop {Function}
          */
-        this.imageRule = this.md.renderer.rules.image;
+        file.imageRule = file.md.renderer.rules.image;
 
         // Override link and image rules
         md.renderer.rules.link_open = _.bind(file.linkOpen, file); // eslint-disable-line
@@ -84,7 +84,7 @@ const file = {
         }
 
         // Create object URLs only if file collection exists
-        if (env.fileModels && env.fileModels.length) {
+        if (env.clonedFiles && env.clonedFiles.length) {
             this.create(attr, id, env);
         }
     },
@@ -107,7 +107,7 @@ const file = {
      * @param {Object} env
      */
     create(attr, id, env) {
-        const file = _.findWhere(env.fileModels, {id});
+        const file = _.findWhere(env.clonedFiles, {id});
 
         if (!file) {
             return;
@@ -115,7 +115,7 @@ const file = {
 
         // Generate a new link only if it wasn't generated before
         let url = this.urls[file.id];
-        url     = url || (URL || window.webkitURL).createObjectURL(file.src);
+        url     = url || (URL || webkitURL).createObjectURL(file.src);
 
         // Save the file URL
         this.urls[file.id] = url;
@@ -126,10 +126,10 @@ const file = {
      * Revoke all object URLs which aren't under use.
      *
      * @param {Object} data
-     * @param {Array} [data.fileModels]
+     * @param {Array} [data.clonedFiles]
      */
     revoke(data) {
-        const fileModels = data.fileModels || [];
+        const fileModels = data.clonedFiles || [];
 
         _.each(this.urls, (url, id) => {
             // If the model has the file model, do nothing

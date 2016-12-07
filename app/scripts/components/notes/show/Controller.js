@@ -116,8 +116,6 @@ export default class Controller extends Mn.Object {
     onSaveObject() {
         return this.fetch()
         .then(model => {
-            this.view.model.notebook    = model.notebook;
-            this.view.model.fileModels  = model.fileModels;
             this.view.model.htmlContent = model.htmlContent;
             this.view.model.set(model.attributes);
             this.view.model.trigger('synced');

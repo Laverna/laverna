@@ -248,8 +248,8 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     updatePreview() {
-        const {attributes, fileModels} = this.view.model;
-        const data = _.extend({fileModels}, attributes, {
+        const {attributes} = this.view.model;
+        const data = _.extend({}, attributes, {
             content: this.editor.getValue(),
         });
 

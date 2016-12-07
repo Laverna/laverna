@@ -82,7 +82,7 @@ test('markdown/file: replaceLink()', t => {
             attrIndex : sand.stub().returns('test'),
         },
     ];
-    const env = {fileModels: [1]};
+    const env = {clonedFiles: [1]};
 
     file.replaceLink(tokens, 0, null, env);
     t.equal(file.getAttrName.calledWith(tokens[0]), true,
@@ -107,7 +107,7 @@ test('markdown/file: getAttrName()', t => {
 test('markdown/file: create()', t => {
     const model = {id: '1', src: 'src'};
     const env   = {
-        fileModels: [model],
+        clonedFiles: [model],
     };
 
     global.URL = {createObjectURL: sand.stub().returns('file-url')};
@@ -130,7 +130,7 @@ test('markdown/file: revoke()', t => {
     file.urls   = {'1-2': 'file-src', '2-2': 'file-src2'};
 
     global.URL = {revokeObjectURL: sand.stub()};
-    file.revoke({fileModels: [model]});
+    file.revoke({clonedFiles: [model]});
     t.equal(URL.revokeObjectURL.calledWith('file-src'), false,
         'revokes the object URL');
     t.equal(URL.revokeObjectURL.calledWith('file-src2'), true,

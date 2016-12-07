@@ -109,8 +109,8 @@ test('markdown/Markdown: toggleTask()', t => {
     const md = new Markdown();
     sand.stub(md, 'parse');
 
-    md.toggleTask({content: 'Test'})
-    t.equal(md.parse.calledWith('Test'), true, 'calls parse method');
+    md.toggleTask({content: 'Test'});
+    t.equal(md.parse.calledWith({content: 'Test'}), true, 'calls parse method');
 
     sand.restore();
     t.end();
@@ -118,9 +118,9 @@ test('markdown/Markdown: toggleTask()', t => {
 
 test('markdown/Markdown: parse()', t => {
     const md     = new Markdown();
-    const render = sand.spy(md.md, 'render');
+    sand.spy(md.md, 'render');
 
-    const res = md.parse('### Test');
+    const res = md.parse({content: '### Test'});
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(data => {
@@ -128,9 +128,9 @@ test('markdown/Markdown: parse()', t => {
         t.equal(Array.isArray(data.tags), true, 'creates an array of tags');
         t.equal(Array.isArray(data.files), true, 'creates an array of files');
 
-        return md.parse(`### Test #tag #tag2 #tag
+        return md.parse({content: `### Test #tag #tag2 #tag
         #file:1-2-3
-        - [] Task 1`);
+        - [] Task 1`});
     })
     .then(data => {
         t.comment(`tags ${data.tags[1]}`);

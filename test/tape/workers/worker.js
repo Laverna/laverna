@@ -23,6 +23,12 @@ test('worker: before()', t => {
     t.end();
 });
 
+test('Worker: removes self.addEventListener', t => {
+    t.equal(global.self.addEventListener, undefined,
+        'removes self.addEventListener to prevent Prismjs from using our messages');
+    t.end();
+});
+
 test('Worker: events', t => {
     t.equal(typeof listeners.message, 'function',
         'listens to "message" event');
@@ -50,8 +56,8 @@ test('Worker: delegator.postResponse()', t => {
     delegator.postResponse(data.promiseId, data.data, data.action);
     t.equal(global.self.postMessage.called, true,
         'posts a message');
-    t.equal(global.self.postMessage.calledWith(JSON.stringify(data)), true,
-        'posts a serialized message');
+    t.equal(global.self.postMessage.calledWith(data), true,
+        'posts data');
 
     sand.restore();
     t.end();
@@ -118,7 +124,7 @@ test('Worker: onMessage()', t => {
     const stub = sand.stub(delegator, 'execute');
     const data = {action: 'execute', promiseId: 'test', data: {}};
 
-    onMessage({data: JSON.stringify(data)});
+    onMessage({data});
     t.equal(stub.calledWith(data.promiseId, data.data), true,
         'handles "execute" message');
 
@@ -129,7 +135,7 @@ test('Worker: onMessage()', t => {
 test('Worker: onMessage() - unhandled message', t => {
     const stub = sand.stub(delegator, 'execute');
 
-    onMessage({data: JSON.stringify({})});
+    onMessage({data: {}});
     t.equal(stub.notCalled, true, 'does nothing if action');
 
     sand.restore();
@@ -139,7 +145,7 @@ test('Worker: onMessage() - unhandled message', t => {
 test('Worker: message listener', t => {
     const stub = sand.stub(delegator, 'execute');
 
-    listeners.message({data: JSON.stringify({action: 'execute'})});
+    listeners.message({data: {action: 'execute'}});
     t.equal(stub.called, true, 'handles "message" events');
 
     sand.restore();

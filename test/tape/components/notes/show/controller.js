@@ -142,10 +142,6 @@ test('notes/show/Controller: onSaveObject()', t => {
     t.equal(fetch.called, true, 'fetches the model again');
 
     res.then(() => {
-        t.equal(con.view.model.notebook, modelNew.notebook,
-            'updates notebook property');
-        t.equal(con.view.model.fileModels, modelNew.fileModels,
-            'updates fileModels property');
         t.equal(con.view.model.htmlContent, modelNew.htmlContent,
             'updates htmlContent property');
         t.equal(set.calledWith(modelNew.attributes), true, 'sets new attributes');

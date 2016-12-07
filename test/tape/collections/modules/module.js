@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import ModuleObj from '../../../../app/scripts/collections/modules/Module';
 import Notes from '../../../../app/scripts/collections/Notes';
+import '../../../../app/scripts/utils/underscore';
 
 class Module extends ModuleObj {
     get Collection() {
@@ -142,9 +143,10 @@ test('Module: find() - filter', t => {
 
 test('Module: saveModel()', t => {
     const mod   = new Module();
-    const model = new mod.Model({id: '1'});
+    const model = new mod.Model({id: '1', test: '2'});
 
-    sand.stub(model, 'setEscape');
+    sand.spy(model, 'setEscape');
+    sand.spy(model, 'validate');
     sand.stub(mod, 'encryptModel').returns(Promise.resolve());
     sand.stub(model, 'save');
     sand.stub(mod.channel, 'trigger');
@@ -153,9 +155,11 @@ test('Module: saveModel()', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
+        t.equal(model.validate.calledAfter(model.setEscape), true,
+            'validates the model after setting new attributes');
         t.equal(mod.encryptModel.calledWith(model), true,
             'encrypts the model');
-        t.equal(model.save.calledWith(model.attributes, {validate: false}), true,
+        t.equal(model.save.calledWith(model.getData(), {validate: false}), true,
             'saves the model');
         t.equal(mod.channel.trigger.calledWith('save:model', {model}), true,
             'triggers save:model event');

@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import {Model as BModel} from 'backbone';
+import {default as BModel} from '../../../app/scripts/models/Model';
 import Sync from '../../../app/scripts/models/Sync';
 import Db from '../../../app/scripts/models/Db';
 
@@ -38,10 +38,10 @@ test('Sync: sync()', t => {
     const stub  = sand.stub(sync, 'read');
     const model = new Model({id: '1', title: 'Test'});
 
-    sync.sync('read', model, {test: 1});
+    sync.sync('read', model, {conditions: 1});
     const called = stub.calledWithMatch(model, {
         idAttribute : 'id',
-        test        : 1,
+        conditions  : 1,
         profileId   : model.profileId,
         storeName   : model.storeName,
     });
@@ -131,6 +131,7 @@ test('Sync: save()', t => {
 
     model.set('title', 'Test');
     sand.spy(model, 'set');
+    sand.stub(model, 'getData').returns({title: 'Test'});
 
     t.comment(`sync model: ${model.attributes.title}`);
     const res = sync.save(model, opt);

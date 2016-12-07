@@ -238,6 +238,7 @@ test('Notes: findAttachments() - do not make requests', t => {
         t.equal(req.calledWith('components/markdown', 'render', model.attributes), true,
             'converts content from Markdown to HTML');
         t.equal(model.htmlContent, '', 'creates htmlContent property');
+
         t.equal(mod.findNotebook.notCalled, true,
             'does not try to fetch a notebook if the note does not have notebookId');
         t.equal(mod.findFiles.notCalled, true,
@@ -253,6 +254,7 @@ test('Notes: findNotebook()', t => {
     const mod   = new Module();
     const model = new mod.Model({notebookId: '1'}, {profileId: 'test'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve({}));
+    sand.spy(model, 'set');
 
     mod.findNotebook(model)
     .then(() => {
@@ -260,7 +262,10 @@ test('Notes: findNotebook()', t => {
             profileId : 'test',
             id        : '1',
         }), true, 'fetches the notebook');
-        t.equal(typeof model.notebook, 'object', 'creates notebook property');
+
+        t.equal(model.set.calledWith('notebook'), true, 'sets notebook attrubute');
+        t.equal(typeof model.attributes.notebook, 'object',
+            'creates notebook property');
 
         sand.restore();
         mod.channel.stopReplying();
@@ -272,6 +277,7 @@ test('Notes: findFiles()', t => {
     const mod   = new Module();
     const model = new mod.Model({files: ['1', '2']}, {profileId: 'test'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve([]));
+    sand.spy(model, 'set');
 
     mod.findFiles(model)
     .then(() => {
@@ -279,7 +285,10 @@ test('Notes: findFiles()', t => {
             profileId : 'test',
             ids       : model.get('files'),
         }), true, 'fetches files');
-        t.equal(Array.isArray(model.fileModels), true, 'creates fileModels property');
+
+        t.equal(model.set.calledWith('fileModels'), true, 'sets fileModels attrubute');
+        t.equal(Array.isArray(model.attributes.fileModels), true,
+            'creates fileModels property');
 
         sand.restore();
         mod.channel.stopReplying();

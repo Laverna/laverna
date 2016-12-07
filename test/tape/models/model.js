@@ -61,6 +61,9 @@ test('Model: validate()', t => {
     t.equal(model.validate({title: 'Test'}), undefined,
         'returns undefined if there are no errors');
 
+    t.equal(model.validate({title: {}}), undefined,
+        'returns undefined if attribute is not string');
+
     t.end();
 });
 
@@ -82,6 +85,20 @@ test('Model: setEscape()', t => {
 
     model.setEscape({title: '', name: 'Test'});
     t.equal(model.get('title'), '', 'does nothing if an attribute is empty');
+
+    t.end();
+});
+
+test('Model: getData()', t => {
+    const model    = new Model({title: 'Test', test: '1'});
+    model.defaults = {title: ''};
+
+    const res = model.getData();
+    t.equal(typeof res, 'object');
+    t.equal(res.title, 'Test', 'contains the attribute which is in default property');
+    t.equal(res.test, undefined,
+        'does not contain attribute which is not in default property');
+    t.equal(Object.keys(res).length, 1);
 
     t.end();
 });

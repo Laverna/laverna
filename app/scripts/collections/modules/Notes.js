@@ -194,12 +194,6 @@ export default class Notes extends Module {
         const {model}  = options;
         const promises = [];
 
-        // Convert Markdown content to HTML
-        promises.push(
-            Radio.request('components/markdown', 'render', model.attributes)
-            .then(content => model.htmlContent = content)
-        );
-
         // Fetch the notebook
         if (model.get('notebookId') !== '0') {
             promises.push(this.findNotebook(model));
@@ -211,6 +205,8 @@ export default class Notes extends Module {
         }
 
         return Promise.all(promises)
+        .then(() => Radio.request('components/markdown', 'render', model.attributes))
+        .then(content => model.htmlContent = content)
         .then(() => model);
     }
 
@@ -225,7 +221,7 @@ export default class Notes extends Module {
             profileId : model.profileId,
             id        : model.get('notebookId'),
         })
-        .then(notebook => model.notebook = notebook); // eslint-disable-line
+        .then(notebook => model.set('notebook', notebook));
     }
 
     /**
@@ -239,7 +235,7 @@ export default class Notes extends Module {
             profileId : model.profileId,
             ids       : model.get('files'),
         })
-        .then(files => model.fileModels = files); // eslint-disable-line
+        .then(files => model.set('fileModels', files));
     }
 
 }

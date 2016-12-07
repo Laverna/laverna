@@ -145,7 +145,8 @@ export default class Module {
     saveModel(options) {
         const {model} = options;
         const data    = options.data || model.attributes;
-        const errors  = model.validate(data);
+        model.setEscape(data);
+        const errors  = model.validate(model.attributes);
 
         // Trigger invalid event if there are any validation errors
         if (errors) {
@@ -153,11 +154,9 @@ export default class Module {
             return Promise.reject('Validation error');
         }
 
-        model.setEscape(data);
-
         // Encrypt the model and save
         return this.encryptModel(model)
-        .then(() => model.save(model.attributes, {validate: false}))
+        .then(() => model.save(model.getData(), {validate: false}))
         .then(() => this.channel.trigger('save:model', {model}));
     }
 

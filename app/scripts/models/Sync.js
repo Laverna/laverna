@@ -53,7 +53,7 @@ export default class Sync {
      * @returns {Promise}
      */
     sync(method, model, options = {}) {
-        const opt = _.extend({}, options, {
+        const opt = _.extend({}, _.pick(options, 'conditions'), {
             profileId   : model.profileId,
             storeName   : model.storeName,
         });
@@ -141,7 +141,7 @@ export default class Sync {
      */
     save(model, options) {
         const opt = _.extend({
-            data: model.attributes,
+            data: model.getData(),
         }, options);
 
         return this.db.processRequest('save', [opt])

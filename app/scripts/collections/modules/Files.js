@@ -80,19 +80,16 @@ export default class Files extends Module {
      */
     addFiles(options) {
         const {files, profileId} = options;
-        const models  = [];
-        const promise = Promise.resolve();
+        const models   = [];
+        const promises = [];
 
         _.each(files, data => {
             const model = new this.Model(null, {profileId});
-
-            promise.then(() => {
-                return this.saveModel({model, data})
-                .then(() => models.push(model));
-            });
+            models.push(model);
+            promises.push(this.saveModel({model, data}));
         });
 
-        return promise.then(() => models);
+        return Promise.all(promises).then(() => models);
     }
 
 }

@@ -82,7 +82,8 @@ export default class Model extends BModel {
 
         // Validate attributes
         _.each(this.validateAttributes, field => {
-            if (!_.isUndefined(attrs[field]) && !attrs[field].trim().length) {
+            const item = attrs[field];
+            if (!item || (typeof item === 'string' && !item.trim().length)) {
                 errors.push(field);
             }
         });
@@ -99,7 +100,7 @@ export default class Model extends BModel {
      * @returns {Object} this
      */
     setEscape(attrs) {
-        const data = _.pick(attrs, _.keys(this.defaults));
+        const data = this.getData(attrs);
 
         // Filter from XSS
         _.each(this.escapeAttributes, attr => {
@@ -113,6 +114,16 @@ export default class Model extends BModel {
         this.setDate();
 
         return this;
+    }
+
+    /**
+     * Return attributes that exist in defaults property.
+     *
+     * @param {Object} attrs=this.attributes
+     * @returns {Object}
+     */
+    getData(attrs = this.attributes) {
+        return _.pick(attrs, _.keys(this.defaults));
     }
 
     /**

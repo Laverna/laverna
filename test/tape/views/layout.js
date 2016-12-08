@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import $ from 'jquery';
+// import $ from 'jquery';
 
 import Layout from '../../../app/scripts/views/Layout';
 global.overrideTemplate(Layout, 'templates/layout.html');
@@ -79,18 +79,39 @@ test('Layout: add()', t => {
     t.equal(view.add({region: 'content'}), false,
         'returns false if a region already exists');
 
-    sand.spy(view.$body, 'append');
     sand.spy(view, 'addRegion');
+    sand.stub(view, 'createRegionElement');
     view.add({region: 'test-it'});
 
-    t.equal(view.$body.append.calledWith('<div id="test-it"/>'), true,
-        'creates a new div block');
-    t.equal($('#test-it').length, 1, 'the new element can be found');
-
+    t.equal(view.createRegionElement.notCalled, true,
+        'does not create a new div block if "html" option is false');
     t.equal(view.addRegion.calledWith('test-it', '#test-it'), true,
         'creates a new region');
     t.equal(typeof view.getRegion('test-it'), 'object',
         'the new region can be found');
+
+    view.add({region: 'test2', html: true, regionOptions: {el: 'test'}});
+    t.equal(view.createRegionElement.called, true,
+        'creates a new div block if "html" option is true');
+    t.equal(view.addRegion.calledWithMatch('test2', {el: 'test'}), true,
+        'uses "regionOptions"');
+
+    sand.restore();
+    view.channel.stopReplying();
+    t.end();
+});
+
+test('Layout: createRegionElement()', t => {
+    const view = new Layout();
+    view.$body = {append: sand.stub()};
+
+    view.createRegionElement({html: true, region: 'test'});
+    t.equal(view.$body.append.calledWith('<div id="test"/>'), true,
+        'generates a div block if "html" option is not string');
+
+    view.createRegionElement({html: '<a/>'});
+    t.equal(view.$body.append.calledWith('<a/>'), true,
+        'appends string from "html" option to body');
 
     sand.restore();
     view.channel.stopReplying();

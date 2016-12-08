@@ -104,15 +104,36 @@ export default class Layout extends Mn.View {
      *
      * @param {Object} options
      * @param {String} options.region - the name of a region
-     * @param {String} (options.html)
+     * @param {String|Boolean} [options.html] - if it's provided, it will create
+     * a new HTML element and append it to DOM
+     * @param {Object} [options.regionOptions]
      */
     add(options) {
         if (this.getRegion(options.region)) {
             return false;
         }
 
-        this.$body.append(options.html || `<div id="${options.region}"/>`);
-        this.addRegion(options.region, `#${options.region}`);
+        // Create a new HTML element
+        if (options.html) {
+            this.createRegionElement(options);
+        }
+
+        this.addRegion(options.region, options.regionOptions || `#${options.region}`);
+    }
+
+    /**
+     * Create HTML element for a region.
+     *
+     * @param {Object} options
+     */
+    createRegionElement(options) {
+        let html = options.html;
+
+        if (typeof html !== 'string') {
+            html = `<div id="${options.region}"/>`;
+        }
+
+        this.$body.append(html);
     }
 
     /**

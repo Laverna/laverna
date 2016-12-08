@@ -31,6 +31,7 @@ import './components/markdown/main';
 import './components/codemirror/main';
 import './components/linkDialog/main';
 import './components/fileDialog/main';
+import './components/fuzzySearch/main';
 
 // Router based components
 import './components/notes/Router';

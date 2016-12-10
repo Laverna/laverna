@@ -1,36 +1,43 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module utils/fileSaver
+ * @license MPL-2.0
  */
-define([
-    'q',
-    'fileSaver'
-], function(Q, fileSaver) {
-    'use strict';
+import {saveAs} from 'file-saver';
 
-    return function(content, fileName) {
+/**
+ * Save a file in Cordova environment.
+ *
+ * @param {String} content
+ * @param {String} fileName
+ * @param {Function} resolve
+ */
+function cordovaSave(content, fileName, resolve) {
+    const externalDir = window.cordova.file.externalDataDirectory;
 
-        // If it is not Cordova app, use HTML5's saveAs function
-        if (!window.cordova) {
-            return new Q(fileSaver(content, fileName));
-        }
-
-        var defer = Q.defer();
-
-        // Use file plugin API
-        window.resolveLocalFileSystemURL(window.cordova.file.externalDataDirectory, function(dir) {
-            dir.getFile(fileName, {create: true}, function(file) {
-                file.createWriter(function(writer) {
-                    writer.write(content);
-                    defer.resolve();
-                });
+    window.resolveLocalFileSystemURL(externalDir, dir => {
+        dir.getFile(fileName, {create: true}, file => {
+            file.createWriter(writer => {
+                writer.write(content);
+                resolve();
             });
         });
+    });
+}
 
-        return defer.promise;
-    };
+/**
+ * Save a file.
+ *
+ * @param {String} content
+ * @param {String} fileName
+ * @returns {Promise}
+ */
+function fileSaver(content, fileName) {
+    if (window.cordova) {
+        return new Promise(resolve => cordovaSave(content, fileName, resolve));
+    }
 
-});
+    // Use HTML5 saveAs
+    return Promise.resolve(saveAs(content, fileName));
+}
+
+export {fileSaver as default, cordovaSave};

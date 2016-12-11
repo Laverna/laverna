@@ -10,6 +10,7 @@ import Radio from 'backbone.radio';
 import controller from '../../../../app/scripts/components/help/controller';
 import About from '../../../../app/scripts/components/help/about/Controller';
 import Keybindings from '../../../../app/scripts/components/help/keybindings/Controller';
+import FirstStart from '../../../../app/scripts/components/help/firstStart/Controller';
 /* eslint-enable */
 
 let sand;
@@ -41,6 +42,16 @@ test('help/controller: showAbout', t => {
 
     controller.showAbout();
     t.equal(init.called, true, 'shows about page');
+
+    sand.restore();
+    t.end();
+});
+
+test('help/Controller: showFirstStart()', t => {
+    const init = sand.stub(FirstStart.prototype, 'init');
+
+    controller.showFirstStart();
+    t.equal(init.called, true, 'shows firstStart page');
 
     sand.restore();
     t.end();

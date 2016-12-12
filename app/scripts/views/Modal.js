@@ -2,6 +2,7 @@
  * @module views/Modal
  */
 import Mn from 'backbone.marionette';
+import Radio from 'backbone.radio';
 import $ from 'jquery';
 
 /**
@@ -12,6 +13,15 @@ import $ from 'jquery';
  * @license MPL-2.0
  */
 export default class Modal extends Mn.Region {
+
+    /**
+     * Radio channel.
+     *
+     * @prop {Object}
+     */
+    get channel() {
+        return Radio.channel('views/Modal');
+    }
 
     /**
      * Show the modal window.
@@ -25,6 +35,7 @@ export default class Modal extends Mn.Region {
 
         this.currentView.$el.on('shown.bs.modal', () => this.onModalShown());
         this.currentView.$el.on('hidden.bs.modal', () => this.onModalHidden());
+        this.channel.trigger('shown');
     }
 
     /**
@@ -48,6 +59,7 @@ export default class Modal extends Mn.Region {
         this.currentView.$el.off(['hidden.bs.modal', 'shown.bs.modal']);
         this.currentView.$el.modal('hide');
         this.removeBackdrop();
+        this.channel.trigger('hidden');
     }
 
     /**

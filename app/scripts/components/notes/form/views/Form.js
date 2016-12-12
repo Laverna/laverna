@@ -91,6 +91,10 @@ export default class Form extends Mn.View {
         this.listenTo(this.channel, 'save:auto', this.autoSave);
         this.listenTo(this, 'bind:keys', this.bindKeys);
 
+        // Unbind keyboard shortcuts if a modal window is shown
+        this.listenTo(Radio.channel('views/Modal'), 'shown', this.unbindKeys);
+        this.listenTo(Radio.channel('views/Modal'), 'hidden', this.bindKeys);
+
         this.bindKeys();
     }
 
@@ -100,6 +104,13 @@ export default class Form extends Mn.View {
     bindKeys() {
         Mousetrap.bindGlobal(['ctrl+s', 'command+s'], e => this.save(e));
         Mousetrap.bindGlobal(['esc'], e => this.cancel(e));
+    }
+
+    /**
+     * Unbind keyboard shortcuts.
+     */
+    unbindKeys() {
+        Mousetrap.unbind(['ctrl+s', 'command+s', 'esc']);
     }
 
     /**
@@ -144,7 +155,7 @@ export default class Form extends Mn.View {
      */
     onDestroy() {
         this.channel.stopReplying();
-        Mousetrap.unbind(['ctrl+s', 'command+s', 'esc']);
+        this.unbindKeys();
     }
 
     /**

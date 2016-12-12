@@ -30,7 +30,7 @@ export default class View extends Mn.View {
 
     ui() {
         return {
-            favorite : '.btn--favourite--icon',
+            favorite : '.btn--favorite--icon',
             body     : '.-scroll',
 
             // Tasks
@@ -46,7 +46,7 @@ export default class View extends Mn.View {
 
     events() {
         return {
-            'click .btn--favourite' : 'toggleFavorite',
+            'click .btn--favorite'  : 'toggleFavorite',
             'click @ui.tasks'       : 'toggleTask',
             'click @ui.rmBtn'       : 'triggerRemove',
         };
@@ -75,7 +75,7 @@ export default class View extends Mn.View {
         this.toggleFavorite = _.throttle(this.toggleFavorite, 300, {leading: false});
     }
 
-    initialize() {
+    onRender() {
         // Bind shortcuts
         Mousetrap.bind('up', () => this.scrollTop());
         Mousetrap.bind('down', () => this.scrollDown());
@@ -87,7 +87,7 @@ export default class View extends Mn.View {
         );
     }
 
-    onDestroy() {
+    onBeforeDestroy() {
         Mousetrap.unbind([
             'up',
             'down',

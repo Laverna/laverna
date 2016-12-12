@@ -204,7 +204,7 @@ export default class Controller extends Mn.Object {
      */
     showCancelConfirm() {
         return Radio.request('components/confirm', 'show', {
-            title: _.i18n('You have unsaved changes'),
+            content: _.i18n('You have unsaved changes'),
         })
         .then(res => {
             if (res === 'confirm') {

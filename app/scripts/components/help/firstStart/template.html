@@ -42,26 +42,24 @@
         </div>
         <div class="modal-body">
             <div class="container-fluid">
-                <form class="form">
-                    <div class="col-xs-12 form-group">
-                        <legend class="text-center">{{_.i18n('Encryption Password')}}</legend>
-                        <input type="password" placeholder="{{_.i18n('Encryption Password')}}" class="form-control col-xs-12" name="password"/>
-                        <p class="help-block">
-                            {{_.i18n('help.firststart encryption')}}
-                        </p>
-                    </div>
-                    <div class="col-xs-12 form-group">
-                        <legend class="text-center">{{_.i18n('Synchronization')}}</legend>
-                        <select class="form-control col-xs-12" name="cloudStorage">
-                            <option value="0">{{ _.i18n('No') }}</option>
-                            <option value="dropbox">Dropbox</option>
-                            <option value="remotestorage">RemoteStorage</option>
-                        </select>
-                        <p class="help-block">
-                            {{_.i18n('help.firststart sync')}}
-                        </p>
-                    </div>
-                </form>
+                <div class="col-xs-12 form-group">
+                    <legend class="text-center">{{_.i18n('Encryption Password')}}</legend>
+                    <input type="password" placeholder="{{_.i18n('Encryption Password')}}" class="form-control col-xs-12" name="password"/>
+                    <p class="help-block">
+                        {{_.i18n('help.firststart encryption')}}
+                    </p>
+                </div>
+                <div class="col-xs-12 form-group">
+                    <legend class="text-center">{{_.i18n('Synchronization')}}</legend>
+                    <select class="form-control col-xs-12" name="cloudStorage">
+                        <option value="0">{{ _.i18n('No') }}</option>
+                        <option value="dropbox">Dropbox</option>
+                        <option value="remotestorage">RemoteStorage</option>
+                    </select>
+                    <p class="help-block">
+                        {{_.i18n('help.firststart sync')}}
+                    </p>
+                </div>
             </div>
         </div>
         <div class="modal-footer">

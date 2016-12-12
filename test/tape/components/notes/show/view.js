@@ -36,7 +36,7 @@ test('View: ui()', t => {
 test('View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object', 'returns an object');
-    t.equal(events['click .btn--favourite'], 'toggleFavorite',
+    t.equal(events['click .btn--favorite'], 'toggleFavorite',
         'toggles favorite status if the favorite button is clicked');
     t.equal(events['click @ui.tasks'], 'toggleTask',
         'toggles checked status of a task if it is clicked');
@@ -69,9 +69,10 @@ test('View: constructor()', t => {
     t.end();
 });
 
-test('View: initialize()', t => {
+test('View: onRender()', t => {
     const bind = sand.stub(Mousetrap, 'bind');
-    new View({configs});
+    const view = new View({configs});
+    view.onRender();
 
     t.equal(bind.calledWith('up'), true, 'listens to "up" key event');
     t.equal(bind.calledWith('down'), true, 'listens to "down" key event');
@@ -84,13 +85,13 @@ test('View: initialize()', t => {
     t.end();
 });
 
-test('View: onDestroy()', t => {
+test('View: onBeforeDestroy()', t => {
     const view   = new View({configs});
     const unbind = sand.spy(Mousetrap, 'unbind');
-    sand.spy(view, 'onDestroy');
+    sand.spy(view, 'onBeforeDestroy');
 
     view.destroy();
-    t.equal(view.onDestroy.called, true, 'calls onDestroy method');
+    t.equal(view.onBeforeDestroy.called, true, 'calls onDestroy method');
     t.equal(unbind.calledWith(['up', 'down', 'e', '#', 's']), true,
         'unbinds all keybindings');
 

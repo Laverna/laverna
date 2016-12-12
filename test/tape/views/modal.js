@@ -14,6 +14,11 @@ test('views/Modal: before()', t => {
     t.end();
 });
 
+test('Modal: channel', t => {
+    t.equal(modal.channel.channelName, 'views/Modal');
+    t.end();
+});
+
 test('views/Modal: onShow()', t => {
     modal.currentView = {
         $el: {
@@ -21,6 +26,7 @@ test('views/Modal: onShow()', t => {
             on    : sand.stub(),
         },
     };
+    const trig = sand.stub(modal.channel, 'trigger');
 
     modal.onShow();
     t.equal(modal.currentView.$el.modal.calledWith({
@@ -33,8 +39,10 @@ test('views/Modal: onShow()', t => {
         'listens to shown.bs.modal event');
     t.equal(modal.currentView.$el.on.calledWith('hidden.bs.modal'), true,
         'listens to hidden.bs.modal event');
+    t.equal(trig.calledWith('shown'), true, 'triggers "shown" event on the channel');
 
     modal.currentView = null;
+    sand.restore();
     t.end();
 });
 
@@ -61,6 +69,7 @@ test('views/Modal: onModalHidden()', t => {
 
 test('views/Modal: onBeforeEmpty()', t => {
     modal.currentView = {$el: {off: sand.stub(), modal: sand.stub()}};
+    const trig        = sand.stub(modal.channel, 'trigger');
     sand.stub(modal, 'removeBackdrop');
 
     modal.onBeforeEmpty();
@@ -71,6 +80,7 @@ test('views/Modal: onBeforeEmpty()', t => {
     t.equal(modal.currentView.$el.modal.calledWith('hide'), true,
         'hides the modal window');
     t.equal(modal.removeBackdrop.called, true, 'removes the backdrop');
+    t.equal(trig.calledWith('hidden'), true, 'triggers "hidden" event on the channel');
 
     sand.restore();
     t.end();

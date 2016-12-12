@@ -4,6 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
+import Radio from 'backbone.radio';
 
 import '../../../../../../app/scripts/utils/underscore';
 import Note from '../../../../../../app/scripts/models/Note';
@@ -70,14 +71,26 @@ test('notes/form/views/Form: events', t => {
 });
 
 test('notes/form/views/Form: initialize()', t => {
-    const reply = sand.stub(View.prototype.channel, 'reply');
-    const bind  = sand.stub(View.prototype, 'bindKeys');
-    const view  = new View({model: new Note()});
+    const reply  = sand.stub(View.prototype.channel, 'reply');
+    const bind   = sand.stub(View.prototype, 'bindKeys');
+    const listen = sand.stub(View.prototype, 'listenTo');
+    const view   = new View({model: new Note()});
 
     t.equal(reply.calledWith({
         getModel      : view.model,
         showChildView : view.showChildView,
     }, view), true, 'starts replying to requests');
+
+    t.equal(listen.calledWith(view.channel, 'save:auto', view.autoSave), true,
+        'listens to save:auto event');
+    t.equal(listen.calledWith(view, 'bind:keys', view.bindKeys), true,
+        'listens to bind:keys event');
+
+    const channel = Radio.channel('views/Modal');
+    t.equal(listen.calledWith(channel, 'shown', view.unbindKeys), true,
+        'unbinds keyboards shortcuts if a modal window is shown');
+    t.equal(listen.calledWith(channel, 'hidden', view.bindKeys), true,
+        'binds keyboards shortcuts back if a modal window is hidden');
 
     t.equal(bind.called, true, 'binds keyboard shortcuts');
 
@@ -152,8 +165,10 @@ test('notes/form/views/Form: onDestroy()', t => {
     const view   = new View({});
     const unbind = sand.spy(Mousetrap, 'unbind');
     sand.spy(view.channel, 'stopReplying');
+    sand.spy(view, 'unbindKeys');
 
     view.onDestroy();
+    t.equal(view.unbindKeys.called, true, 'calls unbindKeys method');
     t.equal(view.channel.stopReplying.called, true, 'stops replying to requests');
     t.equal(unbind.calledWith(['ctrl+s', 'command+s', 'esc']), true,
         'unbinds keyboard shortcuts');

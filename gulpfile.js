@@ -33,6 +33,7 @@ function createTask(name) {
     'lint',
     'serve',
     'test',
+    'copy',
 ].forEach(createTask);
 
 gulp.task('release:after', () => {
@@ -72,6 +73,6 @@ gulp.task('release', $.sequence(
  */
 gulp.task('default', $.sequence(
     'clean:dist',
-    ['css', 'html', 'bundle'],
+    ['css', 'html', 'bundle', 'copy'],
     ['serve']
 ));

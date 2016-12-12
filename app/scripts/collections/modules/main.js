@@ -13,7 +13,6 @@ import Tags from './Tags';
 /**
  * Instantiate all collection modules
  *
- * @todo use profileId when fetching configs (get from the url)
  * @returns {Promise}
  */
 function initializer() {
@@ -25,7 +24,9 @@ function initializer() {
     new Tags();
 
     // Find or create configs
-    return Radio.request('collections/Configs', 'find', {profileId: 'notes-db'});
+    return Radio.request('collections/Configs', 'find', {
+        profileId: Radio.request('utils/Url', 'getProfileId') || 'notes-db',
+    });
 }
 
 // Add a new initializer

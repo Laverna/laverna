@@ -2,8 +2,6 @@
  * @module workers/Delegator
  */
 import Radio from 'backbone.radio';
-import WebWorker from './worker.js';
-import Modernizr from 'modernizr';
 import _ from 'underscore';
 import deb from 'debug';
 
@@ -20,10 +18,17 @@ export default class Delegator {
     /**
      * Radio channel for events/requests.
      *
-     * @returns {Object} Backbone Radio object
+     * @prop {Object} Backbone Radio object
      */
     get channel() {
         return Radio.channel('workers/Delegator');
+    }
+
+    /**
+     * WebWorker file.
+     */
+    get WebWorker() {
+        return require('./worker.js');
     }
 
     /**
@@ -69,7 +74,7 @@ export default class Delegator {
      */
     postMessage(action, data) {
         // Get the least loaded worker
-        const worker = this.getWorker();
+        const worker = this.getWorker(data);
 
         // Increase the number of unresolved promises
         worker.unresolved += 1;
@@ -114,7 +119,7 @@ export default class Delegator {
          * @param {Boolean} unresolved - number of unresolved worker promises
          */
         const worker = {
-            instance   : new WebWorker(),
+            instance   : new this.WebWorker(),
             unresolved : 0,
         };
 
@@ -142,6 +147,7 @@ export default class Delegator {
      */
     onMessage(worker, evt) {
         const msg = evt.data;
+        log('delegator message', msg);
 
         switch (msg.action) {
             case 'resolve':
@@ -169,7 +175,8 @@ export default class Delegator {
         // Resolve/reject a promise
         if (promise[msg.action]) {
             worker.unresolved -= 1; // eslint-disable-line
-            return promise[msg.action](msg.data);
+            promise[msg.action](msg.data);
+            this.promises[msg.promiseId] = null;
         }
     }
 
@@ -192,11 +199,17 @@ export default class Delegator {
     /**
      * Return the least loaded WebWorker.
      *
+     * @param {Object} data={}
      * @returns {Object} WebWorker instance
      */
-    getWorker() {
-        // There is only one worker
-        if (this.workers.length === 1) {
+    getWorker(data = {}) {
+        /*
+         * Use the first worker if:
+         * 1. There is only one worker;
+         * 2. It's an indexedDB operation (because it allows to have only
+         * one instance)
+         */
+        if (this.workers.length === 1 || data.file === 'models/Db') {
             return this.workers[0];
         }
 
@@ -222,6 +235,7 @@ export default class Delegator {
  * supported or false.
  */
 const initializer = () => {
+    /* global Modernizr */
     if (!Modernizr.webworkers) {
         return false;
     }

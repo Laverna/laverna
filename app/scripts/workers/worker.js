@@ -41,6 +41,7 @@ const delegator = {
      */
     postResponse(promiseId, data, action) {
         const sdata = {data, promiseId, action};
+        log('posting response', data);
         self.postMessage(sdata);
     },
 

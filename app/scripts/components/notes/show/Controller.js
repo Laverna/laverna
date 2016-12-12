@@ -78,6 +78,7 @@ export default class Controller extends Mn.Object {
 
         // Set document title
         Radio.request('utils/Title', 'set', {title: model.get('title')});
+        Radio.trigger('components/notes', 'model:active', {model});
     }
 
     /**

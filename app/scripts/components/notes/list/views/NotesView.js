@@ -2,6 +2,7 @@
  * @module components/notes/list/views/NotesView
  */
 import Mn from 'backbone.marionette';
+import Radio from 'backbone.radio';
 import NoteView from './NoteView';
 import Navigate from '../../../../behaviors/Navigate';
 
@@ -22,6 +23,15 @@ export default class NotesView extends Mn.CollectionView {
      */
     get useNavigateKeybindings() {
         return true;
+    }
+
+    /**
+     * Component Radio channel.
+     *
+     * @prop {Object}
+     */
+    get channel() {
+        return Radio.channel('components/notes');
     }
 
     /**

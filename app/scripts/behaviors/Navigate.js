@@ -31,10 +31,16 @@ export default class Navigate extends Mn.Behavior {
             this.bindKeys();
         }
 
+        this.onModelNavigate = _.debounce(this.onModelNavigate, 10);
+
         // Listen to model:navigate event
         this.listenTo(this.collection.channel, 'model:navigate', _.debounce((...args) => {
             this.onModelNavigate(...args);
         }, 10));
+
+        if (this.view.channel) {
+            this.listenTo(this.view.channel, 'model:active', this.onModelNavigate);
+        }
 
         // Child view events
         this.listenTo(this.view, 'childview:scroll:top', this.onScrollTop);
@@ -99,8 +105,9 @@ export default class Navigate extends Mn.Behavior {
      * @param {Object} data.model
      */
     onModelNavigate(data) {
-        this.view.options.filterArgs.id = data.model.id;
-        data.model.trigger('focus');
+        const model = this.collection.get(data.model.id);
+        this.view.options.filterArgs.id = model.id;
+        model.trigger('focus');
     }
 
 }

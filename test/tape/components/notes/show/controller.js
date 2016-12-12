@@ -67,17 +67,23 @@ test('notes/show/Controller: fetch()', t => {
 test('notes/show/Controller: show()', t => {
     const con     = new Controller({test: '1'});
     const request = sand.stub(Radio, 'request');
+    const trigger = sand.stub(Radio, 'trigger');
     sand.stub(View.prototype, 'initialize');
 
     con.show(new Note({title: 'Test'}));
+
     t.equal(typeof con.view, 'object', 'creates a view instance');
     t.equal(con.view instanceof View, true, 'uses the correct view');
     t.equal(request.calledWith('Layout', 'show', {
         region : 'content',
         view   : con.view,
     }), true, 'renders the view');
+
     t.equal(request.calledWith('utils/Title', 'set', {title: 'Test'}), true,
         'sets document title');
+    t.equal(trigger.calledWith('components/notes', 'model:active', {
+        model: con.view.model,
+    }), true, 'triggers model:active event');
 
     sand.restore();
     t.end();

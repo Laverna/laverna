@@ -32,14 +32,20 @@ test('behaviors/Navigate: initialize()', t => {
     const navigate = Navigate.prototype;
     const bind     = sand.stub(navigate, 'bindKeys');
     const listen   = sand.stub(navigate, 'listenTo');
+
+    View.prototype.channel = {channelName: 'test'};
     const view     = new View({
         collection : new Notes(),
         configs    : {test: 'yes'},
     });
 
     t.equal(bind.called, true, 'starts listening to keybinding events');
+
     t.equal(listen.calledWith(view.collection.channel, 'model:navigate'), true,
         'listens to model:navigate event on collection channel');
+    t.equal(listen.calledWith(view.channel, 'model:active'),
+        true, 'listens to model:active event');
+
     t.equal(listen.calledWith(view, 'childview:scroll:top', navigate.onScrollTop), true,
         'listens to childview:scroll:top event');
     t.equal(listen.calledWith(view, 'navigate:next', navigate.navigateNextModel),
@@ -141,12 +147,15 @@ test('behaviors/Navigate: onModelNavigate()', t => {
     navigate.view  = {options: {filterArgs: {}}};
     const model    = new Notes.prototype.model({id: '2'});
     sand.stub(model, 'trigger');
+    navigate.collection = new Notes([model]);
 
-    navigate.onModelNavigate({model});
+    navigate.onModelNavigate({model: model.clone()});
+
     t.equal(navigate.view.options.filterArgs.id, '2', 'updates filter parameters');
     t.equal(model.trigger.calledWith('focus'), true,
         'triggers "focus" event on the model');
 
+    navigate.collection = null;
     navigate.view = null;
     sand.restore();
     t.end();

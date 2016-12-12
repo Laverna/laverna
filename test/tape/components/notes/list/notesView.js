@@ -20,6 +20,11 @@ test('notes/list/views/NotesView: useNavigateKeybindings', t => {
     t.end();
 });
 
+test('notes/list/views/NotesView: channel', t => {
+    t.equal(NotesView.prototype.channel.channelName, 'components/notes');
+    t.end();
+});
+
 test('notes/list/views/NotesView: behaviors()', t => {
     const behaviors = NotesView.prototype.behaviors();
     t.equal(Array.isArray(behaviors), true, 'returns an array');

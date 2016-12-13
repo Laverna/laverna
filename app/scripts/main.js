@@ -32,6 +32,7 @@ import './components/codemirror/main';
 import './components/linkDialog/main';
 import './components/fileDialog/main';
 import './components/fuzzySearch/main';
+import './components/electronSearch/Controller';
 import './components/importExport/main';
 
 // Router based components

@@ -133,7 +133,7 @@ export default class Layout extends Mn.View {
             html = `<div id="${options.region}"/>`;
         }
 
-        this.$body.append(html);
+        this.$el.append(html);
     }
 
     /**

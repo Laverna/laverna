@@ -38,6 +38,7 @@ import './components/importExport/main';
 // Router based components
 import './components/notes/Router';
 import './components/notebooks/Router';
+import './components/settings/Router';
 
 const log = deb('lav:main');
 

@@ -103,14 +103,14 @@ test('Layout: add()', t => {
 
 test('Layout: createRegionElement()', t => {
     const view = new Layout();
-    view.$body = {append: sand.stub()};
+    view.$el   = {append: sand.stub()};
 
     view.createRegionElement({html: true, region: 'test'});
-    t.equal(view.$body.append.calledWith('<div id="test"/>'), true,
+    t.equal(view.$el.append.calledWith('<div id="test"/>'), true,
         'generates a div block if "html" option is not string');
 
     view.createRegionElement({html: '<a/>'});
-    t.equal(view.$body.append.calledWith('<a/>'), true,
+    t.equal(view.$el.append.calledWith('<a/>'), true,
         'appends string from "html" option to body');
 
     sand.restore();

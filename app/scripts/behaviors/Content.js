@@ -3,7 +3,6 @@
  */
 import Mn from 'backbone.marionette';
 import $ from 'jquery';
-import _ from 'underscore';
 import Hammer from 'hammerjs';
 import Radio from 'backbone.radio';
 

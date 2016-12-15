@@ -2,6 +2,7 @@
  * @module components/settings/sidebar/Navbar
  */
 import Mn from 'backbone.marionette';
+import _ from 'underscore';
 
 /**
  * Settings navbar view for the sidebar.

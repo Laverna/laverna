@@ -4,6 +4,7 @@
  * @module components/markdown/file
  */
 /* eslint no-param-reassign: 0 */
+/* global webkitURL */
 import _ from 'underscore';
 
 /**
@@ -17,7 +18,7 @@ const file = {
      *
      * @prop {Object}
      */
-    pattern: /\#file:([a-z0-9\-])+/,
+    pattern: /\#file:([a-z0-9\-])+/, // eslint-disable-line
 
     /**
      * Object that contains the generated file URLs.

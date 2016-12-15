@@ -44,7 +44,8 @@ test('settings/sidebar/Controller: onDestroy()', t => {
 test('settings/sidebar/Controller: init()', t => {
     const con   = new Controller();
     con.options = {tab: null};
-    sand.stub(Radio, 'request').withArgs('utils/Url').returns('/test');
+    sand.stub(Radio, 'request').withArgs('utils/Url')
+        .returns('/test');
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
@@ -99,10 +100,10 @@ test('settings/sidebar/Controller: listenToEvents()', t => {
 
 test('settings/sidebar/Controller: activateTab()', t => {
     const con = new Controller();
-    con.view  = {triggerMethod: sand.stub()};
+    con.view  = {activateTab: sand.stub()};
 
     con.activateTab({tab: 'test'});
-    t.equal(con.view.triggerMethod.calledWith('activate:tab', {tab: 'test'}), true,
+    t.equal(con.view.activateTab.calledWith({tab: 'test'}), true,
         'triggers activate:tab event on the view');
 
     sand.restore();

@@ -57,7 +57,7 @@ test('navbar/Controller: onShowRequest()', t => {
     t.equal(con.changeTitle.notCalled, true,
         'does not call changeTitle method');
 
-    con.view = {};
+    con.view = {_isRendered: true};
     con.onShowRequest({test: '1'});
     t.equal(con.changeTitle.calledWith({test: '1'}), true,
         'just changes the title if the navbar view already exists');
@@ -174,8 +174,6 @@ test('navbar/Controller: listenToEvents()', t => {
     con.listenToEvents();
     t.equal(con.notebooks.startListening.called, true,
         'starts listening to notebooks collection events');
-    t.equal(listen.calledWith(con.view, 'destroy', con.destroy), true,
-        'destroyes itself if the view is destroyed');
     t.equal(listen.calledWith(con.view, 'submit:search', con.navigateSearch), true,
         'navigates to search page on search:submit event');
 

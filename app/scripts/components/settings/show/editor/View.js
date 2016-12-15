@@ -1,52 +1,59 @@
 /**
- * Copyright (C) 2016 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/settings/show/editor/View
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'apps/settings/show/formBehavior',
-    'text!apps/settings/show/templates/editor.html'
-], function(_, Marionette, FormBehavior, Tmpl) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import Behavior from '../Behavior';
+
+/**
+ * Editor settings view.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class View extends Mn.View {
+
+    get template() {
+        const tmpl = require('./template.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * Note editor settings
+     * Behaviors.
+     *
+     * @see module:components/settings/show/Behavior
+     * @returns {Array}
      */
-    var View = Marionette.ItemView.extend({
-        template: _.template(Tmpl),
+    get behaviors() {
+        return [Behavior];
+    }
 
-        behaviors: {
-            FormBehavior: {
-                behaviorClass: FormBehavior
-            }
-        },
+    ui() {
+        return {
+            indentUnit    : '#indentUnit',
+            indentWarning : '#indentUnit-low-warning',
+        };
+    }
 
-        ui: {
-            indentUnit: '#indentUnit',
-            indentUnitLowWarning: '#indentUnit-low-warning'
-        },
+    events() {
+        return {
+            'change @ui.indentUnit' : 'checkIndentUnit',
+        };
+    }
 
-        events: {
-            'change #indentUnit' : 'checkIndentUnit'
-        },
+    /**
+     * Show indentation warning if its value is lower than 3.
+     */
+    checkIndentUnit() {
+        const indent = Number(this.ui.indentUnit.val().trim());
+        this.ui.indentWarning.toggleClass('hidden', indent >= 3);
+    }
 
-        serializeData: function() {
-            return { models: this.collection.getConfigs() };
-        },
+    serializeData() {
+        return {
+            models: this.collection.getConfigs(),
+        };
+    }
 
-        checkIndentUnit: function() {
-            if (this.ui.indentUnit.val() < 3) {
-                this.ui.indentUnitLowWarning.show();
-            } else {
-                this.ui.indentUnitLowWarning.hide();
-            }
-        }
-    });
-
-    return View;
-});
+}

@@ -58,14 +58,15 @@ test('settings/sidebar/views/View: activateTab()', t => {
 test('settings/sidebar/views/View: confirm()', t => {
     const view = new View();
     const evt  = {preventDefault: sand.stub(), currentTarget: '#test'};
-    sand.stub(view, '$').withArgs('#test').returns({attr: () => '/url'});
-    const trigger = sand.stub(Radio, 'trigger');
+    sand.stub(view, '$').withArgs('#test')
+        .returns({attr: () => '/url'});
+    const request = sand.stub(Radio, 'request');
 
     view.confirm(evt);
     t.equal(evt.preventDefault.called, true, 'prevents the default behavior');
 
-    t.equal(trigger.calledWith('components/settings', 'navigate', {url: '/url'}),
-        true, 'triggers "navigate" event on components/settings channel');
+    t.equal(request.calledWith('components/settings', 'confirmNavigate', {url: '/url'}),
+        true, 'makes "confirmNavigate" request on components/settings channel');
 
     sand.restore();
     t.end();

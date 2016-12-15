@@ -75,9 +75,13 @@
         "name": "Occitan",
         "nativeName": "Occitan"
     },
+    "lt": {
+      "name": "Lithuanian",
+      "nativeName": "Lietuvių"
+    },
     "lv": {
       "name": "Latvian",
-      "nativeName": "latviešu"
+      "nativeName": "Latviešu"
     },
     "pt_br": {
         "name": "Portugisich (Brasilien)",

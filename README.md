@@ -44,6 +44,19 @@ There are several ways to start using Laverna:
 ---------------
 Download the latest [Laverna release][13] for your operating system. After downloading the archive, you need to unpack it. Then, in the unpacked folder you need to run an executable (laverna.exe for Windows, laverna for Linux and Mac).
 
+#### Arch Linux (or derived distributions)
+
+The package can be found [here](https://aur.archlinux.org/packages/laverna/). 
+
+For installation please use :
+
+```bash
+$ yaourt -S laverna
+```
+
+For issue about installation please report [here](https://github.com/funilrys/PKGBUILD/issues/new) or contact [@funilrys](https://github.com/funilrys) on gitter [here](https://gitter.im/funilrys_/PKGBUILD)
+
+
 ### Installation of a prebuilt version
 ------------
 #### 1. Download

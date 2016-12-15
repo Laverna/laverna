@@ -42,6 +42,7 @@ test('Layout: initialize()', t => {
         empty  : view.empty,
         add    : view.add,
         toggle : view.toggle,
+        toggleContent: view.toggleContent,
     }), true, 'replies to requests');
 
     sand.restore();
@@ -128,5 +129,26 @@ test('Layout: toggle()', t => {
 
     sand.restore();
     view.channel.stopReplying();
+    t.end();
+});
+
+test('Layout: toggleContent()', t => {
+    const view = new Layout();
+    const toggleCont = sand.spy(view.getRegion('content').$el, 'toggleClass');
+    const toggleSide = sand.spy(view.getRegion('sidebar').$el, 'toggleClass');
+
+    view.toggleContent({visible: true});
+    t.equal(toggleCont.calledWith('hidden-xs', false), true,
+        'shows "content" region if visible is true');
+    t.equal(toggleSide.calledWith('hidden-xs', true), true,
+        'hides "sidebar" region if visible is true');
+
+    view.toggleContent({visible: false});
+    t.equal(toggleCont.calledWith('hidden-xs', true), true,
+        'hides "content" region if visible is false');
+    t.equal(toggleSide.calledWith('hidden-xs', false), true,
+        'shows "sidebar" region if visible is false');
+
+    sand.restore();
     t.end();
 });

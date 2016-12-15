@@ -8,11 +8,19 @@ import sinon from 'sinon';
 /* eslint-disable */
 import _ from '../../../../../app/scripts/utils/underscore';
 import View from '../../../../../app/scripts/components/settings/show/View';
+import Content from '../../../../../app/scripts/behaviors/Content';
 /* eslint-enable */
 
 let sand;
 test('settings/show/View: before()', t => {
     sand = sinon.sandbox.create();
+    t.end();
+});
+
+test('settings/show/View: behaviors', t => {
+    const behaviors = View.prototype.behaviors;
+    t.equal(Array.isArray(behaviors), true, 'is an array');
+    t.equal(behaviors.indexOf(Content) !== -1, true, 'uses content behavior');
     t.end();
 });
 

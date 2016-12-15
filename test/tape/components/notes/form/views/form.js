@@ -16,6 +16,7 @@ global.Mousetrap    = Mousetrap;
 /* eslint-disable */
 const View      = require('../../../../../../app/scripts/components/notes/form/views/Form').default;
 const Notebooks = require('../../../../../../app/scripts/components/notes/form/views/Notebooks').default;
+const Content = require('../../../../../../app/scripts/behaviors/Content').default;
 /* eslint-enable */
 
 let sand;
@@ -26,6 +27,14 @@ test('notes/form/views/Form: before()', t => {
 
 test('notes/form/views/Form: className', t => {
     t.equal(View.prototype.className, 'layout--body');
+    t.end();
+});
+
+test('notes/form/views/Form: behaviors', t => {
+    const behaviors = View.prototype.behaviors;
+    t.equal(Array.isArray(behaviors), true, 'is an array');
+    t.equal(behaviors.indexOf(Content) !== -1, true,
+        'uses "content" behavior');
     t.end();
 });
 

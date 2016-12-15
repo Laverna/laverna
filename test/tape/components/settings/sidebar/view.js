@@ -8,11 +8,19 @@ import Radio from 'backbone.radio';
 
 /* eslint-disable */
 import View from '../../../../../app/scripts/components/settings/sidebar/views/View';
+import Sidebar from '../../../../../app/scripts/behaviors/Sidebar';
 /* eslint-enable */
 
 let sand;
 test('settings/sidebar/views/View: before()', t => {
     sand = sinon.sandbox.create();
+    t.end();
+});
+
+test('settings/sidebar/views/View: behaviors', t => {
+    const behaviors = View.prototype.behaviors;
+    t.equal(Array.isArray(behaviors), true, 'is an array');
+    t.equal(behaviors.indexOf(Sidebar) !== -1, true, 'uses sidebar behavior');
     t.end();
 });
 

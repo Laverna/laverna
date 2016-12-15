@@ -7,6 +7,7 @@ import sinon from 'sinon';
 
 import Layout from '../../../../../app/scripts/components/notes/list/views/Layout';
 import Pagination from '../../../../../app/scripts/behaviors/Pagination';
+import Sidebar from '../../../../../app/scripts/behaviors/Sidebar';
 import NotesView from '../../../../../app/scripts/components/notes/list/views/NotesView';
 
 global.overrideTemplate(Layout, 'components/notes/list/templates/layout.html');
@@ -21,6 +22,7 @@ test('notes/list/views/Layout: behaviors()', t => {
     const behaviors = Layout.prototype.behaviors();
     t.equal(Array.isArray(behaviors), true, 'returns an array');
     t.equal(behaviors.indexOf(Pagination) > -1, true, 'uses pagination behavior');
+    t.equal(behaviors.indexOf(Sidebar) > -1, true, 'uses sidebar behavior');
     t.end();
 });
 

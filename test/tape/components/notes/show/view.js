@@ -9,6 +9,7 @@ import Mousetrap from 'mousetrap';
 
 import Note from '../../../../../app/scripts/models/Note';
 import View from '../../../../../app/scripts/components/notes/show/View';
+import Content from '../../../../../app/scripts/behaviors/Content';
 import _ from '../../../../../app/scripts/utils/underscore';
 
 let sand;
@@ -22,8 +23,15 @@ test('notes/show/View: before()', t => {
     t.end();
 });
 
-test('View: className', t => {
+test('notes/show/View: className', t => {
     t.equal(View.prototype.className, 'layout--body');
+    t.end();
+});
+
+test('notes/show/View: behaviors', t => {
+    const behaviors = View.prototype.behaviors;
+    t.equal(Array.isArray(behaviors), true, 'is an array');
+    t.equal(behaviors.indexOf(Content) !== -1, true, 'uses content behavior');
     t.end();
 });
 
@@ -88,10 +96,8 @@ test('View: onRender()', t => {
 test('View: onBeforeDestroy()', t => {
     const view   = new View({configs});
     const unbind = sand.spy(Mousetrap, 'unbind');
-    sand.spy(view, 'onBeforeDestroy');
 
-    view.destroy();
-    t.equal(view.onBeforeDestroy.called, true, 'calls onDestroy method');
+    view.onBeforeDestroy();
     t.equal(unbind.calledWith(['up', 'down', 'e', '#', 's']), true,
         'unbinds all keybindings');
 

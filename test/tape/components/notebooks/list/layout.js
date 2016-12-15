@@ -12,11 +12,25 @@ import _ from '../../../../../app/scripts/utils/underscore';
 import View from '../../../../../app/scripts/components/notebooks/list/views/Layout';
 import Notebooks from '../../../../../app/scripts/collections/Notebooks';
 import Tags from '../../../../../app/scripts/collections/Tags';
+import Sidebar from '../../../../../app/scripts/behaviors/Sidebar';
 /* eslint-enable */
 
 let sand;
 test('notebooks/list/views/Layout: before()', t => {
     sand = sinon.sandbox.create();
+    t.end();
+});
+
+test('notebooks/list/views/Layout: behaviors', t => {
+    const behaviors = View.prototype.behaviors;
+    t.equal(Array.isArray(behaviors), true, 'is an array');
+    t.equal(behaviors.indexOf(Sidebar) !== -1, true, 'uses sidebar behavior');
+    t.end();
+});
+
+test('notebooks/list/views/Layout: noSwipeLeft', t => {
+    t.equal(View.prototype.noSwipeLeft, true,
+        'does nothing on swipeleft event');
     t.end();
 });
 

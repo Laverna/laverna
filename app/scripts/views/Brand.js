@@ -1,32 +1,29 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module views/Brand
  */
-/*global define*/
-define([
-    'underscore',
-    'jquery',
-    'backbone',
-    'marionette'
-], function (_, $, Backbone) {
-    'use strict';
+import Mn from 'backbone.marionette';
 
-    var BrandRegion = Backbone.Marionette.Region.extend({
-        el : '#layout--brand',
+/**
+ * The region that shows its content on fullscreen and on green background.
+ *
+ * @class
+ * @extends Marionette.Region
+ * @license MPL-2.0
+ */
+export default class Brand extends Mn.Region {
 
-        onShow: function () {
-            // this.$el.html(view.el);
-            this.$el.slideDown('fast');
-        },
+    /**
+     * Show the region with animation.
+     */
+    onShow() {
+        this.$el.slideDown('fast');
+    }
 
-        onEmpty: function () {
-            this.$el.slideUp('fast');
-        }
+    /**
+     * Hide the region with animation.
+     */
+    onEmpty() {
+        this.$el.slideUp('fast');
+    }
 
-    });
-
-    return BrandRegion;
-});
+}

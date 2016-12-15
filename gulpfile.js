@@ -48,11 +48,8 @@ gulp.task('release:after', () => {
  * ``gulp build --dev`` to build without minifying.
  */
 gulp.task('build', $.sequence(
-    'test',
     'clean:dist',
-    ['prism', 'less'],
-    ['copy', 'require', 'htmlmin', 'cssmin'],
-    'htmlManifest'
+    ['bundle', 'copy', 'css', 'html']
 ));
 
 /**
@@ -71,8 +68,4 @@ gulp.task('release', $.sequence(
  * Gulp server.
  * ``gulp --root dist`` to serve dist folder.
  */
-gulp.task('default', $.sequence(
-    'clean:dist',
-    ['css', 'html', 'bundle', 'copy'],
-    ['serve']
-));
+gulp.task('default', $.sequence('build', 'serve'));

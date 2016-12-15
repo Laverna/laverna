@@ -3,20 +3,22 @@ node_js:
     - 6
     - 'stable'
 before_install:
-    - npm install -g gulp bower jshint
+    - npm install -g gulp coveralls
 install:
     - npm install
-    - bower install
-    - cd test && bower install && cd ../
 script:
+    - gulp lint
     - gulp build
-    - gulp --root dist &
-    - set -e
-    - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && gulp nightwatch --env ci; echo $? || false'
-    - sleep 1
-    - killall gulp
+    - npm run cover
+    # - gulp --root dist &
+    # - set -e
+    # - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && gulp nightwatch --env ci; echo $? || false'
+    # - sleep 1
+    # - killall gulp
 after_failure:
     - killall gulp
+after_success:
+    - cat ./_dev/cover/lcov.info | coveralls
 addons:
     sauce_connect:
         username:

@@ -19,7 +19,7 @@ module.exports = function(gulp, $) {
         'export TAP_DIAG=1 && babel-node ./test/tape/index.js',
     ]));
 
-    gulp.task('test:run', [/* 'lint', */'tape']);
+    gulp.task('test:run', ['lint', 'tape']);
 
     gulp.task('test', ['test:run'], () => {
         gulp.watch(['app/scripts/**/*.js', 'test/tape/**/*.js'], ['tape']);

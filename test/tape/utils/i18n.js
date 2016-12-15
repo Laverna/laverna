@@ -18,7 +18,7 @@ test('Initializer: before()', t => {
 
 test('I18n: initialize()', t => {
     const i18n = new I18n();
-    sand.stub(i18n, 'getLang').returns(Promise.resolve(''));
+    sand.stub(i18n, 'getLang').returns(Promise.resolve('en'));
     sand.stub(i18n, 'initLocale');
 
     const res = i18n.initialize();
@@ -28,7 +28,7 @@ test('I18n: initialize()', t => {
         t.equal(i18n.getLang.called, true,
             'gets language from settings or browser');
 
-        t.equal(i18n.initLocale.called, true,
+        t.equal(i18n.initLocale.calledWith('en'), true,
             'initializes i18next after getting the language');
 
         sand.restore();
@@ -66,13 +66,17 @@ test('I18n: initLocale()', t => {
 
 test('I18n: getLang() - configs', t => {
     const i18n = new I18n();
-    sand.stub(Radio, 'request').returns('en');
+    const req  = sand.stub(Radio, 'request').returns('en');
     sand.spy(i18n, 'getBrowserLang');
 
     const res = i18n.getLang();
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(lng => {
+        t.equal(req.calledWith('collections/Configs', 'findConfig', {
+            name: 'appLang',
+        }), true, 'requests the language from settings');
+
         t.equal(lng, 'en', 'returns the result of request');
         t.equal(i18n.getBrowserLang.notCalled, true,
             'does not try to get language from browser');

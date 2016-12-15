@@ -163,14 +163,16 @@ test('settings/show/Controller: save()', t => {
     t.equal(con.view.triggerMethod.calledWith('saved'), true, 'triggers "saved" event');
 
     con.hasChanges.returns(true);
-    con.changes = {test: {name: 'test', value: 'config'}};
+    const changes = {test: {name: 'test', value: 'config'}};
+    con.changes = changes;
 
     con.save()
     .then(() => {
         t.equal(req.calledWith('saveConfigs', {
-            configs    : con.changes,
+            configs    : changes,
             useDefault : con.view.options.useDefault,
         }), true, 'saves all changes');
+        t.equal(con.changes.length, 0, 'resets changes');
 
         sand.restore();
         t.end();
@@ -218,6 +220,7 @@ test('settings/show/Controller: hasChanges()', t => {
 test('settings/show/Controller: navigate()', t => {
     const con = new Controller();
     const req = sand.stub(Radio, 'request');
+    sand.stub(document.location, 'reload');
 
     con.navigate({url: '/test1'});
     t.equal(req.calledWith('utils/Url', 'navigate', {
@@ -230,6 +233,8 @@ test('settings/show/Controller: navigate()', t => {
         url            : '/notes',
         includeProfile : true,
     }), true, 'navigates to /notes page by default');
+    t.equal(document.location.reload.called, true,
+        'reloads the page to apply settings if it is not a settings page');
 
     sand.restore();
     t.end();

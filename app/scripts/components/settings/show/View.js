@@ -3,6 +3,7 @@
  */
 import Mn from 'backbone.marionette';
 import _ from 'underscore';
+import Content from '../../../behaviors/Content';
 
 /**
  * Settings layout view.
@@ -16,6 +17,16 @@ export default class View extends Mn.View {
     get template() {
         const tmpl = require('./template.html');
         return _.template(tmpl);
+    }
+
+    /**
+     * Behaviors.
+     *
+     * @see module:behaviors/Content
+     * @returns {Array}
+     */
+    get behaviors() {
+        return [Content];
     }
 
     regions() {

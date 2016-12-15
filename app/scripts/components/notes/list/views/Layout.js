@@ -7,6 +7,7 @@ import deb from 'debug';
 
 import NotesView from './NotesView';
 import Pagination from '../../../../behaviors/Pagination';
+import Sidebar from '../../../../behaviors/Sidebar';
 
 const log = deb('lav:components/notes/list/views/Layout');
 
@@ -28,10 +29,11 @@ export default class Layout extends Mn.View {
      * Behaviors.
      *
      * @see module:behaviors/Pagination
+     * @see module:behaviors/Sidebar
      * @returns {Array}
      */
     behaviors() {
-        return [Pagination];
+        return [Sidebar, Pagination];
     }
 
     /**

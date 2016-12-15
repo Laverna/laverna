@@ -6,6 +6,8 @@ import _ from 'underscore';
 import Mousetrap from 'mousetrap';
 import Radio from 'backbone.radio';
 
+import Content from '../../../behaviors/Content';
+
 import deb from 'debug';
 
 const log = deb('lav:components/notes/show/View');
@@ -26,6 +28,16 @@ export default class View extends Mn.View {
 
     get className() {
         return 'layout--body';
+    }
+
+    /**
+     * Behaviors.
+     *
+     * @see module:behaviors/Content
+     * @prop {Array}
+     */
+    get behaviors() {
+        return [Content];
     }
 
     ui() {

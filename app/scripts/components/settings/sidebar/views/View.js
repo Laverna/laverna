@@ -5,6 +5,8 @@ import Mn from 'backbone.marionette';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 
+import Sidebar from '../../../../behaviors/Sidebar';
+
 /**
  * Settings sidebar view.
  *
@@ -17,6 +19,16 @@ export default class View extends Mn.View {
     get template() {
         const tmpl = require('../templates/template.html');
         return _.template(tmpl);
+    }
+
+    /**
+     * Behaviors.
+     *
+     * @see module:behaviors/Sidebar
+     * @returns {Array}
+     */
+    get behaviors() {
+        return [Sidebar];
     }
 
     events() {

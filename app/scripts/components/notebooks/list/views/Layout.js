@@ -8,6 +8,7 @@ import Mousetrap from 'mousetrap';
 
 import Notebooks from './Notebooks';
 import Tags from './Tags';
+import Sidebar from '../../../../behaviors/Sidebar';
 
 /**
  * Notebooks list layout view.
@@ -21,6 +22,25 @@ export default class Layout extends Mn.View {
     get template() {
         const tmpl = require('../templates/layout.html');
         return _.template(tmpl);
+    }
+
+    /**
+     * Behaviors.
+     *
+     * @see module:behaviors/Sidebar
+     * @returns {Array}
+     */
+    get behaviors() {
+        return [Sidebar];
+    }
+
+    /**
+     * Do nothing on swipeleft event.
+     *
+     * @prop {Boolean} true
+     */
+    get noSwipeLeft() {
+        return true;
     }
 
     /**

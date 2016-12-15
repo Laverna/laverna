@@ -10,6 +10,7 @@ import deb from 'debug';
 import Mousetrap from 'mousetrap';
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
+import Content from '../../../../behaviors/Content';
 import Notebooks from './Notebooks';
 
 const log = deb('lav:components/notes/form/views/Form');
@@ -30,6 +31,16 @@ export default class Form extends Mn.View {
 
     get className() {
         return 'layout--body';
+    }
+
+    /**
+     * Behaviors.
+     *
+     * @see module:behaviors/Content
+     * @returns {Array}
+     */
+    get behaviors() {
+        return [Content];
     }
 
     /**

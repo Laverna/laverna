@@ -1,57 +1,107 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/settings/show/profiles/View
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'backbone.radio',
-    'text!apps/settings/show/templates/profiles.html'
-], function(_, Marionette, Radio, Tmpl) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import Radio from 'backbone.radio';
+
+/**
+ * Profiles settings view.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class View extends Mn.View {
+
+    get template() {
+        const tmpl = require('./template.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * Show, add, remove profiles
+     * Configs radio channel.
+     *
+     * @prop {Object}
      */
-    var Profiles = Marionette.ItemView.extend({
-        template: _.template(Tmpl),
+    get configsChannel() {
+        return Radio.channel('collections/Configs');
+    }
 
-        ui: {
-            profile : '#profileName'
-        },
+    ui() {
+        return {
+            profile: '#profileName',
+        };
+    }
 
-        events: {
-            'keypress @ui.profile' : 'createProfile',
-            'click .removeProfile' : 'removeProfile'
-        },
+    events() {
+        return {
+            'keypress @ui.profile' : 'createOnEnter',
+            'click .removeProfile' : 'removeProfile',
+        };
+    }
 
-        initialize: function() {
-            this.listenTo(this.options.profiles, 'change', this.render);
-        },
+    initialize() {
+        this.listenTo(this.options.profiles, 'change', this.render);
+    }
 
-        removeProfile: function(e) {
-            this.trigger('remove:profile', $(e.currentTarget).attr('data-profile'));
-            return false;
-        },
-
-        createProfile: function(e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                this.trigger('create:profile', this.ui.profile.val().trim());
-                this.ui.profile.val('').blur();
-            }
-        },
-
-        serializeData: function() {
-            return {
-                appProfiles: this.options.profiles.getValueJSON()
-            };
+    /**
+     * Create a ew profile if enter is pressed.
+     *
+     * @param {Object} e
+     */
+    createOnEnter(e) {
+        // Create a new profile if enter is pressed
+        if (e.which === 13) {
+            e.preventDefault();
+            return this.createProfile();
         }
-    });
+    }
 
-    return Profiles;
-});
+    /**
+     * Create a new profile.
+     *
+     * @returns {Promise}
+     */
+    createProfile() {
+        const name = this.ui.profile.val().trim();
+
+        if (name.length) {
+            return this.configsChannel.request('createProfile', {name})
+            .then(() => {
+                const {profiles} = this.options;
+                profiles.attributes.value.push(name);
+                profiles.set('value', _.unique(profiles.attributes.value));
+            });
+        }
+    }
+
+    /**
+     * Remove a profile.
+     *
+     * @returns {Promise}
+     */
+    removeProfile(e) {
+        e.preventDefault();
+        const name = this.$(e.currentTarget).attr('data-profile');
+
+        if (name.length) {
+            return Radio.request('components/confirm', 'show', {
+                content: _.i18n('profile.confirm remove', {profile: name}),
+            })
+            .then(res => {
+                if (res !== 'confirm') {
+                    return;
+                }
+                return this.configsChannel.request('removeProfile', {name});
+            });
+        }
+    }
+
+    serializeData() {
+        return {
+            appProfiles: this.options.profiles.get('value'),
+        };
+    }
+
+}

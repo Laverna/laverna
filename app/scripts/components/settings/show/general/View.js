@@ -1,60 +1,84 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/settings/show/general/View
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'backbone.radio',
-    'i18next',
-    'text!locales/locales.json',
-    'apps/settings/show/formBehavior',
-    'text!apps/settings/show/templates/general.html'
-], function(_, Marionette, Radio, i18n, locales, FormBehavior, Tmpl) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import i18n from 'i18next';
+import locales from '../../../../../locales/locales.json';
+import Behavior from '../Behavior';
+
+/**
+ * General settings view.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class View extends Mn.View {
+
+    get template() {
+        const tmpl = require('./template.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * General settings.
+     * Behaviors.
+     *
+     * @see module:components/settings/show/Behavior
+     * @returns {Array}
      */
-    var View = Marionette.ItemView.extend({
-        template: _.template(Tmpl),
+    get behaviors() {
+        return [Behavior];
+    }
 
-        behaviors: {
-            FormBehavior: {
-                behaviorClass: FormBehavior
-            }
-        },
+    /**
+     * serializeData.
+     *
+     * @returns {Object}
+     */
+    serializeData() {
+        const models = this.collection.getConfigs();
 
-        serializeData: function() {
-            var appLang = this.collection.get('appLang');
-            return {
-                locales    : JSON.parse(locales),
-                models     : this.collection.getConfigs(),
-                appLang    : (appLang.get('value') || i18n.language) || 'en',
-                useDefault : this.options.useDefault.toJSON()
-            };
-        },
+        return {
+            locales,
+            models,
+            appLang    : (models.appLang || i18n.language) || 'en',
+            profileId  : this.options.profileId,
+            useDefault : this.options.useDefault.attributes,
+        };
+    }
 
-        templateHelpers: function() {
-            return {
-                isDefaultProfile: function() {
-                    var profile = Radio.request('uri', 'profile');
-                    return _.indexOf([null, 'notes-db'], profile) > -1;
-                },
+    /**
+     * templateContext.
+     *
+     * @returns {Object}
+     */
+    templateContext() {
+        return {
 
-                isLocaleActive: function(locale) {
-                    if (this.appLang === locale ||
-                        this.appLang.search(locale) >= 0) {
-                        return ' selected';
-                    }
+            /**
+             * Return true if it's the default profile.
+             *
+             * @returns {Boolean}
+             */
+            isDefaultProfile() {
+                return _.indexOf([null, 'notes-db'], this.profileId) > -1;
+            },
+
+            /**
+             * Selects a locale if it's active.
+             *
+             * @param {String} locale
+             * @returns {String}
+             */
+            selectLocale(locale) {
+                if (this.appLang === locale ||
+                    this.appLang.search(locale) >= 0) {
+                    return ' selected';
                 }
-            };
-        }
-    });
+            },
 
-    return View;
-});
+        };
+    }
+
+}

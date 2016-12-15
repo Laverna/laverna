@@ -1,69 +1,80 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/settings/show/importExport/View
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'backbone.radio',
-    'text!apps/settings/show/templates/importExport.html'
-], function (_, Marionette, Radio, Tmpl) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import Radio from 'backbone.radio';
+
+/**
+ * Import/export settings view.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class View extends Mn.View {
+
+    get template() {
+        const tmpl = require('./template.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * Import or export settings
+     * ImportExport component Radio channel.
+     *
+     * @prop {Object}
      */
-    var ImportExport = Marionette.ItemView.extend({
-        template: _.template(Tmpl),
+    get channel() {
+        return Radio.channel('components/importExport');
+    }
 
-        ui: {
-            importBtn  : '#do-import',
-            import     : '#import-file',
+    events() {
+        return {
+            'click .btn--import'       : 'triggerClick',
+            'change #import--data'     : 'importData',
+            'change #import--settings' : 'importData',
+            'click #export--data'      : 'exportData',
+            'click #export--settings'  : 'exportSettings',
+        };
+    }
 
-            // Export  / import buttons
-            importData : '#import-data-file',
-            exportData : '#export-data',
-        },
+    /**
+     * Emulate click on the file button to show file chooser.
+     *
+     * @param {Object} e
+     */
+    triggerClick(e) {
+        e.preventDefault();
+        const input = this.$(e.currentTarget).attr('data-file');
+        this.$(input).click();
+    }
 
-        events: {
-            'click .btn--import'    : 'triggerClick',
-            'change @ui.import'     : 'triggerImport',
-            'change @ui.importData' : 'triggerImportData',
-            'click @ui.exportData'  : 'triggerExportData'
-        },
-
-        triggers: {
-            'click #do-export'  : 'export'
-        },
-
-        triggerImport: function(e) {
-            if (!e.target.files.length) {
-                return;
-            }
-            this.trigger('import', e.target);
-        },
-
-        triggerImportData: function(e) {
-            if (!e.target.files.length) {
-                return;
-            }
-
-            Radio.request('importExport', 'import', e.target.files);
-        },
-
-        triggerExportData: function() {
-            Radio.request('importExport', 'export');
-        },
-
-        triggerClick: function(e) {
-            var file = $(e.currentTarget).attr('data-file');
-            $(file).click();
+    /**
+     * Export everything from Laverna.
+     */
+    importData(e) {
+        const {files} = e.target;
+        if (!files.length) {
+            return;
         }
-    });
 
-    return ImportExport;
-});
+        this.channel.request('import', {files});
+    }
+
+    /**
+     * Export everything from Laverna.
+     */
+    exportData() {
+        this.channel.request('export');
+    }
+
+    /**
+     * Export settings.
+     */
+    exportSettings() {
+        this.channel.request('export', {
+            data: {[`${this.collection.profileId}`]: [this.collection]},
+        });
+    }
+
+}

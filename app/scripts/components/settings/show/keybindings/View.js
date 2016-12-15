@@ -1,47 +1,59 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- * 
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module components/settings/show/keybindings/View
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'apps/settings/show/formBehavior',
-    'text!apps/settings/show/templates/keybindings.html'
-], function(_, Marionette, FormBehavior, Tmpl) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import _ from 'underscore';
+import Behavior from '../Behavior';
+
+/**
+ * Keybindings settings view.
+ *
+ * @class
+ * @extends Marionette.View
+ * @license MPL-2.0
+ */
+export default class View extends Mn.View {
+
+    get template() {
+        const tmpl = require('./template.html');
+        return _.template(tmpl);
+    }
 
     /**
-     * Keybinding settings
+     * Behaviors.
+     *
+     * @see module:components/settings/show/Behavior
+     * @returns {Array}
      */
-    var Shortcuts = Marionette.ItemView.extend({
-        template: _.template(Tmpl),
+    get behaviors() {
+        return [Behavior];
+    }
 
-        behaviors: {
-            FormBehavior: {
-                behaviorClass: FormBehavior
-            }
-        },
+    serializeData() {
+        return this.options;
+    }
 
-        serializeData: function() {
-            return { collection: this.collection };
-        },
+    templateContext() {
+        return {
+            /**
+             * Return an array of models filtered by their names.
+             *
+             * @param {String} str
+             * @returns {Array}
+             */
+            filter(str) {
+                return this.collection.filterByName(str);
+            },
 
-        templateHelpers: function() {
-            return {
-                filter: function(str) {
-                    return this.collection.filterName(str);
-                },
+            /**
+             * Application wide shortcuts.
+             *
+             * @returns {Array}
+             */
+            appShortcuts() {
+                return this.collection.appShortcuts();
+            },
+        };
+    }
 
-                appShortcuts: function() {
-                    return this.collection.appShortcuts();
-                }
-            };
-        }
-    });
-
-    return Shortcuts;
-});
+}

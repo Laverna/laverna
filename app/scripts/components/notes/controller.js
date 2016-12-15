@@ -4,6 +4,7 @@
  */
 import _ from 'underscore';
 import deb from 'debug';
+import Radio from 'backbone.radio';
 
 import List from './list/Controller';
 import Show from './show/Controller';
@@ -11,11 +12,6 @@ import Form from './form/Controller';
 import './remove/Controller';
 
 const log = deb('lav:components/notes/controller');
-
-import Radio from 'backbone.radio';
-Radio.reply('components/editor', 'get:data', () => {
-    return Promise.resolve('');
-});
 
 export default {
 

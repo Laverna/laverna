@@ -1,77 +1,82 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module behaviors/Content
  */
-/* global define */
-define([
-    'underscore',
-    'marionette',
-    'backbone.radio'
-], function(_, Marionette, Radio) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import $ from 'jquery';
+import _ from 'underscore';
+import Hammer from 'hammerjs';
+import Radio from 'backbone.radio';
+
+/**
+ * Content region behavior.
+ * It allows to show only one region on small screens (either content or sidebar)
+ *
+ * @class
+ * @extends Marionette.Behavior
+ * @license MPL-2.0
+ */
+export default class Content extends Mn.Behavior {
+
+    events() {
+        return {
+            'click #show--sidebar': 'showSidebar',
+        };
+    }
 
     /**
-     * Content region behaviour
+     * If a content view is destroyed, show the sidebar.
      */
-    var Content = Marionette.Behavior.extend({
-
-        events: {
-            'swiperight'          : 'showSidebar',
-            'click #show--sidebar': 'showSidebar',
-        },
-
-        initialize: function() {
-            var channel = Radio.channel('region');
-
-            this.showContent();
-            this.listenActive();
-
-            this.listenTo(channel, 'sidebar:shown', this.listenActive);
-            this.listenTo(channel, 'content:hidden', this.showSidebar);
-            this.listenTo(channel, 'content:shown', this.showContent);
-        },
-
-        onRender: function() {
-            this.view.$el.hammer();
-        },
-
-        /**
-         * When some active element is clicked, hide the sidebar.
-         */
-        listenActive: function() {
-            if (!this.$active || !this.$active.length) {
-                this.$active = $('.list--item.active, .list--settings.active');
-                this.$active.on('click.toggle', this.showContent);
-            }
-        },
-
-        onDestroy: function() {
-            if (this.$active) {
-                this.showSidebar();
-                this.$active.off('click.toggle');
-            }
-        },
-
-        /**
-         * Show only the content
-         */
-        showContent: function() {
-            Radio.request('global', 'region:hide', 'sidebar', 'hidden-xs');
-            Radio.request('global', 'region:visible', 'content', 'hidden-xs');
-        },
-
-        /**
-         * Show only the sidebar.
-         */
-        showSidebar: function() {
-            Radio.request('global', 'region:visible', 'sidebar', 'hidden-xs');
-            Radio.request('global', 'region:hide', 'content', 'hidden-xs');
+    onDestroy() {
+        if (this.$active) {
+            this.$active.off('click');
         }
 
-    });
+        if (this.hammer) {
+            this.hammer.destroy();
+        }
 
-    return Content;
-});
+        this.showSidebar();
+    }
+
+    /**
+     * Show content region.
+     */
+    onRender() {
+        this.showContent();
+        this.listenToHammer();
+        this.listenActive();
+    }
+
+    /**
+     * Listen to touch events.
+     */
+    listenToHammer() {
+        this.hammer = new Hammer(this.view.$el[0]);
+        this.hammer.on('swiperight', () => this.showSidebar());
+    }
+
+    /**
+     * Show content again if a user clicks on an already active element.
+     */
+    listenActive() {
+        if (!this.$active || !this.$active.length) {
+            this.$active = $('.list--item.active, .list--settings.active');
+            this.$active.on('click', () => this.showContent());
+        }
+    }
+
+    /**
+     * Hide content and show the sidebar.
+     */
+    showSidebar() {
+        Radio.request('Layout', 'toggleContent', {visible: false});
+    }
+
+    /**
+     * Hide sidebar and show content.
+     */
+    showContent() {
+        Radio.request('Layout', 'toggleContent', {visible: true});
+    }
+
+}

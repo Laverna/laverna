@@ -8,6 +8,7 @@ import Radio from 'backbone.radio';
 import deb from 'debug';
 
 import Modal from './Modal';
+import Brand from './Brand';
 
 const log = deb('lav:views/Layout');
 
@@ -53,6 +54,7 @@ export default class Layout extends Mn.View {
             sidebarNavbar : '#sidebar--navbar',
             sidebar       : '#sidebar--content',
             content       : '#content',
+            brand         : {regionClass: Brand, el: '#layout--brand'},
             modal         : {regionClass: Modal, el: '#layout--modal'},
         };
     }
@@ -74,6 +76,7 @@ export default class Layout extends Mn.View {
             empty  : this.empty,
             add    : this.add,
             toggle : this.toggle,
+            toggleContent: this.toggleContent,
         }, this);
     }
 
@@ -144,6 +147,17 @@ export default class Layout extends Mn.View {
      */
     toggle(options) {
         this.getRegion(options.region).$el.toggleClass('hidden');
+    }
+
+    /**
+     * Show either sidebar or content region.
+     *
+     * @param {Object} options
+     * @param {Boolean} options.visible - true if content region should be visible
+     */
+    toggleContent(options) {
+        this.getRegion('sidebar').$el.toggleClass('hidden-xs', options.visible);
+        this.getRegion('content').$el.toggleClass('hidden-xs', !options.visible);
     }
 
 }

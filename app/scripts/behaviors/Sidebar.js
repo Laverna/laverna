@@ -1,55 +1,54 @@
 /**
- * Copyright (C) 2015 Laverna project Authors.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * @module behaviors/Sidebar
  */
-/* global define */
-define([
-    'underscore',
-    'jquery',
-    'marionette',
-    'backbone.radio'
-], function(_, $, Marionette, Radio) {
-    'use strict';
+import Mn from 'backbone.marionette';
+import $ from 'jquery';
+import Hammer from 'hammerjs';
+import Radio from 'backbone.radio';
+
+/**
+ * Sidebar region behavior.
+ *
+ * @class
+ * @extends Marionette.Behavior
+ * @license MPL-2.0
+ */
+export default class Sidebar extends Mn.Behavior {
 
     /**
-     * Sidebar region behaviour
+     * Stop listening to touch events.
      */
-    var Sidebar = Marionette.Behavior.extend({
+    onDestroy() {
+        if (this.hammer) {
+            this.hammer.destroy();
+        }
+    }
 
-        defaults: {
-            events: {
-                'swipeleft'  : 'onSwipeLeft',
-                'swiperight' : 'onSwipeRight',
-            }
-        },
+    /**
+     * Start listening to touch events.
+     */
+    onRender() {
+        this.hammer = new Hammer($('#sidebar--content')[0]);
 
-        onRender: function() {
-            var hammer = $('#sidebar--content').hammer();
+        this.hammer.on('swiperight', () => this.onSwipeRight());
+        this.hammer.on('swipeleft', () => this.onSwipeLeft());
+    }
 
-            _.each(this.options.events, function(func, ev) {
-                hammer.bind(ev, this.view[func] || this[func]);
-            }, this);
-        },
+    /**
+     * Show sidebar menu on swiperight.
+     */
+    onSwipeRight() {
+        Radio.trigger('components/navbar', 'show:sidemenu');
+    }
 
-        /**
-         * Show sidemenu.
-         */
-        onSwipeRight: function() {
-            Radio.trigger('sidemenu', 'show');
-        },
+    /**
+     * Switch to content region (hide sidebar) on swipeleft.
+     */
+    onSwipeLeft() {
+        // Notebooks component does not use content region
+        if (!this.view.noSwipeLeft) {
+            Radio.request('Layout', 'toggleContent', {visible: true});
+        }
+    }
 
-        /**
-         * Switch to content region (hide sidebar).
-         */
-        onSwipeLeft: function() {
-            Radio.trigger('region', 'content:shown');
-        },
-
-    });
-
-    return Sidebar;
-
-});
+}

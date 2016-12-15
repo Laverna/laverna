@@ -3,7 +3,9 @@
  * @license MPL-2.0
  */
 import deb from 'debug';
+import Radio from 'backbone.radio';
 import Sidebar from './sidebar/Controller';
+import Show from './show/Controller';
 
 const log = deb('lav:components/notes/controller');
 
@@ -22,26 +24,41 @@ export default {
 
         this.sidebar = new Sidebar(options);
         this.sidebar.init();
+        this.sidebar.once('destroy', () => this.onDestroy());
     },
 
     /**
      * Show settings.
      */
     showContent(profileId, tab) {
+        log('showSettings', {profileId, tab});
         this.showSidebar({profileId, tab});
-        log('show settings', {profileId, tab});
+
+        this.content = new Show({profileId, tab});
+        this.content.init();
+        this.content.once('destroy', () => this.onDestroy());
     },
 
     /**
      * Destroy the sidebar controller if settings controller is destroyed.
      */
-    onContentDestroy() {
+    onDestroy() {
         const url = Radio.request('utils/Url', 'getHash');
 
+        // If a user is not on settings page anymore
         if (url.search('settings') === -1) {
-            this.sidebar.destroy();
-            this.sidebar = null;
+            // Destroy the sidebar controller
+            if (this.sidebar) {
+                this.sidebar.destroy();
+                this.sidebar = null;
+            }
+
+            // Destroy the content controller
+            if (this.content) {
+                this.content.destroy();
+                this.content = null;
+            }
         }
-    }
+    },
 
 };

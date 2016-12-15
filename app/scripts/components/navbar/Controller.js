@@ -67,7 +67,7 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     onShowRequest(options = {}) {
-        if (this.view) {
+        if (this.view && this.view._isRendered) {
             return this.changeTitle(options);
         }
 
@@ -158,7 +158,6 @@ export default class Controller extends Mn.Object {
      */
     listenToEvents() {
         this.notebooks.startListening();
-        this.listenTo(this.view, 'destroy', this.destroy);
         this.listenTo(this.view, 'submit:search', this.navigateSearch);
     }
 

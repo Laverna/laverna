@@ -82,7 +82,7 @@ export default class Controller extends Mn.Object {
      * @param {String} data.tab
      */
     activateTab(data) {
-        this.view.triggerMethod('activate:tab', data);
+        this.view.activateTab(data);
     }
 
 }

@@ -266,6 +266,7 @@ export default class Configs extends Module {
     /**
      * Remove a profile.
      *
+     * @todo clear localforage database
      * @param {Object} options
      * @param {String} options.name - profile name
      * @returns {Promise}

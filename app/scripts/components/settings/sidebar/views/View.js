@@ -2,6 +2,7 @@
  * @module components/settings/sidebar/View
  */
 import Mn from 'backbone.marionette';
+import _ from 'underscore';
 import Radio from 'backbone.radio';
 
 /**
@@ -50,7 +51,7 @@ export default class View extends Mn.View {
     confirm(e) {
         e.preventDefault();
 
-        Radio.trigger('components/settings', 'navigate', {
+        Radio.request('components/settings', 'confirmNavigate', {
             url: this.$(e.currentTarget).attr('href'),
         });
     }

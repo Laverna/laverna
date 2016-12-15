@@ -27,6 +27,7 @@ export default class Import extends Mn.Object {
 
         return this.readZip(this.options.files[0])
         .then(zip => this.import(zip))
+        .then(() => document.location.reload())
         .catch(err => log('error', err));
     }
 

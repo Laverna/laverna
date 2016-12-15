@@ -16,7 +16,8 @@ test('importExport/Import: before()', t => {
 });
 
 test('importExport/Import: init()', t => {
-    const con = new Import();
+    const con    = new Import();
+    const reload = sand.stub(document.location, 'reload');
     sand.stub(con, 'checkFiles').returns(false);
     sand.stub(con, 'readZip').returns(Promise.resolve());
     sand.stub(con, 'import');
@@ -31,6 +32,8 @@ test('importExport/Import: init()', t => {
         t.equal(con.readZip.calledWith(con.options.files[0]), true,
             'reads the ZIP archive');
         t.equal(con.import.called, true, 'imports files from the ZIP archive');
+        t.equal(reload.calledAfter(con.import), true,
+            'reloads the page after the proccess is over');
 
         sand.restore();
         t.end();

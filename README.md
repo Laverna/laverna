@@ -27,8 +27,7 @@ The application stores all your notes in your browser databases such as indexedD
 
 ## Tools
 
-On the front-end this project uses JavaScript and the [Marionette JS](http://marionettejs.com/) framework while [Node JS](https://nodejs.org/en/), [Bower](https://bower.io/), and [Gulp.js](http://gulpjs.com/) are used on the back-end.  The test runner used is [karma](https://karma-runner.github.io/1.0/index.html) however,
-contributors are free to utilize whatever testing tools they desire.
+On the front-end this project uses JavaScript and the [Marionette JS](http://marionettejs.com/) framework while [Node JS](https://nodejs.org/en/), and [Gulp.js](http://gulpjs.com/) are used on the back-end. The test runner is [tape](https://github.com/substack/tape).
 
 
 ## Installation
@@ -46,7 +45,7 @@ Download the latest [Laverna release][13] for your operating system. After downl
 
 #### Arch Linux (or derived distributions)
 
-The package can be found [here](https://aur.archlinux.org/packages/laverna/). 
+The package can be found [here](https://aur.archlinux.org/packages/laverna/).
 
 For installation please use :
 
@@ -100,11 +99,9 @@ cd laverna
 
 **3. Ensure you have the node.js platform installed.** (See OS-specific instructions on their [website][8]).
 
-**4. Ensure you have the bower and gulp packages installed** (locally and globally):
+**4. Ensure you have installed gulp** (locally and globally):
 
 ```bash
-$ npm install bower
-$ npm install -g bower
 $ npm install gulp
 $ npm install -g gulp
 ```
@@ -113,10 +110,6 @@ $ npm install -g gulp
 
 ```bash
 $ npm install
-$ bower install
-$ cd test
-$ bower install
-$ cd ..
 ```
 
 #### 6. Build minified version of Laverna:
@@ -142,7 +135,7 @@ Please have a look in our [wiki][15].
 * Like us on [alternativeto.net][5]
 * [Contribute][7]
 
-###Coding Style Guidelines
+### Coding Style Guidelines
 
 For those wanting to contribute code, we ask that you use either plain JavaScript or the Marionette.js framework. (For more details on the preferred coding style see [.editorconfig](https://github.com/Laverna/laverna/blob/master/.editorconfig)). Also, all experimental changes are being pushed on the **dev** branch, so any feature changes are preferred to be done on either this branch or a branch that uses the dev branch as its parent.
 

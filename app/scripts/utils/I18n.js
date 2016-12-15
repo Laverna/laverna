@@ -28,7 +28,7 @@ export default class I18n {
         log('init');
 
         return this.getLang()
-        .then(() => this.initLocale())
+        .then(lng => this.initLocale(lng))
         .catch(err => {
             log('error', err);
             return Promise.reject(err);
@@ -69,7 +69,9 @@ export default class I18n {
      * @todo detect language in Cordova
      */
     getLang() {
-        const lng = Radio.request('configs', 'get:config', 'appLang');
+        const lng = Radio.request('collections/Configs', 'findConfig', {
+            name: 'appLang',
+        });
 
         if (lng || typeof window.navigator === 'undefined') {
             return Promise.resolve(lng);

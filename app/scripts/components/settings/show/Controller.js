@@ -178,6 +178,7 @@ export default class Controller extends Mn.Object {
             useDefault : this.view.options.useDefault,
         })
         .then(() => this.view.triggerMethod('saved'))
+        .then(() => this.changes = [])
         .catch(err => log('save error', err));
     }
 
@@ -219,10 +220,13 @@ export default class Controller extends Mn.Object {
      * @param {String} options.url
      */
     navigate(options = {}) {
-        Radio.request('utils/Url', 'navigate', {
-            url            : options.url || '/notes',
-            includeProfile : true,
-        });
+        const url = options.url || '/notes';
+        Radio.request('utils/Url', 'navigate', {url, includeProfile: true});
+
+        // Reload the page to apply changes
+        if (url.search('settings') === -1) {
+            document.location.reload();
+        }
     }
 
 }

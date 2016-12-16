@@ -16,7 +16,7 @@
     "cover:check": "npm run cover && nyc check-coverage --lines 95 --functions 95 --branches 95",
     "jsdoc": "jsdoc app/scripts -r -d _dev/jsdoc && gulp serve --root=./_dev/jsdoc --dev",
     "gulpdoc": "jsdoc gulps/ gulpfile.js -r -d _dev/gulpdoc && gulp serve --root=./_dev/gulpdoc --dev",
-    "eslint": "eslint --ignore-pattern 'app/scripts/modules' --ignore-pattern='encryption' --ignore-pattern='classes' ./app/scripts/",
+    "eslint": "eslint -c './.eslintrc.js' --ignore-pattern 'app/scripts/modules' --ignore-pattern='encryption' --ignore-pattern='classes' ./app/scripts/",
     "prepub": "npm test && npm run cover && npm run cover:check"
   },
   "main": "electron.js",
@@ -69,6 +69,7 @@
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",
     "babel-loader": "^6.2.5",
+    "babel-polyfill": "^6.20.0",
     "babel-preset-es2015": "^6.13.2",
     "browser-sync": "^2.14.0",
     "cordova-lib": "^6.3.0",

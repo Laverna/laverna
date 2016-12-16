@@ -127,7 +127,7 @@ export default class Controller extends Mn.Object {
                 tagEnd : '\r\n```',
             },
             'unordered-list': {
-                replace : /^(\s*)(\*|\-|\+)\s+/,
+                replace : /^(\s*)(\*|\-|\+)\s+/, // eslint-disable-line
                 tag     : '* ',
             },
             'ordered-list': {

@@ -5,7 +5,7 @@ import {LocalStorage} from 'node-localstorage';
 import overrideTemplate from './overrideTemplate';
 import raf from 'raf';
 
-global.localStorage     = new LocalStorage(`${__dirname}/../../_dev/scratch`);
+global.localStorage     = new LocalStorage(`${__dirname}/../../_dev`);
 global.overrideTemplate = overrideTemplate;
 global.requestAnimationFrame = raf;
 

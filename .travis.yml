@@ -5,7 +5,7 @@ node_js:
 before_install:
     - npm install -g gulp coveralls
 install:
-    - npm install
+    - npm install && npm i babel-cli
 script:
     - gulp lint
     - gulp build

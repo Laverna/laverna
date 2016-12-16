@@ -182,9 +182,11 @@
         "auth confirm": "Now you will be redirected to **Dropbox** authorization page.\r> Please click **OK** button.",
         "auth title": "Dropbox auth",
         "api info 1": "You can have your own API key on",
-        "api info 2": "When you create a new app at Dropbox's Developer site you should keep in mind that:",
+        "api info 2": "Create a new app at Dropbox's Developer site:",
         "api info li 1": "Type of API should be **Dropbox API**",
-        "api info li 2": "Type of access should be **App Folder**"
+        "api info li 2": "Type of access should be **App Folder**",
+        "api info li 3": "Copy the App key and enter it here",
+        "api info li 4": "Add your installation’s URL to the Redirect URIs section, ending with “dropbox.html”; example: https://example.com/dropbox.html"
     },
     "help": {
         "firststart title": "Welcome to Laverna",

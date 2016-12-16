@@ -1,8 +1,12 @@
 # Laverna - note taking web app
 
-[![Join the chat at https://gitter.im/Laverna/laverna](https://badges.gitter.im/Laverna/laverna.svg)](https://gitter.im/Laverna/laverna?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[Wiki](https://github.com/Laverna/laverna/wiki) |
+[IRC](https://webchat.freenode.net/?channels=laverna) |
+[Gitter Chat](https://gitter.im/Laverna/laverna)
 
-[![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna) [![devDependency Status](https://david-dm.org/Laverna/laverna/dev-status.svg)](https://david-dm.org/Laverna/laverna#info=devDependencies) [![Code Climate](https://codeclimate.com/github/Laverna/laverna/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna)
+[![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna)
+[![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna/badge.svg?branch=dev)](https://coveralls.io/github/Laverna/laverna)
+[![Code Climate](https://codeclimate.com/github/Laverna/laverna/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna)
 
 Laverna is a JavaScript note-taking web application with a Markdown editor and encryption support.  It's built to be an open source alternative to Evernote.
 
@@ -106,16 +110,10 @@ $ npm install gulp
 $ npm install -g gulp
 ```
 
-#### 5. Install Laverna's dependencies:
+#### 5. Install dependencies and build:
 
 ```bash
-$ npm install
-```
-
-#### 6. Build minified version of Laverna:
-
-```bash
-$ gulp build
+$ npm run setup
 ```
 
 #### 7. Start Laverna:

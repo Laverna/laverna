@@ -1,11 +1,19 @@
 import jsdom from 'jsdom';
-import {readFileSync as read} from 'fs';
+import {readFileSync as read, mkdirSync} from 'fs';
 import glob from 'glob';
 import {LocalStorage} from 'node-localstorage';
 import overrideTemplate from './overrideTemplate';
 import raf from 'raf';
 
-global.localStorage     = new LocalStorage(`${__dirname}/../../_dev`);
+try {
+    mkdirSync(`${__dirname}/../../_dev`);
+    mkdirSync(`${__dirname}/../../_dev/scratch`);
+}
+// eslint-disable-next-line
+catch (e) {
+}
+
+global.localStorage     = new LocalStorage(`${__dirname}/../../_dev/scratch`);
 global.overrideTemplate = overrideTemplate;
 global.requestAnimationFrame = raf;
 

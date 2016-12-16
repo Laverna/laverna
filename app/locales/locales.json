@@ -106,5 +106,9 @@
     "zh_cn": {
         "name": "Simplified Chinese",
         "nativeName": "Simplified Chinese"
+    },
+    "zh_tw": {
+        "name": "Traditional Chinese",
+        "nativeName": "中文（台灣）"
     }
 }

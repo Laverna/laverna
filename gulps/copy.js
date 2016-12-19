@@ -23,6 +23,11 @@ module.exports = gulp => {
                 './app/styles/**/*.+(eot|svg|ttf|woff)',
             ], {base: './app'})
             .pipe(gulp.dest('./dist')),
+
+            gulp.src([
+                './node_modules/openpgp/dist/openpgp.worker.js',
+                './node_modules/openpgp/dist/openpgp.js',
+            ]).pipe(gulp.dest('./dist/scripts')),
         ]);
     };
 };

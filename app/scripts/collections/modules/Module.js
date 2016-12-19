@@ -87,11 +87,9 @@ export default class Module {
         }
 
         // The model exists in the collection
-        if (this.collection && this.collection.profileId === options.profileId &&
-            this.collection.get(options[this.idAttribute])) {
-            return Promise.resolve(
-                this.collection.get(options[this.idAttribute])
-            );
+        const collModel = this.findCollectionModel(options);
+        if (collModel) {
+            return Promise.resolve(collModel);
         }
 
         // Instantiate a new model
@@ -102,6 +100,20 @@ export default class Module {
         // Fetch and decrypt the model
         return model.fetch()
         .then(() => this.decryptModel(model));
+    }
+
+    /**
+     * Try to find the model in this.collection.
+     *
+     * @returns {Object|Boolean}
+     */
+    findCollectionModel(options) {
+        const profileId = options.profileId || 'notes-db';
+        if (!this.collection || this.collection.profileId !== profileId) {
+            return false;
+        }
+
+        return this.collection.get(options[this.idAttribute]);
     }
 
     /**
@@ -268,7 +280,7 @@ export default class Module {
             return Promise.resolve(model);
         }
 
-        return Radio.request('encrypt', 'decryptModel', {model});
+        return Radio.request('models/Encryption', 'decryptModel', {model});
     }
 
     /**
@@ -284,7 +296,8 @@ export default class Module {
         }
 
         const collection = coll.fullCollection || coll;
-        return Radio.request('encrypt', 'decryptCollection', {collection});
+        return Radio.request('models/Encryption', 'decryptCollection', {collection})
+        .then(() => coll);
     }
 
     /**
@@ -299,7 +312,7 @@ export default class Module {
             return Promise.resolve(model);
         }
 
-        return Radio.request('encrypt', 'encryptModel', {model});
+        return Radio.request('models/Encryption', 'encryptModel', {model});
     }
 
 }

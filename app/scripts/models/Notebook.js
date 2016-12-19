@@ -21,6 +21,7 @@ export default class Notebook extends Model {
      *
      * @property {String} type - type of data stored in this model
      * @property {(String|undefined)} id - undefined for default
+     * @property {String} encryptedData
      * @property {String} parentId
      * @property {String} name - the name of a notebook
      * @property {Number} count - the number of notes attached to the notebook
@@ -32,14 +33,15 @@ export default class Notebook extends Model {
      */
     get defaults() {
         return {
-            type     : 'notebooks',
-            id       : undefined,
-            parentId : '0',
-            name     : '',
-            count    : 0,
-            trash    : 0,
-            created  : 0,
-            updated  : 0,
+            type          : 'notebooks',
+            id            : undefined,
+            encryptedData : '',
+            parentId      : '0',
+            name          : '',
+            count         : 0,
+            trash         : 0,
+            created       : 0,
+            updated       : 0,
         };
     }
 

@@ -21,6 +21,7 @@ export default class Tag extends Model {
      *
      * @property {String} type - type of data stored in this model
      * @property {(String|Undefined)} id - undefined for default
+     * @property {String} encryptedData
      * @property {String} name - the name of a tag
      * @property {Number} count - the number of notes attached to a tag
      * @property {Number} trash
@@ -30,13 +31,14 @@ export default class Tag extends Model {
      */
     get defaults() {
         return {
-            type    : 'tags',
-            id      : undefined,
-            name    : '',
-            count   : 0,
-            trash   : 0,
-            created : 0,
-            updated : 0,
+            type          : 'tags',
+            id            : undefined,
+            encryptedData : '',
+            name          : '',
+            count         : 0,
+            trash         : 0,
+            created       : 0,
+            updated       : 0,
         };
     }
 

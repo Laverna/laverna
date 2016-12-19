@@ -123,7 +123,13 @@ export default class Model extends BModel {
      * @returns {Object}
      */
     getData(attrs = this.attributes) {
-        return _.pick(attrs, _.keys(this.defaults));
+        const data = _.pick(attrs, _.keys(this.defaults));
+
+        if (!attrs.encryptedData || !attrs.encryptedData.length) {
+            return data;
+        }
+
+        return _.omit(data, this.encryptKeys);
     }
 
     /**

@@ -37,6 +37,11 @@ const configNames = {
         sortnotes          : 'created',
         sortnotebooks      : 'name',
         navbarNotebooksMax : '5',
+
+        account: {
+            email : '',
+            name  : '',
+        },
     },
 
     /**
@@ -67,22 +72,16 @@ const configNames = {
      * Encryption settings.
      *
      * @prop {String} encrypt - disable/enable encryption (0|1)
-     * @prop {String} encryptPass - hash of encryption password
-     * @prop {String} encryptSalt - encryption salt
-     * @prop {String} encryptIter - iteration (default is 10000)
-     * @prop {String} encryptTag - authentication strength (default is 128)
-     * @prop {String} encryptKeySize - key size (default is 256)
+     * @prop {String} privateKey - private key
+     * @prop {Object} publicKeys - a list of public keys
      * @prop {Object} encryptBackup - used for storing the previous encryption
      * settings.
      */
     encryption: {
-        encrypt            : '0',
-        encryptPass        : '',
-        encryptSalt        : '',
-        encryptIter        : '10000',
-        encryptTag         : '128',
-        encryptKeySize     : '256',
-        encryptBackup      : {},
+        encrypt       : '0',
+        privateKey    : '',
+        publicKeys    : {},
+        encryptBackup : {},
     },
 
     /**

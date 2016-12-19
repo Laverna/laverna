@@ -60,7 +60,9 @@
     "modernizr": "^3.3.1",
     "modernizr-loader": "0.0.5",
     "mousetrap": "^1.6.0",
+    "openpgp": "^2.3.5",
     "prismjs": "^1.6.0",
+    "sjcl": "^1.0.6",
     "underscore": "^1.8.3",
     "uuid": "^3.0.1",
     "xss": "^0.3.2"

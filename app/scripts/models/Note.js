@@ -21,6 +21,7 @@ export default class Note extends Model {
      *
      * @property {String} type - equal to notes
      * @property {(String|Undefined)} id - undefined for default
+     * @property {String} encryptedData
      * @property {String} title
      * @property {String} content
      * @property {Number} taskAll - the number of tasks in a note
@@ -38,6 +39,7 @@ export default class Note extends Model {
         return {
             type          : 'notes',
             id            : undefined,
+            encryptedData : '',
             title         : '',
             content       : '',
             taskAll       : 0,

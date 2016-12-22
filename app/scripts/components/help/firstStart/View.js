@@ -24,27 +24,70 @@ export default class View extends Mn.View {
 
     ui() {
         return {
-            settings     : '#welcome--settings',
             page         : '#welcome--page',
-            backup       : '#welcome--backup',
+            settings     : '#welcome--settings',
+            wait         : '#welcome--wait',
             password     : 'input[name="password"]',
-            cloudStorage : 'select[name="cloudStorage"]',
+            passwordRe   : 'input[name="passwordRe"]',
+            email        : 'input[name=email]',
+            name         : 'input[name=name]',
+            saveBtn      : '#welcome--save',
         };
     }
 
     triggers() {
         return {
             'click #welcome--import' : 'import',
-            'click #welcome--save'   : 'save',
+            'click @ui.saveBtn'      : 'save',
             'click #welcome--export' : 'download',
         };
     }
 
     events() {
         return {
-            'click #welcome--next': 'onNext',
-            'click #welcome--last': 'destroy',
+            'keyup @ui.email'            : 'onInputChange',
+            'keyup input[type=password]' : 'onInputChange',
+            'click #welcome--previous'   : 'onPrevious',
+            'click #welcome--next'       : 'onNext',
+            'click #welcome--last'       : 'destroy',
         };
+    }
+
+    /**
+     * Check if email is empty.
+     */
+    onInputChange() {
+        this.checkForm();
+    }
+
+    /**
+     * Check if email and password are provided.
+     */
+    checkForm() {
+        if (this.ui.email.val().trim().length && this.checkPassword()) {
+            this.ui.saveBtn.removeAttr('disabled');
+        }
+        else {
+            this.ui.saveBtn.attr('disabled', true);
+        }
+    }
+
+    /**
+     * Return true if password is not empty.
+     *
+     * @returns {Boolean}
+     */
+    checkPassword() {
+        const password = this.ui.password.val().trim();
+        return password === this.ui.passwordRe.val() && password.length !== 0;
+    }
+
+    /**
+     * Show the first page and hide settings page.
+     */
+    onPrevious() {
+        this.ui.page.removeClass('hidden');
+        this.ui.settings.addClass('hidden');
     }
 
     /**
@@ -58,9 +101,17 @@ export default class View extends Mn.View {
     /**
      * After saving settings, show backup buttons.
      */
-    onSaveAfter() {
+    onSaveBefore() {
         this.ui.settings.addClass('hidden');
-        this.ui.backup.removeClass('hidden');
+        this.ui.wait.removeClass('hidden');
+    }
+
+    /**
+     * After saving settings, show backup buttons.
+     */
+    onSaveAfter() {
+        this.ui.wait.addClass('hidden');
+        this.$('#welcome--backup').removeClass('hidden');
     }
 
 }

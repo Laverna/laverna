@@ -4,6 +4,7 @@
 import Mn from 'backbone.marionette';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
+import * as openpgp from 'openpgp';
 import View from './View';
 import deb from 'debug';
 
@@ -128,25 +129,75 @@ export default class Controller extends Mn.Object {
     /**
      * Save settings.
      *
+     * @fires this.view#save:before
      * @fires this.view#save:after
      * @returns {Promise}
      */
     save() {
-        return Promise.all([
-            this.savePassword(),
-            this.saveCloud(),
-        ])
-        .then(() => this.view.triggerMethod('save:after'));
+        this.view.triggerMethod('save:before');
+
+        return this.saveAccount()
+        .then(account => this.generateKeyPair(account))
+        .then(() => this.view.triggerMethod('save:after'))
+        .catch(err => log('save error', err));
     }
 
     /**
-     * Save a password.
+     * Save email and name.
      *
-     * @todo
+     * @returns {Promise} - resolves with account information (object)
+     */
+    saveAccount() {
+        const value = {
+            email : this.view.ui.email.val().trim(),
+            name  : this.view.ui.name.val().trim(),
+        };
+
+        return this.configsChannel.request('saveModelObject', {
+            profileId : this.profileId,
+            data      : {value, name: 'account'},
+        })
+        .then(() => value);
+    }
+
+    /**
+     * Generate OpenPGP key pair and save it.
+     *
+     * @todo handle errors
+     * @param {Object} account
+     * @param {String} account.email
+     * @param {String} account.name
      * @returns {Promise}
      */
-    savePassword() {
-        return Promise.resolve();
+    generateKeyPair(account) {
+        const passphrase = this.view.ui.password.val().trim();
+
+        return Radio.request('models/Encryption', 'generateKeys', {
+            passphrase,
+            userIds: [account],
+        })
+        .then(keys => this.saveKeyPair(keys))
+        .catch(err => log('error', err));
+    }
+
+    /**
+     * Save the key pair.
+     *
+     * @param {Object} keys
+     * @returns {Promise}
+     */
+    saveKeyPair(keys) {
+        const key     = openpgp.key.readArmored(keys.publicKey).keys[0];
+        const configs = [
+            {name: 'privateKey', value: keys.privateKey},
+            {name: 'publicKeys', value: {[key.primaryKey.fingerprint]: keys.publicKey}},
+            {name: 'encrypt', value: 1},
+        ];
+
+        return this.configsChannel.request('saveConfigs', {
+            configs,
+            profileId : this.profileId,
+        });
     }
 
     /**

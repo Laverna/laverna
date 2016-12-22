@@ -1,7 +1,7 @@
-<div class="modal-dialog modal-lg" id="welcome--page">
-    <div class="modal-content">
+<div class="modal-dialog modal-lg">
+
+    <div class="modal-content" id="welcome--page">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h2 class="modal-title text-center">
                 {{_.i18n('help.firststart title')}}
             </h2>
@@ -30,12 +30,9 @@
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal-dialog modal-lg hidden" id="welcome--settings">
-    <div class="modal-content">
+    <div class="modal-content hidden" id="welcome--settings">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h2 class="modal-title text-center">
                 {{_.i18n('help.firststart title')}}
             </h2>
@@ -43,37 +40,58 @@
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="col-xs-12 form-group">
-                    <legend class="text-center">{{_.i18n('Encryption Password')}}</legend>
-                    <input type="password" placeholder="{{_.i18n('Encryption Password')}}" class="form-control col-xs-12" name="password"/>
+                    <legend class="text-center">{{_.i18n('Account')}}</legend>
+                    <input type="email" name="email" placeholder="{{_.i18n('Email')}}" value="" class="form-control col-xs-12" />
+                </div>
+                <div class="col-xs-12 form-group">
+                    <input type="name" name="name" placeholder="{{_.i18n('Your name (optional)')}}" value="" class="form-control col-xs-12" />
                     <p class="help-block">
-                        {{_.i18n('help.firststart encryption')}}
+                        {{_.i18n('The email is used as your account ID and saved on our servers.')}}
                     </p>
                 </div>
                 <div class="col-xs-12 form-group">
-                    <legend class="text-center">{{_.i18n('Synchronization')}}</legend>
-                    <select class="form-control col-xs-12" name="cloudStorage">
-                        <option value="0">{{ _.i18n('No') }}</option>
-                        <option value="dropbox">Dropbox</option>
-                        <option value="remotestorage">RemoteStorage</option>
-                    </select>
+                    <legend class="text-center">{{_.i18n('Encryption Password')}}</legend>
+                    <input type="password" placeholder="{{_.i18n('Passphrase')}}" class="form-control col-xs-12" name="password"/>
+                </div>
+                <div class="col-xs-12 form-group">
+                    <input type="password" placeholder="{{_.i18n('Re-enter passphrase')}}" class="form-control col-xs-12" name="passwordRe"/>
                     <p class="help-block">
-                        {{_.i18n('help.firststart sync')}}
+                        <p>{{_.i18n('Choose a strong and hard to guess passphrase')}}.</p>
+                        <p><b>{{_.i18n('Please make sure you remember the passphrase you have set')}}.</b></p>
                     </p>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <div class="text-center">
-                <button id="welcome--save" class="btn btn-lg btn-success">
+            <div class="col-xs-6">
+                <button id="welcome--previous" class="btn btn-lg btn-default pull-right">
+                    {{_.i18n('Previous')}}
+                </button>
+            </div>
+            <div class="col-xs-6">
+                <button id="welcome--save" class="btn btn-lg btn-success pull-left" disabled="disabled">
                     {{_.i18n('Next')}}
                 </button>
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal-dialog modal-lg hidden" id="welcome--backup">
-    <div class="modal-content">
+    <div class="modal-content hidden" id="welcome--wait">
+        <div class="modal-header">
+            <h2 class="modal-title text-center">
+                {{_.i18n('Please wait')}}...
+            </h2>
+        </div>
+        <div class="modal-body">
+            <p class="text-center loader" style="font-size:3em">
+                <i class="icon icon-arrows animate-spin"></i>
+            </p>
+            <p class="text-center">{{_.i18n('We are generating your encryption keys.')}}</p>
+            <p class="text-center">{{_.i18n('It might take a while.')}}</p>
+        </div>
+    </div>
+
+    <div class="modal-content hidden" id="welcome--backup">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h2 class="modal-title text-center">
@@ -96,4 +114,5 @@
             </div>
         </div>
     </div>
+
 </div>

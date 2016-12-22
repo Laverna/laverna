@@ -29,6 +29,7 @@ test('notes/show/Controller: configs', t => {
 
 test('notes/show/Controller: init()', t => {
     const con = new Controller();
+    const req = sand.stub(Radio, 'request');
     sand.stub(con, 'fetch').returns(Promise.resolve({id: '1'}));
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
@@ -36,6 +37,8 @@ test('notes/show/Controller: init()', t => {
     const res = con.init();
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(con.fetch.called, true, 'fetches the model');
+    t.equal(req.calledWith('Layout', 'showLoader', {region: 'content'}), true,
+        'renders the loader view to indicate that the note model is being fetched');
 
     res.then(() => {
         t.equal(con.show.calledWithMatch({id: '1'}), true,

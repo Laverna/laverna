@@ -7,6 +7,7 @@ import sinon from 'sinon';
 // import $ from 'jquery';
 
 import Layout from '../../../app/scripts/views/Layout';
+import Loader from '../../../app/scripts/views/Loader';
 global.overrideTemplate(Layout, 'templates/layout.html');
 
 let sand;
@@ -43,6 +44,7 @@ test('Layout: initialize()', t => {
         add    : view.add,
         toggle : view.toggle,
         toggleContent: view.toggleContent,
+        showLoader   : view.showLoader,
     }), true, 'replies to requests');
 
     sand.restore();
@@ -148,6 +150,20 @@ test('Layout: toggleContent()', t => {
         'hides "content" region if visible is false');
     t.equal(toggleSide.calledWith('hidden-xs', false), true,
         'shows "sidebar" region if visible is false');
+
+    sand.restore();
+    t.end();
+});
+
+test('Layout: showLoader()', t => {
+    const view = new Layout();
+    sand.stub(view, 'show', opt => view.loadView = opt.view);
+
+    view.showLoader({region: 'modal'});
+    t.equal(view.show.calledWithMatch({region: 'modal'}), true,
+        'renders the view');
+    t.equal(view.loadView instanceof Loader, true,
+        'uses "Loader" view');
 
     sand.restore();
     t.end();

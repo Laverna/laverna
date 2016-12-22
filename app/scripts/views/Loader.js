@@ -14,7 +14,7 @@ import _ from 'underscore';
 export default class Loader extends Mn.View {
 
     get template() {
-        const tmpl = require('../templates/template.html');
+        const tmpl = require('../templates/loader.html');
         return _.template(tmpl);
     }
 

@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Radio from 'backbone.radio';
 import deb from 'debug';
 
+import Loader from './Loader';
 import Modal from './Modal';
 import Brand from './Brand';
 
@@ -77,6 +78,7 @@ export default class Layout extends Mn.View {
             add    : this.add,
             toggle : this.toggle,
             toggleContent: this.toggleContent,
+            showLoader   : this.showLoader,
         }, this);
     }
 
@@ -158,6 +160,19 @@ export default class Layout extends Mn.View {
     toggleContent(options) {
         this.getRegion('sidebar').$el.toggleClass('hidden-xs', options.visible);
         this.getRegion('content').$el.toggleClass('hidden-xs', !options.visible);
+    }
+
+    /**
+     * Render the loader view in a region.
+     *
+     * @param {Object} options
+     * @param {String} options.region
+     */
+    showLoader(options) {
+        this.show({
+            region : options.region,
+            view   : new Loader(),
+        });
     }
 
 }

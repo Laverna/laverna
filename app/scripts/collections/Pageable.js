@@ -68,6 +68,7 @@ export default class Pageable extends Collection {
         if (!_.isUndefined(opt.perPage)) {
             this.pagination.perPage = Number(opt.perPage);
         }
+        this.pagination.current = Number(opt.page);
 
         // Do not use pagination
         if (this.pagination.perPage === 0) {
@@ -286,7 +287,7 @@ export default class Pageable extends Collection {
     updateTotalPages() {
         return (this.pagination.total = Math.ceil(
             this.fullCollection.length / this.pagination.perPage
-        ));
+        ) - 1);
     }
 
     /**
@@ -311,7 +312,7 @@ export default class Pageable extends Collection {
      * Get models for the next page.
      */
     getNextPage() {
-        this.reset(this.getPage(this.pagination.current));
+        this.reset(this.getPage(this.pagination.current + 1));
     }
 
     /**

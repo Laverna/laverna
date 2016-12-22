@@ -30,15 +30,16 @@ export default class Pagination extends Mn.Behavior {
 
     collectionEvents() {
         return {
-            'page:next'     : 'getNextPage',
-            'page:previous' : 'getPreviousPage',
-            reset           : 'updatePaginationButtons',
+            reset: 'updatePaginationButtons',
         };
     }
 
     initialize() {
         this.options    = this.view.options;
         this.collection = this.options.collection;
+
+        this.listenTo(this.collection.channel, 'page:next', this.getNextPage);
+        this.listenTo(this.collection.channel, 'page:previous', this.getPreviousPage);
     }
 
     /**

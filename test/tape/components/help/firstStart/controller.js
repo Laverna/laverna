@@ -5,6 +5,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
+import * as openpgp from 'openpgp';
 
 /* eslint-disable */
 import Configs from '../../../../../app/scripts/collections/Configs';
@@ -158,13 +159,16 @@ test('help/firstStart/Controller: listenToEvents()', t => {
 test('help/firstStart/Controller: save()', t => {
     const con = new Controller();
     con.view  = {triggerMethod: sand.stub()};
-    sand.stub(con, 'savePassword');
-    sand.stub(con, 'saveCloud');
+    sand.stub(con, 'saveAccount').returns(Promise.resolve('account'));
+    sand.stub(con, 'generateKeyPair');
 
     con.save()
     .then(() => {
-        t.equal(con.savePassword.called, true, 'saves the password');
-        t.equal(con.saveCloud.called, true, 'saves the cloud storage settings');
+        t.equal(con.view.triggerMethod.calledWith('save:before'), true,
+            'triggers save:before event');
+        t.equal(con.saveAccount.called, true, 'creates a new account');
+        t.equal(con.generateKeyPair.calledWith('account'), true,
+            'generates a new key pair');
         t.equal(con.view.triggerMethod.calledWith('save:after'), true,
             'triggers save:after event');
 
@@ -173,9 +177,71 @@ test('help/firstStart/Controller: save()', t => {
     });
 });
 
-test('help/firstStart/Controller: savePassword()', t => {
+test('help/firstStart/Controller: saveAccount()', t => {
     const con = new Controller();
-    con.savePassword();
+    con.view  = {ui: {
+        email: {val: sand.stub().returns('test@example.com')},
+        name : {val: sand.stub().returns('Test')},
+    }};
+    sand.stub(con.configsChannel, 'request').returns(Promise.resolve());
+
+    con.saveAccount()
+    .then(res => {
+        t.equal(con.configsChannel.request.calledWith('saveModelObject', {
+            profileId: con.profileId,
+            data     : {
+                name : 'account',
+                value: {email: 'test@example.com', name: 'Test'},
+            },
+        }), true, 'msg');
+        t.deepEqual(res, {email: 'test@example.com', name: 'Test'},
+            'resolves with account data');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('help/firstStart/Controller: generateKeyPair()', t => {
+    const con  = new Controller();
+    con.view   = {ui: {password: {val: sand.stub().returns('pass')}}};
+    const keys = {publicKey: 'pub', privateKey: 'priv'};
+    const req  = sand.stub(Radio, 'request').returns(Promise.resolve(keys));
+    sand.stub(con, 'saveKeyPair');
+
+    const account = {name: 'Test', email: 'test@example.com'};
+    con.generateKeyPair(account)
+    .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'generateKeys', {
+            passphrase: 'pass',
+            userIds   : [account],
+        }), true, 'generates a new key pair');
+
+        t.equal(con.saveKeyPair.calledWith(keys), true,
+            'saves the generate key pair');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('help/firstStart/Controller: generateKeyPair()', t => {
+    const con = new Controller();
+    const req = sand.stub(con.configsChannel, 'request');
+    const key = {primaryKey: {fingerprint: 'fingertest'}};
+    sand.stub(openpgp.key, 'readArmored').returns({keys: [key]});
+
+    con.saveKeyPair({publicKey: 'pub', privateKey: 'priv'});
+    t.equal(req.calledWith('saveConfigs', {
+        profileId: con.profileId,
+        configs  : [
+            {name: 'privateKey', value: 'priv'},
+            {name: 'publicKeys', value: {fingertest: 'pub'}},
+            {name: 'encrypt', value: 1},
+        ],
+    }), true, 'saves the key pair');
+
+    sand.restore();
     t.end();
 });
 

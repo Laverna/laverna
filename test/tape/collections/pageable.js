@@ -348,7 +348,7 @@ test('Pageable: sortByComparators() - asc', t => {
 test('Pageable: updateTotalPages()', t => {
     const page = new Pageable();
 
-    const pages = Math.ceil(125 / page.pagination.perPage);
+    const pages = Math.ceil(125 / page.pagination.perPage) - 1;
     page.fullCollection = {length: 125};
     t.equal(page.updateTotalPages(), pages, 'msg');
 
@@ -388,7 +388,7 @@ test('Pageable: getNextPage() + getPreviousPage()', t => {
 
     // Next page
     page.getNextPage();
-    t.equal(stub.calledWith(page.pagination.current), true,
+    t.equal(stub.calledWith(page.pagination.current + 1), true,
         'executes getPage() to get models for the next page');
     t.equal(reset.calledWith([{id: 'next'}]), true, 'resets itself');
 

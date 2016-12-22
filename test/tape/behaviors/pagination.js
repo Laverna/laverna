@@ -47,10 +47,6 @@ test('Pagination: events()', t => {
 test('Pagination: collectionEvents()', t => {
     const events = Pagination.prototype.collectionEvents();
     t.equal(typeof events, 'object', 'returns an object');
-    t.equal(events['page:next'], 'getNextPage',
-        'listens to page:next event');
-    t.equal(events['page:previous'], 'getPreviousPage',
-        'listens to page:previous event');
     t.equal(events.reset, 'updatePaginationButtons',
         'updates pagination buttons if the collection is reset');
 
@@ -60,11 +56,18 @@ test('Pagination: collectionEvents()', t => {
 test('Pagination: initialize()', t => {
     const page = Pagination.prototype;
     page.view  = {options: {collection: new Notes()}};
+    const list = sand.stub(page, 'listenTo');
 
     page.initialize();
     t.equal(page.options, page.view.options, 'uses options from the view');
     t.equal(page.collection, page.view.options.collection,
         'uses collection from the view');
+
+    const {collection} = page.view.options;
+    t.equal(list.calledWith(collection.channel, 'page:next', page.getNextPage),
+        true, 'listens to page:next event on collection channel');
+    t.equal(list.calledWith(collection.channel, 'page:previous', page.getPreviousPage),
+        true, 'listens to page:previous event on collection channel');
 
     page.view       = null;
     page.collection = null;

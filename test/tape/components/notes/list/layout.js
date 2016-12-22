@@ -34,26 +34,24 @@ test('notes/list/views/Layout: regions()', t => {
 });
 
 test('notes/list/views/Layout: onRender()', t => {
-    const view = new Layout();
+    const view = new Layout({collection: {channel: {}}});
     const stub = sand.stub(view, 'showChildView');
     sand.stub(NotesView.prototype, 'behaviors').returns([]);
 
     view.onRender();
     t.equal(stub.calledWith('notes'), true, 'renders the collection view');
 
-    view.destroy();
     sand.restore();
     t.end();
 });
 
 test('notes/list/views/Layout: templateContext()', t => {
-    const view      = new Layout();
+    const view      = new Layout({collection: {channel: {}}});
     view.collection = {models: []};
     const context   = view.templateContext();
 
     t.equal(typeof context, 'object', 'returns an object');
     t.equal(context.collection, view.collection, 'uses the collection property');
 
-    view.destroy();
     t.end();
 });

@@ -16,7 +16,7 @@
     "cover:check": "npm run cover && nyc check-coverage --lines 95 --functions 95 --branches 95",
     "jsdoc": "jsdoc app/scripts -r -d _dev/jsdoc && gulp serve --root=./_dev/jsdoc --dev",
     "gulpdoc": "jsdoc gulps/ gulpfile.js -r -d _dev/gulpdoc && gulp serve --root=./_dev/gulpdoc --dev",
-    "eslint": "eslint -c './.eslintrc.js' --ignore-pattern 'app/scripts/modules' --ignore-pattern='encryption' --ignore-pattern='classes' ./app/scripts/",
+    "eslint": "eslint -c './.eslintrc.js' --ignore-pattern 'app/scripts/modules' --ignore-pattern='encryption' ./app/scripts/",
     "prepub": "npm test && npm run cover && npm run cover:check"
   },
   "main": "electron.js",

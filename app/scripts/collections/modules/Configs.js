@@ -2,6 +2,8 @@
  * @module collections/modules/Configs
  */
 import _ from 'underscore';
+import * as openpgp from 'openpgp';
+import Radio from 'backbone.radio';
 import Module from './Module';
 import Collection from '../Configs';
 import {configNames} from '../configNames';
@@ -46,6 +48,9 @@ export default class Configs extends Module {
             findDefaultProfiles : this.findDefaultProfiles,
             createProfile       : this.createProfile,
             removeProfile       : this.removeProfile,
+            changePassphrase    : this.changePassphrase,
+            addPublicKey        : this.addPublicKey,
+            removePublicKey     : this.removePublicKey,
         }, this);
     }
 
@@ -281,6 +286,74 @@ export default class Configs extends Module {
                 return this.saveModel({model, data: {value}});
             }
         });
+    }
+
+    /**
+     * Change the private key's passphrase.
+     *
+     * @param {Object} options
+     * @param {Object} options.model - "privateKey" model
+     * @param {String} options.oldPassphrase
+     * @param {String} options.newPassphrase
+     * @returns {Promise}
+     */
+    changePassphrase(options) {
+        if (options.oldPassphrase === options.newPassphrase) {
+            return Promise.reject('New and old passphrase are the same');
+        }
+        else if (!options.oldPassphrase.length || !options.newPassphrase.length) {
+            return Promise.reject('You did not provide old or new passphrase');
+        }
+
+        const {model} = options;
+        return Radio.request('models/Encryption', 'changePassphrase', options)
+        .then(value => this.saveModel({model, data: {value}}));
+    }
+
+    /**
+     * Add a public key to the array.
+     *
+     * @param {Object} options
+     * @param {Object} options.model - "publicKeys" model
+     * @param {String} options.publicKey
+     * @returns {Promise}
+     */
+    addPublicKey(options) {
+        const {model, publicKey} = options;
+        const {keys, err} = openpgp.key.readArmored(publicKey);
+        const value = model.get('value');
+
+        if (err) {
+            return Promise.reject(err[0].message);
+        }
+        else if (value[keys[0].primaryKey.fingerprint]) {
+            return Promise.reject('The key already exists!');
+        }
+
+        value[keys[0].primaryKey.fingerprint] = publicKey;
+        return this.saveModel({model, data: {value}})
+        .then(() => this.collection.trigger('change'));
+    }
+
+    /**
+     * Remove a public key from the array.
+     *
+     * @param {Object} options
+     * @param {Object} options.model - "encryptKeys" model
+     * @param {String} options.publicKey
+     * @returns {Promise}
+     */
+    removePublicKey(options) {
+        const {model, publicKey} = options;
+        const {keys, err} = openpgp.key.readArmored(publicKey);
+        let value = model.get('value');
+
+        if (err) {
+            return Promise.reject(err[0].message);
+        }
+
+        value = _.omit(value, keys[0].primaryKey.fingerprint);
+        return this.saveModel({model, data: {value}});
     }
 
 }

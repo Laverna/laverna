@@ -1,52 +1,43 @@
 <div class="form-group">
-    <label class="col-sm-2 control-label" for="useEncryption">{{ _.i18n('Use encryption') }}</label>
-    <div class="col-sm-10 checkbox">
+    <div class="col-sm-12 checkbox">
          <label class="control-label">
              <input id="useEncryption" type="checkbox" name="encrypt" <% if(Number(models.encrypt) === 1) { %> checked<% } %> >
-             {{ _.i18n('Yes') }}
+             {{ _.i18n('Use encryption') }}
          </label>
     </div>
 </div>
 
-<fieldset id="encryptOpt" <% if(Number(models.encrypt) === 0) { %>disabled="disabled"<% } %>>
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="encryptPass">{{ _.i18n('Encryption Password') }}</label>
-        <div class="col-sm-10">
-            <input type="password" id="encryptPass" name="encryptPass" value="" placeholder="{{passwordText()}}" class="form-control" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="encryptSalt">{{ _.i18n('Salt') }}</label>
-        <div class="col-sm-10">
-            <input class="form-control hex" disabled type="text" name="encryptSalt" id="encryptSalt" value="" >
+<% if (keys !== null) { %>
+<div class="center-block">
+    <header>
+        <h3>{{_.i18n('Your key')}}</h3>
+    </header>
 
-            <a id="randomize" href="#">{{ _.i18n('Random') }}</a>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="encryptIter">{{ _.i18n('Strengthen by a factor of') }}</label>
-        <div class="col-sm-10">
-            <input type="number" name="encryptIter" id="encryptIter" value="{{models.encryptIter}}" class="form-control" >
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="encryptKeySize">{{ _.i18n('Key size') }}</label>
-        <div class="col-sm-10">
-            <select class="form-control" name="encryptKeySize" id="encryptKeySize">
-                <option value="128"<%if(models.encryptKeySize === '128'){ %> selected<% } %>>128</option>
-                <option value="192"<%if(models.encryptKeySize === '192'){ %> selected<% } %>>192</option>
-                <option value="256"<%if(models.encryptKeySize === '256'){ %> selected<% } %>>256</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label" for="encryptTag">{{ _.i18n('Authentication strength') }}</label>
-        <div class="col-sm-10">
-            <select class="form-control" name="encryptTag" id="encryptTag">
-                <option value="64"<%if(models.encryptTag === '64'){ %> selected<% } %>>64</option>
-                <option value="96"<%if(models.encryptTag === '96'){ %> selected<% } %>>96</option>
-                <option value="128"<%if(models.encryptTag === '128'){ %> selected<% } %>>128</option>
-            </select>
-        </div>
-    </div>
-</fieldset>
+    <button id="btn--privateKey" type="button" class="btn btn-default btn-block">
+        <i class="icon-lock"></i>
+        {{privateKey.users[0].userId.userid}}
+    </button>
+    <button id="btn--passphrase" type="button" class="btn btn-default btn-block">
+        <i class="icon-pencil"></i>
+        {{_.i18n('Change passphrase')}}
+    </button>
+</div>
+
+<div class="center-block">
+    <header>
+        <h3>
+            {{_.i18n('Public keys you trust')}}
+            <button class="btn btn-link btn--add--public" type="button"><i class="icon-doc-new"></i></button>
+        </h3>
+    </header>
+
+    <% _.each(keys, function(key, fingerprint) { %>
+    <% if (!isPrivate(fingerprint)) { %>
+    <button type="button" class="btn btn-default btn-block btn--publicKey" data-index="{{fingerprint}}">
+        <i class="icon-lock"></i>
+        {{key.users[0].userId.userid}}
+    </button>
+    <% } %>
+    <% }) %>
+</div>
+<% } %>

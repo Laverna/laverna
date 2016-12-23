@@ -1,0 +1,34 @@
+<div class="modal-dialog modal-mini">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="modal-title">{{ _.i18n('Change passphrase') }}</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <input id="oldPassphrase" name="oldPassphrase" placeholder="{{_.i18n('Old passphrase')}}" class="form-control" type="password" />
+            </div>
+            <div class="form-group">
+                <input id="newPassphrase" name="newPassphrase" placeholder="{{_.i18n('New passphrase')}}" class="form-control" type="password" />
+            </div>
+            <div class="form-group">
+                <input id="newPassphraseRe" name="newPassphraseRe" placeholder="{{_.i18n('Re-enter passphrase')}}" class="form-control" type="password" />
+            </div>
+            <div class="form-group">
+                <p class="help-block">
+                    <p>{{_.i18n('Choose a strong and hard to guess passphrase')}}.</p>
+                    <p><b>{{_.i18n('Please make sure you remember the passphrase you have set')}}. If you forget the passphrase, it will be impossible to recover your data.</b></p>
+                    <p class="text-danger help--error"></p>
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn--cancel">
+                {{ _.i18n('Close') }}
+            </button>
+            <button type="button" class="btn btn-success btn--save">
+                {{ _.i18n('Save') }}
+            </button>
+        </div>
+    </div>
+</div>

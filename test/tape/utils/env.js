@@ -26,8 +26,8 @@ test('Env: constructor()', t => {
         'replies to isMobile requests');
     t.equal(env.channel.reply.calledWith('isWebkit'), true,
         'replies to isWebkit requests');
-    t.equal(env.channel.reply.calledWith('useWorkers'), true,
-        'replies to useWorkers requests');
+    t.equal(env.channel.reply.calledWith('canUseWorkers'), true,
+        'replies to canUseWorkers requests');
     t.equal(env.channel.reply.calledWith('platform'), true,
         'replies to platform requests');
 

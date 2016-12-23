@@ -16,7 +16,11 @@ test('underscore: before()', t => {
 test('underscore: i18n()', t => {
     const spy = sand.spy(i18next, 't');
     _.i18n('hello');
-    t.equal(spy.called, true, 'uses i18next');
+    t.equal(spy.calledWith('hello'), true, 'uses i18next');
+
+    _.i18n('hello', {myVar: 'test'});
+    t.equal(spy.calledWith('hello', {myVar: 'test'}), true, 'uses options');
+
     sand.restore();
     t.end();
 });

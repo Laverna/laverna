@@ -32,8 +32,8 @@ _.mixin({
      * @param {String} str
      * @returns {String}
      */
-    i18n(str) {
-        return i18next.t(str);
+    i18n(...args) {
+        return i18next.t(...args);
     },
 
     /**

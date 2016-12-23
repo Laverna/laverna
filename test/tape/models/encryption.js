@@ -4,11 +4,11 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
+import * as openpgp from 'openpgp';
+import sjcl from 'sjcl';
 
 import Encryption from '../../../app/scripts/models/Encryption';
 import Notes from '../../../app/scripts/collections/Notes';
-
-const openpgp = require('openpgp');
 
 let sand;
 test('models/Encryption: before()', t => {
@@ -17,15 +17,16 @@ test('models/Encryption: before()', t => {
     t.end();
 });
 
-test('Encryption: channel', t => {
+test('models/Encryption: channel', t => {
     t.equal(Encryption.prototype.channel.channelName, 'models/Encryption');
     t.end();
 });
 
-test('Encryption: constructor()', t => {
+test('models/Encryption: constructor()', t => {
     const reply = sand.stub(Encryption.prototype.channel, 'reply');
     const enc   = new Encryption({privateKey: 'key'});
 
+    t.equal(enc.openpgp, openpgp, 'creates "openpgp" property');
     t.deepEqual(enc.options, {privateKey: 'key'}, 'creates "options" property');
 
     t.equal(reply.calledWith({
@@ -45,76 +46,156 @@ test('Encryption: constructor()', t => {
     t.end();
 });
 
-test('Encryption: readKeys()', t => {
+test('models/Encryption: readKeys() - reject', t => {
     const enc  = new Encryption({privateKey: 'key'});
     const read = sand.stub(openpgp.key, 'readArmored');
+    read.returns({keys: [{decrypt: () => false}]});
 
-    const decrypt = sand.stub().returns(true);
-    const keys    = {
-        privateKey : {key : 'private', decrypt},
-        publicKeys : [{key : 'public'}],
-    };
-    read.withArgs('privateKey').returns({keys: [keys.privateKey]});
-    read.withArgs('publicKey').returns({keys: keys.publicKeys});
-
-    const res = enc.readKeys({
-        privateKey: 'privateKey',
-        publicKeys: ['publicKey'],
-    });
-    t.equal(typeof res.then, 'function', 'returns a promise');
-    t.deepEqual(enc.keys, {
-        privateKey  : keys.privateKey,
-        privateKeys : [keys.privateKey],
-        publicKeys  : keys.publicKeys,
-    }, 'creates "keys" property');
-
-    res.then(() => {
-        enc.options = {privateKey: 'privateKey', publicKeys: ['publicKey']};
-        decrypt.returns(false);
-        return enc.readKeys();
-    })
+    enc.readKeys()
     .catch(err => {
         t.equal(err, 'Cannot decrypt the private key',
             'rejects the promise if it failed to decrypt the private key');
+
         sand.restore();
         t.end();
     });
 });
 
-/*
- * @todo
-test('Encryption: generateKeys()', t => {
-    const enc  = new Encryption({privateKey: 'key'});
-    const stub = sand.spy(openpgp, 'generateKey');
+test('models/Encryption: readKeys() - resolve', t => {
+    const enc        = new Encryption();
+    const read       = sand.stub(openpgp.key, 'readArmored');
+    const privateKey = {decrypt: () => true};
+    read.returns({keys: [privateKey]});
+    sand.stub(enc, 'readPublicKeys').returns(['pub']);
+
+    enc.readKeys({privateKey: 'priv', publicKey: 'pub'})
+    .then(res => {
+        const keys = {
+            privateKey,
+            privateKeys: [privateKey],
+            publicKeys : ['pub'],
+        };
+        t.deepEqual(res, keys, 'resolves with private and public keys');
+        t.deepEqual(enc.keys, keys, 'creates "keys" property');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('models/Encryption: readPublicKeys()', t => {
+    const enc  = new Encryption();
+    const read = sand.stub(openpgp.key, 'readArmored');
+    read.returns({keys: ['pubKey']});
+
+    const res = enc.readPublicKeys({publicKeys: {test: 'test', test2: 'test2'}});
+    t.deepEqual(res, ['pubKey', 'pubKey'], 'returns an array of public keys');
+    t.equal(read.callCount, 2, 'reads all keys');
+
+    sand.restore();
+    t.end();
+});
+
+test('models/Encryption: generateKeys()', t => {
+    const enc   = new Encryption({privateKey: 'key'});
+    const key   = {privateKeyArmored: 'priv', publicKeyArmored: 'pub'};
+    enc.openpgp = {generateKey: sand.stub().returns(Promise.resolve(key))};
 
     enc.generateKeys({userIds: [{name: 'me'}], passphrase: 'test'})
-    .then(() => {
-        t.equal(stub.calledWith({
+    .then(res => {
+        t.equal(enc.openpgp.generateKey.calledWith({
             numBits    : 2048,
             userIds    : [{name: 'me'}],
             passphrase : 'test',
         }), true, 'generates the keys');
 
+        t.deepEqual(res, {
+            privateKey: 'priv',
+            publicKey : 'pub',
+        }, 'resolves with the key');
+
         sand.restore();
         t.end();
     });
 });
-*/
 
-// @todo
-test('Encryption: changePassphrase()', t => {
-    t.end();
+test('models/Encryption: changePassphrase()', t => {
+    const enc     = new Encryption();
+    const encrypt = sand.stub();
+    const key     = {
+        decrypt : sand.stub().returns(true),
+        armor   : sand.stub().returns('newPrivateKey'),
+        getAllKeyPackets: sand.stub().returns([{encrypt}, {encrypt}]),
+    };
+    const read = sand.stub(openpgp.key, 'readArmored').returns({keys: [key]});
+    enc.options.privateKey = 'privateKey';
+
+    enc.changePassphrase({newPassphrase: '1', oldPassphrase: '2'})
+    .then(res => {
+        t.equal(encrypt.callCount, 2, 'encrypts all key packets');
+        t.equal(res, 'newPrivateKey', 'resolves with the new armored key');
+
+        key.armor.throws();
+        return enc.changePassphrase({newPassphrase: '1', oldPassphrase: '2'})
+    })
+    .catch(err => {
+        t.equal(err, 'Setting new passphrase failed');
+
+        key.decrypt.returns(false);
+        return enc.changePassphrase({newPassphrase: '1', oldPassphrase: '2'});
+    })
+    .catch(err => {
+        t.equal(err, 'Wrong old passphrase');
+        sand.restore();
+        t.end();
+    });
 });
 
-test('Encryption: encrypt()', t => {
-    t.end();
+test('models/Encryption: encrypt()', t => {
+    const enc     = new Encryption();
+    const encrypt = sand.stub().returns(Promise.resolve({data: 'encrypted'}));
+    enc.openpgp   = {encrypt};
+    enc.keys      = {privateKey: 'priv', publicKey: 'pub'};
+
+    enc.encrypt({data: 'clear text'})
+    .then(res => {
+        t.equal(encrypt.calledWithMatch({
+            privateKey : 'priv',
+            publicKey  : 'pub',
+            data       : 'clear text',
+        }), true, 'encrypts data');
+
+        t.equal(res, 'encrypted', 'resolves with encrypted string');
+
+        sand.restore();
+        t.end();
+    });
 });
 
-test('Encryption: decrypt()', t => {
-    t.end();
+test('models/Encryption: decrypt()', t => {
+    const enc   = new Encryption();
+    enc.keys    = {privateKey: 'priv', publicKey: 'pub'};
+    enc.openpgp = {
+        decrypt: sand.stub().returns(Promise.resolve({data: 'decrypted'})),
+        message: {readArmored: () => 'unarmed'},
+    };
+
+    enc.decrypt({message: 'encrypted'})
+    .then(res => {
+        t.equal(enc.openpgp.decrypt.calledWithMatch({
+            privateKey : 'priv',
+            publicKey  : 'pub',
+            message    : 'unarmed',
+        }), true, 'encrypts data');
+
+        t.equal(res, 'decrypted', 'resolves with decrypted string');
+
+        sand.restore();
+        t.end();
+    });
 });
 
-test('Encryption: encryptModel()', t => {
+test('models/Encryption: encryptModel()', t => {
     const enc = new Encryption();
     sand.stub(enc, 'encrypt').returns(Promise.resolve('encrypted string'));
 
@@ -140,17 +221,25 @@ test('Encryption: encryptModel()', t => {
     });
 });
 
-test('Encryption: decryptModel()', t => {
+test('models/Encryption: decryptModel()', t => {
     const enc       = new Encryption();
     const decrypted = JSON.stringify({title: 'Test'});
     sand.stub(enc, 'decrypt').returns(Promise.resolve(decrypted));
 
     const model = {
-        attributes  : {encryptedData: 'encrypted data'},
+        attributes  : {encryptedData: ''},
         set         : sand.stub(),
     };
 
     enc.decryptModel({model})
+    .then(res => {
+        t.equal(res, model, 'resolves with the model');
+        t.equal(enc.decrypt.notCalled, true,
+            'does nothing if encryptedData attribute is empty');
+
+        model.attributes.encryptedData = 'encrypted data';
+        return enc.decryptModel({model});
+    })
     .then(res => {
         t.equal(enc.decrypt.calledWith({message: 'encrypted data'}), true,
             'decrypts "encryptedData" attribute');
@@ -163,7 +252,7 @@ test('Encryption: decryptModel()', t => {
     });
 });
 
-test('Encryption: encryptCollection()', t => {
+test('models/Encryption: encryptCollection()', t => {
     const enc = new Encryption();
     sand.stub(enc, 'encryptModel').returns(Promise.resolve());
     const collection = new Notes();
@@ -189,7 +278,7 @@ test('Encryption: encryptCollection()', t => {
     });
 });
 
-test('Encryption: decryptCollection', t => {
+test('models/Encryption: decryptCollection()', t => {
     const enc = new Encryption();
     sand.stub(enc, 'decryptModel').returns(Promise.resolve());
     const collection = new Notes();
@@ -215,6 +304,16 @@ test('Encryption: decryptCollection', t => {
     });
 });
 
-test('Encryption: sha256()', t => {
-    t.end();
+test('models/Encryption: sha256()', t => {
+    const enc = new Encryption();
+    const spy = sand.spy(sjcl.hash.sha256, 'hash');
+
+    enc.sha256({text: 'test'})
+    .then(res => {
+        t.equal(Array.isArray(res), true, 'resolves with an array');
+        t.equal(spy.calledWith('test'), true, 'calls hash method');
+
+        sand.restore();
+        t.end();
+    });
 });

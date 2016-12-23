@@ -126,11 +126,10 @@ test('Configs: appShortcuts()', t => {
 test('Configs: filterByName()', t => {
     const configs = new Configs();
     configs.resetFromObject(configs.configNames);
-    const res     = configs.filterByName('encrypt');
+    const res     = configs.filterByName('actions');
 
     t.equal(Array.isArray(res), true, 'returns an array');
-    t.equal(res.length, Object.keys(configNames.encryption).length,
-        'finds all items that have a key word in their names');
+    t.equal(res.length, 4, 'finds all items that have a key word in their names');
 
     t.end();
 });

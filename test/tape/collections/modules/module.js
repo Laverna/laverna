@@ -315,52 +315,44 @@ test('Module: isEncryptEnabled()', t => {
 });
 
 test('Module: decryptModel()', t => {
-    const mod  = new Module();
-    const stub = sand.stub();
+    const mod   = new Module();
+    const stub  = sand.stub();
+    const req   = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const model = {id: '1'};
     sand.stub(mod, 'isEncryptEnabled').returns(false);
 
-    Radio.replyOnce('encrypt', 'decryptModel', data => {
-        stub();
-        return Promise.resolve(data.model);
-    });
+    mod.decryptModel(model);
+    t.equal(req.notCalled, true, 'does nothing if encryption is disabled');
 
-    mod.decryptModel({id: '1'})
-    .then(model => {
-        t.equal(stub.notCalled, true);
-        t.deepEqual(model, {id: '1'});
+    mod.isEncryptEnabled.returns(true);
+    mod.decryptModel(model);
+    t.equal(req.calledWith('models/Encryption', 'decryptModel', {model}), true,
+        'decrypts the model');
 
-        mod.isEncryptEnabled.returns(true);
-        return mod.decryptModel({id: '2'});
-    })
-    .then(model => {
-        t.deepEqual(model, {id: '2'});
-
-        mod.channel.stopReplying();
-        sand.restore();
-        t.end();
-    });
+    mod.channel.stopReplying();
+    sand.restore();
+    t.end();
 });
 
 test('Module: decryptCollection()', t => {
     const mod  = new Module();
     const stub = sand.stub();
+    const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const coll = new Notes();
     sand.stub(mod, 'isEncryptEnabled').returns(false);
 
-    Radio.replyOnce('encrypt', 'decryptCollection', data => {
-        stub();
-        return Promise.resolve(data.collection);
-    });
+    mod.decryptCollection(coll);
+    t.equal(req.notCalled, true, 'does nothing if encryption is disabled');
 
-    mod.decryptCollection({model: '1'})
-    .then(coll => {
-        t.deepEqual(coll, {model: '1'});
+    mod.isEncryptEnabled.returns(true);
+    const res = mod.decryptCollection(coll);
 
-        mod.collection = {model: '2'};
-        mod.isEncryptEnabled.returns(true);
-        return mod.decryptCollection();
-    })
-    .then(coll => {
-        t.deepEqual(coll, {model: '2'});
+    t.equal(req.calledWith('models/Encryption', 'decryptCollection', {
+        collection: coll,
+    }), true, 'decrypts the collection');
+
+    res.then(res => {
+        t.equal(res, coll, 'resolves with the collection the collection');
 
         mod.channel.stopReplying();
         sand.restore();
@@ -371,24 +363,19 @@ test('Module: decryptCollection()', t => {
 test('Module: encryptModel()', t => {
     const mod  = new Module();
     const stub = sand.stub();
+    const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
     sand.stub(mod, 'isEncryptEnabled').returns(false);
+    const model = {id: '1'};
 
-    Radio.replyOnce('encrypt', 'encryptModel', data => {
-        stub();
-        return Promise.resolve(data.model);
-    });
+    mod.encryptModel(model);
+    t.equal(req.notCalled, true, 'does nothing if encryption is disabled');
 
-    mod.encryptModel({id: '1'})
-    .then(model => {
-        t.deepEqual(model, {id: '1'});
-        mod.isEncryptEnabled.returns(true);
-        return mod.encryptModel({id: '2'});
-    })
-    .then(model => {
-        t.deepEqual(model, {id: '2'});
+    mod.isEncryptEnabled.returns(true);
+    mod.encryptModel(model);
+    t.equal(req.calledWith('models/Encryption', 'encryptModel', {model}), true,
+        'encrypts the model');
 
-        mod.channel.stopReplying();
-        sand.restore();
-        t.end();
-    });
+    mod.channel.stopReplying();
+    sand.restore();
+    t.end();
 });

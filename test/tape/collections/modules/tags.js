@@ -88,7 +88,7 @@ test('Tags: saveModel()', t => {
     sand.stub(mod, 'remove').returns(Promise.resolve());
 
     const reply = sand.stub().returns(Promise.resolve(['t', 'est']));
-    Radio.reply('encrypt', 'sha256', reply);
+    Radio.reply('models/Encryption', 'sha256', reply);
 
     mod.saveModel({model})
     .then(() => {

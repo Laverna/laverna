@@ -91,7 +91,7 @@ test('Model: setEscape()', t => {
 
 test('Model: getData()', t => {
     const model    = new Model({title: 'Test', test: '1'});
-    model.defaults = {title: ''};
+    model.defaults = {title: '', encryptedData: ''};
 
     const res = model.getData();
     t.equal(typeof res, 'object');
@@ -99,6 +99,11 @@ test('Model: getData()', t => {
     t.equal(res.test, undefined,
         'does not contain attribute which is not in default property');
     t.equal(Object.keys(res).length, 1);
+
+    model.set('encryptedData', 'encrypted');
+    model.encryptKeys   = ['title'];
+    t.deepEqual(model.getData(), {encryptedData: 'encrypted'},
+        'does not contain attributes that should be encrypted');
 
     t.end();
 });

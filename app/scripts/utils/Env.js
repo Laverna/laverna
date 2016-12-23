@@ -18,17 +18,16 @@ export default class Env {
     /**
      * @listens utils/Env#isMobile - returns true if it's a mobile device
      * @listens utils/Env#isWebkit - returns true if it's a webkit based device
-     * @listens utils/Env#useWorkers - returns if the device supports web workers
+     * @listens utils/Env#canUseWorkers - returns if the device supports web workers
      * @listens utils/Env#platform - returns platform of the user
      */
     constructor() {
-
         // Start replying to requests
         this.channel.reply({
-            isMobile   : this.isMobile,
-            isWebkit   : this.isWebkit,
-            useWorkers : this.useWorkers,
-            platform   : this.platform,
+            isMobile      : this.isMobile,
+            isWebkit      : this.isWebkit,
+            canUseWorkers : this.canUseWorkers,
+            platform      : this.platform,
         });
     }
 

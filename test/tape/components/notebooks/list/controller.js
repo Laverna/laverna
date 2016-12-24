@@ -46,11 +46,14 @@ test('notebooks/list/Controller: onDestroy()', t => {
 
 test('notebooks/list/Controller: init()', t => {
     const con = new Controller();
+    const req = sand.stub(Radio, 'request');
     sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
     const res = con.init();
+    t.equal(req.calledWith('Layout', 'showLoader', {region: 'sidebar'}), true,
+        'shows a loader');
     t.equal(con.fetch.called, true, 'fetches all collections');
 
     res.then(() => {
@@ -87,6 +90,9 @@ test('notebooks/list/Controller: show()', t => {
     sand.stub(View.prototype, 'bindKeys');
     con.show(tags, notebooks);
     t.equal(con.view instanceof View, true, 'instantiates the view');
+
+    t.equal(req.calledWith('Layout', 'empty', {region: 'content'}), true,
+        'empties "content" region');
 
     t.equal(req.calledWith('Layout', 'show', {
         region : 'sidebar',

@@ -90,8 +90,9 @@ export default class Tags extends Module {
      */
     saveModel(options) {
         const {model} = options;
+        const name    = (options.data || {}).name || model.get('name');
 
-        return Radio.request('models/Encryption', 'sha256', {text: model.get('name')})
+        return Radio.request('models/Encryption', 'sha256', {text: name})
         .then(sha256 => {
             const id = sha256.join('');
 

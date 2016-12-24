@@ -87,19 +87,23 @@ test('Tags: saveModel()', t => {
     const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
     sand.stub(mod, 'remove').returns(Promise.resolve());
 
-    const reply = sand.stub().returns(Promise.resolve(['t', 'est']));
-    Radio.reply('models/Encryption', 'sha256', reply);
+    const req = sand.stub(Radio, 'request');
+    req.returns(Promise.resolve(['t', 'est']));
 
     mod.saveModel({model})
     .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'test'}),
+            true, 'gets the name from the model');
         t.equal(mod.remove.notCalled, true,
             'does not remove the model if its ID has not changed');
         t.equal(save.calledWithMatch({model}), true, 'saves the model');
 
-        reply.returns(Promise.resolve(['te', 'sting']));
-        return mod.saveModel({model});
+        req.returns(Promise.resolve(['te', 'sting']));
+        return mod.saveModel({model, data: {name: 'testing'}});
     })
     .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'testing'}),
+            true, 'gets the name from the data');
         t.equal(mod.remove.calledWith({model}), true,
             'removes the model if it has a different ID');
         t.equal(save.calledWithMatch({model}), true, 'saves the model');

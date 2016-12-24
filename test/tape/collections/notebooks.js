@@ -4,6 +4,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Notebooks from '../../../app/scripts/collections/Notebooks';
+import Pageable from '../../../app/scripts/collections/Pageable';
 import Notebook from '../../../app/scripts/models/Notebook';
 
 let sand;
@@ -39,6 +40,20 @@ test('Notebooks: comparators', t => {
 test('Notebooks: constructor()', t => {
     const notebooks = new Notebooks();
     t.equal(notebooks.pagination.perPage, 0, 'disables pagination');
+    t.end();
+});
+
+test('Notebooks: startListening()', t => {
+    const stub      = sand.stub(Pageable.prototype, 'startListening');
+    const notebooks = new Notebooks();
+    const listen    = sand.stub(notebooks, 'listenTo');
+
+    notebooks.startListening();
+    t.equal(listen.calledWith(notebooks, 'change:parentId', notebooks.updateTree),
+        true, 're-sorts the collection if a model\'s parentId changes');
+    t.equal(stub.called, true, 'calls the parent method');
+
+    sand.restore();
     t.end();
 });
 

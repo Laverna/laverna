@@ -49,6 +49,19 @@ export default class Notebooks extends Pageable {
         this.pagination = {perPage: 0};
     }
 
+    startListening() {
+        this.listenTo(this, 'change:parentId', this.updateTree);
+
+        return super.startListening();
+    }
+
+    /**
+     * Re-sort the collection by parent IDs.
+     */
+    updateTree() {
+        this.reset(this.getTree());
+    }
+
     /**
      * Build a tree structure.
      *

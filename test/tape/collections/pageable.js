@@ -365,6 +365,10 @@ test('Pageable: hasNextPage()', t => {
     t.equal(page.hasNextPage(), true,
         'returns true if the current page number is not equal to the total amount');
 
+    page.pagination.total = undefined;
+    t.equal(page.hasNextPage(), false,
+        'returns false if the total number is undefined');
+
     t.end();
 });
 

@@ -102,6 +102,10 @@ test('notes/Controller: filterHasChanged()', t => {
     t.equal(controller.filterHasChanged(), false,
         'returns false if only ID changed');
 
+    controller._args.page = 2;
+    t.equal(controller.filterHasChanged(), false,
+        'returns false if only page changed');
+
     controller._argsOld = undefined;
     t.equal(controller.filterHasChanged(), false,
         'returns false if _argsOld property does not exist');

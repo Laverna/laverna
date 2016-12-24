@@ -4,18 +4,11 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Mn from 'backbone.marionette';
 import Radio from 'backbone.radio';
 import '../../../app/scripts/utils/underscore';
 
 import Pagination from '../../../app/scripts/behaviors/Pagination';
 import Notes from '../../../app/scripts/collections/Notes';
-
-class View extends Mn.View {
-    behaviors() {
-        return [Pagination];
-    }
-}
 
 let sand;
 test('behaviors/Pagination: before()', t => {
@@ -87,12 +80,17 @@ test('Pagination: updatePaginationButtons()', t => {
     page.collection.pagination.total = 10;
 
     page.updatePaginationButtons();
-    t.equal(page.ui.pageNav.toggleClass.calledWith('hidden'), true,
+    t.equal(page.ui.pageNav.toggleClass.calledWith('hidden', false), true,
         'toggles "hidden" class of the pagination button group');
     t.equal(page.ui.prevPage.toggleClass.calledWith('disabled'), true,
         'toggles "disabled" class of the "previous" button');
     t.equal(page.ui.nextPage.toggleClass.calledWith('disabled'), true,
         'toggles "disabled" class of the "next" button');
+
+    page.collection.pagination.total = 0;
+    page.updatePaginationButtons();
+    t.equal(page.ui.pageNav.toggleClass.calledWith('hidden', true), true,
+        'hides all pagination buttons if the total number of models is equal to 0');
 
     page.ui = page.oldUi;
     sand.restore();

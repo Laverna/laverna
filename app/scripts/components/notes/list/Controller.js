@@ -37,6 +37,9 @@ export default class Controller extends Mn.Object {
     init() {
         const opt = this.options.filterArgs;
 
+        // Show a loader
+        Radio.request('Layout', 'showLoader', {region: 'sidebar'});
+
         // Fetch notes
         return Radio.request('collections/Notes', 'find', _.extend({}, opt, {
             perPage   : this.configs.pagination,

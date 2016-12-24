@@ -296,7 +296,8 @@ export default class Pageable extends Collection {
      * @returns {Boolean}
      */
     hasNextPage() {
-        return this.pagination.current !== this.pagination.total;
+        return (!!this.pagination.total &&
+            this.pagination.current !== this.pagination.total);
     }
 
     /**

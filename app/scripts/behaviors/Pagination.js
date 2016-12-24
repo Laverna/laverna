@@ -46,7 +46,7 @@ export default class Pagination extends Mn.Behavior {
      * Update pagination buttons states (disabled) or hide them.
      */
     updatePaginationButtons() {
-        this.ui.pageNav.toggleClass('hidden', this.collection.pagination.total <= 1);
+        this.ui.pageNav.toggleClass('hidden', this.collection.pagination.total === 0);
         this.ui.prevPage.toggleClass('disabled', !this.collection.hasPreviousPage());
         this.ui.nextPage.toggleClass('disabled', !this.collection.hasNextPage());
     }

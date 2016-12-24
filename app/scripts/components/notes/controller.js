@@ -78,8 +78,8 @@ export default {
      */
     filterHasChanged() {
         return !_.isEqual(
-            _.omit(this.options, 'id'),
-            _.omit(this._argsOld || {}, 'id')
+            _.omit(this.options, 'id', 'page'),
+            _.omit(this._argsOld || {}, 'id', 'page')
         );
     },
 

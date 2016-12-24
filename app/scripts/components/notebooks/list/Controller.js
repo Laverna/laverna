@@ -40,6 +40,9 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     init() {
+        // Show a loader
+        Radio.request('Layout', 'showLoader', {region: 'sidebar'});
+
         return this.fetch()
         .then(results => this.show(results[0], results[1]))
         .then(() => this.listenToEvents())
@@ -72,8 +75,8 @@ export default class Controller extends Mn.Object {
             profileLink : Radio.request('util/Url', 'getProfileLink'),
         });
 
-        Radio.request('Layout', 'show', {region: 'sidebar', view: this.view});
         Radio.request('Layout', 'empty', {region: 'content'});
+        Radio.request('Layout', 'show', {region: 'sidebar', view: this.view});
         Radio.request('components/navbar', 'show', {section: _.i18n('Notebooks & tags')});
     }
 

@@ -4,6 +4,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
+import '../../../../app/scripts/utils/underscore';
 import Module from '../../../../app/scripts/collections/modules/Tags';
 import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
 import Tags from '../../../../app/scripts/collections/Tags';
@@ -51,64 +52,92 @@ test('Tags: addTags()', t => {
 });
 
 test('Tags: addTag()', t => {
-    const mod   = new Module();
-    const reply = sand.stub().returns(Promise.resolve(['t', 'est']));
-    const model = new mod.Model({id: 'test', name: 'test'});
-    sand.stub(mod, 'findModel').returns(model);
-    sand.stub(mod, 'saveModel').returns(model);
+    const mod  = new Module();
+    const save = sand.stub(ModuleOrig.prototype, 'saveModel');
+    sand.stub(mod, 'getId').returns(Promise.resolve('testId'));
 
-    Radio.reply('encrypt', 'sha256', reply);
-
-    mod.addTag({name: 'test', profileId: 'test'})
+    const data = {name: 'test', profileId: 'test'};
+    mod.addTag(data)
     .then(() => {
-        t.equal(reply.calledWith({text: 'test'}), true,
-            'creates the ID by calculating sha256 of the name');
-        t.equal(mod.findModel.calledWithMatch({profileId: 'test', id: 'test'}), true,
-            'checks if a tag with the same name already exists');
-        t.equal(mod.saveModel.notCalled, true,
-            'does not create a new tag if there is already a tag with the same name');
+        t.equal(mod.getId.calledWith({data}), true,
+            'calls "getId" method to compute sha256 of the tag');
 
-        mod.findModel.returns(null);
-        return mod.addTag({name: 'test', profileId: 'test'});
-    })
-    .then(() => {
-        t.equal(mod.saveModel.called, true, 'creates a new model');
+        t.equal(save.calledWithMatch({model: {id: 'testId'}}), true,
+            'creates a new model');
 
-        Radio.channel('encrypt').stopReplying();
         mod.channel.stopReplying();
         sand.restore();
         t.end();
     });
 });
 
-test('Tags: saveModel()', t => {
+test('Tags: saveModel() - do not compute ID', t => {
+    const mod  = new Module();
+    const save = sand.stub(ModuleOrig.prototype, 'saveModel');
+    sand.stub(mod, 'getId');
+
+    const data = {data: {trash: 2}};
+    mod.saveModel(data);
+
+    t.equal(save.calledWith(data), true, 'saves the model');
+    t.equal(mod.getId.notCalled, true, 'does not compute a new ID');
+
+    sand.restore();
+    t.end();
+});
+
+test('Tags: saveModel() - compute ID', t => {
     const mod   = new Module();
-    const model = new mod.Model({id: 'test', name: 'test'});
+    const model = new mod.Model({id: 'testId', name: 'test'});
     const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
     sand.stub(mod, 'remove').returns(Promise.resolve());
-
-    const req = sand.stub(Radio, 'request');
-    req.returns(Promise.resolve(['t', 'est']));
+    sand.stub(mod, 'getId').returns(Promise.resolve('testId'));
+    sand.spy(model, 'set');
 
     mod.saveModel({model})
     .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'test'}),
-            true, 'gets the name from the model');
+        t.equal(mod.getId.calledWith({model}), true,
+            'calls "getId" method to compute sha256 of the tag');
+
         t.equal(mod.remove.notCalled, true,
             'does not remove the model if its ID has not changed');
+
+        t.equal(model.set.calledWith({id: 'testId'}), true, 'sets a new ID');
         t.equal(save.calledWithMatch({model}), true, 'saves the model');
 
-        req.returns(Promise.resolve(['te', 'sting']));
+        mod.getId.returns(Promise.resolve('testingId'));
         return mod.saveModel({model, data: {name: 'testing'}});
     })
     .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'testing'}),
-            true, 'gets the name from the data');
         t.equal(mod.remove.calledWith({model}), true,
             'removes the model if it has a different ID');
+
+        t.equal(model.set.calledWith({id: 'testingId'}), true, 'sets a new ID');
         t.equal(save.calledWithMatch({model}), true, 'saves the model');
 
-        Radio.channel('encrypt').stopReplying();
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end();
+    });
+});
+
+test('Tags: getId()', t => {
+    const mod   = new Module();
+    const model = new mod.Model({name: 'testing'});
+    const req   = sand.stub(Radio, 'request').returns(Promise.resolve(['t', 'e']));
+
+    mod.getId({data: {name: 'test'}})
+    .then(res => {
+        t.equal(res, 'te', 'returns a string');
+        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'test'}),
+            true, 'computes SHA256 of a tag\'s name');
+
+        return mod.getId({model});
+    })
+    .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'testing'}),
+            true, 'computes SHA256 of a tag\'s name');
+
         mod.channel.stopReplying();
         sand.restore();
         t.end();

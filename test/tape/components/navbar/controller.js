@@ -119,8 +119,9 @@ test('navbar/Controller: fetch()', t => {
     res.then(() => {
         t.equal(req.calledWith('collections/Configs', 'findProfileModel'), true,
             'fetches the profile model');
-        t.equal(req.calledWithMatch('collections/Notebooks', 'find', {
-            profileId: 'test',
+        t.equal(req.calledWith('collections/Notebooks', 'find', {
+            profileId  : 'test',
+            conditions : {trash  : 0},
         }), true, 'fetches notebooks collection');
         t.equal(con.changeDocumentTitle.calledWithMatch({filter: 'tag'}), true,
             'changes document title');

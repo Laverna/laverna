@@ -55,9 +55,10 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     fetch() {
+        const opt = {profileId: this.options.profileId, conditions: {trash: 0}};
         return Promise.all([
-            Radio.request('collections/Notebooks', 'find', this.options),
-            Radio.request('collections/Tags', 'find', this.options),
+            Radio.request('collections/Notebooks', 'find', opt),
+            Radio.request('collections/Tags', 'find', opt),
         ]);
     }
 

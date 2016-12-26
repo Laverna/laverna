@@ -66,7 +66,7 @@ test('notebooks/list/Controller: init()', t => {
 });
 
 test('notebooks/list/Controller: fetch()', t => {
-    const opt = {profileId: 'test'};
+    const opt = {profileId: 'test', conditions: {trash: 0}};
     const con = new Controller(opt);
     const req = sand.stub(Radio, 'request');
 

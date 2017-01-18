@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import ModuleObj from '../../../../app/scripts/collections/modules/Module';
 import Notes from '../../../../app/scripts/collections/Notes';
-import '../../../../app/scripts/utils/underscore';
+import _ from '../../../../app/scripts/utils/underscore';
 
 class Module extends ModuleObj {
     get Collection() {
@@ -105,36 +105,50 @@ test('Module: findModel() - fetches a model', t => {
 });
 
 test('Module: find()', t => {
-    const mod     = new Module();
-    const res     = mod.find();
-    const decrypt = sand.stub(mod, 'decryptCollection', coll => coll);
+    const mod  = new Module();
+    const coll = new mod.Collection();
+    sand.stub(mod, 'fetch').returns(Promise.resolve(coll));
+    sand.stub(coll, 'filterList');
+    sand.stub(coll, 'paginate');
 
+    const opt = {
+        profileId : 'default',
+        conditions: {trash: 0},
+    };
+    const res = mod.find(opt);
     t.equal(typeof res.then, 'function', 'returns a promise');
+    t.equal(mod.fetch.calledWith(_.omit(opt, 'conditions')), true,
+        'calls "fetch" method');
 
     res.then(collection => {
         t.equal(typeof collection, 'object', 'returns an object');
-        t.equal(decrypt.calledWith(collection), true, 'decrypts the collection');
+        t.equal(coll.filterList.calledWith(opt), true, 'filters the result');
+        t.equal(coll.paginate.called, true, 'paginates the collection');
 
+        return mod.find({});
+    })
+    .then(() => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
     });
 });
 
-test('Module: find() - filter', t => {
-    const mod = new Module();
+test('Module: fetch()', t => {
+    const mod   = new Module();
+    const fetch = sand.stub(mod.Collection.prototype, 'fetch');
+    fetch.returns(Promise.resolve());
     sand.stub(mod, 'decryptCollection', coll => coll);
 
-    mod.find({filter: 'active'})
+    const opt = {profileId: 'test'};
+    mod.fetch(opt)
     .then(collection => {
-        t.equal(mod.collection, collection);
-        t.equal(collection.conditionFilter, 'active');
-        t.deepEqual(collection.currentCondition, collection.conditions.active);
+        t.equal(fetch.calledWith(opt), true, 'calls "fetch" method');
+        t.equal(mod.decryptCollection.calledWith(mod.collection), true,
+            'decrypts the collection');
+        t.equal(typeof mod.collection, 'object', 'creates "collection" property');
+        t.equal(collection.storeName, mod.collection.storeName);
 
-        return mod.find({filter: 'notebook', query: '1'});
-    })
-    .then(collection => {
-        t.equal(collection.conditionFilter, 'notebook');
         sand.restore();
         mod.channel.stopReplying();
         t.end();
@@ -150,6 +164,7 @@ test('Module: saveModel()', t => {
     sand.stub(mod, 'encryptModel').returns(Promise.resolve());
     sand.stub(model, 'save');
     sand.stub(mod.channel, 'trigger');
+    sand.stub(mod, 'onSaveModel');
 
     const res = mod.saveModel({model, data: {title: 'Test'}});
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -163,11 +178,35 @@ test('Module: saveModel()', t => {
             'saves the model');
         t.equal(mod.channel.trigger.calledWith('save:model', {model}), true,
             'triggers save:model event');
+        t.equal(mod.onSaveModel.calledWith(model), true,
+            'calls "onSaveModel" method after saving');
 
         mod.channel.stopReplying();
         sand.restore();
         t.end();
     });
+});
+
+test('Module: onSaveModel()', t => {
+    const mod   = new Module();
+    const model = new mod.Collection.prototype.model({id: 1});
+
+    t.equal(mod.onSaveModel(model), false, 'returns false if there is no collection');
+
+    mod.collection = new mod.Collection([model]);
+    sand.stub(model, 'set');
+
+    mod.onSaveModel(model);
+    t.equal(model.set.calledWith(model.attributes), true,
+        'updates the model in the collection');
+
+    sand.spy(mod.collection, 'add');
+    mod.onSaveModel({id: 2});
+    t.equal(mod.collection.add.calledWithMatch({id: 2}), true,
+        'adds the model to the collection');
+
+    sand.restore();
+    t.end();
 });
 
 test('Module: saveModel() - validate', t => {
@@ -316,7 +355,6 @@ test('Module: isEncryptEnabled()', t => {
 
 test('Module: decryptModel()', t => {
     const mod   = new Module();
-    const stub  = sand.stub();
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve());
     const model = {id: '1'};
     sand.stub(mod, 'isEncryptEnabled').returns(false);
@@ -336,7 +374,6 @@ test('Module: decryptModel()', t => {
 
 test('Module: decryptCollection()', t => {
     const mod  = new Module();
-    const stub = sand.stub();
     const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
     const coll = new Notes();
     sand.stub(mod, 'isEncryptEnabled').returns(false);
@@ -362,7 +399,6 @@ test('Module: decryptCollection()', t => {
 
 test('Module: encryptModel()', t => {
     const mod  = new Module();
-    const stub = sand.stub();
     const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
     sand.stub(mod, 'isEncryptEnabled').returns(false);
     const model = {id: '1'};

@@ -46,61 +46,23 @@ test('Pageable: pagination', t => {
     t.end();
 });
 
-test('Pageable: fetch() - do nothing', t => {
-    const page    = new Pageable();
-    const onFetch = sand.stub(page, 'onFetch');
-    sand.stub(Collection.prototype, 'fetch').returns(Promise.resolve());
-
-    const res = page.fetch({perPage: 0});
-    t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(page.pagination.perPage, 0, 'uses perPage option');
-
-    res.then(() => {
-        t.equal(onFetch.notCalled, true, 'does nothing if perPage is equal to 0');
-        sand.restore();
-        t.end();
-    });
-});
-
-test('Pageable: fetch() - paginate', t => {
-    const page    = new Pageable();
-    const onFetch = sand.stub(page, 'onFetch');
-    sand.stub(Collection.prototype, 'fetch').returns(Promise.resolve());
-
-    const res = page.fetch();
-    t.equal(typeof res.then, 'function', 'returns a promise');
-
-    res.then(() => {
-        t.equal(onFetch.called, true, 'executes onFetch method');
-        sand.restore();
-        t.end();
-    });
-});
-
-test('Pageable: onFetch()', t => {
-    const page           = new Pageable();
-    const paginate       = sand.spy(page, 'paginate');
-
-    t.equal(page.onFetch(), page, 'returns itself');
-    t.equal(typeof page.fullCollection, 'object',
-        'clones itself to fullCollection property');
-    t.equal(paginate.called, true, 'creates pagination');
-
-    sand.restore();
-    page.stopListening();
-    t.end();
-});
-
 test('Pageable: paginate()', t => {
     const page = new Pageable();
 
     // Create spies
-    page.fullCollection = page.clone();
-    const sortSpy       = sand.spy(page.fullCollection, 'sortByComparators');
-    const totalSpy      = sand.spy(page, 'updateTotalPages');
-    const pageSpy       = sand.spy(page, 'getPage');
+    const sortSpy  = sand.spy(Pageable.prototype, 'sortByComparators');
+    const totalSpy = sand.spy(page, 'updateTotalPages');
+    const pageSpy  = sand.spy(page, 'getPage');
 
+    page.pagination.perPage = 0;
     t.equal(page.paginate(), page, 'returns itself');
+    t.equal(sortSpy.notCalled, true, 'does nothing if perPage is equal to 0');
+
+    page.pagination.perPage = 10;
+    t.equal(page.paginate(), page, 'returns itself');
+    t.equal(typeof page.fullCollection, 'object', 'creates fullCollection property');
+
+    page.paginate();
     t.equal(sortSpy.called, true, 'sorts full collection');
     t.equal(totalSpy.calledAfter(sortSpy), true, 'updates the total amount of pages');
     t.equal(pageSpy.calledAfter(totalSpy), true, 'creates pagination');

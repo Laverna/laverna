@@ -59,23 +59,6 @@ test('Notes: constructor()', t => {
     t.end();
 });
 
-test('Notes: filterList()', t => {
-    const notes = new Notes();
-    const stub  = sand.stub(notes, 'taskFilter').returns([{id: '1'}]);
-    const reset = sand.spy(notes, 'reset');
-
-    notes.filterList('filter404');
-    t.equal(stub.notCalled, true, 'does nothing if a method does not exist');
-    t.equal(reset.notCalled, true, 'does not reset if a method does not exist');
-
-    notes.filterList('task', {query: 'test'});
-    t.equal(stub.calledWith('test'), true, 'executes taskFilter method');
-    t.equal(reset.calledWith([{id: '1'}]), true, 'resets itself');
-
-    sand.restore();
-    t.end();
-});
-
 test('Notes: taskFilter()', t => {
     const notes = new Notes([
         {id: '1', taskCompleted: 10, taskAll: 10},

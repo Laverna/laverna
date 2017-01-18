@@ -2,8 +2,15 @@
  * @file Test collections/Collection
  */
 import test from 'tape';
+import sinon from 'sinon';
 import Collection from '../../../app/scripts/collections/Collection';
 import Note from '../../../app/scripts/models/Note';
+
+let sand;
+test('Collection: before()', t => {
+    sand = sinon.sandbox.create();
+    t.end();
+});
 
 test('Collection: sync', t => {
     const coll = new Collection();
@@ -38,5 +45,51 @@ test('Collection: storeName', t => {
     t.equal(coll.storeName, 'notes');
 
     delete coll.model;
+    t.end();
+});
+
+test('Collection: filterList()', t => {
+    const coll      = new Collection();
+    coll.testFilter = sand.stub().returns([]);
+
+    sand.stub(coll, 'getCondition').returns({trash: 0});
+    sand.spy(coll, 'where');
+    sand.spy(coll, 'reset');
+
+    t.equal(coll.filterList({filter: 'active'}), coll, 'returns itself');
+    t.equal(coll.where.calledWithMatch({trash: 0}), true, 'filters the collection');
+    t.equal(coll.reset.called, true, 'resets the collection');
+
+    coll.getCondition.returns(null);
+    t.equal(coll.filterList({filter: 'test', query: '1'}), coll, 'returns itself');
+    t.equal(coll.testFilter.called, true, 'calls "testFilter" method');
+
+    sand.restore();
+    t.end();
+});
+
+test('Collection: getCondition()', t => {
+    const coll      = new Collection();
+    coll.conditions = {active: {trash: 0}};
+
+    t.deepEqual(coll.getCondition({filter: 'active'}), {trash: 0});
+    t.equal(coll.conditionFilter, 'active', 'creates "conditionFilter" property');
+    t.deepEqual(coll.currentCondition, {trash: 0},
+        'creates "currentCondition" property');
+
+    t.deepEqual(coll.getCondition({conditions: {trash: 1}}), {trash: 1},
+        'uses "conditions" option');
+
+    sand.restore();
+    t.end();
+});
+
+test('Collection: findOrCreate()', t => {
+    const coll      = new Collection();
+    coll.add({id: 1});
+
+    t.equal(typeof coll.findOrCreate(2), 'object', 'returns an object');
+    t.equal(coll.findOrCreate(1), coll.get(1), 'finds the model in the collection');
+
     t.end();
 });

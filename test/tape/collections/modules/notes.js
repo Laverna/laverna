@@ -157,7 +157,6 @@ test('Notes: find()', t => {
     const collection = new mod.Collection([{id: '1'}, {id: '2'}]);
     const find       = sand.stub(ModuleOrig.prototype, 'find');
     find.returns(Promise.resolve(collection));
-    sand.spy(collection, 'filterList');
     Radio.replyOnce('collections/Configs', 'findConfig', () => 'id');
 
     const opt = {profileId: 'test', filter: 'yes'};
@@ -165,8 +164,6 @@ test('Notes: find()', t => {
     .then(collection => {
         t.equal(find.calledWithMatch({profileId: 'test', sortField: 'id'}), true,
             'uses sortField config when fetching models');
-        t.equal(collection.filterList.calledWith('yes'), true,
-            'filters the collection');
 
         mod.channel.stopReplying();
         sand.restore();

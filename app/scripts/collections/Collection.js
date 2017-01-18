@@ -76,4 +76,52 @@ export default class Collection extends Backbone.Collection {
         this.profileId = options.profileId;
     }
 
+    /**
+     * Filter models. If a filter cannot be described with
+     * simple code in `this.conditions`, then a new method
+     * should be created. The method should follow the naming convention
+     * `nameFilter`. For example, taskFilter, tagFilter...
+     *
+     * @param {Object} options = {}
+     * @param {Object} [options.conditions]
+     * @param {String} [options.filter]
+     * @returns {Object} this
+     */
+    filterList(options = {}) {
+        const cond = this.getCondition(options);
+
+        if (cond) {
+            this.reset(this.where(cond));
+        }
+        else if (this[`${options.filter}Filter`]) {
+            const models = this[`${options.filter}Filter`](options.query);
+            this.reset(models);
+        }
+
+        return this;
+    }
+
+    /**
+     * Return filter conditions.
+     *
+     * @param {Object} options
+     * @returns {Object}
+     */
+    getCondition(options) {
+        const cond = options.conditions || this.conditions[options.filter];
+        this.conditionFilter  = options.filter;
+        this.currentCondition = _.isFunction(cond) ? cond(options) : cond;
+        return this.currentCondition;
+    }
+
+    /**
+     * Find a model by ID or create a new one.
+     *
+     * @param {String} id
+     * @returns {Object}
+     */
+    findOrCreate(id) {
+        return this.get(id) || new this.model();
+    }
+
 }

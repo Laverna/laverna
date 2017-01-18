@@ -56,28 +56,6 @@ export default class Notes extends Pageable {
     }
 
     /**
-     * Filter models. If a filter cannot be described with
-     * simple code in `this.conditions`, then a new method
-     * should be created. The method should follow the naming convention
-     * `nameFilter`. For example, taskFilter, tagFilter...
-     *
-     * @param {String} filter
-     * @param {Object} options = {}
-     * @returns {Object} this
-     */
-    filterList(filter, options = {}) {
-        // Do nothing if a method does not exist
-        if (!filter || !this[`${filter}Filter`]) {
-            return this;
-        }
-
-        // Filter and reset
-        const models = this[`${filter}Filter`](options.query);
-        this.reset(models);
-        return this;
-    }
-
-    /**
      * Find notes that have unfinished tasks.
      *
      * @returns {Array}

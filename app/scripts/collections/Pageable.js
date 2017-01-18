@@ -49,55 +49,31 @@ export default class Pageable extends Collection {
         this.pagination = {
             perPage : 4,
             first   : 0,
-            current : 0,
+            current : Number(this.options.page || 0),
             total   : 0,
         };
-    }
 
-    /**
-     * Override fetch method.
-     *
-     * @param {Object} options = {}
-     * @param {Number} (options.perPage) - items per page
-     * @returns {Promise}
-     */
-    fetch(options = {}) {
-        const opt = options;
-
-        // Use "perPage" config from the options argument
-        if (!_.isUndefined(opt.perPage)) {
-            this.pagination.perPage = Number(opt.perPage);
+        // Use "perPage" config from the options
+        if (!_.isUndefined(this.options.perPage)) {
+            this.pagination.perPage = Number(this.options.perPage);
         }
-        this.pagination.current = Number(opt.page);
-
-        // Do not use pagination
-        if (this.pagination.perPage === 0) {
-            return super.fetch(options);
-        }
-
-        return super.fetch(options)
-        .then(() => this.onFetch());
     }
 
     /**
-     * Sort and slice/paginate the collection.
-     *
-     * @returns {Object} this
-     */
-    onFetch() {
-        // Keep full collection in memory
-        this.fullCollection = this.clone();
-        this.paginate();
-
-        return this;
-    }
-
-    /**
-     * Create pagination.
+     * Paginate the collection.
      *
      * @returns {Object} this
      */
     paginate() {
+        // Don't paginate
+        if (!this.pagination.perPage) {
+            return this;
+        }
+
+        if (!this.fullCollection) {
+            this.fullCollection = this.clone();
+        }
+
         // Sort the collection
         this.fullCollection.sortByComparators();
 
@@ -190,9 +166,7 @@ export default class Pageable extends Collection {
         collection.add(model, {at: 0});
 
         // Re-sort and create pagination again
-        if (this.pagination.perPage) {
-            this.paginate();
-        }
+        this.paginate();
     }
 
     /**

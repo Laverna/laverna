@@ -154,8 +154,7 @@ export default class Notes extends Module {
         );
         const opt = _.extend({sortField}, options);
 
-        return super.find(opt)
-        .then(collection => collection.filterList(options.filter, options));
+        return super.find(opt);
     }
 
     /**

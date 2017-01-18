@@ -77,7 +77,7 @@ export default class Module {
      *
      * @param {Object} options = {}
      * @param {String} options.id - id of a model
-     * @param {String} (options.profileId) - profile ID
+     * @param {String} [options.profileId] - profile ID
      * @returns {Promise}
      */
     findModel(options = {}) {
@@ -120,28 +120,46 @@ export default class Module {
      * Find all models.
      *
      * @param {Object} options = {}
-     * @param {String} (options.conditions) - conditions by which models
+     * @param {String} [options.conditions] - conditions by which models
      * will be filtered
-     * @param {String} (options.profileId) - profile id
+     * @param {String} [options.profileId] - profile id
      * @returns {Promise}
      */
     find(options = {}) {
-        const opt       = options;
-        this.collection = new this.Collection(null, {profileId: options.profileId});
+        return this.fetch(_.omit(options, 'conditions'))
+        .then(collection => {
+            if (options.filter || options.conditions) {
+                collection.filterList(options);
+            }
 
-        // Filter conditions
-        if (opt.filter && this.collection.conditions) {
-            const cond = this.collection.conditions[opt.filter];
-            opt.conditions = _.isFunction(cond) ? cond(opt) : cond;
+            if (collection.paginate) {
+                collection.paginate();
+            }
+
+            return collection;
+        });
+    }
+
+    /**
+     * Fetch a collection and cache it in memory.
+     * This method exists because decrypting a lot of models every time
+     * a collection is fetched can be a very expensive operation.
+     *
+     * @param {Object} options
+     * @returns {Promise} collection
+     */
+    fetch(options) {
+        // If the collection is already cached, return its clone
+        if (this.collection && this.collection.length) {
+            return Promise.resolve(this.collection.clone());
         }
 
-        // Save current filter condition
-        this.collection.conditionFilter  = opt.filter;
-        this.collection.currentCondition = opt.conditions;
+        this.collection = new this.Collection(null, options);
 
-        // Fetch and decrypt the model
-        return this.collection.fetch(opt)
-        .then(() => this.decryptCollection(this.collection));
+        // Fetch and decrypt the collection
+        return this.collection.fetch(options)
+        .then(() => this.decryptCollection(this.collection))
+        .then(() => this.collection.clone());
     }
 
     /**
@@ -149,7 +167,7 @@ export default class Module {
      *
      * @param {Object} options
      * @param {Object} options.model - Backbone model
-     * @param {Object} (options.data) - data that should be updated
+     * @param {Object} [options.data] - data that should be updated
      * (uses model.attributes if it's not provided)
      * @fires channel#update:model - after saving a model
      * @returns {Promise} - resolves with a model
@@ -169,7 +187,30 @@ export default class Module {
         // Encrypt the model and save
         return this.encryptModel(model)
         .then(() => model.save(model.getData(), {validate: false}))
-        .then(() => this.channel.trigger('save:model', {model}));
+        .then(() => {
+            this.onSaveModel(model);
+            this.channel.trigger('save:model', {model});
+        });
+    }
+
+    /**
+     * After saving a model, update/add it to this.collection.
+     *
+     * @param {Object} model
+     */
+    onSaveModel(model) {
+        if (!this.collection) {
+            return false;
+        }
+
+        const collModel = this.collection.get(model.id);
+
+        if (collModel) {
+            collModel.set(model.attributes);
+        }
+        else {
+            this.collection.add(model);
+        }
     }
 
     /**
@@ -177,7 +218,7 @@ export default class Module {
      *
      * @param {Object} options = {}
      * @param {Object} options.collection - Backbone collection
-     * @param {Object} (options.data) - with this every model in a collection
+     * @param {Object} [options.data] - with this every model in a collection
      * will be updated
      * @fires channel#save:collection - after saving a model
      * @returns {Promise}
@@ -234,8 +275,8 @@ export default class Module {
      * Instead, it changes a model's attributes to the default ones.
      *
      * @param {Object} options
-     * @param {Object} (options.model) - Backbone.model
-     * @param {Object} (options.id) - ID of a model
+     * @param {Object} [options.model] - Backbone.model
+     * @param {Object} [options.id] - ID of a model
      * @fires channel#destroy:model
      * @returns {Promise}
      */

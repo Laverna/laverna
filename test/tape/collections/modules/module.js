@@ -42,6 +42,18 @@ test('Module: channel', t => {
     t.end();
 });
 
+test('Module: configs', t => {
+    const conf = {username: 'bob'};
+    const req  = sand.stub(Radio, 'request').returns(conf);
+
+    t.equal(Module.prototype.configs, conf, 'returns the result of the request');
+    t.equal(req.calledWith('collections/Configs', 'findConfigs'), true,
+        'makes "findConfigs" request');
+
+    sand.restore();
+    t.end();
+});
+
 test('Module: constructor()', t => {
     const spy = sand.spy(Module.prototype.channel, 'reply');
     const mod = new Module();
@@ -158,6 +170,7 @@ test('Module: fetch()', t => {
 test('Module: saveModel()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', test: '2'});
+    Object.defineProperty(mod, 'configs', {get: () => {return {username: 'bob'}}});
 
     sand.spy(model, 'setEscape');
     sand.spy(model, 'validate');
@@ -170,8 +183,11 @@ test('Module: saveModel()', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
+        t.equal(model.setEscape.calledWithMatch({sharedBy: 'bob'}), true,
+            'sets "sharedBy" attribute');
         t.equal(model.validate.calledAfter(model.setEscape), true,
             'validates the model after setting new attributes');
+
         t.equal(mod.encryptModel.calledWith(model), true,
             'encrypts the model');
         t.equal(model.save.calledWith(model.getData(), {validate: false}), true,
@@ -213,10 +229,11 @@ test('Module: saveModel() - validate', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1'});
     sand.spy(model, 'trigger');
+    Object.defineProperty(mod, 'configs', {get: () => {return {username: 'bob'}}});
 
     mod.saveModel({model})
     .catch(err => {
-        t.equal(err, 'Validation error');
+        t.equal(err.search('Validation error') !== -1, true);
         t.equal(model.trigger.calledWith('invalid'), true,
             'triggers "invalid" event');
 

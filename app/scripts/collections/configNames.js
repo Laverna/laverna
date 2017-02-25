@@ -37,11 +37,6 @@ const configNames = {
         sortnotes          : 'created',
         sortnotebooks      : 'name',
         navbarNotebooksMax : '5',
-
-        account: {
-            email : '',
-            name  : '',
-        },
     },
 
     /**
@@ -60,10 +55,12 @@ const configNames = {
     /**
      * Synchronization settings.
      *
+     * @prop {String} username - username claimed on the signaling server
      * @prop {String} cloudStorage - (dropbox|remotestorage)
      * @prop {String} dropboxKey - dropbox app key
      */
     sync: {
+        username           : '',
         cloudStorage       : '0',
         dropboxKey         : '',
     },
@@ -73,14 +70,14 @@ const configNames = {
      *
      * @prop {String} encrypt - disable/enable encryption (0|1)
      * @prop {String} privateKey - private key
-     * @prop {Object} publicKeys - a list of public keys
+     * @prop {String} publicKey - public key
      * @prop {Object} encryptBackup - used for storing the previous encryption
      * settings.
      */
     encryption: {
         encrypt       : '0',
         privateKey    : '',
-        publicKeys    : {},
+        publicKey     : '',
         encryptBackup : {},
     },
 

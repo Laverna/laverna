@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<% if (keys !== null) { %>
+<% if (privateKey) { %>
 <div class="center-block">
     <header>
         <h3>{{_.i18n('Your key')}}</h3>
@@ -21,23 +21,5 @@
         <i class="icon-pencil"></i>
         {{_.i18n('Change passphrase')}}
     </button>
-</div>
-
-<div class="center-block">
-    <header>
-        <h3>
-            {{_.i18n('Public keys you trust')}}
-            <button class="btn btn-link btn--add--public" type="button"><i class="icon-doc-new"></i></button>
-        </h3>
-    </header>
-
-    <% _.each(keys, function(key, fingerprint) { %>
-    <% if (!isPrivate(fingerprint)) { %>
-    <button type="button" class="btn btn-default btn-block btn--publicKey" data-index="{{fingerprint}}">
-        <i class="icon-lock"></i>
-        {{key.users[0].userId.userid}}
-    </button>
-    <% } %>
-    <% }) %>
 </div>
 <% } %>

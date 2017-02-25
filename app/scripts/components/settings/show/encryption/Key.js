@@ -2,11 +2,7 @@
  * @module components/settings/show/encryption/Key
  */
 import Mn from 'backbone.marionette';
-import Radio from 'backbone.radio';
 import _ from 'underscore';
-import deb from 'debug';
-
-const log = deb('lav:components/settings/show/encryption/Key');
 
 /**
  * Show private/public key information.
@@ -36,7 +32,6 @@ export default class Key extends Mn.View {
         return {
             'focus @ui.text'    : 'selectAll',
             'click .btn--cancel': 'destroy',
-            'click .btn--remove': 'removeKey',
         };
     }
 
@@ -45,20 +40,6 @@ export default class Key extends Mn.View {
      */
     selectAll() {
         this.ui.text.select();
-    }
-
-    /**
-     * Remove the public key.
-     *
-     * @returns {Promise}
-     */
-    removeKey() {
-        return Radio.request('collections/Configs', 'removePublicKey', {
-            publicKey : this.options.key.armor(),
-            model     : this.model,
-        })
-        .then(() => this.destroy())
-        .catch(err => log('error', err));
     }
 
     serializeData() {
@@ -73,7 +54,8 @@ export default class Key extends Mn.View {
              * @returns {String}
              */
             getArmor() {
-                return this.model.get('value')[this.key.primaryKey.fingerprint];
+                const key = this.isPrivate ? this.key.toPublic() : this.key;
+                return key.armor();
             },
 
             /**
@@ -82,7 +64,7 @@ export default class Key extends Mn.View {
              * @returns {String}
              */
             getFingerprint() {
-                return this.key.primaryKey.fingerprint.match(/.{4}/g).join(' ');
+                return _.splitBy4(this.key.primaryKey.fingerprint);
             },
 
             /**

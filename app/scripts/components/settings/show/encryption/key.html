@@ -43,12 +43,6 @@
                 </div>
             </div>
 
-            <% if (!isPrivate) { %>
-            <div>
-                <button class="btn btn-danger pull-right btn--remove">{{_.i18n('Remove from trust')}}</button>
-            </div>
-            <% } %>
-
             <div>
                 <h4>{{_.i18n('Public key')}}:</h4>
                 <textarea class="form-control" readonly="true" rows="8">{{getArmor()}}</textarea>

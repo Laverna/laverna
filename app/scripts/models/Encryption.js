@@ -29,6 +29,15 @@ export default class Encryption {
         return Radio.channel('models/Encryption');
     }
 
+    /**
+     * App configs.
+     *
+     * @prop {Object}
+     */
+    get configs() {
+        return Radio.request('collections/Configs', 'findConfigs');
+    }
+
     constructor(options = {}) {
         this.options = options;
         this.openpgp = openpgp;
@@ -40,25 +49,57 @@ export default class Encryption {
         this.openpgp.config.use_native = false; // eslint-disable-line
         this.openpgp.initWorker({path: 'scripts/openpgp.worker.js'});
 
+        // Reply to core requests
         this.channel.reply({
+            // Core methods
+            sha256            : this.sha256,
+            random            : this.random,
             readKeys          : this.readKeys,
+            readUserKey       : this.readUserKey,
             generateKeys      : this.generateKeys,
             changePassphrase  : this.changePassphrase,
+            sign              : this.sign,
+            verify            : this.verify,
             encrypt           : this.encrypt,
             decrypt           : this.decrypt,
+            // Backbone related methods
             encryptModel      : this.encryptModel,
             decryptModel      : this.decryptModel,
             encryptCollection : this.encryptCollection,
             decryptCollection : this.decryptCollection,
-            sha256            : this.sha256,
         }, this);
     }
 
     /**
-     * Read key pairs.
+     * Calculate sha256 hash of the string set.
      *
+     * @public
+     * @param {Object} options={}
+     * @param {String} options.text
+     * @returns {Promise}
+     */
+    sha256(options = {}) {
+        return Promise.resolve(sjcl.hash.sha256.hash(options.text));
+    }
+
+    /**
+     * Generate random characters.
+     *
+     * @public
+     * @param {Object} options
+     * @param {Number} options.number
+     * @returns {Promise} resolve with string
+     */
+    random(options = {}) {
+        const random = sjcl.random.randomWords(options.number || 4, 0);
+        return Promise.resolve(sjcl.codec.hex.fromBits(random));
+    }
+
+    /**
+     * Read the user's key pairs and other users' public keys.
+     *
+     * @public
      * @param {Object} options=this.options
-     * @param {Array} options.publicKeys - an array of public keys
      * @param {String} options.privateKey
      * @param {String} options.passphrase
      * @returns {Object}
@@ -66,19 +107,18 @@ export default class Encryption {
     readKeys(options = this.options) {
         this.options     = _.extend(this.options, options);
         const privateKey = this.openpgp.key.readArmored(options.privateKey).keys[0];
-        log('readKeys: keys', privateKey, options);
 
         /**
          * A user's key pairs.
          *
          * @prop {Object}
-         * @prop {Array} publicKeys - an array of public keys
+         * @prop {Object} publicKeys
          * @prop {Object} privateKey - the private key
          */
         this.keys = {
             privateKey,
             privateKeys : [privateKey],
-            publicKeys  : [],
+            publicKeys  : {},
         };
 
         // Try to decrypt the private key
@@ -86,34 +126,49 @@ export default class Encryption {
             return Promise.reject('Cannot decrypt the private key');
         }
 
-        // Read public keys
-        this.keys.publicKeys = this.readPublicKeys(options);
+        // My public key
+        this.keys.publicKeys[this.configs.username] = this.keys.privateKeys[0].toPublic();
 
-        log('keys are', this.keys);
-        return Promise.resolve(this.keys);
+        return this.readPublicKeys()
+        .then(() => this.keys);
     }
 
     /**
-     * Read all public keys.
+     * Read public keys of the trusted users.
      *
+     * @protected
+     * @todo user profileId when fetching users?
      * @param {Object} options
-     * @param {Array} options.publicKeys
-     * @returns {Array}
+     * @returns {Promise}
      */
-    readPublicKeys(options) {
-        const keys = [];
-
-        _.each(options.publicKeys, pubKey => {
-            const publicKey = this.openpgp.key.readArmored(pubKey).keys[0];
-            keys.push(publicKey);
+    readPublicKeys() {
+        return Radio.request('collections/Users', 'find')
+        .then(collection => {
+            collection.each(model => {
+                if (!model.get('pendingAccept')) {
+                    this.readUserKey({model});
+                }
+            });
         });
+    }
 
-        return keys;
+    /**
+     * Read a user's public key and save it to this.keys.publicKeys
+     *
+     * @public
+     * @param {Object} model - user model
+     * @returns {Object} key
+     */
+    readUserKey({model}) {
+        const key = this.openpgp.key.readArmored(model.get('publicKey')).keys[0];
+        this.keys.publicKeys[model.get('username')] = key;
+        return key;
     }
 
     /**
      * Generate new key pair.
      *
+     * @public
      * @param {Object} options
      * @param {Array} options.userIds
      * @param {String} options.passphrase
@@ -137,6 +192,7 @@ export default class Encryption {
     /**
      * Change the passphrase of a private key.
      *
+     * @public
      * @param {Object} options
      * @param {String} options.newPassphrase
      * @param {String} options.oldPassphrase
@@ -168,16 +224,70 @@ export default class Encryption {
     }
 
     /**
+     * Sign a message using the user's private key.
+     *
+     * @public
+     * @param {String} data
+     * @returns {Promise}
+     */
+    sign({data}) {
+        return this.openpgp.sign({data, privateKeys: this.keys.privateKey})
+        .then(sign => sign.data);
+    }
+
+    /**
+     * Verify a signature.
+     *
+     * @public
+     * @param {Object} options
+     * @param {String} options.message
+     * @param {Array}  [options.publicKeys]
+     * @param {String} [options.username] - the name of the user who signed
+     * the message
+     * @returns {Promise}
+     */
+    verify(options) {
+        const message = this.openpgp.cleartext.readArmored(options.message);
+        const keys    = options.publicKeys || this.getUserKeys(options.username);
+        return this.openpgp.verify({message, publicKeys: keys.publicKeys});
+    }
+
+    /**
+     * Return an object that contains a user's public key.
+     *
+     * @protected
+     * @param {String} [username]
+     * @return {Object} - {privateKeys, publicKeys}
+     */
+    getUserKeys(username) {
+        const publicKeys = [this.keys.publicKeys[this.configs.username]];
+
+        if (username && this.keys.publicKeys[username] &&
+            username !== this.configs.username) {
+            publicKeys.push(this.keys.publicKeys[username]);
+        }
+
+        return {
+            publicKeys,
+            privateKey : this.keys.privateKey,
+            privateKeys: this.keys.privateKeys,
+        };
+    }
+
+    /**
      * Encrypt string data with PGP keys.
      * If keys aren't provided, it will use the keys from this.configs property.
      *
+     * @public
      * @param {Object} options
-     * @param {String} options.data
+     * @param {String} options.data - data that should be encrypted
+     * @param {String} [options.username] - the name of the user for whom
+     * it should be encrypted
      * @returns {Promise} - resolves with an encrypted string
      */
     encrypt(options) {
-        log('encrypting data', options);
-        return this.openpgp.encrypt(_.extend({}, this.keys, options))
+        const keys = this.getUserKeys(options.username);
+        return this.openpgp.encrypt(_.extend({}, keys, options))
         .then(enc => enc.data);
     }
 
@@ -185,13 +295,16 @@ export default class Encryption {
      * Decrypt armored data with PGP keys.
      * If keys aren't provided, it will use the keys from this.configs property.
      *
+     * @public
      * @param {Object} options
-     * @param {String} options.message
+     * @param {String} options.message  - message which should be decrypted
+     * @param {String} [options.username] - the name of the user who encrypted
+     * the message
      * @returns {Promise}
      */
     decrypt(options) {
-        log('decrypting data', options);
-        const data = _.extend({}, _.omit(this.keys), options, {
+        const keys = this.getUserKeys(options.username);
+        const data = _.extend({}, keys, options, {
             message : this.openpgp.message.readArmored(options.message),
         });
 
@@ -202,17 +315,16 @@ export default class Encryption {
     /**
      * Encrypt a model.
      *
-     * @param {Object} options
-     * @param {Object} options.model
+     * @public
+     * @param {Object} model
+     * @param {String} [username]
      * @returns {Promise} resolve with the model
      */
-    encryptModel(options) {
-        const {model} = options;
-        const data    = _.pick(model.attributes, model.encryptKeys);
+    encryptModel({model, username}) {
+        const data = _.pick(model.attributes, model.encryptKeys);
 
-        return this.encrypt({data: JSON.stringify(data)})
+        return this.encrypt({username, data: JSON.stringify(data)})
         .then(encryptedData => {
-            log('encrypted a model', encryptedData);
             model.set({encryptedData});
             return model;
         });
@@ -221,21 +333,20 @@ export default class Encryption {
     /**
      * Decrypt a model.
      *
-     * @param {Object} options
-     * @param {Object} options.model
+     * @public
+     * @param {Object} model
+     * @param {String} [username]
      * @returns {Promise} resolves with the model
      */
-    decryptModel(options) {
-        const {model} = options;
+    decryptModel({model, username}) {
         const message = model.attributes.encryptedData;
 
         if (!message.length) {
             return Promise.resolve(model);
         }
 
-        return this.decrypt({message})
+        return this.decrypt({message, username})
         .then(decrypted => {
-            log('decryptedModel', decrypted);
             const data = JSON.parse(decrypted);
             model.set(data);
             return model;
@@ -245,20 +356,19 @@ export default class Encryption {
     /**
      * Encrypt every model in a collection.
      *
-     * @param {Object} options
-     * @param {Object} options.collection
+     * @public
+     * @param {Object} collection
+     * @param {String} [username]
      * @returns {Promise}
      */
-    encryptCollection(options) {
-        const {collection} = options;
-
+    encryptCollection({collection, username}) {
         if (!collection.length) {
             return Promise.resolve(collection);
         }
 
         const promises = [];
         collection.each(model => {
-            promises.push(this.encryptModel({model}));
+            promises.push(this.encryptModel({model, username}));
         });
 
         return Promise.all(promises)
@@ -268,35 +378,23 @@ export default class Encryption {
     /**
      * Decrypt every model in a collection.
      *
-     * @param {Object} options
-     * @param {Object} options.collection
+     * @public
+     * @param {Object} collection
+     * @param {String} [username]
      * @returns {Promise}
      */
-    decryptCollection(options) {
-        const {collection} = options;
-
+    decryptCollection({collection, username}) {
         if (!collection.length) {
             return Promise.resolve(collection);
         }
 
         const promises = [];
         collection.each(model => {
-            promises.push(this.decryptModel({model}));
+            promises.push(this.decryptModel({model, username}));
         });
 
         return Promise.all(promises)
         .then(() => collection);
-    }
-
-    /**
-     * Calculate sha256 hash of the string set.
-     *
-     * @param {Object} options={}
-     * @param {String} options.text
-     * @returns {Promise}
-     */
-    sha256(options = {}) {
-        return Promise.resolve(sjcl.hash.sha256.hash(options.text));
     }
 
 }

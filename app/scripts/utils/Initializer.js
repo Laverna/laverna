@@ -108,14 +108,14 @@ export default class Initializer {
      * @returns {Promise} it will be resolved once all callbacks complete their tasks
      */
     startInit(name, options) {
-        const promises = [];
+        let promise = Promise.resolve();
 
         // Get all callbacks by key name and execute
         _.each(this._inits[name] || [], fnc => {
-            promises.push(fnc(options));
+            promise = promise.then(() => fnc(options));
         });
 
-        return Promise.all(promises);
+        return promise;
     }
 
 }

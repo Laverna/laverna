@@ -4,6 +4,7 @@
 import {Model as BModel} from 'backbone';
 import Sync from './Sync';
 import _ from 'underscore';
+import Radio from 'backbone.radio';
 
 /**
  * Core model.
@@ -57,6 +58,16 @@ export default class Model extends BModel {
      */
     get escapeAttributes() {
         return [];
+    }
+
+    /**
+     * Radio channel.
+     *
+     * @returns {Object}
+     */
+    get channel() {
+        const name = _.capitalize(this.storeName);
+        return Radio.channel(`collections/${name}`);
     }
 
     constructor(data, options = {}) {
@@ -143,6 +154,38 @@ export default class Model extends BModel {
 
         this.set('updated', Date.now());
         this.set('created', this.get('created') || Date.now());
+    }
+
+    /**
+     * Check if the model is shared with a user.
+     *
+     * @param {String} username
+     * @returns {Boolean}
+     */
+    isSharedWith(username) {
+        return (
+            _.indexOf(this.get('sharedWith'), username) !== -1 ||
+            this.get('sharedBy') === username
+        );
+    }
+
+    /**
+     * Share the document with a user.
+     *
+     * @param {String} username
+     */
+    toggleShare(username) {
+        let sharedWith = this.get('sharedWith') || [];
+
+        if (this.isSharedWith(username)) {
+            sharedWith = _.without(sharedWith, username);
+        }
+        else {
+            sharedWith.push(username);
+            this.set({sharedWith: []});
+        }
+
+        this.set({sharedWith});
     }
 
 }

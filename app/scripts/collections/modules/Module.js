@@ -60,6 +60,15 @@ export default class Module {
         return this.Collection.prototype.channel;
     }
 
+    /**
+     * App configs.
+     *
+     * @prop {Object}
+     */
+    get configs() {
+        return Radio.request('collections/Configs', 'findConfigs');
+    }
+
     constructor() {
         this.channel.reply({
             findModel       : this.findModel,
@@ -132,7 +141,7 @@ export default class Module {
                 collection.filterList(options);
             }
 
-            if (collection.paginate) {
+            if (collection.paginate && options.perPage !== 0) {
                 collection.paginate();
             }
 
@@ -174,14 +183,15 @@ export default class Module {
      */
     saveModel(options) {
         const {model} = options;
-        const data    = options.data || model.attributes;
+        const data    = options.data  || model.attributes;
+        data.sharedBy = data.sharedBy || this.configs.username;
         model.setEscape(data);
         const errors  = model.validate(model.attributes);
 
         // Trigger invalid event if there are any validation errors
         if (errors) {
             model.trigger('invalid', {errors});
-            return Promise.reject('Validation error');
+            return Promise.reject(`Validation error: ${errors}`);
         }
 
         // Encrypt the model and save

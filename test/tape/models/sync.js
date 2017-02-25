@@ -158,3 +158,25 @@ test('Sync: find()', t => {
         t.end();
     });
 });
+
+test('Sync: delete()', t => {
+    const sync  = new Sync();
+    const opt   = {profileId: 'test', storeName: 'sync-save'};
+    const model = new Model({id: '1'});
+    sand.stub(model, 'getData').returns({id: '1'});
+
+    const stub  = sand.stub();
+    Object.defineProperty(sync, 'db', {
+        get: () => {return {processRequest: stub};},
+    });
+
+    sync.delete(model, opt);
+    t.equal(stub.calledWithMatch('removeItem', [{
+        profileId : 'test',
+        storeName : 'sync-save',
+        data      : {id: '1'},
+    }]), true, 'removes the model');
+
+    sand.restore();
+    t.end();
+});

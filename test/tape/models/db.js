@@ -170,6 +170,28 @@ test('Db: find() - filters the results', t => {
     });
 });
 
+test('Db: removeItem()', t => {
+    const db         = new Db();
+    const opt        = {
+        storeName   : 'find-filters',
+        profileId   : 'test',
+        idAttribute : 'username',
+        data        : {username: 'bob'},
+    };
+    const removeItem = sand.stub();
+    sand.stub(db, 'getDb').returns({removeItem});
+
+    db.removeItem(opt);
+    t.equal(db.getDb.calledWith(opt), true, 'calls "getDb" method');
+    t.equal(removeItem.calledWith('bob'), true, 'removes the item');
+
+    db.removeItem({data: {id: '1'}});
+    t.equal(removeItem.calledWith('1'), true, 'uses "id" as idAttribute');
+
+    sand.restore();
+    t.end();
+});
+
 test('Db: after()', t => {
     localStorage.clear();
     sand.restore();

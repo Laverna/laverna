@@ -4,7 +4,6 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import * as openpgp from 'openpgp';
 
 import '../../../../app/scripts/utils/underscore';
 import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
@@ -26,7 +25,7 @@ test('Configs: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
-    t.equal(reply.calledWithMatch({
+    t.equal(reply.calledWith({
         findConfig          : mod.findConfig,
         findConfigs         : mod.findConfigs,
         saveConfig          : mod.saveConfig,
@@ -36,8 +35,6 @@ test('Configs: constructor()', t => {
         createProfile       : mod.createProfile,
         removeProfile       : mod.removeProfile,
         changePassphrase    : mod.changePassphrase,
-        addPublicKey        : mod.addPublicKey,
-        removePublicKey     : mod.removePublicKey,
     }, mod), true, 'replies to requests');
 
     sand.restore();
@@ -176,6 +173,7 @@ test('Configs: findConfigs()', t => {
     t.deepEqual(mod.findConfigs(), {test: 'yes'}, 'returns a key=>value object');
     t.equal(spy.called, true, 'calls getConfigs method');
 
+    mod.channel.stopReplying();
     sand.restore();
     t.end();
 });
@@ -217,10 +215,10 @@ test('Configs: saveConfig()', t => {
 test('Configs: saveConfigs() - object', t => {
     const mod     = new Module();
     const configs = {
-        test: {name: 'test', value: 'test1'},
-        test2: {name: 'test2', value: 'test2'},
+        test  : {name: 'test', value: 'test1'},
+        test2 : {name: 'test2', value: 'test2'},
     };
-    const save = sand.spy(mod, 'saveConfig');
+    const save = sand.stub(mod, 'saveConfig');
 
     mod.saveConfigs({configs, useDefault: 'test', profileId: 'test'})
     .then(() => {
@@ -244,7 +242,7 @@ test('Configs: saveConfigs() - array', t => {
         {name: 'test', value: 'test1'},
         {name: 'test2', value: 'test2'},
     ];
-    const save = sand.spy(mod, 'saveConfig');
+    const save = sand.stub(mod, 'saveConfig');
 
     mod.saveConfigs({configs, useDefault: 'test', profileId: 'test'})
     .then(() => {
@@ -347,7 +345,7 @@ test('Configs: changePassphrase() - reject', t => {
     const mod    = new Module();
     const reject = sand.spy(Promise, 'reject');
 
-    mod.changePassphrase({oldPassphrase: '1', newPassphrase: '1'}).catch(() => {})
+    mod.changePassphrase({oldPassphrase: '1', newPassphrase: '1'}).catch(() => {});
     t.equal(reject.called, true,
         'rejects the promise if the old and new passphrase are the same');
 
@@ -385,72 +383,4 @@ test('Configs: changePassphrase() - success', t => {
         mod.channel.stopReplying();
         t.end();
     });
-});
-
-test('Configs: addPublicKey() - reject', t => {
-    const mod    = new Module();
-    const reject = sand.spy(Promise, 'reject');
-    const read   = sand.stub(openpgp.key, 'readArmored')
-    .returns({err: [{message: 'test error'}]});
-    const model  = new Configs.prototype.model({value: {test: 'pub'}});
-
-    mod.addPublicKey({model, publicKey: 'pub'}).catch(() => {});
-    t.equal(reject.calledWith('test error'), true,
-        'rejects the promise if the public key is unreadable');
-
-    read.returns({keys: [{primaryKey: {fingerprint: 'test'}}]});
-    mod.addPublicKey({model, publicKey: 'pub'}).catch(() => {});
-    t.equal(reject.calledWith('The key already exists!'), true,
-        'rejects the promise if the public key already exists');
-
-    sand.restore();
-    t.end();
-});
-
-test('Configs: addPublicKey() - success', t => {
-    const mod   = new Module();
-    const model = new Configs.prototype.model({value: {}});
-    const read  = sand.stub(openpgp.key, 'readArmored')
-    .returns({keys: [{primaryKey: {fingerprint: 'test'}}]});
-    sand.stub(mod, 'saveModel').returns(Promise.resolve());
-    mod.collection = {trigger: sand.stub()};
-
-    mod.addPublicKey({model, publicKey: 'pub'})
-    .then(() => {
-        t.equal(mod.saveModel.calledWithMatch({
-            model,
-            data: {value: {test: 'pub'}},
-        }), true, 'saves the public key');
-
-        t.equal(mod.collection.trigger.calledWith('change'), true,
-            'triggers "change" event on the collection');
-
-        sand.restore();
-        t.end();
-    });
-});
-
-test('Configs: removePublicKey()', t => {
-    const mod   = new Module();
-    const read  = sand.stub(openpgp.key, 'readArmored')
-    .returns({err: [{message: 'test error'}]});
-    const opt   = {publicKey: 'pub', model: new Configs.prototype.model()};
-    opt.model.set({value: {test: 'pub', second: 'pub'}});
-    sand.spy(Promise, 'reject');
-
-    mod.removePublicKey(opt).catch(() => {});
-    t.equal(Promise.reject.calledWith('test error'), true,
-        'rejects the promise if the public key is unreadable');
-
-    sand.stub(mod, 'saveModel');
-    read.returns({keys: [{primaryKey: {fingerprint: 'test'}}]});
-
-    mod.removePublicKey(opt);
-    t.equal(mod.saveModel.calledWith({
-        model: opt.model,
-        data : {value: {second: 'pub'}},
-    }), true, 'removes the public key from database');
-
-    sand.restore();
-    t.end();
 });

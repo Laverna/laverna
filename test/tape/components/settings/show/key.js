@@ -39,8 +39,6 @@ test('settings/show/encryption/Key: events()', t => {
         'selects everything in textarea');
     t.equal(events['click .btn--cancel'], 'destroy',
         'destroyes itself if cancel button is clicked');
-    t.equal(events['click .btn--remove'], 'removeKey',
-        'removes the public key if the button is clicked');
 
     t.end();
 });
@@ -56,25 +54,6 @@ test('settings/show/encryption/Key: selectAll()', t => {
     t.end();
 });
 
-test('settings/show/encryption/Key: removeKey()', t => {
-    const view = new View({key: {armor: () => 'pub'}, model: {id: '1'}});
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
-    sand.stub(view, 'destroy');
-
-    view.removeKey()
-    .then(() => {
-        t.equal(req.calledWith('collections/Configs', 'removePublicKey', {
-            publicKey : 'pub',
-            model     : view.model,
-        }), true, 'removes the public key from the database');
-
-        t.equal(view.destroy.called, true, 'destroyes itself after removing the key');
-
-        sand.restore();
-        t.end();
-    });
-});
-
 test('settings/show/encryption/Key: serializeData()', t => {
     const view   = new View();
     view.options = {model: {id: '1'}, key: 'pub'};
@@ -85,18 +64,26 @@ test('settings/show/encryption/Key: serializeData()', t => {
 });
 
 test('settings/show/encryption/Key: templateContext()', t => {
-    const context = new View().templateContext();
-    context.model = new Configs.prototype.model({
-        value: {123412341234: 'pub'},
-    });
-    context.key   = {primaryKey: {
-        fingerprint: '123412341234',
-        algorithm  : 'rsa_sign_encrypt',
-    }};
+    const context     = new View().templateContext();
+    const armor       = sand.stub().returns('pub');
+    context.isPrivate = true;
+    context.key       = {
+        primaryKey: {
+            fingerprint : '123412341234',
+            algorithm   : 'rsa_sign_encrypt',
+        },
+        toPublic : () => {return {armor}},
+        armor    : sand.stub(),
+    };
 
     t.equal(context.getArmor(), 'pub', 'returns armored public key');
+    t.equal(armor.called, true, 'converts the private key to public key');
     t.equal(context.getFingerprint(), '1234 1234 1234');
     t.equal(context.getType(), 'rsa');
+
+    context.isPrivate = false;
+    context.getArmor();
+    t.equal(context.key.armor.called, true, 'calls key.armor()');
 
     t.end();
 });

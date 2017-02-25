@@ -34,12 +34,8 @@ test('settings/show/encryption/View: events()', t => {
 
     t.equal(events['click #btn--privateKey'], 'showPrivateKey',
         'shows the private information if the button is clicked');
-    t.equal(events['click .btn--publicKey'], 'showPublicKey',
-        'shows a public information if the button is clicked');
     t.equal(events['click #btn--passphrase'], 'showPasswordView',
         'shows the password form if the button is clicked');
-    t.equal(events['click .btn--add--public'], 'showAddPublicKey',
-        'adds a new public key if the button is clicked');
 
     t.end();
 });
@@ -58,21 +54,6 @@ test('settings/show/encryption/View: showPrivateKey()', t => {
 
     view.showPrivateKey();
     t.equal(view.showKey.calledWith(view.privateKey, true), true,
-        'calls "showKey" method');
-
-    sand.restore();
-    t.end();
-});
-
-test('settings/show/encryption/View: showPublicKey()', t => {
-    const view = new View();
-    view.keys  = {fingerprint: 'pub'};
-    sand.stub(view, 'showKey');
-    const jq = sand.stub(view, '$').returns({attr: () => 'fingerprint'});
-
-    view.showPublicKey({currentTarget: 'test'});
-    t.equal(jq.calledWith('test'), true, 'searches for the fingerprint');
-    t.equal(view.showKey.calledWith(view.keys.fingerprint), true,
         'calls "showKey" method');
 
     sand.restore();
@@ -111,22 +92,6 @@ test('settings/show/encryption/View: showPasswordView()', t => {
     t.end();
 });
 
-test('settings/show/encryption/View: showAddPublicKey()', t => {
-    const view = new View();
-    const req  = sand.stub(Radio, 'request');
-    view.collection = {get: sand.stub().withArgs('publicKeys')
-    .returns({})};
-
-    view.showAddPublicKey();
-    t.equal(req.calledWithMatch('Layout', 'show', {
-        view   : {},
-        region : 'modal',
-    }), true, 'renders public key form view');
-
-    sand.restore();
-    t.end();
-});
-
 test('settings/show/encryption/View: serializeData()', t => {
     const coll = new Configs();
     coll.resetFromObject(coll.configNames);
@@ -134,7 +99,6 @@ test('settings/show/encryption/View: serializeData()', t => {
 
     t.deepEqual(view.serializeData(), {
         models: view.collection.getConfigs(),
-        keys  : null,
     });
 
     const read = sand.stub(openpgp.key, 'readArmored');
@@ -148,7 +112,6 @@ test('settings/show/encryption/View: serializeData()', t => {
     t.deepEqual(view.serializeData(), {
         models     : view.collection.getConfigs(),
         privateKey : 'privTest',
-        keys       : {test: 'pubTest'},
     });
 
     sand.restore();
@@ -156,16 +119,6 @@ test('settings/show/encryption/View: serializeData()', t => {
 });
 
 test('settings/show/encryption/View: templateContext()', t => {
-    const view         = new View();
-    const context      = view.templateContext();
-    context.privateKey = {primaryKey: {fingerprint: 'test'}};
-
-    t.equal(context.isPrivate('test'), true,
-        'returns true if the fingerprints are the same');
-
-    t.equal(context.isPrivate('test2'), false,
-        'returns false if the fingerprints are not the same');
-
     sand.restore();
     t.end();
 });

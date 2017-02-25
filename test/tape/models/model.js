@@ -4,6 +4,7 @@
  */
 import test from 'tape';
 
+import '../../../app/scripts/utils/underscore';
 import Model from '../../../app/scripts/models/Model';
 
 test('Model: sync()', t => {
@@ -41,6 +42,13 @@ test('Model: validateAttributes()', t => {
 test('Model: escapeAttributes()', t => {
     const model = new Model();
     t.equal(Array.isArray(model.escapeAttributes), true, 'is an array');
+    t.end();
+});
+
+test('Model: channel', t => {
+    const model     = new Model();
+    model.storeName = 'notes';
+    t.equal(model.channel.channelName, 'collections/Notes');
     t.end();
 });
 
@@ -121,6 +129,30 @@ test('Model: setDate()', t => {
         'changes "updated" attribute');
     t.equal(typeof model.get('created'), 'number',
         'changes "created" attribute');
+
+    t.end();
+});
+
+test('Model: isSharedWith()', t => {
+    const model = new Model({sharedWith: ['alice'], sharedBy: 'bob'});
+
+    t.equal(model.isSharedWith('sid'), false, 'returns false');
+    t.equal(model.isSharedWith('alice'), true,
+        'returns true if the model is shared with a user');
+    t.equal(model.isSharedWith('bob'), true,
+        'returns true if a user is the author of the model');
+
+    t.end();
+});
+
+test('Model: toggleShare()', t => {
+    const model = new Model({sharedWith: ['alice'], sharedBy: 'bob'});
+
+    model.toggleShare('alice');
+    t.equal(model.isSharedWith('alice'), false, 'stops sharing with a user');
+
+    model.toggleShare('alice');
+    t.equal(model.isSharedWith('alice'), true, 'starts sharing with a user again');
 
     t.end();
 });

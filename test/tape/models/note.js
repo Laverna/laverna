@@ -21,6 +21,8 @@ test('Note: defaults', t => {
     t.equal(defaults.notebookId, '0');
     t.equal(Array.isArray(defaults.tags), true);
     t.equal(Array.isArray(defaults.files), true);
+    t.equal(Array.isArray(defaults.sharedWith), true);
+    t.equal(defaults.sharedBy, '');
 
     const attrs = 'taskAll,taskCompleted,created,updated,isFavorite,trash';
     attrs.split(',').forEach(attr => {
@@ -52,6 +54,7 @@ test('Note: escapeAttributes()', t => {
     t.equal(Array.isArray(escape), true, 'is an array');
     t.equal(escape.indexOf('title') > -1, true, 'filters title');
     t.equal(escape.indexOf('content') > -1, true, 'filters content');
+    t.equal(escape.indexOf('sharedBy') > -1, true, 'filters sharedBy');
     t.end();
 });
 

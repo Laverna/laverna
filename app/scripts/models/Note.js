@@ -33,6 +33,9 @@ export default class Note extends Model {
      * @property {Number} isFavorite - equal to 1 if the note is favorite
      * @property {Number} trash
      * @property {Array} files - array of file IDs
+     * @property {Array} sharedWith - an array of users with whome the note
+     * is shared
+     * @property {String} sharedBy - the author of the note
      * @returns {Object}
      */
     get defaults() {
@@ -51,6 +54,8 @@ export default class Note extends Model {
             isFavorite    : 0,
             trash         : 0,
             files         : [],
+            sharedWith    : [],
+            sharedBy      : '',
         };
     }
 
@@ -73,7 +78,7 @@ export default class Note extends Model {
     }
 
     get escapeAttributes() {
-        return ['title', 'content'];
+        return ['title', 'content', 'sharedBy'];
     }
 
     /**

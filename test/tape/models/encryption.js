@@ -6,8 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import * as openpgp from 'openpgp';
 import sjcl from 'sjcl';
+import Radio from 'backbone.radio';
 
 import Encryption from '../../../app/scripts/models/Encryption';
+import Users from '../../../app/scripts/collections/Users';
+import User  from '../../../app/scripts/models/User';
 import Notes from '../../../app/scripts/collections/Notes';
 
 let sand;
@@ -22,28 +25,73 @@ test('models/Encryption: channel', t => {
     t.end();
 });
 
+test('models/Encryption: configs', t => {
+    Radio.replyOnce('collections/Configs', 'findConfigs', {});
+    t.equal(typeof Encryption.prototype.configs, 'object');
+    t.end();
+});
+
 test('models/Encryption: constructor()', t => {
-    const reply = sand.stub(Encryption.prototype.channel, 'reply');
-    const enc   = new Encryption({privateKey: 'key'});
+    const reply      = sand.stub(Encryption.prototype.channel, 'reply');
+    const enc        = new Encryption({privateKey: 'key'});
 
     t.equal(enc.openpgp, openpgp, 'creates "openpgp" property');
+    t.equal(enc.openpgp.config.compression, 0, 'disables compression in OpenPGP');
+    t.equal(enc.openpgp.config.use_native, false, 'disables native crypto');
     t.deepEqual(enc.options, {privateKey: 'key'}, 'creates "options" property');
 
     t.equal(reply.calledWith({
-        readKeys         : enc.readKeys,
-        generateKeys     : enc.generateKeys,
-        changePassphrase : enc.changePassphrase,
-        encrypt          : enc.encrypt,
-        decrypt          : enc.decrypt,
-        encryptModel     : enc.encryptModel,
-        decryptModel     : enc.decryptModel,
-        encryptCollection: enc.encryptCollection,
-        decryptCollection: enc.decryptCollection,
-        sha256           : enc.sha256,
+        // Core methods
+        sha256            : enc.sha256,
+        random            : enc.random,
+        readKeys          : enc.readKeys,
+        readUserKey       : enc.readUserKey,
+        generateKeys      : enc.generateKeys,
+        changePassphrase  : enc.changePassphrase,
+        sign              : enc.sign,
+        verify            : enc.verify,
+        encrypt           : enc.encrypt,
+        decrypt           : enc.decrypt,
+        // Backbone related methods
+        encryptModel      : enc.encryptModel,
+        decryptModel      : enc.decryptModel,
+        encryptCollection : enc.encryptCollection,
+        decryptCollection : enc.decryptCollection,
     }, enc), true, 'starts replying to requests');
 
     sand.restore();
     t.end();
+});
+
+test('models/Encryption: sha256()', t => {
+    const enc = new Encryption();
+    const spy = sand.spy(sjcl.hash.sha256, 'hash');
+
+    enc.sha256({text: 'test'})
+    .then(res => {
+        t.equal(Array.isArray(res), true, 'resolves with an array');
+        t.equal(spy.calledWith('test'), true, 'calls hash method');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('models/Encryption: random()', t => {
+    const enc = new Encryption();
+
+    enc.random()
+    .then(str => {
+        t.equal(typeof str, 'string', 'returns "string"');
+        t.equal(str.length, 32, 'returns 4 random "words" for default');
+        t.notEqual(str.search(/^(?=.*[a-zA-Z])(?=.*[0-9])/), -1,
+            'contains both numbers and letters');
+        return enc.random({number: 8});
+    })
+    .then(str => {
+        t.equal(str.length, 64, 'returns 8 random "words"');
+        t.end();
+    });
 });
 
 test('models/Encryption: readKeys() - reject', t => {
@@ -64,16 +112,18 @@ test('models/Encryption: readKeys() - reject', t => {
 test('models/Encryption: readKeys() - resolve', t => {
     const enc        = new Encryption();
     const read       = sand.stub(openpgp.key, 'readArmored');
-    const privateKey = {decrypt: () => true};
+    const privateKey = {decrypt: () => true, toPublic: () => 'pub'};
     read.returns({keys: [privateKey]});
-    sand.stub(enc, 'readPublicKeys').returns(['pub']);
+    sand.stub(enc, 'readPublicKeys').returns(Promise.resolve(['pub']));
+
+    Radio.replyOnce('collections/Configs', 'findConfigs', {username: 'bob'});
 
     enc.readKeys({privateKey: 'priv', publicKey: 'pub'})
     .then(res => {
         const keys = {
             privateKey,
             privateKeys: [privateKey],
-            publicKeys : ['pub'],
+            publicKeys : {bob: 'pub'},
         };
         t.deepEqual(res, keys, 'resolves with private and public keys');
         t.deepEqual(enc.keys, keys, 'creates "keys" property');
@@ -84,13 +134,36 @@ test('models/Encryption: readKeys() - resolve', t => {
 });
 
 test('models/Encryption: readPublicKeys()', t => {
-    const enc  = new Encryption();
-    const read = sand.stub(openpgp.key, 'readArmored');
+    const enc   = new Encryption();
+    const users = new Users([{pendingAccept: true}, {pendingAccept: false}]);
+    const req   = sand.stub(Radio, 'request').returns(Promise.resolve(users));
+    sand.stub(enc, 'readUserKey');
+
+    enc.readPublicKeys()
+    .then(() => {
+        t.equal(req.calledWith('collections/Users', 'find'), true,
+            'requests users');
+        t.equal(enc.readUserKey.callCount, 1, 'reads users public keys');
+        t.equal(enc.readUserKey.calledWith({model: users.at(1)}), true,
+            'reads the keys of users who are trusted');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('models/Encryption: readUserKey()', t => {
+    const enc   = new Encryption();
+    const read  = sand.stub(openpgp.key, 'readArmored');
+    const model = new User({username: 'alice', publicKey: 'armored'});
     read.returns({keys: ['pubKey']});
 
-    const res = enc.readPublicKeys({publicKeys: {test: 'test', test2: 'test2'}});
-    t.deepEqual(res, ['pubKey', 'pubKey'], 'returns an array of public keys');
-    t.equal(read.callCount, 2, 'reads all keys');
+    enc.keys  = {publicKeys: {}};
+    const res = enc.readUserKey({model});
+
+    t.deepEqual(res, 'pubKey', 'returns the key');
+    t.equal(enc.keys.publicKeys.alice, 'pubKey',
+        'saves the key in this.keys.publicKeys');
 
     sand.restore();
     t.end();
@@ -127,7 +200,7 @@ test('models/Encryption: changePassphrase()', t => {
         armor   : sand.stub().returns('newPrivateKey'),
         getAllKeyPackets: sand.stub().returns([{encrypt}, {encrypt}]),
     };
-    const read = sand.stub(openpgp.key, 'readArmored').returns({keys: [key]});
+    sand.stub(openpgp.key, 'readArmored').returns({keys: [key]});
     enc.options.privateKey = 'privateKey';
 
     enc.changePassphrase({newPassphrase: '1', oldPassphrase: '2'})
@@ -136,7 +209,7 @@ test('models/Encryption: changePassphrase()', t => {
         t.equal(res, 'newPrivateKey', 'resolves with the new armored key');
 
         key.armor.throws();
-        return enc.changePassphrase({newPassphrase: '1', oldPassphrase: '2'})
+        return enc.changePassphrase({newPassphrase: '1', oldPassphrase: '2'});
     })
     .catch(err => {
         t.equal(err, 'Setting new passphrase failed');
@@ -151,17 +224,91 @@ test('models/Encryption: changePassphrase()', t => {
     });
 });
 
+test('models/Encryption: sign()', t => {
+    const enc   = new Encryption();
+    enc.keys    = {privateKey: 'privateKey'};
+    enc.openpgp = {sign: sand.stub()};
+    enc.openpgp.sign.returns(Promise.resolve({data: 'signature'}));
+
+    enc.sign({data: 'text'})
+    .then(signature => {
+        t.equal(signature, 'signature', 'returns the signature');
+        t.equal(enc.openpgp.sign.calledWith({
+            data        : 'text',
+            privateKeys : enc.keys.privateKey,
+        }), true, 'calls "openpgp.sign" method');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('models/Encryption: verify()', t => {
+    const enc   = new Encryption();
+    enc.openpgp = {verify: sand.stub()};
+    enc.openpgp.verify.returns(Promise.resolve(true));
+
+    enc.openpgp.cleartext = {readArmored: sand.stub().returns('message')};
+    sand.stub(enc, 'getUserKeys').returns({publicKeys: ['pubKey']});
+
+    enc.verify({message: 'armored', publicKeys: ['pubKey']})
+    .then(() => {
+        t.equal(enc.getUserKeys.notCalled, true, 'use "publicKeys" parameter');
+        return enc.verify({message: 'armored'});
+    })
+    .then(res => {
+        t.equal(enc.getUserKeys.called, true, 'calls getUserKeys() method');
+        t.equal(res, true, 'returns the result');
+        t.equal(enc.openpgp.verify.calledWith({
+            message    : 'message',
+            publicKeys : ['pubKey'],
+        }), true, 'calls "openpgp.verify" method');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('models/Encryption: getUserKeys()', t => {
+    const enc = new Encryption();
+    enc.keys  = {
+        privateKey  : 'privateKey',
+        privateKeys : ['privateKey'],
+        publicKeys  : {bob: 'pubKey', alice: 'pubKey', peer: 'pubKey'},
+    };
+    Object.defineProperty(enc, 'configs', {
+        get: () => {
+            return {username: 'bob'};
+        },
+    });
+
+    t.deepEqual(enc.getUserKeys('bob'), {
+        publicKeys  : [enc.keys.publicKeys.bob],
+        privateKey  : enc.keys.privateKey,
+        privateKeys : enc.keys.privateKeys,
+    }, 'returns the users keys');
+
+    t.deepEqual(enc.getUserKeys('alice'), {
+        publicKeys  : [enc.keys.publicKeys.bob, enc.keys.publicKeys.alice],
+        privateKey  : enc.keys.privateKey,
+        privateKeys : enc.keys.privateKeys,
+    }, 'contains another users public key');
+
+    t.end();
+});
+
 test('models/Encryption: encrypt()', t => {
     const enc     = new Encryption();
     const encrypt = sand.stub().returns(Promise.resolve({data: 'encrypted'}));
     enc.openpgp   = {encrypt};
-    enc.keys      = {privateKey: 'priv', publicKey: 'pub'};
+    sand.stub(enc, 'getUserKeys').returns({privateKey: 'priv', publicKeys: ['pub']});
 
-    enc.encrypt({data: 'clear text'})
+    enc.encrypt({data: 'clear text', username: 'bob'})
     .then(res => {
+        t.equal(enc.getUserKeys.calledWith('bob'), true, 'gets bobs public keys');
         t.equal(encrypt.calledWithMatch({
             privateKey : 'priv',
-            publicKey  : 'pub',
+            publicKeys : ['pub'],
             data       : 'clear text',
         }), true, 'encrypts data');
 
@@ -174,17 +321,18 @@ test('models/Encryption: encrypt()', t => {
 
 test('models/Encryption: decrypt()', t => {
     const enc   = new Encryption();
-    enc.keys    = {privateKey: 'priv', publicKey: 'pub'};
     enc.openpgp = {
         decrypt: sand.stub().returns(Promise.resolve({data: 'decrypted'})),
         message: {readArmored: () => 'unarmed'},
     };
+    sand.stub(enc, 'getUserKeys').returns({privateKey: 'priv', publicKeys: ['pub']});
 
-    enc.decrypt({message: 'encrypted'})
+    enc.decrypt({message: 'encrypted', username: 'bob'})
     .then(res => {
+        t.equal(enc.getUserKeys.calledWith('bob'), true, 'gets bobs public keys');
         t.equal(enc.openpgp.decrypt.calledWithMatch({
             privateKey : 'priv',
-            publicKey  : 'pub',
+            publicKeys : ['pub'],
             message    : 'unarmed',
         }), true, 'encrypts data');
 
@@ -205,10 +353,11 @@ test('models/Encryption: encryptModel()', t => {
         set         : sand.stub(),
     };
 
-    enc.encryptModel({model})
+    enc.encryptModel({model, username: 'bob'})
     .then(res => {
         t.equal(enc.encrypt.calledWithMatch({
-            data: JSON.stringify({title: 'Hello', content: 'World'}),
+            username : 'bob',
+            data     : JSON.stringify({title: 'Hello', content: 'World'}),
         }), true, 'encrypts model attributes');
 
         t.equal(model.set.calledWith({encryptedData: 'encrypted string'}), true,
@@ -238,11 +387,13 @@ test('models/Encryption: decryptModel()', t => {
             'does nothing if encryptedData attribute is empty');
 
         model.attributes.encryptedData = 'encrypted data';
-        return enc.decryptModel({model});
+        return enc.decryptModel({model, username: 'bob'});
     })
     .then(res => {
-        t.equal(enc.decrypt.calledWith({message: 'encrypted data'}), true,
-            'decrypts "encryptedData" attribute');
+        t.equal(enc.decrypt.calledWith({
+            username : 'bob',
+            message  : 'encrypted data',
+        }), true, 'decrypts "encryptedData" attribute');
         t.equal(model.set.calledWith({title: 'Test'}), true,
             'sets new attributes');
         t.equal(res, model, 'returns the model');
@@ -264,14 +415,18 @@ test('models/Encryption: encryptCollection()', t => {
             'does nothing if the collection is empty');
 
         collection.add([{id: '1'}, {id: '2'}]);
-        return enc.encryptCollection({collection});
+        return enc.encryptCollection({collection, username: 'bob'});
     })
     .then(() => {
         t.equal(enc.encryptModel.callCount, 2, 'encrypts every model in a collection');
-        t.equal(enc.encryptModel.calledWith({model: collection.at(0)}), true,
-            'encrypts the first model');
-        t.equal(enc.encryptModel.calledWith({model: collection.at(1)}), true,
-            'encrypts the second model');
+        t.equal(enc.encryptModel.calledWith({
+            username : 'bob',
+            model    : collection.at(0),
+        }), true, 'encrypts the first model');
+        t.equal(enc.encryptModel.calledWith({
+            username : 'bob',
+            model    : collection.at(1),
+        }), true, 'encrypts the second model');
 
         sand.restore();
         t.end();
@@ -290,28 +445,18 @@ test('models/Encryption: decryptCollection()', t => {
             'does nothing if the collection is empty');
 
         collection.add([{id: '1'}, {id: '2'}]);
-        return enc.decryptCollection({collection});
+        return enc.decryptCollection({collection, username: 'bob'});
     })
     .then(() => {
         t.equal(enc.decryptModel.callCount, 2, 'decrypts every model in a collection');
-        t.equal(enc.decryptModel.calledWith({model: collection.at(0)}), true,
-            'decrypts the first model');
-        t.equal(enc.decryptModel.calledWith({model: collection.at(1)}), true,
-            'decrypts the second model');
-
-        sand.restore();
-        t.end();
-    });
-});
-
-test('models/Encryption: sha256()', t => {
-    const enc = new Encryption();
-    const spy = sand.spy(sjcl.hash.sha256, 'hash');
-
-    enc.sha256({text: 'test'})
-    .then(res => {
-        t.equal(Array.isArray(res), true, 'resolves with an array');
-        t.equal(spy.calledWith('test'), true, 'calls hash method');
+        t.equal(enc.decryptModel.calledWith({
+            username : 'bob',
+            model    : collection.at(0),
+        }), true, 'decrypts the first model');
+        t.equal(enc.decryptModel.calledWith({
+            username : 'bob',
+            model    : collection.at(1),
+        }), true, 'decrypts the second model');
 
         sand.restore();
         t.end();

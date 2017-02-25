@@ -95,3 +95,10 @@ test('Underscore: capitalize()', t => {
         'Convert the first letter of a string to uppercase');
     t.end();
 });
+
+test('Underscore: splitBy4()', t => {
+    t.equal(_.splitBy4('fourfourfour').length, 14);
+    t.equal(_.splitBy4('fourfourfour').search('four four four') !== -1, true,
+        'puts spaces');
+    t.end();
+});

@@ -101,6 +101,17 @@ _.mixin({
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
+
+    /**
+     * Split string by 4 characters.
+     *
+     * @param {String} str
+     * @returns {String}
+     */
+    splitBy4(str) {
+        return str.match(/.{4}/g).join(' ');
+    },
+
 });
 
 export default _;

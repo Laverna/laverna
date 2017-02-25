@@ -2,7 +2,7 @@
  * @module collections/Collection
  */
 import Backbone from 'backbone';
-import Radio from 'backbone.radio';
+// import Radio from 'backbone.radio';
 import _ from 'underscore';
 import Sync from '../models/Sync';
 
@@ -58,8 +58,7 @@ export default class Collection extends Backbone.Collection {
      * @returns {Object}
      */
     get channel() {
-        const name = _.capitalize(this.storeName);
-        return Radio.channel(`collections/${name}`);
+        return this.model.prototype.channel;
     }
 
     /**
@@ -121,7 +120,7 @@ export default class Collection extends Backbone.Collection {
      * @returns {Object}
      */
     findOrCreate(id) {
-        return this.get(id) || new this.model();
+        return this.get(id) || new this.model({id});
     }
 
 }

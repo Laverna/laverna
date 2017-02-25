@@ -148,4 +148,16 @@ export default class Sync {
         .then(data => model.set(data));
     }
 
+    /**
+     * Delete a model.
+     *
+     * @param {Object} model - Backbone model
+     * @param {Object} options
+     * @returns {Promise}
+     */
+    delete(model, options) {
+        const opt = _.extend({data: model.getData()}, options);
+        return this.db.processRequest('removeItem', [opt]);
+    }
+
 }

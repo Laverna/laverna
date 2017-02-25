@@ -103,4 +103,20 @@ export default class Db extends WorkerModule {
         .then(() => data);
     }
 
+    /**
+     * Save an item.
+     *
+     * @param {Object} options
+     * @param {String} options.profileId - used for setting database name
+     * @param {String} options.storeName - notes, tags, notebooks, etc
+     * @param {String} options.id - id of an item
+     * @param {String} [options.idAttribute]
+     * @returns {Promise}
+     */
+    removeItem(options) {
+        const idAttribute = options.idAttribute || 'id';
+        const key         = options.data[idAttribute] || options[idAttribute];
+        return this.getDb(options).removeItem(key);
+    }
+
 }

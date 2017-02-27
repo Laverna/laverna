@@ -30,6 +30,11 @@ test('notes/form/Controller: configs', t => {
     t.end();
 });
 
+test('notes/form/Controller: notesChannel', t => {
+    t.equal(Controller.prototype.notesChannel.channelName, 'collections/Notes');
+    t.end();
+});
+
 test('notes/form/Controller: init()', t => {
     const con = new Controller();
     sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
@@ -62,11 +67,12 @@ test('notes/form/Controller: onDestroy()', t => {
 });
 
 test('notes/form/Controller: fetch()', t => {
-    const con = new Controller({profileId: 'testdb', id: '1'});
-    const req = sand.stub(Radio, 'request');
+    const con     = new Controller({profileId: 'testdb', id: '1'});
+    const req     = sand.stub(Radio, 'request');
+    const noteReq = sand.stub(con.notesChannel, 'request');
 
     con.fetch();
-    t.equal(req.calledWith('collections/Notes', 'findModel', {
+    t.equal(noteReq.calledWith('findModel', {
         profileId       : 'testdb',
         id              : '1',
         findAttachments : true,
@@ -120,7 +126,7 @@ test('notes/form/Controller: getNotebookId()', t => {
 });
 
 test('notes/form/Controller: listenToEvents()', t => {
-    const con    = new Controller({});
+    const con    = new Controller({id: '1'});
     con.view     = new View();
     const listen = sand.stub(con, 'listenTo');
 
@@ -131,6 +137,8 @@ test('notes/form/Controller: listenToEvents()', t => {
         'saves the changes');
     t.equal(listen.calledWith(con.view, 'cancel', con.checkChanges), true,
         'checks if there are any changes before closing the form');
+    t.equal(listen.calledWith(con.notesChannel, 'save:object:1', con.onSaveObject),
+        true, 'listens to save:object:1');
 
     con.view.destroy();
     sand.restore();
@@ -141,7 +149,8 @@ test('notes/form/Controller: save()', t => {
     const con    = new Controller({});
     con.view     = new View({model: new Note()});
 
-    const req = sand.stub(Radio, 'request');
+    const req      = sand.stub(Radio, 'request');
+    const notesReq = sand.stub(con.notesChannel, 'request');
     sand.stub(con, 'getData').returns(Promise.resolve({title: 'Ok'}));
     sand.spy(con, 'checkTitle');
     sand.stub(con, 'redirect');
@@ -153,7 +162,7 @@ test('notes/form/Controller: save()', t => {
     res.then(() => {
         t.equal(con.checkTitle.calledWith({title: 'Ok'}), true,
             'checks if the title exists');
-        t.equal(req.calledWith('collections/Notes', 'saveModel', {
+        t.equal(notesReq.calledWith('saveModel', {
             data     : {title: 'Ok'},
             saveTags : false,
             model    : con.view.model,
@@ -163,7 +172,7 @@ test('notes/form/Controller: save()', t => {
         return con.save({autoSave: false});
     })
     .then(() => {
-        t.equal(req.calledWithMatch('collections/Notes', 'saveModel', {
+        t.equal(notesReq.calledWithMatch('saveModel', {
             saveTags : true,
         }), true, 'saves the model and tags');
         t.equal(con.redirect.calledWith(false), true, 'redirects back');
@@ -241,6 +250,30 @@ test('notes/form/Controller: checkChanges()', t => {
     });
 });
 
+test('notes/form/Controller: onSaveObject()', t => {
+    const con         = new Controller({});
+    con.view          = {model: new Note({title: 'Old'})};
+    const model       = new Note({title: 'Changed title'});
+    model.htmlContent = 'HTML';
+
+    sand.stub(con, 'fetch').returns(Promise.resolve([model]));
+    sand.stub(con.view.model, 'trigger');
+
+    con.onSaveObject()
+    .then(() => {
+        t.equal(con.fetch.called, true, 're-fetches the model');
+        t.equal(con.view.model.htmlContent, model.htmlContent,
+            'updates html content');
+        t.deepEqual(con.view.model.attributes, model.attributes,
+            'updates model attributes');
+        t.equal(con.view.model.trigger.calledWith('synced'), true,
+            'triggers "synced" event');
+
+        sand.restore();
+        t.end();
+    });
+});
+
 test('notes/form/Controller: showCancelConfirm()', t => {
     const con = new Controller({});
     sand.stub(con, 'redirect');
@@ -297,9 +330,10 @@ test('notes/form/Controller: redirect()', t => {
 });
 
 test('notes/form/Controller: preRedirect()', t => {
-    const con = new Controller({});
-    con.model = new Note();
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const con      = new Controller({});
+    con.model      = new Note();
+    const req      = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const notesReq = sand.stub(con.notesChannel, 'request').returns(Promise.resolve());
 
     t.equal(typeof con.preRedirect().then, 'function', 'returns a promise');
     t.equal(req.calledWith('components/notes', 'remove', {
@@ -310,7 +344,7 @@ test('notes/form/Controller: preRedirect()', t => {
     con.options.id       = '1';
     con.dataBeforeChange = {title: 'Test 1', content: 'Test content'};
     t.equal(typeof con.preRedirect().then, 'function', 'returns a promise');
-    t.equal(req.calledWith('collections/Notes', 'saveModel', {
+    t.equal(notesReq.calledWith('saveModel', {
         model : con.model,
         data  : con.dataBeforeChange,
     }), true, 'restores the original state of the model');

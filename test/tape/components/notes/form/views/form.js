@@ -143,8 +143,9 @@ test('notes/form/views/Form: onAfterRender()', t => {
     sand.stub(view, 'switchMode');
 
     view.onAfterRender();
-    t.equal(view.channel.trigger.calledWith('ready'), true,
-        'triggers "ready" event on the view\'s channel');
+    t.equal(view.channel.trigger.calledWith('ready', {
+        model: view.model,
+    }), true, 'triggers "ready" event on the view\'s channel');
     t.equal(view.ui.title.trigger.calledWith('focus'), true,
         'focuses on the title');
     t.equal(view.switchMode.calledWith('preview'), true,

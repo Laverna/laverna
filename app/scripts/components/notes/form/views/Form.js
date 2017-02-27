@@ -140,7 +140,7 @@ export default class Form extends Mn.View {
      * @fires this.channel#ready
      */
     onAfterRender() {
-        this.channel.trigger('ready');
+        this.channel.trigger('ready', {model: this.model});
 
         // Focus on the title
         this.ui.title.trigger('focus');

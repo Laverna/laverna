@@ -23,6 +23,10 @@ export default class Controller extends Mn.Object {
         return Radio.request('collections/Configs', 'findConfigs');
     }
 
+    get notesChannel() {
+        return Radio.channel('collections/Notes');
+    }
+
     /**
      * Fetch data and show the form.
      *
@@ -51,7 +55,7 @@ export default class Controller extends Mn.Object {
     fetch() {
         const {profileId} = this.options;
         return Promise.all([
-            Radio.request('collections/Notes', 'findModel', _.extend({
+            this.notesChannel.request('findModel', _.extend({
                 findAttachments: !_.isNull(this.options.id),
             }, this.options)),
             Radio.request('collections/Notebooks', 'find', {profileId}),
@@ -111,6 +115,9 @@ export default class Controller extends Mn.Object {
         this.listenTo(this.view, 'destroy', this.destroy);
         this.listenTo(this.view, 'save', this.save);
         this.listenTo(this.view, 'cancel', this.checkChanges);
+
+        this.listenTo(this.notesChannel, `save:object:${this.options.id}`,
+            this.onSaveObject);
     }
 
     /**
@@ -125,13 +132,15 @@ export default class Controller extends Mn.Object {
         return this.getData()
         .then(data => this.checkTitle(data))
         .then(data => {
-            return Radio.request('collections/Notes', 'saveModel', {
+            return this.notesChannel.request('saveModel', {
                 data,
                 saveTags : options.autoSave !== true,
                 model    : this.view.model,
             });
         })
         .then(() => {
+            Radio.trigger('components/notes', 'save:model', {model: this.view.model});
+
             // Redirect to the previous page if isn't auto save
             if (options.autoSave !== true) {
                 return this.redirect(false);
@@ -197,6 +206,22 @@ export default class Controller extends Mn.Object {
     }
 
     /**
+     * After a model is synchronized, refresh the model again.
+     *
+     * @fires model#synced
+     * @returns {Promise}
+     */
+    onSaveObject() {
+        return this.fetch()
+        .then(([model]) => {
+            this.view.model.htmlContent = model.htmlContent;
+            this.view.model.set(model.attributes);
+            this.view.model.trigger('synced');
+        })
+        .catch(err => log('error', err));
+    }
+
+    /**
      * Show a confirmation dialog asking a user if it is alright to
      * lose all changes.
      *
@@ -245,7 +270,7 @@ export default class Controller extends Mn.Object {
         }
 
         // Restore the original state of the note.
-        return Radio.request('collections/Notes', 'saveModel', {
+        return this.notesChannel.request('saveModel', {
             model : this.model,
             data  : this.dataBeforeChange,
         });

@@ -7,6 +7,17 @@
     </div>
 
     <div class="navbar-right header--right navbar-btn dropdown">
+        <% if (sharedBy === username) { %>
+        <a class="btn -note btn-default note--share" href="#">
+            <span class="icon-share"></span>
+            {{_.i18n('Share')}}
+        </a>
+        <% } else { %>
+        <a class="btn -note btn-default" href="#" title="{{_.i18n('Shared by')}} {{sharedBy}}">
+            <span class="icon-share"></span>
+            {{sharedBy}}
+        </a>
+        <% } %>
         <a href="#{{profileLink}}notes/edit/{{id}}" class="btn -note btn-default note--edit">
             <span class="icon-pencil"></span>
             <span class="hidden-xs">{{_.i18n('Edit')}}</span>

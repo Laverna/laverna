@@ -58,6 +58,7 @@ export default class View extends Mn.View {
 
     events() {
         return {
+            'click .note--share'    : 'showShare',
             'click .btn--favorite'  : 'toggleFavorite',
             'click @ui.tasks'       : 'toggleTask',
             'click @ui.rmBtn'       : 'triggerRemove',
@@ -107,6 +108,14 @@ export default class View extends Mn.View {
             this.options.configs.actionsRemove,
             this.options.configs.actionsRotateStar,
         ]);
+    }
+
+    /**
+     * Show share modal window.
+     */
+    showShare() {
+        Radio.request('components/share', 'show', {model: this.model});
+        return false;
     }
 
     /**
@@ -160,6 +169,7 @@ export default class View extends Mn.View {
      */
     scrollTop() {
         this.ui.body.scrollTop(this.ui.body.scrollTop() - 50);
+        return false;
     }
 
     /**
@@ -167,6 +177,7 @@ export default class View extends Mn.View {
      */
     scrollDown() {
         this.ui.body.scrollTop(this.ui.body.scrollTop() + 50);
+        return false;
     }
 
     /**
@@ -174,6 +185,7 @@ export default class View extends Mn.View {
      */
     navigateEdit() {
         Radio.request('utils/Url', 'navigate', {url: this.ui.editBtn.attr('href')});
+        return false;
     }
 
     /**
@@ -191,6 +203,7 @@ export default class View extends Mn.View {
             content     : this.model.htmlContent || this.model.get('content'),
             notebook    : (this.model.notebook || {}).attributes,
             profileLink : this.options.profileLink,
+            username    : this.options.configs.username,
         });
     }
 

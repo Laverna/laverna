@@ -78,13 +78,17 @@ test('settings/show/Controller: init()', t => {
 });
 
 test('settings/show/Controller: fetch()', t => {
-    const con = new Controller({profileId: 'test'});
-    const req = sand.stub(con.configsChannel, 'request');
+    const con    = new Controller({profileId: 'test'});
+    const req    = sand.stub(con.configsChannel, 'request');
+    const radReq = sand.stub(Radio, 'request');
 
-    const res = con.fetch();
+    const res    = con.fetch();
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(req.calledWith('find', {profileId: 'test'}), true,
         'fetches configs collection');
+
+    t.equal(radReq.calledWith('collections/Users', 'find', {profileId: 'test'}),
+        true, 'fetches users');
 
     t.equal(req.calledWith('findModel', {
         profileId : 'test',

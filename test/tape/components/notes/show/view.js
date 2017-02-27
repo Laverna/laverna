@@ -44,6 +44,8 @@ test('View: ui()', t => {
 test('View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object', 'returns an object');
+    t.equal(events['click .note--share'], 'showShare',
+        'shows share dialog');
     t.equal(events['click .btn--favorite'], 'toggleFavorite',
         'toggles favorite status if the favorite button is clicked');
     t.equal(events['click @ui.tasks'], 'toggleTask',
@@ -100,6 +102,18 @@ test('View: onBeforeDestroy()', t => {
     view.onBeforeDestroy();
     t.equal(unbind.calledWith(['up', 'down', 'e', '#', 's']), true,
         'unbinds all keybindings');
+
+    sand.restore();
+    t.end();
+});
+
+test('View: showShare()', t => {
+    const view = new View({configs, model: {id: '1'}});
+    const req  = sand.stub(Radio, 'request');
+
+    t.equal(view.showShare(), false, 'returns false');
+    t.equal(req.calledWith('components/share', 'show', {model: view.model}), true,
+        'shows share dialog');
 
     sand.restore();
     t.end();
@@ -263,8 +277,9 @@ test('View: triggerRemove()', t => {
 });
 
 test('View: serializeData()', t => {
-    const model = new Note({id: '1'});
-    const view  = new View({configs, model, profileLink: '/p/def'});
+    const model      = new Note({id: '1'});
+    configs.username = 'alice';
+    const view       = new View({configs, model, profileLink: '/p/def'});
     sand.spy(_, 'extend');
 
     t.equal(typeof view.serializeData(), 'object', 'returns an object');
@@ -272,6 +287,7 @@ test('View: serializeData()', t => {
         content     : model.get('content'),
         notebook    : undefined,
         profileLink : '/p/def',
+        username    : configs.username,
     }), true, 'contains model attributes and other parameters');
 
     view.destroy();

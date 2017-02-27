@@ -4,7 +4,8 @@
 import Mn from 'backbone.marionette';
 import _ from 'underscore';
 import Behavior from '../Behavior';
-import constants from '../../../../constants';
+// import constants from '../../../../constants';
+import Users from './Users';
 
 /**
  * Sync settings view.
@@ -30,10 +31,28 @@ export default class View extends Mn.View {
         return [Behavior];
     }
 
+    regions() {
+        return {
+            users: '#sync--users',
+        };
+    }
+
+    onRender() {
+        this.showUsers();
+    }
+
+    /**
+     * Show a list of users whom you trust.
+     */
+    showUsers() {
+        this.showChildView('users', new Users({
+            collection: this.options.users,
+        }));
+    }
+
     serializeData() {
         return {
-            models         : this.collection.getConfigs(),
-            dropboxKeyNeed : constants.dropboxKeyNeed,
+            models: this.collection.getConfigs(),
         };
     }
 

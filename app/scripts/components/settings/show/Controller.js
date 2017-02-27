@@ -105,6 +105,7 @@ export default class Controller extends Mn.Object {
 
         return Promise.all([
             this.configsChannel.request('find', {profileId}),
+            Radio.request('collections/Users', 'find', {profileId}),
             this.configsChannel.request('findModel', {
                 profileId,
                 name: 'useDefaultConfigs',
@@ -119,12 +120,12 @@ export default class Controller extends Mn.Object {
      * @param {Array}
      */
     show(results) {
-        const [collection, useDefault, profiles] = results;
+        const [collection, users, useDefault, profiles] = results;
         const TabView = this.views[_.capitalize(this.options.tab)];
 
         // Render the view
         this.view = new View(_.extend(
-            {collection, useDefault, profiles, TabView},
+            {collection, users, useDefault, profiles, TabView},
             this.options
         ));
         Radio.request('Layout', 'show', {region: 'content', view: this.view});

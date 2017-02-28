@@ -6,7 +6,6 @@ import Radio from 'backbone.radio';
 
 import About from './about/Controller';
 import Keybindings from './keybindings/Controller';
-import FirstStart from './firstStart/Controller';
 
 let controller;
 export default controller = {
@@ -17,18 +16,11 @@ export default controller = {
     init() {
         Radio.reply('components/help', {
             showAbout       : this.showAbout,
-            showFirstStart  : this.showFirstStart,
             showKeybindings : this.showKeybindings,
         }, this);
 
         // Show keybinding help if "?" key is pressed
         Radio.on('utils/Keybindings', 'appKeyboardHelp', () => this.showKeybindings());
-
-        // Add a new initializer
-        Radio.request('utils/Initializer', 'add', {
-            name    : 'App:components',
-            callback: () => this.showFirstStart(),
-        });
     },
 
     /**
@@ -36,15 +28,6 @@ export default controller = {
      */
     showAbout(...args) {
         return new About(...args).init();
-    },
-
-    /**
-     * Show first start help/guide.
-     *
-     * @returns {Promise}
-     */
-    showFirstStart(...args) {
-        return new FirstStart(...args).init();
     },
 
     /**

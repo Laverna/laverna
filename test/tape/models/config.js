@@ -39,33 +39,3 @@ test('Config: validate()', t => {
 
     t.end();
 });
-
-test('Config: isPassword()', t => {
-    const config = new Config({name: 'encryptPass'});
-    t.equal(config.isPassword({}), true, 'returns true if models name is encryptPass');
-
-    config.set('name', 'test');
-    t.equal(config.isPassword({name: 'encryptPass'}), true,
-        'returns true if data.name is equal to encryptPass');
-
-    t.equal(config.isPassword({name: 'encrypt'}), false,
-        'returns false if all checks fail');
-
-    t.end();
-});
-
-test('Config: isPasswordHash()', t => {
-    const config = new Config({name: 'encryptPass', value: [1, 2, 3]});
-
-    t.equal(config.isPasswordHash({value: '1'}), true,
-        'returns true if it is password model and it is not equal to the previous');
-
-    t.equal(config.isPasswordHash({value: [1, 2, 3]}), false,
-        'returns false if password has not changed');
-
-    config.set('name', 'no');
-    t.equal(config.isPasswordHash({value: '1'}), false,
-        'returns false if it is not password model');
-
-    t.end();
-});

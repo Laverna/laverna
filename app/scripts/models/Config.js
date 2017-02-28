@@ -47,30 +47,4 @@ export default class Config extends Model {
         return ['name'];
     }
 
-    /**
-     * Return true if it's password model.
-     *
-     * @param {Object} data
-     * @param {String} data.name
-     * @returns {Boolean}
-     */
-    isPassword(data) {
-        return this.get('name') === 'encryptPass' || data.name === 'encryptPass';
-    }
-
-    /**
-     * Return true if the password isn't hashed.
-     *
-     * @param {Object} data
-     * @param {String} data.name
-     * @param {String} data.value
-     * @returns {Boolean}
-     */
-    isPasswordHash(data) {
-        return (
-            this.isPassword(data) &&
-            !_.isArray(data.value) && data.value !== this.get('value').toString()
-        );
-    }
-
 }

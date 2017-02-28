@@ -12,7 +12,7 @@ module.exports = (gulp, $) => {
             open      : !$.util.env.dev,
             server    : $.util.env.root || 'dist',
             port      : $.util.env.port || 9000,
-            ghostMode : $.util.env.dev || false,
+            ghostMode : $.util.env.ghostMode !== undefined,
         });
 
         // Watch for changes in SASS and HTML

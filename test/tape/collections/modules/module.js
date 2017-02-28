@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import ModuleObj from '../../../../app/scripts/collections/modules/Module';
 import Notes from '../../../../app/scripts/collections/Notes';
+import Edit from '../../../../app/scripts/models/Edit';
 import _ from '../../../../app/scripts/utils/underscore';
 
 class Module extends ModuleObj {
@@ -425,8 +426,17 @@ test('Module: encryptModel()', t => {
 
     mod.isEncryptEnabled.returns(true);
     mod.encryptModel(model);
-    t.equal(req.calledWith('models/Encryption', 'encryptModel', {model}), true,
-        'encrypts the model');
+    t.equal(req.calledWith('models/Encryption', 'encryptModel', {
+        model,
+        username: undefined,
+    }), true, 'encrypts the model');
+
+    const model2 = new Edit({id: '2', username: 'alice'});
+    mod.encryptModel(model2);
+    t.equal(req.calledWith('models/Encryption', 'encryptModel', {
+        model    : model2,
+        username : 'alice',
+    }), true, 'encrypts "edit" model with another user\'s public key');
 
     mod.channel.stopReplying();
     sand.restore();

@@ -363,7 +363,14 @@ export default class Module {
             return Promise.resolve(model);
         }
 
-        return Radio.request('models/Encryption', 'encryptModel', {model});
+        let username;
+
+        // Encrypt "Edit" model with another user's public key
+        if (model.storeName === 'edits') {
+            username = model.get('username');
+        }
+
+        return Radio.request('models/Encryption', 'encryptModel', {model, username});
     }
 
 }

@@ -5,10 +5,13 @@
 import Radio from 'backbone.radio';
 
 import Configs from './Configs';
+import Users from './Users';
 import Files from './Files';
 import Notebooks from './Notebooks';
 import Notes from './Notes';
 import Tags from './Tags';
+import Shadows from './Shadows';
+import Edits from './Edits';
 
 /**
  * Instantiate all collection modules
@@ -18,10 +21,13 @@ import Tags from './Tags';
 function initializer() {
     // Instantiate all collection modules to start listening to requests
     new Configs();
+    new Users();
     new Files();
     new Notebooks();
     new Notes();
     new Tags();
+    new Shadows();
+    new Edits();
 
     // Find or create configs
     return Radio.request('collections/Configs', 'find', {

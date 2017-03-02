@@ -9,7 +9,7 @@ const webpack = require('webpack'),
     config    = require('./webpack.config');
 
 // Disable source maps
-config.devtool = null;
+config.devtool = false;
 
 config.plugins = config.plugins.concat([
 

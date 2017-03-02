@@ -1,6 +1,7 @@
 'use strict';
 
 const webpackStream = require('webpack-stream');
+const webpack       = require('webpack');
 
 /**
  * @file Bundle JS files.
@@ -24,7 +25,7 @@ module.exports = (gulp, $) => {
         }
 
         return gulp.src('app/scripts/main.js')
-        .pipe(webpackStream(webpackConfig, null, () => {
+        .pipe(webpackStream(webpackConfig, webpack, () => {
             $.browserSync.stream();
 
             if (!called && !isBuild) {

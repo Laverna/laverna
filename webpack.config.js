@@ -11,17 +11,16 @@ const path  = require('path'),
 
 module.exports = {
     devtool: 'source-map',
-    debug  : true,
 
     entry: {
-        app    : path.join(__dirname, './app/scripts/main.js'),
+        main   : path.join(__dirname, './app/scripts/main.js'),
         vendor : Object.keys(pkg.dependencies),
     },
 
     output: {
-        path       : '/scripts/',
-        publicPath : '/scripts/',
-        filename   : 'main.js',
+        path       : path.join(__dirname, './dist/scripts/'),
+        publicPath : 'scripts/',
+        filename   : '[name].js',
     },
 
     resolve: {
@@ -31,7 +30,7 @@ module.exports = {
     },
 
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
+        new webpack.optimize.CommonsChunkPlugin({names: ['vendor']}),
 
         new webpack.ProvidePlugin({
             _               : 'underscore',
@@ -43,37 +42,33 @@ module.exports = {
     ],
 
     module: {
-        loaders: [
+        rules: [
             // WebWorkers
             {
                 test: /worker\.js$/,
-                loader: 'worker',
+                loader: 'worker-loader',
             },
 
             // Babel
             {
                 test    : /\.js?$/,
                 exclude : /(node_modules|bower_components)/,
-                loader  : 'babel',
-                query   : pkg.babel,
+                loader  : 'babel-loader',
+                query   : {
+                    presets: [['es2015', {modules: false}]],
+                },
             },
 
             // Modernizr
             {
                 test: /\.modernizrrc$/,
-                loader: 'modernizr',
+                loader: 'modernizr-loader!json-loader',
             },
 
             // Templates
             {
                 test:  /\.html$/,
                 loader: 'raw-loader',
-            },
-
-            // JSON
-            {
-                test: /\.json$/,
-                loader: 'json',
             },
         ],
     },

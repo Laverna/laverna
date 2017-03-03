@@ -56,11 +56,13 @@ const configNames = {
      * Synchronization settings.
      *
      * @prop {String} username - username claimed on the signaling server
+     * @prop {String} deviceId - unique device ID
      * @prop {String} cloudStorage - (dropbox|remotestorage)
      * @prop {String} dropboxKey - dropbox app key
      */
     sync: {
         username           : '',
+        deviceId           : '',
         cloudStorage       : '0',
         dropboxKey         : '',
     },

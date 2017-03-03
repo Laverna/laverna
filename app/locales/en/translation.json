@@ -125,6 +125,9 @@
 	"Vim": "Vim",
 	"Emacs": "Emacs",
 	"Sublime": "Sublime",
+	"Confirm you want to add the user to trust": "Are you sure you want to add user **{{username}}** with key fingerprint **{{fingerprint}}** to trusted users?",
+	"Confirm you want to reject the invite": "Are you sure you want to reject **{{username}}'s** invite?",
+	"Confirm you want to remove the user from trust": "Are you sure you want to remove **{{username}}** from trust?",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

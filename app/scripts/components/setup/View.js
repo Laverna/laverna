@@ -1,8 +1,13 @@
 /**
- * @module components/help/firstStart/View
+ * @module components/setup/View
  */
 import Mn from 'backbone.marionette';
 import _ from 'underscore';
+
+// Content views
+import Username from './username/View';
+import Register from './register/View';
+import Export   from './export/View';
 
 /**
  * First start help view.
@@ -19,99 +24,93 @@ export default class View extends Mn.View {
     }
 
     get className() {
-        return 'modal fade';
+        return 'container text-center -auth';
     }
 
-    ui() {
+    regions() {
         return {
-            page         : '#welcome--page',
-            settings     : '#welcome--settings',
-            wait         : '#welcome--wait',
-            password     : 'input[name="password"]',
-            passwordRe   : 'input[name="passwordRe"]',
-            email        : 'input[name=email]',
-            name         : 'input[name=name]',
-            saveBtn      : '#welcome--save',
+            content: '#welcome--content',
         };
     }
 
+    /**
+     * 1. Trigger "import" if the button is clicked.
+     * 2. Trigger "export" if the last button is clicked.
+     *
+     * @prop {Object}
+     */
     triggers() {
         return {
             'click #welcome--import' : 'import',
-            'click @ui.saveBtn'      : 'save',
-            'click #welcome--export' : 'download',
+            'click #welcome--last'   : 'export',
         };
     }
 
     events() {
         return {
-            'keyup @ui.email'            : 'onInputChange',
-            'keyup input[type=password]' : 'onInputChange',
-            'click #welcome--previous'   : 'onPrevious',
-            'click #welcome--next'       : 'onNext',
-            'click #welcome--last'       : 'destroy',
+            'click .btn--import'   : 'clickInput',
+            'change #import--data' : 'checkFile',
+        };
+    }
+
+    childViewEvents() {
+        return {
+            'show:username': 'showUsername',
         };
     }
 
     /**
-     * Check if email is empty.
+     * Show "username" view.
      */
-    onInputChange() {
-        this.checkForm();
+    onRender() {
+        this.showUsername();
     }
 
     /**
-     * Check if email and password are provided.
+     * Show the view that checks if a username exists.
      */
-    checkForm() {
-        if (this.ui.email.val().trim().length && this.checkPassword()) {
-            this.ui.saveBtn.removeAttr('disabled');
-        }
-        else {
-            this.ui.saveBtn.attr('disabled', true);
-        }
+    showUsername() {
+        this.showChildView('content', new Username());
     }
 
     /**
-     * Return true if password is not empty.
+     * Show the view where a user can enter their passphrase or
+     * upload their key pair to register a new account.
+     */
+    showRegister(data = {}) {
+        this.showChildView('content', new Register(data));
+    }
+
+    /**
+     * Click on file input to show a dialog where a user
+     * can choose their key pair.
      *
-     * @returns {Boolean}
+     * @param {Object} e
      */
-    checkPassword() {
-        const password = this.ui.password.val().trim();
-        return password === this.ui.passwordRe.val() && password.length !== 0;
+    clickInput(e) {
+        const id = this.$(e.currentTarget).attr('data-file');
+        this.$(id).click();
     }
 
     /**
-     * Show the first page and hide settings page.
+     * If a file is selected, trigger read:key event.
+     *
+     * @param {Object} e
      */
-    onPrevious() {
-        this.ui.page.removeClass('hidden');
-        this.ui.settings.addClass('hidden');
+    checkFile(e) {
+        const {files} = e.target;
+        if (files.length) {
+            this.trigger('read:key', {file: files[0]});
+        }
     }
 
     /**
-     * Show settings page after a user clicks on "next" button.
+     * Warn a user that they need to keep their private key in a safe place.
+     *
+     * @param {Object} data
      */
-    onNext() {
-        this.ui.page.addClass('hidden');
-        this.ui.settings.removeClass('hidden');
-    }
-
-    /**
-     * After saving settings, show backup buttons.
-     */
-    onSaveBefore() {
-        this.ui.settings.addClass('hidden');
-        this.ui.wait.removeClass('hidden');
-    }
-
-    /**
-     * After saving settings, show backup buttons.
-     */
-    onSaveAfter() {
-        this.ui.wait.addClass('hidden');
-        this.$('#welcome--backup').removeClass('hidden');
+    onSaveAfter(data) {
+        this.showChildView('content', new Export(data));
     }
 
 }

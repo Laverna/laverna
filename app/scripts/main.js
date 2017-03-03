@@ -34,6 +34,7 @@ import './components/fileDialog/main';
 import './components/fuzzySearch/main';
 import './components/electronSearch/Controller';
 import './components/importExport/main';
+import './components/setup/main';
 import './components/encryption/main';
 
 // Router based components

@@ -35,6 +35,7 @@ test('Configs: constructor()', t => {
         createProfile       : mod.createProfile,
         removeProfile       : mod.removeProfile,
         changePassphrase    : mod.changePassphrase,
+        createDeviceId      : mod.createDeviceId,
     }, mod), true, 'replies to requests');
 
     sand.restore();
@@ -381,6 +382,25 @@ test('Configs: changePassphrase() - success', t => {
 
         sand.restore();
         mod.channel.stopReplying();
+        t.end();
+    });
+});
+
+test('Configs: createDeviceId()', t => {
+    const mod = new Module();
+    const req = sand.stub(Radio, 'request').returns(Promise.resolve('rand'));
+    sand.stub(mod, 'saveConfig');
+
+    mod.createDeviceId()
+    .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'random', {number: 6}), true,
+            'generates random string');
+
+        t.equal(mod.saveConfig.calledWith({
+            config: {name: 'deviceId', value: 'rand'},
+        }), true, 'saves the device ID');
+
+        sand.restore();
         t.end();
     });
 });

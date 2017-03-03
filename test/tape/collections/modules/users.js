@@ -14,6 +14,7 @@ import User  from '../../../../app/scripts/models/User';
 
 let sand;
 test('collections/modules/Users: before()', t => {
+    Radio.channel('models/Signal').stopReplying();
     sand = sinon.sandbox.create();
     t.end();
 });

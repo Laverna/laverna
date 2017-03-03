@@ -1,7 +1,6 @@
 /**
  * @module models/Config
  */
-import _ from 'underscore';
 import Model from './Model';
 
 /**

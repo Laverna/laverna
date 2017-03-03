@@ -3,7 +3,6 @@
  */
 import DiffCollection from './DiffCollection';
 import Edit from '../models/Edit';
-import Radio from 'backbone.radio';
 
 /**
  * Edits collection.

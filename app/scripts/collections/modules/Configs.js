@@ -48,6 +48,7 @@ export default class Configs extends Module {
             createProfile       : this.createProfile,
             removeProfile       : this.removeProfile,
             changePassphrase    : this.changePassphrase,
+            createDeviceId      : this.createDeviceId,
         }, this);
     }
 
@@ -305,6 +306,18 @@ export default class Configs extends Module {
         const {model} = options;
         return Radio.request('models/Encryption', 'changePassphrase', options)
         .then(value => this.saveModel({model, data: {value}}));
+    }
+
+    /**
+     * Generate the device ID.
+     *
+     * @returns {Promise}
+     */
+    createDeviceId() {
+        return Radio.request('models/Encryption', 'random', {number: 6})
+        .then(rand => {
+            return this.saveConfig({config: {name: 'deviceId', value: rand}});
+        });
     }
 
 }

@@ -23,6 +23,8 @@ import './utils/Keybindings';
 // Collections
 import './collections/modules/main';
 
+import './models/Signal';
+
 // Components
 import './components/confirm/Controller';
 import './components/navbar/Controller';
@@ -34,6 +36,7 @@ import './components/fileDialog/main';
 import './components/fuzzySearch/main';
 import './components/electronSearch/Controller';
 import './components/importExport/main';
+import './components/share/Controller';
 import './components/setup/main';
 import './components/encryption/main';
 

@@ -5,7 +5,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import '../../../../app/scripts/utils/underscore';
+import _ from '../../../../app/scripts/utils/underscore';
 import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
 import Configs from '../../../../app/scripts/collections/Configs';
 import Module from '../../../../app/scripts/collections/modules/Configs';
@@ -36,6 +36,7 @@ test('Configs: constructor()', t => {
         removeProfile       : mod.removeProfile,
         changePassphrase    : mod.changePassphrase,
         createDeviceId      : mod.createDeviceId,
+        updatePeer          : mod.updatePeer,
     }, mod), true, 'replies to requests');
 
     sand.restore();
@@ -399,6 +400,40 @@ test('Configs: createDeviceId()', t => {
         t.equal(mod.saveConfig.calledWith({
             config: {name: 'deviceId', value: 'rand'},
         }), true, 'saves the device ID');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('Configs: updatePeer()', t => {
+    const mod      = new Module();
+    const lastSeen = Date.now();
+    const model    = new Configs.prototype.model({
+        value: [{lastSeen, username: 'bob', deviceId: '2'}],
+    });
+    sand.stub(mod, 'findModel').returns(Promise.resolve(model));
+    sand.stub(mod, 'saveModel');
+
+    mod.updatePeer({username: null, deviceId: null});
+    t.equal(mod.findModel.notCalled, true,
+        'does nothing if username and deviceId are empty');
+
+    const res = mod.updatePeer({username: 'bob', deviceId: '1'});
+    t.equal(mod.findModel.calledWith({name: 'peers'}), true,
+        'fetches "peers" configs');
+
+    res.then(() => {
+        const peer = _.findWhere(model.get('value'), {username: 'bob', deviceId: '1'});
+        t.notEqual(peer, undefined, 'adds a new peer');
+
+        return mod.updatePeer({username: 'bob', deviceId: '2'});
+    })
+    .then(() => {
+        const peer = _.findWhere(model.get('value'), {username: 'bob', deviceId: '2'});
+        t.notEqual(lastSeen, peer.lastSeen, 'updates "lastSeen" date');
+
+        t.equal(mod.saveModel.calledWithMatch({model}), true, 'saves the changes');
 
         sand.restore();
         t.end();

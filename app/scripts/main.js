@@ -24,6 +24,7 @@ import './utils/Keybindings';
 import './collections/modules/main';
 
 import './models/Signal';
+import './models/Peer';
 
 // Components
 import './components/confirm/Controller';

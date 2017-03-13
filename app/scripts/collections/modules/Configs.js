@@ -49,6 +49,7 @@ export default class Configs extends Module {
             removeProfile       : this.removeProfile,
             changePassphrase    : this.changePassphrase,
             createDeviceId      : this.createDeviceId,
+            updatePeer          : this.updatePeer,
         }, this);
     }
 
@@ -317,6 +318,35 @@ export default class Configs extends Module {
         return Radio.request('models/Encryption', 'random', {number: 6})
         .then(rand => {
             return this.saveConfig({config: {name: 'deviceId', value: rand}});
+        });
+    }
+
+    /**
+     * Add a new peer to the array of peers or update the date when
+     * they connected the last time.
+     *
+     * @param {String} username
+     * @param {String} deviceId
+     * @returns {Promise}
+     */
+    updatePeer({username, deviceId}) {
+        if (!username || !deviceId) {
+            return Promise.resolve();
+        }
+
+        return this.findModel({name: 'peers'})
+        .then(model => {
+            const value = model.get('value');
+            const peer  = _.findWhere(value, {username, deviceId});
+
+            if (peer) {
+                peer.lastSeen = Date.now();
+            }
+            else {
+                value.push({username, deviceId, lastSeen: Date.now()});
+            }
+
+            return this.saveModel({model, data: {value}});
         });
     }
 

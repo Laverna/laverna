@@ -57,12 +57,15 @@ const configNames = {
      *
      * @prop {String} username - username claimed on the signaling server
      * @prop {String} deviceId - unique device ID
+     * @prop {Array}  peers    - an array of peers. Every item in the array
+     * has the following structure {username, deviceId, lastSeen}
      * @prop {String} cloudStorage - (dropbox|remotestorage)
      * @prop {String} dropboxKey - dropbox app key
      */
     sync: {
         username           : '',
         deviceId           : '',
+        peers              : [],
         cloudStorage       : '0',
         dropboxKey         : '',
     },

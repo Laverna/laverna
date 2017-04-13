@@ -29,8 +29,9 @@ export default class Files extends Module {
         super();
 
         this.channel.reply({
-            findFiles : this.findFiles,
-            addFiles : this.addFiles,
+            findFiles  : this.findFiles,
+            addFiles   : this.addFiles,
+            createUrls : this.createUrls,
         }, this);
     }
 
@@ -55,22 +56,6 @@ export default class Files extends Module {
     }
 
     /**
-     * Save a file model. It overrides the parent method
-     * to convert "src" property to blob.
-     *
-     * @param {Object} options
-     * @param {Object} options.model - a file model
-     * @param {Object} (options.data)
-     * @returns {Promise}
-     */
-    saveModel(options) {
-        const data = options.data || options.model.attributes;
-        data.src   = toBlob(data.src);
-
-        return super.saveModel(_.extend(options, {data}));
-    }
-
-    /**
      * Save several files.
      *
      * @param {Object} options
@@ -90,6 +75,24 @@ export default class Files extends Module {
         });
 
         return Promise.all(promises).then(() => models);
+    }
+
+    /**
+     * Create object URLs.
+     *
+     * @param {Array} models
+     * @returns {Array}
+     */
+    createUrls({models}) {
+        const url = (URL || window.webkitURL);
+
+        return _.map(models, model => {
+            const src = toBlob(model.get('src'));
+            return {
+                id  : model.id,
+                url : url.createObjectURL(src),
+            };
+        });
     }
 
 }

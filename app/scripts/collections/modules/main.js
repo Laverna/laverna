@@ -42,3 +42,5 @@ Radio.once('App', 'init', () => {
         callback: initializer,
     });
 });
+
+export default initializer;

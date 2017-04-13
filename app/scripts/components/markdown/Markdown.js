@@ -2,6 +2,7 @@
  * @module components/markdown/Markdown
  */
 import _ from 'underscore';
+import Radio from 'backbone.radio';
 import MarkdownIt from 'markdown-it';
 import WorkerModule from '../../workers/Module';
 
@@ -67,14 +68,19 @@ export default class Markdown extends WorkerModule {
     }
 
     processRequest(method, args) {
-        const [data] = args;
+        const data = _.omit(args[0], 'notebook');
 
         // Do nothing if content is empty
         if (!data.content || !data.content.length) {
             return Promise.resolve('');
         }
 
-        data.clonedFiles = _.pluck(data.fileModels || [], 'attributes');
+        // Create object URLs for attachments
+        data.clonedFiles = Radio.request('collections/Files', 'createUrls', {
+            models: data.fileModels,
+        });
+        data.fileModels  = null;
+
         return super.processRequest(method, [data]);
     }
 

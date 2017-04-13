@@ -4,7 +4,6 @@
  * @module components/markdown/file
  */
 /* eslint no-param-reassign: 0 */
-/* global webkitURL */
 import _ from 'underscore';
 
 /**
@@ -114,13 +113,9 @@ const file = {
             return;
         }
 
-        // Generate a new link only if it wasn't generated before
-        let url = this.urls[file.id];
-        url     = url || (URL || webkitURL).createObjectURL(file.src);
-
         // Save the file URL
-        this.urls[file.id] = url;
-        attr[1] = url;
+        this.urls[file.id] = file.url;
+        attr[1] = file.url;
     },
 
     /**

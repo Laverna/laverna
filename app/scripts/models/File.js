@@ -55,4 +55,11 @@ export default class File extends Model {
         return ['name'];
     }
 
+    /**
+     * @todo implement a proper check
+     */
+    isSharedWith() {
+        return true;
+    }
+
 }

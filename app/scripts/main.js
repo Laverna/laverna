@@ -25,6 +25,7 @@ import './collections/modules/main';
 
 import './models/Signal';
 import './models/Peer';
+import './models/diffsync/Core';
 
 // Components
 import './components/confirm/Controller';

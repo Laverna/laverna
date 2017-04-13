@@ -184,7 +184,12 @@ export default class Module {
     saveModel(options) {
         const {model} = options;
         const data    = options.data  || model.attributes;
-        data.sharedBy = data.sharedBy || this.configs.username;
+
+        // Assume the model belongs to the user
+        if (!data.sharedBy && !model.get('sharedBy')) {
+            data.sharedBy = this.configs.username;
+        }
+
         model.setEscape(data);
         const errors  = model.validate(model.attributes);
 

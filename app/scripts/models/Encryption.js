@@ -249,7 +249,7 @@ export default class Encryption {
     verify(options) {
         const message = this.openpgp.cleartext.readArmored(options.message);
         const keys    = options.publicKeys || this.getUserKeys(options.username);
-        return this.openpgp.verify({message, publicKeys: keys.publicKeys});
+        return this.openpgp.verify({message, publicKeys: keys.publicKeys || keys});
     }
 
     /**

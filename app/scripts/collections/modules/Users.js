@@ -34,10 +34,11 @@ export default class Users extends Module {
 
         // Add new replies
         this.channel.reply({
-            acceptInvite : this.acceptInvite,
-            rejectInvite : this.rejectInvite,
-            invite       : this.invite,
-            saveInvite   : this.saveInvite,
+            acceptInvite    : this.acceptInvite,
+            acceptIfPending : this.acceptIfPending,
+            rejectInvite    : this.rejectInvite,
+            invite          : this.invite,
+            saveInvite      : this.saveInvite,
         }, this);
     }
 
@@ -48,6 +49,14 @@ export default class Users extends Module {
 
         return super.find(...args)
         .then(() => this.collection);
+    }
+
+    saveModel({model, data}) {
+        return super.saveModel({model, data})
+        .then(() => {
+            Radio.request('models/Encryption', 'readUserKey', {model});
+            return model;
+        });
     }
 
     /**
@@ -79,7 +88,25 @@ export default class Users extends Module {
     acceptInvite({model}) {
         this.removeServerInvite(model);
         const data = {pendingAccept: false, pendingInvite: false};
-        return this.saveModel({model, data});
+
+        return this.saveModel({model, data})
+        .then(() => {
+            Radio.request('models/Peer', 'sendOfferTo', {user: model.attributes});
+        });
+    }
+
+    /**
+     * Mark an invite that you sent as accepted.
+     *
+     * @param {String} {username}
+     */
+    acceptIfPending({username}) {
+        return this.findModel({username})
+        .then(model => {
+            if (model.get('pendingInvite')) {
+                return this.acceptInvite({model});
+            }
+        });
     }
 
     /**

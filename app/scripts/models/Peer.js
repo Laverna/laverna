@@ -4,7 +4,7 @@
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 import SimplePeer from 'simple-peer';
-import isBuffer from 'is-buffer';
+// import isBuffer from 'is-buffer';
 import deb from 'debug';
 import {Buffer} from 'buffer';
 
@@ -65,8 +65,9 @@ export default class Peer {
 
         // Reply to requests
         this.channel.reply({
-            send  : this.send,
-            peers : this.peers,
+            send        : this.send,
+            sendOfferTo : this.sendOfferTo,
+            peers       : this.peers,
         }, this);
     }
 
@@ -107,9 +108,6 @@ export default class Peer {
      */
     onSignalConnect({socket}) {
         this.socket = socket;
-        const users = _.pluck(_.pluck(this.users.getActive(), 'attributes'), 'username');
-        users.push(this.configs.username);
-        log('sending offers to', users);
 
         _.bindAll(this, 'onReconnect', 'onRequestOffer', 'onOffer', 'onSignal');
 
@@ -122,15 +120,35 @@ export default class Peer {
         this.socket.on('signal', this.onSignal);
 
         // Tell the signaling server to send offers to peers
+        this.sendOffers();
+    }
+
+    /**
+     * Send peer connection offers to other users.
+     */
+    sendOffers() {
+        const users = _.pluck(_.pluck(this.users.getActive(), 'attributes'), 'username');
+        users.push(this.configs.username);
+
+        log('sending offers to', users);
         this.socket.emit('requestOffers', {users});
     }
 
     /**
+     * Send an offer to a specific user.
+     *
+     * @param {Object} {user}
+     */
+    sendOfferTo({user}) {
+        this.socket.emit('requestOffers', {users: [user]});
+    }
+
+    /**
      * Reconnected to the signaling server.
-     * @todo authenticate on the signaling server again
      */
     onReconnect() {
         log('reconnect');
+        this.sendOffers();
     }
 
     /**
@@ -194,7 +212,7 @@ export default class Peer {
      * @param {String} user.username - the user who wants to establish connection
      * @param {String} user.deviceId
      */
-    onRequestOffer(user) {
+    onRequestOffer(user) {// eslint-disable-line
         log('an offer', user);
         const peer = this.getPeer(user);
 
@@ -242,7 +260,7 @@ export default class Peer {
             username,
             deviceId,
             initiator,
-            instance: new SimplePeer({initiator}),
+            instance: new SimplePeer({initiator, trickle: false}),
         };
 
         log(`connecting to a new peer ${username}/${deviceId}`);
@@ -258,11 +276,29 @@ export default class Peer {
     listenToPeer(peer) {
         peer.instance.on('error', err => log('peer error', err));
 
+        peer.instance.on('close', () => this.onPeerClose(peer));
+
         peer.instance.on('signal', signal => this.sendSignal({signal, peer}));
 
         peer.instance.on('connect', () => this.onConnect({peer}));
 
         peer.instance.on('data', data => this.onData({peer, data}));
+    }
+
+    /**
+     * Try to re-connect to a peer after connection loss.
+     *
+     * @param {Object} peer
+     */
+    onPeerClose(peer) {
+        // Do nothing if the socket connection is lost too
+        if (this.socket.disconnected === true) {
+            return;
+        }
+
+        log(`connection with @${peer.username} was dropped, reconnecting...`);
+        const user = _.pick(peer, 'username', 'deviceId');
+        this.sendOfferTo({user});
     }
 
     /**
@@ -340,6 +376,7 @@ export default class Peer {
     onConnect({peer}) {
         log('connected to a peer', peer);
         Radio.request('collections/Configs', 'updatePeer', peer);
+        Radio.request('collections/Users', 'acceptIfPending', peer);
         this.channel.trigger('connected', {peer});
     }
 
@@ -411,7 +448,8 @@ export default class Peer {
         const res = this.readBuffer(data);
 
         if (!res) {
-            return log('buffdata is not ready yet');
+            // log('buffdata is not ready yet');
+            return;
         }
 
         const obj = JSON.parse(res);

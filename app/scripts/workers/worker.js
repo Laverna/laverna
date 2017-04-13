@@ -41,7 +41,7 @@ const delegator = {
      */
     postResponse(promiseId, data, action) {
         const sdata = {data, promiseId, action};
-        log('posting response', data);
+        log(`${action} the promise`);
         self.postMessage(sdata);
     },
 
@@ -77,7 +77,7 @@ const delegator = {
  */
 function onMessage(evt) {
     const msg = evt.data;
-    log('received a message from the main thread', msg);
+    log(`${msg.action}: ${msg.data.file}.${msg.data.method}()`, msg.data.args);
 
     switch (msg.action) {
         case 'execute':

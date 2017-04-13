@@ -135,8 +135,8 @@ test('Worker: onMessage()', t => {
 test('Worker: onMessage() - unhandled message', t => {
     const stub = sand.stub(delegator, 'execute');
 
-    onMessage({data: {}});
-    t.equal(stub.notCalled, true, 'does nothing if action');
+    onMessage({data: {data: {}}});
+    t.equal(stub.notCalled, true, 'does nothing if action is undefined');
 
     sand.restore();
     t.end();
@@ -145,7 +145,7 @@ test('Worker: onMessage() - unhandled message', t => {
 test('Worker: message listener', t => {
     const stub = sand.stub(delegator, 'execute');
 
-    listeners.message({data: {action: 'execute'}});
+    listeners.message({data: {action: 'execute', data: {}}});
     t.equal(stub.called, true, 'handles "message" events');
 
     sand.restore();

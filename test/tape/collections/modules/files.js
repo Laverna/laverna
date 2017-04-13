@@ -14,28 +14,31 @@ const Module  = proxyquire('../../../../app/scripts/collections/modules/Files', 
 }).default;
 
 let sand;
-test('Files: before()', t => {
+test('collections/modules/Files: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Files: Collection', t => {
+test('collections/modules/Files: Collection', t => {
     t.equal(Module.prototype.Collection, Files, 'uses files collection');
     t.end();
 });
 
-test('Files: constructor()', t => {
+test('collections/modules/Files: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
-    t.equal(reply.calledWith({findFiles: mod.findFiles, addFiles: mod.addFiles}), true,
-        'replies to getFiles and addFiles request');
+    t.equal(reply.calledWith({
+        findFiles  : mod.findFiles,
+        addFiles   : mod.addFiles,
+        createUrls : mod.createUrls,
+    }), true, 'replies to additional requests');
 
     sand.restore();
     t.end();
 });
 
-test('Files: findFiles()', t => {
+test('collections/modules/Files: findFiles()', t => {
     const mod  = new Module();
     const find = sand.stub(mod, 'findModel').returns({id: '1'});
 
@@ -56,22 +59,7 @@ test('Files: findFiles()', t => {
     });
 });
 
-test('Files: saveModel()', t => {
-    const mod   = new Module();
-    const model = new mod.Model({id: 'test', src: 'file-src'});
-    const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
-
-    mod.saveModel({model});
-    t.equal(toBlob.calledWith('file-src'), true, 'converts "src" property to blob');
-    t.equal(save.calledWithMatch({model, data: {src: 'blob'}}), true,
-        'saves the model');
-
-    mod.channel.stopReplying();
-    sand.restore();
-    t.end();
-});
-
-test('Files: addFiles()', t => {
+test('collections/modules/Files: addFiles()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel').returns(Promise.resolve());
 
@@ -89,4 +77,20 @@ test('Files: addFiles()', t => {
         sand.restore();
         t.end();
     });
+});
+
+test('collections/modules/Files: createUrls()', t => {
+    const mod   = new Module();
+    global.URL  = {createObjectURL: src => `${src}/url`};
+    const files = new Files([
+        {id: '1', src: 'src1'},
+        {id: '2', src: 'src2'},
+    ]);
+
+    const urls = mod.createUrls({models: files.models});
+    t.equal(Array.isArray(urls), true, 'returns an array');
+    t.deepEqual(urls[0], {id: '1', url: 'blob/url'}, 'contains the first models URL');
+    t.deepEqual(urls[1], {id: '2', url: 'blob/url'}, 'contains the first models URL');
+
+    t.end();
 });

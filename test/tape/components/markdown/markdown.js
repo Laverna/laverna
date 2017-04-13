@@ -3,6 +3,7 @@
  * @file
  */
 import test from 'tape';
+import Radio from 'backbone.radio';
 import sinon from 'sinon';
 import Markdown from '../../../../app/scripts/components/markdown/Markdown';
 import Module from '../../../../app/scripts/workers/Module';
@@ -40,12 +41,19 @@ test('markdown/Markdown: constructor()', t => {
 
 test('markdown/Markdown: processRequest()', t => {
     const process = sand.stub(Module.prototype, 'processRequest');
-    const md = new Markdown();
+    const md      = new Markdown();
+    const req     = sand.stub(Radio, 'request').returns('files');
 
     md.processRequest('', [{content: ''}]);
     t.equal(process.notCalled, true, 'does nothing if content is empty');
 
-    md.processRequest('', [{content: 'test'}]);
+    const data    = {content: 'test', fileModels: ['1', '2']};
+    md.processRequest('', [data]);
+
+    t.equal(req.calledWithMatch('collections/Files', 'createUrls', {
+        models: data.fileModels,
+    }), true, 'creates object URLs for files');
+
     t.equal(process.called, true, 'calls the parent processRequest method');
 
     sand.restore();

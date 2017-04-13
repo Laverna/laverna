@@ -105,20 +105,17 @@ test('markdown/file: getAttrName()', t => {
 });
 
 test('markdown/file: create()', t => {
-    const model = {id: '1', src: 'src'};
+    const model = {id: '1', url: 'blob://url'};
     const env   = {
         clonedFiles: [model],
     };
 
-    global.URL = {createObjectURL: sand.stub().returns('file-url')};
-
     file.create({}, '2', env);
-    t.equal(URL.createObjectURL.notCalled, true,
+    t.equal(file.urls['2'], undefined,
         'does nothing if the model does not exist');
 
     file.create({}, '1', env);
-    t.equal(URL.createObjectURL.calledWith(model.src), true, 'creates a new object URL');
-    t.equal(file.urls[model.id], 'file-url', 'saves the object URL');
+    t.equal(file.urls[model.id], 'blob://url', 'saves the object URL');
 
     global.URL = null;
     file.urls  = {};

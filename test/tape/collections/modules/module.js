@@ -198,6 +198,13 @@ test('Module: saveModel()', t => {
         t.equal(mod.onSaveModel.calledWith(model), true,
             'calls "onSaveModel" method after saving');
 
+        model.set('sharedBy', 'alice');
+        return mod.saveModel({model, data: {title: 'Test'}});
+    })
+    .then(() => {
+        t.equal(model.get('sharedBy'), 'alice',
+            'does not change "sharedBy" attribute');
+
         mod.channel.stopReplying();
         sand.restore();
         t.end();

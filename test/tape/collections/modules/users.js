@@ -29,10 +29,11 @@ test('collections/modules/Users: constructor()', t => {
     const mod = new Module();
 
     t.equal(reply.calledWith({
-        acceptInvite : mod.acceptInvite,
-        rejectInvite : mod.rejectInvite,
-        invite       : mod.invite,
-        saveInvite   : mod.saveInvite,
+        acceptInvite    : mod.acceptInvite,
+        acceptIfPending : mod.acceptIfPending,
+        rejectInvite    : mod.rejectInvite,
+        invite          : mod.invite,
+        saveInvite      : mod.saveInvite,
     }), true, 'replies to additional requests');
 
     sand.restore();
@@ -56,6 +57,21 @@ test('collections/modules/Users: find()', t => {
     t.end();
 });
 
+test('collections/modules/Users: saveModel()', t => {
+    const mod  = new Module();
+    const req  = sand.stub(Radio, 'request');
+    const save = sand.stub(ModuleOrig.prototype, 'saveModel').returns(Promise.resolve());
+
+    mod.saveModel({})
+    .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'readUserKey'), true,
+            'adds a users key to the array of public keys');
+
+        sand.restore();
+        t.end();
+    });
+});
+
 test('collections/modules/Users: remove()', t => {
     const mod      = new Module();
     const model    = new User({username: 'bob'});
@@ -76,6 +92,7 @@ test('collections/modules/Users: remove()', t => {
 test('collections/modules/Users: acceptInvite()', t => {
     const mod   = new Module();
     const model = new User({username: 'bob', pendingAccept: true, pendingInvite: true});
+    const req   = sand.stub(Radio, 'request');
     sand.stub(mod, 'saveModel').returns(Promise.resolve());
 
     mod.acceptInvite({model})
@@ -84,6 +101,33 @@ test('collections/modules/Users: acceptInvite()', t => {
             model,
             data: {pendingAccept: false, pendingInvite: false},
         }), true, 'marks the user as trusted');
+
+        t.equal(req.calledWith('models/Peer', 'sendOfferTo', {
+            user: model.attributes,
+        }), true, 'sends a connection invite to the user');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('collections/modules/Users: acceptIfPending()', t => {
+    const mod   = new Module();
+    const model = new User({pendingInvite: false});
+    const find  = sand.stub(mod, 'findModel').returns(Promise.resolve(model));
+    sand.stub(mod, 'acceptInvite');
+
+    mod.acceptIfPending({username: 'bob'})
+    .then(() => {
+        t.equal(mod.acceptInvite.notCalled, true,
+            'does nothing if you did not send an invite to the user');
+
+        model.set('pendingInvite', true);
+        return mod.acceptIfPending({username: 'bob'});
+    })
+    .then(() => {
+        t.equal(mod.acceptInvite.calledWith({model}), true,
+            'mark the invite as accepted');
 
         sand.restore();
         t.end();

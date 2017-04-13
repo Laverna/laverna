@@ -58,8 +58,9 @@ test('models/Peer: constructor()', t => {
     t.equal(typeof peer.buffers, 'object', 'creates "buffers" property');
 
     t.equal(reply.calledWith({
-        send  : peer.send,
-        peers : peer.peers,
+        send        : peer.send,
+        sendOfferTo : peer.sendOfferTo,
+        peers       : peer.peers,
     }), true, 'starts replying to requests');
 
     sand.restore();
@@ -145,9 +146,28 @@ test('models/Peer: onSignalConnect()', t => {
     t.end();
 });
 
+test('models/Peer: sendOfferTo()', t => {
+    const peer   = new Peer();
+    const socket = {emit: sand.stub()};
+    peer.socket  = socket;
+
+    peer.sendOfferTo({user: {username: 'alice', deviceId: '1'}});
+    t.equal(socket.emit.calledWith('requestOffers', {
+        users: [{username: 'alice', deviceId: '1'}],
+    }), true, 'sends an offer to a specific user');
+
+    sand.restore();
+    t.end();
+});
+
 test('models/Peer: onReconnect()', t => {
     const peer = new Peer();
+    sand.stub(peer, 'sendOffers');
+
     peer.onReconnect();
+    t.equal(peer.sendOffers.called, true, 're-send offers to users');
+
+    sand.restore();
     t.end();
 });
 
@@ -304,7 +324,7 @@ test('models/Peer: connectPeer()', t => {
     sand.stub(peer, 'listenToPeer');
 
     peer.connectPeer({username: 'alice', deviceId: '1'});
-    t.equal(SimplePeer.calledWith({initiator: false}), true,
+    t.equal(SimplePeer.calledWith({initiator: false, trickle: false}), true,
         'creates a new peer instance');
     t.equal(peer.peers[0].instance, instance,
         'saves the peer instance in "peers" property');
@@ -312,7 +332,7 @@ test('models/Peer: connectPeer()', t => {
         'starts listening to peer events');
 
     peer.connectPeer({username: 'alice', deviceId: '2'}, true);
-    t.equal(SimplePeer.calledWith({initiator: true}), true,
+    t.equal(SimplePeer.calledWith({initiator: true, trickle: false}), true,
         'creates a new initiating peer instance');
 
     sand.restore();
@@ -327,9 +347,28 @@ test('models/Peer: listenToPeer()', t => {
     peer.listenToPeer(peerObj);
 
     t.equal(on.calledWith('error'), true, 'catches errors');
+    t.equal(on.calledWith('close'), true, 'listens to "close" event');
     t.equal(on.calledWith('signal'), true, 'listens to "signal" event');
     t.equal(on.calledWith('connect'), true, 'listens to "connect" event');
     t.equal(on.calledWith('data'), true, 'listens to "data" event');
+
+    sand.restore();
+    t.end();
+});
+
+test('models/Peer: onPeerClose()', t => {
+    const peer  = new Peer();
+    const send  = sand.stub(peer, 'sendOfferTo');
+    peer.socket = {disconnected: true};
+
+    peer.onPeerClose();
+    t.equal(send.notCalled, true,
+        'does nothing if the socket connection is not active');
+
+    peer.socket = {disconnected: false};
+    const user  = {username: 'alice', deviceId: '1'};
+    peer.onPeerClose(user);
+    t.equal(send.calledWithMatch({user}), true, 'sends an offer to the user');
 
     sand.restore();
     t.end();
@@ -425,6 +464,9 @@ test('models/Peer: onConnect()', t => {
     peer.onConnect({peer: peerObj});
     t.equal(req.calledWith('collections/Configs', 'updatePeer', peerObj), true,
         'adds the peer to the array of peers in configs');
+    t.equal(req.calledWith('collections/Users', 'acceptIfPending', peerObj),
+        true, 'confirm an invite sent to the user');
+
     t.equal(trig.calledWith('connected', {peer: peerObj}), true,
         'triggers "connected"');
 

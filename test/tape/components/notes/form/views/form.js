@@ -75,6 +75,18 @@ test('notes/form/views/Form: events', t => {
         'saves the changes if the save button is clicked');
     t.equal(events['click .editor--cancel'], 'cancel',
         'cancels all changes if the cancel button is clicked');
+    t.equal(events['change @ui.title'], 'setTitle',
+        'update "title" attribute after every change');
+
+    t.end();
+});
+
+test('notes/form/views/Form: modelEvents', t => {
+    const events = View.prototype.modelEvents();
+    t.equal(typeof events, 'object', 'returns an object');
+
+    t.equal(events['change:title'], 'onChangeTitle',
+        'update the title value after the attribute is changed');
 
     t.end();
 });
@@ -239,6 +251,30 @@ test('notes/form/views/Form: cancel()', t => {
     view.ui.title.is.returns(false);
     view.cancel();
     t.equal(view.options.focus, 'editor');
+
+    sand.restore();
+    t.end();
+});
+
+test('notes/form/views/Form: setTitle()', t => {
+    const model   = new Note();
+    const view    = new View({model});
+    view.ui.title = {val: () => 'test'};
+
+    view.setTitle();
+    t.equal(model.get('title'), 'test', 'updates the title attribute');
+
+    t.end();
+});
+
+test('notes/form/views/Form: onChangeTitle()', t => {
+    const model   = new Note({title: 'test'});
+    const view    = new View({model});
+    const val     = sand.stub();
+    view.ui.title = {val};
+
+    view.onChangeTitle();
+    t.equal(val.calledWith('test'), true, 'updates the title value');
 
     sand.restore();
     t.end();

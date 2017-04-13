@@ -205,12 +205,16 @@ test('codemirror/Controller: onChangeMode()', t => {
 
 test('codemirror/Controller: onChange()', t => {
     const con  = new Controller();
+    con.view   = {model: new Note()};
+    con.editor = {instance: {getValue: () => 'test'}};
+
     sand.stub(con, 'updatePreview');
     sand.stub(con, 'autoSave');
 
     con.onChange();
     t.equal(con.updatePreview.called, true, 'calls updatePreview method');
-    t.equal(con.autoSave.called, true, 'calls autoSave method');
+    t.equal(con.view.model.get('content'), 'test', 'changes "content" attribute');
+    // t.equal(con.autoSave.called, true, 'calls autoSave method');
 
     sand.restore();
     t.end();

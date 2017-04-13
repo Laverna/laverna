@@ -191,7 +191,8 @@ export default class Controller extends Mn.Object {
     onChange() {
         log('change');
         this.updatePreview();
-        this.autoSave();
+        this.view.model.set('content', this.editor.instance.getValue());
+        // this.autoSave();
     }
 
     /**

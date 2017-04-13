@@ -79,6 +79,13 @@ export default class Form extends Mn.View {
             'submit @ui.form'       : 'save',
             'click @ui.saveBtn'     : 'save',
             'click .editor--cancel' : 'cancel',
+            'change @ui.title'      : 'setTitle',
+        };
+    }
+
+    modelEvents() {
+        return {
+            'change:title': 'onChangeTitle',
         };
     }
 
@@ -210,6 +217,20 @@ export default class Form extends Mn.View {
 
         this.trigger('cancel');
         return false;
+    }
+
+    /**
+     * Update "title" attribute after every change.
+     */
+    setTitle() {
+        this.model.set('title', this.ui.title.val().trim());
+    }
+
+    /**
+     * Update the title value after the attribute is changed.
+     */
+    onChangeTitle() {
+        this.ui.title.val(_.cleanXSS(this.model.get('title')));
     }
 
     /**

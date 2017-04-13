@@ -201,7 +201,7 @@ export default class View extends Mn.View {
     serializeData() {
         return _.extend({}, this.model.attributes, {
             content     : this.model.htmlContent || this.model.get('content'),
-            notebook    : (this.model.notebook || {}).attributes,
+            notebook    : (this.model.get('notebook') || {}).attributes,
             profileLink : this.options.profileLink,
             username    : this.options.configs.username,
         });

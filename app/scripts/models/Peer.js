@@ -50,6 +50,17 @@ export default class Peer {
 
     constructor() {
         /**
+         * {@link https://en.wikipedia.org/wiki/STUN|STUN}
+         * and {@link https://en.wikipedia.org/wiki/TURN|TURN} server list.
+         *
+         * @prop {Array}
+         */
+        this.iceServers = [
+            {urls: 'stun:stun.l.google.com:19302'},
+            {urls: 'stun:stun1.l.google.com:19302'},
+        ];
+
+        /**
          * An array of connected peers.
          *
          * @prop {Array}
@@ -256,14 +267,14 @@ export default class Peer {
      * @param {Boolean} initiator=false
      */
     connectPeer({username, deviceId}, initiator = false) {
-        const peer = {
-            username,
-            deviceId,
+        const instance = new SimplePeer({
             initiator,
-            instance: new SimplePeer({initiator, trickle: false}),
-        };
+            trickle : true,
+            config  : {iceServers: this.iceServers},
+        });
 
         log(`connecting to a new peer ${username}/${deviceId}`);
+        const peer = {username, deviceId, initiator, instance};
         this.peers.push(peer);
         this.listenToPeer(peer);
     }

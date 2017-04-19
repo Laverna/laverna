@@ -54,6 +54,9 @@ test('models/Peer: constructor()', t => {
     const reply = sand.stub(Peer.prototype.channel, 'reply');
     const peer  = new Peer();
 
+    t.equal(Array.isArray(peer.iceServers), true, 'creates "iceServers" property');
+    t.equal(peer.iceServers.length, 2, 'STUN and TURN server list is not empty');
+
     t.equal(Array.isArray(peer.peers), true, 'creates "peers" property');
     t.equal(typeof peer.buffers, 'object', 'creates "buffers" property');
 
@@ -324,16 +327,23 @@ test('models/Peer: connectPeer()', t => {
     sand.stub(peer, 'listenToPeer');
 
     peer.connectPeer({username: 'alice', deviceId: '1'});
-    t.equal(SimplePeer.calledWith({initiator: false, trickle: false}), true,
-        'creates a new peer instance');
+    t.equal(SimplePeer.calledWith({
+        initiator : false,
+        trickle   : true,
+        config    : {iceServers: peer.iceServers},
+    }), true, 'creates a new peer instance');
+
     t.equal(peer.peers[0].instance, instance,
         'saves the peer instance in "peers" property');
     t.equal(peer.listenToPeer.calledWith(peer.peers[0]), true,
         'starts listening to peer events');
 
     peer.connectPeer({username: 'alice', deviceId: '2'}, true);
-    t.equal(SimplePeer.calledWith({initiator: true, trickle: false}), true,
-        'creates a new initiating peer instance');
+    t.equal(SimplePeer.calledWith({
+        initiator : true,
+        trickle   : true,
+        config    : {iceServers: peer.iceServers},
+    }), true, 'creates a new initiating peer instance');
 
     sand.restore();
     t.end();

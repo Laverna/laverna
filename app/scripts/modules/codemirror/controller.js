@@ -136,6 +136,10 @@ define([
                     // Ctrl+G - attach file
                     'Cmd-G'  : this.attachmentAction,
                     'Ctrl-G' : this.attachmentAction,
+                    
+                    // Shift+Ctrl+- - divider
+                    'Shift-Cmd--'   : this.hrAction,
+                    'Shift-Ctrl--'  : this.hrAction,
 
 					// Ctrl+. - indent line
 					'Ctrl-.' 		: 'indentMore',

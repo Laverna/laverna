@@ -83,6 +83,10 @@
       "name": "Latvian",
       "nativeName": "Latviešu"
     },
+    "pl": {
+        "name": "Polish"
+        "nativeName": "Polski"
+    },
     "pt_br": {
         "name": "Portugisich (Brasilien)",
         "nativeName": "Portugisich (Brasilien)"
@@ -94,7 +98,7 @@
     "se": {
         "name": "Swedish",
         "nativeName": "Svenska"
-   },
+    },
     "sq": {
         "name": "Albanian",
         "nativeName": "Shqip"

@@ -55,6 +55,7 @@ const configNames = {
     /**
      * Synchronization settings.
      *
+     * @prop {String} signalServer
      * @prop {String} username - username claimed on the signaling server
      * @prop {String} deviceId - unique device ID
      * @prop {Array}  peers    - an array of peers. Every item in the array
@@ -63,6 +64,7 @@ const configNames = {
      * @prop {String} dropboxKey - dropbox app key
      */
     sync: {
+        signalServer       : 'http://localhost:3000',
         username           : '',
         deviceId           : '',
         peers              : [],

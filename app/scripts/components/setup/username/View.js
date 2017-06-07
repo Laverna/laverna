@@ -2,6 +2,7 @@
  * @module components/setup/username/View
  */
 import _ from 'underscore';
+import Radio from 'backbone.radio';
 import View from '../ContentView';
 
 /**
@@ -20,10 +21,17 @@ export default class Username extends View {
 
     ui() {
         return {
-            username: 'input[name=username]',
-            next    : '#welcome--next',
-            warning : '.welcome--warning',
-            alert   : '.alert',
+            username     : 'input[name=username]',
+            signalServer : 'input[name=signalServer]',
+            next         : '#welcome--next',
+            warning      : '.welcome--warning',
+            alert        : '.alert',
+        };
+    }
+
+    serializeData() {
+        return {
+            configs: Radio.request('collections/Configs', 'findConfigs'),
         };
     }
 
@@ -39,7 +47,8 @@ export default class Username extends View {
      */
     onClickNext() {
         this.triggerMethod('check:user', {
-            username: this.ui.username.val().trim(),
+            username     : this.ui.username.val().trim(),
+            signalServer : this.ui.signalServer.val().trim(),
         });
     }
 

@@ -123,10 +123,17 @@ export default class Controller extends Mn.Object {
      *
      * @fires view#name:taken
      * @param {String} username
+     * @param {String} signalServer
      * @returns {Promise}
      */
-    checkUser({username}) {
-        return Radio.request('models/Signal', 'findUser', {username})
+    checkUser({username, signalServer}) {
+        return this.configsChannel.request('saveConfig', {
+            config: {
+                name  : 'signalServer',
+                value : signalServer || this.configs.signalServer,
+            },
+        })
+        .then(() => Radio.request('models/Signal', 'findUser', {username}))
         .then(user => {
             // Show the registration form if user does not exist on the server
             if (_.isEmpty(user)) {

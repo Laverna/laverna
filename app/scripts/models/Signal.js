@@ -46,7 +46,7 @@ export default class Signal {
          * @prop {String} options.api    - API URL
          */
         this.options     = _.extend({
-            server: `http://${document.location.hostname}:3000`,
+            server: this.configs.signalServer,
         }, options);
         this.options.api = `${this.options.server}/api`;
 
@@ -249,4 +249,9 @@ export default class Signal {
 
 }
 
-Radio.once('App', 'init', () => new Signal());
+Radio.once('App', 'init', () => {
+    Radio.request('utils/Initializer', 'add', {
+        name    : 'App:utils',
+        callback: () => new Signal(),
+    });
+});

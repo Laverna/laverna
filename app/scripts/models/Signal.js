@@ -244,6 +244,12 @@ export default class Signal {
     onInvite(data) {
         log('received an invite', data);
         return Radio.request('collections/Users', 'saveInvite', data)
+        .then(() => {
+            Radio.request('utils/Notify', 'show', {
+                title: 'Laverna',
+                body : _.i18n('You received an invite', data),
+            });
+        })
         .catch(err => log('error', err));
     }
 

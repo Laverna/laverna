@@ -40,11 +40,15 @@ test('setup/username/View: onInputChange()', t => {
 test('setup/username/View: onClickNext()', t => {
     const view = new View();
     const trig = sand.stub(view, 'triggerMethod');
-    view.ui    = {username: {val: () => 'user'}};
+    view.ui    = {
+        username     : {val: () => 'user'},
+        signalServer : {val: () => 'https://laverna.cc'},
+    };
 
     view.onClickNext();
     t.equal(trig.calledWith('check:user', {
-        username: 'user',
+        username     : 'user',
+        signalServer : 'https://laverna.cc',
     }), true, 'triggers "check:user"');
 
     sand.restore();

@@ -19,6 +19,10 @@ const Signal = proxyquire('../../../app/scripts/models/Signal', {
 let sand;
 test('models/Signal: before()', t => {
     sand = sinon.sandbox.create();
+    Radio.channel('collections/Configs').reply('findConfigs', () => {
+        return {server: 'https://laverna.cc'};
+    });
+
     t.end();
 });
 
@@ -42,9 +46,10 @@ test('models/Signal: configs', t => {
 
 test('models/Signal: constructor()', t => {
     const reply = sand.stub(Signal.prototype.channel, 'reply');
-    const sig = new Signal({});
+    const sig   = new Signal({});
 
     t.equal(typeof sig.options, 'object', 'creates "options" property');
+    t.equal(sig.options.server, sig.configs.signalServer, 'msg');
 
     t.equal(reply.calledWith({
         connect      : sig.connect,
@@ -281,6 +286,7 @@ test('models/Signal: onInvite()', t => {
 
 test('models/Signal: after()', t => {
     Radio.channel('models/Signal').stopReplying();
+    Radio.channel('collections/Configs').stopReplying();
     sand.restore();
     t.end();
 });

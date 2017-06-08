@@ -138,6 +138,7 @@ test('setup/Controller: onViewDestroy()', t => {
 test('setup/Controller: checkUser()', t => {
     const con     = new Controller();
     const req     = sand.stub(Radio, 'request').returns(Promise.resolve({}));
+    const confReq = sand.stub(con.configsChannel, 'request').returns(Promise.resolve());
     const user    = {username: 'test'};
     const trigger = sand.stub();
     con.view      = {
@@ -147,8 +148,15 @@ test('setup/Controller: checkUser()', t => {
         },
     };
 
-    con.checkUser({username: 'test'})
+    con.checkUser({username: 'test', signalServer: 'https://laverna.cc'})
     .then(() => {
+        t.equal(confReq.calledWith('saveConfig', {
+            config: {
+                name  : 'signalServer',
+                value : 'https://laverna.cc',
+            },
+        }), true, 'changes the signaling server address');
+
         t.equal(con.view.showRegister.calledWith({username: 'test'}), true,
             'shows the registration form if user does not exist on the server');
 

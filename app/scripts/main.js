@@ -19,6 +19,7 @@ import './utils/I18n';
 import './utils/Url';
 import './utils/Title';
 import './utils/Keybindings';
+import './utils/Notify';
 
 // Collections
 import './collections/modules/main';

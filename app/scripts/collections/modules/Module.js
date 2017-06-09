@@ -159,7 +159,7 @@ export default class Module {
      */
     fetch(options) {
         // If the collection is already cached, return its clone
-        if (this.collection && this.collection.length) {
+        if (this.isCollectionEmpty(options)) {
             return Promise.resolve(this.collection.clone());
         }
 
@@ -169,6 +169,21 @@ export default class Module {
         return this.collection.fetch(options)
         .then(() => this.decryptCollection(this.collection))
         .then(() => this.collection.clone());
+    }
+
+    /**
+     * Check if the collection is empty.
+     *
+     * @param {Object} options
+     * @param {String} [options.profileId]
+     * @returns {Boolean}
+     */
+    isCollectionEmpty(options) {
+        const profileId = options.profileId || 'notes-db';
+        return (
+            this.collection && this.collection.length &&
+            this.collection.profileId === profileId
+        );
     }
 
     /**

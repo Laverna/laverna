@@ -30,7 +30,6 @@ export default class Register extends View {
     ui() {
         return {
             next       : '#welcome--next',
-            email      : 'input[name=email]',
             name       : 'input[name=name]',
             password   : 'input[name=password]',
             passwordRe : 'input[name=passwordRe]',
@@ -76,7 +75,6 @@ export default class Register extends View {
             keyData  : {
                 username   : this.ui.name.val().trim(),
                 passphrase : this.ui.password.val().trim(),
-                email      : this.ui.email.val().trim(),
             },
         });
     }

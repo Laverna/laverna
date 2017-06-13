@@ -208,14 +208,13 @@ export default class Controller extends Mn.Object {
      * Generate a new OpenPGP key pair.
      *
      * @param {String} passphrase
-     * @param {String} email
      * @param {String} username
      * @returns {Promise}
      */
-    generateKeyPair({passphrase, email, username}) {
+    generateKeyPair({passphrase, username}) {
         return Radio.request('models/Encryption', 'generateKeys', {
             passphrase,
-            userIds: [{name: username, email}],
+            userIds: [{name: username}],
         });
     }
 

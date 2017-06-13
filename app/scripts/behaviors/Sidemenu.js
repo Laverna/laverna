@@ -36,7 +36,7 @@ export default class Sidemenu extends Mn.Behavior {
          * Hammer events. If the view has smenuHammerEvents property,
          * it will override the behavior's.
          *
-         * @prop
+         * @prop {Object}
          * @prop {String} swiperight - show the menu
          * @prop {String} swipeleft - hide the menu
          */

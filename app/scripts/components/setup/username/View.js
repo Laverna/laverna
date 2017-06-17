@@ -26,6 +26,14 @@ export default class Username extends View {
             next         : '#welcome--next',
             warning      : '.welcome--warning',
             alert        : '.alert',
+            importInput  : '#import--data',
+        };
+    }
+
+    events() {
+        return {
+            'click #welcome--import': 'triggerImport',
+            'change #import--data'  : 'importData',
         };
     }
 
@@ -33,6 +41,30 @@ export default class Username extends View {
         return {
             configs: Radio.request('collections/Configs', 'findConfigs'),
         };
+    }
+
+    /**
+     * Show file dialog.
+     *
+     * @param {Object} e
+     */
+    triggerImport(e) {
+        e.preventDefault();
+        this.ui.importInput.click();
+    }
+
+    /**
+     * Import everything from the previous device.
+     *
+     * @param {Object} e
+     */
+    importData(e) {
+        const {files} = e.target;
+        if (!files.length) {
+            return;
+        }
+
+        Radio.request('components/importExport', 'import', {files});
     }
 
     /**

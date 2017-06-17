@@ -49,7 +49,7 @@ export default class View extends Mn.View {
     events() {
         return {
             'click .btn--import'   : 'clickInput',
-            'change #import--data' : 'checkFile',
+            'change #import--key'  : 'checkFile',
         };
     }
 

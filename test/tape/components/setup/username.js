@@ -4,6 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
+import Radio from 'backbone.radio';
 
 import '../../../../app/scripts/utils/underscore';
 import ContentView from '../../../../app/scripts/components/setup/ContentView';
@@ -18,6 +19,44 @@ test('setup/username/View: before()', t => {
 test('setup/username/View: ui()', t => {
     const ui = View.prototype.ui();
     t.equal(typeof ui, 'object');
+    t.end();
+});
+
+test('setup/username/Username: events()', t => {
+    const events = View.prototype.events();
+    t.equal(typeof events, 'object');
+    t.equal(events['click #welcome--import'], 'triggerImport');
+    t.equal(events['change #import--data'], 'importData');
+    t.end();
+});
+
+test('setup/username/Username: triggerImport()', t => {
+    const view = new View();
+    view.ui    = {importInput: {click: sand.stub()}};
+    const preventDefault = sand.stub();
+
+    view.triggerImport({preventDefault});
+    t.equal(preventDefault.called, true, 'prevents the default behaviour');
+    t.equal(view.ui.importInput.click.called, true, 'triggers click on the file field');
+
+    sand.restore();
+    t.end();
+});
+
+test('setup/username/Username: importData()', t => {
+    const view   = new View();
+    const target = {files: [1, 2]};
+    const req    = sand.stub(Radio, 'request');
+
+    view.importData({target: {files: []}});
+    t.equal(req.notCalled, true, 'does nothing if there are no files');
+
+    view.importData({target});
+    t.equal(req.calledWith('components/importExport', 'import', {
+        files: target.files,
+    }), true, 'tries to import data to the current device');
+
+    sand.restore();
     t.end();
 });
 

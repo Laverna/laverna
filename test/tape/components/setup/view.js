@@ -39,7 +39,7 @@ test('setup/View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object');
     t.equal(events['click .btn--import'], 'clickInput');
-    t.equal(events['change #import--data'], 'checkFile');
+    t.equal(events['change #import--key'], 'checkFile');
     t.end();
 });
 

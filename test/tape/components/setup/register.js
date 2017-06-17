@@ -85,7 +85,6 @@ test('setup/register/View: onClickNext()', t => {
         keyData  : {
             username   : 'test',
             passphrase : '1',
-            email      : 'test@',
         },
     }), true, 'triggers "save"');
 

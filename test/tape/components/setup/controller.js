@@ -230,7 +230,7 @@ test('setup/Controller: save()', t => {
 
     const opt = {
         username : 'test',
-        keyData  : {username: 'test', email: 'test@', passphrase: '1'},
+        keyData  : {username: 'test', passphrase: '1'},
         register : true,
     };
 
@@ -261,10 +261,10 @@ test('setup/Controller: generateKeyPair()', t => {
     const con = new Controller();
     const req = sand.stub(Radio, 'request');
 
-    con.generateKeyPair({passphrase: '1', email: 'test@', username: 'test'});
+    con.generateKeyPair({passphrase: '1', username: 'test'});
     t.equal(req.calledWith('models/Encryption', 'generateKeys', {
         passphrase: '1',
-        userIds: [{name: 'test', email: 'test@'}],
+        userIds: [{name: 'test'}],
     }), true, 'makes "generateKeys" request');
 
     sand.restore();

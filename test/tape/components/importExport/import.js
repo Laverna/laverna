@@ -121,6 +121,7 @@ test('importExport/Import: readFile()', t => {
     const async = sand.stub().returns(Promise.resolve(res));
     con.zip     = {file: sand.stub().returns({async})};
     sand.stub(con, 'importNote');
+    sand.stub(con, 'importFile');
     sand.stub(con, 'importCollection');
 
     const name = 'backup/notes-db/notes/1.json';
@@ -135,6 +136,11 @@ test('importExport/Import: readFile()', t => {
             profileId : 'notes-db',
             data      : {id: '1'},
         }), true, 'imports a note');
+
+        return con.readFile(con.zip, {name: 'backup/notes-db/files/1.json'});
+    })
+    .then(() => {
+        t.equal(con.importFile.called, true, 'imports files');
 
         return con.readFile(con.zip, {name: 'backup/notes-db/notebooks.json'});
     })
@@ -168,6 +174,21 @@ test('importExport/Import: importNote()', t => {
         sand.restore();
         t.end();
     });
+});
+
+test('importExport/Import: importFile()', t => {
+    const con   = new Import();
+    const req   = sand.stub(Radio, 'request');
+    const options = {profileId: 'test', data: {id: '1'}};
+
+    con.importFile(options);
+    t.equal(req.calledWith('collections/Files', 'saveModelObject', {
+        data      : options.data,
+        profileId : options.profileId,
+    }), true, 'saves the file to database');
+
+    sand.restore();
+    t.end();
 });
 
 test('importExport/Import: importCollection()', t => {

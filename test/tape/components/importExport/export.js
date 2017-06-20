@@ -9,6 +9,7 @@ import _ from '../../../../app/scripts/utils/underscore';
 
 import Export from '../../../../app/scripts/components/importExport/Export';
 import Notes from '../../../../app/scripts/collections/Notes';
+import Files from '../../../../app/scripts/collections/Files';
 import Tags from '../../../../app/scripts/collections/Tags';
 
 let sand;
@@ -32,7 +33,7 @@ test('importExport/Export: profiles', t => {
 test('importExport/Export: collections', t => {
     const names = Export.prototype.collections;
     t.equal(Array.isArray(names), true, 'returns an array');
-    t.equal(names.length, 4);
+    t.equal(names.length, 6);
     t.end();
 });
 
@@ -145,6 +146,14 @@ test('importExport/Export: exportCollection()', t => {
     t.equal(con.exportNote.calledWith('laverna-backups/notes-db', mod), true,
         'exports every model from notes collection');
 
+    sand.stub(con, 'exportFile');
+    const files = new Files();
+    const file  = new Files.prototype.model({id: '1'});
+    files.add(file);
+    con.exportCollection(files);
+    t.equal(con.exportFile.calledWith('laverna-backups/notes-db', file), true,
+        'exports every model from files collection');
+
     const tags = new Tags();
     con.zip    = {file: sand.stub()};
     con.exportCollection(tags);
@@ -165,6 +174,19 @@ test('importExport/Export: exportNote()', t => {
         true, 'saves the content in a Markdown file');
     t.equal(con.zip.file.calledWith('backups/notes/1.json'),
         true, 'saves other attributes in a JSON file');
+
+    sand.restore();
+    t.end();
+});
+
+test('importExport/Export: exportFile()', t => {
+    const con = new Export();
+    const mod = new Files.prototype.model({id: '1', src: 'test'});
+    con.zip   = {file: sand.stub()};
+
+    con.exportFile('backups', mod);
+    t.equal(con.zip.file.calledWith('backups/files/1.json'),
+        true, 'saves all model attributes in a JSON file');
 
     sand.restore();
     t.end();

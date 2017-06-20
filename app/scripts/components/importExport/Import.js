@@ -114,6 +114,9 @@ export default class Import extends Mn.Object {
             if (path[2] === 'notes') {
                 return this.importNote({zip, profileId, data, name: file.name});
             }
+            else if (path[2] === 'files') {
+                return this.importFile({profileId, data});
+            }
             else {
                 const type = path[2].split('.json')[0];
                 return this.importCollection({profileId, data, type});
@@ -148,6 +151,22 @@ export default class Import extends Mn.Object {
     }
 
     /**
+     * Import a file attachment to database.
+     *
+     * @param {Object} options
+     * @param {String} options.profileId
+     * @param {Object} options.data
+     * @returns {Promise}
+     */
+    importFile(options) {
+        const {data, profileId} = options;
+        return Radio.request('collections/Files', 'saveModelObject', {
+            data,
+            profileId,
+        });
+    }
+
+    /**
      * Import a collection to database.
      *
      * @param {Object} options
@@ -158,7 +177,7 @@ export default class Import extends Mn.Object {
      */
     importCollection(options) {
         // Do nothing if the collection name is incorrect
-        const types = ['notebooks', 'tags', 'configs'];
+        const types = ['notebooks', 'tags', 'configs', 'users'];
         if (_.indexOf(types, options.type) === -1) {
             return Promise.resolve();
         }

@@ -35,7 +35,7 @@ export default class Export extends Mn.Object {
      * @prop {Array}
      */
     get collections() {
-        return ['Notes', 'Notebooks', 'Tags', 'Configs'];
+        return ['Notes', 'Notebooks', 'Tags', 'Configs', 'Files', 'Users'];
     }
 
     onDestroy() {
@@ -135,6 +135,9 @@ export default class Export extends Mn.Object {
         if (collection.storeName === 'notes') {
             coll.each(model => this.exportNote(path, model));
         }
+        else if (collection.storeName === 'files') {
+            coll.each(model => this.exportFile(path, model));
+        }
         // Other collections' data is saved in one JSON file
         else {
             const data = JSON.stringify(collection.toJSON());
@@ -155,6 +158,19 @@ export default class Export extends Mn.Object {
 
         this.zip.file(`${fileName}.md`, model.get('content'));
         this.zip.file(`${fileName}.json`, data);
+    }
+
+    /**
+     * Export a file attachment.
+     *
+     * @param {String} path - the path where the file should be saved
+     * @param {Object} model
+     */
+    exportFile(path, model) {
+        this.zip.file(
+            `${path}/files/${model.id}.json`,
+            JSON.stringify(model.getData())
+        );
     }
 
     /**

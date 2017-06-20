@@ -31,10 +31,10 @@ export default class Username extends View {
     }
 
     events() {
-        return {
+        return _.extend(super.events(), {
             'click #welcome--import': 'triggerImport',
             'change #import--data'  : 'importData',
-        };
+        });
     }
 
     serializeData() {

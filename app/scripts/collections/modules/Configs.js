@@ -153,6 +153,15 @@ export default class Configs extends Module {
         return this.collection.getConfigs();
     }
 
+    saveFromArray(options) {
+        // Generate a new deviceId for each new device
+        const values = _.filter(options.values, val => {
+            return val.name !== 'deviceId';
+        });
+
+        return super.saveFromArray({values, profileId: options.profileId});
+    }
+
     /**
      * Save config object to the database.
      *

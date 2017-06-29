@@ -20,6 +20,7 @@ import './utils/Url';
 import './utils/Title';
 import './utils/Keybindings';
 import './utils/Notify';
+import './utils/electronListener';
 
 // Collections
 import './collections/modules/main';

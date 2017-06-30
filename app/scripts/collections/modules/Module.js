@@ -193,10 +193,11 @@ export default class Module {
      * @param {Object} options.model - Backbone model
      * @param {Object} [options.data] - data that should be updated
      * (uses model.attributes if it's not provided)
+     * @param {Boolean} [options.dontValidate]
      * @fires channel#update:model - after saving a model
      * @returns {Promise} - resolves with a model
      */
-    saveModel(options) {
+    saveModel(options) { //eslint-disable-line
         const {model} = options;
         const data    = options.data  || model.attributes;
 
@@ -206,7 +207,10 @@ export default class Module {
         }
 
         model.setEscape(data);
-        const errors  = model.validate(model.attributes);
+        let errors = null;
+        if (!options.dontValidate) {
+            errors = model.validate(model.attributes);
+        }
 
         // Trigger invalid event if there are any validation errors
         if (errors) {
@@ -269,6 +273,7 @@ export default class Module {
      * @param {Object} options
      * @param {Object} options.data - an object with a model's values
      * @param {String} options.profileId - profile name
+     * @param {Boolean} [options.dontValidate]
      * @fires collections/{Name}#save:object:{modelId}
      * @returns {Promise}
      */
@@ -276,7 +281,7 @@ export default class Module {
         const model = new this.Model(options.data, {profileId: options.profileId});
 
         return this.decryptModel(model)
-        .then(() => this.saveModel({model}))
+        .then(() => this.saveModel({model, dontValidate: options.dontValidate}))
         .then(() => this.channel.trigger(`save:object:${model.id}`, {model}))
         .then(() => model);
     }

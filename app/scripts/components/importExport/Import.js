@@ -146,6 +146,7 @@ export default class Import extends Mn.Object {
             return Radio.request('collections/Notes', 'saveModelObject', {
                 data,
                 profileId,
+                dontValidate: true,
             });
         });
     }

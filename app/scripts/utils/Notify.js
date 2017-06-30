@@ -37,7 +37,7 @@ export default class Notify {
      * @returns {Boolean}
      */
     isSupported() {
-        return ('Notification' in window);
+        return ('Notification' in window && !window.cordova);
     }
 
     /**

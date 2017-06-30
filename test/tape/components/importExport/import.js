@@ -167,8 +167,9 @@ test('importExport/Import: importNote()', t => {
     })
     .then(() => {
         t.equal(req.calledWith('collections/Notes', 'saveModelObject', {
-            profileId : 'test',
-            data      : {content: 'test content'},
+            profileId    : 'test',
+            data         : {content: 'test content'},
+            dontValidate : true,
         }), true, 'saves the note to database');
 
         sand.restore();

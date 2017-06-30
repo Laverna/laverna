@@ -10,12 +10,12 @@
     "About": "Om",
     "Save": "Gem",
     "Save & Exit": "Gem & Luk",
-    "Cancel": "Annuler",
+    "Cancel": "Annuller",
     "Full screen": "Fuld skærm",
-    "Preview": "Smugkig",
+    "Preview": "Forhåndsvisning",
     "Normal": "Normal",
     "Select notebook": "Vælg notesbog",
-    "Title": "Tittel",
+    "Title": "Titel",
     "Submit": "Indsend",
     "Tags": "Tags",
     "Tag": "Tag",
@@ -28,10 +28,10 @@
     "New tag": "Nyt tag",
     "Edit": "Rediger",
     "Remove": "Fjern",
-    "Forever": "Forevigt",
+    "Forever": "For evigt",
     "No": "Nej",
     "Yes": "Ja",
-    "Basic": "Basalt",
+    "Basic": "Grundlæggende",
     "Cloud storage": "Cloud-lager",
     "Notes per page": "Noter per side",
     "Sort notebooks": "Sortér notesbøger",
@@ -44,7 +44,7 @@
     "Encryption Password": "Krypteringskodeord",
     "Salt": "Salt",
     "Random": "Tilfældig",
-    "Key size": "Key størrelse",
+    "Key size": "Nøglestørrelse",
     "Strengthen by a factor of": "Styrk med en faktor på",
     "Authentication strength": "Authentication styrke",
     "Unlock": "Lås op",
@@ -71,15 +71,15 @@
     "appCreateNote": "Opret ny note",
     "appSearch": "Søg efter note",
     "appKeyboardHelp": "Tastaturhjælp",
-    "Change keybindings": "Ændre indstillinger for genvejstaster",
+    "Change keybindings": "Skift genvejstaster",
     "Donate": "Donér",
     "Github page": "Github side",
     "Report bugs and issues here": "Anmeld fejl og problemer her",
     "Report bugs through email": "Anmeld fejl via email",
-    "Credits": "Anerkendelse",
+    "Credits": "Anerkendelser",
     "List of contributors": "Liste over bidragsydere",
     "List of all used libraries": "Liste over alle benyttede libraries",
-    "Are you sure?": "Er du nu helt sikker?",
+    "Are you sure?": "Er du sikker?",
     "You have unsaved changes": "Du har ikke-gemte ændringer.",
     "Dropbox API key": "Dropbox API nøgle",
     "Required": "Obligatorisk",
@@ -98,13 +98,13 @@
     "Export settings": "Export indstillinger",
     "Wrong format": "Forkert format",
     "useDefaultConfigs": "Brug standard-instillingerne",
-    "File chould be in json format": "Filen kunne være i json format",
+    "File should be in json format": "Filen skal være i json format",
     "Close": "Luk",
-    "Hyperlink": "Hyperink",
-    "Editor": "Redigeringsvidue",
+    "Hyperlink": "Hyperlink",
+    "Editor": "Redigeringsvindue",
     "Preview": "Smugkig",
     "Download": "Download",
-    "Transfer everything": "Alt",
+    "Transfer everything": "Overfør alt",
     "encryption": {
         "wait": "Vent venligst indtil krypteringen er fuldført",
         "error": "Krypteringsfejl",
@@ -113,7 +113,7 @@
         "errorConfirmAuth": "Prøv igen",
         "backup": {
             "title": "Foretag backup af data",
-            "content": "Vær venlig at downloade din backup-fil, før du forsætter. Denne indeholder dekrypteret tidligere data fra tidligere profiler. Opbevar denne et sikkert sted.",
+            "content": "Vær venlig at downloade din backup-fil, før du fortsætter. Denne indeholder dekrypteret tidligere data fra tidligere profiler. Opbevar denne et sikkert sted.",
             "next": "Fortsæt uden at downloade en backup-fil"
         },
         "state": {
@@ -124,7 +124,7 @@
     },
     "profile": {
         "confirm remove": "Alt data for profilen **{{profile}}** , såsom noter, tags og notesbøger, vil blive fjernet permanent !",
-        "type name": "Type profilnavn"
+        "type name": "Skriv profilnavn"
     },
     "files": {
         "file-url": "Sti til fil eller billede",
@@ -146,7 +146,7 @@
         "name": "Angiv venligst et navn for notesbogen",
         "confirm remove": "Notesbogen **{{name}}** vil blive **fjernet permanent**!",
         "remove with notes": "Ja, fjern med vedhæftede noter",
-        "remove": "Ja tak, fjern"
+        "remove": "Ja, fjern"
     },
     "tags": {
         "name": "Tag navn er obligatorisk",
@@ -164,10 +164,10 @@
     },
     "help": {
         "firststart title": "Velkommen til Laverna",
-        "firststart import": "Hvis du har benyttet Laverna før, kan du importerer dine data på knappen 'importer'.",
-        "firststart next": "Hvis ikke du har benyttet dig af Laverna før, kan du gå videre ved at trykke på knappen 'næste' og starte installeringen.",
+        "firststart import": "Hvis du har benyttet Laverna før, kan du importere dine data på knappen 'importer'.",
+        "firststart next": "Hvis ikke du har benyttet dig af Laverna før, kan du gå videre ved at trykke på knappen 'næste' og starte installationen.",
         "firststart encryption": "Hvis du vil kryptere dit indhold angiv venligst et kodeord.",
-        "firststart sync": "Da vi ikke lagre nogen form for data på vores servere, skal du benytte en af synkroniserings-tjenesterne for at se dit indhold på dine andre enheder.",
+        "firststart sync": "Da vi ikke lagrer nogen form for data på vores servere, skal du benytte en af synkroniserings-tjenesterne for at se dit indhold på dine andre enheder.",
         "firststart backup": "Alt er næsten klart. Du kan derfor downloade en backup af dine indstillinger og forsætte til det sidste trin."
     }
 }

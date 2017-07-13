@@ -60,7 +60,7 @@ export default class Diff {
         this.fastpatch = {
             diff  : fastpatch.compare,
             patch : (obj, patches) => {
-                fastpatch.apply(obj, patches);
+                fastpatch.applyPatch(obj, patches);
                 return obj;
             },
         };

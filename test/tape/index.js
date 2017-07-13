@@ -1,5 +1,5 @@
-import jsdom from 'jsdom';
-import {readFileSync as read, mkdirSync} from 'fs';
+import {JSDOM} from 'jsdom';
+import {mkdirSync} from 'fs';
 import glob from 'glob';
 import {LocalStorage} from 'node-localstorage';
 import overrideTemplate from './overrideTemplate';
@@ -20,20 +20,23 @@ global.requestAnimationFrame = raf;
 /**
  * Create DOM environment.
  */
-jsdom.env({
-    url  : 'http://localhost/#',
-    html : read(`${__dirname}/../../app/index.html`, 'utf8'),
+JSDOM.fromFile(`${__dirname}/../../app/index.html`, {
+    url         : 'http://localhost/#',
+    contentType : 'text/html',
+})
+.then(doc => {
+    global.document    = doc.window.document;
+    global.window      = doc.window;
+    global.navigator   = global.window.navigator;
+    global.location    = global.window.location;
+    global.HTMLElement = doc.window.HTMLElement;
 
-    done : (err, window) => {
-        global.window    = window;
-        global.navigator = window.navigator;
-        global.location  = window.location;
-        global.document  = window.document;
-        global.window.localStorage = global.localStorage;
+    global.window.localStorage = global.localStorage;
+    global.window.setTimeout   = setTimeout;
+    global.window.clearTimeout = clearTimeout;
 
-        // Automatically require all test files
-        glob.sync(`${__dirname}/**/*.js`)
-        .filter(file => file.indexOf('index.js') === -1)
-        .forEach(file => require(file));
-    },
+    // Automatically require all test files
+    glob.sync(`${__dirname}/**/*.js`)
+    .filter(file => file.indexOf('index.js') === -1)
+    .forEach(file => require(file));
 });

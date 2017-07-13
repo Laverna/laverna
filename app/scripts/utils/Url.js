@@ -143,8 +143,8 @@ export default class Url {
 
         // Remove the leading slash and profile link
         const url = (options.url || '/')
-            .replace(/^\//, '')
-            .replace(/\/?p\/[^/]*\//, '');
+        .replace(/^\//, '')
+        .replace(/\/?p\/[^/]*\//, '');
 
         return !profileId ? url : `/p/${profileId}/${url}`;
     }

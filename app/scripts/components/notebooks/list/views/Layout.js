@@ -129,7 +129,7 @@ export default class Layout extends Mn.View {
      */
     actionsEdit() {
         const $a = this.$('.list-group-item.active').parent()
-            .find('.edit-link:first');
+        .find('.edit-link:first');
         this.navigateToLink($a);
     }
 
@@ -147,7 +147,7 @@ export default class Layout extends Mn.View {
      */
     actionsRemove() {
         const $a = this.$('.list-group-item.active').parent()
-            .find('.remove-link:first');
+        .find('.remove-link:first');
         $a.trigger('click');
     }
 

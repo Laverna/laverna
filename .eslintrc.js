@@ -17,7 +17,7 @@ module.exports = {
     'rules': {
 
         // Coding Style
-        'indent'                   : [2, 4, {'SwitchCase': 1}],
+        'indent'                   : [2, 4, {'SwitchCase': 1, 'MemberExpression': 0}],
         'linebreak-style'          : [2, 'unix'],
         'quotes'                   : [2, 'single'],
         'semi'                     : [2, 'always'],

@@ -153,7 +153,10 @@ define([
             .then(function(keys) {
                 self.keys.key    = keys.key;
                 self.keys.hexKey = keys.hexKey;
-                self._saveSession();
+
+                if (Number(self.configs.encryptCachePass)) {
+                    self._saveSession();
+                }
             });
         },
 

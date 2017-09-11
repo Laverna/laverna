@@ -7,11 +7,11 @@
 </div>
 
 <div class="col-xs-12 form-group">
-    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="username" placeholder="{{_.i18n('Username')}}" />
+    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="username" placeholder="{{_.i18n('Username')}}" title="{{_.i18n('Username')}}" />
 </div>
 
 <div class="col-xs-12 form-group">
-    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="signalServer" value="{{configs.signalServer}}" placeholder="{{_.i18n('Signaling server')}}" />
+    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="signalServer" value="{{configs.signalServer}}" placeholder="{{_.i18n('Signaling server')}}" title="{{_.i18n('Signaling server')}}" />
 </div>
 
 <div class="welcome--warning col-xs-12 hidden" style="margin-bottom:10px">
@@ -25,12 +25,12 @@
 
 <div class="col-xs-6">
     <input id="import--data" class="hide" type="file"/>
-    <button id="welcome--import" type="button" class="btn btn-lg btn-block btn--brand pull-right">
+    <button id="welcome--import" type="button" class="btn btn-lg btn-block btn-success pull-right">
         {{_.i18n('Import')}}
     </button>
 </div>
 <div class="col-xs-6">
-    <button id="welcome--next" class="btn btn-lg btn-block btn--brand pull-left" disabled="disabled">
+    <button id="welcome--next" class="btn btn-lg btn-block btn-success pull-left" disabled="disabled">
         {{_.i18n('Next')}}
     </button>
 </div>

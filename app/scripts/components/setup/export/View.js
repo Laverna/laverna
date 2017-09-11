@@ -18,6 +18,10 @@ export default class Export extends Mn.View {
         return _.template(tmpl);
     }
 
+    className() {
+        return 'row';
+    }
+
     serializeData() {
         return this.options;
     }

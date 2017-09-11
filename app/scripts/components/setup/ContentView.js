@@ -13,6 +13,10 @@ import _ from 'underscore';
  */
 export default class ContentView extends Mn.View {
 
+    className() {
+        return 'row';
+    }
+
     events() {
         return {
             'keyup input'          : 'onInputChange',

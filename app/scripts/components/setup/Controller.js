@@ -260,14 +260,30 @@ export default class Controller extends Mn.Object {
     }
 
     /**
+     * Save synchronization settings.
+     *
+     * @returns {Promise}
+     */
+    saveSync() {
+        const value = this.view.getChildView('content').ui.sync.val().trim();
+        return this.configsChannel.request('saveConfig', {
+            config    : {value, name: 'cloudStorage'},
+            profileId : this.profileId,
+        });
+    }
+
+    /**
      * Download the private key.
      *
      * @returns {Promise}
      */
     export() {
-        const blob = new Blob([this.keys.privateKey], {type: 'text/plain'});
-        this.fileSaver(blob, 'laverna-key.asc');
-        this.view.destroy();
+        this.saveSync()
+        .then(() => {
+            const blob = new Blob([this.keys.privateKey], {type: 'text/plain'});
+            this.fileSaver(blob, 'laverna-key.asc');
+            this.view.destroy();
+        });
     }
 
     /**

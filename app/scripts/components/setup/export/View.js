@@ -18,6 +18,12 @@ export default class Export extends Mn.View {
         return _.template(tmpl);
     }
 
+    ui() {
+        return {
+            sync: '[name=sync]',
+        };
+    }
+
     className() {
         return 'row';
     }

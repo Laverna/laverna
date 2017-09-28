@@ -31,26 +31,18 @@ define([
                 return new Q();
             }
 
-            var defer = Q.defer();
-
             if (model.encryptedData) {
                 model = _.omit(model, encryptKeys);
             }
 
-            this.client.writeFile(
-                this.profile + '/' + type + '/' + model.id + '.json',
-                JSON.stringify(model),
-                function(err, stat) {
-                    if (err) {
-                        return defer.reject(err);
-                    }
+            var path = '/' + this.profile + '/' + type + '/' + model.id + '.json';
 
-                    console.log('stat', stat);
-                    defer.resolve(model);
-                }
-            );
-
-            return defer.promise;
+            return this.client.filesUpload({
+                path: path,
+                autorename: false,
+                mode: {'.tag': 'overwrite'},
+                contents: JSON.stringify(model),
+            });
         },
 
         /**
@@ -59,21 +51,15 @@ define([
          * @type string type [notes|notebooks|tags]
          */
         getAll: function(type) {
-            var hash = this.getHash(type) || null,
-                self = this;
+            var self = this;
 
-            return this.readdir(type, {hash: hash})
-            .spread(function(data, entr) {
-                if (!entr || !entr.length) {
-                    data = data || [];
-                    return data.contents || data;
-                }
-
+            return this.readdir(type)
+            .then(function(resp) {
                 var promises = [];
 
-                _.each(entr, function(fileName) {
-                    if (fileName.search('.json') !== -1) {
-                        promises.push(self.getById(type, fileName));
+                _.each(resp.entries, function(file) {
+                    if (file.name.search('.json') !== -1) {
+                        promises.push(self.getFile(type, file.path_lower));
                     }
                 });
 
@@ -85,27 +71,21 @@ define([
          * Get a JSON object by ID from Dropbox.
          *
          * @type string type [notes|notebooks|tags]
-         * @type string fileName
+         * @type string path
          */
-        getById: function(type, fileName) {
-            var defer = Q.defer();
+        getFile: function(type, path) {
+            return this.client.filesDownload({path: path})
+            .then(function(resp) {
+                var defer = Q.defer();
+                var reader = new FileReader();
 
-            // Add a file extension
-            if (fileName.search('.json') === -1) {
-                fileName += '.json';
-            }
+                reader.addEventListener('loadend', function() {
+                    defer.resolve(JSON.parse(reader.result));
+                });
+                reader.readAsText(resp.fileBlob);
 
-            fileName = this.profile + '/' + type + '/' + fileName;
-
-            this.client.readFile(fileName, function(err, data) {
-                if (err) {
-                    return defer.reject(err);
-                }
-
-                defer.resolve(JSON.parse(data));
+                return defer.promise;
             });
-
-            return defer.promise;
         },
 
         /**
@@ -115,88 +95,18 @@ define([
          * @type object options
          */
         readdir: function(type, options) {
-            var defer = Q.defer(),
-                self  = this;
-            options   = options || {};
-
-            this.client.readdir(this.profile + '/' + type, options, function(err, entr, fileStat) {
-                if (err) {
-                    /*
-                     * If a folder doesn't exist, probably synchronizing is done
-                     * for the first time
-                     */
-                    if (err.status === 404) {
-                        return defer.resolve([]);
-                    }
-                    else if (err.status === 304) {
-                        return defer.resolve([self.getCache(type)]);
-                    }
-
-                    console.error('Dropbox error', err);
-                    return defer.reject(err);
+            return this.client.filesListFolder({
+                path            : '/' + this.profile + '/' + type,
+                include_deleted : false,
+            })
+            .catch(function(err) {
+                if (err.status === 409) {
+                    return [];
                 }
 
-                var data = fileStat.json();
-                defer.resolve([data, entr]);
-            });
-
-            return defer.promise;
-        },
-
-        /**
-         * Update folder hash.
-         *
-         * @type string type [notes|notebooks|tags]
-         */
-        updateHash: function(type) {
-            return this.readdir(type)
-            .spread(function(data) {
-                if (!data) {
-                    return;
-                }
-                return localStorage.setItem(
-                    'dropbox.hash.' + Adapter.profile + '.' + type,
-                    data.hash
-                );
+                return Promise.reject(err);
             });
         },
-
-        /**
-         * Get folder hash.
-         *
-         * @type string type [notes|notebooks|tags]
-         */
-        getHash: function(type) {
-            return localStorage.getItem(
-                'dropbox.hash.' + this.profile + '.' + type
-            );
-        },
-
-        /**
-         * Get an array of objects which exist on Dropbox.
-         *
-         * @type string type [notes|notebooks|tags]
-         */
-        getCache: function(type) {
-            var data = localStorage.getItem('dropbox.cache.' + this.profile + '/' + type);
-            return JSON.parse(data);
-        },
-
-        /**
-         * Save an array of objects which exist on Dropbox.
-         *
-         * @type string type [notes|notebooks|tags]
-         */
-        saveCache: function(type, data) {
-            data = _.map(data, function(item) {
-                return {id: item.id, updated: item.updated};
-            });
-
-            return localStorage.setItem(
-                'dropbox.cache.' + this.profile + '/' + type,
-                JSON.stringify(data)
-            );
-        }
 
     };
 

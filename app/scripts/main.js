@@ -46,7 +46,7 @@ requirejs.config({
         // Backbone
         underscore            : '../bower_components/underscore/underscore',
         backbone              : '../bower_components/backbone/backbone',
-        marionette            : '../bower_components/marionette/lib/core/backbone.marionette',
+        marionette            : '../bower_components/backbone.marionette/lib/core/backbone.marionette',
         'backbone.radio'      : '../bower_components/backbone.radio/build/backbone.radio.min',
         'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
         fuse                  : '../bower_components/fuse/src/fuse',
@@ -61,7 +61,7 @@ requirejs.config({
         remotestorage         : '../bower_components/remotestorage.js/release/stable/remotestorage',
         bluebird              : '../bower_components/bluebird/js/browser/bluebird.min',
         tv4                   : '../bower_components/tv4/tv4',
-        dropbox               : '../bower_components/dropbox/dropbox',
+        dropbox               : 'helpers/Dropbox-sdk.min',
 
         // Markdown
         'markdown-it'         : '../bower_components/markdown-it/dist/markdown-it.min',
@@ -101,6 +101,9 @@ requirejs.config({
         // Backbone
         underscore: {
             exports: '_'
+        },
+        fileSaver: {
+            exports: 'saveAs',
         },
         backbone: {
             deps: ['underscore', 'jquery'],

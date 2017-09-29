@@ -185,8 +185,12 @@ define([
          */
         onReady: function() {
             var profile = Radio.request('uri', 'profile') || 'notes-db';
+            var self = this;
             adapter.init(this.client, profile);
-            this.checkChanges();
+
+            this.timeout = window.setTimeout(function() {
+                self.checkChanges();
+            }, 500);
         },
 
         /**

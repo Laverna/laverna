@@ -44,7 +44,7 @@ gulp.task('test', ['jsonlint', 'jshint', 'mocha']);
  * ``gulp build --dev`` to build without minifying.
  */
 gulp.task('build', plugins.sequence(
-    'test',
+    // 'test',
     'clean:dist',
     ['prism', 'less'],
     ['copy', 'require', 'htmlmin', 'cssmin'],

@@ -45,6 +45,7 @@ module.exports = function(gulp, plugins) {
                 './app/scripts/classes/sjcl.js',
                 './app/scripts/classes/sjcl.worker.js',
 
+                './app/scripts/helpers/Dropbox-sdk.min.js',
                 './app/scripts/helpers/db.js',
                 './app/scripts/helpers/migrate.js',
                 './app/scripts/migrate.js',

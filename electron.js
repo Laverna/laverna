@@ -142,11 +142,17 @@ appHelper = {
      */
     onReady: function() {
         this
-        .interceptProtocol()
+        .startServer()
+        // .interceptProtocol()
         .createWindow()
         .createMenu()
         .createTray()
         .registerEvents();
+    },
+
+    startServer() {
+        require('./server')(9000);
+        return this;
     },
 
     /**

@@ -60,8 +60,9 @@ const configNames = {
      * @prop {String} deviceId - unique device ID
      * @prop {Array}  peers    - an array of peers. Every item in the array
      * has the following structure {username, deviceId, lastSeen}
-     * @prop {String} cloudStorage - (dropbox|remotestorage)
+     * @prop {String} cloudStorage - (p2p|dropbox|remotestorage)
      * @prop {String} dropboxKey - dropbox app key
+     * @prop {String} dropboxAccessToken - dropbox access token
      */
     sync: {
         signalServer       : 'http://localhost:3000',
@@ -70,6 +71,7 @@ const configNames = {
         peers              : [],
         cloudStorage       : '0',
         dropboxKey         : '',
+        dropboxAccessToken : '',
     },
 
     /**

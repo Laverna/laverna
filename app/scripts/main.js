@@ -43,6 +43,7 @@ import './components/importExport/main';
 import './components/share/Controller';
 import './components/setup/main';
 import './components/encryption/main';
+import './components/dropbox/main';
 
 // Router based components
 import './components/notes/Router';

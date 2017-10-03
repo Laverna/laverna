@@ -139,6 +139,7 @@ export default class Sync {
     sync() {
         let promise = Promise.resolve();
         this.channel.trigger('start');
+        this.stat.statRemote = false;
         log('checking for changes...');
 
         _.each(this.collectionNames, name => {
@@ -190,6 +191,7 @@ export default class Sync {
             const model = collection.findWhere({id: file.id});
 
             if (!model || model.get('updated') < file.updated) {
+                this.stat.statRemote = true;
                 promises.push(collection.channel.request('saveModelObject', {
                     data      : file,
                     profileId : collection.profileId,

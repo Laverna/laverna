@@ -185,10 +185,10 @@ test('settings/show/Controller: save()', t => {
 
 test('settings/show/Controller: confirmNavigate()', t => {
     const con = new Controller();
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve('confirm'));
+    const req = sand.stub(Radio, 'request').resolves('confirm');
     sand.stub(con, 'navigate');
     sand.stub(con, 'hasChanges').returns(false);
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     con.confirmNavigate({url: '/test'});
     t.equal(req.notCalled, true,

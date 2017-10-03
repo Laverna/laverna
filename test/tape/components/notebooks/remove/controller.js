@@ -40,7 +40,7 @@ test('notebooks/remove/Controller: constructor()', t => {
 test('notebooks/remove/Controller: remove()', t => {
     const con   = new Controller();
     const model = new Notebook({id: '1'});
-    sand.stub(con, 'showConfirm').returns(Promise.resolve('confirm'));
+    sand.stub(con, 'showConfirm').resolves('confirm');
     sand.stub(con, 'requestRemove');
 
     const res = con.remove({model});
@@ -63,7 +63,7 @@ test('notebooks/remove/Controller: showConfirm()', t => {
     const con   = new Controller();
     const model = new Notebook({id: '1'});
     const req   = sand.stub(Radio, 'request');
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     con.showConfirm(new Tag({id: '1'}));
     t.equal(req.calledWith('components/confirm', 'show', {

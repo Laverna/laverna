@@ -53,7 +53,7 @@ test('setup/ContenView: onSaveError()', t => {
     const text    = sand.stub();
     const rmClass = sand.stub().returns({text});
     view.ui       = {alert: {removeClass: rmClass}};
-    sand.stub(_, 'i18n', txt => txt);
+    sand.stub(_, 'i18n').callsFake(txt => txt);
 
     view.onSaveError({err: 'error'});
     t.equal(rmClass.calledWith('hidden'), true, 'shows the message box');

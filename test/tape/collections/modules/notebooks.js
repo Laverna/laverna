@@ -9,18 +9,18 @@ import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
 import Notebooks from '../../../../app/scripts/collections/Notebooks';
 
 let sand;
-test('Module: before()', t => {
+test('collections/modules/Notebooks: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Notebooks: Collection', t => {
+test('collections/modules/Notebooks: Collection', t => {
     t.equal(Module.prototype.Collection, Notebooks,
         'uses notebooks collection');
     t.end();
 });
 
-test('Notebooks: remove()', t => {
+test('collections/modules/Notebooks: remove()', t => {
     const mod = new Module();
 
     sand.stub(mod, 'updateChildren').returns(Promise.resolve());
@@ -51,7 +51,7 @@ test('Notebooks: remove()', t => {
     });
 });
 
-test('Notebooks: updateChildren()', t => {
+test('collections/modules/Notebooks: updateChildren()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', parentId: 0}, {profileId: 'test'});
     const coll  = new Notebooks([{id: '1'}, {id: '2'}]);
@@ -74,7 +74,7 @@ test('Notebooks: updateChildren()', t => {
     });
 });
 
-test('Notebooks: getChildren()', t => {
+test('collections/modules/Notebooks: getChildren()', t => {
     const mod  = new Module();
     const stub = sand.stub(mod, 'find').returns(Promise.resolve());
 
@@ -103,11 +103,11 @@ test('Notebooks: getChildren()', t => {
     });
 });
 
-test('Notebooks: find()', t => {
+test('collections/modules/Notebooks: find()', t => {
     const mod  = new Module();
     const coll = new mod.Collection();
     const find = sand.stub(ModuleOrig.prototype, 'find')
-        .returns(Promise.resolve(coll));
+    .resolves(coll);
     sand.spy(coll, 'getTree');
 
     Radio.replyOnce('collections/Configs', 'findConfig', () => 'parentId');

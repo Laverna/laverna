@@ -45,7 +45,7 @@ test('encryption/auth/Controller: init()', t => {
     t.equal(con.destroy.called, true, 'destroyes itself if encryption is disabled');
 
     req.returns({encrypt: 1});
-    sand.stub(con, 'show', () => con.promise.resolve());
+    sand.stub(con, 'show').callsFake(() => con.promise.resolve());
     sand.stub(con, 'listenToEvents');
 
     con.init()

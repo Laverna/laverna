@@ -101,7 +101,7 @@ test('settings/show/encryption/Passphrase: save()', t => {
 test('settings/show/encryption/Passphrase: onChangeError()', t => {
     const view = new View();
     view.ui    = {helpError: {text: sand.stub()}};
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     view.onChangeError({message: 'error'});
     t.equal(view.ui.helpError.text.notCalled, true,

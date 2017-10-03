@@ -11,17 +11,17 @@ import Configs from '../../../../app/scripts/collections/Configs';
 import Module from '../../../../app/scripts/collections/modules/Configs';
 
 let sand;
-test('Configs: before()', t => {
+test('collections/modules/Configs: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Configs: Collection', t => {
+test('collections/modules/Configs: Collection', t => {
     t.equal(Module.prototype.Collection, Configs, 'uses configs collection');
     t.end();
 });
 
-test('Configs: constructor()', t => {
+test('collections/modules/Configs: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
@@ -43,7 +43,7 @@ test('Configs: constructor()', t => {
     t.end();
 });
 
-test('Configs: findModel()', t => {
+test('collections/modules/Configs: findModel()', t => {
     const mod  = new Module();
     const find = sand.stub(ModuleOrig.prototype, 'findModel');
     const get  = sand.spy(Configs.prototype, 'getDefault');
@@ -67,7 +67,7 @@ test('Configs: findModel()', t => {
     });
 });
 
-test('Configs: find()', t => {
+test('collections/modules/Configs: find()', t => {
     const mod        = new Module();
     const collection = new mod.Collection([{id: '1'}]);
     mod.collection   = collection;
@@ -101,7 +101,7 @@ test('Configs: find()', t => {
     });
 });
 
-test('Configs: getProfileId()', t => {
+test('collections/modules/Configs: getProfileId()', t => {
     const mod   = new Module();
     const model = new mod.Model({value: 0});
     const find  = sand.stub(mod, 'findModel').returns(Promise.resolve(model));
@@ -124,14 +124,14 @@ test('Configs: getProfileId()', t => {
     });
 });
 
-test('Configs: checkOrCreate()', t => {
+test('collections/modules/Configs: checkOrCreate()', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection();
 
     const hasNew  = sand.stub(mod.collection, 'hasNewConfigs').returns(false);
     const trigger = sand.stub(mod.channel, 'trigger');
     const create  = sand.stub(mod.collection, 'createDefault')
-        .returns(Promise.resolve());
+    .resolves();
     const find = sand.stub(ModuleOrig.prototype, 'find');
 
     mod.checkOrCreate()
@@ -154,7 +154,7 @@ test('Configs: checkOrCreate()', t => {
     });
 });
 
-test('Configs: findConfig()', t => {
+test('collections/modules/Configs: findConfig()', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection([{name: 'test', value: 'yes'}]);
 
@@ -167,7 +167,7 @@ test('Configs: findConfig()', t => {
     t.end();
 });
 
-test('Configs: findConfigs()', t => {
+test('collections/modules/Configs: findConfigs()', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection([{name: 'test', value: 'yes'}]);
     const spy = sand.spy(mod.collection, 'getConfigs');
@@ -180,10 +180,10 @@ test('Configs: findConfigs()', t => {
     t.end();
 });
 
-test('Configs: saveConfig()', t => {
+test('collections/modules/Configs: saveConfig()', t => {
     const mod  = new Module();
-    const save = sand.stub(mod, 'saveModel').returns(Promise.resolve('saved'));
-    const find = sand.stub(mod, 'findModel').returns(Promise.resolve(null));
+    const save = sand.stub(mod, 'saveModel').resolves('saved');
+    const find = sand.stub(mod, 'findModel').resolves(null);
 
     const useDefault = new mod.Model();
     const config     = {name: 'useDefaultConfigs', value: '1'};
@@ -214,7 +214,7 @@ test('Configs: saveConfig()', t => {
     });
 });
 
-test('Configs: saveConfigs() - object', t => {
+test('collections/modules/Configs: saveConfigs() - object', t => {
     const mod     = new Module();
     const configs = {
         test  : {name: 'test', value: 'test1'},
@@ -238,7 +238,7 @@ test('Configs: saveConfigs() - object', t => {
     });
 });
 
-test('Configs: saveConfigs() - array', t => {
+test('collections/modules/Configs: saveConfigs() - array', t => {
     const mod     = new Module();
     const configs = [
         {name: 'test', value: 'test1'},
@@ -258,7 +258,7 @@ test('Configs: saveConfigs() - array', t => {
     });
 });
 
-test('Configs: findProfileModel()', t => {
+test('collections/modules/Configs: findProfileModel()', t => {
     const mod  = new Module();
     const find = sand.stub(mod, 'findModel').returns('yes');
 
@@ -271,7 +271,7 @@ test('Configs: findProfileModel()', t => {
     t.end();
 });
 
-test('Configs: findDefaultProfiles()', t => {
+test('collections/modules/Configs: findDefaultProfiles()', t => {
     const mod = new Module();
 
     mod.findDefaultProfiles()
@@ -282,7 +282,7 @@ test('Configs: findDefaultProfiles()', t => {
     });
 });
 
-test('Configs: findProfileUseDefaults()', t => {
+test('collections/modules/Configs: findProfileUseDefaults()', t => {
     const mod = new Module();
     const spy = sand.spy(mod, 'findModel');
 
@@ -302,7 +302,7 @@ test('Configs: findProfileUseDefaults()', t => {
     });
 });
 
-test('Configs: createProfile()', t => {
+test('collections/modules/Configs: createProfile()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel');
 
@@ -321,7 +321,7 @@ test('Configs: createProfile()', t => {
     });
 });
 
-test('Configs: removeProfile()', t => {
+test('collections/modules/Configs: removeProfile()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel');
     sand.stub(mod, 'findProfileModel').returns(
@@ -343,7 +343,7 @@ test('Configs: removeProfile()', t => {
     });
 });
 
-test('Configs: changePassphrase() - reject', t => {
+test('collections/modules/Configs: changePassphrase() - reject', t => {
     const mod    = new Module();
     const reject = sand.spy(Promise, 'reject');
 
@@ -361,7 +361,7 @@ test('Configs: changePassphrase() - reject', t => {
     t.end();
 });
 
-test('Configs: changePassphrase() - success', t => {
+test('collections/modules/Configs: changePassphrase() - success', t => {
     const mod = new Module();
     const opt = {
         model: new Configs.prototype.model({id: '1'}),
@@ -387,7 +387,7 @@ test('Configs: changePassphrase() - success', t => {
     });
 });
 
-test('Configs: createDeviceId()', t => {
+test('collections/modules/Configs: createDeviceId()', t => {
     const mod = new Module();
     const req = sand.stub(Radio, 'request').returns(Promise.resolve('rand'));
     sand.stub(mod, 'saveConfig');
@@ -406,7 +406,7 @@ test('Configs: createDeviceId()', t => {
     });
 });
 
-test('Configs: updatePeer()', t => {
+test('collections/modules/Configs: updatePeer()', t => {
     const mod      = new Module();
     const lastSeen = Date.now();
     const model    = new Configs.prototype.model({

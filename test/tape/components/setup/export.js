@@ -16,9 +16,10 @@ test('setup/export/View: before()', t => {
 
 test('setup/export/View: serializeData()', t => {
     const opt  = {el: 'test'};
-    const view = new View(opt);
+    View.prototype.options = {el: 'test'};
 
-    t.deepEqual(view.serializeData(), opt);
+    t.deepEqual(View.prototype.serializeData(), opt);
 
+    View.prototype.options = null;
     t.end();
 });

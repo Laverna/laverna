@@ -9,12 +9,12 @@ import Radio from 'backbone.radio';
 import Module from '../../../app/scripts/workers/Module';
 
 let sand;
-test('worker: before()', t => {
+test('workers/Module: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Module: fileName()', t => {
+test('workers/Module: fileName()', t => {
     const module = new Module();
 
     t.equal(typeof module.fileName, 'string', 'returns string');
@@ -23,27 +23,28 @@ test('Module: fileName()', t => {
     t.end();
 });
 
-test('Module: channelName', t => {
+test('workers/Module: channelName', t => {
     const module = new Module();
     t.equal(module.channelName, module.fileName, 'uses fileName');
     t.end();
 });
 
-test('Module: channel()', t => {
+test('workers/Module: channel()', t => {
     const module = new Module();
     t.equal(typeof module.channel, 'object');
     t.end();
 });
 
-test('Module: radioRequests()', t => {
+test('workers/Module: radioRequests()', t => {
     const module = new Module();
     t.equal(typeof module.radioRequests, 'object', 'returns an object');
     t.end();
 });
 
-test('Module: constructor()', t => {
+test('workers/Module: constructor()', t => {
     const replies = {};
-    const reply   = sand.stub(Module.prototype.channel, 'reply', (key, func) => {
+    const reply   = sand.stub(Module.prototype.channel, 'reply')
+    .callsFake((key, func) => {
         replies[key] = func;
     });
 
@@ -64,7 +65,7 @@ test('Module: constructor()', t => {
     t.end();
 });
 
-test('Module: processRequest() - no worker', t => {
+test('workers/Module: processRequest() - no worker', t => {
     const module = new Module();
     module.save  = sand.stub();
     module.save.returns('result');
@@ -84,7 +85,7 @@ test('Module: processRequest() - no worker', t => {
     t.end();
 });
 
-test('Module: processRequest() - delegate to worker', t => {
+test('workers/Module: processRequest() - delegate to worker', t => {
     const module = new Module();
     const stub   = sand.stub(module, 'delegateToWorker');
     window.Worker = true;
@@ -98,7 +99,7 @@ test('Module: processRequest() - delegate to worker', t => {
     t.end();
 });
 
-test('Module: delegateToWorker()', t => {
+test('workers/Module: delegateToWorker()', t => {
     const module = new Module();
     const stub   = sand.stub(Radio, 'request').returns(Promise.resolve());
 
@@ -114,7 +115,7 @@ test('Module: delegateToWorker()', t => {
     t.end();
 });
 
-test('Module: after()', t => {
+test('workers/Module: after()', t => {
     sand.restore();
     t.end();
 });

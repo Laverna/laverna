@@ -41,10 +41,10 @@ test('settings/show/sync/Users: events()', t => {
 
 test('settings/show/sync/Users: showConfirm()', t => {
     const view = new View({collection: new Users([{username: 'alice'}])});
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve(true));
+    const req  = sand.stub(Radio, 'request').resolves(true);
     const attr = sand.stub().returns('alice');
     sand.stub(view, '$').returns({attr});
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     view.showConfirm({currentTarget: '#username'}, 'are you sure?')
     .then(res => {

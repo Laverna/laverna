@@ -8,24 +8,24 @@ import Collection from '../../../app/scripts/collections/Collection';
 import Note from '../../../app/scripts/models/Note';
 
 let sand;
-test('Collection: before()', t => {
+test('collections/Collection: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Collection: sync', t => {
+test('collections/Collection: sync', t => {
     const coll = new Collection();
     t.equal(typeof coll.sync, 'function', 'has sync method');
     t.end();
 });
 
-test('Collection: profileId', t => {
+test('collections/Collection: profileId', t => {
     const coll = new Collection();
     t.equal(coll.profileId, 'notes-db');
     t.end();
 });
 
-test('Collection: profileId - can change', t => {
+test('collections/Collection: profileId - can change', t => {
     const coll = new Collection();
     coll.model = Note.extend({});
 
@@ -38,7 +38,7 @@ test('Collection: profileId - can change', t => {
     t.end();
 });
 
-test('Collection: storeName', t => {
+test('collections/Collection: storeName', t => {
     const coll = new Collection();
     coll.model = Note.extend({});
 
@@ -49,14 +49,14 @@ test('Collection: storeName', t => {
     t.end();
 });
 
-test('Collection: channel', t => {
+test('collections/Collection: channel', t => {
     const coll = new Collection();
     coll.model = Note.extend({});
     t.equal(coll.channel, coll.model.prototype.channel);
     t.end();
 });
 
-test('Collection: filterList()', t => {
+test('collections/Collection: filterList()', t => {
     const coll      = new Collection();
     coll.testFilter = sand.stub().returns([]);
 
@@ -76,7 +76,7 @@ test('Collection: filterList()', t => {
     t.end();
 });
 
-test('Collection: getCondition()', t => {
+test('collections/Collection: getCondition()', t => {
     const coll      = new Collection();
     coll.conditions = {active: {trash: 0}};
 
@@ -92,7 +92,7 @@ test('Collection: getCondition()', t => {
     t.end();
 });
 
-test('Collection: findOrCreate()', t => {
+test('collections/Collection: findOrCreate()', t => {
     const coll      = new Collection();
     coll.add({id: 1});
 

@@ -10,13 +10,13 @@ import Note from '../../../app/scripts/models/Note';
 import '../../../app/scripts/utils/underscore';
 
 let sand;
-test('Pageable: before()', t => {
+test('collections/Pageable: before()', t => {
     Pageable.prototype.model = Note;
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Pageable: channel', t => {
+test('collections/Pageable: channel', t => {
     const page = new Pageable();
     t.equal(typeof page.channel, 'object', 'is an object');
     t.equal(page.channel.channelName, 'collections/Notes',
@@ -24,7 +24,7 @@ test('Pageable: channel', t => {
     t.end();
 });
 
-test('Pageable: comparators', t => {
+test('collections/Pageable: comparators', t => {
     const comparators = new Pageable().comparators;
 
     t.equal(typeof comparators, 'object', 'is an object');
@@ -34,7 +34,7 @@ test('Pageable: comparators', t => {
     t.end();
 });
 
-test('Pageable: pagination', t => {
+test('collections/Pageable: pagination', t => {
     const pagination = new Pageable().pagination;
 
     t.equal(typeof pagination, 'object', 'is an object');
@@ -46,7 +46,7 @@ test('Pageable: pagination', t => {
     t.end();
 });
 
-test('Pageable: paginate()', t => {
+test('collections/Pageable: paginate()', t => {
     const page = new Pageable();
 
     // Create spies
@@ -73,7 +73,7 @@ test('Pageable: paginate()', t => {
     t.end();
 });
 
-test('Pageable: startListening()', t => {
+test('collections/Pageable: startListening()', t => {
     const page      = new Pageable();
     const listenSpy = sand.spy(page, 'listenTo');
 
@@ -98,7 +98,7 @@ test('Pageable: startListening()', t => {
     t.end();
 });
 
-test('Pageable: removeEvents()', t => {
+test('collections/Pageable: removeEvents()', t => {
     const page          = new Pageable();
     page.fullCollection = page.clone();
 
@@ -113,7 +113,7 @@ test('Pageable: removeEvents()', t => {
     t.end();
 });
 
-test('Pageable: onUpdateModel()', t => {
+test('collections/Pageable: onUpdateModel()', t => {
     const page  = new Pageable();
     const model = new Note();
 
@@ -125,7 +125,7 @@ test('Pageable: onUpdateModel()', t => {
     t.end();
 });
 
-test('Pageable: onUpdateModel() -> onDestroyModel()', t => {
+test('collections/Pageable: onUpdateModel() -> onDestroyModel()', t => {
     const page  = new Pageable();
     const model = new Note({trash: 1});
 
@@ -139,7 +139,7 @@ test('Pageable: onUpdateModel() -> onDestroyModel()', t => {
     t.end();
 });
 
-test('Pageable: onUpdateModel() -> updateCollectionModel()', t => {
+test('collections/Pageable: onUpdateModel() -> updateCollectionModel()', t => {
     const page  = new Pageable();
     const model = new Note();
 
@@ -151,7 +151,7 @@ test('Pageable: onUpdateModel() -> updateCollectionModel()', t => {
     t.end();
 });
 
-test('Pageable: updateCollectionModel()', t => {
+test('collections/Pageable: updateCollectionModel()', t => {
     const page = new Pageable();
 
     // Existing model
@@ -172,7 +172,7 @@ test('Pageable: updateCollectionModel()', t => {
     t.end();
 });
 
-test('Pageable: onDestroyModel()', t => {
+test('collections/Pageable: onDestroyModel()', t => {
     const page = new Pageable();
 
     t.equal(page.onDestroyModel({model: {id: 42}}), false,
@@ -191,7 +191,7 @@ test('Pageable: onDestroyModel()', t => {
     t.end();
 });
 
-test('Pageable: navigateOnRemove()', t => {
+test('collections/Pageable: navigateOnRemove()', t => {
     const page    = new Pageable();
     const trigger = sand.spy(page.channel, 'trigger');
 
@@ -212,7 +212,7 @@ test('Pageable: navigateOnRemove()', t => {
     t.end();
 });
 
-test('Pageable: navigateOnRemove() - navigate to the previous page', t => {
+test('collections/Pageable: navigateOnRemove() - navigate to the previous page', t => {
     const page    = new Pageable();
     const trigger = sand.spy(page.channel, 'trigger');
     sand.stub(page, 'hasPreviousPage').returns(false);
@@ -231,7 +231,7 @@ test('Pageable: navigateOnRemove() - navigate to the previous page', t => {
     t.end();
 });
 
-test('Pageable: onRestoreModel()', t => {
+test('collections/Pageable: onRestoreModel()', t => {
     const page  = new Pageable();
     const model = new Note();
     page.add([model, model.clone()]);
@@ -251,7 +251,7 @@ test('Pageable: onRestoreModel()', t => {
     t.end();
 });
 
-test('Pageable: sortByComparators() - desc', t => {
+test('collections/Pageable: sortByComparators() - desc', t => {
     const page = new Pageable();
     const sort = sand.spy(page, 'sort');
     page.reset([]);
@@ -280,7 +280,7 @@ test('Pageable: sortByComparators() - desc', t => {
     t.end();
 });
 
-test('Pageable: sortByComparators() - asc', t => {
+test('collections/Pageable: sortByComparators() - asc', t => {
     const page = new Pageable();
     page.comparators = {
         isFavorite: 'asc',
@@ -307,7 +307,7 @@ test('Pageable: sortByComparators() - asc', t => {
     t.end();
 });
 
-test('Pageable: updateTotalPages()', t => {
+test('collections/Pageable: updateTotalPages()', t => {
     const page = new Pageable();
 
     const pages = Math.ceil(125 / page.pagination.perPage) - 1;
@@ -317,7 +317,7 @@ test('Pageable: updateTotalPages()', t => {
     t.end();
 });
 
-test('Pageable: hasNextPage()', t => {
+test('collections/Pageable: hasNextPage()', t => {
     const page = new Pageable();
 
     t.equal(page.hasNextPage(), false,
@@ -334,7 +334,7 @@ test('Pageable: hasNextPage()', t => {
     t.end();
 });
 
-test('Pageable: hasPreviousPage()', t => {
+test('collections/Pageable: hasPreviousPage()', t => {
     const page = new Pageable();
 
     t.equal(page.hasPreviousPage(), false,
@@ -347,7 +347,7 @@ test('Pageable: hasPreviousPage()', t => {
     t.end();
 });
 
-test('Pageable: getNextPage() + getPreviousPage()', t => {
+test('collections/Pageable: getNextPage() + getPreviousPage()', t => {
     const page  = new Pageable();
     const stub  = sand.stub(page, 'getPage').returns([{id: 'next'}]);
     const reset = sand.spy(page, 'reset');
@@ -369,7 +369,7 @@ test('Pageable: getNextPage() + getPreviousPage()', t => {
     t.end();
 });
 
-test('Pageable: getPage()', t => {
+test('collections/Pageable: getPage()', t => {
     const page   = new Pageable();
     const offset = sand.spy(page, 'getOffset');
 
@@ -385,7 +385,7 @@ test('Pageable: getPage()', t => {
     t.end();
 });
 
-test('Pageable: getOffset()', t => {
+test('collections/Pageable: getOffset()', t => {
     const page = new Pageable();
 
     t.equal(page.getOffset(1), 1 * page.pagination.perPage);
@@ -396,7 +396,7 @@ test('Pageable: getOffset()', t => {
     t.end();
 });
 
-test('Pageable: navigateNextModel()', t => {
+test('collections/Pageable: navigateNextModel()', t => {
     const page    = new Pageable();
     const trigger = sand.stub(page.channel, 'trigger');
     const hasNext = sand.stub(page, 'hasNextPage').returns(false);
@@ -428,7 +428,7 @@ test('Pageable: navigateNextModel()', t => {
     t.end();
 });
 
-test('Pageable: navigatePreviousModel()', t => {
+test('collections/Pageable: navigatePreviousModel()', t => {
     const page        = new Pageable();
     const trigger     = sand.stub(page.channel, 'trigger');
     const hasPrevious = sand.stub(page, 'hasPreviousPage').returns(false);
@@ -461,7 +461,7 @@ test('Pageable: navigatePreviousModel()', t => {
     t.end();
 });
 
-test('Pageable: after()', t => {
+test('collections/Pageable: after()', t => {
     delete Pageable.prototype.model;
     sand.restore();
     t.end();

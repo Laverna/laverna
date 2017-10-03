@@ -8,31 +8,31 @@ import {configNames} from '../../../app/scripts/collections/configNames';
 import Config from '../../../app/scripts/models/Config';
 
 let sand;
-test('Configs: before()', t => {
+test('collections/Configs: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Configs: profileId', t => {
+test('collections/Configs: profileId', t => {
     const configs = new Configs();
     t.equal(configs.profileId, 'notes-db');
     t.end();
 });
 
-test('Configs: model', t => {
+test('collections/Configs: model', t => {
     const configs = new Configs();
     t.equal(configs.model, Config, 'uses config model');
     t.end();
 });
 
-test('Configs: configNames', t => {
+test('collections/Configs: configNames', t => {
     const configs = new Configs();
     t.equal(typeof configs.configNames, 'object', 'is an object');
     t.equal(Object.keys(configs.configNames).length > 10, true, 'is not empty');
     t.end();
 });
 
-test('Configs: hasNewConfigs()', t => {
+test('collections/Configs: hasNewConfigs()', t => {
     const configs = new Configs();
 
     t.equal(configs.hasNewConfigs(), true, 'returns true if there are new configs');
@@ -45,7 +45,7 @@ test('Configs: hasNewConfigs()', t => {
     t.end();
 });
 
-test('Configs: createDefault()', t => {
+test('collections/Configs: createDefault()', t => {
     const configs = new Configs();
     const spy     = sand.spy(configs.model.prototype, 'save');
     configs.add({name: 'appVersion', value: '1.0'});
@@ -60,7 +60,7 @@ test('Configs: createDefault()', t => {
     });
 });
 
-test('Configs: getConfigs()', t => {
+test('collections/Configs: getConfigs()', t => {
     const configs = new Configs();
 
     t.equal(typeof configs.getConfigs(), 'object', 'returns an object');
@@ -76,7 +76,7 @@ test('Configs: getConfigs()', t => {
     t.end();
 });
 
-test('Configs: getDefault()', t => {
+test('collections/Configs: getDefault()', t => {
     const configs = new Configs();
     const model   = configs.getDefault('pagination');
 
@@ -86,7 +86,7 @@ test('Configs: getDefault()', t => {
     t.end();
 });
 
-test('Configs: resetFromObject()', t => {
+test('collections/Configs: resetFromObject()', t => {
     const configs = new Configs();
     const spy     = sand.spy(configs, 'reset');
     const res     = configs.resetFromObject(configs.configNames);
@@ -99,7 +99,7 @@ test('Configs: resetFromObject()', t => {
     t.end();
 });
 
-test('Configs: keybindings()', t => {
+test('collections/Configs: keybindings()', t => {
     const configs = new Configs();
     configs.resetFromObject(configs.configNames);
     const res     = configs.keybindings();
@@ -112,7 +112,7 @@ test('Configs: keybindings()', t => {
     t.end();
 });
 
-test('Configs: appShortcuts()', t => {
+test('collections/Configs: appShortcuts()', t => {
     const configs = new Configs();
     configs.resetFromObject(configs.configNames);
     const res     = configs.appShortcuts();
@@ -123,7 +123,7 @@ test('Configs: appShortcuts()', t => {
     t.end();
 });
 
-test('Configs: filterByName()', t => {
+test('collections/Configs: filterByName()', t => {
     const configs = new Configs();
     configs.resetFromObject(configs.configNames);
     const res     = configs.filterByName('actions');
@@ -134,7 +134,7 @@ test('Configs: filterByName()', t => {
     t.end();
 });
 
-test('Configs: after()', t => {
+test('collections/Configs: after()', t => {
     localStorage.clear();
     sand.restore();
     t.end();

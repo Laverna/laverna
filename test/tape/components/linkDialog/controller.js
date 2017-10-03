@@ -49,7 +49,7 @@ test('linkDialog/Controller: onDestroy()', t => {
 test('linkDialog/Controller: init()', t => {
     const con = new Controller();
     sand.stub(con, 'show');
-    sand.stub(con, 'listenToEvents', () => con.promise.resolve());
+    sand.stub(con, 'listenToEvents').callsFake(() => con.promise.resolve());
 
     con.init()
     .then(() => {
@@ -102,7 +102,7 @@ test('linkDialog/Controller: listenToEvents()', t => {
 test('linkDialog/Controller: renderDropdown()', t => {
     const con = new Controller();
     const req = sand.stub(con.notesChannel, 'request')
-        .returns(Promise.resolve({models: []}));
+    .resolves({models: []});
     con.view  = {options: {}, renderDropdown: sand.stub()};
 
     con.renderDropdown()

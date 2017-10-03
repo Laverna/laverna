@@ -50,7 +50,7 @@ test('I18n: initLocale()', t => {
     const i18n = new I18n();
 
     sand.spy(i18next, 'use');
-    sand.stub(i18next, 'init', (opt, res) => res());
+    sand.stub(i18next, 'init').callsFake((opt, res) => res());
 
     const res = i18n.initLocale('en');
     t.equal(typeof res.then, 'function', 'returns a promise');

@@ -77,7 +77,7 @@ test('codemirror/View: onClickButton()', t => {
     const preventDefault = sand.stub();
     const attr           = sand.stub();
     sand.stub(view, '$').withArgs('test')
-        .returns({attr});
+    .returns({attr});
     sand.stub(view, 'trigger');
 
     view.onClickButton({preventDefault, currentTarget: 'test'});
@@ -166,7 +166,7 @@ test('codemirror/View: updateFooter()', t => {
     const view = new View({configs: {}});
     const html = sand.stub(view.$footer, 'html');
     const opt  = {currentLine: 1, numberOfLines: 2};
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     view.updateFooter(opt);
     t.equal(html.calledWith('Line of'), true, 'changes the footer');

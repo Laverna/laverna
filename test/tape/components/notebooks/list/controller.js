@@ -85,7 +85,7 @@ test('notebooks/list/Controller: show()', t => {
     const tags      = new Tags();
     const notebooks = new Notebooks();
     const req       = sand.stub(Radio, 'request');
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     sand.stub(View.prototype, 'bindKeys');
     con.show(tags, notebooks);

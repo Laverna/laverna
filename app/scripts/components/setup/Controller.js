@@ -278,7 +278,7 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     export() {
-        this.saveSync()
+        return this.saveSync()
         .then(() => {
             const blob = new Blob([this.keys.privateKey], {type: 'text/plain'});
             this.fileSaver(blob, 'laverna-key.asc');

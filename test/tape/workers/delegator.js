@@ -10,17 +10,17 @@ import Radio from 'backbone.radio';
 import {default as Delegator, initializer} from '../../../app/scripts/workers/Delegator';
 
 let sand;
-test('Delegator: before()', t => {
+test('workers/Delegator: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Delegator: channel', t => {
+test('workers/Delegator: channel', t => {
     t.equal(Delegator.prototype.channel.channelName, 'workers/Delegator');
     t.end();
 });
 
-test('Delegator: constructor()', t => {
+test('workers/Delegator: constructor()', t => {
     const channel = Delegator.prototype.channel;
     const reply   = sand.stub(channel, 'reply');
     const trigger = sand.stub(channel, 'trigger');
@@ -38,7 +38,7 @@ test('Delegator: constructor()', t => {
     t.end();
 });
 
-test('Delegator: delegateMethod()', t => {
+test('workers/Delegator: delegateMethod()', t => {
     const con = new Delegator();
     sand.stub(con, 'postMessage');
 
@@ -51,7 +51,7 @@ test('Delegator: delegateMethod()', t => {
     t.end();
 });
 
-test('Delegator: postMessage()', t => {
+test('workers/Delegator: postMessage()', t => {
     const con    = new Delegator();
     const worker = {unresolved: 0, instance: {postMessage: sand.stub()}};
     sand.stub(con, 'getWorker').returns(worker);
@@ -69,7 +69,7 @@ test('Delegator: postMessage()', t => {
     t.end();
 });
 
-test('Delegator: spawnWorkers()', t => {
+test('workers/Delegator: spawnWorkers()', t => {
     const con  = new Delegator();
     const cpus = window.navigator.hardwareConcurrency || 1;
     sand.stub(con, 'spawnWorker').returns({});
@@ -82,7 +82,7 @@ test('Delegator: spawnWorkers()', t => {
     t.end();
 });
 
-test('Delegator: spawnWorker()', t => {
+test('workers/Delegator: spawnWorker()', t => {
     const con    = new Delegator();
     const worker = {addEventListener: sand.stub()};
     const stub   = sand.stub().returns(worker);
@@ -101,7 +101,7 @@ test('Delegator: spawnWorker()', t => {
     t.end();
 });
 
-test('Delegator: onMessage()', t => {
+test('workers/Delegator: onMessage()', t => {
     const con = new Delegator();
     sand.stub(con, 'onPromise');
 
@@ -123,7 +123,7 @@ test('Delegator: onMessage()', t => {
     t.end();
 });
 
-test('Delegator: onPromise()', t => {
+test('workers/Delegator: onPromise()', t => {
     const con     = new Delegator();
     const promise = {resolve: sand.stub(), reject: sand.stub()};
     const worker  = {unresolved: 10};
@@ -146,7 +146,7 @@ test('Delegator: onPromise()', t => {
     t.end();
 });
 
-test('Delegator: getPromise()', t => {
+test('workers/Delegator: getPromise()', t => {
     const con    = new Delegator();
     con.promises = [{resolve: 'test'}];
 
@@ -157,7 +157,7 @@ test('Delegator: getPromise()', t => {
     t.end();
 });
 
-test('Delegator: getWorker()', t => {
+test('workers/Delegator: getWorker()', t => {
     const con   = new Delegator();
     con.workers = [{instance: '0', unresolved: 10}];
 
@@ -179,7 +179,7 @@ test('Delegator: getWorker()', t => {
     t.end();
 });
 
-test('Delegator: initializer()', t => {
+test('workers/Delegator: initializer()', t => {
     const spawn = sand.stub(Delegator.prototype, 'spawnWorkers');
     global.Modernizr = {webworkers: false};
 
@@ -194,7 +194,7 @@ test('Delegator: initializer()', t => {
     t.end();
 });
 
-test('Delegator: after()', t => {
+test('workers/Delegator: after()', t => {
     Radio.channel('workers/Delegator').stopReplying();
     sand.restore();
     t.end();

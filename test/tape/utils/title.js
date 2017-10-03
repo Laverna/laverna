@@ -106,9 +106,9 @@ test('Title: setTitle()', t => {
 test('Title: setSection()', t => {
     const title    = new Title();
     const filter   = sand.stub(title, 'getTitleFromFilter')
-        .returns(Promise.resolve('test'));
+    .resolves('test');
     const notebook = sand.stub(title, 'notebookTitle')
-        .returns(Promise.resolve('notebook'));
+    .resolves('notebook');
 
     const options = {query: 'test', filter: 'notebook'};
     title.setSection(options)
@@ -133,7 +133,7 @@ test('Title: setSection()', t => {
 
 test('Title: getTitleFromFilter()', t => {
     const title = new Title();
-    sand.stub(_, 'i18n', str => str);
+    sand.stub(_, 'i18n').callsFake(str => str);
 
     t.equal(title.getTitleFromFilter({filter: 'search', query: 'test'}), 'Test',
         'uses "query" as title if it is search filter');

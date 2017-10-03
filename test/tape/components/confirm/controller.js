@@ -6,7 +6,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Controller from '../../../../app/scripts/components/confirm/Controller';
-import View from '../../../../app/scripts/components/confirm/View';
+// import View from '../../../../app/scripts/components/confirm/View';
 
 let sand;
 test('confirm/Controller: before()', t => {
@@ -35,7 +35,7 @@ test('confirm/Controller: constructor()', t => {
 
 test('confirm/Controller: init()', t => {
     const con = new Controller();
-    sand.stub(con, 'show', (opt, promise) => {
+    sand.stub(con, 'show').callsFake((opt, promise) => {
         promise.resolve();
     });
 

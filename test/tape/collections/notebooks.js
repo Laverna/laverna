@@ -8,25 +8,25 @@ import Pageable from '../../../app/scripts/collections/Pageable';
 import Notebook from '../../../app/scripts/models/Notebook';
 
 let sand;
-test('Notebooks: before()', t => {
+test('collections/Notebooks: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Notebooks: model', t => {
+test('collections/Notebooks: model', t => {
     const notebooks = new Notebooks();
     t.equal(notebooks.model, Notebook, 'uses notebook model');
     t.end();
 });
 
-test('Notebooks: conditions', t => {
+test('collections/Notebooks: conditions', t => {
     const conditions = new Notebooks().conditions;
     t.equal(typeof conditions, 'object', 'is an object');
     t.deepEqual(conditions.active, {trash: 0});
     t.end();
 });
 
-test('Notebooks: comparators', t => {
+test('collections/Notebooks: comparators', t => {
     t.equal(typeof new Notebooks().comparators, 'object', 'is an object');
     t.equal(new Notebooks().comparators.name, 'desc', 'uses default comparators');
 
@@ -37,13 +37,13 @@ test('Notebooks: comparators', t => {
     t.end();
 });
 
-test('Notebooks: constructor()', t => {
+test('collections/Notebooks: constructor()', t => {
     const notebooks = new Notebooks();
     t.equal(notebooks.pagination.perPage, 0, 'disables pagination');
     t.end();
 });
 
-test('Notebooks: startListening()', t => {
+test('collections/Notebooks: startListening()', t => {
     const stub      = sand.stub(Pageable.prototype, 'startListening');
     const notebooks = new Notebooks();
     const listen    = sand.stub(notebooks, 'listenTo');
@@ -57,7 +57,7 @@ test('Notebooks: startListening()', t => {
     t.end();
 });
 
-test('Notebooks: getTree()', t => {
+test('collections/Notebooks: getTree()', t => {
     const models = [
         {id: '1', parentId: '0'}, {id: '2', parentId: '0'},
         {id: '3', parentId: '1'}, {id: '4', parentId: '3'},
@@ -88,7 +88,7 @@ test('Notebooks: getTree()', t => {
     t.end();
 });
 
-test('Notebooks: getRoots()', t => {
+test('collections/Notebooks: getRoots()', t => {
     const notebooks = new Notebooks([
         {id: '1', parentId: '0'}, {id: '2', parentId: '1'},
     ]);
@@ -105,7 +105,7 @@ test('Notebooks: getRoots()', t => {
     t.end();
 });
 
-test('Notebooks: getChildren()', t => {
+test('collections/Notebooks: getChildren()', t => {
     const notebooks = new Notebooks([
         {id: '1', parentId: '0'}, {id: '2', parentId: '1'},
         {id: '3', parentId: '1'}, {id: '4', parentId: '2'},
@@ -124,7 +124,7 @@ test('Notebooks: getChildren()', t => {
     t.end();
 });
 
-test('Notebooks: rejectTree()', t => {
+test('collections/Notebooks: rejectTree()', t => {
     const notebooks = new Notebooks([
         {id: '1', parentId: '0'}, {id: '2', parentId: '0'},
         {id: '3', parentId: '1'}, {id: '4', parentId: '3'},
@@ -142,7 +142,7 @@ test('Notebooks: rejectTree()', t => {
     t.end();
 });
 
-test('Notebooks: after()', t => {
+test('collections/Notebooks: after()', t => {
     sand.restore();
     t.end();
 });

@@ -32,7 +32,7 @@ test('notes/form/views/NotebooksCollection: childView()', t => {
 test('notes/form/views/NotebooksCollection: onRender()', t => {
     const view = View.prototype;
     view.$el   = {attr: sinon.stub()};
-    sinon.stub(_, 'i18n', str => str);
+    sinon.stub(_, 'i18n').callsFake(str => str);
 
     view.onRender();
     t.equal(view.$el.attr.calledWith('label', 'Notebooks'), true,

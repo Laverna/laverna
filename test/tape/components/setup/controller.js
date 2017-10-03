@@ -320,22 +320,28 @@ test('setup/Controller: saveConfigs()', t => {
 
 test('setup/Controller: export()', t => {
     const con   = new Controller();
+
+    sand.stub(con, 'saveSync').resolves();
     global.Blob = sand.stub().returns('blob');
     con.view    = {destroy: sand.stub()};
     con.keys    = {privateKey: 'priv'};
     sand.stub(con, 'fileSaver');
 
-    con.export();
-    t.equal(global.Blob.calledWith([con.keys.privateKey], {
-        type: 'text/plain',
-    }), true, 'creates a blob of the private key');
+    const res = con.export();
+    t.equal(con.saveSync.called, true, 'calls saveSync() method');
 
-    t.equal(con.fileSaver.calledWithMatch({}, 'laverna-key.asc'), true,
-        'offers the user to save their private key');
-    t.equal(con.view.destroy.called, true, 'destroyes the view');
+    res.then(() => {
+        t.equal(global.Blob.calledWith([con.keys.privateKey], {
+            type: 'text/plain',
+        }), true, 'creates a blob of the private key');
 
-    sand.restore();
-    t.end();
+        t.equal(con.fileSaver.calledWithMatch({}, 'laverna-key.asc'), true,
+            'offers the user to save their private key');
+        t.equal(con.view.destroy.called, true, 'destroyes the view');
+
+        sand.restore();
+        t.end();
+    });
 });
 
 test('setup/Controller: import()', t => {

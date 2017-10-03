@@ -11,18 +11,18 @@ const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     dolor et magna ullamcorper euismod.`;
 
 let sand;
-test('Notes: before()', t => {
+test('collections/Notes: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Notes: model', t => {
+test('collections/Notes: model', t => {
     const notes = new Notes();
     t.equal(notes.model, Note, 'uses note model');
     t.end();
 });
 
-test('Notes: conditions', t => {
+test('collections/Notes: conditions', t => {
     const conditions = new Notes().conditions;
 
     t.equal(typeof conditions, 'object', 'is an object');
@@ -35,7 +35,7 @@ test('Notes: conditions', t => {
     t.end();
 });
 
-test('Notes: comparators', t => {
+test('collections/Notes: comparators', t => {
     const comparators = new Notes().comparators;
 
     t.equal(typeof comparators, 'object', 'is an object');
@@ -49,7 +49,7 @@ test('Notes: comparators', t => {
     t.end();
 });
 
-test('Notes: constructor()', t => {
+test('collections/Notes: constructor()', t => {
     t.equal(new Notes().pagination.perPage, 10,
         'changes the number of models shown per page');
 
@@ -59,7 +59,7 @@ test('Notes: constructor()', t => {
     t.end();
 });
 
-test('Notes: taskFilter()', t => {
+test('collections/Notes: taskFilter()', t => {
     const notes = new Notes([
         {id: '1', taskCompleted: 10, taskAll: 10},
         {id: '2', taskCompleted: 1, taskAll: 10},
@@ -72,7 +72,7 @@ test('Notes: taskFilter()', t => {
     t.end();
 });
 
-test('Notes: tagFilter', t => {
+test('collections/Notes: tagFilter', t => {
     const notes = new Notes([
         {id: '1', tags: ['test', 'testTag'], trash: 0},
         {id: '2', tags: ['test'], trash: 0},
@@ -87,7 +87,7 @@ test('Notes: tagFilter', t => {
     t.end();
 });
 
-test('Notes: searchFilter()', t => {
+test('collections/Notes: searchFilter()', t => {
     const notes = new Notes([
         {id: '1', title: 'Test 1', content: `${lorem} search content`},
         {id: '2', title: 'Test 2', content: `${lorem} find this`},
@@ -105,7 +105,7 @@ test('Notes: searchFilter()', t => {
     t.end();
 });
 
-test('Notes: fuzzySearch()', t => {
+test('collections/Notes: fuzzySearch()', t => {
     const notes = new Notes([
         {id: '1', title: 'The Great Gatsby. Test'},
         {id: '2', title: 'The DaVinci Code. Test'},
@@ -121,7 +121,7 @@ test('Notes: fuzzySearch()', t => {
     t.end();
 });
 
-test('Notes: after()', t => {
+test('collections/Notes: after()', t => {
     sand.restore();
     t.end();
 });

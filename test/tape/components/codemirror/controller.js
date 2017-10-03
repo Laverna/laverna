@@ -222,7 +222,7 @@ test('codemirror/Controller: onChange()', t => {
 
 test('codemirror/Controller: autoSave()', t => {
     const con  = new Controller();
-    sand.stub(con, 'autoSave', Controller.prototype.autoSave);
+    sand.stub(con, 'autoSave').callsFake(Controller.prototype.autoSave);
     const trig = sand.stub(con.formChannel, 'trigger');
 
     con.autoSave();
@@ -236,7 +236,7 @@ test('codemirror/Controller: onScroll()', t => {
     const con       = new Controller();
     const scrollTop = sand.stub();
     con.view        = {ui: {previewScroll: {scrollTop}}};
-    sand.stub(con, 'onScroll', Controller.prototype.onScroll);
+    sand.stub(con, 'onScroll').callsFake(Controller.prototype.onScroll);
 
     con.onScroll({doc: {scrollTop: 0}});
     t.equal(scrollTop.called, true,

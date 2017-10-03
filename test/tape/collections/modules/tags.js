@@ -10,18 +10,18 @@ import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
 import Tags from '../../../../app/scripts/collections/Tags';
 
 let sand;
-test('Tags: before()', t => {
+test('collections/modules/Tags: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Tags: Collection', t => {
+test('collections/modules/Tags: Collection', t => {
     t.equal(Module.prototype.Collection, Tags,
         'uses tags collection');
     t.end();
 });
 
-test('Tags: constructor()', t => {
+test('collections/modules/Tags: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
@@ -32,7 +32,7 @@ test('Tags: constructor()', t => {
     t.end();
 });
 
-test('Tags: addTags()', t => {
+test('collections/modules/Tags: addTags()', t => {
     const mod = new Module();
     const add = sand.stub(mod, 'addTag');
     const opt = {profileId: 'test', tags: ['tag', 'test']};
@@ -51,7 +51,7 @@ test('Tags: addTags()', t => {
     });
 });
 
-test('Tags: addTag()', t => {
+test('collections/modules/Tags: addTag()', t => {
     const mod  = new Module();
     const save = sand.stub(ModuleOrig.prototype, 'saveModel');
     sand.stub(mod, 'getId').returns(Promise.resolve('testId'));
@@ -71,7 +71,7 @@ test('Tags: addTag()', t => {
     });
 });
 
-test('Tags: saveModel() - do not compute ID', t => {
+test('collections/modules/Tags: saveModel() - do not compute ID', t => {
     const mod  = new Module();
     const save = sand.stub(ModuleOrig.prototype, 'saveModel');
     sand.stub(mod, 'getId');
@@ -86,7 +86,7 @@ test('Tags: saveModel() - do not compute ID', t => {
     t.end();
 });
 
-test('Tags: saveModel() - compute ID', t => {
+test('collections/modules/Tags: saveModel() - compute ID', t => {
     const mod   = new Module();
     const model = new mod.Model({id: 'testId', name: 'test'});
     const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
@@ -121,7 +121,7 @@ test('Tags: saveModel() - compute ID', t => {
     });
 });
 
-test('Tags: getId()', t => {
+test('collections/modules/Tags: getId()', t => {
     const mod   = new Module();
     const model = new mod.Model({name: 'testing'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve(['t', 'e']));

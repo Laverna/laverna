@@ -17,7 +17,7 @@ test('setup/main: before()', t => {
 
 test('setup/main: initialize()', t => {
     const init = sand.stub(Controller.prototype, 'init');
-    const req  = sand.stub(Radio, 'request', (...args) => {
+    const req  = sand.stub(Radio, 'request').callsFake((...args) => {
         args[2].callback();
     });
 

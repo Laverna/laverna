@@ -5,34 +5,34 @@ import test from 'tape';
 import Tags from '../../../app/scripts/collections/Tags';
 import Tag from '../../../app/scripts/models/Tag';
 
-test('Tags: model', t => {
+test('collections/Tags: model', t => {
     const tags = new Tags();
     t.equal(tags.model, Tag, 'uses tag model');
     t.end();
 });
 
-test('Tags: comparators', t => {
+test('collections/Tags: comparators', t => {
     const tags = new Tags();
     t.equal(typeof tags.comparators, 'object');
     t.equal(tags.comparators.created, 'desc');
     t.end();
 });
 
-test('Tags: conditions', t => {
+test('collections/Tags: conditions', t => {
     const tags = new Tags();
     t.equal(typeof tags.conditions, 'object');
     t.deepEqual(tags.conditions.active, {trash: 0});
     t.end();
 });
 
-test('Tags: constructor()', t => {
+test('collections/Tags: constructor()', t => {
     t.equal(new Tags().pagination.perPage, 20, 'uses the default perPage settings');
     t.equal(new Tags(null, {perPage: 12}).pagination.perPage, 12,
         'uses the perPage option');
     t.end();
 });
 
-test('Tags: getPage()', t => {
+test('collections/Tags: getPage()', t => {
     const tags          = new Tags();
     tags.fullCollection = tags.clone();
 
@@ -51,7 +51,7 @@ test('Tags: getPage()', t => {
     t.end();
 });
 
-test('Tags: hasPreviousPage()', t => {
+test('collections/Tags: hasPreviousPage()', t => {
     const tags = new Tags();
     t.equal(tags.hasPreviousPage(), false, 'returns false');
     t.end();

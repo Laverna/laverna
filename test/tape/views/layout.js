@@ -5,6 +5,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 // import $ from 'jquery';
+import _ from 'underscore';
 
 import Layout from '../../../app/scripts/views/Layout';
 import Loader from '../../../app/scripts/views/Loader';
@@ -13,6 +14,7 @@ global.overrideTemplate(Layout, 'templates/layout.html');
 let sand;
 test('Layout: before()', t => {
     sand = sinon.sandbox.create();
+    sinon.stub(Layout.prototype, 'template').returns(_.template(''));
     t.end();
 });
 
@@ -66,8 +68,11 @@ test('Layout: show()', t => {
 
 test('Layout: empty()', t => {
     const view  = new Layout();
+    const show  = sand.stub(view, 'showChildView');
 
-    const empty = sand.stub(view.getRegion('content'), 'empty');
+    const empty = sand.stub();
+    sand.stub(view, 'getRegion').withArgs('content').returns({empty});
+
     view.empty({region: 'content'});
     t.equal(empty.called, true, 'empties a region');
 
@@ -78,7 +83,9 @@ test('Layout: empty()', t => {
 
 test('Layout: add()', t => {
     const view  = new Layout();
+    const stub = sand.stub(view, 'getRegion');
 
+    stub.withArgs('content').returns({});
     t.equal(view.add({region: 'content'}), false,
         'returns false if a region already exists');
 
@@ -90,6 +97,8 @@ test('Layout: add()', t => {
         'does not create a new div block if "html" option is false');
     t.equal(view.addRegion.calledWith('test-it', '#test-it'), true,
         'creates a new region');
+
+    stub.withArgs('test-it').returns({});
     t.equal(typeof view.getRegion('test-it'), 'object',
         'the new region can be found');
 
@@ -122,11 +131,12 @@ test('Layout: createRegionElement()', t => {
 });
 
 test('Layout: toggle()', t => {
-    const view   = new Layout();
-    const toggle = sand.spy(view.getRegion('content').$el, 'toggleClass');
+    const view        = new Layout();
+    const toggleClass = sand.stub();
+    sand.stub(view, 'getRegion').withArgs('content').returns({$el: {toggleClass}});
 
     view.toggle({region: 'content'});
-    t.equal(toggle.calledWith('hidden'), true,
+    t.equal(toggleClass.calledWith('hidden'), true,
         'toggles "hidden" class');
 
     sand.restore();
@@ -136,8 +146,12 @@ test('Layout: toggle()', t => {
 
 test('Layout: toggleContent()', t => {
     const view = new Layout();
-    const toggleCont = sand.spy(view.getRegion('content').$el, 'toggleClass');
-    const toggleSide = sand.spy(view.getRegion('sidebar').$el, 'toggleClass');
+    const toggleCont = sand.stub();
+    const toggleSide = sand.stub();
+
+    sand.stub(view, 'getRegion')
+    .withArgs('content').returns({$el: {toggleClass: toggleCont}})
+    .withArgs('sidebar').returns({$el: {toggleClass: toggleSide}});
 
     view.toggleContent({visible: true});
     t.equal(toggleCont.calledWith('hidden-xs', false), true,
@@ -157,7 +171,7 @@ test('Layout: toggleContent()', t => {
 
 test('Layout: showLoader()', t => {
     const view = new Layout();
-    sand.stub(view, 'show', opt => view.loadView = opt.view);
+    sand.stub(view, 'show').callsFake(opt => view.loadView = opt.view);
 
     view.showLoader({region: 'modal'});
     t.equal(view.show.calledWithMatch({region: 'modal'}), true,

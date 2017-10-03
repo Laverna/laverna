@@ -14,7 +14,7 @@ test('views/Modal: before()', t => {
     t.end();
 });
 
-test('Modal: channel', t => {
+test('views/Modal: channel', t => {
     t.equal(modal.channel.channelName, 'views/Modal');
     t.end();
 });

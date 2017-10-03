@@ -10,18 +10,18 @@ import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
 import Notes from '../../../../app/scripts/collections/Notes';
 
 let sand;
-test('Notes: before()', t => {
+test('collections/modules/Notes: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Notes: Collection', t => {
+test('collections/modules/Notes: Collection', t => {
     t.equal(Module.prototype.Collection, Notes,
         'uses notes collection');
     t.end();
 });
 
-test('Notes: constructor()', t => {
+test('collections/modules/Notes: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
@@ -33,7 +33,7 @@ test('Notes: constructor()', t => {
     t.end();
 });
 
-test('Notes: saveModel()', t => {
+test('collections/modules/Notes: saveModel()', t => {
     const mod   = new Module();
     const model = new mod.Model(
         {id: 'test-save1', tags: ['1', '2']},
@@ -59,7 +59,7 @@ test('Notes: saveModel()', t => {
     });
 });
 
-test('Notes: remove()', t => {
+test('collections/modules/Notes: remove()', t => {
     const mod    = new Module();
     const model  = new mod.Model({id: '1', trash: 1});
     const remove = sand.stub(ModuleOrig.prototype, 'remove');
@@ -86,7 +86,7 @@ test('Notes: remove()', t => {
     });
 });
 
-test('Notes: findOrFetch()', t => {
+test('collections/modules/Notes: findOrFetch()', t => {
     const mod  = new Module();
     const find = sand.stub(mod, 'findModel').returns(Promise.resolve());
 
@@ -106,7 +106,7 @@ test('Notes: findOrFetch()', t => {
     });
 });
 
-test('Notes: restore()', t => {
+test('collections/modules/Notes: restore()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', trash: 2});
     const save  = sand.stub(mod, 'saveModel').returns(Promise.resolve());
@@ -125,7 +125,7 @@ test('Notes: restore()', t => {
     });
 });
 
-test('Notes: changeNotebookId()', t => {
+test('collections/modules/Notes: changeNotebookId()', t => {
     const mod        = new Module();
     const model      = new mod.Model({id: '1'}, {profileId: 'test'});
     const collection = new mod.Collection([{id: '1'}, {id: '2'}]);
@@ -152,7 +152,7 @@ test('Notes: changeNotebookId()', t => {
     });
 });
 
-test('Notes: find()', t => {
+test('collections/modules/Notes: find()', t => {
     const mod        = new Module();
     const collection = new mod.Collection([{id: '1'}, {id: '2'}]);
     const find       = sand.stub(ModuleOrig.prototype, 'find');
@@ -171,11 +171,11 @@ test('Notes: find()', t => {
     });
 });
 
-test('Notes: findModel()', t => {
+test('collections/modules/Notes: findModel()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1'});
     const find  = sand.stub(ModuleOrig.prototype, 'findModel')
-        .returns(Promise.resolve(model));
+    .resolves(model);
 
     sand.stub(mod, 'findAttachments');
 
@@ -198,7 +198,7 @@ test('Notes: findModel()', t => {
     });
 });
 
-test('Notes: findAttachments()', t => {
+test('collections/modules/Notes: findAttachments()', t => {
     const mod   = new Module();
     const model = new mod.Model(
         {id: '1', files: ['1', '2'], notebookId: '12'},
@@ -223,7 +223,7 @@ test('Notes: findAttachments()', t => {
     });
 });
 
-test('Notes: findAttachments() - do not make requests', t => {
+test('collections/modules/Notes: findAttachments() - do not make requests', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1'}, {profileId: 'test'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve(''));
@@ -247,7 +247,7 @@ test('Notes: findAttachments() - do not make requests', t => {
     });
 });
 
-test('Notes: findNotebook()', t => {
+test('collections/modules/Notes: findNotebook()', t => {
     const mod   = new Module();
     const model = new mod.Model({notebookId: '1'}, {profileId: 'test'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve({}));
@@ -270,7 +270,7 @@ test('Notes: findNotebook()', t => {
     });
 });
 
-test('Notes: findFiles()', t => {
+test('collections/modules/Notes: findFiles()', t => {
     const mod   = new Module();
     const model = new mod.Model({files: ['1', '2']}, {profileId: 'test'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve([]));

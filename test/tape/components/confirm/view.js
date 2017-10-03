@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Radio from 'backbone.radio';
+// import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
 
 import _ from '../../../../app/scripts/utils/underscore';
@@ -16,12 +16,12 @@ test('confirm/View: before()', t => {
     t.end();
 });
 
-test('View: className', t => {
+test('confirm/View: className', t => {
     t.equal(View.prototype.className, 'modal fade');
     t.end();
 });
 
-test('View: events()', t => {
+test('confirm/View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object', 'returns an object');
     t.equal(events['click .modal-footer .btn'], 'onBtnClick',
@@ -30,7 +30,7 @@ test('View: events()', t => {
     t.end();
 });
 
-test('View: initialize()', t => {
+test('confirm/View: initialize()', t => {
     const bind = sand.spy(Mousetrap, 'bind');
     const view = new View();
     const stub = sand.stub(view, 'focusNextBtn');
@@ -44,7 +44,7 @@ test('View: initialize()', t => {
     t.end();
 });
 
-test('View: onBeforeDestroy()', t => {
+test('confirm/View: onBeforeDestroy()', t => {
     const view   = new View();
     const unbind = sand.spy(Mousetrap, 'unbind');
     sand.spy(view, 'onBeforeDestroy');
@@ -57,7 +57,7 @@ test('View: onBeforeDestroy()', t => {
     t.end();
 });
 
-test('View: onShownModal()', t => {
+test('confirm/View: onShownModal()', t => {
     const view  = new View();
     const focus = sand.stub();
     sand.stub(view, '$').returns({focus});
@@ -71,7 +71,7 @@ test('View: onShownModal()', t => {
     t.end();
 });
 
-test('View: onBtnClick()', t => {
+test('confirm/View: onBtnClick()', t => {
     const view = new View();
     sand.stub(view, '$').returns({attr: () => 'confirm'});
     sand.stub(view, 'trigger');
@@ -86,7 +86,7 @@ test('View: onBtnClick()', t => {
     t.end();
 });
 
-test('View: focusNextBtn()', t => {
+test('confirm/View: focusNextBtn()', t => {
     const view       = new View();
     const focusNext  = sand.stub();
     const focusFirst = sand.stub();
@@ -108,7 +108,7 @@ test('View: focusNextBtn()', t => {
     t.end();
 });
 
-test('View: serializeData()', t => {
+test('confirm/View: serializeData()', t => {
     const view = new View({content: 'Test'});
     const res  = view.serializeData();
 
@@ -119,9 +119,9 @@ test('View: serializeData()', t => {
     t.end();
 });
 
-test('View: templateContext()', t => {
+test('confirm/View: templateContext()', t => {
     const context = new View().templateContext();
-    sand.stub(_, 'i18n', text => text);
+    sand.stub(_, 'i18n').callsFake(text => text);
 
     t.equal(context.getTitle.apply({title: 'Test'}), 'Test',
         'uses title from options');

@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Radio from 'backbone.radio';
+// import Radio from 'backbone.radio';
 import _ from '../../../../app/scripts/utils/underscore';
 
 import View from '../../../../app/scripts/components/linkDialog/views/View';
@@ -65,7 +65,7 @@ test('linkDialog/views/View: triggers()', t => {
 });
 
 test('linkDialog/views/View: constructor()', t => {
-    sand.stub(_, 'debounce', method => method);
+    sand.stub(_, 'debounce').callsFake(method => method);
     const listen = sand.stub(View.prototype, 'listenTo');
     const view   = new View();
 
@@ -105,7 +105,7 @@ test('linkDialog/views/View: onUrlKeyup()', t => {
 });
 
 test('linkDialog/views/View: handleUrl()', t => {
-    sand.stub(_, 'debounce', method => method);
+    sand.stub(_, 'debounce').callsFake(method => method);
     const view = new View();
     view.ui    = {
         url     : {val: () => 'https://laverna.cc'},

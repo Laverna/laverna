@@ -18,7 +18,7 @@ test('encryption/main: before()', t => {
 
 test('encryption/Main', t => {
     const init = sand.stub(Auth.prototype, 'init');
-    const req  = sand.stub(Radio, 'request', (n, m, data) => data.callback());
+    const req  = sand.stub(Radio, 'request').callsFake((n, m, data) => data.callback());
 
     initialize();
     t.equal(req.calledWithMatch('utils/Initializer', 'add', {name: 'App:auth'}), true,

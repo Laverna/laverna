@@ -83,6 +83,10 @@
       "name": "Latvian",
       "nativeName": "Latviešu"
     },
+    "pl": {
+        "name": "Polish",
+        "nativeName": "Polski"
+    },
     "pt_br": {
         "name": "Portugisich (Brasilien)",
         "nativeName": "Portugisich (Brasilien)"
@@ -94,7 +98,7 @@
     "se": {
         "name": "Swedish",
         "nativeName": "Svenska"
-   },
+    },
     "sq": {
         "name": "Albanian",
         "nativeName": "Shqip"
@@ -108,7 +112,7 @@
         "nativeName": "Simplified Chinese"
     },
     "zh_tw": {
-        "name": "Traditional Chinese",
-        "nativeName": "中文（台灣）"
+        "name": "Traditional Chinese (Taiwan)",
+        "nativeName": "Traditional Chinese (Taiwan)"
     }
 }

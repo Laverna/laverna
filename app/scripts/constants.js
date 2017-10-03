@@ -17,7 +17,7 @@ import _ from 'underscore';
  * not work and a user needs to provid their own
  */
 const constants = {
-    version       : '0.7.4-RC1',
+    version       : '0.7.51',
     url           : location.origin + location.pathname.replace('index.html', ''),
     defaultHosts  : [
         'laverna.cc',

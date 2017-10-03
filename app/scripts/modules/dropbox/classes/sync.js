@@ -10,11 +10,12 @@ define([
     'underscore',
     'jquery',
     'q',
+    'backbone',
     'marionette',
     'backbone.radio',
     'dropbox',
     'modules/dropbox/classes/adapter'
-], function(_, $, Q, Marionette, Radio, Dropbox, adapter) {
+], function(_, $, Q, Backbone, Marionette, Radio, Dropbox, adapter) {
     'use strict';
 
     /**
@@ -50,30 +51,16 @@ define([
         initialize: function() {
             var key = Radio.request('configs', 'get:config', 'dropboxKey');
             this.configs.key = key || this.configs.key;
+            this.configs.accessToken = Radio.request('configs', 'get:config', 'dropboxAccessToken');
 
             this.vent = Radio.channel('dropbox');
 
-            this.client = new Dropbox.Client({
-                key: this.configs.key
+            this.client = new Dropbox({
+                clientId: this.configs.key
             });
-
-            // Configure auth
-            if (window.cordova) {
-                window.open = window.cordova.InAppBrowser.open;
-                this.client.authDriver(new Dropbox.AuthDriver.Cordova());
-            }
-            else {
-                this.client.authDriver(new Dropbox.AuthDriver.Popup({
-                    receiverUrl  : (location.origin + location.pathname.replace('index.html', '') + 'dropbox.html'),
-                    rememberUser : true
-                }));
-            }
 
             // Replies
             Radio.reply('sync', 'start', this.startSync, this);
-
-            // Listen to events
-            this.listenTo(this.vent, 'auth:success', this.onReady);
 
             // Listen to Laverna events
             this.listenTo(Radio.channel('notes'), 'sync:model destroy:model restore:model', this.onSave);
@@ -81,7 +68,18 @@ define([
             this.listenTo(Radio.channel('tags'), 'sync:model destroy:model restore:model', this.onSave);
 
             // Authorize the app
-            this.checkAuth();
+            var self = this;
+            this.checkAuth()
+            .then(function(authenticated) {
+                if (authenticated) {
+                    return self.onReady();
+                }
+
+                console.error('Dropbox authentication failed.');
+            })
+            .catch(function(err) {
+                console.log('Dropbox error', err);
+            });
         },
 
         /**
@@ -101,58 +99,58 @@ define([
          * Check if Dropbox was authenticated.
          */
         checkAuth: function() {
-            var self = this;
+            var hash = this.parseHash();
 
-            return this.auth({interactive: false})
-            .fail(function(err) {
-                if (err) {
-                    console.error('Dropbox', err);
-                    return;
+            if (this.configs.accessToken && this.configs.accessToken.length) {
+                this.client.setAccessToken(this.configs.accessToken);
+                return Promise.resolve(true);
+            }
+            else if (hash.access_token && hash.access_token.length) {
+                return this.saveAccessToken(hash.access_token);
+            }
+            else {
+                if (hash.error) {
+                    Radio.request('uri', 'navigate', '/');
                 }
 
-                return self.showConfirm();
-            });
+                return this.authenticate();
+            }
         },
 
         /**
-         * Authenticate on Dropbox
+         * Parse location hash.
          *
-         * @type object options
-         * @return promise
+         * @returns {Object}
          */
-        auth: function(options) {
-            var defer = Q.defer(),
-                self  = this;
+        parseHash: function() {
+            var hash = window.location.hash.replace('#', '').split('&');
+            var ret  = {};
 
-            this.client.authenticate(options || {}, function(err, client) {
-                if (err) {
-                    return defer.reject(err);
+            if (!hash.length) {
+                return ret;
+            }
+
+            _.each(hash, function(str) {
+                var parts = str.replace(/\+/g, ' ').split('=');
+
+                if (parts.length > 1) {
+                    var key  = parts.shift();
+                    var val  = parts.length > 0 ? parts.join('=') : undefined;
+                    val      = undefined ? null : decodeURIComponent(val.trim());
+                    ret[key] = val;
                 }
-
-                if (client.isAuthenticated()) {
-                    self.vent.trigger('auth:success');
-                    return defer.resolve(client);
-                }
-
-                defer.reject(null);
             });
 
-            return defer.promise;
+            return ret;
         },
 
-        /**
-         * Ask a user to authenticate the app on Dropbox.
-         */
-        showConfirm: function() {
-            var defer = Q.defer(),
-                self  = this;
+        authenticate: function() {
+            var defer = Q.defer();
+            var authUrl = this.client.getAuthenticationUrl(document.location);
 
             Radio.once('Confirm', 'cancel',  _.bind(defer.reject, defer));
             Radio.once('Confirm', 'confirm', function() {
-                self.auth({interactive: true})
-                .then(function() {
-                    defer.resolve();
-                });
+                window.location = authUrl;
             });
 
             Radio.request('Confirm', 'start', {
@@ -164,12 +162,35 @@ define([
         },
 
         /**
+         * Save the access token in configs.
+         *
+         * @param {String} accessToken
+         * @returns {Promise}
+         */
+        saveAccessToken: function(accessToken) {
+            var self = this;
+            return Radio.request('configs', 'save:object', {
+                name  : 'dropboxAccessToken',
+                value : accessToken,
+            })
+            .then(function() {
+                Radio.request('uri', 'navigate', '/');
+                self.configs.accessToken.accessToken;
+                return true;
+            });
+        },
+
+        /**
          * Start synchronizing all data after Dropbox client is ready.
          */
         onReady: function() {
             var profile = Radio.request('uri', 'profile') || 'notes-db';
+            var self = this;
             adapter.init(this.client, profile);
-            this.checkChanges();
+
+            this.timeout = window.setTimeout(function() {
+                self.checkChanges();
+            }, 500);
         },
 
         /**
@@ -247,15 +268,6 @@ define([
             return _.reduce(promises, Q.when, new Q())
             .then(function() {
                 return Radio.request(module, 'fetch', {encrypt: true});
-            })
-            .then(function(data) {
-                data = (data.fullCollection || data).toJSON();
-                adapter.saveCache(module, data);
-                return;
-            })
-            .then(function() {
-                console.log('all done');
-                return adapter.updateHash(module);
             });
         },
 

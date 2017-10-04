@@ -343,10 +343,3 @@ test('setup/Controller: export()', t => {
         t.end();
     });
 });
-
-test('setup/Controller: import()', t => {
-    const con = new Controller();
-
-    con.import();
-    t.end();
-});

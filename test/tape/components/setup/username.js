@@ -4,15 +4,20 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Radio from 'backbone.radio';
+// import Radio from 'backbone.radio';
 
-import '../../../../app/scripts/utils/underscore';
+import _ from '../../../../app/scripts/utils/underscore';
 import ContentView from '../../../../app/scripts/components/setup/ContentView';
 import View from '../../../../app/scripts/components/setup/username/View';
 
 let sand;
 test('setup/username/View: before()', t => {
     sand = sinon.sandbox.create();
+    t.end();
+});
+
+test('setup/username/View: importChannel', t => {
+    t.equal(View.prototype.importChannel.channelName, 'components/importExport');
     t.end();
 });
 
@@ -27,6 +32,17 @@ test('setup/username/Username: events()', t => {
     t.equal(typeof events, 'object');
     t.equal(events['click #welcome--import'], 'triggerImport');
     t.equal(events['change #import--data'], 'importData');
+    t.end();
+});
+
+test('setup/username/Username: initialize()', t => {
+    const stub = sand.stub(View.prototype, 'listenTo');
+    const view = new View();
+
+    t.equal(stub.calledWith(view.importChannel, 'completed', view.showImportMessage),
+        true, 'listens to importExport component\'s "completed" event');
+
+    sand.restore();
     t.end();
 });
 
@@ -46,15 +62,37 @@ test('setup/username/Username: triggerImport()', t => {
 test('setup/username/Username: importData()', t => {
     const view   = new View();
     const target = {files: [1, 2]};
-    const req    = sand.stub(Radio, 'request');
+    const req    = sand.stub(view.importChannel, 'request');
 
     view.importData({target: {files: []}});
     t.equal(req.notCalled, true, 'does nothing if there are no files');
 
     view.importData({target});
-    t.equal(req.calledWith('components/importExport', 'import', {
+    t.equal(req.calledWith('import', {
         files: target.files,
     }), true, 'tries to import data to the current device');
+
+    sand.restore();
+    t.end();
+});
+
+test('setup/username/View: showImportMessage()', t => {
+    const view = new View();
+    sand.stub(_, 'i18n').callsFake(str => str);
+    view.ui    = {
+        warning : {removeClass: sand.stub()},
+        alert   : {text: sand.stub()},
+    };
+
+    view.showImportMessage();
+    t.equal(view.ui.warning.removeClass.calledWith('hidden'), true,
+        'shows the warning block');
+    t.equal(view.ui.alert.text.calledWith('Import success'), true,
+        'shows a success message');
+
+    view.showImportMessage({error: 'error'});
+    t.equal(view.ui.alert.text.calledWith('Import error'), true,
+        'shows an error message');
 
     sand.restore();
     t.end();

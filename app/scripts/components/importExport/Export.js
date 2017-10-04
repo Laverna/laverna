@@ -140,10 +140,22 @@ export default class Export extends Mn.Object {
         }
         // Other collections' data is saved in one JSON file
         else {
-            const data = JSON.stringify(collection.toJSON());
-            this.zip.file(`${path}/${collection.storeName}.json`, data);
+            this.exportToJSON(path, collection);
         }
         log(`exporting ${coll.storeName}`);
+    }
+
+    /**
+     * Export a collection to a JSON file.
+     *
+     * @param {String} path
+     * @param {Object} collection
+     */
+    exportToJSON(path, collection) {
+        const data = JSON.stringify(
+            collection.getExportData ? collection.getExportData() : collection.toJSON()
+        );
+        this.zip.file(`${path}/${collection.storeName}.json`, data);
     }
 
     /**

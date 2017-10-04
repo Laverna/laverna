@@ -67,6 +67,16 @@ export default class Configs extends Collection {
     }
 
     /**
+     * Return an array of configs which are allowed to be exported.
+     *
+     * @returns {Array}
+     */
+    getExportData() {
+        const dbx = this.findWhere({name: 'dropboxAccessToken'});
+        return this.without(dbx);
+    }
+
+    /**
      * Transform models to key=value structure.
      *
      * @returns {Object}

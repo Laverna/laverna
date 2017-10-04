@@ -164,6 +164,24 @@ test('importExport/Export: exportCollection()', t => {
     t.end();
 });
 
+test('importExport/Export: exportToJSON()', t => {
+    const con        = new Export();
+    con.zip          = {file: sand.stub()};
+    const collection = new Notes();
+    const stub       = sand.stub();
+    sand.stub(collection, 'toJSON');
+
+    con.exportToJSON('/', collection);
+    t.equal(collection.toJSON.called, true, 'uses toJSON()');
+
+    collection.getExportData = stub;
+    con.exportToJSON('/', collection);
+    t.equal(stub.called, true, 'uses getExportData() if the collection has it');
+
+    sand.restore();
+    t.end();
+});
+
 test('importExport/Export: exportNote()', t => {
     const con = new Export();
     const mod = new Notes.prototype.model({id: '1', content: 'test'});

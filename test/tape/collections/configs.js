@@ -3,6 +3,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
+import _ from '../../../app/scripts/utils/underscore';
 import Configs from '../../../app/scripts/collections/Configs';
 import {configNames} from '../../../app/scripts/collections/configNames';
 import Config from '../../../app/scripts/models/Config';
@@ -58,6 +59,17 @@ test('collections/Configs: createDefault()', t => {
         sand.restore();
         t.end();
     });
+});
+
+test('collections/Configs: getExportData()', t => {
+    const configs = new Configs([{name: 'dropboxKey'}, {name: 'dropboxAccessToken'}]);
+    const res     = configs.getExportData();
+
+    t.equal(res.length, 1);
+    t.equal(_.findWhere(res, {name: 'dropboxAccessToken'}), undefined,
+        'does not contain Dropbox access token');
+
+    t.end();
 });
 
 test('collections/Configs: getConfigs()', t => {

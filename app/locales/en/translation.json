@@ -129,6 +129,8 @@
 	"Confirm you want to reject the invite": "Are you sure you want to reject **{{username}}'s** invite?",
 	"Confirm you want to remove the user from trust": "Are you sure you want to remove **{{username}}** from trust?",
 	"You received an invite": "You received an invite from {{username}}. Go to settings/sync to accept or reject the invite.",
+	"Import success": "Successfuly recoverd your data from backup! Reloading the page...",
+	"Import error": "Failed to recover your data from the backup file you've provided!",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

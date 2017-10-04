@@ -26,9 +26,27 @@ export default class Import extends Mn.Object {
         }
 
         return this.readZip(this.options.files[0])
-        .then(zip => this.import(zip))
-        .then(() => document.location.reload())
-        .catch(err => log('error', err));
+        .then(zip  => this.import(zip))
+        .then(()   => this.onSuccess())
+        .catch(err => this.onError(err));
+    }
+
+    /**
+     * If import is successful, trigger "completed" and reload the page after 800ms.
+     */
+    onSuccess() {
+        Radio.trigger('components/importExport', 'completed');
+        window.setTimeout(() => document.location.reload(), 800);
+    }
+
+    /**
+     * If import failed, trigger "completed" event with the error.
+     *
+     * @param {String} error
+     */
+    onError(error) {
+        log('error', error);
+        Radio.trigger('components/importExport', 'completed', {error});
     }
 
     /**
@@ -84,6 +102,7 @@ export default class Import extends Mn.Object {
      */
     import(zip) {
         const promises = [];
+        let configFile;
 
         _.each(zip.files, file => {
             // Ignore directories and non JSON files
@@ -91,10 +110,17 @@ export default class Import extends Mn.Object {
                 return;
             }
 
-            promises.push(this.readFile(zip, file));
+            if (file.name.indexOf('configs.json') === -1) {
+                promises.push(this.readFile(zip, file));
+            }
+            else {
+                configFile = file;
+            }
         });
 
-        return Promise.all(promises);
+        // Import configs at the end to avoid encryption errors
+        return Promise.all(promises)
+        .then(() => this.readFile(zip, configFile));
     }
 
     /**

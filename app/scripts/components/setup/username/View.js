@@ -19,6 +19,10 @@ export default class Username extends View {
         return _.template(tmpl);
     }
 
+    get importChannel() {
+        return Radio.channel('components/importExport');
+    }
+
     ui() {
         return {
             username     : 'input[name=username]',
@@ -43,6 +47,10 @@ export default class Username extends View {
         };
     }
 
+    initialize() {
+        this.listenTo(this.importChannel, 'completed', this.showImportMessage);
+    }
+
     /**
      * Show file dialog.
      *
@@ -64,7 +72,17 @@ export default class Username extends View {
             return;
         }
 
-        Radio.request('components/importExport', 'import', {files});
+        this.importChannel.request('import', {files});
+    }
+
+    /**
+     * Show a message with the import result.
+     *
+     * @param {Object} data={}
+     */
+    showImportMessage(data = {}) {
+        this.ui.warning.removeClass('hidden');
+        this.ui.alert.text(_.i18n(data.error ? 'Import error' : 'Import success'));
     }
 
     /**

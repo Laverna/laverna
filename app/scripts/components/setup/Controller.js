@@ -286,10 +286,4 @@ export default class Controller extends Mn.Object {
         });
     }
 
-    /**
-     * @todo Implement import
-     */
-    import() {
-    }
-
 }

@@ -68,7 +68,7 @@ export default class Export extends Mn.Object {
         }
 
         /* Data structure should be similar to this:
-         * {notes-db: [Notes, Notebooks, Tags], profile2: []},
+         * {default: [Notes, Notebooks, Tags], profile2: []},
          */
         _.each(data, collections => this.exportCollections(collections));
 

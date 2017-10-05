@@ -62,7 +62,7 @@ export default class View extends Mn.View {
              * @returns {Boolean}
              */
             isDefaultProfile() {
-                return _.indexOf([null, 'notes-db'], this.profileId) > -1;
+                return _.indexOf([null, 'default'], this.profileId) > -1;
             },
 
             /**

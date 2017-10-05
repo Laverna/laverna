@@ -30,7 +30,7 @@ export default class Collection extends Backbone.Collection {
      * @returns {String}
      */
     get profileId() {
-        return this._profileId || 'notes-db';
+        return this._profileId || 'default';
     }
 
     /**

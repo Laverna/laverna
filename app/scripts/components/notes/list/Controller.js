@@ -43,7 +43,7 @@ export default class Controller extends Mn.Object {
         // Fetch notes
         return Radio.request('collections/Notes', 'find', _.extend({}, opt, {
             perPage   : this.configs.pagination,
-            profileId : opt.profileId || 'notes-db',
+            profileId : opt.profileId || 'default',
         }))
         .then(collection => this.show(collection))
         .then(() => this.listenToEvents())

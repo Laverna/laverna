@@ -36,8 +36,9 @@ export default class Db extends WorkerModule {
      * @returns {Object} localforage instance
      */
     getDb(options) {
-        const {profileId, storeName} = options;
-        const id = `${profileId}/${storeName}`;
+        const {storeName} = options;
+        const profileId   = `lav-${options.profileId}`;
+        const id          = `${profileId}/${storeName}`;
 
         this.dbs[id] = this.dbs[id] || localforage.createInstance({
             storeName,

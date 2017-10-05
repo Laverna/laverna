@@ -31,7 +31,7 @@ function initializer() {
 
     // Find or create configs
     return Radio.request('collections/Configs', 'find', {
-        profileId: Radio.request('utils/Url', 'getProfileId') || 'notes-db',
+        profileId: Radio.request('utils/Url', 'getProfileId') || 'default',
     });
 }
 

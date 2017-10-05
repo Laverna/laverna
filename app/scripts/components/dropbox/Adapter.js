@@ -170,7 +170,7 @@ export default class Adapter {
      * @returns {Promise}
      */
     find({profileId, type}) {
-        return this.readDir({path: `/${profileId || 'notes-db'}/${type}`})
+        return this.readDir({path: `/${profileId || 'default'}/${type}`})
         .then(resp => {
             const promises = [];
 

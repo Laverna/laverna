@@ -107,7 +107,7 @@ export default class Configs extends Module {
 
         return this.findModel({profileId, name: 'useDefaultConfigs'})
         .then(model => {
-            return !model || Number(model.get('value')) ? 'notes-db' : profileId;
+            return !model || Number(model.get('value')) ? 'default' : profileId;
         });
     }
 
@@ -218,7 +218,7 @@ export default class Configs extends Module {
      * @returns {Promise} resolves with appProfiles model
      */
     findProfileModel() {
-        return this.findModel({name: 'appProfiles', profileId: 'notes-db'});
+        return this.findModel({name: 'appProfiles', profileId: 'default'});
     }
 
     /**
@@ -233,7 +233,7 @@ export default class Configs extends Module {
             const profiles = _.filter(useDefaults, profile => {
                 return (
                     Number(profile.get('value')) === 1 ||
-                    profile.profileId === 'notes-db'
+                    profile.profileId === 'default'
                 );
             });
 

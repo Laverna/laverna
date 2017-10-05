@@ -74,11 +74,11 @@
         <% }); } %>
 
         <div class="list-group-item sidemenu--item -disabled">{{_.i18n('Profiles')}}</div>
-        <a class="list-group-item sidemenu--item<% if (profileId === 'notes-db' || !profileId) { %> active<% } %>" href="#/notes">
+        <a class="list-group-item sidemenu--item<% if (profileId === 'default' || !profileId) { %> active<% } %>" href="#/notes">
             <i class="icon-user"></i>  {{_.i18n('Default')}}
         </a>
         <% _.forEach(profiles, function(prof) { %>
-        <% if (prof !== 'notes-db') { %>
+        <% if (prof !== 'default') { %>
         <a class="list-group-item sidemenu--item<% if (profileId === prof) { %> active<% } %>" href="#{{getProfileLink(prof)}}">
             <i class="icon-user"></i>  {{prof}}
         </a>

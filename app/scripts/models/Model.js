@@ -30,7 +30,7 @@ export default class Model extends BModel {
      * @returns {String}
      */
     get profileId() {
-        return this._profileId || 'notes-db';
+        return this._profileId || 'default';
     }
 
     /**

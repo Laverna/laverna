@@ -29,7 +29,7 @@ const configNames = {
      * in the navbar
      */
     general: {
-        appProfiles        : ['notes-db'],
+        appProfiles        : ['default'],
         appLang            : '',
         useDefaultConfigs  : '1',
 

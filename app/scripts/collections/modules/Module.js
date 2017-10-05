@@ -117,7 +117,7 @@ export default class Module {
      * @returns {Object|Boolean}
      */
     findCollectionModel(options) {
-        const profileId = options.profileId || 'notes-db';
+        const profileId = options.profileId || 'default';
         if (!this.collection || this.collection.profileId !== profileId) {
             return false;
         }

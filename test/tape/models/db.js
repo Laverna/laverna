@@ -32,7 +32,7 @@ test('Db: getDb()', t => {
     const spy = sand.spy(localforage, 'createInstance');
 
     const res = db.getDb({profileId: 'test', storeName: 'tests'});
-    t.equal(spy.calledWith({name: 'test', storeName: 'tests'}), true,
+    t.equal(spy.calledWith({name: 'lav-test', storeName: 'tests'}), true,
         'creates a new localforage instance');
     t.equal(typeof res, 'object', 'returns localforage instance');
 
@@ -44,7 +44,7 @@ test('Db: getDb() - old instance', t => {
     const db       = new Db();
     const spy      = sand.spy(localforage, 'createInstance');
     const instance = {test: 1};
-    db.dbs['test/tests'] = instance;
+    db.dbs['lav-test/tests'] = instance;
 
     const res = db.getDb({profileId: 'test', storeName: 'tests'});
     t.equal(spy.notCalled, true, 'does not create a new instance');

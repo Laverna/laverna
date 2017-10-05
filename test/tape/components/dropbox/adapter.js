@@ -173,10 +173,10 @@ test('Adapter: find()', t => {
     const resp = {entries: [
         {name: '1.json', path_lower: '/1.json'}, {name: '2', path_lower: '/2'},
     ]};
-    sand.stub(adapter, 'readDir').withArgs({path: '/notes-db/notes'}).resolves(resp);
+    sand.stub(adapter, 'readDir').withArgs({path: '/default/notes'}).resolves(resp);
     sand.stub(adapter, 'readFile');
 
-    adapter.find({profileId: 'notes-db', type: 'notes'})
+    adapter.find({profileId: 'default', type: 'notes'})
     .then(() => {
         t.equal(adapter.readFile.callCount, 1, 'reads only JSON files');
         t.equal(adapter.readFile.calledWith({path: '/1.json'}), true,
@@ -255,7 +255,7 @@ test('Adapter: getModelPath()', t => {
     const adapter = new Adapter(configs);
     const model = new Notes.prototype.model({id: '1'});
 
-    t.equal(adapter.getModelPath(model), '/notes-db/notes/1.json');
+    t.equal(adapter.getModelPath(model), '/default/notes/1.json');
 
     t.end();
 });

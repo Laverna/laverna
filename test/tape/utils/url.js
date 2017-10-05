@@ -25,12 +25,12 @@ test('Url: noteFilters', t => {
 });
 
 test('Url: constructor()', t => {
-    document.location.hash = '/p/notes-db/';
+    document.location.hash = '/p/default/';
     const reply = sand.spy(Url.prototype.channel, 'reply');
     const url   = new Url();
 
     t.equal(typeof url.hashOnStart, 'string', 'saves the original location hash');
-    t.equal(url.profileId, 'notes-db', 'saves the current profile Id');
+    t.equal(url.profileId, 'default', 'saves the current profile Id');
     t.equal(reply.called, true, 'starts replying to requests');
     t.equal(url.channel.request('getHashOnStart'), url.hashOnStart,
         'replies to getHashOnStart request');
@@ -122,8 +122,8 @@ test('Url: historyLength()', t => {
 test('Url: getProfileLink()', t => {
     const url = new Url();
 
-    const link = url.getProfileLink({profileId: 'notes-db', url: '/p/notes/notes'});
-    t.equal(link, '/p/notes-db/notes', 'ok');
+    const link = url.getProfileLink({profileId: 'default', url: '/p/notes/notes'});
+    t.equal(link, '/p/default/notes', 'ok');
 
     sand.stub(url, 'getProfileId').returns('my-profile');
     const link2 = url.getProfileLink({url: '/notes'});
@@ -170,9 +170,9 @@ test('Url: getNotesLink()', t => {
     const spy = sand.spy(url, 'getProfileLink');
 
     let link = url.getNotesLink({
-        filterArgs: {filter: 'notebooks', query: 'id', page: '2', profileId: 'notes-db'},
+        filterArgs: {filter: 'notebooks', query: 'id', page: '2', profileId: 'default'},
     });
-    t.equal(link, '/p/notes-db/notes/f/notebooks/q/id/p2', 'returns a correct url');
+    t.equal(link, '/p/default/notes/f/notebooks/q/id/p2', 'returns a correct url');
     t.equal(spy.called, true, 'calls getProfileLink()');
 
     link = url.getNotesLink({

@@ -56,9 +56,9 @@ test('settings/show/general/View: templateContext()', t => {
     t.equal(context.isDefaultProfile(), true,
         'returns true if the profileId is null');
 
-    context.profileId = 'notes-db';
+    context.profileId = 'default';
     t.equal(context.isDefaultProfile(), true,
-        'returns true if the profileId is equal to "notes-db"');
+        'returns true if the profileId is equal to "default"');
 
     context.appLang = 'en';
     t.equal(context.selectLocale('en'), ' selected',

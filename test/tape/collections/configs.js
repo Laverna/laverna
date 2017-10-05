@@ -16,7 +16,7 @@ test('collections/Configs: before()', t => {
 
 test('collections/Configs: profileId', t => {
     const configs = new Configs();
-    t.equal(configs.profileId, 'notes-db');
+    t.equal(configs.profileId, 'default');
     t.end();
 });
 
@@ -81,7 +81,7 @@ test('collections/Configs: getConfigs()', t => {
     t.equal(configs.getConfigs().testKey, 'testValue',
         'transforms into key=>value structure');
 
-    configs.add({name: 'appProfiles', value: JSON.stringify(['notes-db'])});
+    configs.add({name: 'appProfiles', value: JSON.stringify(['default'])});
     t.equal(Array.isArray(configs.getConfigs().appProfiles), true,
         'parses appProfiles from JSON');
 

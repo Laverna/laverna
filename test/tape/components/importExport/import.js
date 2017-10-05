@@ -152,7 +152,7 @@ test('importExport/Import: readFile()', t => {
     sand.stub(con, 'importFile');
     sand.stub(con, 'importCollection');
 
-    const name = 'backup/notes-db/notes/1.json';
+    const name = 'backup/default/notes/1.json';
     con.readFile(con.zip, {name})
     .then(() => {
         t.equal(con.zip.file.calledWith(name), true,
@@ -161,20 +161,20 @@ test('importExport/Import: readFile()', t => {
         t.equal(con.importNote.calledWith({
             name,
             zip       : con.zip,
-            profileId : 'notes-db',
+            profileId : 'default',
             data      : {id: '1'},
         }), true, 'imports a note');
 
-        return con.readFile(con.zip, {name: 'backup/notes-db/files/1.json'});
+        return con.readFile(con.zip, {name: 'backup/default/files/1.json'});
     })
     .then(() => {
         t.equal(con.importFile.called, true, 'imports files');
 
-        return con.readFile(con.zip, {name: 'backup/notes-db/notebooks.json'});
+        return con.readFile(con.zip, {name: 'backup/default/notebooks.json'});
     })
     .then(() => {
         t.equal(con.importCollection.calledWith({
-            profileId : 'notes-db',
+            profileId : 'default',
             data      : {id: '1'},
             type      : 'notebooks',
         }), true, 'imports notebooks');

@@ -73,7 +73,7 @@ test('collections/modules/Configs: find()', t => {
     mod.collection   = collection;
 
     const find = sand.stub(ModuleOrig.prototype, 'find');
-    sand.stub(mod, 'getProfileId').returns(Promise.resolve('notes-db'));
+    sand.stub(mod, 'getProfileId').returns(Promise.resolve('default'));
     sand.stub(mod, 'checkOrCreate');
 
     mod.find({profileId: 'test'})
@@ -90,7 +90,7 @@ test('collections/modules/Configs: find()', t => {
             'find out what profileId this profile uses to store configs');
         t.equal(find.calledAfter(mod.getProfileId), true,
             'calls the parent method after finding out the profile ID');
-        t.equal(find.calledWithMatch({profileId: 'notes-db'}), true,
+        t.equal(find.calledWithMatch({profileId: 'default'}), true,
             'uses profile ID');
         t.equal(mod.checkOrCreate.calledAfter(find), true,
             'will try to create the default configs');
@@ -116,7 +116,7 @@ test('collections/modules/Configs: getProfileId()', t => {
         return mod.getProfileId({profileId: 'test'});
     })
     .then(profileId => {
-        t.equal(profileId, 'notes-db', 'uses the default database');
+        t.equal(profileId, 'default', 'uses the default database');
 
         mod.channel.stopReplying();
         sand.restore();
@@ -145,7 +145,7 @@ test('collections/modules/Configs: checkOrCreate()', t => {
         t.equal(trigger.calledWith('collection:empty'), true,
             'triggers collection:empty event');
         t.equal(create.called, true, 'creates default configs');
-        t.equal(find.calledWith({profileId: 'notes-db'}), true,
+        t.equal(find.calledWith({profileId: 'default'}), true,
             'fetches configs again');
 
         mod.channel.stopReplying();
@@ -263,7 +263,7 @@ test('collections/modules/Configs: findProfileModel()', t => {
     const find = sand.stub(mod, 'findModel').returns('yes');
 
     t.equal(mod.findProfileModel(), 'yes');
-    t.equal(find.calledWith({name: 'appProfiles', profileId: 'notes-db'}), true,
+    t.equal(find.calledWith({name: 'appProfiles', profileId: 'default'}), true,
         'fetches appProfiles model from the default database');
 
     mod.channel.stopReplying();
@@ -306,13 +306,13 @@ test('collections/modules/Configs: createProfile()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel');
 
-    mod.createProfile({name: 'notes-db'})
+    mod.createProfile({name: 'default'})
     .then(() => {
         t.equal(save.notCalled, true, 'does nothing if the profile already exists');
         return mod.createProfile({name: 'test'});
     })
     .then(() => {
-        t.equal(save.calledWithMatch({data: {value: ['notes-db', 'test']}}), true,
+        t.equal(save.calledWithMatch({data: {value: ['default', 'test']}}), true,
             'adds the profile to the array');
 
         sand.restore();
@@ -325,7 +325,7 @@ test('collections/modules/Configs: removeProfile()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel');
     sand.stub(mod, 'findProfileModel').returns(
-        Promise.resolve(new mod.Model({value: ['notes-db', 'test', '1']}))
+        Promise.resolve(new mod.Model({value: ['default', 'test', '1']}))
     );
 
     mod.removeProfile({name: 'test2'})
@@ -334,7 +334,7 @@ test('collections/modules/Configs: removeProfile()', t => {
         return mod.removeProfile({name: 'test'});
     })
     .then(() => {
-        t.equal(save.calledWithMatch({data: {value: ['notes-db', '1']}}), true,
+        t.equal(save.calledWithMatch({data: {value: ['default', '1']}}), true,
             'removes the profile from the array');
 
         sand.restore();

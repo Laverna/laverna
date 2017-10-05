@@ -13,7 +13,7 @@ test('collections/Files: sync', t => {
 
 test('collections/Files: profileId', t => {
     const coll = new Files();
-    t.equal(coll.profileId, 'notes-db');
+    t.equal(coll.profileId, 'default');
     t.end();
 });
 

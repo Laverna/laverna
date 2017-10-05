@@ -21,7 +21,7 @@ test('collections/Collection: sync', t => {
 
 test('collections/Collection: profileId', t => {
     const coll = new Collection();
-    t.equal(coll.profileId, 'notes-db');
+    t.equal(coll.profileId, 'default');
     t.end();
 });
 

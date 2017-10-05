@@ -16,7 +16,7 @@ test('Model: sync()', t => {
 test('Model: profileId() - get', t => {
     const model = new Model();
 
-    t.equal(model.profileId, 'notes-db', 'returns "notes-db" for default');
+    t.equal(model.profileId, 'default', 'returns "default" for default');
     model._profileId = 'test';
     t.equal(model.profileId, 'test', 'returns the value of "_profileId" property');
 

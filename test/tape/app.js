@@ -71,7 +71,7 @@ test('App: lazyStart() - success', t => {
 
     res.then(() => {
         t.equal(init.calledWith(
-            {names: ['App:core', 'App:utils', 'App:components', 'App:auth']}),
+            {names: ['App:core', 'App:utils', 'App:components', 'App:auth', 'App:checks']}),
             true,
             'starts initializers'
         );

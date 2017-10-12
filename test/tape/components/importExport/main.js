@@ -37,3 +37,15 @@ test('importExport/Main: responds to "export" request', t => {
     sand.restore();
     t.end();
 });
+
+test('importExport/Main: adds "App:checks" initializer', t => {
+    const req = sand.stub(Radio, 'request');
+
+    main();
+    t.equal(req.calledWithMatch('utils/Initializer', 'add', {
+        name: 'App:checks',
+    }), true, 'msg');
+
+    sand.restore();
+    t.end();
+});

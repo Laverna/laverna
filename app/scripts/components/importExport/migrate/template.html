@@ -1,0 +1,41 @@
+<header>
+    <h1 class="header--brand">{{_.i18n('Migration')}}</h1>
+</header>
+
+<div class="container-fluid container--white">
+    <div class="row hidden" id="migrate--alert" style="padding-bottom:0">
+        <div class="col-xs-12 alert alert-danger" style="margin-bottom:0"></div>
+    </div>
+
+    <div class="row" id="migrate--confirm">
+        <div class="col-xs-12">
+            <div class="form-group text-left text--brand">{{_.i18n('We found existing data from the previous version of Laverna. If you want to recover your data, click on "Start" button.')}}</div>
+
+            <% if (configs.encrypt) { %>
+            <div class="form-group text-left text--brand">{{_.i18n('Please, enter the password you used in the previous version of Laverna.')}}</div>
+            <div class="form-group">
+                <input name="password" class="form-control col-xs-12 input-lg input--brand" type="password" placeholder="{{_.i18n('Password')}}" />
+                <br/><br/><br/>
+            </div>
+            <% } %>
+
+            <div class="form-group row">
+                <div class="col-xs-6">
+                    <button id="migrate--cancel" class="btn btn-lg btn-block btn-warning pull-right">{{_.i18n('Cancel')}}</button>
+                </div>
+                <div class="col-xs-6">
+                    <button id="migrate--start" class="btn btn-lg btn-block btn-success pull-left">{{_.i18n('Start')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="migrate--progress" class="row hidden text--brand">
+        <div class="col-xs-12">
+            <div class="progress">
+                <div class="progress-bar progress-bar-success migrate--progress--bar" style="width: 0%"></div>
+            </div>
+            <div class="form-group text--brand migrate--progress--text"></div>
+        </div>
+    </div>
+</div>

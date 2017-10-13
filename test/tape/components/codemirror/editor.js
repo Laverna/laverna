@@ -38,7 +38,22 @@ test('codemirror/Controller: init()', t => {
     sand.stub(codemirror, 'fromTextArea').returns({test: '1'});
 
     con.init();
-    t.equal(codemirror.fromTextArea.called, true, 'instantiates codemirror editor');
+
+    t.equal(codemirror.fromTextArea.calledWith(document.getElementById('editor--input'), {
+        mode            : {
+            name        : 'gfm',
+            gitHubSpice : false,
+        },
+        keyMap          : con.options.configs.textEditor || 'default',
+        lineNumbers     : false,
+        matchBrackets   : true,
+        lineWrapping    : true,
+        indentUnit      : parseInt(con.options.configs.indentUnit, 10),
+        extraKeys       : con.extraKeys,
+        inputStyle      : 'contenteditable',
+        spellcheck      : true,
+    }), true, 'instantiates codemirror editor');
+
     t.deepEqual(con.instance, {test: '1'}, 'saves codemirror instance in editor property');
 
     sand.restore();

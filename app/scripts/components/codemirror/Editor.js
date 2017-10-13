@@ -143,6 +143,8 @@ export default class Codemirror {
             lineWrapping    : true,
             indentUnit      : parseInt(this.options.configs.indentUnit, 10),
             extraKeys       : this.extraKeys,
+            inputStyle      : 'contenteditable',
+            spellcheck      : true,
         });
     }
 

@@ -47,7 +47,7 @@
 
 ## Security
 * Client-side AES document encryption.
-* No registration required. Laverna manages signup and login via security tools built-in to all modern web browsers.
+* No registration required. Laverna manages signup/login via security tools built in to all modern browsers.
 * By default, Laverna stores notes using the database in your browser (such as indexedDB or localStorage). This means that no data is synced to the cloud without your permission.
 
 <hr>

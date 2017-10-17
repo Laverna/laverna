@@ -1,8 +1,11 @@
 <div align="center">
   <h1>Laverna | The open source note-taking app</h1>
 
+
   <h5>🔖  &nbsp;🔏  &nbsp;📄&nbsp;</h5>
-  A clean, lightweight alternative to Evernote that keeps your notes encrypted.
+  <p>A clean, lightweight alternative to Evernote that keeps your notes encrypted.</p>
+  <p>**Demo**: https://laverna.cc &nbsp;OR&nbsp; http://laverna.github.io/static-laverna</p>
+  <br>
 
   [![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna)
   [![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna/badge.svg?branch=dev)](https://coveralls.io/github/Laverna/laverna)
@@ -12,21 +15,21 @@
     <a href="https://gitter.im/Laverna/laverna">
       Gitter
     </a>
-    <span>&nbsp; | &nbsp;</span>
+    <span> | </span>
     <a href="https://webchat.freenode.net/?channels=laverna">
       IRC
     </a>
-    <span>&nbsp; | &nbsp;</span>
+    <span> | </span>
     <a href="https://github.com/Laverna/laverna/wiki">
       Wiki
     </a>
-    <span>&nbsp; | &nbsp;</span>
+    <span> | </span>
     <a href="#developer-install--documentation">
       Contribute
     </a>
   </h3>
   
-  **Demo**: https://laverna.cc &nbsp;OR&nbsp; http://laverna.github.io/static-laverna
+
 
   <br>
  
@@ -38,7 +41,7 @@
   <br>
 </div>
 
-<hr/>
+<br/>
 
 ## Features
 
@@ -56,12 +59,14 @@
 * No registration required - Laverna manages signup and login via security tools built-in to all modern web browsers.
 * By default, Laverna stores notes using the database in your browser (such as indexedDB or localStorage). This means that no data is synced to the cloud without your permission.
 
+<hr>
+<br>
 
 ## Quick Start (recommended)
 
 Open [laverna.cc](https://laverna.cc/) and get started in less than 30 seconds. No extra steps are required!
 
-<hr>
+
 
 ## Install Desktop App (beta)
 
@@ -112,7 +117,8 @@ $ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna
 
 **Open **`index.html`** (from inside the Laverna folder) in any browser.**
 
-<hr/>
+<hr>
+<br>
 
 ## Developer Install & Documentation
 
@@ -132,8 +138,6 @@ To run Laverna locally, you'll need to have the following installed:
 ```bash
 $ git clone git@github.com:Laverna/laverna.git
 ```
-
-
 
 ### Step 2
 
@@ -166,8 +170,6 @@ $ gulp
 ```
 
 > *Ensure you have Gulp installed locally AND globally!*
-
-
 
 ### Step 3
 
@@ -241,4 +243,3 @@ Laverna uses a lot of other libraries and each of these [libraries use different
 [13]: https://github.com/Laverna/laverna/releases
 [14]: https://git-scm.com/book/en/v2
 [15]: https://github.com/Laverna/laverna/wiki
-

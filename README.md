@@ -49,7 +49,7 @@
 <hr>
 
 ## Security
-* Client-side AES document encryption.
+* [Client-side document encryption](#developer-install--documentation)
 * No registration required. Laverna manages signup/login via security tools built in to all modern browsers.
 * By default, Laverna stores notes using the database in your browser (such as indexedDB or localStorage). This means that no data is synced to the cloud without your permission.
 
@@ -80,12 +80,11 @@ After downloading the file for your operating system, unpack the `.zip` file. In
 
 * Install the package [hosted here](https://aur.archlinux.org/packages/laverna/). Once installed, run: `$ pacaur -S laverna`
 
+> *Running into issues with Arch Linux installation? Report [here](https://github.com/funilrys/PKGBUILD/issues/new) or contact [@funilrys](https://github.com/funilrys) on Gitter [here](https://gitter.im/funilrys_/PKGBUILD)*.
+
 ### Previous Releases
 
 * All historical releases[ are available here](https://github.com/Laverna/laverna/releases).
-
-> *Running into issues with installation? Report [here](https://github.com/funilrys/PKGBUILD/issues/new) or contact [@funilrys](https://github.com/funilrys) on Gitter [here](https://gitter.im/funilrys_/PKGBUILD)*.
-
 
 ## Install a Prebuilt Version
 

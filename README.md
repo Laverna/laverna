@@ -86,44 +86,43 @@ After downloading, unpack the `.zip` files. Inside the unpacked folder (e.g. `cd
 
 ## Install a Prebuilt Version
 
-**Download via wget:**
+**1. Download via wget:**
 
 ```bash
 $ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna.zip
 ```
 
-**Unpack the downloaded archive:**
+**2. Unpack the downloaded archive:**
 
 ```bash
 $ unzip laverna.zip
 ```
 
-**Open **`index.html`** (from inside the Laverna folder) in any browser.**
+**3. Open **`index.html`** (from inside the Laverna folder) in any browser.**
 
 <hr>
 
 ## Developer Install & Documentation
 
-To run Laverna locally, you'll need to have the following installed:
-
+To run Laverna locally, you need to have the following installed:
 * [Node.js](https://nodejs.org/) version 6.11.4. Laverna works with other versions, but requires additional configuration and is not recommended.
 * [MongoDB](https://docs.mongodb.com/manual/installation/)
 * [Git](https://git-scm.com/book/en/v2) (note: Windows users need to set the PATH variable for git after installation).
 
-### Step 1
+Setting up your local environment only takes a few minutes. 
 
-If you're planning to contribute to the project's development, hit the fork button at the top of the page and move on to **Step 2**.
+### Part One: Install Laverna
+
+If you're planning to contribute to the project's development, hit the fork button at the top of the page and move on to **step 2**.
 
 
-**Clone the Laverna repository:**
+**1. Clone the Laverna repository:**
 
 ```bash
 $ git clone git@github.com:Laverna/laverna.git
 ```
 
-### Step 2
-
-**Navigate to project directory and checkout `dev` branch:**
+**2. Navigate to project directory and checkout `dev` branch:**
 
 ```bash
 $ cd laverna
@@ -132,20 +131,20 @@ $ cd laverna
 $ git fetch && git checkout dev
 ```
 
-**Install Gulp:**
+**3. Install Gulp:**
 
 ```bash
 $ npm install gulp
 $ npm install -g gulp
 ```
 
-**Install dependencies and build:**
+**4. Install dependencies and build:**
 
 ```bash
 $ npm run setup
 ```
 
-**Start Laverna:**
+**5. Start Laverna:**
 
 ```bash
 $ gulp
@@ -153,25 +152,25 @@ $ gulp
 
 > *Make sure you have Gulp installed locally AND globally!*
 
-### Step 3
+### Part Two: Setup Signal Server
 
-**Clone the repository for [Laverna's backend Signal Server](https://github.com/Laverna/laverna-server):**
+**1. Clone the repository for [Laverna's backend Signal Server](https://github.com/Laverna/laverna-server):**
 
 ```bash
 $ git clone git@github.com:Laverna/server.git
 ```
 
-**Install dependencies:**
+**2. Install dependencies:**
 
 ```bash
 $ cd server && npm install
 ```
 
-**Configure the Signal Server:**
+**3. Configure the Signal Server:**
 
 Copy `.env.example` to `.env` and change configs in the new file.
 
-**Start the Signal Server:**
+**4. Start the Signal Server:**
 
 ```bash
 $ npm start

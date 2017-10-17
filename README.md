@@ -104,12 +104,11 @@ $ unzip laverna.zip
 
 ## Developer Install & Documentation
 
-To run Laverna locally, you need to have the following installed:
+Setting up the Laverna development environment only takes a few minutes. To run locally, you need to have the following installed:
 * [Node.js](https://nodejs.org/) version 6.11.4. Laverna works with other versions, but requires additional configuration and is not recommended.
 * [MongoDB](https://docs.mongodb.com/manual/installation/)
 * [Git](https://git-scm.com/book/en/v2) (note: Windows users need to set the PATH variable for git after installation).
 
-Setting up your local environment only takes a few minutes. 
 
 ### Part One: Install Laverna
 

@@ -49,7 +49,7 @@
 <hr>
 
 ## Security
-* [Client-side document encryption](#developer-install--documentation)
+* [Client-side document encryption](#encryption)
 * No registration required. Laverna manages signup/login via security tools built in to all modern browsers.
 * By default, Laverna stores notes using the database in your browser (such as indexedDB or localStorage). This means that no data is synced to the cloud without your permission.
 
@@ -195,10 +195,9 @@ Localizations [are available here.](https://github.com/Laverna/laverna/blob/dev/
 
 ## Encryption
 
-Laverna uses the [SJCL](http://bitwiseshiftleft.github.io/sjcl/) library for implementing the AES algorithm. You can review the code here:
+The current Laverna release (on `master`) uses the [SJCL](http://bitwiseshiftleft.github.io/sjcl/) library to implement the AES algorithm. 
 
-* https://github.com/Laverna/laverna/blob/master/app/scripts/classes/encryption.js
-* https://github.com/Laverna/laverna/blob/master/app/scripts/apps/encryption/
+**However, in our effort to permanently enhance the application's security**, Laverna is implementing OpenPGP encryption via [OpenPGP.js](https://github.com/openpgpjs/openpgpjs).
 
 
 ## Donations
@@ -234,3 +233,4 @@ Laverna uses a lot of other libraries and each of these [libraries use different
 [13]: https://github.com/Laverna/laverna/releases
 [14]: https://git-scm.com/book/en/v2
 [15]: https://github.com/Laverna/laverna/wiki
+

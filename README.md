@@ -44,13 +44,14 @@
 * Syntax highlighting, MathJax support
 * Robust keyboard shortcuts
 
+<hr>
+<img src="https://s3.amazonaws.com/laverna-readme/Screen+Recording+2017-10-16+at+10.10+PM-min.gif">
+<hr>
 
 ## Security
 * Client-side AES document encryption.
 * No registration required. Laverna manages signup/login via security tools built in to all modern browsers.
 * By default, Laverna stores notes using the database in your browser (such as indexedDB or localStorage). This means that no data is synced to the cloud without your permission.
-
-<hr>
 
 ## Quick Start (recommended)
 

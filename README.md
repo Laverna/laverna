@@ -91,12 +91,14 @@ After downloading, unpack the `.zip` files. Inside the unpacked folder (e.g. `cd
 ```bash
 $ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna.zip
 ```
+<br/>
 
 **2. Unpack the downloaded archive:**
 
 ```bash
 $ unzip laverna.zip
 ```
+<br/>
 
 **3. Open **`index.html`** (from inside the Laverna folder) in any browser.**
 
@@ -113,13 +115,14 @@ Setting up the Laverna development environment only takes a few minutes. To run 
 ### Part One: Install Laverna
 
 If you're planning to contribute to the project's development, hit the fork button at the top of the page and move on to **step 2**.
-
+<br/>
 
 **1. Clone the Laverna repository:**
 
 ```bash
 $ git clone git@github.com:Laverna/laverna.git
 ```
+<br/>
 
 **2. Navigate to project directory and checkout `dev` branch:**
 
@@ -129,6 +132,7 @@ $ cd laverna
 # unless you're patching bugs in the latest release, switch to dev branch:
 $ git fetch && git checkout dev
 ```
+<br/>
 
 **3. Install Gulp:**
 
@@ -136,20 +140,21 @@ $ git fetch && git checkout dev
 $ npm install gulp
 $ npm install -g gulp
 ```
+<br/>
 
 **4. Install dependencies and build:**
 
 ```bash
 $ npm run setup
 ```
+<br/>
 
 **5. Start Laverna:**
 
 ```bash
 $ gulp
 ```
-
-> *Make sure you have Gulp installed locally AND globally!*
+<br/>
 
 ### Part Two: Setup Signal Server
 
@@ -158,16 +163,20 @@ $ gulp
 ```bash
 $ git clone git@github.com:Laverna/server.git
 ```
+<br/>
 
 **2. Install dependencies:**
 
 ```bash
 $ cd server && npm install
 ```
+<br/>
 
 **3. Configure the Signal Server:**
 
 Copy `.env.example` to `.env` and change configs in the new file.
+
+<br/>
 
 **4. Start the Signal Server:**
 

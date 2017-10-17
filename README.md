@@ -1,10 +1,9 @@
 <div align="center">
   <h1>Laverna | The open source note-taking app</h1>
 
-
   <h5>🔖  &nbsp;🔏  &nbsp;📄&nbsp;</h5>
   <p>A clean, lightweight alternative to Evernote that keeps your notes encrypted.</p>
-  <p>**Demo**: https://laverna.cc &nbsp;OR&nbsp; http://laverna.github.io/static-laverna</p>
+  <p><strong>Demo</strong>: https://laverna.cc &nbsp;OR&nbsp; http://laverna.github.io/static-laverna</p>
   <br>
 
   [![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna)
@@ -28,8 +27,6 @@
       Contribute
     </a>
   </h3>
-  
-
 
   <br>
  
@@ -60,7 +57,6 @@
 * By default, Laverna stores notes using the database in your browser (such as indexedDB or localStorage). This means that no data is synced to the cloud without your permission.
 
 <hr>
-<br>
 
 ## Quick Start (recommended)
 
@@ -118,7 +114,6 @@ $ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna
 **Open **`index.html`** (from inside the Laverna folder) in any browser.**
 
 <hr>
-<br>
 
 ## Developer Install & Documentation
 

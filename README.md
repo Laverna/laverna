@@ -1,41 +1,44 @@
 <div align="center">
   <h1>Laverna | The open source note-taking app</h1>
-  <hr/>
-  <blockquote style="border:none"> A clean, lightweight alternative to Evernote that keeps your notes encrypted.
-    </blockquote>
 
+  <h5>🔖  &nbsp;🔏  &nbsp;📄&nbsp;</h5>
+  A clean, lightweight alternative to Evernote that keeps your notes encrypted.
 
-<h5>
-<table>
-  <tr>
-    <td><a href="https://github.com/Laverna/laverna/wiki">&nbsp; Wiki&nbsp;&nbsp;&nbsp;|</a></td>
-    <td><a href="https://webchat.freenode.net/?channels=laverna">&nbsp; Gitter&nbsp; | &nbsp;</a></td>
-    <td><a href="https://gitter.im/Laverna/laverna">&nbsp;IRC</a></td>
-  </tr>
-</table>
-</h5>
+  [![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna)
+  [![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna/badge.svg?branch=dev)](https://coveralls.io/github/Laverna/laverna)
+  [![Code Climate](https://codeclimate.com/github/Laverna/laverna/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna)
+  
+  <h3>    
+    <a href="https://gitter.im/Laverna/laverna">
+      Gitter
+    </a>
+    <span>&nbsp; | &nbsp;</span>
+    <a href="https://webchat.freenode.net/?channels=laverna">
+      IRC
+    </a>
+    <span>&nbsp; | &nbsp;</span>
+    <a href="https://github.com/Laverna/laverna/wiki">
+      Wiki
+    </a>
+    <span>&nbsp; | &nbsp;</span>
+    <a href="#developer-install--documentation">
+      Contribute
+    </a>
+  </h3>
+  
+  **Demo**: https://laverna.cc &nbsp;OR&nbsp; http://laverna.github.io/static-laverna
 
-[![Build Status](https://travis-ci.org/Laverna/laverna.svg?branch=dev)](https://travis-ci.org/Laverna/laverna)
-[![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna/badge.svg?branch=dev)](https://coveralls.io/github/Laverna/laverna)
-[![Code Climate](https://codeclimate.com/github/Laverna/laverna/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna)
-
-<br>
-**Demo**: https://laverna.cc &nbsp;OR&nbsp; http://laverna.github.io/static-laverna
-
-<br>
-
-<h5>🔖  &nbsp;🔏  &nbsp;📄&nbsp;</h5>
-
-
-<br>
-<sub>
-  Laverna is written end-to-end in JavaScript. It uses the
-  <a href="http://marionettejs.com/">Marionette JS framework</a>,
-  <a href="http://gulpjs.com/">Gulp</a> and runs on Node.js. The test runner is <a href="https://github.com/substack/tape">tape</a>
-</sub>
-<br>
+  <br>
+ 
+  <sub>
+    Laverna is written end-to-end in JavaScript. It uses the
+    <a href="http://marionettejs.com/">Marionette JS framework</a>,
+    <a href="http://gulpjs.com/">Gulp</a> and runs on Node.js. The test runner is <a href="https://github.com/substack/tape">tape</a>
+  </sub>
+  <br>
 </div>
 
+<hr/>
 
 ## Features
 
@@ -58,6 +61,7 @@
 
 Open [laverna.cc](https://laverna.cc/) and get started in less than 30 seconds. No extra steps are required!
 
+<hr>
 
 ## Install Desktop App (beta)
 
@@ -108,8 +112,7 @@ $ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna
 
 **Open **`index.html`** (from inside the Laverna folder) in any browser.**
 
-<hr>
-<br>
+<hr/>
 
 ## Developer Install & Documentation
 
@@ -180,7 +183,7 @@ $ git clone git@github.com:Laverna/server.git
 $ cd server && npm install
 ```
 
-**Configure the Signal Server:** 
+**Configure the Signal Server:**
 
 Copy `.env.example` to `.env` and change configs in the new file.
 
@@ -238,3 +241,4 @@ Laverna uses a lot of other libraries and each of these [libraries use different
 [13]: https://github.com/Laverna/laverna/releases
 [14]: https://git-scm.com/book/en/v2
 [15]: https://github.com/Laverna/laverna/wiki
+

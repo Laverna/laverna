@@ -54,11 +54,12 @@
 
 ## Quick Start (recommended)
 
-Open [laverna.cc](https://laverna.cc/) and get started in less than 30 seconds. No extra steps are required!
+* Open [laverna.cc](https://laverna.cc/) and get started in less than 30 seconds. 
+* No extra steps are required!
 
 ## Install Desktop App (beta)
 
-After downloading, unpack the `.zip` files. Inside the unpacked folder (e.g. `cd ~/Applications/laverna-0.7.51`), run an executable: `laverna.exe` for Windows, `laverna` for Linux and Mac.
+After downloading the file for your operating system, unpack the `.zip` file. Inside the unpacked folder (e.g. `cd ~/Applications/laverna-0.7.51`), run an executable: `laverna.exe` for Windows, `laverna` for Linux and Mac.
 
 ### Windows
 
@@ -84,6 +85,7 @@ After downloading, unpack the `.zip` files. Inside the unpacked folder (e.g. `cd
 
 > *Running into issues with installation? Report [here](https://github.com/funilrys/PKGBUILD/issues/new) or contact [@funilrys](https://github.com/funilrys) on Gitter [here](https://gitter.im/funilrys_/PKGBUILD)*.
 
+
 ## Install a Prebuilt Version
 
 **1. Download via wget:**
@@ -102,7 +104,8 @@ $ unzip laverna.zip
 
 **3. Open **`index.html`** (from inside the Laverna folder) in any browser.**
 
-<hr>
+<br/>
+<hr/>
 
 ## Developer Install & Documentation
 
@@ -154,7 +157,6 @@ $ npm run setup
 ```bash
 $ gulp
 ```
-<br/>
 
 ### Part Two: Setup Signal Server
 

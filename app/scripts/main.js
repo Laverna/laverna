@@ -13,6 +13,7 @@ import App from './App';
 import './workers/Delegator';
 
 // Utils
+import './utils/theme';
 import './utils/Env';
 import './utils/underscore';
 import './utils/I18n';

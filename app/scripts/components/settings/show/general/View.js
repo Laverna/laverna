@@ -5,7 +5,9 @@ import Mn from 'backbone.marionette';
 import _ from 'underscore';
 import i18n from 'i18next';
 import locales from '../../../../../locales/locales.json';
+import themes from '../../../../../styles/themes.json';
 import Behavior from '../Behavior';
+import Radio from 'backbone.radio';
 
 /**
  * General settings view.
@@ -31,6 +33,25 @@ export default class View extends Mn.View {
         return [Behavior];
     }
 
+    events() {
+        return {
+            'change @ui.theme': 'previewTheme',
+        };
+    }
+
+    ui() {
+        return {
+            theme: '#theme',
+        };
+    }
+
+    /**
+     * Preview a theme.
+     */
+    previewTheme() {
+        Radio.trigger('components/settings', 'changeTheme', {name: this.ui.theme.val()});
+    }
+
     /**
      * serializeData.
      *
@@ -42,7 +63,9 @@ export default class View extends Mn.View {
         return {
             locales,
             models,
+            themes,
             appLang    : (models.appLang || i18n.language) || 'en',
+            theme      : models.theme || 'default',
             profileId  : this.options.profileId,
             useDefault : this.options.useDefault.attributes,
         };
@@ -74,6 +97,18 @@ export default class View extends Mn.View {
             selectLocale(locale) {
                 if (this.appLang === locale ||
                     this.appLang.search(locale) >= 0) {
+                    return ' selected';
+                }
+            },
+
+            /**
+             * Select a theme if it's active.
+             *
+             * @param {String} theme - theme name
+             * @returns {String}
+             */
+            selectTheme(theme) {
+                if (this.theme === theme) {
                     return ' selected';
                 }
             },

@@ -20,6 +20,7 @@ const configNames = {
      *
      * @prop {Array} appProfiles - profile names stored in JSON format
      * @prop {String} appLang - localization (en|fr...etc)
+     * @prop {String} theme - theme
      * @prop {String} useDefaultConfigs - (0|1) 1 if the profile should
      * use settings from the main profile.
      * @prop {String} pagination - the number of notes shown per page
@@ -31,6 +32,7 @@ const configNames = {
     general: {
         appProfiles        : ['default'],
         appLang            : '',
+        theme              : '',
         useDefaultConfigs  : '1',
 
         pagination         : '10',

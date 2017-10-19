@@ -26,6 +26,20 @@ test('settings/show/general/View: behaviors()', t => {
     t.end();
 });
 
+test('settings/show/general/View: events()', t => {
+    const events = View.prototype.events();
+    t.equal(typeof events, 'object', 'returns an object');
+    t.equal(events['change @ui.theme'], 'previewTheme');
+    t.end();
+});
+
+test('settings/show/general/View: ui()', t => {
+    const ui = View.prototype.ui();
+    t.equal(typeof ui, 'object', 'returns an object');
+    t.equal(ui.theme, '#theme');
+    t.end();
+});
+
 test('settings/show/general/View: serializeData()', t => {
     const collection = new Configs();
     collection.resetFromObject(collection.configNames);
@@ -37,7 +51,9 @@ test('settings/show/general/View: serializeData()', t => {
     t.equal(typeof res, 'object', 'returns an object');
     t.equal(typeof res.locales, 'object', 'has locales');
     t.deepEqual(res.models, collection.getConfigs(), 'has models');
+    t.deepEqual(typeof res.themes, 'object', 'has themes');
     t.equal(res.appLang, 'en', 'has appLang');
+    t.equal(res.theme, 'default', 'has theme');
     t.equal(res.profileId, 'test', 'has profileId');
     t.equal(res.useDefault, useDefault.attributes, 'has useDefault model');
 
@@ -71,6 +87,13 @@ test('settings/show/general/View: templateContext()', t => {
     context.appLang = 'en-us';
     t.equal(context.selectLocale('fr'), undefined,
         'does nothing if the locale is not equal to appLang');
+
+    context.theme = 'default';
+    t.equal(context.selectTheme('dark'), undefined,
+        'returns nothing if the theme is not active');
+
+    t.equal(context.selectTheme('default'), ' selected',
+        'selects the theme if it is active');
 
     t.end();
 });

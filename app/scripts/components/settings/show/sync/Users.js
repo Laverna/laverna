@@ -6,7 +6,7 @@ import _ from 'underscore';
 import Mn from 'backbone.marionette';
 
 /**
- * Show a list of users.
+ * Show a list of users whom you trust or invited.
  *
  * @class
  * @extends Marionette.View

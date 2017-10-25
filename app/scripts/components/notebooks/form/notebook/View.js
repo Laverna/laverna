@@ -46,18 +46,4 @@ export default class View extends Mn.View {
         });
     }
 
-    templateContext() {
-        return {
-            /**
-             * If the notebookId is equal to the model's parentId,
-             * select the option.
-             */
-            isParent(notebookId) {
-                if (this.parentId === notebookId) {
-                    return ' selected="selected"';
-                }
-            },
-        };
-    }
-
 }

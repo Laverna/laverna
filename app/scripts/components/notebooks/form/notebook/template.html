@@ -23,7 +23,7 @@
                         <select name="parentId" class="form-control modal--input">
                             <option value="0">{{ _.i18n('Parent') }}: {{ _.i18n('Root') }}</option>
                             <% _.each(notebooks, function (notebook) { %>
-                            <option value="{{notebook.id}}"{{isParent(notebook.id) }}>
+                            <option value="{{notebook.id}}"{{_.selectOption(parentId, notebook.id) }}>
                                 {{ _.i18n('Parent') }}: {=_.cleanXSS(notebook.name)}
                             </option>
                             <% }); %>

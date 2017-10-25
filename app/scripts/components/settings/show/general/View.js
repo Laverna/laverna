@@ -101,18 +101,6 @@ export default class View extends Mn.View {
                 }
             },
 
-            /**
-             * Select a theme if it's active.
-             *
-             * @param {String} theme - theme name
-             * @returns {String}
-             */
-            selectTheme(theme) {
-                if (this.theme === theme) {
-                    return ' selected';
-                }
-            },
-
         };
     }
 

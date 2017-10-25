@@ -34,7 +34,7 @@
     <div class="col-sm-10">
         <select class="form-control" name="theme" id="theme">
             <% _.forEach(themes, function(name, theme) { %>
-            <option value="{{theme}}"{{ selectTheme(theme) }}>{{name}}</option>
+            <option value="{{theme}}"{{ _.selectOption(models.theme, theme) }}>{{name}}</option>
             <% }); %>
         </select>
     </div>
@@ -52,10 +52,10 @@
     <div class="col-sm-10">
         <select id="sortnotes" class="form-control" name="sortnotes" checked="{{models.sortnotes}}">
             <option value="created">{{ _.i18n('Created date') }}</option>
-            <option value="updated" <%if(models.sortnotes === 'updated'){%>selected<%}%>>
+            <option value="updated" {{_.selectOption(models.sortnotes, 'updated')}}>
             {{ _.i18n('Updated date') }}
             </option>
-            <option value="title" <%if(models.sortnotes === 'title'){%>selected<%}%>>
+            <option value="title" {{_.selectOption(models.sortnotes, 'title')}}>
             {{ _.i18n('Title') }}
             </option>
         </select>
@@ -67,7 +67,7 @@
     <div class="col-sm-10">
         <select id="sortnotebooks" class="form-control" name="sortnotebooks" checked="{{models.sortnotebooks}}">
             <option value="name">{{ _.i18n('Name') }}</option>
-            <option value="created" <%if(models.sortnotebooks === 'created'){%>selected<%}%>>
+            <option value="created" {{_.selectOption(models.sortnotebooks, 'created')}}>
             {{ _.i18n('Created date') }}
             </option>
         </select>

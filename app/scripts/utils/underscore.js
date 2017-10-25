@@ -112,6 +112,17 @@ _.mixin({
         return str.match(/.{4}/g).join(' ');
     },
 
+    /**
+     * Select an option if it is active.
+     *
+     * @param {String} active
+     * @param {String} item
+     * @returns {String}
+     */
+    selectOption(active, item) {
+        return active === item ? 'selected="selected" ' : '';
+    },
+
 });
 
 export default _;

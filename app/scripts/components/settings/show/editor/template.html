@@ -3,8 +3,8 @@
     <div class="col-sm-10">
         <select id="editMode" class="form-control" name="editMode" checked="{{models.editMode}}">
             <option value="normal">{{ _.i18n('Normal') }}</option>
-            <option value="fullscreen" <%if(models.editMode === 'fullscreen'){%>selected<%}%>>{{ _.i18n('Fullscreen') }}</option>
-            <option value="preview" <%if(models.editMode === 'preview'){%>selected<%}%>>{{ _.i18n('Fullscreen with preview') }}</option>
+            <option value="fullscreen" {{_.selectOption(models.editMode, 'fullscreen')}}>{{ _.i18n('Fullscreen') }}</option>
+            <option value="preview" {{_.selectOption(models.editMode, 'preview')}}>{{ _.i18n('Fullscreen with preview') }}</option>
         </select>
     </div>
 </div>
@@ -26,9 +26,9 @@
 		<!-- TODO Add translation-->
         <select id="textEditor" class="form-control" name="textEditor" checked="{{models.textEditor}}">
             <option value="default">{{ _.i18n('Default') }}</option>
-			<option value="vim" <%if(models.textEditor === 'vim'){%>selected<%}%>>{{ _.i18n('Vim') }}</option>
-			<option value="emacs" <%if(models.textEditor === 'emacs'){%>selected<%}%>>{{ _.i18n('Emacs') }}</option>
-			<option value="sublime" <%if(models.textEditor === 'sublime'){%>selected<%}%>>{{ _.i18n('Sublime') }}</option>
+            <option value="vim" {{_.selectOption(models.textEditor, 'vim')}}>{{ _.i18n('Vim') }}</option>
+			<option value="emacs" {{_.selectOption(models.textEditor, 'emacs')}}>{{ _.i18n('Emacs') }}</option>
+			<option value="sublime" {{_.selectOption(models.textEditor, 'sublime')}}>{{ _.i18n('Sublime') }}</option>
         </select>
     </div>
 </div>

@@ -8,6 +8,7 @@ import Radio from 'backbone.radio';
 import '../../../../app/scripts/utils/underscore';
 import initialize from '../../../../app/scripts/components/dropbox/main';
 import Sync from '../../../../app/scripts/components/dropbox/Sync';
+import View from '../../../../app/scripts/components/dropbox/settings/View';
 
 let sand;
 test('components/dropbox/main: before()', t => {
@@ -29,6 +30,10 @@ test('components/dropbox/main', t => {
 
     initialize();
     t.equal(stub.called, true, 'msg');
+
+    sand.restore();
+    t.equal(Radio.request('components/dropbox', 'getSettingsView'), View,
+        'replies with the settings view');
 
     sand.restore();
     t.end();

@@ -223,13 +223,14 @@ test('collections/modules/Users: invite()', t => {
 test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
     const mod     = new Module();
     const options = {username: 'bob', fingerprint: 'test', publicKey: 'pubKey'};
-    const model   = new User({username: 'bob'});
+    const model   = new User({username: 'bob', pendingAccept: true});
 
     sand.stub(openpgp.key, 'readArmored').returns({
         keys: [{primaryKey: {fingerprint: 'print'}}],
     });
     sand.stub(mod, 'findModel').returns(Promise.resolve(model));
     sand.stub(mod, 'autoAcceptInvite');
+    sand.stub(mod, 'removeServerInvite');
 
     mod.saveInvite(options)
     .then(res => {
@@ -244,6 +245,13 @@ test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
             'tries to find the user in the database');
         t.equal(mod.autoAcceptInvite.calledWith(options), true,
             'automatically accepts the invite if the user exists in the DB');
+
+        model.set('pendingAccept', false);
+        mod.saveInvite(options)
+    })
+    .then(() => {
+        t.equal(mod.removeServerInvite.calledWith(model), true,
+            'removes the invite from the server if the it was already accepted');
 
         sand.restore();
         t.end();

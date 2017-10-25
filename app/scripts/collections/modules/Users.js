@@ -220,7 +220,14 @@ export default class Users extends Module {
 
         // If the user exists in the DB, automatically accept the invite
         return this.findModel({username: options.username})
-        .then(model => this.autoAcceptInvite(options, keys, model))
+        .then(model => {
+            // Remove the invite from the server if the invite was already accepted
+            if (!model.get('pendingAccept') && !model.get('pendingInvite')) {
+                return this.removeServerInvite(model);
+            }
+
+            return this.autoAcceptInvite(options, keys, model);
+        })
         .catch(err  => {
             if (err !== 'not found') {
                 throw new Error(err);

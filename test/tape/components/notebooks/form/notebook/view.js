@@ -51,16 +51,3 @@ test('notebooks/form/notebook/View: serializeData()', t => {
 
     t.end();
 });
-
-test('notebooks/form/notebook/View: templateContext()', t => {
-    const context    = View.prototype.templateContext();
-    context.parentId = '1';
-
-    t.notEqual(context.isParent('2'), ' selected="selected"',
-        'does not select the option if notebookId is not equal to the model\'s');
-
-    t.equal(context.isParent('1'), ' selected="selected"',
-        'selects the option if its notebookId is equal to to the model\'s');
-
-    t.end();
-});

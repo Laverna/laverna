@@ -102,3 +102,9 @@ test('Underscore: splitBy4()', t => {
         'puts spaces');
     t.end();
 });
+
+test('Underscore: selectOption()', t => {
+    t.equal(_.selectOption('active', 'not'), '', 'returns empty string');
+    t.equal(_.selectOption('active', 'active'), 'selected="selected" ');
+    t.end();
+});

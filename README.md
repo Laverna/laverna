@@ -131,6 +131,20 @@ $ gulp build
 $ gulp
 ```
 
+## MacOS notes on accepting incoming connections
+Because currently Laverna does not sign it's Mac packages, if you want to avoid the "Accept incoming connections" warning message everytime the application is launched, you can run the following commands. Assuming your current direction contains the laverna application:
+
+```bash
+codesign -s - -f ./laverna.app/Contents/Frameworks/Electron\ Framework.framework
+codesign -s - -f ./laverna.app/Contents/Frameworks/Electron\ Helper\ EH.app 
+codesign -s - -f ./laverna.app/Contents/Frameworks/Electron\ Helper\ NP.app
+codesign -s - -f ./laverna.app/Contents/Frameworks/Electron\ Helper.app 
+codesign -s - -f ./laverna.app/Contents/Frameworks/Mantle.framework 
+codesign -s - -f ./laverna.app/Contents/Frameworks/ReactiveCocoa.framework 
+codesign -s - -f ./laverna.app/Contents/Frameworks/Squirrel.framework 
+codesign --verify -vv ./laverna.app
+```
+
 ## Do you have questions?
 ---------------
 Please have a look in our [wiki][15].

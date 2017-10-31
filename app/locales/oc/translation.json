@@ -32,7 +32,7 @@
     "No": "Non",
     "Yes": "Òc",
     "Basic": "Basic",
-    "Cloud storage": "Enregistrament aluenhat sul Cloud",
+    "Cloud storage": "Enregistrament alonhat sul Cloud",
     "Notes per page": "Nòtas per pagina",
     "Sort notebooks": "Triar los blòts",
     "Name": "Nom",
@@ -46,7 +46,7 @@
     "Random": "Aleatòri",
     "Key size": "Talha de la clau",
     "Strengthen by a factor of": "Renfortir per un factor de",
-    "Authentication strength": "Autenticacion fòrta",
+    "Authentication strength": "Autentificacion fòrta",
     "Unlock": "Desclavar",
     "Your new encryption password": "Vòstre novèl senhal",
     "Your old encryption password": "Vòstre ancian senhal",
@@ -127,14 +127,14 @@
             "next": "Contunhar sens telecargar lo fichièr de salvament"
         },
         "state": {
-            "decrypt": "Deschifrar tot",
-            "encrypt": "Chifrar tot",
+            "decrypt": "O deschifrar tot",
+            "encrypt": "O chifrar tot",
             "save": "Enregistrament dels cambiaments"
         }
     },
     "profile": {
 		"profile name": "Nom del perfil",
-        "confirm remove": "Lo perfil **{{profile}}** serà levat amb totas las donadas, enclús las nòtas, etiquetas e los blòts. Aquesta accion es irreversibla !",
+        "confirm remove": "Lo perfil **{{profile}}** serà levat amb totas las donadas, inclús las nòtas, etiquetas e los blòts. Aquesta accion es irreversibla !",
         "type name": "Marcatz lo nom del perfil"
     },
     "files": {
@@ -166,19 +166,19 @@
         "confirm remove": "L'etiqueta **{{name}}** serà levada **per totjorn** !"
     },
     "dropbox": {
-        "auth confirm": "Seretz menat sus la pagina d'autorizacion de **Dropbox**.\r> Mercés de far clic sul boton **OK**.",
+        "auth confirm": "Seretz menat a la pagina d'autorizacion de **Dropbox**.\r> Mercés de far clic sul boton **OK**.",
         "auth title": "Dropbox auth",
-        "api info 1": "Podètz aver vòstre pròpia clau d'API",
-        "api info 2": "Quand creatz una novèla app sul site Dropbox's Developer vos cal gardar a l'esprit aquò : ",
+        "api info 1": "Podètz aver vòstra pròpria clau d'API",
+        "api info 2": "Quand creatz una novèla app sul site Dropbox's Developer vos cal gardar al cap aquò : ",
         "api info li 1": "Tip d'API deu èsser **Dropbox API**",
         "api info li 2": "Tip d'accès deu èsser **App Folder**"
     },
     "help": {
-        "firststart title": "Benvengut sus Laverna",
+        "firststart title": "Benvengut a Laverna",
         "firststart import": "S'avètz ja utilizat Laverna, podètz importar vòstres paramètres d'abans en clicant sul boton 'importar' çaijós.",
-        "firststart next": "S'avètz pas jamai utilizat Laverna, clicatz sul boton 'seguent' per començar lo  processús d'installation.",
+        "firststart next": "S'avètz pas jamai utilizat Laverna, clicatz sul boton 'seguent' per començar lo  processús d'installacion.",
         "firststart encryption": "Se volètz utilizar lo chiframent, mercés de fornir un senhal de chiframent.",
         "firststart sync": "Ja que gardem pas cap de donadas sus nòstres servidors, vos cal activar la sincronizacion amb un de los adaptadors per poder veire vòstras nòtas en d'aparelhs mai.",
-        "firststart backup": "Tot es gaireben prèst. Podètz telecargar vòstra salvagarda de paramètres e anar a la darrèra etapa."
+        "firststart backup": "Tot es gaireben prèst. Podètz telecargar vòstra salvagarda de paramètres e anar a la darrièra etapa."
     }
 }

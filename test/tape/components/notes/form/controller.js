@@ -35,6 +35,12 @@ test('notes/form/Controller: notesChannel', t => {
     t.end();
 });
 
+test('notes/form/Controller: ignoreKeys', t => {
+    t.deepEqual(Controller.prototype.ignoreKeys.length, 3);
+    t.deepEqual(Controller.prototype.ignoreKeys, ['created', 'updated', 'encryptedData']);
+    t.end();
+});
+
 test('notes/form/Controller: init()', t => {
     const con = new Controller();
     sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
@@ -95,7 +101,7 @@ test('notes/form/Controller: show()', t => {
     const trig    = sand.stub(View.prototype, 'triggerMethod');
 
     con.show();
-    t.deepEqual(con.dataBeforeChange, _.omit(con.model.attributes, 'created', 'updated'),
+    t.deepEqual(con.dataBeforeChange, _.omit(con.model.attributes, 'created', 'updated', 'encryptedData'),
         'saves model attributes to restore it later');
     t.equal(req.calledWithMatch('Layout', 'show', {region: 'content'}), true,
         'renders the view');
@@ -223,10 +229,10 @@ test('notes/form/Controller: checkTitle()', t => {
 test('notes/form/Controller: checkChanges()', t => {
     const con = new Controller({});
     con.model = new Note({title: 'Test', content: 'Content'});
-    con.dataBeforeChange = _.omit(con.model.attributes, 'created', 'updated');
+    con.dataBeforeChange = _.omit(con.model.attributes, con.ignoreKeys);
 
     sand.stub(con, 'getData').returns(Promise.resolve({
-        title: 'Test', content: 'Content',
+        title: 'Test', content: 'Content', encryptedData: 'hello',
     }));
     sand.stub(con, 'redirect');
     sand.stub(con, 'showCancelConfirm');

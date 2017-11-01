@@ -28,6 +28,15 @@ export default class Controller extends Mn.Object {
     }
 
     /**
+     * Ignore these values when checking if a note's changed.
+     *
+     * @prop {Array}
+     */
+    get ignoreKeys() {
+        return ['created', 'updated', 'encryptedData'];
+    }
+
+    /**
      * Fetch data and show the form.
      *
      * @returns {Promise}
@@ -67,7 +76,7 @@ export default class Controller extends Mn.Object {
      */
     show() {
         // Saves data before you change anything, in case you cancel editing
-        this.dataBeforeChange = _.omit(this.model.attributes, 'created', 'updated');
+        this.dataBeforeChange = _.omit(this.model.attributes, this.ignoreKeys);
 
         // Instantiate the view
         this.view = new View({
@@ -193,7 +202,7 @@ export default class Controller extends Mn.Object {
         return this.getData()
         .then(res => {
             this.model.setEscape(res);
-            const data = _.omit(this.model.attributes, 'created', 'updated');
+            const data = _.omit(this.model.attributes, this.ignoreKeys);
 
             // There aren't any changes
             if (_.isEqual(this.dataBeforeChange, data)) {

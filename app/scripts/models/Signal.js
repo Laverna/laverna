@@ -254,10 +254,3 @@ export default class Signal {
     }
 
 }
-
-Radio.once('App', 'init', () => {
-    Radio.request('utils/Initializer', 'add', {
-        name    : 'App:utils',
-        callback: () => new Signal(),
-    });
-});

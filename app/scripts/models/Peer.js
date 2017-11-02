@@ -507,6 +507,3 @@ export default class Peer {
     }
 
 }
-
-// Try to connect to other peers as soon as the app is ready
-Radio.once('App', 'start', () => new Peer().init());

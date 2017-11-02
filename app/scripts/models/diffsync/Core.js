@@ -7,7 +7,7 @@ import deb from 'debug';
 import Diff from './Diff';
 import Patch from './Patch';
 
-const log = deb('lav:models/Diffsync');
+const log = deb('lav:models/diffsync/Core');
 
 /**
  * The core class for differential synchronization.
@@ -226,8 +226,3 @@ export default class Core {
     }
 
 }
-
-// Instantiate automatically on start
-Radio.once('App', 'start', () => {
-    return new Core().init();
-});

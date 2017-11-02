@@ -280,10 +280,15 @@ test('View: serializeData()', t => {
     const model      = new Note({id: '1'});
     configs.username = 'alice';
     const view       = new View({configs, model, profileLink: '/p/def'});
+
     sand.spy(_, 'extend');
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Configs', 'findConfig', {name: 'cloudStorage'})
+    .returns('p2p');
 
     t.equal(typeof view.serializeData(), 'object', 'returns an object');
     t.equal(_.extend.calledWithMatch({}, model.attributes, {
+        cloudStorage: 'p2p',
         content     : model.get('content'),
         notebook    : undefined,
         profileLink : '/p/def',
@@ -291,6 +296,7 @@ test('View: serializeData()', t => {
     }), true, 'contains model attributes and other parameters');
 
     view.destroy();
+    sand.restore();
     t.end();
 });
 

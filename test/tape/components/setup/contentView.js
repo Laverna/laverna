@@ -48,6 +48,19 @@ test('setup/ContenView: onReadyKey()', t => {
     t.end();
 });
 
+test('setup/ContentView: showWarning()', t => {
+    const view = new View();
+    view.ui    = {alert: {text: sand.stub()}};
+    view.ui.alert.removeClass = sand.stub().returns({text: view.ui.alert.text});
+    sand.stub(_, 'i18n').callsFake(str => str);
+
+    view.showWarning('Hello');
+    t.equal(view.ui.alert.text.calledWith('Hello'), true, 'shows the text');
+
+    sand.restore();
+    t.end();
+});
+
 test('setup/ContenView: onSaveError()', t => {
     const view    = new View({username: 'test'});
     const text    = sand.stub();
@@ -58,6 +71,9 @@ test('setup/ContenView: onSaveError()', t => {
     view.onSaveError({err: 'error'});
     t.equal(rmClass.calledWith('hidden'), true, 'shows the message box');
     t.equal(text.calledWith('error'), true, 'changes the error message');
+
+    view.onSaveError({err: {status: '0'}});
+    t.equal(text.calledWith('Signal server error #0'), true, 'changes the error message');
 
     sand.restore();
     t.end();

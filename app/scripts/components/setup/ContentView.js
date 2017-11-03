@@ -43,13 +43,22 @@ export default class ContentView extends Mn.View {
     }
 
     /**
+     * Show a warning or an error message.
+     *
+     * @param {String} text
+     */
+    showWarning(text) {
+        this.ui.alert.removeClass('hidden').text(_.i18n(text));
+    }
+
+    /**
      * Failed to save changes or claim the username.
      *
      * @param {String} err
      */
     onSaveError({err}) {
-        const text = _.cleanXSS(err);
-        this.ui.alert.removeClass('hidden').text(_.i18n(text));
+        const text = _.isString(err) ? err : `Signal server error #${err.status}`;
+        this.showWarning(_.cleanXSS(text));
     }
 
     /**

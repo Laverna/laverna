@@ -142,8 +142,8 @@ test('setup/Controller: checkUser()', t => {
     const user    = {username: 'test'};
     const trigger = sand.stub();
     con.view      = {
-        showRegister: sand.stub(),
-        getChildView: () => {
+        showRegister  : sand.stub(),
+        getChildView  : () => {
             return {triggerMethod: trigger};
         },
     };
@@ -155,6 +155,10 @@ test('setup/Controller: checkUser()', t => {
                 name  : 'signalServer',
                 value : 'https://laverna.cc',
             },
+        }), true, 'changes the signaling server address in configs');
+
+        t.equal(req.calledWith('models/Signal', 'changeServer', {
+            signal: 'https://laverna.cc',
         }), true, 'changes the signaling server address');
 
         t.equal(con.view.showRegister.calledWith({username: 'test'}), true,
@@ -166,6 +170,13 @@ test('setup/Controller: checkUser()', t => {
     .then(() => {
         t.equal(trigger.calledWith('name:taken', {user}), true,
             'triggers "name:taken" event');
+
+        req.returns(Promise.reject('error'));
+        return con.checkUser({username: 'test'});
+    })
+    .catch(() => {
+        t.equal(trigger.calledWith('signalServer:error', {err: 'error'}), true,
+            'triggers "signalServer:error"');
 
         sand.restore();
         t.end();

@@ -45,19 +45,31 @@ export default class Signal {
          * @prop {String} options.server - signaling server URL
          * @prop {String} options.api    - API URL
          */
-        this.options     = _.extend({
-            server: this.configs.signalServer,
-        }, options);
-        this.options.api = `${this.options.server}/api`;
+        this.options = _.extend({}, options);
+
+        // Set the signaling server address
+        this.changeServer(options);
 
         // Start replying to requests
         this.channel.reply({
+            changeServer : this.changeServer,
             connect      : this.connect,
             register     : this.register,
             findUser     : this.findUser,
             sendInvite   : this.sendInvite,
             removeInvite : this.removeInvite,
         }, this);
+    }
+
+    /**
+     * Change the signaling server address.
+     *
+     * @param {Object} options={}
+     * @param {String} options.signal
+     */
+    changeServer(options = {}) {
+        this.options.server = options.signal || this.configs.signalServer;
+        this.options.api    = `${this.options.server}/api`;
     }
 
     /**
@@ -73,7 +85,7 @@ export default class Signal {
                 return null;
             }
 
-            throw new Error(err);
+            return Promise.reject(err);
         });
     }
 

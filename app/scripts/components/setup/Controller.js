@@ -127,13 +127,22 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     checkUser({username, signalServer}) {
+        const view = this.view.getChildView('content');
+        Radio.request('models/Signal', 'changeServer', {signal: signalServer});
+
         return this.configsChannel.request('saveConfig', {
             config: {
                 name  : 'signalServer',
                 value : signalServer || this.configs.signalServer,
             },
         })
-        .then(() => Radio.request('models/Signal', 'findUser', {username}))
+        .then(() => {
+            return Radio.request('models/Signal', 'findUser', {username})
+            .catch(err => {
+                view.triggerMethod('signalServer:error', {err});
+                throw new Error(err);
+            });
+        })
         .then(user => {
             // Show the registration form if user does not exist on the server
             if (_.isEmpty(user)) {
@@ -141,7 +150,7 @@ export default class Controller extends Mn.Object {
             }
 
             log('the username is taken!!!', user);
-            this.view.getChildView('content').triggerMethod('name:taken', {user});
+            view.triggerMethod('name:taken', {user});
         });
     }
 

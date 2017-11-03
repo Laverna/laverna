@@ -28,9 +28,9 @@ export default class Username extends View {
             username     : 'input[name=username]',
             signalServer : 'input[name=signalServer]',
             next         : '#welcome--next',
-            warning      : '.welcome--warning',
             alert        : '.alert',
             importInput  : '#import--data',
+            btnImport    : '.btn--import',
         };
     }
 
@@ -81,8 +81,7 @@ export default class Username extends View {
      * @param {Object} data={}
      */
     showImportMessage(data = {}) {
-        this.ui.warning.removeClass('hidden');
-        this.ui.alert.text(_.i18n(data.error ? 'Import error' : 'Import success'));
+        this.showWarning(data.error ? 'Import error' : 'Import success');
     }
 
     /**
@@ -103,15 +102,22 @@ export default class Username extends View {
     }
 
     /**
+     * There was an error when trying to connect to the signaling server.
+     *
+     * @param {Object} {err} - error
+     */
+    onSignalServerError({err}) {
+        this.showWarning(`Signal server error #${err.status}`);
+    }
+
+    /**
      * If the username isn't free, enable all button and
      * show key pair upload button.
      */
     onNameTaken({user}) {
         this.options.user = user;
-        this.ui.warning.removeClass('hidden');
-        this.ui.alert.text(_.i18n(`This username is taken.
-            If it was you who claimed this username, upload your key pair
-            or try another username.`));
+        this.ui.btnImport.removeClass('hidden');
+        this.showWarning('Signal server: username is taken');
     }
 
     /**
@@ -127,8 +133,7 @@ export default class Username extends View {
             return super.onReadyKey({key});
         }
 
-        return this.ui.alert.text(_.i18n(`You selected a wrong key!
-            Perhaps it is not your account.`));
+        return this.showWarning('Setup: wrong key');
     }
 
 }

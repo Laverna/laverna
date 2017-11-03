@@ -45,13 +45,15 @@ test('models/Signal: configs', t => {
 });
 
 test('models/Signal: constructor()', t => {
-    const reply = sand.stub(Signal.prototype.channel, 'reply');
-    const sig   = new Signal({});
+    const reply  = sand.stub(Signal.prototype.channel, 'reply');
+    const change = sand.stub(Signal.prototype, 'changeServer');
+    const sig    = new Signal({});
 
     t.equal(typeof sig.options, 'object', 'creates "options" property');
-    t.equal(sig.options.server, sig.configs.signalServer, 'msg');
+    t.equal(change.called, true, 'changes the signaling server address');
 
     t.equal(reply.calledWith({
+        changeServer : sig.changeServer,
         connect      : sig.connect,
         register     : sig.register,
         findUser     : sig.findUser,
@@ -60,6 +62,21 @@ test('models/Signal: constructor()', t => {
     }), true, 'replies to requests');
 
     sand.restore();
+    t.end();
+});
+
+test('models/Signal: changeServer()', t => {
+    const sig = new Signal();
+    Object.defineProperty(sig, 'configs', {get: () => {
+        return {signalServer: 'https://laverna.cc'};
+    }});
+
+    sig.changeServer({signal: 'http://localhost:3000'});
+    t.equal(sig.options.server, 'http://localhost:3000');
+
+    sig.changeServer();
+    t.equal(sig.options.server, 'https://laverna.cc');
+
     t.end();
 });
 

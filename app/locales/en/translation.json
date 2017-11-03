@@ -131,6 +131,9 @@
 	"You received an invite": "You received an invite from {{username}}. Go to settings/sync to accept or reject the invite.",
 	"Import success": "Successfuly recoverd your data from backup! Reloading the page...",
 	"Import error": "Failed to recover your data from the backup file you've provided!",
+	"Signal server error #0": "Failed to connect to the signaling server!",
+	"Signal server: username is taken": "This username is taken. If it was you who claimed this username, upload your key pair or try another username.",
+	"Setup: wrong key": "You selected a wrong key! Perhaps it is not your account.",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

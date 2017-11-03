@@ -79,19 +79,14 @@ test('setup/username/Username: importData()', t => {
 test('setup/username/View: showImportMessage()', t => {
     const view = new View();
     sand.stub(_, 'i18n').callsFake(str => str);
-    view.ui    = {
-        warning : {removeClass: sand.stub()},
-        alert   : {text: sand.stub()},
-    };
+    sand.stub(view, 'showWarning');
 
     view.showImportMessage();
-    t.equal(view.ui.warning.removeClass.calledWith('hidden'), true,
-        'shows the warning block');
-    t.equal(view.ui.alert.text.calledWith('Import success'), true,
+    t.equal(view.showWarning.calledWith('Import success'), true,
         'shows a success message');
 
     view.showImportMessage({error: 'error'});
-    t.equal(view.ui.alert.text.calledWith('Import error'), true,
+    t.equal(view.showWarning.calledWith('Import error'), true,
         'shows an error message');
 
     sand.restore();
@@ -132,19 +127,29 @@ test('setup/username/View: onClickNext()', t => {
     t.end();
 });
 
+test('setup/username/View: onSignalServerError()', t => {
+    const view = new View();
+    sand.stub(view, 'showWarning');
+
+    view.onSignalServerError({err: {status: 0}});
+    t.equal(view.showWarning.calledWith('Signal server error #0'), true,
+        'shows a warning message');
+
+    sand.restore();
+    t.end();
+});
+
 test('setup/username/View: onNameTaken()', t => {
     const view = new View();
     const user = {username: 'test', publicKey: 'pub'};
-    view.ui    = {
-        warning : {removeClass: sand.stub()},
-        alert   : {text: sand.stub()},
-    };
+    view.ui    = {btnImport : {removeClass: sand.stub()}};
+    sand.stub(view, 'showWarning');
 
     view.onNameTaken({user});
     t.equal(view.options.user, user, 'creates "user" property');
-    t.equal(view.ui.warning.removeClass.calledWith('hidden'), true,
-        'shows the warning');
-    t.equal(view.ui.alert.text.called, true, 'changes warning message');
+    t.equal(view.ui.btnImport.removeClass.calledWith('hidden'), true,
+        'shows the "import" button');
+    t.equal(view.showWarning.called, true, 'changes warning message');
 
     sand.restore();
     t.end();
@@ -154,11 +159,11 @@ test('setup/username/View: onReadyKey()', t => {
     const user = {username: 'test', publicKey: 'pub', fingerprint: 'print'};
     const view = new View({user});
     const key  = {primaryKey: {fingerprint: 'print!'}};
-    view.ui    = {alert: {text: sand.stub()}};
     const stub = sand.stub(ContentView.prototype, 'onReadyKey');
+    sand.stub(view, 'showWarning');
 
     view.onReadyKey({key});
-    t.equal(view.ui.alert.text.called, true,
+    t.equal(view.showWarning.calledWith('Setup: wrong key'), true,
         'changes the warning message that the fingerprints do not match');
 
     key.primaryKey.fingerprint = 'print';

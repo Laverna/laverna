@@ -14,18 +14,18 @@
     <input class="form-control col-xs-12 input-lg input--brand" type="text" name="signalServer" value="{{configs.signalServer}}" placeholder="{{_.i18n('Signaling server')}}" title="{{_.i18n('Signaling server')}}" />
 </div>
 
-<div class="welcome--warning col-xs-12 hidden" style="margin-bottom:10px">
-    <div class="alert alert-warning"></div>
+<div class="col-xs-12" style="margin-bottom:10px">
+    <div class="alert alert-warning hidden"></div>
 
     <input id="import--key" class="hide" type="file">
-    <button data-file="#import--key" type="button" class="btn btn-default btn-block btn--import">
+    <button data-file="#import--key" type="button" class="btn btn-default btn-block btn--import hidden">
         <i class="icon-key"></i> {{_.i18n('Upload key pair')}}
     </button>
 </div>
 
 <div class="col-xs-6">
     <input id="import--data" class="hide" type="file"/>
-    <button id="welcome--import" type="button" class="btn btn-lg btn-block btn-success pull-right">
+    <button id="welcome--import" type="button" class="btn btn-lg btn-block btn-warning pull-right">
         {{_.i18n('Import')}}
     </button>
 </div>

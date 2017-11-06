@@ -121,6 +121,7 @@ export default class Controller extends Mn.Object {
 
         // Start replying to requests
         this.channel.reply({
+            getContent: this.getContent,
             getData   : this.getData,
             makeLink  : this.makeLink,
             makeImage : this.makeImage,
@@ -132,6 +133,15 @@ export default class Controller extends Mn.Object {
     }
 
     /**
+     * Return the current content.
+     *
+     * @returns {String}
+     */
+    getContent() {
+        return this.editor.instance.getValue();
+    }
+
+    /**
      * Update the preview.
      *
      * @returns {Promise}
@@ -139,7 +149,7 @@ export default class Controller extends Mn.Object {
     updatePreview() {
         const {attributes} = this.view.model;
         const data = _.extend({}, attributes, {
-            content: this.editor.instance.getValue(),
+            content: this.getContent(),
         });
 
         return Radio.request('components/markdown', 'render', data)
@@ -191,14 +201,18 @@ export default class Controller extends Mn.Object {
     onChange() {
         log('change');
         this.updatePreview();
-        this.view.model.set('content', this.editor.instance.getValue());
-        // this.autoSave();
+        this.autoSave();
     }
 
     /**
      * Trigger save:auto event.
      */
     autoSave() {
+        // Set content only if a user isn't using P2P sync
+        if (this.configs.cloudStorage !== 'p2p') {
+            this.view.model.set('content', this.getContent());
+        }
+
         this.formChannel.trigger('save:auto');
     }
 
@@ -303,7 +317,7 @@ export default class Controller extends Mn.Object {
      * @returns {Object}
      */
     getData() {
-        const content = this.editor.instance.getValue();
+        const content = this.getContent();
         const keys    = ['tags', 'tasks', 'taskCompleted', 'taskAll', 'files'];
 
         return Radio.request('components/markdown', 'parse', {content})

@@ -152,6 +152,11 @@ export default class Diff {
         const attr     = _.pick(doc.attributes, _.keys(doc.defaults));
         let ignoreKeys = [].concat(this.ignoreKeys);
 
+        // Get a note's content from the editor
+        if (doc.storeName === 'notes' && this.liveDoc === doc) {
+            attr.content = Radio.request('components/editor', 'getContent');
+        }
+
         // Don't let other users know whom the document is shared with
         if (username !== this.options.configs.username) {
             ignoreKeys = ignoreKeys.concat(['sharedBy', 'sharedWith', 'notebookId']);

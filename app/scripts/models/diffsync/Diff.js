@@ -308,6 +308,7 @@ export default class Diff extends DiffModel {
      * @param {Object} peer - peer information
      * @param {Object} doc  - document model
      */
+    // eslint-disable-next-line complexity
     checkDoc(peer, doc) {
         // Ignore new models
         if (!doc.id) {
@@ -337,7 +338,11 @@ export default class Diff extends DiffModel {
         return Promise.all([
             Radio.request('collections/Edits', 'saveModel', {model: edit}),
             Radio.request('collections/Shadows', 'saveModel', {model: shadow}),
-            doc.channel.request('saveModel', {model: doc}),
+            // Don't save the doc if it's a 'live' session (auto save will handle it)
+            (this.liveDoc === doc ?
+                Promise.resolve() :
+                doc.channel.request('saveModel', {model: doc})
+            ),
         ]);
     }
 

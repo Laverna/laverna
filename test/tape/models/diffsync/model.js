@@ -139,6 +139,9 @@ test('models/diffsync/Model: findFileAttachments()', t => {
 test('models/diffsync/Model: getDocAttr()', t => {
     const model = new Model({configs: {username: 'bob'}});
     const note  = new Notes.prototype.model({id: '1', notebookId: '2'});
+    const req   = sand.stub(Radio, 'request')
+        .withArgs('components/editor', 'getContent')
+        .returns('editor content');
 
     function checkKeys(keys, ignore) {
         ignore.forEach(key => {
@@ -150,9 +153,18 @@ test('models/diffsync/Model: getDocAttr()', t => {
     t.equal(typeof res, 'object', 'returns an object');
     checkKeys(_.keys(res), model.ignoreKeys);
 
-    const res2 = model.getDocAttr(note, 'alice');
+    model.liveDoc = new Notes.prototype.model({id: '2'});
+    const res2    = model.getDocAttr(note, 'alice');
     checkKeys(_.keys(res2), ['sharedBy', 'sharedWith'].concat(model.ignoreKeys));
+    t.equal(req.notCalled, true, 'uses the notes content attribute');
 
+    model.liveDoc = note;
+    const res3    = model.getDocAttr(note, 'bob');
+    t.equal(res3.content, 'editor content');
+    t.equal(req.called, true,
+        'requests the content attribute from the editor if it is a "live" session');
+
+    sand.restore();
     t.end();
 });
 

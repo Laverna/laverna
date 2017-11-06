@@ -327,6 +327,16 @@ test('models/diffsync/Patch: patch() - applies patches', t => {
     t.equal(doc.channel.request.calledWith('saveModel', {model: doc}), true,
         'saves the document');
 
+    patch.liveDoc = new Note({id: '3'});
+    patch.patch({edit, peerEdit, shadow, doc});
+    t.equal(doc.channel.request.callCount, 2,
+        'saves the document if it is not a "live" document');
+
+    patch.liveDoc = doc;
+    patch.patch({edit, peerEdit, shadow, doc});
+    t.equal(doc.channel.request.callCount, 2,
+        'does not save the document if it is a "live" session');
+
     sand.restore();
     t.end();
 });

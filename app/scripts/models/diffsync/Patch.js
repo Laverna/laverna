@@ -248,7 +248,7 @@ export default class Patch extends DiffModel {
         ];
 
         // Save the document only if it's changed
-        if (data.doc.get('changed')) {
+        if (data.doc.get('changed') && (!this.liveDoc || this.liveDoc !== data.doc)) {
             promises.push(data.doc.channel.request('saveModel', {model: data.doc}));
         }
 

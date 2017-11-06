@@ -438,6 +438,14 @@ test('models/diffsync/Diff: checkDoc()', t => {
         t.equal(req.callCount, 2, 'does nothing if there is no change');
         t.equal(diff.diffed, false, 'does not change diffed status');
 
+        doc.set('content', 'Hello!');
+        diff.liveDoc = doc;
+        return diff.checkDoc(peer, doc);
+    })
+    .then(() => {
+        t.equal(req2.callCount, 1,
+            'does not save the document if it is a "live" session');
+
         sand.restore();
         t.end();
     });

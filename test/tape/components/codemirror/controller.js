@@ -126,10 +126,22 @@ test('codemirror/Controller: listenToEvents()', t => {
         true, 'calls onCursorActivity method if the editor triggers cursorActivity');
 
     t.equal(reply.calledWith({
+        getContent: con.getContent,
         getData   : con.getData,
         makeLink  : con.makeLink,
         makeImage : con.makeImage,
     }), true, 'starts replying to requests');
+
+    sand.restore();
+    t.end();
+});
+
+test('codemirror/Controller: getContent()', t => {
+    const con  = new Controller();
+    con.editor = {instance: {getValue: sand.stub().returns('Test')}};
+
+    t.equal(con.getContent(), 'Test', 'returns the current content');
+    t.equal(con.editor.instance.getValue.called, true);
 
     sand.restore();
     t.end();
@@ -205,28 +217,37 @@ test('codemirror/Controller: onChangeMode()', t => {
 
 test('codemirror/Controller: onChange()', t => {
     const con  = new Controller();
-    con.view   = {model: new Note()};
-    con.editor = {instance: {getValue: () => 'test'}};
 
     sand.stub(con, 'updatePreview');
     sand.stub(con, 'autoSave');
 
     con.onChange();
     t.equal(con.updatePreview.called, true, 'calls updatePreview method');
-    t.equal(con.view.model.get('content'), 'test', 'changes "content" attribute');
-    // t.equal(con.autoSave.called, true, 'calls autoSave method');
+    t.equal(con.autoSave.called, true, 'calls autoSave method');
 
     sand.restore();
     t.end();
 });
 
 test('codemirror/Controller: autoSave()', t => {
-    const con  = new Controller();
+    const con        = new Controller();
     sand.stub(con, 'autoSave').callsFake(Controller.prototype.autoSave);
-    const trig = sand.stub(con.formChannel, 'trigger');
+    con.editor       = {instance: {getValue: () => 'test'}};
+    con.view         = {model: {set: sand.stub()}};
+    let cloudStorage = 'p2p';
+    const trig       = sand.stub(con.formChannel, 'trigger');
+
+    Object.defineProperty(con, 'configs', {get: () => {
+        return {cloudStorage};
+    }});
 
     con.autoSave();
-    t.equal(trig.called, true, 'triggers save:auto event');
+    t.equal(trig.calledWith('save:auto'), true, 'triggers save:auto event');
+    t.equal(con.view.model.set.notCalled, true, 'does not set new value');
+
+    cloudStorage = 'dropbox';
+    con.autoSave();
+    t.equal(con.view.model.set.calledWith('content', 'test'), true, 'sets a new value');
 
     sand.restore();
     t.end();

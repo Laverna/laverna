@@ -56,6 +56,7 @@ module.exports = function(gulp, plugins) {
                 'apps/settings/show/views/showView',
                 'apps/settings/show/views/sync',
                 'apps/settings/show/views/modules',
+                'apps/settings/show/views/editor',
 
                 'apps/settings/module/app',
                 'apps/settings/module/controller',

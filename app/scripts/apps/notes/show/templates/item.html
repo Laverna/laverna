@@ -47,9 +47,13 @@
             <h1 class="page-header -note">
                 {=cleanXSS(title)}
                 <small class="note--date">{{createdDate()}}</small>
+               
                 <button type="button" class="btn btn-link btn--favourite pull-right">
                     <span class="btn--favourite--icon icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
                 </button>
+                <a type="button" target="_blank" href="#{{uri}}notes/f/active/show/{{id}}" class="btn btn-link btn--favourite pull-right">
+                    ~
+                </a>
             </h1>
         </header>
 

@@ -11,7 +11,7 @@
     "bluebird": "~3.4.0",
     "blueimp-canvas-to-blob": "git://github.com/blueimp/JavaScript-Canvas-to-Blob#~2.1.1",
     "bootstrap": "~3.3.6",
-    "device.js": "git://github.com/matthewhudson/device.js",
+    "device.js": "git://github.com/matthewhudson/device.js#0.2.7",
     "dropzone": "~4.3.0",
     "enquire": "~2.1.2",
     "FileSaver": "*",

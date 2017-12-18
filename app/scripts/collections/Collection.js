@@ -121,7 +121,9 @@ export default class Collection extends Backbone.Collection {
      * @returns {Object}
      */
     findOrCreate(id, data = {}) {
-        return this.get(id) || new this.model(_.extend({id}, data));
+        const model = this.get(id) || new this.model(_.extend({id}, data));
+        this.add(model);
+        return model;
     }
 
 }

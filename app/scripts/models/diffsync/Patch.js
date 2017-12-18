@@ -207,9 +207,10 @@ export default class Patch extends DiffModel {
     rollback(data) {
         const {shadow, peerEdit} = data;
         const backup = shadow.get('backup');
+        const p      = peerEdit.get('p');
 
-        if (backup.m !== peerEdit.get('p')) {
-            return log(`Backup version missmatch: ${backup.m} != ${peerEdit.get('p')}`);
+        if (backup.m !== p) {
+            return log(`Backup version missmatch: ${backup.m} != ${p}`);
         }
 
         // Rollback and clear diffs
@@ -239,16 +240,17 @@ export default class Patch extends DiffModel {
 
         // Create a shadow backup and clear the edit stack
         data.shadow.createBackup(data.shadow.get('m'));
+
+        // Clear diffs
+        data.edit.clearDiffs({shadow: data.shadow});
+
         const promises = [
-            this.edits.channel.request('clearDiffs', {
-                model  : data.edit,
-                shadow : data.shadow,
-            }),
+            this.edits.channel.request('saveModel', {model: data.edit}),
             this.shadows.channel.request('saveModel', {model: data.shadow}),
         ];
 
         // Save the document only if it's changed
-        if (data.doc.get('changed') && (!this.liveDoc || this.liveDoc !== data.doc)) {
+        if (data.doc.get('changed') && this.liveDoc !== data.doc) {
             promises.push(data.doc.channel.request('saveModel', {model: data.doc}));
         }
 

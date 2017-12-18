@@ -307,6 +307,7 @@ export default class Diff extends DiffModel {
      *
      * @param {Object} peer - peer information
      * @param {Object} doc  - document model
+     * @returns {Promise}
      */
     // eslint-disable-next-line complexity
     checkDoc(peer, doc) {

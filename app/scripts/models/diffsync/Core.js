@@ -65,7 +65,7 @@ export default class Core {
             wait      : 30000,
             docWait   : {
                 min   : 1000,
-                max   : 15000,
+                max   : 5000,
                 wait  : 1000,
             },
             docsWait  : {

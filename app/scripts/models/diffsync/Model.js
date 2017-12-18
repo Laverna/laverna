@@ -155,6 +155,7 @@ export default class Diff {
         // Get a note's content from the editor
         if (doc.storeName === 'notes' && this.liveDoc === doc) {
             attr.content = Radio.request('components/editor', 'getContent');
+            attr.content = attr.content || doc.get('content');
         }
 
         // Don't let other users know whom the document is shared with

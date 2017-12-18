@@ -2,6 +2,7 @@
  * @module models/Edit
  */
 import Model from './Model';
+import _ from 'underscore';
 
 /**
  * Edit model. Used in @see module:models/Diffsync
@@ -66,6 +67,24 @@ export default class Edit extends Model {
             m: shadow.attributes.m,
             p: shadow.attributes.p,
         });
+    }
+
+    /**
+     * Clear the edit stack.
+     *
+     * @param {Object} shadow
+     * @param {Boolean} clearAll - true if all diffs should be cleared
+     */
+    clearDiffs({shadow, clearAll}) {
+        let diffs = [];
+
+        if (!clearAll) {
+            diffs = _.filter(this.get('diffs'), diff => {
+                return diff.m >= shadow.get('m');
+            });
+        }
+
+        this.set({diffs, p: shadow.get('p')});
     }
 
 }

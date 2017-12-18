@@ -70,7 +70,7 @@ export default class Shadow extends Model {
      * @param {Object} m - my version
      */
     createBackup(m) {
-        const backup = _.pick(this.attributes, 'doc', 'm', 'p');
+        const backup = _.pick(this.attributes, 'doc', 'm');
         backup.m     = m || backup.m;
         this.set({backup});
     }

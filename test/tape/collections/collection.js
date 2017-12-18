@@ -95,10 +95,12 @@ test('collections/Collection: getCondition()', t => {
 test('collections/Collection: findOrCreate()', t => {
     const coll      = new Collection();
     coll.add({id: 1});
+    sand.spy(coll, 'add');
 
     t.equal(typeof coll.findOrCreate(2), 'object', 'returns an object');
     t.equal(coll.findOrCreate(3).get('id'), 3, 'creates a new model');
     t.equal(coll.findOrCreate(1), coll.get(1), 'finds the model in the collection');
+    t.equal(coll.add.called, true, 'adds the new model to the collection');
 
     t.end();
 });

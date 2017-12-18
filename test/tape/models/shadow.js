@@ -3,6 +3,7 @@
  * @file
  */
 import test from 'tape';
+import _ from 'underscore';
 import Shadow from '../../../app/scripts/models/Shadow';
 
 test('models/Shadow: storeName', t => {
@@ -50,10 +51,11 @@ test('models/Shadow: createBackup()', t => {
     const shadow = new Shadow(data);
 
     shadow.createBackup();
-    t.deepEqual(shadow.get('backup'), data, 'creates a full backup of the shadow');
+    t.deepEqual(shadow.get('backup'), _.omit(data, 'p'), 'creates a full backup of the shadow');
+    t.equal(shadow.get('backup').p, undefined, 'does not contain "p" version');
 
     shadow.createBackup(2);
-    t.deepEqual(shadow.get('backup'), {doc: data.doc, m: 2, p: 2},
+    t.deepEqual(shadow.get('backup'), {doc: data.doc, m: 2},
         'creates a full backup of the shadow');
 
     t.end();

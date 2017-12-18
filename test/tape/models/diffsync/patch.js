@@ -294,7 +294,7 @@ test('models/diffsync/Patch: patch() - does not apply patches if there is nothin
 test('models/diffsync/Patch: patch() - applies patches', t => {
     const patch    = new Patch({edits: new Edits, shadows: new Shadows()});
     const peerEdit = new Edit({diffs: [1, 2]});
-    const edit     = new Edit({diffs: []});
+    const edit     = new Edit({diffs: [{m: 1, p: 1}, {m: 2, p: 1}]});
     const shadow   = new Shadow({m: 2, p: 1, doc: {content: 'Hello'}});
     const doc      = new Note({content: 'Hello'});
 
@@ -310,14 +310,12 @@ test('models/diffsync/Patch: patch() - applies patches', t => {
     t.deepEqual(shadow.get('backup').doc, {content: 'Hello'},
         'updates the backup version of the document');
 
-    t.equal(patch.edits.channel.request.calledWith('clearDiffs', {
-        shadow,
-        model: edit,
-    }), true, 'clears the edit stack');
+    t.equal(edit.get('diffs').length, 1, 'clears the edit stack');
+    t.equal(patch.edits.channel.request.calledWith('saveModel', {model: edit}),
+        true, 'saves the edit model');
 
-    t.equal(patch.shadows.channel.request.calledWith('saveModel', {
-        model: shadow,
-    }), true, 'saves the shadow');
+    t.equal(patch.shadows.channel.request.calledWith('saveModel', {model: shadow}),
+        true, 'saves the shadow');
 
     t.equal(doc.channel.request.calledWith('saveModel', {model: doc}), false,
         'does not save the document if there are no changes');

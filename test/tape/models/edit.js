@@ -4,6 +4,7 @@
  */
 import test from 'tape';
 import Edit from '../../../app/scripts/models/Edit';
+import Shadow from '../../../app/scripts/models/Shadow';
 
 test('models/Edit: storeName', t => {
     const note = new Edit();
@@ -53,6 +54,27 @@ test('models/Edit: addDiff()', t => {
     edit.addDiff({diff, shadow: {attributes: {p: 2, m: 2}}});
     t.equal(edit.get('p'), 2, 'updates "p" version');
     t.deepEqual(edit.get('diffs')[1], {diff, p: 2, m: 2}, 'adds a new diff');
+
+    t.end();
+});
+
+test('models/Edit: clearDiffs()', t => {
+    const edit   = new Edit({
+        p: 0,
+        diffs: [
+            {diff: {}, m: 0, p: 0},
+            {diff: {}, m: 1, p: 1},
+            {diff: {}, m: 2, p: 1},
+        ],
+    });
+    const shadow = new Shadow({p: 1, m: 2});
+
+    edit.clearDiffs({shadow});
+    t.equal(edit.get('diffs').length, 1, 'clears diffs which received a response');
+    t.equal(edit.get('p'), shadow.get('p'), 'updates "P" version');
+
+    edit.clearDiffs({shadow, clearAll: true});
+    t.equal(edit.get('diffs').length, 0, 'clears all diffs');
 
     t.end();
 });

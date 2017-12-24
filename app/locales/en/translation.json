@@ -199,7 +199,7 @@
     },
     "help": {
         "firststart title": "Welcome to Laverna",
-        "firststart import": "If you have already used Laverna before, you can import your old settings by clicking on 'import' button bellow.",
+        "firststart import": "If you have already used Laverna before, you can import your old settings by clicking on 'import' button below.",
         "firststart next": "If you have never used Laverna before, click on 'next' button to start installation process.",
         "firststart encryption": "If you want to use encryption, please, provide encryption password.",
         "firststart sync": "Since we don't store any data on our servers, you need to enable synchronization with one of the adapters to be able to view your notes on other devices.",

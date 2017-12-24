@@ -46,6 +46,7 @@ define([
             'encryptTag'         : '128',
             'encryptKeySize'     : '256',
             'encryptBackup'      : {},
+            'encryptCachePass'   : '1',
 
             // Keybindings
             'navigateTop'        : 'k',

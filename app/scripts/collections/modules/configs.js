@@ -56,7 +56,8 @@ define([
 
         encryptionKeys: [
             'encrypt'    , 'encryptPass', 'encryptSalt'  ,
-            'encryptIter', 'encryptTag' , 'encryptKeySize'
+            'encryptIter', 'encryptTag' , 'encryptKeySize',
+            'encryptCachePass',
         ],
 
         /**

@@ -32,7 +32,7 @@ const constants = {
 };
 
 // The default Dropbox API key will not work
-if (!_.contains(constants.defaultHosts, location.host)) {
+if (!_.contains(constants.defaultHosts, location.host) && !window.electron) {
     constants.dropboxKeyNeed = true;
 }
 

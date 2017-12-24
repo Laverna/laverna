@@ -74,10 +74,11 @@ export default class Adapter {
     /**
      * Parse the location hash.
      *
+     * @param {String} url
      * @returns {Object}
      */
-    parseHash() {
-        const hash = Backbone.history.fragment.split('&');
+    parseHash(url = Backbone.history.fragment) {
+        const hash = url.split('&');
         const ret  = {};
 
         if (!hash.length) {
@@ -116,14 +117,41 @@ export default class Adapter {
      * Authenticate in browser.
      */
     authBrowser() {
-        const authUrl = this.dbx.getAuthenticationUrl(document.location);
+        const url     = window.electron ? 'http://localhost:9000/' : document.location;
+        const authUrl = this.dbx.getAuthenticationUrl(url);
+
         return Radio.request('components/confirm', 'show', {
             content: _.i18n('dropbox.auth confirm'),
         })
         .then(answer => {
             if (answer === 'confirm') {
                 window.location = authUrl;
+                if (window.electron) {
+                    return this.authElectron();
+                }
             }
+        });
+    }
+
+    /**
+     * Authenticate in Electron environment.
+     *
+     * @returns {Promise}
+     */
+    authElectron() {
+        const {ipcRenderer} = window.electron;
+
+        return new Promise(resolve => {
+            ipcRenderer.once('lav:dropbox:oauth', (event, {url}) => {
+                const hash = url ? this.parseHash(url.split('#')[1]) : {};
+
+                if (hash.access_token && hash.access_token.length) {
+                    this.saveAccessToken(hash.access_token).then(resolve);
+                }
+                else {
+                    resolve(false);
+                }
+            });
         });
     }
 
@@ -136,8 +164,7 @@ export default class Adapter {
         return new Promise(resolve => {
             this.dbx.authenticateWithCordova(
                 accessToken => {
-                    this.configs.accessToken = accessToken;
-                    resolve(true);
+                    this.saveAccessToken(accessToken).then(resolve);
                 },
                 () => resolve(false)
             );

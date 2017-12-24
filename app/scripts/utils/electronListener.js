@@ -29,6 +29,14 @@ function electronListener() {
         Radio.request('components/help', 'showAbout');
     });
 
+    ipcRenderer.on('lav:backup:key', () => {
+        Radio.request('components/importExport', 'export', {exportKey: true});
+    });
+
+    ipcRenderer.on('lav:backup:data', () => {
+        Radio.request('components/importExport', 'export');
+    });
+
     return true;
 }
 

@@ -28,6 +28,9 @@ test('utils/electronlistener: starts listening to ipcRenderer events', t => {
     t.equal(on.calledWith('lav:newNote'), true, 'listens to lav:newNote');
     t.equal(on.calledWith('lav:about'), true, 'listens to lav:about');
 
+    t.equal(on.calledWith('lav:backup:key'), true, 'listens to lav:backup:key');
+    t.equal(on.calledWith('lav:backup:data'), true, 'listens to lav:backup:data');
+
     window.electron = null;
     sand.restore();
     t.end();

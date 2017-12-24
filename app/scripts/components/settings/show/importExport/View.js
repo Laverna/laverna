@@ -30,11 +30,10 @@ export default class View extends Mn.View {
 
     events() {
         return {
-            'click .btn--import'       : 'triggerClick',
-            'change #import--data'     : 'importData',
-            'change #import--settings' : 'importData',
-            'click #export--data'      : 'exportData',
-            'click #export--settings'  : 'exportSettings',
+            'click .btn--import'   : 'triggerClick',
+            'change #import--data' : 'importData',
+            'click #export--data'  : 'exportData',
+            'click #export--key'   : 'exportKey',
         };
     }
 
@@ -69,12 +68,10 @@ export default class View extends Mn.View {
     }
 
     /**
-     * Export settings.
+     * Export OpenPGP private key.
      */
-    exportSettings() {
-        this.channel.request('export', {
-            data: {[`${this.collection.profileId}`]: [this.collection]},
-        });
+    exportKey() {
+        this.channel.request('export', {exportKey: true});
     }
 
 }

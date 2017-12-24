@@ -72,8 +72,11 @@ export default class Configs extends Collection {
      * @returns {Array}
      */
     getExportData() {
-        const dbx = this.findWhere({name: 'dropboxAccessToken'});
-        return this.without(dbx);
+        const excludeNames = ['dropboxAccessToken', 'deviceId'];
+        let coll           = this.models;
+        _.each(excludeNames, name => coll = _.without(coll, this.findWhere({name})));
+
+        return coll;
     }
 
     /**

@@ -49,6 +49,9 @@ export default class Export extends Mn.Object {
         if (this.options.data) {
             return this.exportData();
         }
+        else if (this.options.exportKey) {
+            return this.exportKey();
+        }
 
         // Otherwise, fetch data from database and then start exporting them
         return this.export();
@@ -74,6 +77,19 @@ export default class Export extends Mn.Object {
 
         return this.saveToFile()
         .catch(err => log('error', err));
+    }
+
+    /**
+     * Export the OpenPGP private key
+     */
+    exportKey() {
+        const key = Radio.request('collections/Configs', 'findConfig', {
+            name: 'privateKey',
+        });
+        const blob = new Blob([key], {type: 'text/plain;charset=ascii'});
+
+        this.saveAs(blob, 'lav-private-key.asc');
+        this.destroy();
     }
 
     /**

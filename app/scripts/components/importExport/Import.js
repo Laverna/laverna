@@ -20,15 +20,17 @@ const log = deb('lav:components/importExport/Import');
 export default class Import extends Mn.Object {
 
     init() {
-        // Do nothing if there aren't any ZIP archives
-        if (!this.checkFiles()) {
-            return Promise.resolve();
+        if (this.options.files && this.options.files.length) {
+            if (this.isZipFile()) {
+                return this.importData();
+            }
+            else if (this.isKey()) {
+                return this.importKey();
+            }
         }
 
-        return this.readZip(this.options.files[0])
-        .then(zip  => this.import(zip))
-        .then(()   => this.onSuccess())
-        .catch(err => this.onError(err));
+        // Do nothing if there aren't any ZIP archives
+        return Promise.resolve();
     }
 
     /**
@@ -50,27 +52,77 @@ export default class Import extends Mn.Object {
     }
 
     /**
-     * Check if the provided files are ZIP archives.
-     *
-     * @returns {Boolean}
-     */
-    checkFiles() {
-        const {files} = this.options;
-        return (!!files && !!files.length && this.isZipFile(files[0]));
-    }
-
-    /**
      * Check if a file is a ZIP archive.
      *
-     * @param {Object} file
-     * @param {Object} file.type
-     * @param {Object} file.name
+     * @param {Object} file=this.options.files[0]
+     * @param {String} file.type
+     * @param {String} file.name
+     * @returns {Boolean}
      */
-    isZipFile(file) {
+    isZipFile(file = this.options.files[0]) {
         return (
             file.type === 'application/zip' ||
             _.last(file.name.split('.')) === 'zip'
         );
+    }
+
+    /**
+     * Check if a file is a private key.
+     *
+     * @param {Object} file=this.options.files[0]
+     * @param {String} file.type
+     * @param {String} file.name
+     * @param {String} file.size
+     * @returns {Boolean}
+     */
+    isKey(file = this.options.files[0]) {
+        return (
+            file.type === 'text/plain' &&
+            _.last(file.name.split('.')) === 'asc' &&
+            file.size >= 2500
+        );
+    }
+
+    /**
+     * Import everything from a ZIP file.
+     *
+     * @returns {Promise}
+     */
+    importData() {
+        return this.readZip(this.options.files[0])
+        .then(zip  => this.import(zip))
+        .then(()   => this.onSuccess())
+        .catch(err => this.onError(err));
+    }
+
+    /**
+     * Import a private key.
+     *
+     * @returns {Promise}
+     */
+    importKey() {
+        return this.readText(this.options.files[0])
+        .then(value => {
+            return Radio.request('collections/Configs', 'saveConfig', {
+                config: {value, name: 'privateKey'},
+            });
+        })
+        .then(()   => this.onSuccess())
+        .catch(err => this.onError(err));
+    }
+
+    /**
+     * Read a text file.
+     *
+     * @param {Object} file
+     * @returns {Promise} resolves with string
+     */
+    readText(file) {
+        return new Promise(resolve => {
+            const reader  = new FileReader();
+            reader.onload = (e => resolve(e.target.result));
+            reader.readAsText(file);
+        });
     }
 
     /**
@@ -204,7 +256,7 @@ export default class Import extends Mn.Object {
      */
     importCollection(options) {
         // Do nothing if the collection name is incorrect
-        const types = ['notebooks', 'tags', 'configs', 'users'];
+        const types = ['notebooks', 'tags', 'configs', 'users', 'files'];
         if (_.indexOf(types, options.type) === -1) {
             return Promise.resolve();
         }

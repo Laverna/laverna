@@ -18,12 +18,12 @@ test('components/dropbox/Adapter: before()', t => {
     t.end();
 });
 
-test('Adapter: clientKey', t => {
+test('components/dropbox/Adapter: clientKey', t => {
     t.equal(typeof Adapter.prototype.clientKey, 'string');
     t.end();
 });
 
-test('Adapter: constructor()', t => {
+test('components/dropbox/Adapter: constructor()', t => {
     const adapter = new Adapter(configs);
 
     t.equal(typeof adapter.configs, 'object', 'creates .configs property');
@@ -32,7 +32,7 @@ test('Adapter: constructor()', t => {
     t.end();
 });
 
-test('Adapter: checkAuth()', t => {
+test('components/dropbox/Adapter: checkAuth()', t => {
     const adapter = new Adapter(configs);
     const set     = sand.stub(adapter.dbx, 'setAccessToken');
     sand.stub(adapter, 'saveAccessToken').resolves();
@@ -62,13 +62,16 @@ test('Adapter: checkAuth()', t => {
     });
 });
 
-test('Adapter: parseHash()', t => {
+test('components/dropbox/Adapter: parseHash()', t => {
     const adapter             = new Adapter(configs);
     Backbone.history.fragment = 'access_token=1&error=no';
 
     const res = adapter.parseHash();
     t.equal(typeof res, 'object', 'returns an object');
     t.equal(res.access_token, '1', 'the result contains access_token');
+
+    t.equal(adapter.parseHash('access_token=2&error=no').access_token, '2',
+        'can parse a specified url');
 
     Backbone.history.fragment = '';
     t.equal(adapter.parseHash().access_token, undefined, 'does not contain access_token');
@@ -80,7 +83,7 @@ test('Adapter: parseHash()', t => {
     t.end();
 });
 
-test('Adapter: authenticate()', t => {
+test('components/dropbox/Adapter: authenticate()', t => {
     const adapter = new Adapter(configs);
     const wind    = window;
     window        = {cordova: null}
@@ -99,14 +102,15 @@ test('Adapter: authenticate()', t => {
     t.end();
 });
 
-test('Adapter: authBrowser()', t => {
+test('components/dropbox/Adapter: authBrowser()', t => {
     const adapter = new Adapter(configs);
-    const authUrl = 'http://localhost:9000/';
+    const authUrl = 'http://localhost:8000/';
     const wind    = window;
     window        = {location: ''};
 
     sand.stub(adapter.dbx, 'getAuthenticationUrl').returns(authUrl);
     sand.stub(_, 'i18n').callsFake(str => str);
+    sand.stub(adapter, 'authElectron');
     const confirm = sand.stub(Radio, 'request').withArgs('components/confirm', 'show', {
         content: 'dropbox.auth confirm',
     });
@@ -120,7 +124,13 @@ test('Adapter: authBrowser()', t => {
         return adapter.authBrowser();
     })
     .then(() => {
-        t.equal(window.location, authUrl, 'changes window location');
+        t.equal(adapter.authElectron.notCalled, true, 'does not call authElectron()');
+
+        window.electron = {};
+        return adapter.authBrowser();
+    })
+    .then(() => {
+        t.equal(adapter.authElectron.called, true, 'waits for a response from Electron');
 
         window = wind;
         sand.restore();
@@ -128,15 +138,50 @@ test('Adapter: authBrowser()', t => {
     });
 });
 
-test('Adapter: authCordova()', t => {
+test('components/dropbox/Adapter: authElectron()', t => {
+    const adapter   = new Adapter(configs);
+    let callback;
+    const once      = sand.stub().callsFake((evt, fnc) => callback = fnc);
+    window.electron = {ipcRenderer: {once}};
+    sand.stub(adapter, 'saveAccessToken').resolves(true);
+
+    const res = adapter.authElectron();
+    t.equal(typeof res.then, 'function', 'returns a promise');
+    t.equal(once.calledWith('lav:dropbox:oauth'), true,
+            'starts listening to lav:dropbox:oauth event');
+
+    setTimeout(() => {
+        callback('lav', {url: 'http://localhost/#access_token=1'});
+    }, 20);
+
+    adapter.authElectron()
+    .then(auth => {
+        t.equal(adapter.saveAccessToken.calledWith('1'), true, 'saves the access token');
+        t.equal(auth, true, 'resolves with "true"');
+
+        const res = adapter.authElectron();
+        setTimeout(() => callback('lav', {}), 20);
+        return res;
+    })
+    .then(auth => {
+        t.equal(auth, false, 'resolves with false');
+
+        window.electron = undefined;
+        sand.restore();
+        t.end();
+    });
+});
+
+test('components/dropbox/Adapter: authCordova()', t => {
     const adapter = new Adapter(configs);
     const stub    = sand.stub(adapter.dbx, 'authenticateWithCordova');
+    const save    = sand.stub(adapter, 'saveAccessToken').resolves(true);
 
     stub.callsFake(successFnc => successFnc('1'));
 
     adapter.authCordova()
     .then(res => {
-        t.equal(adapter.configs.accessToken, '1', 'changes configs');
+        t.equal(save.calledWith('1'), true, 'changes configs');
         t.equal(res, true, 'resolves with "true"');
 
         stub.callsFake((successFnc, errorFnc) => errorFnc());
@@ -149,7 +194,7 @@ test('Adapter: authCordova()', t => {
     });
 });
 
-test('Adapter: saveAccessToken()', t => {
+test('components/dropbox/Adapter: saveAccessToken()', t => {
     const adapter = new Adapter(configs);
     const req     = sand.stub(Radio, 'request');
 
@@ -168,7 +213,7 @@ test('Adapter: saveAccessToken()', t => {
     });
 });
 
-test('Adapter: find()', t => {
+test('components/dropbox/Adapter: find()', t => {
     const adapter = new Adapter(configs);
     const resp = {entries: [
         {name: '1.json', path_lower: '/1.json'}, {name: '2', path_lower: '/2'},
@@ -187,7 +232,7 @@ test('Adapter: find()', t => {
     });
 });
 
-test('Adapter: readDir()', t => {
+test('components/dropbox/Adapter: readDir()', t => {
     const adapter = new Adapter(configs);
     const res     = [{name: '1'}];
     sand.stub(adapter.dbx, 'filesListFolder').withArgs({
@@ -204,7 +249,7 @@ test('Adapter: readDir()', t => {
 });
 
 // @todo
-test('Adapter: readFile()', t => {
+test('components/dropbox/Adapter: readFile()', t => {
     const adapter = new Adapter(configs);
     const data    = {id: '1', title: 'Test'};
 
@@ -218,7 +263,7 @@ test('Adapter: readFile()', t => {
     // });
 });
 
-test('Adapter: findModel()', t => {
+test('components/dropbox/Adapter: findModel()', t => {
     const adapter = new Adapter(configs);
     const read    = sand.stub(adapter, 'readFile');
     sand.stub(adapter, 'getModelPath').withArgs({id: '1'}).returns('/1.json');
@@ -233,7 +278,7 @@ test('Adapter: findModel()', t => {
     t.end();
 });
 
-test('Adapter: saveModel()', t => {
+test('components/dropbox/Adapter: saveModel()', t => {
     const adapter = new Adapter(configs);
     const upload  = sand.stub(adapter.dbx, 'filesUpload');
     sand.stub(adapter, 'getModelPath').withArgs({id: '1'}).returns('/1.json');
@@ -251,7 +296,7 @@ test('Adapter: saveModel()', t => {
     t.end();
 });
 
-test('Adapter: getModelPath()', t => {
+test('components/dropbox/Adapter: getModelPath()', t => {
     const adapter = new Adapter(configs);
     const model = new Notes.prototype.model({id: '1'});
 

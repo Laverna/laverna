@@ -32,12 +32,10 @@ test('settings/show/importExport/View: events()', t => {
         'triggers click on the file button if an import button is clicked');
     t.equal(events['change #import--data'], 'importData',
         'imports data if a file was chosen');
-    t.equal(events['change #import--settings'], 'importData',
-        'imports data if a settings backup was chosen');
     t.equal(events['click #export--data'], 'exportData',
         'exports everything if the button is clicked');
-    t.equal(events['click #export--settings'], 'exportSettings',
-        'exports settings if the button is clicked');
+    t.equal(events['click #export--key'], 'exportKey',
+        'exports the private key if the button is clicked');
 
     t.end();
 });
@@ -84,15 +82,14 @@ test('settings/show/importExport/View: exportData()', t => {
     t.end();
 });
 
-test('settings/show/importExport/View: exportSettings()', t => {
+test('settings/show/importExport/View: exportKey()', t => {
     const coll = new Configs(null, {profileId: 'test'});
     const view = new View({collection: coll});
     const req  = sand.stub(view.channel, 'request');
 
-    view.exportSettings();
-    t.equal(req.calledWith('export', {
-        data: {test: [coll]},
-    }), true, 'exports only settings');
+    view.exportKey();
+    t.equal(req.calledWith('export', {exportKey: true}), true,
+        'exports only the private key');
 
     sand.restore();
     t.end();

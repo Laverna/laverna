@@ -62,12 +62,18 @@ test('collections/Configs: createDefault()', t => {
 });
 
 test('collections/Configs: getExportData()', t => {
-    const configs = new Configs([{name: 'dropboxKey'}, {name: 'dropboxAccessToken'}]);
+    const configs = new Configs([
+        {name: 'dropboxKey'},
+        {name: 'dropboxAccessToken'},
+        {name: 'deviceId'},
+    ]);
     const res     = configs.getExportData();
 
     t.equal(res.length, 1);
     t.equal(_.findWhere(res, {name: 'dropboxAccessToken'}), undefined,
         'does not contain Dropbox access token');
+    t.equal(_.findWhere(res, {name: 'deviceId'}), undefined,
+        'does not contain the device ID');
 
     t.end();
 });

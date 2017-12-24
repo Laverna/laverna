@@ -39,8 +39,9 @@ test('importExport/Export: collections', t => {
 
 test('importExport/Export: init()', t => {
     const con = new Export();
-    sand.stub(con, 'exportData').returns(Promise.resolve());
-    sand.stub(con, 'export').returns(Promise.resolve());
+    sand.stub(con, 'exportData').resolves();
+    sand.stub(con, 'exportKey').resolves();
+    sand.stub(con, 'export').resolves();
 
     const res = con.init();
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -50,6 +51,10 @@ test('importExport/Export: init()', t => {
     con.options = {data: []};
     con.init();
     t.equal(con.exportData.called, true, 'calls "exportData" method');
+
+    con.options = {exportKey: true};
+    con.init();
+    t.equal(con.exportKey.called, true, 'calls "exportKey" method');
 
     sand.restore();
     t.end();
@@ -69,6 +74,26 @@ test('importExport/Export: exportData()', t => {
     t.equal(con.exportCollections.calledWith(con.options.data.profile), true,
         'exports data from every profile');
     t.equal(con.saveToFile.called, true, 'saves the result to a ZIP file');
+
+    sand.restore();
+    t.end();
+});
+
+
+test('importExport/Export: exportKey()', t => {
+    const con   = new Export();
+    global.Blob = sand.stub().callsFake(str => str);
+    sand.stub(con, 'saveAs');
+    sand.spy(con, 'destroy');
+
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Configs', 'findConfig', {name: 'privateKey'})
+    .returns('private key');
+
+    const res = con.exportKey();
+    t.equal(con.saveAs.calledWith(['private key'], 'lav-private-key.asc'), true,
+        'exports the private key');
+    t.equal(con.destroy.called, true, 'destroyes itself');
 
     sand.restore();
     t.end();

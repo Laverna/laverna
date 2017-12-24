@@ -16,24 +16,31 @@ test('importExport/Import: before()', t => {
 });
 
 test('importExport/Import: init()', t => {
-    const con    = new Import();
-    sand.stub(con, 'onSuccess');
-    sand.stub(con, 'checkFiles').returns(false);
-    sand.stub(con, 'readZip').returns(Promise.resolve());
-    sand.stub(con, 'import');
+    const con   = new Import();
+    const iData = sand.stub(con, 'importData');
+    const iKey  = sand.stub(con, 'importKey');
 
     t.equal(typeof con.init().then, 'function', 'returns a promise');
-    t.equal(con.readZip.notCalled, true, 'does nothing if there are not any files');
+    t.equal(iData.notCalled, true, 'does not import any data if the array of files is empty');
+    t.equal(iKey.notCalled, true, 'does not import the private key if the array of files is empty');
 
-    con.options = {files: [1]};
-    con.checkFiles.returns(true);
+    con.options = {files: [{type: 'application/json', name: 'test.md'}]};
     con.init()
     .then(() => {
-        t.equal(con.readZip.calledWith(con.options.files[0]), true,
-            'reads the ZIP archive');
-        t.equal(con.import.called, true, 'imports files from the ZIP archive');
-        t.equal(con.onSuccess.calledAfter(con.import), true,
-            'executes onSuccess() after the process is over');
+        t.equal(iData.notCalled, true, 'does not import any data if it is not a ZIP archive');
+        t.equal(iKey.notCalled, true, 'does not import the private key if it is not a private key');
+
+        con.options = {files: [{type: 'application/zip', name: 'b.zip'}]};
+        return con.init();
+    })
+    .then(() => {
+        t.equal(iData.called, true, 'imports data from the ZIP archive');
+
+        con.options = {files: [{type: 'text/plain', name: 'k.asc', size: 2500}]};
+        return con.init();
+    })
+    .then(() => {
+        t.equal(iKey.called, true, 'imports the private key');
 
         sand.restore();
         t.end();
@@ -68,22 +75,6 @@ test('importExport/Import: onError', t => {
     t.end();
 });
 
-test('importExport/Import: checkFiles()', t => {
-    const con   = new Import();
-    sand.stub(con, 'isZipFile').returns(true);
-
-    t.equal(con.checkFiles(), false, 'returns false if there are no files');
-
-    con.options.files = [];
-    t.equal(con.checkFiles(), false, 'returns false if the array of files is empty');
-
-    con.options = {files: [1]};
-    t.equal(con.checkFiles(), true, 'returns true');
-
-    sand.restore();
-    t.end();
-});
-
 test('importExport/Import: isZipFile()', t => {
     const con = new Import();
 
@@ -97,6 +88,85 @@ test('importExport/Import: isZipFile()', t => {
         'returns false');
 
     t.end();
+});
+
+test('importExport/Import: isKey()', t => {
+    const con = new Import();
+    con.options.files = [{
+        type: 'text/plain',
+        name: 'b.asc',
+        size: 2000,
+    }];
+
+    t.equal(con.isKey({type: 'application/zip'}), false,
+        'returns false if file type is not equal to text/plain');
+
+    t.equal(con.isKey({type: 'text/plain', name: 'backup.zip'}), false,
+        'returns false if the file does not have ASC extension');
+
+    t.equal(con.isKey(), false, 'returns false if the size is less than 2500');
+
+    con.options.files[0].size = 3500;
+    t.equal(con.isKey(), true, 'returns true');
+
+    t.end();
+});
+
+test('importExport/Import: importData()', t => {
+    const file = {name: 'b.zip'};
+    const con  = new Import({files: [file]});
+    sand.stub(con, 'readZip').resolves('zip');
+    sand.stub(con, 'import');
+    sand.stub(con, 'onSuccess');
+
+    con.importData()
+    .then(() => {
+        t.equal(con.readZip.calledWith(file), true, 'reads the ZIP archive');
+        t.equal(con.import.calledWith('zip'), true, 'starts importing the data');
+        t.equal(con.onSuccess.called, true, 'calls onSuccess()');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: importKey()', t => {
+    const file = {name: 'key.asc'};
+    const con  = new Import({files: [file]});
+    const req  = sand.stub(Radio, 'request');
+    sand.stub(con, 'readText').resolves('private key');
+    sand.stub(con, 'onSuccess');
+
+    con.importKey()
+    .then(() => {
+        t.equal(con.readText.calledWith(file), true, 'reads the private key');
+        t.equal(req.calledWith('collections/Configs', 'saveConfig', {
+            config: {value: 'private key', name: 'privateKey'},
+        }), true, 'saves the key');
+        t.equal(con.onSuccess.called, true, 'calls onSuccess()');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: readKey()', t => {
+    const con  = new Import();
+    const file = {name: 'k.asc'};
+
+    const reader      = {readAsText: sand.stub()};
+    global.FileReader = sand.stub().returns(reader);
+
+    const res = con.readText(file);
+    reader.onload({target: {result: '---private key---'}});
+
+    res.then(res => {
+        t.equal(reader.readAsText.calledWith(file), true, 'reads the file');
+        t.equal(res, '---private key---', 'resolves with the key');
+
+        sand.restore();
+        t.end();
+    });
 });
 
 test('importExport/Import: readZip()', t => {

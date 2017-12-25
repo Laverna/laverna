@@ -57,7 +57,6 @@ test('markdown/task: toggle()', t => {
 
 test('markdown/task: parse()', t => {
     const state = {tokens: [{type: 'block', content: '[x] task'}]};
-    task.md = {utils: {arrayReplaceAt: () => {}}};
     sand.stub(task, 'parseTokenChildren');
 
     task.parse(state);
@@ -69,7 +68,6 @@ test('markdown/task: parse()', t => {
     t.equal(task.parseTokenChildren.calledWithMatch({
         state,
         token: state.tokens[0],
-        arrayReplaceAt: task.md.utils.arrayReplaceAt,
     }), true, 'searches for tasks in child tokens');
 
     task.md = null;
@@ -78,6 +76,7 @@ test('markdown/task: parse()', t => {
 });
 
 test('markdown/task: parseTokenChildren()', t => {
+    task.md    = {utils: {arrayReplaceAt: sand.stub()}};
     const data = {
         state: {Token: 'test'},
         token: {
@@ -86,7 +85,6 @@ test('markdown/task: parseTokenChildren()', t => {
                 {type: 'text', content: 'Not a task'},
             ],
         },
-        arrayReplaceAt: sand.stub(),
     };
     sand.stub(task, 'replaceToken');
 
@@ -94,10 +92,10 @@ test('markdown/task: parseTokenChildren()', t => {
     t.equal(task.replaceToken.notCalled, true,
         'does nothing if the type of a child token is not text');
 
-    data.token.children[0] = {type: 'text', content: '[] task'};
+    data.token = {content: '[] task'};
     task.parseTokenChildren(data);
     t.equal(task.replaceToken.called, true, 'calls replaceToken method');
-    t.equal(data.arrayReplaceAt.called, true, 'calls arrayReplaceAt method');
+    t.equal(task.md.utils.arrayReplaceAt.called, true, 'calls arrayReplaceAt method');
 
     sand.restore();
     t.end();
@@ -121,7 +119,8 @@ test('markdown/task: replaceToken()', t => {
 });
 
 test('markdown/task: render()', t => {
-    let env = {};
+    task.md     = {renderInline: sand.stub()};
+    let env     = {};
     const token = {meta: {checked: true, label: 'task', id: 1}};
 
     const res = task.render([token], 0, null, env);
@@ -129,6 +128,8 @@ test('markdown/task: render()', t => {
     t.equal(Array.isArray(env.tasks), true, 'creates "tasks" property');
     t.equal(env.tasks.indexOf('task') !== -1, true, 'saves the label in tasks property');
     t.equal(env.taskCompleted, 1, 'increases the number of completed tasks');
+    t.equal(task.md.renderInline.calledWith('task'), true,
+        'renders the label of the task');
 
     env = {};
     task.render([{meta: {checked: false, label: 'task2', id: 2}}], 0, null, env);

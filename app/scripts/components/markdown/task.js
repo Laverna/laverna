@@ -69,7 +69,6 @@ const task = {
      * @param {Object} state
      */
     parse(state) {
-        const {arrayReplaceAt} = this.md.utils;
         let count = 0;
 
         _.each(state.tokens, token => {
@@ -86,7 +85,7 @@ const task = {
             }
 
             // Find child tokens which have tasks
-            count = this.parseTokenChildren({count, state, token, arrayReplaceAt});
+            count = this.parseTokenChildren({count, state, token});
         });
     },
 
@@ -97,22 +96,21 @@ const task = {
      * @param {Object} data.count
      * @param {Object} data.state
      * @param {Object} data.token
-     * @param {Function} data.arrayReplaceAt
      * @returns {Number} the number of found tasks
      */
     parseTokenChildren(data) {
-        const {state, token, arrayReplaceAt} = data;
+        const {state, token} = data;
         let count = 0 + data.count;
 
-        _.each(token.children, (child, i) => {
-            // Check if there are any tasks
-            if (child.type === 'text' && this.pattern.test(child.content)) {
-                count++;
+        if (this.pattern.test(token.content)) {
+            count++;
 
-                const taskTokens = this.replaceToken(child, state.Token, count);
-                token.children = arrayReplaceAt(token.children, i, taskTokens);
+            // Ignore it if it doesn't start with [x?], (1-9). or -
+            if (/^[\-\[1-9]/.test(token.content)) {
+                const taskTokens = this.replaceToken(token, state.Token, count);
+                token.children   = this.md.utils.arrayReplaceAt([token], 0, taskTokens);
             }
-        });
+        }
 
         return count;
     },
@@ -159,6 +157,8 @@ const task = {
         }
 
         const checked = (meta.checked ? 'checked="checked"' : '');
+        meta.label    = this.md.renderInline(meta.label);
+
         /* eslint-disable */
         return `<label class="task task--checkbox">
         <input data-task="${meta.id}" type="checkbox" ${checked} class="checkbox--input" />

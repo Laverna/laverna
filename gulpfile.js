@@ -3,6 +3,8 @@
 /**
  * @file Gulp tasks.
  * @example gulp // Default task. Builds and serves the app.
+ * @example gulp build --distDir='~/laverna-dist' // To build the project and
+ * place it in ~/laverna-dist folder.
  */
 const gulp = require('gulp'),
     pkg    = require('./package.json'),
@@ -10,6 +12,7 @@ const gulp = require('gulp'),
 
 $.del         = require('del');
 $.browserSync = require('browser-sync').create();
+$.distDir     = $.util.env.distDir || './dist';
 
 /**
  * Create a new Gulp task.

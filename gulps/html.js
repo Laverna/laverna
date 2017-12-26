@@ -14,7 +14,7 @@ module.exports = function(gulp, $) {
             collapseWhitespace : true,
             quoteCharacter     : '\'',
         }))
-        .pipe(gulp.dest('./dist'))
+        .pipe(gulp.dest($.distDir))
         .pipe($.browserSync.stream());
     });
 
@@ -25,8 +25,8 @@ module.exports = function(gulp, $) {
         }
 
         return gulp.src([
-            'dist/**',
-            '!dist/bower_components/MathJax/**',
+            `${$.distDir}/**`,
+            `!${$.distDir}/bower_components/MathJax/**`,
         ])
         .pipe($.manifest({
             hash         : true,
@@ -41,15 +41,15 @@ module.exports = function(gulp, $) {
             master       : ['index.html'],
             fallback     : ['/ 404.html'],
         }))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest($.distDir));
     });
 
     gulp.task('html:manifest', ['html:manifest:create'], () => {
         const htmlStr  = '<html class="no-js">';
         const manifest = '<html manifest="app.appcache" class="no-js">';
 
-        return gulp.src('./dist/*.html')
+        return gulp.src(`${$.distDir}/*.html`)
         .pipe($.util.env.electron ? $.util.noop() : $.replace(htmlStr, manifest))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest($.distDir));
     });
 };

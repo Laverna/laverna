@@ -21,7 +21,7 @@ module.exports = function(gulp, plug, pkg) {
     });
 
     gulp.task('mobile:copy', function() {
-        return gulp.src(['./dist/**/*'], {base: 'dist'})
+        return gulp.src([`${$.distDir}/**/*`], {base: ${$.distDir}})
         .pipe(gulp.dest('./cordova/www'));
     });
 

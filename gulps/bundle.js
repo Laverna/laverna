@@ -33,7 +33,7 @@ module.exports = (gulp, $) => {
                 cb();
             }
         }))
-        .pipe(gulp.dest('dist/scripts/'))
+        .pipe(gulp.dest(`${$.distDir}/scripts/`))
         .pipe($.browserSync.stream());
     };
 };

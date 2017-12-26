@@ -32,16 +32,16 @@ module.exports = (gulp, $) => {
             remove   : false,
             add      : true,
         }))
-        .pipe(gulp.dest('./dist/styles/'))
+        .pipe(gulp.dest(`${$.distDir}/styles/`))
         .pipe($.browserSync.stream());
     });
 
     gulp.task('cssmin', () => {
-        return gulp.src('./dist/styles/*.css')
+        return gulp.src(`${$.distDir}/styles/*.css`)
         .pipe($.cleanCss({
             compatibility: 'ie8',
         }))
-        .pipe(gulp.dest('./dist/styles'));
+        .pipe(gulp.dest(`${$.distDir}/styles`));
     });
 
 };

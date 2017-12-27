@@ -199,7 +199,7 @@ export default class Import extends Mn.Object {
                 const type = path[2].split('.json')[0];
                 return this.importCollection({profileId, data, type});
             }
-        })
+        });
     }
 
     /**
@@ -240,6 +240,7 @@ export default class Import extends Mn.Object {
 
         const mdName = name.replace(/\.json$/, '.md');
         return zip.file(mdName).async('string')
+        // eslint-disable-next-line
         .then(content => data.content = content);
     }
 

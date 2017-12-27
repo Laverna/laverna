@@ -1,23 +1,33 @@
-<div class="center-block">
-    <header>
-        <h3>{{_.i18n('Backup your private key')}}</h3>
-    </header>
+<fieldset>
+    <legend>{{_.i18n('Backup your private key')}}</legend>
+    <div class="form-group container-fluid">
+        <button id="export--key" type="button" class="btn btn-default btn-block">
+            <i class="icon-cog"></i> {{ _.i18n('Backup') }}
+        </button>
+    </div>
+</fieldset>
+<br/>
 
-    <button id="export--key" type="button" class="btn btn-default btn-block">
-        <i class="icon-cog"></i> {{ _.i18n('Backup') }}
-    </button>
-</div>
+<fieldset>
+    <legend>{{_.i18n('Backup everything')}}</legend>
+    <div class="form-group container-fluid">
+        <input id="import--data" class="hide" type="file">
+        <button data-file="#import--data" type="button" class="btn btn-default btn-block btn--import">
+            <i class="icon-note"></i> {{ _.i18n('Recover from backup') }}
+        </button>
+        <button id="export--data" type="button" class="btn btn-default btn-block">
+            <i class="icon-note"></i> {{ _.i18n('Backup everything') }}
+        </button>
+    </div>
+</fieldset>
+<br/>
 
-<div class="center-block">
-    <header>
-        <h3>{{_.i18n('Backup everything')}}</h3>
-    </header>
-
-    <input id="import--data" class="hide" type="file">
-    <button data-file="#import--data" type="button" class="btn btn-default btn-block btn--import">
-        <i class="icon-note"></i> {{ _.i18n('Import data') }}
-    </button>
-    <button id="export--data" type="button" class="btn btn-default btn-block">
-        <i class="icon-note"></i> {{ _.i18n('Backup data') }}
-    </button>
-</div>
+<!-- <fieldset> -->
+<!--     <legend>{{_.i18n('Import from other services')}}</legend> -->
+<!--     <div class="form-group container-fluid"> -->
+<!--         <input id="import--evernote" class="hide" type="file"> -->
+<!--         <button data-file="#import--evernote" type="button" class="btn btn-default btn-block btn--import"> -->
+<!--             <i class="icon-note"></i> {{ _.i18n("Import from Evernote's backup") }} -->
+<!--         </button> -->
+<!--     </div> -->
+<!-- </fieldset> -->

@@ -51,11 +51,19 @@ export default class Users extends Module {
         .then(() => this.collection);
     }
 
-    saveModel({model, data}) {
-        return super.saveModel({model, data})
+    saveModel(options) {
+        const privKey = Radio.request('collections/Configs', 'findConfig', {
+            name: 'privateKey',
+        });
+
+        return super.saveModel(options)
         .then(() => {
-            Radio.request('models/Encryption', 'readUserKey', {model});
-            return model;
+            // Add a users key to the array of public keys if the user's private key exists
+            if (privKey && privKey.length) {
+                Radio.request('models/Encryption', 'readUserKey', {model: options.model});
+            }
+
+            return options.model;
         });
     }
 

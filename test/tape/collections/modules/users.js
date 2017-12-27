@@ -64,6 +64,13 @@ test('collections/modules/Users: saveModel()', t => {
 
     mod.saveModel({})
     .then(() => {
+        t.equal(req.calledWith('models/Encryption', 'readUserKey'), false,
+            'does not add a users key to the array of public keys');
+
+        req.withArgs('collections/Configs', 'findConfig').returns('---private key---');
+        return mod.saveModel({});
+    })
+    .then(() => {
         t.equal(req.calledWith('models/Encryption', 'readUserKey'), true,
             'adds a users key to the array of public keys');
 

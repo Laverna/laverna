@@ -186,7 +186,7 @@ export default class Import extends Mn.Object {
         return zip.file(file.name).async('string')
         .then(res => {
             const path      = file.name.split('/');
-            const profileId = path[1];
+            const profileId = path[1] === 'notes-db' ? 'default' : path[1];
             const data      = JSON.parse(res);
 
             if (path[2] === 'notes') {
@@ -199,7 +199,7 @@ export default class Import extends Mn.Object {
                 const type = path[2].split('.json')[0];
                 return this.importCollection({profileId, data, type});
             }
-        });
+        })
     }
 
     /**
@@ -214,19 +214,33 @@ export default class Import extends Mn.Object {
      */
     importNote(options) {
         const {data, profileId} = options;
-        const name = options.name.replace(/\.json$/, '.md');
 
-        // Read a note's content from a Markdown file
-        return options.zip.file(name).async('string')
-        .then(content => {
-            data.content = content;
-
+        return this.readMarkdown(options)
+        .then(() => {
             return Radio.request('collections/Notes', 'saveModelObject', {
                 data,
                 profileId,
                 dontValidate: true,
             });
         });
+    }
+
+    /**
+     * Read a note's content from Markdown file.
+     *
+     * @param {Object} data
+     * @param {String} name
+     * @param {Object} zip
+     * @returns {Promise}
+     */
+    readMarkdown({data, name, zip}) {
+        if (data.encryptedData && data.encryptedData.length) {
+            return Promise.resolve();
+        }
+
+        const mdName = name.replace(/\.json$/, '.md');
+        return zip.file(mdName).async('string')
+        .then(content => data.content = content);
     }
 
     /**

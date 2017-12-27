@@ -196,8 +196,9 @@ test('importExport/Import: readZip()', t => {
 test('importExport/Import: import()', t => {
     const con = new Import();
     const zip = {files: [
+        {name: 'configs.json'},
         {name: 'test.png'},
-        {dir: true},
+        {name: '/dir', dir: true},
         {name: 'notebooks.json'},
         {name: 'notes/1.json'},
     ]};
@@ -205,12 +206,15 @@ test('importExport/Import: import()', t => {
 
     const res = con.import(zip);
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(con.readFile.callCount, 2, 'ignores directories and non JSON files');
-    t.equal(con.readFile.calledWith(zip, zip.files[2]), true, 'imports notebooks');
-    t.equal(con.readFile.calledWith(zip, zip.files[3]), true, 'imports notes');
+    res.then(() => {
+        t.equal(con.readFile.callCount, 3, 'ignores directories and non JSON files');
+        t.equal(con.readFile.calledWith(zip, zip.files[0]), true, 'imports configs');
+        t.equal(con.readFile.calledWith(zip, zip.files[3]), true, 'imports notebooks');
+        t.equal(con.readFile.calledWith(zip, zip.files[4]), true, 'imports notes');
 
-    sand.restore();
-    t.end();
+        sand.restore();
+        t.end();
+    });
 });
 
 test('importExport/Import: readFile()', t => {
@@ -259,16 +263,41 @@ test('importExport/Import: importNote()', t => {
     const async = sand.stub().returns(Promise.resolve('test content'));
     const zip   = {file: sand.stub().returns({async})};
     const req   = sand.stub(Radio, 'request');
+    sand.spy(con, 'readMarkdown');
 
     con.importNote({
         zip, data: {}, profileId: 'test', name: 'backups/test/notes/1.json.json',
     })
     .then(() => {
+        t.equal(con.readMarkdown.called, true, 'tries to read Markdown content');
+
         t.equal(req.calledWith('collections/Notes', 'saveModelObject', {
             profileId    : 'test',
             data         : {content: 'test content'},
             dontValidate : true,
         }), true, 'saves the note to database');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: readMarkdown()', t => {
+    const con    = new Import();
+    const asyncZ = sand.stub().resolves('test content');
+    const zip    = {file: sand.stub().returns({async: asyncZ})};
+    let data     = {encryptedData: 'encryptedData'};
+
+    con.importNote({zip, data, name: '1.json'})
+    .then(() => {
+        t.equal(asyncZ.notCalled, true, 'does nothing if data contains encrypted data');
+
+        data = {encryptedData: ''};
+        con.importNote({zip, data: {}, name: '1.json'})
+    })
+    .then(() => {
+        t.equal(zip.file.calledWith('1.md'), true, 'reads the Markdown file');
+        // t.equal(data.content, 'test content');
 
         sand.restore();
         t.end();

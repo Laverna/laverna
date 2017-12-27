@@ -179,7 +179,7 @@ export default class Module {
      * @returns {Boolean}
      */
     isCollectionEmpty(options) {
-        const profileId = options.profileId || 'notes-db';
+        const profileId = options.profileId || 'default';
         return (
             this.collection && this.collection.length &&
             this.collection.profileId === profileId

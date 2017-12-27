@@ -182,9 +182,14 @@ export default class Export extends Mn.Object {
      */
     exportNote(path, model) {
         const fileName = `${path}/notes/${model.id}`;
-        const data     = JSON.stringify(_.omit(model.getData(), 'content'));
+        let data       = model.getData();
 
-        this.zip.file(`${fileName}.md`, model.get('content'));
+        // Create a Markdown file with note's content only if encryption is disabled
+        if (data.content) {
+            this.zip.file(`${fileName}.md`, data.content);
+        }
+
+        data = JSON.stringify(_.omit(data, 'content'));
         this.zip.file(`${fileName}.json`, data);
     }
 

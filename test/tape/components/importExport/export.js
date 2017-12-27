@@ -218,6 +218,13 @@ test('importExport/Export: exportNote()', t => {
     t.equal(con.zip.file.calledWith('backups/notes/1.json'),
         true, 'saves other attributes in a JSON file');
 
+    mod.set({encryptedData: '--encryptedData--', id: '2'});
+    con.exportNote('backups', mod);
+    t.equal(con.zip.file.calledWith('backups/notes/2.md', mod.get('content')),
+        false, 'does not save plain text Markdown if a model has encryptedData attribute');
+    t.equal(con.zip.file.calledWith('backups/notes/2.json'),
+        true, 'saves other attributes in a JSON file');
+
     sand.restore();
     t.end();
 });

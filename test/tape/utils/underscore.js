@@ -103,6 +103,16 @@ test('Underscore: splitBy4()', t => {
     t.end();
 });
 
+test('Underscore: countWords()', t => {
+    t.equal(_.countWords('# Count **words**'), 2);
+    t.equal(_.countWords(`English, العربية, Italiano, Bosnian, Čeština, Dansk,
+		Deutsch, Schwiizerdütsch, Ελληνικά, Esperanto, Español, Français, Hindi,
+		한국어, Marathi, Norsk bokmål, Nederlands, Norsk nynorsk, Occitan, Lietuvių,
+		Latviešu, Polski, Portugisich, Русский, Svenska, Shqip, Türkçe`), 29);
+
+    t.end();
+});
+
 test('Underscore: selectOption()', t => {
     t.equal(_.selectOption('active', 'not'), '', 'returns empty string');
     t.equal(_.selectOption('active', 'active'), 'selected="selected" ');

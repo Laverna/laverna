@@ -153,6 +153,7 @@ test('notes/form/views/Form: onAfterRender()', t => {
     sand.stub(view.channel, 'trigger');
     view.ui = {title: {trigger: sand.stub()}};
     sand.stub(view, 'switchMode');
+    sand.stub(view, 'showStats');
 
     view.onAfterRender();
     t.equal(view.channel.trigger.calledWith('ready', {
@@ -162,6 +163,26 @@ test('notes/form/views/Form: onAfterRender()', t => {
         'focuses on the title');
     t.equal(view.switchMode.calledWith('preview'), true,
         'changes the edit mode');
+
+    t.equal(view.showStats.called, true, 'shows text stats');
+
+    sand.restore();
+    t.end();
+});
+
+test('notes/form/views/Form: showStats()', t => {
+    const model = new Note({content: '## Test this'});
+    const view  = new View({model, configs: {editMode: 'preview'}});
+    view.ui     = {words: {text: sand.stub()}, chars: {text: sand.stub()}};
+
+    view.showStats();
+    t.equal(view.ui.words.text.calledWith(2), true,
+        'shows the number of words in model\'s content');
+    t.equal(view.ui.chars.text.calledWith(model.attributes.content.length), true,
+        'shows the number of characters in content');
+
+    view.showStats({content: '## Count the words'});
+    t.equal(view.ui.words.text.calledWith(3), true, 'uses the paramaters');
 
     sand.restore();
     t.end();

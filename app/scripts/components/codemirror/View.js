@@ -41,7 +41,7 @@ export default class View extends Mn.View {
 
     initialize() {
         this.options.mode = this.options.configs.editMode;
-        this.$footer      = $('#editor--footer');
+        this.$footer      = $('#editor--footer--lines');
         this.$layoutBody  = $('.layout--body.-scroll.-form');
 
         this.listenTo(this, 'change:mode', this.onChangeMode);

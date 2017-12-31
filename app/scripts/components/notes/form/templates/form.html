@@ -53,5 +53,11 @@
         </form>
     </div>
     <div id="editor" class="layout--body editor--container"></div>
-	<footer id="editor--footer"></footer>
+    <footer id="editor--footer">
+        <span id="editor--footer--lines" class="pull-left"></span>
+        <div class="pull-right">
+            {{_.i18n('Words')}}: <span id="editor--footer--words"></span>,
+            {{_.i18n('Characters')}}: <span id="editor--footer--chars"></span>
+        </div>
+    </footer>
 </div>

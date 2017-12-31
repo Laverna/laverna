@@ -70,6 +70,8 @@ export default class Form extends Mn.View {
             form       : '.editor--form',
             saveBtn    : '.editor--save',
             title      : '#editor--input--title',
+            words      : '#editor--footer--words',
+            chars      : '#editor--footer--chars',
         };
     }
 
@@ -86,6 +88,7 @@ export default class Form extends Mn.View {
     modelEvents() {
         return {
             'change:title': 'onChangeTitle',
+            'update:stats': 'showStats',
         };
     }
 
@@ -156,6 +159,20 @@ export default class Form extends Mn.View {
         if (this.options.configs.editMode !== 'normal') {
             this.switchMode(this.options.configs.editMode);
         }
+
+        this.showStats();
+    }
+
+    /**
+     * Show text stats, including a number of words, characters.
+     *
+     * @param {Object} data
+     * @param {String} data.content
+     */
+    showStats(data = {}) {
+        const text = data.content || this.model.get('content');
+        this.ui.words.text(_.countWords(text));
+        this.ui.chars.text(text.length);
     }
 
     /**

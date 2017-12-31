@@ -216,14 +216,18 @@ test('codemirror/Controller: onChangeMode()', t => {
 });
 
 test('codemirror/Controller: onChange()', t => {
-    const con  = new Controller();
+    const con = new Controller();
+    con.view  = {model: {trigger: sand.stub()}};
 
+    sand.stub(con, 'getContent').returns('test');
     sand.stub(con, 'updatePreview');
     sand.stub(con, 'autoSave');
 
     con.onChange();
     t.equal(con.updatePreview.called, true, 'calls updatePreview method');
     t.equal(con.autoSave.called, true, 'calls autoSave method');
+    t.equal(con.view.model.trigger.calledWith('update:stats', {content: 'test'}),
+        true, 'triggers "update:stats"');
 
     sand.restore();
     t.end();

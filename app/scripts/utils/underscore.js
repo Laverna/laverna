@@ -113,6 +113,16 @@ _.mixin({
     },
 
     /**
+     * Count a number of words in text.
+     *
+     * @param {String} text
+     * @returns {Number} number of words
+     */
+    countWords(text) {
+        return text.match(/([^\u0000-\u007F]|\w)+/g, '').length;
+    },
+
+    /**
      * Select an option if it is active.
      *
      * @param {String} active

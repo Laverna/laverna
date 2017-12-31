@@ -200,6 +200,8 @@ export default class Controller extends Mn.Object {
      */
     onChange() {
         log('change');
+        this.view.model.trigger('update:stats', {content: this.getContent()});
+
         this.updatePreview();
         this.autoSave();
     }

@@ -71,8 +71,8 @@ $ wget https://github.com/Laverna/static-laverna/archive/gh-pages.zip -O laverna
 $ unzip laverna.zip
 ```
 
-#### 3. Open index.html in a browser
-Open in your favorite browser the index.html file which is located inside *laverna* directory.
+#### 3. Run the program 
+Open in your favorite browser the index.html file or double click on the file called 'laverna' which is located inside *laverna* directory.
 
 
 ## Installation from source

@@ -271,7 +271,8 @@ export default class Controller extends Mn.Object {
      */
     preRedirect() {
         // Delete the new note model
-        if (_.isUndefined(this.options.id)) {
+        if (_.isUndefined(this.options.id) || _.isNull(this.options.id)) {
+            this.model.set({title: 'Untitled'});
             return Radio.request('components/notes', 'remove', {
                 model : this.model,
                 force : true,

@@ -110,6 +110,8 @@ test('Underscore: countWords()', t => {
 		한국어, Marathi, Norsk bokmål, Nederlands, Norsk nynorsk, Occitan, Lietuvių,
 		Latviešu, Polski, Portugisich, Русский, Svenska, Shqip, Türkçe`), 29);
 
+	t.equal(_.countWords(''), 0, 'returns 0 if it found no words');
+
     t.end();
 });
 

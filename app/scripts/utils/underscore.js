@@ -119,7 +119,8 @@ _.mixin({
      * @returns {Number} number of words
      */
     countWords(text) {
-        return text.match(/([^\u0000-\u007F]|\w)+/g, '').length;
+        const matches = text.match(/([^\u0000-\u007F]|\w)+/g, '');
+        return matches ? matches.length : 0;
     },
 
     /**

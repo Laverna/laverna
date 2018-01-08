@@ -340,8 +340,11 @@ test('notes/form/Controller: preRedirect()', t => {
     con.model      = new Note();
     const req      = sand.stub(Radio, 'request').returns(Promise.resolve());
     const notesReq = sand.stub(con.notesChannel, 'request').returns(Promise.resolve());
+    sand.stub(con.model, 'set');
 
     t.equal(typeof con.preRedirect().then, 'function', 'returns a promise');
+    t.equal(con.model.set.calledWith({title: 'Untitled'}), true,
+        'changes the title to "Untitled"');
     t.equal(req.calledWith('components/notes', 'remove', {
         model : con.model,
         force : true,

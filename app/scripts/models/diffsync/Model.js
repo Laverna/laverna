@@ -148,7 +148,7 @@ export default class Diff {
      * @param {String} username
      * @returns {Object}
      */
-    getDocAttr(doc, username) {
+    getDocAttr(doc, username) { // eslint-disable-line complexity
         const attr     = _.pick(doc.attributes, _.keys(doc.defaults));
         let ignoreKeys = [].concat(this.ignoreKeys);
 

@@ -19,7 +19,7 @@ const log = deb('lav:components/importExport/Import');
  */
 export default class Import extends Mn.Object {
 
-    init() {
+    init() { // eslint-disable-line complexity
         if (this.options.files && this.options.files.length) {
             if (this.isZipFile()) {
                 return this.importData();

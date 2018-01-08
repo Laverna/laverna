@@ -179,7 +179,7 @@ export default class Peer {
      * @param {Object} user
      * @returns {Boolean}
      */
-    isTrustedUser(user) {
+    isTrustedUser(user) { // eslint-disable-line complexity
         if (user.username === this.configs.username) {
             return true;
         }
@@ -246,7 +246,7 @@ export default class Peer {
      *
      * @param {Object} user
      */
-    onOffer(user) {
+    onOffer(user) { // eslint-disable-line complexity
         const peer = this.getPeer(user);
         if (!this.isTrustedUser(user) || (peer && peer.instance.connected)) {
             return log('Ignoring the peer: untrusted user or peer already exists!');

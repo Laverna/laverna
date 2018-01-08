@@ -227,7 +227,7 @@ export default class Patch extends DiffModel {
      *
      * @param {Object} data
      */
-    patch(data) {
+    patch(data) { // eslint-disable-line complexity
         const diffs = data.peerEdit.get('diffs');
 
         // If both diffs are empty, do nothing

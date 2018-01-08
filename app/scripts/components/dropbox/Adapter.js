@@ -49,7 +49,7 @@ export default class Adapter {
      *
      * @returns {Promise}
      */
-    checkAuth() {
+    checkAuth() { // eslint-disable-line complexity
         const hash = this.parseHash();
 
         // The access token was saved in configs

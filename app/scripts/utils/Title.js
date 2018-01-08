@@ -134,7 +134,7 @@ export default class Title {
      * @param {Object} options
      * @returns {String}
      */
-    getTitleFromFilter(options) {
+    getTitleFromFilter(options) { // eslint-disable-line complexity
         let title;
 
         // Use "query" as title if it's search or tag filter

@@ -106,7 +106,7 @@ export default class Diff extends DiffModel {
      * @param {String} type - the type of synchronization (normal, live)
      * @returns {Number} wait time
      */
-    calcWait(type) {
+    calcWait(type) { // eslint-disable-line complexity
         const options    = this.options[`${type}Wait`];
         const {min, max} = options;
         const range      = max - min;

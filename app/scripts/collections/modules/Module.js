@@ -136,7 +136,7 @@ export default class Module {
      */
     find(options = {}) {
         return this.fetch(_.omit(options, 'conditions'))
-        .then(collection => {
+        .then(collection => { // eslint-disable-line complexity
             if (options.filter || options.conditions) {
                 collection.filterList(options);
             }

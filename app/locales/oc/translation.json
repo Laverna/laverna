@@ -156,7 +156,7 @@
         "attachImage": "Ligar coma un imatge"
     },
     "notes": {
-        "confirm trash": "La nòta **{{title}}** serà desplaçat a l'escobilhièr.",
+        "confirm trash": "La nòta **{{title}}** serà desplaçada a l'escobilhièr.",
         "confirm remove": "La nòta **{{title}}** serà levada **per totjorn** !",
         "create and attach": "Crear una nòta novèla e ligar sos ligams",
         "create": "Crear una nòta novèla",

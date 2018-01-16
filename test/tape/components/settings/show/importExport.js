@@ -32,6 +32,8 @@ test('settings/show/importExport/View: events()', t => {
         'triggers click on the file button if an import button is clicked');
     t.equal(events['change #import--data'], 'importData',
         'imports data if a file was chosen');
+    t.equal(events['change #import--evernote'], 'importEvernote',
+        'imports from Evernote');
     t.equal(events['click #export--data'], 'exportData',
         'exports everything if the button is clicked');
     t.equal(events['click #export--key'], 'exportKey',
@@ -56,7 +58,7 @@ test('settings/show/importExport/View: triggerClick()', t => {
     t.end();
 });
 
-test('settings/show/importExport/View: importData()', t => {
+test('settings/show/importExport/View: importData() + importEvernote()', t => {
     const view = new View();
     const req  = sand.stub(view.channel, 'request');
 
@@ -66,6 +68,10 @@ test('settings/show/importExport/View: importData()', t => {
     view.importData({target: {files: [1, 2]}});
     t.equal(req.calledWith('import', {files: [1, 2]}), true,
         'imports data from the selected ZIP files');
+
+    view.importEvernote({target: {files: [1, 2]}});
+    t.equal(req.calledWith('importEvernote', {files: [1, 2]}), true,
+        'imports from Evernote backup');
 
     sand.restore();
     t.end();

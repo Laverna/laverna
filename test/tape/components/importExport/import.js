@@ -15,6 +15,11 @@ test('importExport/Import: before()', t => {
     t.end();
 });
 
+test('importExport/Import: channel', t => {
+    t.equal(Import.prototype.channel.channelName, 'components/importExport');
+    t.end();
+});
+
 test('importExport/Import: init()', t => {
     const con   = new Import();
     const iData = sand.stub(con, 'importData');
@@ -50,10 +55,10 @@ test('importExport/Import: init()', t => {
 test('importExport/Import: onSuccess', t => {
     const con    = new Import();
     const reload = sand.stub(document.location, 'reload');
-    const trig   = sand.stub(Radio, 'trigger');
+    const trig   = sand.stub(con.channel, 'trigger');
 
     con.onSuccess();
-    t.equal(trig.calledWith('components/importExport', 'completed'), true,
+    t.equal(trig.calledWith('completed'), true,
         'triggers "completed" event');
 
     setTimeout(() => {
@@ -65,10 +70,10 @@ test('importExport/Import: onSuccess', t => {
 
 test('importExport/Import: onError', t => {
     const con    = new Import();
-    const trig   = sand.stub(Radio, 'trigger');
+    const trig   = sand.stub(con.channel, 'trigger');
 
     con.onError('error');
-    t.equal(trig.calledWith('components/importExport', 'completed', {error: 'error'}),
+    t.equal(trig.calledWith('completed', {error: 'error'}),
         true, 'triggers "completed" event');
 
     sand.restore();

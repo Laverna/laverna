@@ -29,6 +29,10 @@ function electronListener() {
         Radio.request('components/help', 'showAbout');
     });
 
+    ipcRenderer.on('lav:import:evernote', (e, data) => {
+        Radio.request('components/importExport', 'importEvernote', data);
+    });
+
     ipcRenderer.on('lav:backup:key', () => {
         Radio.request('components/importExport', 'export', {exportKey: true});
     });

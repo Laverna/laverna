@@ -19,6 +19,15 @@ const log = deb('lav:components/importExport/Import');
  */
 export default class Import extends Mn.Object {
 
+    /**
+     * Radio channel (components/importExport).
+     *
+     * @prop {Object}
+     */
+    get channel() {
+        return Radio.channel('components/importExport');
+    }
+
     init() { // eslint-disable-line complexity
         if (this.options.files && this.options.files.length) {
             if (this.isZipFile()) {
@@ -37,7 +46,7 @@ export default class Import extends Mn.Object {
      * If import is successful, trigger "completed" and reload the page after 800ms.
      */
     onSuccess() {
-        Radio.trigger('components/importExport', 'completed');
+        this.channel.trigger('completed');
         window.setTimeout(() => document.location.reload(), 800);
     }
 
@@ -48,7 +57,7 @@ export default class Import extends Mn.Object {
      */
     onError(error) {
         log('error', error);
-        Radio.trigger('components/importExport', 'completed', {error});
+        this.channel.trigger('completed', {error});
     }
 
     /**
@@ -89,6 +98,9 @@ export default class Import extends Mn.Object {
      * @returns {Promise}
      */
     importData() {
+        // Trigger an event that import proccess started
+        this.channel.trigger('started');
+
         return this.readZip(this.options.files[0])
         .then(zip  => this.import(zip))
         .then(()   => this.onSuccess())
@@ -101,6 +113,9 @@ export default class Import extends Mn.Object {
      * @returns {Promise}
      */
     importKey() {
+        // Trigger an event that import proccess started
+        this.channel.trigger('started');
+
         return this.readText(this.options.files[0])
         .then(value => {
             return Radio.request('collections/Configs', 'saveConfig', {

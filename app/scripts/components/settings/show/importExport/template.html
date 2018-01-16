@@ -11,7 +11,7 @@
 <fieldset>
     <legend>{{_.i18n('Backup everything')}}</legend>
     <div class="form-group container-fluid">
-        <input id="import--data" class="hide" type="file">
+        <input accept=".zip" id="import--data" class="hide" type="file">
         <button data-file="#import--data" type="button" class="btn btn-default btn-block btn--import">
             <i class="icon-note"></i> {{ _.i18n('Recover from backup') }}
         </button>
@@ -22,12 +22,12 @@
 </fieldset>
 <br/>
 
-<!-- <fieldset> -->
-<!--     <legend>{{_.i18n('Import from other services')}}</legend> -->
-<!--     <div class="form-group container-fluid"> -->
-<!--         <input id="import--evernote" class="hide" type="file"> -->
-<!--         <button data-file="#import--evernote" type="button" class="btn btn-default btn-block btn--import"> -->
-<!--             <i class="icon-note"></i> {{ _.i18n("Import from Evernote's backup") }} -->
-<!--         </button> -->
-<!--     </div> -->
-<!-- </fieldset> -->
+<fieldset>
+    <legend>{{_.i18n('Import from other services')}}</legend>
+    <div class="form-group container-fluid">
+        <input accept=".enex" id="import--evernote" class="hide" type="file">
+        <button data-file="#import--evernote" type="button" class="btn btn-default btn-block btn--import">
+            <i class="icon-note"></i> {{ _.i18n("Import from Evernote's backup") }}
+        </button>
+    </div>
+</fieldset>

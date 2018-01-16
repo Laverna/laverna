@@ -30,10 +30,11 @@ export default class View extends Mn.View {
 
     events() {
         return {
-            'click .btn--import'   : 'triggerClick',
-            'change #import--data' : 'importData',
-            'click #export--data'  : 'exportData',
-            'click #export--key'   : 'exportKey',
+            'click .btn--import'       : 'triggerClick',
+            'change #import--data'     : 'importData',
+            'change #import--evernote' : 'importEvernote',
+            'click #export--data'      : 'exportData',
+            'click #export--key'       : 'exportKey',
         };
     }
 
@@ -49,7 +50,7 @@ export default class View extends Mn.View {
     }
 
     /**
-     * Export everything from Laverna.
+     * Recover from a backup.
      */
     importData(e) {
         const {files} = e.target;
@@ -58,6 +59,14 @@ export default class View extends Mn.View {
         }
 
         this.channel.request('import', {files});
+    }
+
+    /**
+     * Import notes from Evernote backup.
+     */
+    importEvernote(e) {
+        const {files} = e.target;
+        this.channel.request('importEvernote', {files});
     }
 
     /**

@@ -35,10 +35,17 @@ export default class View extends Mn.View {
         return [Behavior];
     }
 
+    ui() {
+        return {
+            useEncrypt: '#useEncryption',
+        };
+    }
+
     events() {
         return {
             'click #btn--privateKey' : 'showPrivateKey',
             'click #btn--passphrase' : 'showPasswordView',
+            'change @ui.useEncrypt'  : 'useEncryption',
         };
     }
 
@@ -72,6 +79,25 @@ export default class View extends Mn.View {
     showPasswordView() {
         const view = new Passphrase({model: this.collection.get('privateKey')});
         Radio.request('Layout', 'show', {view, region: 'modal'});
+    }
+
+    /**
+     * Ask a user if they are sure they want to disable encryption.
+     */
+    useEncryption() {
+        // Don't show the confirmation dialog if a user is enabling encryption
+        if (this.ui.useEncrypt.is(':checked')) {
+            return true;
+        }
+
+        return Radio.request('components/confirm', 'show', {
+            content: _.i18n('Are you sure you want to disable encryption?'),
+        })
+        .then(answer => {
+            if (answer === 'reject') {
+                this.ui.useEncrypt.prop('checked', true);
+            }
+        });
     }
 
     /**

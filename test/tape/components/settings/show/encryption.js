@@ -28,6 +28,13 @@ test('settings/show/encryption/View: behaviors()', t => {
     t.end();
 });
 
+test('settings/show/encryption/View: ui()', t => {
+    const ui = View.prototype.ui();
+    t.equal(typeof ui, 'object');
+    t.equal(ui.useEncrypt, '#useEncryption');
+    t.end();
+});
+
 test('settings/show/encryption/View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object');
@@ -36,6 +43,8 @@ test('settings/show/encryption/View: events()', t => {
         'shows the private information if the button is clicked');
     t.equal(events['click #btn--passphrase'], 'showPasswordView',
         'shows the password form if the button is clicked');
+    t.equal(events['change @ui.useEncrypt'], 'useEncryption',
+        'shows a confirmation dialog before disabling encryption');
 
     t.end();
 });
@@ -90,6 +99,38 @@ test('settings/show/encryption/View: showPasswordView()', t => {
 
     sand.restore();
     t.end();
+});
+
+test('settings/show/encryption/View: useEncryption()', t => {
+    const view = new View();
+    const req  = sand.stub(Radio, 'request').resolves('confirm');
+    const is   = sand.stub().returns(true);
+    view.ui    = {useEncrypt: {is, prop: sand.stub()}};
+
+    t.equal(view.useEncryption(), true,
+        'returns "true" if a user is enabling encryption');
+    t.equal(req.notCalled, true, 'does not show the confirmation dialog');
+    is.returns(false);
+
+    const res = view.useEncryption();
+    t.equal(typeof res.then, 'function', 'returns a promise');
+    t.equal(req.calledWith('components/confirm', 'show'), true,
+        'shows the confirmation dialog');
+
+    res.then(() => {
+        t.equal(view.ui.useEncrypt.prop.notCalled, true,
+            'does nothing if a user confirmed they want to disable encryption');
+
+        req.resolves('reject');
+        return view.useEncryption();
+    })
+    .then(() => {
+        t.equal(view.ui.useEncrypt.prop.calledWith('checked', true), true,
+            're-enables encryption if a user changed their mind');
+
+        sand.restore();
+        t.end();
+    });
 });
 
 test('settings/show/encryption/View: serializeData()', t => {

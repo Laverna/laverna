@@ -101,6 +101,57 @@ test('collections/modules/Configs: find()', t => {
     });
 });
 
+test('collections/modules/Configs: saveModel()', t => {
+    const mod   = new Module();
+    const model = new mod.Model({name: '', value: 0});
+    const stub  = sand.stub(mod, 'backupEncrypt');
+    const save  = sand.stub(ModuleOrig.prototype, 'saveModel').resolves();
+
+    mod.saveModel({model, data: {value: 1}})
+    .then(() => {
+        t.equal(save.called, true, 'saves the model');
+        t.equal(stub.notCalled, true, 'does not call backupEncrypt()');
+
+        model.set('name', 'encrypt');
+        return mod.saveModel({model, data: {value: 1}});
+    })
+    .then(() => {
+        t.equal(stub.called, true, 'backs up encryption setting');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('collections/modules/Configs: backupEncrypt()', t => {
+    const mod      = new Module();
+    const model    = new mod.Model({value: 0});
+    const backup   = new mod.Model({name: 'encryptBackup', value: 1});
+    mod.collection = new Configs([backup]);
+    const save     = sand.stub(mod, 'saveModel');
+
+    mod.backupEncrypt({model});
+    t.equal(save.notCalled, true, 'does nothing if nothing has changed');
+
+    model.set({name: 'encryption', value: 0});
+    mod.backupEncrypt({model});
+    t.equal(save.notCalled, true,
+        'does nothing if the encryption setting has not changed');
+
+    model.set('value', 1);
+    mod.backupEncrypt({model});
+    t.equal(save.calledWith({model: backup, data: {value: {encrypt: 0}}}), true,
+        'changes the value to "0"');
+
+    model.set('value', 0);
+    mod.backupEncrypt({model});
+    t.equal(save.calledWith({model: backup, data: {value: {encrypt: 1}}}), true,
+        'changes the value to 1');
+
+    sand.restore();
+    t.end();
+});
+
 test('collections/modules/Configs: getProfileId()', t => {
     const mod   = new Module();
     const model = new mod.Model({value: 0});

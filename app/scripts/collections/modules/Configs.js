@@ -95,6 +95,35 @@ export default class Configs extends Module {
         .then(() => this.checkOrCreate());
     }
 
+    saveModel(options) {
+        // Do nothing if it isn't encryption setting change
+        if (options.model.get('name') !== 'encrypt') {
+            return super.saveModel(options);
+        }
+
+        return Promise.all([
+            super.saveModel(options),
+            this.backupEncrypt(options),
+        ]);
+    }
+
+    /**
+     * Backup encryption setting (to be able to decrypt/encrypt after restart).
+     *
+     * @param {Object} {data} - new values
+     * @returns {Promise}
+     */
+    backupEncrypt({model}) {
+        const changed = model.changedAttributes();
+        if (!changed || _.isUndefined(changed.value)) {
+            return Promise.resolve();
+        }
+
+        const backup = this.collection.get('encryptBackup');
+        const value  = {encrypt: Number(changed.value) ? 0 : 1};
+        return this.saveModel({model: backup, data: {value}});
+    }
+
     /**
      * Find out what profileId this profile uses to store configs.
      *

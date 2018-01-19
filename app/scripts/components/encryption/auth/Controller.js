@@ -36,12 +36,6 @@ export default class Controller extends Mn.Object {
      * @returns {Promise} resolved once auth is successful
      */
     init() {
-        // Do nothing if encryption is disabled
-        if (!Number(this.configs.encrypt)) {
-            this.destroy();
-            return Promise.resolve();
-        }
-
         return new Promise((resolve, reject) => {
             this.promise = {resolve, reject};
             this.show();

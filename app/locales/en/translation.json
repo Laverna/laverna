@@ -48,6 +48,8 @@
     "Strengthen by a factor of": "Strengthen by a factor of",
     "Authentication strength": "Authentication strength",
     "Unlock": "Unlock",
+    "Data decryption after disabling encryption": "You disabled encryption! We are going to decrypt your data. Click cancel button if you changed your mind or proceed.",
+    "Data encryption after enabling encryption": "You enabled encryption. We are going to encrypt your data.",
     "Your new encryption password": "Your new encryption password",
     "Your old encryption password": "Your old encryption password",
     "Show sidebar": "Show sidebar",

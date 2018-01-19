@@ -40,10 +40,6 @@ test('encryption/auth/Controller: init()', t => {
     const req = sand.stub(Radio, 'request').returns({encrypt: 0});
     const con = new Controller();
 
-    sand.stub(con, 'destroy');
-    con.init();
-    t.equal(con.destroy.called, true, 'destroyes itself if encryption is disabled');
-
     req.returns({encrypt: 1});
     sand.stub(con, 'show').callsFake(() => con.promise.resolve());
     sand.stub(con, 'listenToEvents');

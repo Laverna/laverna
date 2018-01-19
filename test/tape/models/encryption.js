@@ -344,7 +344,9 @@ test('models/Encryption: decrypt()', t => {
 });
 
 test('models/Encryption: encryptModel()', t => {
-    const enc = new Encryption();
+    const enc  = new Encryption();
+    const conf = {encrypt: 0};
+    Object.defineProperty(enc, 'configs', {get: () => conf});
     sand.stub(enc, 'encrypt').returns(Promise.resolve('encrypted string'));
 
     const model = {
@@ -354,6 +356,12 @@ test('models/Encryption: encryptModel()', t => {
     };
 
     enc.encryptModel({model, username: 'bob'})
+    .then(() => {
+        t.equal(enc.encrypt.notCalled, true, 'does nothing if encryption is disabled');
+
+        conf.encrypt = 1;
+        return enc.encryptModel({model, username: 'bob'});
+    })
     .then(res => {
         t.equal(enc.encrypt.calledWithMatch({
             username : 'bob',
@@ -404,11 +412,20 @@ test('models/Encryption: decryptModel()', t => {
 });
 
 test('models/Encryption: encryptCollection()', t => {
-    const enc = new Encryption();
+    const enc  = new Encryption();
+    const conf = {encrypt: 0};
+    Object.defineProperty(enc, 'configs', {get: () => conf});
     sand.stub(enc, 'encryptModel').returns(Promise.resolve());
     const collection = new Notes();
 
     enc.encryptCollection({collection})
+    .then(() => {
+        t.equal(enc.encryptModel.notCalled, true,
+            'does nothing if encryption is disabled');
+
+        conf.encrypt = 1;
+        return enc.encryptCollection({collection});
+    })
     .then(res => {
         t.equal(res, collection, 'returns the collection');
         t.equal(enc.encryptModel.notCalled, true,

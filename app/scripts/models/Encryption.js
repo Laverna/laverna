@@ -321,6 +321,12 @@ export default class Encryption {
      * @returns {Promise} resolve with the model
      */
     encryptModel({model, username}) {
+        // Don't encrypt if encryption is disabled
+        if (!Number(this.configs.encrypt)) {
+            log('do not encrypt');
+            return Promise.resolve(model);
+        }
+
         const data = _.pick(model.attributes, model.encryptKeys);
 
         return this.encrypt({username, data: JSON.stringify(data)})
@@ -362,7 +368,8 @@ export default class Encryption {
      * @returns {Promise}
      */
     encryptCollection({collection, username}) {
-        if (!collection.length) {
+        // Don't decrypt if the collection is empty or encryption is disabled
+        if (!collection.length || !Number(this.configs.encrypt)) {
             return Promise.resolve(collection);
         }
 

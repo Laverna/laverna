@@ -322,6 +322,7 @@ test('setup/Controller: saveConfigs()', t => {
             {name: 'encrypt', value: 1},
             {name: 'username', value: 'test'},
         ],
+        noBackup : true,
         profileId: con.profileId,
     }), true, 'saves configs');
 

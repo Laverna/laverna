@@ -113,6 +113,10 @@ test('collections/modules/Configs: saveModel()', t => {
         t.equal(stub.notCalled, true, 'does not call backupEncrypt()');
 
         model.set('name', 'encrypt');
+        return mod.saveModel({model, data: {value: 1}, noBackup: true});
+    })
+    .then(() => {
+        t.equal(stub.notCalled, true, 'does not call backupEncrypt()');
         return mod.saveModel({model, data: {value: 1}});
     })
     .then(() => {

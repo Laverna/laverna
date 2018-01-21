@@ -264,7 +264,8 @@ export default class Controller extends Mn.Object {
 
         return this.configsChannel.request('saveConfigs', {
             configs,
-            profileId: this.profileId,
+            noBackup  : true,
+            profileId : this.profileId,
         });
     }
 

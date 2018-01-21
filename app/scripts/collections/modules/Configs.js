@@ -97,7 +97,7 @@ export default class Configs extends Module {
 
     saveModel(options) {
         // Do nothing if it isn't encryption setting change
-        if (options.model.get('name') !== 'encrypt') {
+        if (options.model.get('name') !== 'encrypt' || options.noBackup) {
             return super.saveModel(options);
         }
 
@@ -213,7 +213,8 @@ export default class Configs extends Module {
                 return;
             }
 
-            return this.saveModel({model, data: config});
+            const opt = _.extend({}, options, {model, data: config});
+            return this.saveModel(opt);
         });
     }
 

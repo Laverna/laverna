@@ -12,8 +12,8 @@ test('collections/Users: sync', t => {
 });
 
 test('collections/Users: profileId', t => {
-    const coll = new Users();
-    t.equal(coll.profileId, 'default');
+    t.equal(new Users().profileId, undefined, 'is undefined by default');
+    t.equal(new Users(null, {profileId: 'test'}).profileId, 'test');
     t.end();
 });
 

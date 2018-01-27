@@ -7,23 +7,23 @@ import test from 'tape';
 import '../../../app/scripts/utils/underscore';
 import Model from '../../../app/scripts/models/Model';
 
-test('Model: sync()', t => {
+test('models/Model: sync()', t => {
     const model = new Model();
     t.equal(typeof model.sync, 'function', 'has sync method');
     t.end();
 });
 
-test('Model: profileId() - get', t => {
+test('models/Model: profileId() - get', t => {
     const model = new Model();
 
-    t.equal(model.profileId, 'default', 'returns "default" for default');
+    t.equal(model.profileId, undefined, 'returns "undefined" for default');
     model._profileId = 'test';
     t.equal(model.profileId, 'test', 'returns the value of "_profileId" property');
 
     t.end();
 });
 
-test('Model: profileId() - set', t => {
+test('models/Model: profileId() - set', t => {
     const model = new Model();
 
     model.profileId = 'test2';
@@ -33,26 +33,26 @@ test('Model: profileId() - set', t => {
     t.end();
 });
 
-test('Model: validateAttributes()', t => {
+test('models/Model: validateAttributes()', t => {
     const model = new Model();
     t.equal(Array.isArray(model.validateAttributes), true, 'is an array');
     t.end();
 });
 
-test('Model: escapeAttributes()', t => {
+test('models/Model: escapeAttributes()', t => {
     const model = new Model();
     t.equal(Array.isArray(model.escapeAttributes), true, 'is an array');
     t.end();
 });
 
-test('Model: channel', t => {
+test('models/Model: channel', t => {
     const model     = new Model();
     model.storeName = 'notes';
     t.equal(model.channel.channelName, 'collections/Notes');
     t.end();
 });
 
-test('Model: validate()', t => {
+test('models/Model: validate()', t => {
     const model = new Model();
     Object.defineProperty(model, 'validateAttributes', {
         get: () => {
@@ -75,7 +75,7 @@ test('Model: validate()', t => {
     t.end();
 });
 
-test('Model: setEscape()', t => {
+test('models/Model: setEscape()', t => {
     const model = new Model();
     Object.defineProperty(model, 'escapeAttributes', {
         get: () => {
@@ -97,7 +97,7 @@ test('Model: setEscape()', t => {
     t.end();
 });
 
-test('Model: getData()', t => {
+test('models/Model: getData()', t => {
     const model    = new Model({title: 'Test', test: '1'});
     model.defaults = {title: '', encryptedData: ''};
 
@@ -116,7 +116,7 @@ test('Model: getData()', t => {
     t.end();
 });
 
-test('Model: setDate()', t => {
+test('models/Model: setDate()', t => {
     const model = new Model();
     Object.defineProperty(model, 'defaults', {
         get: () => {
@@ -133,7 +133,7 @@ test('Model: setDate()', t => {
     t.end();
 });
 
-test('Model: isSharedWith()', t => {
+test('models/Model: isSharedWith()', t => {
     const model = new Model({sharedWith: ['alice'], sharedBy: 'bob'});
 
     t.equal(model.isSharedWith('sid'), false, 'returns false');
@@ -145,7 +145,7 @@ test('Model: isSharedWith()', t => {
     t.end();
 });
 
-test('Model: toggleShare()', t => {
+test('models/Model: toggleShare()', t => {
     const model = new Model({sharedWith: ['alice'], sharedBy: 'bob'});
 
     model.toggleShare('alice');

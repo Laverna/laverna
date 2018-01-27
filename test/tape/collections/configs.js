@@ -15,8 +15,7 @@ test('collections/Configs: before()', t => {
 });
 
 test('collections/Configs: profileId', t => {
-    const configs = new Configs();
-    t.equal(configs.profileId, 'default');
+    t.equal(new Configs(null, {profileId: 'default'}).profileId, 'default');
     t.end();
 });
 

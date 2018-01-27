@@ -30,11 +30,6 @@ test('collections/modules/Configs: constructor()', t => {
         findConfigs         : mod.findConfigs,
         saveConfig          : mod.saveConfig,
         saveConfigs         : mod.saveConfigs,
-        findProfileModel    : mod.findProfileModel,
-        findDefaultProfiles : mod.findDefaultProfiles,
-        createProfile       : mod.createProfile,
-        removeProfile       : mod.removeProfile,
-        changePassphrase    : mod.changePassphrase,
         createDeviceId      : mod.createDeviceId,
         updatePeer          : mod.updatePeer,
     }, mod), true, 'replies to requests');
@@ -72,25 +67,18 @@ test('collections/modules/Configs: find()', t => {
     const collection = new mod.Collection([{id: '1'}]);
     mod.collection   = collection;
 
-    const find = sand.stub(ModuleOrig.prototype, 'find');
-    sand.stub(mod, 'getProfileId').returns(Promise.resolve('default'));
+    const find = sand.stub(ModuleOrig.prototype, 'find').resolves();
     sand.stub(mod, 'checkOrCreate');
 
     mod.find({profileId: 'test'})
     .then(coll => {
         t.equal(coll, collection, 'returns the existing collection');
-        t.equal(mod.getProfileId.notCalled, true,
-            'does nothing if there is a collection');
 
         mod.collection.reset([]);
         return mod.find({profileId: 'test'});
     })
     .then(() => {
-        t.equal(mod.getProfileId.called, true,
-            'find out what profileId this profile uses to store configs');
-        t.equal(find.calledAfter(mod.getProfileId), true,
-            'calls the parent method after finding out the profile ID');
-        t.equal(find.calledWithMatch({profileId: 'default'}), true,
+        t.equal(find.calledWithMatch({profileId: 'test'}), true,
             'uses profile ID');
         t.equal(mod.checkOrCreate.calledAfter(find), true,
             'will try to create the default configs');
@@ -156,37 +144,13 @@ test('collections/modules/Configs: backupEncrypt()', t => {
     t.end();
 });
 
-test('collections/modules/Configs: getProfileId()', t => {
-    const mod   = new Module();
-    const model = new mod.Model({value: 0});
-    const find  = sand.stub(mod, 'findModel').returns(Promise.resolve(model));
-
-    mod.getProfileId({profileId: 'test'})
-    .then(profileId => {
-        t.equal(find.calledWith({profileId: 'test', name: 'useDefaultConfigs'}), true,
-            'tries to find useDefaultConfigs model');
-        t.equal(profileId, 'test', 'does not use the default database');
-
-        model.set('value', 1);
-        return mod.getProfileId({profileId: 'test'});
-    })
-    .then(profileId => {
-        t.equal(profileId, 'default', 'uses the default database');
-
-        mod.channel.stopReplying();
-        sand.restore();
-        t.end();
-    });
-});
-
 test('collections/modules/Configs: checkOrCreate()', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection();
 
     const hasNew  = sand.stub(mod.collection, 'hasNewConfigs').returns(false);
     const trigger = sand.stub(mod.channel, 'trigger');
-    const create  = sand.stub(mod.collection, 'createDefault')
-    .resolves();
+    const create  = sand.stub(mod.collection, 'createDefault').resolves();
     const find = sand.stub(ModuleOrig.prototype, 'find');
 
     mod.checkOrCreate()
@@ -200,7 +164,7 @@ test('collections/modules/Configs: checkOrCreate()', t => {
         t.equal(trigger.calledWith('collection:empty'), true,
             'triggers collection:empty event');
         t.equal(create.called, true, 'creates default configs');
-        t.equal(find.calledWith({profileId: 'default'}), true,
+        t.equal(find.calledWith({profileId: undefined}), true,
             'fetches configs again');
 
         mod.channel.stopReplying();
@@ -211,19 +175,25 @@ test('collections/modules/Configs: checkOrCreate()', t => {
 
 test('collections/modules/Configs: findConfig()', t => {
     const mod      = new Module();
-    mod.collection = new mod.Collection([{name: 'test', value: 'yes'}]);
+    t.equal(mod.findConfig({name: 'config'}), null,
+        'returns "null" if there is no collection');
 
+    mod.collection = new mod.Collection([{name: 'test', value: 'yes'}]);
     t.equal(mod.findConfig({name: 'test'}), 'yes',
         'returns the value of a config');
     t.equal(mod.findConfig({name: 'helloTest', default: 'no'}), 'no',
         'returns the default');
+
 
     mod.channel.stopReplying();
     t.end();
 });
 
 test('collections/modules/Configs: findConfigs()', t => {
-    const mod      = new Module();
+    const mod = new Module();
+
+    t.equal(mod.findConfigs(), null, 'returns "null" if there is no collection');
+
     mod.collection = new mod.Collection([{name: 'test', value: 'yes'}]);
     const spy = sand.spy(mod.collection, 'getConfigs');
 
@@ -236,31 +206,23 @@ test('collections/modules/Configs: findConfigs()', t => {
 });
 
 test('collections/modules/Configs: saveConfig()', t => {
-    const mod  = new Module();
-    const save = sand.stub(mod, 'saveModel').resolves('saved');
-    const find = sand.stub(mod, 'findModel').resolves(null);
+    const mod    = new Module();
+    const save   = sand.stub(mod, 'saveModel').resolves('saved');
+    const find   = sand.stub(mod, 'findModel').resolves(null);
+    const config = {name: 'test', value: '1'};
 
-    const useDefault = new mod.Model();
-    const config     = {name: 'useDefaultConfigs', value: '1'};
+    mod.saveConfig({config})
+    .then(res => {
+        t.equal(find.calledWithMatch({name: 'test'}), true,
+            'tries to find the config model');
+        t.equal(save.notCalled, true, 'does not save if the model was not found');
 
-    mod.saveConfig({config, useDefault})
-    .then(() => {
-        t.equal(find.notCalled, true, 'does not try to find the model');
-        t.equal(save.calledWith({model: useDefault, data: config}), true,
-            'saves useDefaultConfigs model');
-
-        config.name = 'test';
-        return mod.saveConfig({config, useDefault, profileId: 'test'});
+        find.returns(Promise.resolve({id: 'yes'}));
+        return mod.saveConfig({config, profileId: 'test'});
     })
     .then(res => {
         t.equal(find.calledWithMatch({profileId: 'test', name: 'test'}), true,
-            'tries to find the config model');
-        t.equal(res, undefined, 'does not save if the model was not found');
-
-        find.returns(Promise.resolve({id: 'yes'}));
-        return mod.saveConfig({config, useDefault, profileId: 'test'});
-    })
-    .then(res => {
+            'tries to find the config model using profileId');
         t.equal(res, 'saved', 'saves the config');
 
         mod.channel.stopReplying();
@@ -277,14 +239,14 @@ test('collections/modules/Configs: saveConfigs() - object', t => {
     };
     const save = sand.stub(mod, 'saveConfig');
 
-    mod.saveConfigs({configs, useDefault: 'test', profileId: 'test'})
+    mod.saveConfigs({configs, profileId: 'test'})
     .then(() => {
         t.equal(save.callCount, 2, 'saves all configs');
 
-        const opt1 = {config: configs.test, useDefault: 'test', profileId: 'test'};
+        const opt1 = {config: configs.test, profileId: 'test'};
         t.equal(save.calledWithMatch(opt1), true, 'saves the first config');
 
-        const opt2 = {config: configs.test2, useDefault: 'test', profileId: 'test'};
+        const opt2 = {config: configs.test2, profileId: 'test'};
         t.equal(save.calledWithMatch(opt2), true, 'saves the second config');
 
         mod.channel.stopReplying();
@@ -301,143 +263,14 @@ test('collections/modules/Configs: saveConfigs() - array', t => {
     ];
     const save = sand.stub(mod, 'saveConfig');
 
-    mod.saveConfigs({configs, useDefault: 'test', profileId: 'test'})
+    mod.saveConfigs({configs, profileId: 'test'})
     .then(() => {
         t.equal(save.callCount, 2, 'saves all configs');
-        const opt1 = {config: configs[0], useDefault: 'test', profileId: 'test'};
+        const opt1 = {config: configs[0], profileId: 'test'};
         t.equal(save.calledWithMatch(opt1), true, 'saves the first config');
 
         mod.channel.stopReplying();
         sand.restore();
-        t.end();
-    });
-});
-
-test('collections/modules/Configs: findProfileModel()', t => {
-    const mod  = new Module();
-    const find = sand.stub(mod, 'findModel').returns('yes');
-
-    t.equal(mod.findProfileModel(), 'yes');
-    t.equal(find.calledWith({name: 'appProfiles', profileId: 'default'}), true,
-        'fetches appProfiles model from the default database');
-
-    mod.channel.stopReplying();
-    sand.restore();
-    t.end();
-});
-
-test('collections/modules/Configs: findDefaultProfiles()', t => {
-    const mod = new Module();
-
-    mod.findDefaultProfiles()
-    .then(profiles => {
-        t.equal(Array.isArray(profiles), true, 'returns an array');
-        mod.channel.stopReplying();
-        t.end();
-    });
-});
-
-test('collections/modules/Configs: findProfileUseDefaults()', t => {
-    const mod = new Module();
-    const spy = sand.spy(mod, 'findModel');
-
-    mod.findProfileUseDefaults(['test1', 'test2'])
-    .then(res => {
-        t.equal(spy.calledWith({profileId: 'test1', name: 'useDefaultConfigs'}), true,
-            'fetches useDefaultConfigs from the first profile');
-        t.equal(spy.calledWith({profileId: 'test2', name: 'useDefaultConfigs'}), true,
-            'fetches useDefaultConfigs from the second profile');
-
-        t.equal(Array.isArray(res), true, 'returns an array');
-        t.equal(typeof res[0].get, 'function', 'the array consists of models');
-
-        sand.restore();
-        mod.channel.stopReplying();
-        t.end();
-    });
-});
-
-test('collections/modules/Configs: createProfile()', t => {
-    const mod  = new Module();
-    const save = sand.stub(mod, 'saveModel');
-
-    mod.createProfile({name: 'default'})
-    .then(() => {
-        t.equal(save.notCalled, true, 'does nothing if the profile already exists');
-        return mod.createProfile({name: 'test'});
-    })
-    .then(() => {
-        t.equal(save.calledWithMatch({data: {value: ['default', 'test']}}), true,
-            'adds the profile to the array');
-
-        sand.restore();
-        mod.channel.stopReplying();
-        t.end();
-    });
-});
-
-test('collections/modules/Configs: removeProfile()', t => {
-    const mod  = new Module();
-    const save = sand.stub(mod, 'saveModel');
-    sand.stub(mod, 'findProfileModel').returns(
-        Promise.resolve(new mod.Model({value: ['default', 'test', '1']}))
-    );
-
-    mod.removeProfile({name: 'test2'})
-    .then(() => {
-        t.equal(save.notCalled, true, 'does nothing if the profile does not exist');
-        return mod.removeProfile({name: 'test'});
-    })
-    .then(() => {
-        t.equal(save.calledWithMatch({data: {value: ['default', '1']}}), true,
-            'removes the profile from the array');
-
-        sand.restore();
-        mod.channel.stopReplying();
-        t.end();
-    });
-});
-
-test('collections/modules/Configs: changePassphrase() - reject', t => {
-    const mod    = new Module();
-    const reject = sand.spy(Promise, 'reject');
-
-    mod.changePassphrase({oldPassphrase: '1', newPassphrase: '1'}).catch(() => {});
-    t.equal(reject.called, true,
-        'rejects the promise if the old and new passphrase are the same');
-
-    mod.changePassphrase({oldPassphrase: '', newPassphrase: '1'}).catch(() => {});
-    t.equal(reject.called, true, 'rejects the promise if the old passphrase is empty');
-
-    mod.changePassphrase({oldPassphrase: '1', newPassphrase: ''}).catch(() => {});
-    t.equal(reject.called, true, 'rejects the promise if the new passphrase is empty');
-
-    sand.restore();
-    t.end();
-});
-
-test('collections/modules/Configs: changePassphrase() - success', t => {
-    const mod = new Module();
-    const opt = {
-        model: new Configs.prototype.model({id: '1'}),
-        oldPassphrase: '1',
-        newPassphrase: '2',
-    };
-
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve('newKey'));
-    sand.stub(mod, 'saveModel');
-
-    mod.changePassphrase(opt)
-    .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'changePassphrase', opt),
-            true, 'changes the passphrase');
-        t.equal(mod.saveModel.calledWith({
-            model : opt.model,
-            data  : {value: 'newKey'},
-        }), true, 'saves the new private key');
-
-        sand.restore();
-        mod.channel.stopReplying();
         t.end();
     });
 });

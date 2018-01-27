@@ -12,8 +12,8 @@ test('collections/Files: sync', t => {
 });
 
 test('collections/Files: profileId', t => {
-    const coll = new Files();
-    t.equal(coll.profileId, 'default');
+    t.equal(new Files().profileId, undefined, 'is undefined by default');
+    t.equal(new Files(null, {profileId: 'test'}).profileId, 'test');
     t.end();
 });
 

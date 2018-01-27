@@ -20,8 +20,12 @@ test('collections/Collection: sync', t => {
 });
 
 test('collections/Collection: profileId', t => {
-    const coll = new Collection();
-    t.equal(coll.profileId, 'default');
+    t.equal(new Collection().profileId, undefined, 'is equal to "undefined"');
+
+    const coll = new Collection(null, {profileId: 'default'});
+    t.equal(coll.profileId, 'default', 'changes the profileId');
+    t.equal(coll.model.prototype._profileId, 'default', 'changes model\'s profileId');
+
     t.end();
 });
 

@@ -7,6 +7,7 @@ import Radio from 'backbone.radio';
 import ModuleObj from '../../../../app/scripts/collections/modules/Module';
 import Notes from '../../../../app/scripts/collections/Notes';
 import Edit from '../../../../app/scripts/models/Edit';
+import Profile from '../../../../app/scripts/models/Profile';
 import _ from '../../../../app/scripts/utils/underscore';
 
 class Module extends ModuleObj {
@@ -50,6 +51,16 @@ test('collections/modules/Module: configs', t => {
     t.equal(Module.prototype.configs, conf, 'returns the result of the request');
     t.equal(req.calledWith('collections/Configs', 'findConfigs'), true,
         'makes "findConfigs" request');
+
+    sand.restore();
+    t.end();
+});
+
+test('collections/modules/Module: user', t => {
+    const user = {username: 'alice', privateKey: '--', publicKey: '--pub'};
+    const req  = sand.stub(Radio, 'request').returns(user);
+
+    t.equal(Module.prototype.user, user);
 
     sand.restore();
     t.end();
@@ -168,10 +179,26 @@ test('collections/modules/Module: fetch()', t => {
     });
 });
 
+test('collections/modules/Module: isCollectionCached()', t => {
+    const mod      = new Module();
+    mod.collection = new Notes([{id: 1}, {id: 2}]);
+
+    t.equal(mod.isCollectionCached({}), true, 'returns true');
+    t.equal(mod.isCollectionCached({profileId: 'test'}), false,
+        'returns false if profileId in options and in collection are not the same');
+
+    mod.collection.reset([]);
+    t.equal(mod.isCollectionCached({}), false,
+        'returns false if the collection is empty');
+
+    t.end();
+});
+
 test('collections/modules/Module: saveModel()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', test: '2'});
-    sand.stub(mod, 'configs').get(() => {return {username: 'bob'}});
+    const user  = new Profile({username: 'bob'});
+    Object.defineProperty(mod, 'user', {get: () => user});
 
     sand.spy(model, 'setEscape');
     sand.spy(model, 'validate');
@@ -205,6 +232,12 @@ test('collections/modules/Module: saveModel()', t => {
         t.equal(model.get('sharedBy'), 'alice',
             'does not change "sharedBy" attribute');
 
+        return mod.saveModel({model: user, data: {username: 'alice'}});
+    })
+    .then(() => {
+        t.equal(user.get('sharedBy'), undefined,
+            'does not set "sharedBy" attribute if the model does not use it');
+
         mod.channel.stopReplying();
         sand.restore();
         t.end();
@@ -237,7 +270,9 @@ test('collections/modules/Module: saveModel() - validate', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1'});
     sand.spy(model, 'trigger');
-    Object.defineProperty(mod, 'configs', {get: () => {return {username: 'bob'}}});
+
+    const user  = new Profile({username: 'bob'});
+    Object.defineProperty(mod, 'user', {get: () => user});
 
     mod.saveModel({model})
     .catch(err => {

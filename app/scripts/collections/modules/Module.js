@@ -69,6 +69,15 @@ export default class Module {
         return Radio.request('collections/Configs', 'findConfigs');
     }
 
+    /**
+     * A user's profile model.
+     *
+     * @prop {Object} Backbone model
+     */
+    get user() {
+        return Radio.request('collections/Profiles', 'getUser');
+    }
+
     constructor() {
         this.channel.reply({
             findModel       : this.findModel,
@@ -92,7 +101,7 @@ export default class Module {
     findModel(options = {}) {
         // If id was not provided, return a model with default values
         if (!options[this.idAttribute]) {
-            return Promise.resolve(new this.Model(null, {profileId: options.profileId}));
+            return Promise.resolve(new this.Model(null, options));
         }
 
         // The model exists in the collection
@@ -104,7 +113,7 @@ export default class Module {
         // Instantiate a new model
         const model = new this.Model({
             [this.idAttribute] : options[this.idAttribute],
-        }, {profileId: options.profileId});
+        }, options);
 
         // Fetch and decrypt the model
         return model.fetch()
@@ -117,8 +126,7 @@ export default class Module {
      * @returns {Object|Boolean}
      */
     findCollectionModel(options) {
-        const profileId = options.profileId || 'default';
-        if (!this.collection || this.collection.profileId !== profileId) {
+        if (!this.collection) {
             return false;
         }
 
@@ -159,7 +167,7 @@ export default class Module {
      */
     fetch(options) {
         // If the collection is already cached, return its clone
-        if (this.isCollectionEmpty(options)) {
+        if (this.isCollectionCached(options)) {
             return Promise.resolve(this.collection.clone());
         }
 
@@ -172,17 +180,16 @@ export default class Module {
     }
 
     /**
-     * Check if the collection is empty.
+     * Check if the collection is not empty.
      *
      * @param {Object} options
      * @param {String} [options.profileId]
      * @returns {Boolean}
      */
-    isCollectionEmpty(options) {
-        const profileId = options.profileId || 'default';
+    isCollectionCached(options) {
         return (
-            this.collection && this.collection.length &&
-            this.collection.profileId === profileId
+            (this.collection && this.collection.length !== 0) &&
+            (!options.profileId || this.collection.profileId === options.profileId)
         );
     }
 
@@ -202,8 +209,9 @@ export default class Module {
         const data    = options.data  || model.attributes;
 
         // Assume the model belongs to the user
-        if (!data.sharedBy && !model.get('sharedBy')) {
-            data.sharedBy = this.configs.username;
+        if (!_.isUndefined(model.defaults.sharedBy) &&
+            !data.sharedBy && !model.get('sharedBy')) {
+            data.sharedBy = this.user.get('username');
         }
 
         model.setEscape(data);
@@ -278,7 +286,7 @@ export default class Module {
      * @returns {Promise}
      */
     saveModelObject(options) {
-        const model = new this.Model(options.data, {profileId: options.profileId});
+        const model = new this.Model(options.data, options);
 
         return this.decryptModel(model)
         .then(() => this.saveModel({model, dontValidate: options.dontValidate}))
@@ -318,7 +326,7 @@ export default class Module {
     remove(options) {
         const idAttr = this.idAttribute;
         const data   = {[idAttr]: options[idAttr] || options.model[idAttr]};
-        const model  = new this.Model(data, {profileId: options.profileId});
+        const model  = new this.Model(data, options);
 
         data.trash = 2;
         return this.saveModel({model, data})

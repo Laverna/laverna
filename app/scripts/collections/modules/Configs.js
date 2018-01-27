@@ -5,7 +5,6 @@ import _ from 'underscore';
 import Radio from 'backbone.radio';
 import Module from './Module';
 import Collection from '../Configs';
-import {configNames} from '../configNames';
 
 /**
  * Configs collection module
@@ -26,15 +25,6 @@ export default class Configs extends Module {
         return Collection;
     }
 
-    /**
-     * Config names used for storing encryption configs.
-     *
-     * @returns {Array}
-     */
-    get encryptKeys() {
-        return _.keys(configNames.encryption);
-    }
-
     constructor() {
         super();
 
@@ -43,11 +33,6 @@ export default class Configs extends Module {
             findConfigs         : this.findConfigs,
             saveConfig          : this.saveConfig,
             saveConfigs         : this.saveConfigs,
-            findProfileModel    : this.findProfileModel,
-            findDefaultProfiles : this.findDefaultProfiles,
-            createProfile       : this.createProfile,
-            removeProfile       : this.removeProfile,
-            changePassphrase    : this.changePassphrase,
             createDeviceId      : this.createDeviceId,
             updatePeer          : this.updatePeer,
         }, this);
@@ -76,8 +61,7 @@ export default class Configs extends Module {
 
     /**
      * Find all configs. It overrides the default method to:
-     * 1. Use the default profile's configs if neccessary
-     * 2. Create the default configs if necessary
+     * 1. Create the default configs if necessary
      *
      * @param {Object} options
      * @param {String} options.profileId
@@ -89,9 +73,7 @@ export default class Configs extends Module {
             return Promise.resolve(this.collection);
         }
 
-        return this.getProfileId(options)
-        .then(profileId => _.extend({}, options, {profileId}))
-        .then(opt => super.find(opt))
+        return super.find(options)
         .then(() => this.checkOrCreate());
     }
 
@@ -125,22 +107,6 @@ export default class Configs extends Module {
     }
 
     /**
-     * Find out what profileId this profile uses to store configs.
-     *
-     * @param {Object} options
-     * @param {String} options.profileId
-     * @returns {Promise} resolves with profileId
-     */
-    getProfileId(options) {
-        const {profileId} = options;
-
-        return this.findModel({profileId, name: 'useDefaultConfigs'})
-        .then(model => {
-            return !model || Number(model.get('value')) ? 'default' : profileId;
-        });
-    }
-
-    /**
      * If the collection is empty or there are new available configs, create and
      * save them to database.
      *
@@ -169,6 +135,10 @@ export default class Configs extends Module {
      * @param {String} [options.default] - return this if the config does not exist
      */
     findConfig(options) {
+        if (!this.collection) {
+            return null;
+        }
+
         const model = this.collection.get(options.name);
         return !model ? options.default : model.get('value');
     }
@@ -179,7 +149,7 @@ export default class Configs extends Module {
      * @returns {Object}
      */
     findConfigs() {
-        return this.collection.getConfigs();
+        return this.collection ? this.collection.getConfigs() : null;
     }
 
     saveFromArray(options) {
@@ -197,15 +167,10 @@ export default class Configs extends Module {
      * @param {Object} options
      * @param {Object} options.config - config object with name and value
      * @param {String} options.profileId
-     * @param {Object} (options.useDefault) - useDefault config model
      * @returns {Promise}
      */
     saveConfig(options) {
         const {config} = options;
-
-        if (config.name === 'useDefaultConfigs') {
-            return this.saveModel({model: options.useDefault, data: config});
-        }
 
         return this.findModel(_.extend({}, options, {name: config.name}))
         .then(model => {
@@ -223,7 +188,6 @@ export default class Configs extends Module {
      *
      * @param {Object} options
      * @param {Array} options.configs - an array of config objects
-     * @param {Object} options.useDefault - model
      * @param {String} options.profileId
      * @returns {Promise}
      */
@@ -240,112 +204,6 @@ export default class Configs extends Module {
         });
 
         return Promise.all(promises);
-    }
-
-    /**
-     * Find all available profiles.
-     *
-     * @returns {Promise} resolves with appProfiles model
-     */
-    findProfileModel() {
-        return this.findModel({name: 'appProfiles', profileId: 'default'});
-    }
-
-    /**
-     * Find all profiles that use the default profile's configs.
-     *
-     * @returns {Promise} resolves with an array of profiles
-     */
-    findDefaultProfiles() {
-        return this.findProfileModel()
-        .then(model => this.findProfileUseDefaults(model.get('value')))
-        .then(useDefaults => {
-            const profiles = _.filter(useDefaults, profile => {
-                return (
-                    Number(profile.get('value')) === 1 ||
-                    profile.profileId === 'default'
-                );
-            });
-
-            return _.pluck(profiles, 'profileId');
-        });
-    }
-
-    /**
-     * Fetch useDefaultConfigs model from each available profile.
-     *
-     * @param {Array} profiles - an array of profiles
-     * @returns {Promise} resolves with an array of useDefaultConfigs models.
-     */
-    findProfileUseDefaults(profiles) {
-        const promises = [];
-
-        _.each(profiles, profileId => {
-            promises.push(this.findModel({profileId, name: 'useDefaultConfigs'}));
-        });
-
-        return Promise.all(promises);
-    }
-
-    /**
-     * Create a new profile.
-     *
-     * @param {Object} options
-     * @param {String} options.name - profile name
-     * @returns {Promise}
-     */
-    createProfile(options) {
-        return this.findProfileModel()
-        .then(model => {
-            const value = model.get('value');
-
-            if (!_.contains(value, options.name)) {
-                value.push(options.name);
-                return this.saveModel({model, data: {value}});
-            }
-        });
-    }
-
-    /**
-     * Remove a profile.
-     *
-     * @todo clear localforage database
-     * @param {Object} options
-     * @param {String} options.name - profile name
-     * @returns {Promise}
-     */
-    removeProfile(options) {
-        return this.findProfileModel()
-        .then(model => {
-            let value = model.get('value');
-
-            if (_.contains(value, options.name)) {
-                value = _.without(value, options.name);
-                return this.saveModel({model, data: {value}});
-            }
-        });
-    }
-
-    /**
-     * Change the private key's passphrase.
-     *
-     * @param {Object} options
-     * @param {Object} options.model - "privateKey" model
-     * @param {String} options.oldPassphrase
-     * @param {String} options.newPassphrase
-     * @returns {Promise}
-     */
-    changePassphrase(options) {
-        if (options.oldPassphrase === options.newPassphrase) {
-            return Promise.reject('New and old passphrase are the same');
-        }
-        else if (!options.oldPassphrase.length || !options.newPassphrase.length) {
-            return Promise.reject('You did not provide old or new passphrase');
-        }
-
-        const {model} = options;
-        return Radio.request('models/Encryption', 'changePassphrase', options)
-        .then(value => this.saveModel({model, data: {value}}));
     }
 
     /**

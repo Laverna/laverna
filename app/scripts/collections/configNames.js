@@ -18,11 +18,8 @@ const configNames = {
     /**
      * Main configs.
      *
-     * @prop {Array} appProfiles - profile names stored in JSON format
      * @prop {String} appLang - localization (en|fr...etc)
      * @prop {String} theme - theme
-     * @prop {String} useDefaultConfigs - (0|1) 1 if the profile should
-     * use settings from the main profile.
      * @prop {String} pagination - the number of notes shown per page
      * @prop {String} sortnotes - key by which notes should be sorted
      * @prop {String} sortnotebooks - key by which notebooks should be sorted
@@ -30,10 +27,8 @@ const configNames = {
      * in the navbar
      */
     general: {
-        appProfiles        : ['default'],
         appLang            : '',
         theme              : '',
-        useDefaultConfigs  : '1',
 
         pagination         : '10',
         sortnotes          : 'created',
@@ -58,7 +53,6 @@ const configNames = {
      * Synchronization settings.
      *
      * @prop {String} signalServer
-     * @prop {String} username - username claimed on the signaling server
      * @prop {String} deviceId - unique device ID
      * @prop {Array}  peers    - an array of peers. Every item in the array
      * has the following structure {username, deviceId, lastSeen}
@@ -68,7 +62,6 @@ const configNames = {
      */
     sync: {
         signalServer       : 'http://localhost:3000',
-        username           : '',
         deviceId           : '',
         peers              : [],
         cloudStorage       : '0',
@@ -80,15 +73,11 @@ const configNames = {
      * Encryption settings.
      *
      * @prop {String} encrypt - disable/enable encryption (0|1)
-     * @prop {String} privateKey - private key
-     * @prop {String} publicKey - public key
      * @prop {Object} encryptBackup - used for storing the previous encryption
      * settings.
      */
     encryption: {
         encrypt       : '0',
-        privateKey    : '',
-        publicKey     : '',
         encryptBackup : {},
     },
 

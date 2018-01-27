@@ -4,6 +4,7 @@
  */
 import Radio from 'backbone.radio';
 
+import Profiles from './Profiles';
 import Configs from './Configs';
 import Users from './Users';
 import Files from './Files';
@@ -20,6 +21,7 @@ import Edits from './Edits';
  */
 function initializer() {
     // Instantiate all collection modules to start listening to requests
+    new Profiles();
     new Configs();
     new Users();
     new Files();
@@ -30,9 +32,7 @@ function initializer() {
     new Edits();
 
     // Find or create configs
-    return Radio.request('collections/Configs', 'find', {
-        profileId: Radio.request('utils/Url', 'getProfileId') || 'default',
-    });
+    return Radio.request('collections/Profiles', 'find');
 }
 
 // Add a new initializer

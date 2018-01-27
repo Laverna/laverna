@@ -58,7 +58,7 @@ export default class Configs extends Collection {
             }
 
             // Create a new config and save it
-            const model = new this.model({name, value});
+            const model = new this.model({name, value}, {profileId: this.profileId});
             this.add(model);
             promises.push(model.save());
         });

@@ -41,8 +41,7 @@ export default class Controller extends Mn.Object {
     }
 
     init() {
-        this.options.profileLink = Radio.request('utils/Url', 'getProfileLink');
-        this.options.tab         = this.options.tab || 'general';
+        this.options.tab = this.options.tab || 'general';
         this.show();
         this.listenToEvents();
     }

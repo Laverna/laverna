@@ -12,7 +12,6 @@ import Editor from './editor/View';
 import Encryption from './encryption/View';
 import Keybindings from './keybindings/View';
 import Sync from './sync/View';
-import Profiles from './profiles/View';
 import ImportExport from './importExport/View';
 
 const log = deb('lav:components/settings/show/Controller');
@@ -38,7 +37,6 @@ export default class Controller extends Mn.Object {
             Encryption,
             Keybindings,
             Sync,
-            Profiles,
             ImportExport,
         };
     }
@@ -101,16 +99,9 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     fetch() {
-        const {profileId} = this.options;
-
         return Promise.all([
-            this.configsChannel.request('find', {profileId}),
-            Radio.request('collections/Users', 'find', {profileId}),
-            this.configsChannel.request('findModel', {
-                profileId,
-                name: 'useDefaultConfigs',
-            }),
-            this.configsChannel.request('findProfileModel'),
+            this.configsChannel.request('find'),
+            Radio.request('collections/Users', 'find'),
         ]);
     }
 
@@ -120,12 +111,12 @@ export default class Controller extends Mn.Object {
      * @param {Array}
      */
     show(results) {
-        const [collection, users, useDefault, profiles] = results;
+        const [collection, users] = results;
         const TabView = this.views[_.capitalize(this.options.tab)];
 
         // Render the view
         this.view = new View(_.extend(
-            {collection, users, useDefault, profiles, TabView},
+            {collection, users, TabView},
             this.options
         ));
         Radio.request('Layout', 'show', {region: 'content', view: this.view});
@@ -176,7 +167,6 @@ export default class Controller extends Mn.Object {
 
         return this.configsChannel.request('saveConfigs', {
             configs    : this.changes,
-            useDefault : this.view.options.useDefault,
         })
         .then(() => this.view.triggerMethod('saved'))
         .then(() => this.changes = [])
@@ -222,7 +212,7 @@ export default class Controller extends Mn.Object {
      */
     navigate(options = {}) {
         const url = options.url || '/notes';
-        Radio.request('utils/Url', 'navigate', {url, includeProfile: true});
+        Radio.request('utils/Url', 'navigate', {url});
 
         // Reload the page to apply changes
         if (url.search('settings') === -1) {

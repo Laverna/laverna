@@ -38,29 +38,53 @@ export default class Controller extends Mn.Object {
     init() {
         return new Promise((resolve, reject) => {
             this.promise = {resolve, reject};
-            this.show();
-            this.listenToEvents();
+            this.fetchShow();
         });
+    }
+
+    /**
+     * Fetch profiles and show the auth view.
+     *
+     * @returns {Promise}
+     */
+    fetchShow() {
+        return Radio.request('collections/Profiles', 'find')
+        .then(profiles => {
+            this.profiles = profiles;
+            this.show();
+        })
+        .catch(err => log('error', err));
     }
 
     /**
      * Render the view.
      */
     show() {
-        this.view = new View({configs: this.configs});
+        log('profiles', this.profiles);
+        this.view = new View({profiles: this.profiles});
         Radio.request('Layout', 'show', {
             region : 'brand',
             view   : this.view,
         });
+
         this.view.triggerMethod('ready');
+        this.listenToEvents();
     }
 
     /**
      * Start listening to events.
      */
     listenToEvents() {
-        this.listenTo(this.view, 'destroy', this.destroy);
+        this.listenTo(this.view, 'destroy', this.onViewDestroy);
         this.listenTo(this.view, 'submit', this.onSubmit);
+        this.listenTo(this.view, 'setup', this.onSetup);
+    }
+
+    /**
+     * Stop listening to view events.
+     */
+    onViewDestroy() {
+        this.stopListening(this.view);
     }
 
     /**
@@ -70,17 +94,28 @@ export default class Controller extends Mn.Object {
      */
     onSubmit() {
         const passphrase = this.view.ui.password.val().trim();
+        const username   = this.view.ui.username.val().trim();
 
-        return Radio.request('models/Encryption', 'readKeys', {
-            passphrase,
-            privateKey : this.configs.privateKey,
-            publicKeys : this.configs.publicKeys,
-        })
+        Radio.request('collections/Profiles', 'setUser', {username});
+
+        return Radio.request('models/Encryption', 'readKeys', {passphrase})
+        // Fetch a user's configs
+        .then(() => Radio.request('collections/Configs', 'find', {profileId: username}))
         .then(() => this.onSuccess())
         .catch(error => {
             log('readKeys error', error);
             this.view.triggerMethod('auth:error', {error});
         });
+    }
+
+    /**
+     * Show the setup form to register a new account.
+     *
+     * @returns {Promise}
+     */
+    onSetup() {
+        return Radio.request('components/setup', 'start', {newIdentity: true})
+        .then(() => this.fetchShow());
     }
 
     /**

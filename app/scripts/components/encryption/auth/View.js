@@ -21,13 +21,21 @@ export default class View extends Mn.View {
     ui() {
         return {
             password : 'input[name=password]',
-            btn      : '.btn--brand',
+            username : 'select[name=username]',
+            btn      : '.btn[type=submit]',
         };
     }
 
     triggers() {
         return {
-            'submit .form-wrapper': 'submit',
+            'submit .form-wrapper' : 'submit',
+            'click .btn--setup'    : 'setup',
+        };
+    }
+
+    serializeData() {
+        return {
+            profiles: this.options.profiles.toJSON(),
         };
     }
 

@@ -30,6 +30,8 @@ import './collections/modules/main';
 import './models/diffsync/main';
 
 // Components
+import './components/setup/main';
+import './components/encryption/main';
 import './components/confirm/Controller';
 import './components/navbar/Controller';
 import './components/help/controller';
@@ -41,8 +43,6 @@ import './components/fuzzySearch/main';
 import './components/electronSearch/Controller';
 import './components/importExport/main';
 import './components/share/Controller';
-import './components/setup/main';
-import './components/encryption/main';
 import './components/dropbox/main';
 
 // Router based components

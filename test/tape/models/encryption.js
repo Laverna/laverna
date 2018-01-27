@@ -11,11 +11,14 @@ import Radio from 'backbone.radio';
 import Encryption from '../../../app/scripts/models/Encryption';
 import Users from '../../../app/scripts/collections/Users';
 import User  from '../../../app/scripts/models/User';
+import Profile  from '../../../app/scripts/models/Profile';
 import Notes from '../../../app/scripts/collections/Notes';
 
 let sand;
+const user = new Profile({username: 'bob', privateKey: 'private', publicKey: 'public'});
 test('models/Encryption: before()', t => {
     sand = sinon.sandbox.create();
+    Radio.reply('collections/Profiles', 'getUser', user);
     localStorage.clear();
     t.end();
 });
@@ -28,6 +31,11 @@ test('models/Encryption: channel', t => {
 test('models/Encryption: configs', t => {
     Radio.replyOnce('collections/Configs', 'findConfigs', {});
     t.equal(typeof Encryption.prototype.configs, 'object');
+    t.end();
+});
+
+test('models/Encryption: user', t => {
+    t.equal(Encryption.prototype.user, user.attributes);
     t.end();
 });
 
@@ -115,8 +123,6 @@ test('models/Encryption: readKeys() - resolve', t => {
     const privateKey = {decrypt: () => true, toPublic: () => 'pub'};
     read.returns({keys: [privateKey]});
     sand.stub(enc, 'readPublicKeys').returns(Promise.resolve(['pub']));
-
-    Radio.replyOnce('collections/Configs', 'findConfigs', {username: 'bob'});
 
     enc.readKeys({privateKey: 'priv', publicKey: 'pub'})
     .then(res => {
@@ -276,11 +282,6 @@ test('models/Encryption: getUserKeys()', t => {
         privateKeys : ['privateKey'],
         publicKeys  : {bob: 'pubKey', alice: 'pubKey', peer: 'pubKey'},
     };
-    Object.defineProperty(enc, 'configs', {
-        get: () => {
-            return {username: 'bob'};
-        },
-    });
 
     t.deepEqual(enc.getUserKeys('bob'), {
         publicKeys  : [enc.keys.publicKeys.bob],

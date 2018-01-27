@@ -6,6 +6,14 @@
         </header>
 
         <div class="form-group form--icon">
+            <select name="username" class="form-control input-lg input--brand">
+            <% _.each(profiles, function(profile) { %>
+                <option value="{{profile.username}}">{{profile.username}}</option>
+            <% }) %>
+            </select>
+        </div>
+
+        <div class="form-group form--icon">
             <input class="form-control input-lg input--brand" type="password" name="password"
             placeholder="{{ _.i18n('Encryption Password') }}" required="" autofocus />
         </div>
@@ -13,6 +21,12 @@
         <div class="form-group">
             <button class="btn btn-lg btn-block btn--brand" type="submit">
                 {{ _.i18n('Unlock') }}
+            </button>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-lg btn-block btn--brand btn--setup" type="button" style="border:0">
+                {{ _.i18n('Create a new identity') }}
             </button>
         </div>
     </form>

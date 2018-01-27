@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import '../../../../../app/scripts/utils/underscore';
 
 import View from '../../../../../app/scripts/components/encryption/auth/View';
+import Profiles from '../../../../../app/scripts/collections/Profiles';
 
 let sand;
 test('encryption/auth/View: before()', t => {
@@ -18,7 +19,7 @@ test('encryption/auth/View: ui()', t => {
     const ui = View.prototype.ui();
     t.equal(typeof ui, 'object');
     t.equal(ui.password, 'input[name=password]');
-    t.equal(ui.btn, '.btn--brand');
+    t.equal(ui.btn, '.btn[type=submit]');
 
     t.end();
 });
@@ -28,6 +29,8 @@ test('encryption/auth/View: triggers()', t => {
     t.equal(typeof triggers, 'object');
     t.equal(triggers['submit .form-wrapper'], 'submit',
         'triggers "submit" event');
+    t.equal(triggers['click .btn--setup'], 'setup',
+        'triggers "setup" event');
 
     t.end();
 });

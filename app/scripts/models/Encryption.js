@@ -38,6 +38,15 @@ export default class Encryption {
         return Radio.request('collections/Configs', 'findConfigs');
     }
 
+    /**
+     * A user's profile.
+     *
+     * @prop {Object}
+     */
+    get user() {
+        return Radio.request('collections/Profiles', 'getUser').attributes;
+    }
+
     constructor(options = {}) {
         this.options = options;
         this.openpgp = openpgp;
@@ -105,8 +114,9 @@ export default class Encryption {
      * @returns {Object}
      */
     readKeys(options = this.options) {
-        this.options     = _.extend(this.options, options);
-        const privateKey = this.openpgp.key.readArmored(options.privateKey).keys[0];
+        this.options   = _.extend(this.options, options);
+        let privateKey = this.options.privateKey || this.user.privateKey;
+        privateKey     = this.openpgp.key.readArmored(privateKey).keys[0];
 
         /**
          * A user's key pairs.
@@ -127,7 +137,7 @@ export default class Encryption {
         }
 
         // My public key
-        this.keys.publicKeys[this.configs.username] = this.keys.privateKeys[0].toPublic();
+        this.keys.publicKeys[this.user.username] = this.keys.privateKeys[0].toPublic();
 
         return this.readPublicKeys()
         .then(() => this.keys);
@@ -199,7 +209,7 @@ export default class Encryption {
      * @returns {Promise} resolves with the new private key
      */
     changePassphrase(options) {
-        const privateKey = this.openpgp.key.readArmored(this.options.privateKey).keys[0];
+        const privateKey = this.openpgp.key.readArmored(this.user.privateKey).keys[0];
 
         // Try to decrypt the private key
         if (!privateKey.decrypt(options.oldPassphrase)) {
@@ -260,10 +270,10 @@ export default class Encryption {
      * @return {Object} - {privateKeys, publicKeys}
      */
     getUserKeys(username) {
-        const publicKeys = [this.keys.publicKeys[this.configs.username]];
+        const publicKeys = [this.keys.publicKeys[this.user.username]];
 
         if (username && this.keys.publicKeys[username] &&
-            username !== this.configs.username) {
+            username !== this.user.username) {
             publicKeys.push(this.keys.publicKeys[username]);
         }
 
@@ -276,7 +286,7 @@ export default class Encryption {
 
     /**
      * Encrypt string data with PGP keys.
-     * If keys aren't provided, it will use the keys from this.configs property.
+     * If keys aren't provided, it will use the keys from this.user property.
      *
      * @public
      * @param {Object} options
@@ -293,7 +303,7 @@ export default class Encryption {
 
     /**
      * Decrypt armored data with PGP keys.
-     * If keys aren't provided, it will use the keys from this.configs property.
+     * If keys aren't provided, it will use the keys from this.user property.
      *
      * @public
      * @param {Object} options

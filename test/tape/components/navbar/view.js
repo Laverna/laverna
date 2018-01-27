@@ -261,22 +261,17 @@ test('navbar/View: serializeData()', t => {
     const view = new View({
         args         : {titleOptions: {section: 'Test title'}},
         notebooks    : new Notebooks(),
-        profileModel : {get: sand.stub().returns(['test1', 'test2'])},
         configs      : {navbarNotebooksMax : 10},
     });
     const req  = sand.stub(Radio, 'request').returns('testurl');
     sand.spy(_, 'first');
 
     const res = view.serializeData();
-    t.equal(req.calledWith('utils/Url', 'getProfileLink'), true,
-        'requests the profile link');
     t.equal(_.first.calledWith(view.options.notebooks.toJSON(), 10), true,
         'shows only the first 10 notebooks');
 
     t.equal(typeof res, 'object', 'returns an object');
-    t.equal(res.url, 'testurl');
     t.equal(res.title, 'Test title');
-    t.deepEqual(res.profiles, ['test1', 'test2']);
 
     view.destroy();
     sand.restore();
@@ -293,12 +288,6 @@ test('navbar/View: templateContext()', t => {
     context.configs.cloudStorage = '';
     t.equal(context.isSyncEnabled(), false,
         'isSyncEnabled returns false if dropbox is disabled');
-
-    const req = sand.stub(Radio, 'request').returns('/test1');
-    t.equal(context.getProfileLink('test1'), '/test1',
-        'returns a profile link');
-    t.equal(req.calledWith('utils/Url', 'getProfileLink', {profileId: 'test1'}), true,
-        'makes a getProfileLink request');
 
     sand.restore();
     t.end();

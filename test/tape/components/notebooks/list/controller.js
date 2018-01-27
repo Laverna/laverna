@@ -66,7 +66,7 @@ test('notebooks/list/Controller: init()', t => {
 });
 
 test('notebooks/list/Controller: fetch()', t => {
-    const opt = {profileId: 'test', conditions: {trash: 0}};
+    const opt = {conditions: {trash: 0}};
     const con = new Controller(opt);
     const req = sand.stub(Radio, 'request');
 
@@ -163,13 +163,11 @@ test('notebooks/list/Controller: navigateForm()', t => {
     con.navigateForm();
     t.equal(req.calledWith('utils/Url', 'navigate', {
         url            : '/notebooks/add',
-        includeProfile : true,
     }), true, 'navigates to notebook form page');
 
     con.navigateForm({url: '/tags/add'});
     t.equal(req.calledWith('utils/Url', 'navigate', {
         url            : '/tags/add',
-        includeProfile : true,
     }), true, 'navigates to tag form page');
 
     sand.restore();

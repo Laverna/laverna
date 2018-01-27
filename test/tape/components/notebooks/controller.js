@@ -46,7 +46,7 @@ test('Controller: notebookFormReply()', t => {
 
     const res = controller.notebookFormReply({profileId: 'test', id: '1'});
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(controller.notebookForm.calledWith('test', '1'), true,
+    t.equal(controller.notebookForm.calledWith('1'), true,
         'calls notebookForm method');
 
     sand.restore();

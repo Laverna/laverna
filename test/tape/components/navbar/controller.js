@@ -24,16 +24,6 @@ test('navbar/Controller: configs', t => {
     t.end();
 });
 
-test('navbar/Controller: profileId', t => {
-    const req = sand.stub(Radio, 'request').returns('test');
-    t.equal(Controller.prototype.profileId, 'test');
-    t.equal(req.calledWith('utils/Url', 'getProfileId'), true,
-        'makes getProfileId request');
-
-    sand.restore();
-    t.end();
-});
-
 test('navbar/Controller: constructor()', t => {
     const reply = sand.stub(Controller.prototype.channel, 'reply');
     const con   = new Controller();
@@ -105,8 +95,6 @@ test('navbar/Controller: init()', t => {
 
 test('navbar/Controller: fetch()', t => {
     const con = new Controller({filter: 'tag'});
-
-    Object.defineProperty(con, 'profileId', {get: () => 'test'});
     sand.stub(con, 'changeDocumentTitle').returns({title: 'Test'});
 
     const req = sand.stub(Radio, 'request');
@@ -117,16 +105,12 @@ test('navbar/Controller: fetch()', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
-        t.equal(req.calledWith('collections/Configs', 'findProfileModel'), true,
-            'fetches the profile model');
         t.equal(req.calledWith('collections/Notebooks', 'find', {
-            profileId  : 'test',
             conditions : {trash  : 0},
         }), true, 'fetches notebooks collection');
         t.equal(con.changeDocumentTitle.calledWithMatch({filter: 'tag'}), true,
             'changes document title');
 
-        t.deepEqual(con.profileModel, {id: '1'}, 'creates profileModel property');
         t.deepEqual(con.notebooks, {id: 'id-1'}, 'creates notebooks property');
         t.deepEqual(con.options.titleOptions, {title: 'Test'},
             'saves the result of changeTitle method');

@@ -23,6 +23,7 @@ test('settings/show/general/View: behaviors()', t => {
     t.equal(Array.isArray(behaviors), true, 'returns an array');
     t.equal(behaviors.indexOf(Behavior) !== -1, true, 'uses the behavior');
 
+    sand.restore();
     t.end();
 });
 
@@ -54,8 +55,6 @@ test('settings/show/general/View: serializeData()', t => {
     t.deepEqual(typeof res.themes, 'object', 'has themes');
     t.equal(res.appLang, 'en', 'has appLang');
     t.equal(res.theme, 'default', 'has theme');
-    t.equal(res.profileId, 'test', 'has profileId');
-    t.equal(res.useDefault, useDefault.attributes, 'has useDefault model');
 
     t.end();
 });
@@ -63,18 +62,6 @@ test('settings/show/general/View: serializeData()', t => {
 test('settings/show/general/View: templateContext()', t => {
     const view    = new View();
     const context = view.templateContext();
-    context.profileId = 'test';
-
-    t.equal(context.isDefaultProfile(), false,
-        'returns false if it is not the default profile');
-
-    context.profileId = null;
-    t.equal(context.isDefaultProfile(), true,
-        'returns true if the profileId is null');
-
-    context.profileId = 'default';
-    t.equal(context.isDefaultProfile(), true,
-        'returns true if the profileId is equal to "default"');
 
     context.appLang = 'en';
     t.equal(context.selectLocale('en'), ' selected',

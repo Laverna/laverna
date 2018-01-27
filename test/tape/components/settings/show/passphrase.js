@@ -79,7 +79,7 @@ test('settings/show/encryption/Passphrase: save()', t => {
     view.ui.newPassphrase.val.returns('2');
     view.save()
     .then(() => {
-        t.equal(req.calledWith('collections/Configs', 'changePassphrase', {
+        t.equal(req.calledWith('collections/Profiles', 'changePassphrase', {
             model         : view.model,
             oldPassphrase : '1',
             newPassphrase : '2',

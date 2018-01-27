@@ -25,15 +25,6 @@ test('linkDialog/Controller: notesChannel', t => {
     t.end();
 });
 
-test('linkDialog/Controller: constructor()', t => {
-    sand.stub(Radio, 'request').returns('test');
-    const con = new Controller();
-    t.equal(con.profileId, 'test', 'creates profileId property');
-
-    sand.restore();
-    t.end();
-});
-
 test('linkDialog/Controller: onDestroy()', t => {
     const con     = new Controller();
     const resolve = sand.stub();
@@ -107,10 +98,8 @@ test('linkDialog/Controller: renderDropdown()', t => {
 
     con.renderDropdown()
     .then(() => {
-        t.equal(req.calledWith('find', {
-            pageSize  : 10,
-            profileId : con.profileId,
-        }), true, 'fetches notes collection');
+        t.equal(req.calledWith('find', {pageSize: 10}), true,
+            'fetches notes collection');
         t.deepEqual(con.view.options.collection, {models: []});
         t.equal(con.view.renderDropdown.called, true, 'renders the dropdown view');
 
@@ -174,9 +163,8 @@ test('linkDialog/Controller: createNote()', t => {
 
     con.createNote()
     .then(() => {
-        t.equal(save.calledWithMatch('saveModelObject', {
-            profileId : con.profileId,
-            data      : {title: 'Test'},
+        t.equal(save.calledWith('saveModelObject', {
+            data: {title: 'Test'},
         }), true, 'creates a new note');
 
         t.equal(req.calledWithMatch('utils/Url', 'getNoteLink', {

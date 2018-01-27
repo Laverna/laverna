@@ -84,19 +84,10 @@ test('settings/show/Controller: fetch()', t => {
 
     const res    = con.fetch();
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(req.calledWith('find', {profileId: 'test'}), true,
-        'fetches configs collection');
+    t.equal(req.calledWith('find'), true, 'fetches configs collection');
 
-    t.equal(radReq.calledWith('collections/Users', 'find', {profileId: 'test'}),
+    t.equal(radReq.calledWith('collections/Users', 'find'),
         true, 'fetches users');
-
-    t.equal(req.calledWith('findModel', {
-        profileId : 'test',
-        name      : 'useDefaultConfigs',
-    }), true, 'fetches "useDefaultConfigs" model');
-
-    t.equal(req.calledWith('findProfileModel'), true,
-        'fetches profiles model');
 
     sand.restore();
     t.end();
@@ -174,7 +165,6 @@ test('settings/show/Controller: save()', t => {
     .then(() => {
         t.equal(req.calledWith('saveConfigs', {
             configs    : changes,
-            useDefault : con.view.options.useDefault,
         }), true, 'saves all changes');
         t.equal(con.changes.length, 0, 'resets changes');
 
@@ -228,14 +218,12 @@ test('settings/show/Controller: navigate()', t => {
 
     con.navigate({url: '/test1'});
     t.equal(req.calledWith('utils/Url', 'navigate', {
-        url            : '/test1',
-        includeProfile : true,
+        url : '/test1',
     }), true, 'makes "navigate" request');
 
     con.navigate();
     t.equal(req.calledWith('utils/Url', 'navigate', {
-        url            : '/notes',
-        includeProfile : true,
+        url : '/notes',
     }), true, 'navigates to /notes page by default');
     t.equal(document.location.reload.called, true,
         'reloads the page to apply settings if it is not a settings page');

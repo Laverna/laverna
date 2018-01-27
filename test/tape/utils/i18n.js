@@ -8,7 +8,7 @@ import i18next from 'i18next';
 import i18nextXhr from 'i18next-xhr-backend';
 import Radio from 'backbone.radio';
 
-import {default as I18n, initializer} from '../../../app/scripts/utils/I18n';
+import {default as I18n, initialize} from '../../../app/scripts/utils/I18n';
 
 let sand;
 test('Initializer: before()', t => {
@@ -16,7 +16,7 @@ test('Initializer: before()', t => {
     t.end();
 });
 
-test('I18n: initialize()', t => {
+test('utils/I18nn: initialize()', t => {
     const i18n = new I18n();
     sand.stub(i18n, 'getLang').returns(Promise.resolve('en'));
     sand.stub(i18n, 'initLocale');
@@ -36,7 +36,7 @@ test('I18n: initialize()', t => {
     });
 });
 
-test('I18n: initialize() - reject', t => {
+test('utils/I18nn: initialize() - reject', t => {
     const i18n = new I18n();
     sand.stub(i18n, 'getLang').returns(Promise.reject('error test'));
 
@@ -46,7 +46,7 @@ test('I18n: initialize() - reject', t => {
     });
 });
 
-test('I18n: initLocale()', t => {
+test('utils/I18nn: initLocale()', t => {
     const i18n = new I18n();
 
     sand.spy(i18next, 'use');
@@ -64,7 +64,7 @@ test('I18n: initLocale()', t => {
     });
 });
 
-test('I18n: getLang() - configs', t => {
+test('utils/I18nn: getLang() - configs', t => {
     const i18n = new I18n();
     const req  = sand.stub(Radio, 'request').returns('en');
     sand.spy(i18n, 'getBrowserLang');
@@ -86,7 +86,7 @@ test('I18n: getLang() - configs', t => {
     });
 });
 
-test('I18n: getLang() - browser', t => {
+test('utils/I18nn: getLang() - browser', t => {
     const i18n = new I18n();
     sand.stub(i18n, 'getBrowserLang').returns('es');
 
@@ -102,7 +102,7 @@ test('I18n: getLang() - browser', t => {
     });
 });
 
-test('I18n: getBrowserLang()', t => {
+test('utils/I18nn: getBrowserLang()', t => {
     const i18n = new I18n();
     const res  = i18n.getBrowserLang();
 
@@ -111,12 +111,27 @@ test('I18n: getBrowserLang()', t => {
     t.end();
 });
 
-test('I18n: initializes itself', t => {
+test('utils/I18nn: initializes itself', t => {
     const stub = sand.stub(I18n.prototype, 'initialize');
-    initializer();
+    const req  = sand.stub(Radio, 'request');
 
-    t.equal(typeof initializer, 'function', 'it is a function');
+    t.equal(typeof initialize, 'function', 'it is a function');
+
+    const callback = initialize();
+
+    t.equal(req.calledWith('utils/Initializer', 'add', {
+        callback,
+        name: 'App:utils',
+    }), true, 'initializes at start');
+
+    t.equal(req.calledWith('utils/Initializer', 'add', {
+        callback,
+        name: 'App:last',
+    }), true, 'initializes before app starts');
+
+    callback();
     t.equal(stub.called, true, 'calls initialize method');
+
     sand.restore();
     t.end();
 });

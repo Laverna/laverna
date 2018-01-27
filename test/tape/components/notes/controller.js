@@ -35,13 +35,12 @@ test('notes/Controller: set options', t => {
     t.equal(controller._argsOld, undefined, 'filter backup is empty for default');
 
     controller._args   = {test: 'id'};
-    controller.options = ['test-db', 'tag', 'my-tag', '2', 'my-note-id'];
+    controller.options = ['tag', 'my-tag', '2', 'my-note-id'];
 
     t.deepEqual(controller._argsOld, {test: 'id'}, 'updates the filter backup');
     t.deepEqual(controller.options, controller._args,
         'uses _args property');
     t.deepEqual(controller._args, {
-        profileId : 'test-db',
         filter    : 'tag',
         query     : 'my-tag',
         page      : '2',
@@ -80,13 +79,9 @@ test('notes/Controller: onListDestroy()', t => {
     controller.onListDestroy();
     t.equal(req.calledWith('utils/Url', 'getHash'), true,
         'makes getHash request');
-    t.equal(controller.options.profileId, 'test-profile',
-        'does not change filter options');
 
     req.returns('notebooks');
     controller.onListDestroy();
-    t.notEqual(controller.options.profileId, 'test-profile',
-        'resets filter options');
 
     sand.restore();
     t.end();
@@ -134,15 +129,14 @@ test('notes/Controller: showForm()', t => {
     const init      = sand.stub(Form.prototype, 'init');
     const showNotes = sand.stub(controller, 'showNotes');
 
-    controller.options = ['testdb'];
-    controller.showForm('testdb', 'id-1');
+    controller.showForm('id-1');
     t.equal(_.isEmpty(controller.options), false, 'options object is not empty');
     t.equal(showNotes.notCalled, true,
         'does not show the sidebar if it is already shown');
     t.equal(init.called, true, 'shows the form');
 
     controller._args = {};
-    controller.showForm('testdb', 'id-1');
+    controller.showForm('id-1');
     t.equal(_.isEmpty(controller.options), true, 'options object is empty');
     t.equal(showNotes.called, true,
         'does not show the sidebar if it is already shown');

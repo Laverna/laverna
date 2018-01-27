@@ -48,7 +48,7 @@ test('notebooks/form/tag/Controller: init()', t => {
 });
 
 test('notebooks/form/tag/Controller: fetch()', t => {
-    const opt = {profileId: 'test', id: '1'};
+    const opt = {id: '1'};
     const con = new Controller(opt);
     const req = sand.stub(Radio, 'request');
 
@@ -132,7 +132,6 @@ test('notebooks/form/tag/Controller: redirect()', t => {
     t.equal(req.calledWith('utils/Url', 'navigate', {
         trigger        : false,
         url            : '/notebooks',
-        includeProfile : true,
     }), true, 'navigates to notebooks page');
 
     sand.restore();

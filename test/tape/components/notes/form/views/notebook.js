@@ -12,12 +12,12 @@ import View from '../../../../../../app/scripts/components/notes/form/views/Note
 import Notebook from '../../../../../../app/scripts/models/Notebook';
 /* eslint-enable */
 
-test('Notebook: tagName', t => {
+test('notes/form/Notebook: tagName', t => {
     t.equal(View.prototype.tagName, 'option');
     t.end();
 });
 
-test('Notebook: onRender()', t => {
+test('notes/form/Notebook: onRender()', t => {
     const view = new View({model: new Notebook({id: '1'})});
     view.$el   = {attr: sinon.stub()};
 

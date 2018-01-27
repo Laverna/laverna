@@ -18,15 +18,15 @@ test('notebooks/Router: appRoutes', t => {
     const routes = Router.prototype.appRoutes;
     t.equal(typeof routes, 'object', 'is an object');
 
-    t.equal(routes['(p/:profile/)notebooks'], 'showList',
+    t.equal(routes['notebooks'], 'showList',
         'shows a list of notebooks and tags');
-    t.equal(routes['(p/:profile/)notebooks/add'], 'notebookForm',
+    t.equal(routes['notebooks/add'], 'notebookForm',
         'shows notebook add form');
-    t.equal(routes['(p/:profile/)notebooks/edit/:id'], 'notebookForm',
+    t.equal(routes['notebooks/edit/:id'], 'notebookForm',
         'shows notebook edit form');
-    t.equal(routes['(p/:profile/)tags/add'], 'tagForm',
+    t.equal(routes['tags/add'], 'tagForm',
         'shows tag add form');
-    t.equal(routes['(p/:profile/)tags/edit/:id'], 'tagForm',
+    t.equal(routes['tags/edit/:id'], 'tagForm',
         'shows tag edit form');
 
     t.end();

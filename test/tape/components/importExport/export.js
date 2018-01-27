@@ -8,6 +8,7 @@ import Radio from 'backbone.radio';
 import _ from '../../../../app/scripts/utils/underscore';
 
 import Export from '../../../../app/scripts/components/importExport/Export';
+import Profiles from '../../../../app/scripts/collections/Profiles';
 import Notes from '../../../../app/scripts/collections/Notes';
 import Files from '../../../../app/scripts/collections/Files';
 import Tags from '../../../../app/scripts/collections/Tags';
@@ -19,12 +20,12 @@ test('importExport/Export: before()', t => {
 });
 
 test('importExport/Export: profiles', t => {
-    const res = [1, 2];
-    const req = sand.stub(Radio, 'request').returns(res);
+    const prof = new Profiles();
+    const req  = sand.stub(Radio, 'request')
+    .withArgs('collections/Profiles', 'findProfiles')
+    .returns(prof);
 
-    t.equal(Export.prototype.profiles, res, 'returns an array of profiles');
-    t.equal(req.calledWith('collections/Configs', 'findConfig', {name: 'appProfiles'}),
-        true, 'requests profiles from configs');
+    t.equal(Export.prototype.profiles, prof, 'returns an array of profiles');
 
     sand.restore();
     t.end();
@@ -161,28 +162,29 @@ test('importExport/Export: exportCollections()', t => {
 
 test('importExport/Export: exportCollection()', t => {
     const con = new Export();
+    Object.defineProperty(con, 'profileId', {get: () => 'bob'});
     sand.stub(con, 'exportNote');
 
-    const col = new Notes();
+    const col = new Notes(null, {profileId: 'testdb'});
     const mod = new Notes.prototype.model({id: '1'});
     col.fullCollection = col.clone();
     col.fullCollection.add(mod);
     con.exportCollection(col);
-    t.equal(con.exportNote.calledWith('laverna-backups/default', mod), true,
+    t.equal(con.exportNote.calledWith('laverna-backups/testdb', mod), true,
         'exports every model from notes collection');
 
     sand.stub(con, 'exportFile');
-    const files = new Files();
+    const files = new Files(null, {profileId: 'testdb'});
     const file  = new Files.prototype.model({id: '1'});
     files.add(file);
     con.exportCollection(files);
-    t.equal(con.exportFile.calledWith('laverna-backups/default', file), true,
+    t.equal(con.exportFile.calledWith('laverna-backups/testdb', file), true,
         'exports every model from files collection');
 
     const tags = new Tags();
     con.zip    = {file: sand.stub()};
     con.exportCollection(tags);
-    t.equal(con.zip.file.calledWith('laverna-backups/default/tags.json'),
+    t.equal(con.zip.file.calledWith('laverna-backups/bob/tags.json'),
         true, 'exports data to a JSON file');
 
     sand.restore();

@@ -73,20 +73,18 @@ test('notes/form/Controller: onDestroy()', t => {
 });
 
 test('notes/form/Controller: fetch()', t => {
-    const con     = new Controller({profileId: 'testdb', id: '1'});
+    const con     = new Controller({id: '1'});
     const req     = sand.stub(Radio, 'request');
     const noteReq = sand.stub(con.notesChannel, 'request');
 
     con.fetch();
     t.equal(noteReq.calledWith('findModel', {
-        profileId       : 'testdb',
         id              : '1',
         findAttachments : true,
     }), true, 'makes "findModel" request to notes collection');
 
-    t.equal(req.calledWithMatch('collections/Notebooks', 'find', {
-        profileId : 'testdb',
-    }), true, 'makes "find" request to notebooks collection');
+    t.equal(req.calledWithMatch('collections/Notebooks', 'find'),
+        true, 'makes "find" request to notebooks collection');
 
     sand.restore();
     t.end();

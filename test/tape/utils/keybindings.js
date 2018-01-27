@@ -13,21 +13,20 @@ global.Mousetrap    = Mousetrap;
 
 const keybindings   = require('../../../app/scripts/utils/Keybindings');
 const Keybindings   = keybindings.default;
-const {initializer} = keybindings;
 
 let sand;
-test('Keybindings: before()', t => {
+test('utils/Keybindings: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Keybindings: channel', t => {
+test('utils/Keybindings: channel', t => {
     t.equal(typeof Keybindings.prototype.channel, 'object', 'is an object');
     t.equal(Keybindings.prototype.channel.channelName, 'utils/Keybindings');
     t.end();
 });
 
-test('Keybindings: constructor()', t => {
+test('utils/Keybindings: constructor()', t => {
     const spy = sand.spy(Keybindings.prototype.channel, 'reply');
     const key = new Keybindings();
     t.equal(spy.called, true, 'starts replying to requests');
@@ -36,7 +35,7 @@ test('Keybindings: constructor()', t => {
     t.end();
 });
 
-test('Keybindings: toggle()', t => {
+test('utils/Keybindings: toggle()', t => {
     const key     = new Keybindings();
     const unpause = sand.stub(Mousetrap, 'unpause');
     const pause   = sand.stub(Mousetrap, 'pause');
@@ -54,7 +53,7 @@ test('Keybindings: toggle()', t => {
     t.end();
 });
 
-test('Keybindings: bind()', t => {
+test('utils/Keybindings: bind()', t => {
     const key  = new Keybindings();
     const coll = new Configs();
     sand.stub(key, 'bindApp');
@@ -78,7 +77,7 @@ test('Keybindings: bind()', t => {
     });
 });
 
-test('Keybindings: bindApp()', t => {
+test('utils/Keybindings: bindApp()', t => {
     const key      = new Keybindings();
     key.collection = new Configs();
     key.collection.resetFromObject(key.collection.configNames);
@@ -101,7 +100,7 @@ test('Keybindings: bindApp()', t => {
     Mousetrap.trigger('c');
 });
 
-test('Keybindings: bindJump()', t => {
+test('utils/Keybindings: bindJump()', t => {
     const key      = new Keybindings();
     const bind     = sand.spy(Mousetrap, 'bind');
     const navigate = sand.stub(key, 'navigate');
@@ -120,28 +119,17 @@ test('Keybindings: bindJump()', t => {
     t.end();
 });
 
-test('Keybindings: navigate()', t => {
+test('utils/Keybindings: navigate()', t => {
     const key     = new Keybindings();
     const request = sand.stub(Radio, 'request');
 
     key.navigate('/notes');
     const called = request.calledWith('utils/Url', 'navigate', {
-        url: '/notes', includeProfile: true,
+        url: '/notes',
     });
     t.equal(called, true, 'makes a navigate request');
 
     sand.restore();
     key.channel.stopReplying();
-    t.end();
-});
-
-test('Keybindings: << initializer()', t => {
-    const bind = sand.stub(Keybindings.prototype, 'bind').returns(Promise.resolve());
-
-    t.equal(typeof initializer().then, 'function', 'returns a promise');
-    t.equal(bind.called, true, 'binds shortcuts');
-
-    Radio.channel('utils/Keybindings').stopReplying();
-    sand.restore();
     t.end();
 });

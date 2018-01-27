@@ -16,7 +16,7 @@ test('notes/remove/Controller: before()', t => {
     t.end();
 });
 
-test('Controller: channel', t => {
+test('notes/remove/Controller: channel', t => {
     const channel = Controller.prototype.channel;
     t.equal(typeof channel, 'object', 'returns an object');
     t.equal(channel.channelName, 'components/notes');
@@ -24,7 +24,7 @@ test('Controller: channel', t => {
     t.end();
 });
 
-test('Controller: labels', t => {
+test('notes/remove/Controller: labels', t => {
     const labels = Controller.prototype.labels;
     t.equal(typeof labels, 'object', 'returns an object');
     t.equal(labels.trash, 'notes.confirm trash');
@@ -32,7 +32,7 @@ test('Controller: labels', t => {
     t.end();
 });
 
-test('Controller: constructor()', t => {
+test('notes/remove/Controller: constructor()', t => {
     const reply = sand.stub(Controller.prototype.channel, 'reply');
     const con   = new Controller();
     t.equal(reply.calledWith('remove', con.remove, con), true,
@@ -42,7 +42,7 @@ test('Controller: constructor()', t => {
     t.end();
 });
 
-test('Controller: remove()', t => {
+test('notes/remove/Controller: remove()', t => {
     const con   = new Controller();
     const model = new Note({id: '1'});
 
@@ -52,12 +52,12 @@ test('Controller: remove()', t => {
         'calls removeModel method if model is provided');
 
     sand.stub(con, 'removeById');
-    const options = {id: '1', profileId: 'test'};
+    const options = {id: '1'};
     con.remove(options);
     t.equal(con.removeById.calledWith(options), true,
-        'calls removeById method if id and profileId are provided');
+        'calls removeById method if id is provided');
 
-    con.remove({id: '1'})
+    con.remove({})
     .catch(() => {
         con.channel.stopListening();
         sand.restore();
@@ -65,21 +65,21 @@ test('Controller: remove()', t => {
     });
 });
 
-test('Controller: removeById()', t => {
+test('notes/remove/Controller: removeById()', t => {
     const con   = new Controller();
     const model = new Note({id: '1'});
     const req   = sand.stub(Radio, 'request').returns(Promise.resolve(model));
     sand.stub(con, 'removeModel');
 
-    const res = con.removeById({id: '1', profileId: 'test'})
+    const res = con.removeById({id: '1'});
 
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(req.calledWith('collections/Notes', 'findModel', {
-        id: '1', profileId: 'test',
+        id: '1',
     }), true, 'makes findModel request');
 
     res.then(() => {
-        t.equal(con.removeModel.calledWith({model, id: '1', profileId: 'test'}), true,
+        t.equal(con.removeModel.calledWith({model, id: '1'}), true,
             'calls removeModel method');
 
         con.channel.stopListening();
@@ -88,7 +88,7 @@ test('Controller: removeById()', t => {
     });
 });
 
-test('Controller: removeModel()', t => {
+test('notes/remove/Controller: removeModel()', t => {
     const con   = new Controller();
     const model = new Note({id: '1'});
     const req   = sand.stub(Radio, 'request');
@@ -120,7 +120,7 @@ test('Controller: removeModel()', t => {
     });
 });
 
-test('Controller: showConfirm()', t => {
+test('notes/remove/Controller: showConfirm()', t => {
     const con   = new Controller();
     const model = new Note({id: '1', trash: 0});
     const req   = sand.stub(Radio, 'request');

@@ -19,17 +19,6 @@ test('notebooks/form/notebook/Controller: before()', t => {
     t.end();
 });
 
-test('notebooks/form/notebook/Controller: profileId', t => {
-    const req = sand.stub(Radio, 'request').returns('test');
-
-    t.equal(Controller.prototype.profileId, 'test');
-    t.equal(req.calledWith('utils/Url', 'getProfileId'), true,
-        'makes getProfileId request');
-
-    sand.restore();
-    t.end();
-});
-
 test('notebooks/form/notebook/Controller: init()', t => {
     const con = new Controller();
     sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
@@ -64,7 +53,7 @@ test('notebooks/form/notebook/Controller: onDestroy()', t => {
 });
 
 test('notebooks/form/notebook/Controller: fetch()', t => {
-    const opt = {profileId: 'test', id: '1-1'};
+    const opt = {id: '1-1'};
     const con = new Controller(opt);
     const req = sand.stub(Radio, 'request');
 
@@ -202,7 +191,6 @@ test('notebooks/form/notebook/Controller: redirect()', t => {
     t.equal(req.calledWith('utils/Url', 'navigate', {
         trigger        : false,
         url            : '/notebooks',
-        includeProfile : true,
     }), true, 'does nothing if it is not notebooks page');
 
     sand.restore();

@@ -44,13 +44,10 @@ test('settings/sidebar/Controller: onDestroy()', t => {
 test('settings/sidebar/Controller: init()', t => {
     const con   = new Controller();
     con.options = {tab: null};
-    sand.stub(Radio, 'request').withArgs('utils/Url')
-        .returns('/test');
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
     con.init();
-    t.equal(con.options.profileLink, '/test', 'creates "profileLink" option');
     t.equal(con.options.tab, 'general',
         'if tab is not provided, activates "general" tab');
     t.equal(con.show.called, true, 'calls "show" method');

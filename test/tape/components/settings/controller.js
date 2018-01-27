@@ -41,8 +41,8 @@ test('settings/Controller: showContent()', t => {
     const init = sand.stub(Show.prototype, 'init');
     const once = sand.stub(Show.prototype, 'once');
 
-    const opt = {profileId: 'test', tab: 'general'};
-    controller.showContent(opt.profileId, opt.tab);
+    const opt = {tab: 'general'};
+    controller.showContent(opt.tab);
 
     t.equal(controller.showSidebar.calledWith(opt), true, 'shows the sidebar');
     t.equal(init.called, true, 'instantiates the content controller');

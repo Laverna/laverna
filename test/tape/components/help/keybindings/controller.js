@@ -18,9 +18,12 @@ test('help/keybindings/controller: before()', t => {
 });
 
 test('help/keybindings/Controller: init()', t => {
-    const con = new Controller();
-    sand.stub(con, 'fetch').returns(Promise.resolve('configs'));
+    const con  = new Controller();
     sand.stub(con, 'show');
+
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Configs', 'find')
+    .resolves('configs');
 
     const res = con.init();
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -32,18 +35,6 @@ test('help/keybindings/Controller: init()', t => {
         sand.restore();
         t.end();
     });
-});
-
-test('help/keybindings/Controller: fetch()', t => {
-    const con = new Controller();
-    const req = sand.stub(Radio, 'request');
-
-    con.fetch();
-    t.equal(req.calledWithMatch('collections/Configs', 'find', {
-    }), true, 'fetches configs collection');
-
-    sand.restore();
-    t.end();
 });
 
 test('help/keybindings/Controller: show()', t => {

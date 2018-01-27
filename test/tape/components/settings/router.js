@@ -16,6 +16,6 @@ test('settings/Router: controller()', t => {
 test('settings/Router: appRoutes', t => {
     const routes = Router.prototype.appRoutes;
     t.equal(typeof routes, 'object', 'is an object');
-    t.equal(routes['(p/:profile/)settings(/:tab)'], 'showContent');
+    t.equal(routes['settings(/:tab)'], 'showContent');
     t.end();
 });

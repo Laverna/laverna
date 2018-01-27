@@ -155,7 +155,6 @@ test('fileDialog/Controller: saveFiles()', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(req.calledWith('collections/Files', 'addFiles', {
         files     : con.view.files,
-        profileId : 'test',
     }), true, 'saves the files');
 
     res.then(() => {

@@ -40,6 +40,17 @@ test('models/Peer: configs', t => {
     t.end();
 });
 
+test('models/Peer: user', t => {
+    const attributes = {username: 'alice'};
+    const req        = sand.stub(Radio, 'request')
+    .withArgs('collections/Profiles', 'getUser')
+    .returns({attributes});
+
+    t.equal(new Peer().user, attributes);
+    sand.restore();
+    t.end();
+});
+
 test('models/Peer: channel', t => {
     t.equal(Peer.prototype.channel.channelName, 'models/Peer');
     t.end();
@@ -150,6 +161,25 @@ test('models/Peer: onSignalConnect()', t => {
 });
 
 test('models/Peer: sendOfferTo()', t => {
+    const peer  = new Peer();
+    peer.socket = {emit: sand.stub()};
+    peer.users  = new Users([{username: 'bob'}, {username: 'noone'}]);
+    sand.stub(peer.users, 'getActive').returns(peer.users.where({username: 'bob'}));
+    const user  = {username: 'alice'};
+    Object.defineProperty(peer, 'user', {get: () => user});
+
+    const users = peer.sendOffers();
+
+    t.deepEqual(users, ['bob', 'alice']);
+    t.equal(users.length, 2, 'sends offers to 2 users');
+    t.equal(peer.socket.emit.calledWith('requestOffers', {users}), true,
+        'sends offers to active users');
+
+    sand.restore();
+    t.end();
+});
+
+test('models/Peer: sendOfferTo()', t => {
     const peer   = new Peer();
     const socket = {emit: sand.stub()};
     peer.socket  = socket;
@@ -200,7 +230,7 @@ test('models/Peer: isTrustedUser()', t => {
         {username: 'alice2', pendingAccept: true, pendingInvite: true},
     ]);
     const req  = sand.stub(peer.users.channel, 'request');
-    Object.defineProperty(peer, 'configs', {
+    Object.defineProperty(peer, 'user', {
         get: () => {
             return {username: 'bob'};
         },
@@ -227,9 +257,14 @@ test('models/Peer: isTrustedUser()', t => {
 
 test('models/Peer: isTheSameDevice()', t => {
     const peer = new Peer();
+    Object.defineProperty(peer, 'user', {
+        get: () => {
+            return {username: 'bob'};
+        },
+    });
     Object.defineProperty(peer, 'configs', {
         get: () => {
-            return {username: 'bob', deviceId: '1'};
+            return {deviceId: '1'};
         },
     });
 

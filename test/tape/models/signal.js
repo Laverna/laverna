@@ -229,7 +229,7 @@ test('models/Signal: auth()', t => {
 test('models/Signal: createSignature()', t => {
     const sig = new Signal();
     const req = sand.stub(Radio, 'request');
-    Object.defineProperty(sig, 'configs', {
+    Object.defineProperty(sig, 'user', {
         get: () => {
             return {username: 'bob', publicKey: 'pubKey'};
         },
@@ -255,7 +255,11 @@ test('models/Signal: sendInvite()', t => {
     sig.socket = {emit: sand.stub()};
     const req  = sand.stub(Radio, 'request').returns(Promise.resolve('sign'));
 
-    Object.defineProperty(sig, 'configs', {get: () => {return {username: 'bob'};}});
+    Object.defineProperty(sig, 'user', {
+        get: () => {
+            return {username: 'bob'};
+        },
+    });
     const data = JSON.stringify({
         fingerprint : 'print',
         from        : 'bob',

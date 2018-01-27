@@ -12,9 +12,11 @@ import _ from '../../../../../app/scripts/utils/underscore';
 import View from '../../../../../app/scripts/components/settings/show/encryption/View';
 import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
 import Configs from '../../../../../app/scripts/collections/Configs';
+import Profile from '../../../../../app/scripts/models/Profile';
 /* eslint-enable */
 
 let sand;
+const user = new Profile({username: 'alice', publicKey: 'pub', privateKey: 'priv'});
 test('settings/show/encryption/View: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
@@ -56,6 +58,18 @@ test('settings/show/encryption/View: collectionEvents()', t => {
     t.end();
 });
 
+test('settings/show/encryption/View: initialize()', t => {
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Profiles', 'getUser')
+    .returns(user);
+
+    const view = new View();
+    t.equal(view.user, user, 'creates .user property');
+
+    sand.restore();
+    t.end();
+});
+
 test('settings/show/encryption/View: showPrivateKey()', t => {
     const view      = new View();
     view.privateKey = 'priv';
@@ -88,9 +102,8 @@ test('settings/show/encryption/View: showKey()', t => {
 test('settings/show/encryption/View: showPasswordView()', t => {
     const view = new View();
     const req  = sand.stub(Radio, 'request');
-    view.collection = {get: sand.stub().withArgs('privateKey')
-    .returns({})};
 
+    view.user = user;
     view.showPasswordView();
     t.equal(req.calledWithMatch('Layout', 'show', {
         view   : {},
@@ -137,21 +150,14 @@ test('settings/show/encryption/View: serializeData()', t => {
     const coll = new Configs();
     coll.resetFromObject(coll.configNames);
     const view = new View({collection: coll});
-
-    t.deepEqual(view.serializeData(), {
-        models: view.collection.getConfigs(),
-    });
+    view.user  = user;
 
     const read = sand.stub(openpgp.key, 'readArmored');
     read.withArgs('priv').returns({keys: ['privTest']});
     read.withArgs('pub').returns({keys: ['pubTest']});
 
-    const coll2 = new Configs();
-    coll2.resetFromObject({privateKey: 'priv', publicKeys: {test: 'pub'}});
-    view.collection = coll2;
-
     t.deepEqual(view.serializeData(), {
-        models     : view.collection.getConfigs(),
+        models: view.collection.getConfigs(),
         privateKey : 'privTest',
     });
 

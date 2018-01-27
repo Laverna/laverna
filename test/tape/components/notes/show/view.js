@@ -35,13 +35,13 @@ test('notes/show/View: behaviors', t => {
     t.end();
 });
 
-test('View: ui()', t => {
+test('notes/show/View: ui()', t => {
     const ui = View.prototype.ui();
     t.equal(typeof ui, 'object', 'returns an object');
     t.end();
 });
 
-test('View: events()', t => {
+test('notes/show/View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object', 'returns an object');
     t.equal(events['click .note--share'], 'showShare',
@@ -54,7 +54,7 @@ test('View: events()', t => {
     t.end();
 });
 
-test('View: triggers()', t => {
+test('notes/show/View: triggers()', t => {
     const triggers = View.prototype.triggers();
     t.equal(typeof triggers, 'object', 'returns an object');
     t.equal(triggers['click .note--restore'], 'restore:model',
@@ -63,7 +63,7 @@ test('View: triggers()', t => {
     t.end();
 });
 
-test('View: constructor()', t => {
+test('notes/show/View: constructor()', t => {
     sand.stub(_, 'debounce');
     sand.stub(_, 'throttle');
     const prot = View.prototype;
@@ -79,7 +79,7 @@ test('View: constructor()', t => {
     t.end();
 });
 
-test('View: onRender()', t => {
+test('notes/show/View: onRender()', t => {
     const bind = sand.stub(Mousetrap, 'bind');
     const view = new View({configs});
     view.onRender();
@@ -95,7 +95,7 @@ test('View: onRender()', t => {
     t.end();
 });
 
-test('View: onBeforeDestroy()', t => {
+test('notes/show/View: onBeforeDestroy()', t => {
     const view   = new View({configs});
     const unbind = sand.spy(Mousetrap, 'unbind');
 
@@ -107,7 +107,7 @@ test('View: onBeforeDestroy()', t => {
     t.end();
 });
 
-test('View: showShare()', t => {
+test('notes/show/View: showShare()', t => {
     const view = new View({configs, model: {id: '1'}});
     const req  = sand.stub(Radio, 'request');
 
@@ -119,7 +119,7 @@ test('View: showShare()', t => {
     t.end();
 });
 
-test('View: toggleFavorite() - without throttle', t => {
+test('notes/show/View: toggleFavorite() - without throttle', t => {
     View.prototype.model = new Note({id: '1'});
     const toggle  = sand.spy(View.prototype.model, 'toggleFavorite');
     const request = sand.stub(Radio, 'request').returns(Promise.resolve());
@@ -137,7 +137,7 @@ test('View: toggleFavorite() - without throttle', t => {
     t.end();
 });
 
-test('View: toggleFavorite() - throttled', t => {
+test('notes/show/View: toggleFavorite() - throttled', t => {
     const stub = sand.stub(View.prototype, 'toggleFavorite');
     const view = new View({configs, model: new Note({id: '3'})});
 
@@ -153,7 +153,7 @@ test('View: toggleFavorite() - throttled', t => {
     }, 301);
 });
 
-test('View: toggleTask() - without throttle', t => {
+test('notes/show/View: toggleTask() - without throttle', t => {
     const trigger   = sand.spy(View.prototype, 'trigger');
     const jqReplace = {
         attr : sand.stub().returns('1'),
@@ -173,7 +173,7 @@ test('View: toggleTask() - without throttle', t => {
     t.end();
 });
 
-test('View: toggleTask() - throttled', t => {
+test('notes/show/View: toggleTask() - throttled', t => {
     const stub = sand.stub(View.prototype, 'toggleTask');
     const view = new View({configs, model: new Note({id: '3'})});
 
@@ -189,7 +189,7 @@ test('View: toggleTask() - throttled', t => {
     }, 300);
 });
 
-test('View: onChangeFavorite()', t => {
+test('notes/show/View: onChangeFavorite()', t => {
     const view = new View({configs, model: new Note({id: '3'})});
     const stub = sand.stub();
     view.ui    = {favorite: {toggleClass: stub}};
@@ -202,7 +202,7 @@ test('View: onChangeFavorite()', t => {
     t.end();
 });
 
-test('View: onTaskCompleted()', t => {
+test('notes/show/View: onTaskCompleted()', t => {
     const model = new Note({taskCompleted: 2, taskAll: 10});
     const view  = new View({configs, model});
     view.ui     = {
@@ -221,7 +221,7 @@ test('View: onTaskCompleted()', t => {
     t.end();
 });
 
-test('View: scrollTop()', t => {
+test('notes/show/View: scrollTop()', t => {
     const view  = new View({configs});
     view.ui     = {body: {scrollTop: sand.stub().returns(100)}};
 
@@ -234,7 +234,7 @@ test('View: scrollTop()', t => {
     t.end();
 });
 
-test('View: scrollTop()', t => {
+test('notes/show/View: scrollTop()', t => {
     const view  = new View({configs});
     view.ui     = {body: {scrollTop: sand.stub().returns(150)}};
 
@@ -247,7 +247,7 @@ test('View: scrollTop()', t => {
     t.end();
 });
 
-test('View: navigateEdit()', t => {
+test('notes/show/View: navigateEdit()', t => {
     const view    = new View({configs});
     view.ui       = {editBtn: {attr: sand.stub().returns('notes/edit/1')}};
     const request = sand.stub(Radio, 'request');
@@ -262,7 +262,7 @@ test('View: navigateEdit()', t => {
     t.end();
 });
 
-test('View: triggerRemove()', t => {
+test('notes/show/View: triggerRemove()', t => {
     const view    = new View({configs, model: new Note({id: '3'})});
     const request = sand.stub(Radio, 'request');
 
@@ -276,31 +276,30 @@ test('View: triggerRemove()', t => {
     t.end();
 });
 
-test('View: serializeData()', t => {
-    const model      = new Note({id: '1'});
-    configs.username = 'alice';
-    const view       = new View({configs, model, profileLink: '/p/def'});
+test('notes/show/View: serializeData()', t => {
+    const model = new Note({id: '1'});
+    const view  = new View({model, configs: {}});
 
     sand.spy(_, 'extend');
     sand.stub(Radio, 'request')
     .withArgs('collections/Configs', 'findConfig', {name: 'cloudStorage'})
-    .returns('p2p');
+    .returns('p2p')
+    .withArgs('collections/Profiles', 'getProfile')
+    .returns('bob');
 
     t.equal(typeof view.serializeData(), 'object', 'returns an object');
     t.equal(_.extend.calledWithMatch({}, model.attributes, {
         cloudStorage: 'p2p',
         content     : model.get('content'),
         notebook    : undefined,
-        profileLink : '/p/def',
-        username    : configs.username,
+        username    : 'bob',
     }), true, 'contains model attributes and other parameters');
 
-    view.destroy();
     sand.restore();
     t.end();
 });
 
-test('View: templateContext()', t => {
+test('notes/show/View: templateContext()', t => {
     const context = View.prototype.templateContext();
     t.equal(typeof context, 'object', 'returns an object');
 

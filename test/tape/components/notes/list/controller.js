@@ -25,7 +25,7 @@ test('notes/list/Controller: configs', t => {
 });
 
 test('notes/list/Controller: init()', t => {
-    const con   = new Controller({filterArgs: {profileId: 'test', filter: 'tag'}});
+    const con   = new Controller({filterArgs: {filter: 'tag'}});
     const notes = new Notes([
         {id: '1', title: 'Test 1'},
         {id: '2', title: 'Test 2'},
@@ -41,7 +41,7 @@ test('notes/list/Controller: init()', t => {
 
     const res = con.init();
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(find.calledWith({perPage: 10, profileId: 'test', filter: 'tag'}), true,
+    t.equal(find.calledWith({perPage: 10, filter: 'tag'}), true,
         'requests notes collection');
 
     res.then(() => {
@@ -68,7 +68,7 @@ test('notes/list/Controller/Controller: onDestroy()', t => {
 });
 
 test('notes/list/Controller: show()', t => {
-    const con        = new Controller({profileId: 'test'});
+    const con        = new Controller({});
     const collection = new Notes();
 
     const request = sand.stub(Radio, 'request');
@@ -84,7 +84,7 @@ test('notes/list/Controller: show()', t => {
 });
 
 test('notes/list/Controller: listenToEvents()', t => {
-    const con = new Controller({profileId: 'test'});
+    const con = new Controller({});
     con.view  = {collection: new Notes()};
     sand.stub(con.view.collection, 'startListening');
 
@@ -116,7 +116,7 @@ test('notes/list/Controller: listenToEvents()', t => {
 });
 
 test('notes/list/Controller: navigateModel()', t => {
-    const con     = new Controller({profileId: 'test', filterArgs: {ok: true}});
+    const con     = new Controller({filterArgs: {ok: true}});
     const model   = new Notes.prototype.model();
     const request = sand.stub(Radio, 'request');
 
@@ -137,13 +137,12 @@ test('notes/list/Controller: navigateModel()', t => {
 });
 
 test('notes/list/Controller: navigateForm()', t => {
-    const con     = new Controller({profileId: 'test', filterArgs: {ok: true}});
+    const con     = new Controller({filterArgs: {ok: true}});
     const request = sand.stub(Radio, 'request');
 
     con.navigateForm();
     t.equal(request.calledWith('utils/Url', 'navigate', {
-        url            : '/notes/add',
-        includeProfile : true,
+        url : 'notes/add',
     }), true, 'msg');
 
     sand.restore();

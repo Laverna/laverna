@@ -16,16 +16,6 @@ test('fuzzySearch/Controller: before()', t => {
     t.end();
 });
 
-test('fuzzySearch/Controller: profileId', t => {
-    sand.stub(Radio, 'request').withArgs('utils/Url', 'getProfileId')
-        .returns('1');
-
-    t.equal(Controller.prototype.profileId, '1', 'makes getProfileId request');
-
-    sand.restore();
-    t.end();
-});
-
 test('fuzzySearch/Controller: formChannel', t => {
     t.equal(Controller.prototype.formChannel.channelName, 'components/navbar');
 
@@ -70,9 +60,7 @@ test('fuzzySearch/Controller: fetch()', t => {
     const req = sand.stub(Radio, 'request').returns(Promise.resolve());
 
     t.equal(typeof con.fetch().then, 'function', 'returns a promise');
-    t.equal(req.calledWith('collections/Notes', 'find', {
-        profileId: con.profileId,
-    }), true, 'makes "find" request');
+    t.equal(req.calledWith('collections/Notes', 'find'), true, 'makes "find" request');
 
     sand.restore();
     t.end();

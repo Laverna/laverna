@@ -41,14 +41,13 @@ test('share/Controller: init()', t => {
     const model   = new Note();
     const users   = new Users();
 
-    const configs = {test: '1'};
-    req.withArgs('collections/Configs').returns(configs);
+    req.withArgs('collections/Profiles', 'getProfile').returns('alice');
     req.withArgs('collections/Users').returns(Promise.resolve(users));
     sand.stub(con, 'show');
 
     const res     = con.init({model});
+    t.equal(con.username, 'alice', 'creates "username" property');
     t.equal(typeof res.then, 'function', 'returns a promise');
-    t.equal(con.configs, configs, 'creates "configs" property');
 
     res.then(() => {
         t.equal(con.show.calledWith({model}, users), true, 'msg');
@@ -76,7 +75,7 @@ test('share/Controller: show()', t => {
 
 test('share/Controller: searchUser()', t => {
     const con    = new Controller();
-    con.configs  = {username: 'me'};
+    con.username = 'me';
     let username = 'me';
     con.view     = {
         options       : {users: new Users([{username: 'bob'}])},

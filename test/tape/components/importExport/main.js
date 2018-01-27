@@ -43,7 +43,7 @@ test('importExport/Main: adds "App:checks" initializer', t => {
 
     main();
     t.equal(req.calledWithMatch('utils/Initializer', 'add', {
-        name: 'App:checks',
+        name: 'App:last',
     }), true, 'msg');
 
     sand.restore();

@@ -19,6 +19,14 @@ test('collections/modules/Users: before()', t => {
     t.end();
 });
 
+test('collections/modules/Users: user', t => {
+    const attributes = {username: 'alice'};
+    const req        = sand.stub(Radio, 'request').returns({attributes});
+    t.equal(new Module().user, attributes);
+    sand.restore();
+    t.end();
+});
+
 test('collections/modules/Users: Collection', t => {
     t.equal(Module.prototype.Collection, Users, 'uses "Users" collection');
     t.end();
@@ -357,7 +365,7 @@ test('collections/modules/Users: checkInviteSignature()', t => {
         data,
         signatures: [signature],
     }));
-    Object.defineProperty(mod, 'configs', {get: () => {
+    Object.defineProperty(mod, 'user', {get: () => {
         return {username: 'alice'};
     }});
 

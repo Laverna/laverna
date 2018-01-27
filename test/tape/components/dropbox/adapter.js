@@ -300,7 +300,7 @@ test('components/dropbox/Adapter: getModelPath()', t => {
     const adapter = new Adapter(configs);
     const model = new Notes.prototype.model({id: '1'});
 
-    t.equal(adapter.getModelPath(model), '/default/notes/1.json');
+    t.equal(adapter.getModelPath(model, 'default'), '/default/notes/1.json');
 
     t.end();
 });

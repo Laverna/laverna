@@ -43,6 +43,15 @@ export default class Sync {
         return ['Notes', 'Notebooks', 'Tags', 'Files'];
     }
 
+    /**
+     * Profile id.
+     *
+     * @prop {String}
+     */
+    get profileId() {
+        return Radio.request('collections/Profiles', 'getProfile');
+    }
+
     constructor() {
         /**
          * Sync adapter instance (Dropbox)
@@ -166,7 +175,10 @@ export default class Sync {
     syncCollection(name) {
         return Radio.request(`collections/${name}`, 'find')
         .then(collection => {
-            return this.adapter.find({type: collection.storeName})
+            return this.adapter.find({
+                type      : collection.storeName,
+                profileId : this.profileId,
+            })
             .then(files => {
                 return {files, collection: collection.fullCollection || collection};
             });
@@ -194,7 +206,7 @@ export default class Sync {
                 this.stat.statRemote = true;
                 promises.push(collection.channel.request('saveModelObject', {
                     data      : file,
-                    profileId : collection.profileId,
+                    profileId : this.profileId,
                 }));
             }
         });
@@ -216,7 +228,9 @@ export default class Sync {
             const file = _.findWhere(files, {id: model.id});
 
             if (!file || file.updated < model.get('updated')) {
-                promises.push(this.adapter.saveModel({model}));
+                promises.push(
+                    this.adapter.saveModel({model, profileId: this.profileId})
+                );
             }
         });
 

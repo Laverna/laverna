@@ -36,6 +36,17 @@ test('components/dropbox/Sync: collectionNames', t => {
     t.end();
 });
 
+test('components/dropbox/Sync: profileId', t => {
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Profiles', 'getProfile')
+    .returns('test');
+
+    t.equal(Sync.prototype.profileId, 'test');
+
+    sand.restore();
+    t.end();
+});
+
 test('components/dropbox/Sync: override .configs', t => {
     sinon.stub(Sync.prototype, 'configs')
     .get(() => {
@@ -188,6 +199,7 @@ test('components/dropbox/Sync: syncCollection()', t => {
     const sync       = new Sync();
     const collection = new Notes();
     const files      = ['files'];
+    Object.defineProperty(sync, 'profileId', {get: () => 'test'});
 
     sand.stub(Radio, 'request').withArgs('collections/Notes', 'find')
     .resolves(collection);
@@ -197,8 +209,8 @@ test('components/dropbox/Sync: syncCollection()', t => {
 
     sync.syncCollection('Notes')
     .then(() => {
-        t.equal(sync.adapter.find.calledWith({type: 'notes'}), true,
-            'fetches files from Dropbox');
+        t.equal(sync.adapter.find.calledWith({type: 'notes', profileId: 'test'}),
+            true, 'fetches files from Dropbox');
 
         const data = {files, collection};
         t.equal(sync.syncRemoteChanges.calledWith(data), true,
@@ -217,6 +229,7 @@ test('components/dropbox/Sync: syncRemoteChanges()', t => {
     const files      = [{id: '1'}, {id: '2'}, {id: '3', updated: 2}, {id: '4', updated: 1}];
     const collection = new Notes([{id: '1'}, {id: '3', updated: 1}, {id: '4', updated: 2}]);
     const req        = sand.stub(collection.channel, 'request');
+    Object.defineProperty(sync, 'profileId', {get: () => 'test'});
 
     sync.syncRemoteChanges({files, collection})
     .then(() => {
@@ -225,12 +238,12 @@ test('components/dropbox/Sync: syncRemoteChanges()', t => {
 
         t.equal(req.calledWith('saveModelObject', {
             data      : {id: '2'},
-            profileId : collection.profileId,
+            profileId : 'test',
         }), true, 'saves the file which does not exist locally');
 
         t.equal(req.calledWith('saveModelObject', {
             data      : {id: '3', updated: 2},
-            profileId : collection.profileId,
+            profileId : 'test',
         }), true, 'saves the file which has been changed on Dropbox');
 
         sand.restore();
@@ -243,16 +256,21 @@ test('components/dropbox/Sync: syncLocalChanges()', t => {
     const files      = [{id: '2'}, {id: '3', updated: 1}, {id: '4', updated: 2}];
     const collection = new Notes([{id: '1'}, {id: '3', updated: 2}, {id: '4', updated: 1}]);
     const save       = sand.stub(sync.adapter, 'saveModel');
+    Object.defineProperty(sync, 'profileId', {get: () => 'test'});
 
     sync.syncLocalChanges({files, collection})
     .then(() => {
         t.equal(save.callCount, 2, 'saves only 2 files');
 
-        t.equal(save.calledWith({model: collection.get('1')}), true,
-            'saves the model which does not exist on Dropbox');
+        t.equal(save.calledWith({
+            model     : collection.get('1'),
+            profileId : 'test',
+        }), true, 'saves the model which does not exist on Dropbox');
 
-        t.equal(save.calledWith({model: collection.get('3')}), true,
-            'saves the model which has been changed locally');
+        t.equal(save.calledWith({
+            model     : collection.get('3'),
+            profileId : 'test',
+        }), true, 'saves the model which has been changed locally');
 
         sand.restore();
         t.end();

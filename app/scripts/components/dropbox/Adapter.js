@@ -197,7 +197,7 @@ export default class Adapter {
      * @returns {Promise}
      */
     find({profileId, type}) {
-        return this.readDir({path: `/${profileId || 'default'}/${type}`})
+        return this.readDir({path: `/${profileId}/${type}`})
         .then(resp => {
             const promises = [];
 
@@ -268,17 +268,18 @@ export default class Adapter {
     /**
      * Save a Backbone model to Dropbox.
      *
-     * @param {Object} {model} - Backbone model
+     * @param {Object} model - Backbone model
+     * @param {String} profileId
      * @returns {Promise}
      */
-    saveModel({model}) {
+    saveModel({model, profileId}) {
         // Don't do anything with empty models
         if (!model.id) {
             return Promise.resolve();
         }
 
         return this.dbx.filesUpload({
-            path       : this.getModelPath(model),
+            path       : this.getModelPath(model, profileId),
             autorename : false,
             mode       : {'.tag': 'overwrite'},
             contents   : JSON.stringify(model.getData()),
@@ -291,8 +292,8 @@ export default class Adapter {
      * @param {Object} model - Backbone model
      * @returns {String}
      */
-    getModelPath(model) {
-        return `/${model.profileId}/${model.storeName}/${model.id}.json`;
+    getModelPath(model, profileId) {
+        return `/${profileId}/${model.storeName}/${model.id}.json`;
     }
 
 }

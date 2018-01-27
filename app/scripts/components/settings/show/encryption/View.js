@@ -55,6 +55,10 @@ export default class View extends Mn.View {
         };
     }
 
+    initialize() {
+        this.user = Radio.request('collections/Profiles', 'getUser');
+    }
+
     /**
      * Show a user's personal key information.
      */
@@ -77,7 +81,7 @@ export default class View extends Mn.View {
      * Show the password view where one can change their passphrase.
      */
     showPasswordView() {
-        const view = new Passphrase({model: this.collection.get('privateKey')});
+        const view = new Passphrase({model: this.user});
         Radio.request('Layout', 'show', {view, region: 'modal'});
     }
 
@@ -108,13 +112,8 @@ export default class View extends Mn.View {
     serializeData() {
         const models = this.collection.getConfigs();
 
-        // There are no keys
-        if (!models.privateKey.length) {
-            return {models};
-        }
-
         // Read the private key
-        this.privateKey = openpgp.key.readArmored(models.privateKey).keys[0];
+        this.privateKey = openpgp.key.readArmored(this.user.get('privateKey')).keys[0];
         return {models, privateKey: this.privateKey};
     }
 

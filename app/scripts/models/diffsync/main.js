@@ -17,13 +17,14 @@ export default function initializer() {
         });
 
         if (sync === 'p2p') {
+            signal.changeServer();
             new Peer().init();
             new Core().init();
         }
         else {
             signal.destroy();
         }
-    };
+    }
 
     // Initialize peer class and differential synchronization core
     Radio.once('App', 'start', start);

@@ -15,14 +15,13 @@ function electronListener() {
 
     const urlChannel     = Radio.channel('utils/Url');
     const {ipcRenderer}  = window.electron;
-    const includeProfile = true;
 
     ipcRenderer.on('lav:settings', () => {
-        urlChannel.request('navigate', {includeProfile, url: '/settings'});
+        urlChannel.request('navigate', {url: '/settings'});
     });
 
     ipcRenderer.on('lav:newNote', () => {
-        urlChannel.request('navigate', {includeProfile, url: '/notes/add'});
+        urlChannel.request('navigate', {url: '/notes/add'});
     });
 
     ipcRenderer.on('lav:about', () => {

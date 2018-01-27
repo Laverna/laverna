@@ -69,7 +69,6 @@ export default class Controller extends Mn.Object {
             model,
             configs     : this.configs,
             filterArgs  : this.options,
-            profileLink : Radio.request('utils/Url', 'getProfileLink', this.options),
         });
 
         // Render the view in "content" region

@@ -93,9 +93,8 @@ export default class Controller extends Mn.Object {
      */
     redirect() {
         Radio.request('utils/Url', 'navigate', {
-            trigger        : false,
-            url            : '/notebooks',
-            includeProfile : true,
+            trigger : false,
+            url     : '/notebooks',
         });
     }
 

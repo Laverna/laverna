@@ -37,15 +37,6 @@ export default class Controller extends Mn.Object {
     }
 
     /**
-     * Current profile ID.
-     *
-     * @returns {String}
-     */
-    get profileId() {
-        return Radio.request('utils/Url', 'getProfileId');
-    }
-
-    /**
      * @listens this.channel#show
      */
     constructor(...args) {
@@ -109,17 +100,15 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     fetch() {
-        const options = {profileId: this.profileId, conditions: {trash: 0}};
+        const options = {conditions: {trash: 0}};
 
         return Promise.all([
-            Radio.request('collections/Configs', 'findProfileModel'),
             Radio.request('collections/Notebooks', 'find', options),
             this.changeDocumentTitle(this.options),
         ])
         .then(res => {
-            this.profileModel = res[0];
-            this.notebooks    = res[1];
-            this.options.titleOptions = res[2];
+            this.notebooks = res[0];
+            this.options.titleOptions = res[1];
         });
     }
 
@@ -140,11 +129,9 @@ export default class Controller extends Mn.Object {
      */
     show() {
         this.view = new View({
-            args         : this.options,
-            configs      : this.configs,
-            notebooks    : this.notebooks,
-            profileId    : this.profileId,
-            profileModel : this.profileModel,
+            args      : this.options,
+            configs   : this.configs,
+            notebooks : this.notebooks,
         });
 
         Radio.request('Layout', 'show', {

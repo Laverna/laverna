@@ -26,7 +26,16 @@ export default class Export extends Mn.Object {
      * @prop {Array}
      */
     get profiles() {
-        return Radio.request('collections/Configs', 'findConfig', {name: 'appProfiles'});
+        return Radio.request('collections/Profiles', 'findProfiles');
+    }
+
+    /**
+     * ProfileId.
+     *
+     * @prop {String}
+     */
+    get profileId() {
+        return Radio.request('collections/Profiles', 'getProfile');
     }
 
     /**
@@ -143,8 +152,9 @@ export default class Export extends Mn.Object {
      *
      * @param {Object} collection - Backbone collection
      */
-    exportCollection(collection) {
-        const path = `laverna-backups/${collection.profileId}`;
+    exportCollection(collection) { // eslint-disable-line
+        const profileId = collection.profileId || this.profileId;
+        const path = `laverna-backups/${profileId}`;
         const coll = collection.fullCollection || collection;
 
         // Every model in a notes collection is saved in separate files

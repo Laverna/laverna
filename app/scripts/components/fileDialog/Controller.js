@@ -116,8 +116,7 @@ export default class Controller extends Mn.Object {
      */
     saveFiles() {
         return Radio.request('collections/Files', 'addFiles', {
-            files     : this.view.files,
-            profileId : Radio.request('utils/Url', 'getProfileId'),
+            files: this.view.files,
         })
         .then(files => {
             let {fileModels} = this.options.model.attributes;

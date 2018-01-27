@@ -64,7 +64,7 @@ export default class Passphrase extends Mn.View {
             return this.onChangeError('Passwords do not match');
         }
 
-        return Radio.request('collections/Configs', 'changePassphrase', {
+        return Radio.request('collections/Profiles', 'changePassphrase', {
             model        : this.model,
             oldPassphrase: this.ui.oldPassphrase.val().trim(),
             newPassphrase: this.ui.newPassphrase.val().trim(),

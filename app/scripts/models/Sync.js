@@ -3,6 +3,7 @@
  */
 import _ from 'underscore';
 import Db from './Db';
+import Radio from 'backbone.radio';
 
 /**
  * Override Backbone sync.
@@ -22,10 +23,19 @@ export default class Sync {
     /**
      * Database instance.
      *
-     * @returns {Object}
+     * @prop {Object}
      */
     get db() {
         return new Db();
+    }
+
+    /**
+     * Profile ID
+     *
+     * @prop {String}
+     */
+    get profileId() {
+        return Radio.request('collections/Profiles', 'getProfile');
     }
 
     /**
@@ -54,7 +64,7 @@ export default class Sync {
      */
     sync(method, model, options = {}) {
         const opt = _.extend({}, _.pick(options, 'conditions'), {
-            profileId   : model.profileId,
+            profileId   : model.profileId || this.profileId,
             storeName   : model.storeName,
         });
 

@@ -205,8 +205,7 @@ export default class View extends Mn.View {
             }),
             content     : this.model.htmlContent || this.model.get('content'),
             notebook    : (this.model.get('notebook') || {}).attributes,
-            profileLink : this.options.profileLink,
-            username    : this.options.configs.username,
+            username    : Radio.request('collections/Profiles', 'getProfile'),
         });
     }
 

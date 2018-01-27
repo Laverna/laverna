@@ -49,9 +49,10 @@ export default class Username extends View {
     }
 
     serializeData() {
-        return _.extend({}, this.options, {
+        return {
+            newIdentity : this.options.newIdentity,
             signalServer: configNames.sync.signalServer,
-        });
+        };
     }
 
     initialize() {

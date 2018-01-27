@@ -36,12 +36,6 @@ export default class Controller extends Mn.Object {
         return Radio.channel('collections/Notes');
     }
 
-    constructor(...args) {
-        super(...args);
-
-        this.profileId = Radio.request('utils/Url', 'getProfileId');
-    }
-
     onDestroy() {
         log('destroyed');
 
@@ -92,10 +86,7 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     renderDropdown() {
-        return this.notesChannel.request('find', {
-            pageSize  : 10,
-            profileId : this.profileId,
-        })
+        return this.notesChannel.request('find', {pageSize: 10})
         .then(collection => {
             this.view.options.collection = collection;
             this.view.renderDropdown();
@@ -144,10 +135,7 @@ export default class Controller extends Mn.Object {
     createNote() {
         const title = this.view.ui.url.val().trim();
 
-        return this.notesChannel.request('saveModelObject', {
-            profileId : this.profileId,
-            data      : {title},
-        })
+        return this.notesChannel.request('saveModelObject', {data: {title}})
         .then(model => {
             const url = Radio.request('utils/Url', 'getNoteLink', {model});
             this.resolve(`#${url}`);

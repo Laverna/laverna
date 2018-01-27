@@ -66,8 +66,6 @@ export default class View extends Mn.View {
             themes,
             appLang    : (models.appLang || i18n.language) || 'en',
             theme      : models.theme || 'default',
-            profileId  : this.options.profileId,
-            useDefault : this.options.useDefault.attributes,
         };
     }
 
@@ -78,15 +76,6 @@ export default class View extends Mn.View {
      */
     templateContext() {
         return {
-
-            /**
-             * Return true if it's the default profile.
-             *
-             * @returns {Boolean}
-             */
-            isDefaultProfile() {
-                return _.indexOf([null, 'default'], this.profileId) > -1;
-            },
 
             /**
              * Selects a locale if it's active.

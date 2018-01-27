@@ -18,15 +18,6 @@ const log = deb('lav:components/fuzzySearch/Controller');
 export default class Controller extends Mn.Object {
 
     /**
-     * Profile ID.
-     *
-     * @prop {Object}
-     */
-    get profileId() {
-        return Radio.request('utils/Url', 'getProfileId');
-    }
-
-    /**
      * Search form channel.
      *
      * @prop {Object}
@@ -61,10 +52,8 @@ export default class Controller extends Mn.Object {
      * @returns {Promise} notes collection
      */
     fetch() {
-        log('fetching notes...', this.profileId);
-        return Radio.request('collections/Notes', 'find', {
-            profileId: this.profileId,
-        });
+        log('fetching notes...');
+        return Radio.request('collections/Notes', 'find');
     }
 
     /**

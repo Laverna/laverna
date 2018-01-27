@@ -41,14 +41,13 @@ export default class Controller {
      * @param {Object} options
      * @param {Object} (options.model) - note model
      * @param {String} (options.id) - note ID
-     * @param {String} (options.profileId) - mandatory field if ID is provided
      * @returns {Promise}
      */
     remove(options) {
         if (options.model) {
             return this.removeModel(options);
         }
-        else if (options.id && options.profileId) {
+        else if (options.id) {
             return this.removeById(options);
         }
         else {
@@ -61,7 +60,6 @@ export default class Controller {
      *
      * @param {Object} options
      * @param {String} options.id
-     * @param {String} options.profileId
      * @returns {Promise}
      */
     removeById(options) {

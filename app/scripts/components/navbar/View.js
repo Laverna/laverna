@@ -186,10 +186,8 @@ export default class View extends Mn.View {
         const maxNotebooks = Number(this.options.configs.navbarNotebooksMax);
 
         return _.extend({}, this.options, {
-            url       : Radio.request('utils/Url', 'getProfileLink'),
             title     : this.options.args.titleOptions.section,
             notebooks : _.first(this.options.notebooks.toJSON(), maxNotebooks),
-            profiles  : this.options.profileModel.get('value'),
         });
     }
 
@@ -202,16 +200,6 @@ export default class View extends Mn.View {
              */
             isSyncEnabled() {
                 return this.configs.cloudStorage === 'dropbox';
-            },
-
-            /**
-             * Return a link to a profile.
-             *
-             * @param {String} profileId
-             * @returns {String}
-             */
-            getProfileLink(profileId) {
-                return Radio.request('utils/Url', 'getProfileLink', {profileId});
             },
         };
     }

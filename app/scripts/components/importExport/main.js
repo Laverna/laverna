@@ -17,7 +17,7 @@ function initialize() {
     });
 
     Radio.request('utils/Initializer', 'add', {
-        name     : 'App:checks',
+        name     : 'App:last',
         callback : () => new Migrate().init(),
     });
 }

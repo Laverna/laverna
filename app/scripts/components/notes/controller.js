@@ -33,11 +33,10 @@ export default {
     set options(args) {
         this._argsOld = this._args;
         this._args    = {
-            profileId : args[0],
-            filter    : args[1] || 'active',
-            query     : args[2],
-            page      : args[3],
-            id        : args[4],
+            filter    : args[0] || 'active',
+            query     : args[1],
+            page      : args[2],
+            id        : args[3],
         };
     },
 
@@ -101,17 +100,16 @@ export default {
     /**
      * Add/edit a note.
      *
-     * @param {String} profileId
      * @param {String} id
      */
-    showForm(profileId, id) {
+    showForm(id) {
         // Show the sidebar if it isn't shown yet
         if (_.isEmpty(this.options)) {
-            this.showNotes(profileId, id);
+            this.showNotes(id);
         }
 
-        log('showForm', {profileId, id});
-        new Form(_.extend({}, this.options, {profileId, id})).init();
+        log('showForm', {id});
+        new Form(_.extend({}, this.options, {id})).init();
     },
 
 };

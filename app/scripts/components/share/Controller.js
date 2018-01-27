@@ -49,7 +49,7 @@ export default class Controller extends Mn.Object {
      * @param {Object} data.model
      */
     init(data) {
-        this.configs = Radio.request('collections/Configs', 'findConfigs');
+        this.username = Radio.request('collections/Profiles', 'getProfile');
 
         return Radio.request('collections/Users', 'find')
         .then(users => this.show(data, users))
@@ -80,7 +80,7 @@ export default class Controller extends Mn.Object {
     searchUser() {
         const username = this.view.ui.search.val().trim();
 
-        if (!username.length || username === this.configs.username ||
+        if (!username.length || username === this.username ||
             this.view.options.users.findWhere({username})) {
             return;
         }

@@ -19,16 +19,6 @@ const log = deb('lav:components/notebooks/form/notebook/Controller');
 export default class Controller extends Mn.Object {
 
     /**
-     * Return profileId.
-     *
-     * @returns {String}
-     */
-    get profileId() {
-        const {profileId} = this.options || {};
-        return profileId || Radio.request('utils/Url', 'getProfileId');
-    }
-
-    /**
      * Fetch data and show the notebook form.
      *
      * @returns {Promise}
@@ -155,9 +145,8 @@ export default class Controller extends Mn.Object {
         // Redirect back only if it's notebooks page
         if (hash.search(/notebooks/) !== -1) {
             Radio.request('utils/Url', 'navigate', {
-                trigger        : false,
-                url            : '/notebooks',
-                includeProfile : true,
+                trigger : false,
+                url     : '/notebooks',
             });
         }
     }

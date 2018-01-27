@@ -30,6 +30,15 @@ export default class Peer {
     }
 
     /**
+     * User profile data.
+     *
+     * @prop {Object}
+     */
+    get user() {
+        return Radio.request('collections/Profiles', 'getUser').attributes;
+    }
+
+    /**
      * Radio channel (models/Peer)
      *
      * @prop {Object}
@@ -139,10 +148,11 @@ export default class Peer {
      */
     sendOffers() {
         const users = _.pluck(_.pluck(this.users.getActive(), 'attributes'), 'username');
-        users.push(this.configs.username);
+        users.push(this.user.username);
 
         log('sending offers to', users);
         this.socket.emit('requestOffers', {users});
+        return users;
     }
 
     /**
@@ -180,7 +190,7 @@ export default class Peer {
      * @returns {Boolean}
      */
     isTrustedUser(user) { // eslint-disable-line complexity
-        if (user.username === this.configs.username) {
+        if (user.username === this.user.username) {
             return true;
         }
 
@@ -210,7 +220,7 @@ export default class Peer {
      */
     isTheSameDevice(user) {
         return (
-            user.username === this.configs.username &&
+            user.username === this.user.username &&
             user.deviceId === this.configs.deviceId
         );
     }

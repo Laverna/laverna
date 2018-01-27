@@ -94,7 +94,7 @@ export default class Keybindings {
      * @param {String} url
      */
     navigate(url) {
-        Radio.request('utils/Url', 'navigate', {url, includeProfile: true});
+        Radio.request('utils/Url', 'navigate', {url});
     }
 
 }
@@ -104,15 +104,6 @@ export default class Keybindings {
  *
  * @returns {Promise}
  */
-function initializer() {
+Radio.once('App', 'start', () => {
     return new Keybindings().bind();
-}
-
-Radio.once('App', 'init', () => {
-    Radio.request('utils/Initializer', 'add', {
-        name    : 'App:utils',
-        callback: initializer,
-    });
 });
-
-export {initializer};

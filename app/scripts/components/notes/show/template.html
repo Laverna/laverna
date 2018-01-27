@@ -20,7 +20,7 @@
         </a>
             <% } %>
         <% } %>
-        <a href="#{{profileLink}}notes/edit/{{id}}" class="btn -note btn-default note--edit">
+        <a href="#notes/edit/{{id}}" class="btn -note btn-default note--edit">
             <span class="icon-pencil"></span>
             <span class="hidden-xs">{{_.i18n('Edit')}}</span>
         </a>
@@ -29,7 +29,7 @@
             <span class="hidden-xs"><% if (trash === 0) { %>{{_.i18n('Delete')}}<% } else { %> {{_.i18n('Forever')}}<% } %></span>
         </a>
         <% if (trash !== 1) { %>
-        <a href="#{{profileLink}}settings" class="btn -note btn-default">
+        <a href="#settings" class="btn -note btn-default">
             <span class="icon-cog"></span>
             <span>{{_.i18n('Settings')}}</span>
         </a>
@@ -43,7 +43,7 @@
                     <span class="icon-undo icon--block"></span>
                     {{_.i18n('Restore')}}
                 </a>
-                <a href="#{{profileLink}}settings" class="btn">
+                <a href="#settings" class="btn">
                     <span class="icon-cog icon--block"></span>
                     {{_.i18n('Settings')}}
                 </a>
@@ -79,7 +79,7 @@
 
         <p class="note--notebook">
             <% if (notebook && notebook.id) { %>
-            <a href="#{{profileLink}}notes/f/notebook/q/{{notebook.id}}">
+            <a href="#notes/f/notebook/q/{{notebook.id}}">
                 <i class="icon-notebook"></i> {=_.cleanXSS(notebook.name)}
             </a>
             <% } %>

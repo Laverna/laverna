@@ -24,20 +24,9 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     init() {
-        return this.fetch()
+        return Radio.request('collections/Configs', 'find')
         .then(configs => this.show(configs))
         .catch(err => log('error', err));
-    }
-
-    /**
-     * Fetch configs collection.
-     *
-     * @returns {Promise}
-     */
-    fetch() {
-        return Radio.request('collections/Configs', 'find', {
-            profileId: Radio.request('utils/Url', 'getProfileId'),
-        });
     }
 
     /**

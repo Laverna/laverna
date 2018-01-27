@@ -31,14 +31,12 @@ export default class Router extends Mn.AppRouter {
      * @returns {Object}
      */
     get appRoutes() {
-        const link = '(p/:profile/)';
-
         return {
-            [`${link}notebooks`]          : 'showList',
-            [`${link}notebooks/add`]      : 'notebookForm',
-            [`${link}notebooks/edit/:id`] : 'notebookForm',
-            [`${link}tags/add`]           : 'tagForm',
-            [`${link}tags/edit/:id`]      : 'tagForm',
+            notebooks            : 'showList',
+            'notebooks/add'      : 'notebookForm',
+            'notebooks/edit/:id' : 'notebookForm',
+            'tags/add'           : 'tagForm',
+            'tags/edit/:id'      : 'tagForm',
         };
     }
 

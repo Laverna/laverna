@@ -93,12 +93,11 @@ export default class App extends Application {
      * @listens utils/Initializer#App:auth - authentication
      * @listens utils/Initializer#App:checks - init some checks before starting the app
      * @returns {Promise}
-     * @todo wait for initializers
      * @todo handle errors
      */
     lazyStart() {
         return Radio.request('utils/Initializer', 'start', {
-            names: ['App:core', 'App:utils', 'App:components', 'App:auth', 'App:checks'],
+            names: ['App:core', 'App:utils', 'App:components', 'App:auth', 'App:last'],
         })
         .then(() => this.start())
         .catch(err => log('error', err));

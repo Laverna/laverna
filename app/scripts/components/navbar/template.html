@@ -16,12 +16,10 @@
         </li>
     </ul>
 
-
     <form id="header--search" class="header--search" role="search">
         <input id="header--search--input" class="header--search--input form-control"
             type="text" placeholder="{{_.i18n('Search')}}" value="{{args.query}}" />
     </form>
-
 
     <div class="navbar-right header--right navbar-btn">
         <% if (isSyncEnabled()) { %>
@@ -49,43 +47,32 @@
 
         <div class="list-group-item sidemenu--item -disabled">{{_.i18n('General')}}</div>
 
-        <a class="list-group-item sidemenu--item" href="#{{url}}notes">
+        <a class="list-group-item sidemenu--item" href="#notes">
             <i class="icon-note"></i> {{_.i18n('All Notes')}}
         </a>
-        <a class="list-group-item sidemenu--item" href="#{{url}}notes/f/favorite">
+        <a class="list-group-item sidemenu--item" href="#notes/f/favorite">
             <i class="icon-favorite"></i> {{_.i18n('Favorites')}}
         </a>
-        <a class="list-group-item sidemenu--item" href="#{{url}}notes/f/trashed">
+        <a class="list-group-item sidemenu--item" href="#notes/f/trashed">
             <i class="icon-trashed"></i> {{_.i18n('Trash')}}
         </a>
-        <a class="list-group-item sidemenu--item" href="#{{url}}notebooks">
+        <a class="list-group-item sidemenu--item" href="#notebooks">
             <i class="icon-notebook"></i> {{_.i18n('Notebooks & tags')}}
         </a>
-        <a class="list-group-item sidemenu--item" href="#{{ url }}notes/f/task">
+        <a class="list-group-item sidemenu--item" href="#notes/f/task">
             <i class="icon-ok"></i> {{ _.i18n('Open Tasks') }}
         </a>
 
         <% if (notebooks !== null && notebooks.length) { %>
         <div class="list-group-item sidemenu--item -disabled">{{_.i18n('Notebooks')}}</div>
         <% notebooks.forEach(function(notebook) { %>
-        <a class="list-group-item sidemenu--item" href="#{{url}}notes/f/notebook/q/{{notebook.id}}">
+        <a class="list-group-item sidemenu--item" href="#notes/f/notebook/q/{{notebook.id}}">
             <i class="icon-notebook"></i>  {=_.cleanXSS(notebook.name)}
         </a>
         <% }); } %>
 
-        <div class="list-group-item sidemenu--item -disabled">{{_.i18n('Profiles')}}</div>
-        <a class="list-group-item sidemenu--item<% if (profileId === 'default' || !profileId) { %> active<% } %>" href="#/notes">
-            <i class="icon-user"></i>  {{_.i18n('Default')}}
-        </a>
-        <% _.forEach(profiles, function(prof) { %>
-        <% if (prof !== 'default') { %>
-        <a class="list-group-item sidemenu--item<% if (profileId === prof) { %> active<% } %>" href="#{{getProfileLink(prof)}}">
-            <i class="icon-user"></i>  {{prof}}
-        </a>
-        <% } }); %>
-
         <div class="list-group-item sidemenu--item -disabled">{{_.i18n('Other')}}</div>
-        <a class="list-group-item sidemenu--item" href="#{{url}}settings">
+        <a class="list-group-item sidemenu--item" href="#settings">
             <i class="icon-cog"></i>  {{_.i18n('Settings')}}
         </a>
         <a id="header--about" class="list-group-item sidemenu--item" href="#">

@@ -30,11 +30,11 @@ export default {
     /**
      * Show settings.
      */
-    showContent(profileId, tab) {
-        log('showSettings', {profileId, tab});
-        this.showSidebar({profileId, tab});
+    showContent(tab) {
+        log('showSettings', {tab});
+        this.showSidebar({tab});
 
-        this.content = new Show({profileId, tab});
+        this.content = new Show({tab});
         this.content.init();
         this.content.once('destroy', () => this.onDestroy());
     },

@@ -31,7 +31,7 @@ export default class Router extends Mn.AppRouter {
      */
     get appRoutes() {
         return {
-            '(p/:profile/)settings(/:tab)' : 'showContent',
+            'settings(/:tab)' : 'showContent',
         };
     }
 

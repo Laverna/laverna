@@ -61,7 +61,7 @@ export default class Controller extends Mn.Object {
 
 // Instantiate the controller on start only if the app is in electron environment
 Radio.once('App', 'start', () => {
-    if (window.requireNode) {
+    if (window.electron) {
         new Controller();
     }
 });

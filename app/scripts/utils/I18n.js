@@ -105,12 +105,24 @@ export default class I18n {
 /**
  * Add a new initializer once the app is ready.
  */
-const initializer = () => new I18n().initialize();
-Radio.once('App', 'init', () => {
-    Radio.request('utils/Initializer', 'add', {
-        name    : 'App:utils',
-        callback: initializer,
-    });
-});
+function initialize() {
+    const i18n     = new I18n();
+    const callback = () => i18n.initialize();
 
-export {initializer};
+    // Initialize i18n at start
+    Radio.request('utils/Initializer', 'add', {
+        callback,
+        name    : 'App:utils',
+    });
+
+    // Initialize i18n again because every profile can use a different locale
+    Radio.request('utils/Initializer', 'add', {
+        callback,
+        name    : 'App:last',
+    });
+
+    return callback;
+}
+
+Radio.once('App', 'init', initialize);
+export {initialize};

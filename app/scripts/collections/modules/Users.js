@@ -29,6 +29,15 @@ export default class Users extends Module {
         return Collection;
     }
 
+    /**
+     * The user's profile data.
+     *
+     * @prop {Object}
+     */
+    get user() {
+        return Radio.request('collections/Profiles', 'getUser').attributes;
+    }
+
     constructor() {
         super();
 
@@ -208,7 +217,6 @@ export default class Users extends Module {
      * 2. Save their username, fingerprint, and publicKey if signature is correct
      * 3. Don't accept connections until the offer is accepted
      *
-     * @todo show a notification
      * @see addUser()
      * @public
      * @param {Object} options
@@ -309,7 +317,7 @@ export default class Users extends Module {
             return (
                 res.signatures[0].valid &&
                 data.from === options.username &&
-                data.to   === this.configs.username
+                data.to   === this.user.username
             );
         });
     }

@@ -55,7 +55,7 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     fetch() {
-        const opt = {profileId: this.options.profileId, conditions: {trash: 0}};
+        const opt = {conditions: {trash: 0}};
         return Promise.all([
             Radio.request('collections/Notebooks', 'find', opt),
             Radio.request('collections/Tags', 'find', opt),
@@ -72,8 +72,7 @@ export default class Controller extends Mn.Object {
         this.view = new View({
             notebooks,
             tags,
-            configs     : this.configs,
-            profileLink : Radio.request('util/Url', 'getProfileLink'),
+            configs: this.configs,
         });
 
         Radio.request('Layout', 'empty', {region: 'content'});
@@ -117,10 +116,7 @@ export default class Controller extends Mn.Object {
      * It will use notebook form if the parameter wasn't provided.
      */
     navigateForm(data = {}) {
-        Radio.request('utils/Url', 'navigate', {
-            url            : data.url || '/notebooks/add',
-            includeProfile : true,
-        });
+        Radio.request('utils/Url', 'navigate', {url: data.url || '/notebooks/add'});
     }
 
 }

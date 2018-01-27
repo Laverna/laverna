@@ -31,19 +31,18 @@ export default class Router extends Mn.AppRouter {
      * @returns {Object}
      */
     get appRoutes() {
-        const filter = '(p/:profile/)notes(/f/:filter)(/q/:query)(/p:page)';
+        const filter = 'notes(/f/:filter)(/q/:query)(/p:page)';
 
         return {
             ''           : 'showNotes',
-            'p/:profile' : 'showNotes',
 
             // Show notes list
             [`${filter}`]          : 'showNotes',
             [`${filter}/show/:id`] : 'showNote',
 
             // Edit/add notes
-            '(p/:profile/)notes/add'      : 'showForm',
-            '(p/:profile/)notes/edit/:id' : 'showForm',
+            'notes/add'      : 'showForm',
+            'notes/edit/:id' : 'showForm',
         };
     }
 

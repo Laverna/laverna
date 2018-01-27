@@ -4,7 +4,7 @@
 import Backbone from 'backbone';
 import Radio from 'backbone.radio';
 import _ from 'underscore';
-import $ from 'jquery';
+// import $ from 'jquery';
 
 /**
  * URL helper.
@@ -40,18 +40,12 @@ export default class Url {
         // Save the original location hash
         this.hashOnStart = document.location.hash;
 
-        // Reload the page if profileId has changed
-        this.profileId = this.getProfileId();
-        $(window).on('hashchange', () => this.checkProfile());
-
         // Start replying to requests
         this.channel.reply({
             getHashOnStart : () => this.hashOnStart,
             getHash        : this.getHash,
             navigate       : this.navigate,
             navigateBack   : this.navigateBack,
-            getProfileId   : this.getProfileId,
-            getProfileLink : this.getProfileLink,
             getNotesLink   : this.getNotesLink,
             getNoteLink    : this.getNoteLink,
             getFileLink    : this.getFileLink,
@@ -68,21 +62,11 @@ export default class Url {
     }
 
     /**
-     * Reload the page if profileId has changed.
-     */
-    checkProfile() {
-        if (this.getProfileId() !== this.profileId) {
-            window.location.reload();
-        }
-    }
-
-    /**
      * Navigate to a URL.
      *
      * @param {Object} options
      * @param {String} (options.url)
      * @param {Object} (options.filterArgs)
-     * @param {Boolean} (options.includeProfile) - prepend the profile link
      * to the URL
      */
     navigate(options) {
@@ -98,11 +82,6 @@ export default class Url {
             url = this.getNoteLink(options);
         }
 
-        // Prepend the profile link
-        if (options.includeProfile) {
-            url = this.getProfileLink({url});
-        }
-
         Backbone.history.navigate(url, options);
     }
 
@@ -115,7 +94,7 @@ export default class Url {
     navigateBack(options) {
         if (this.historyLength() === 0) {
             const url = options.url || '/notes';
-            return this.navigate({url, includeProfile: true});
+            return this.navigate({url});
         }
 
         window.history.back();
@@ -128,35 +107,6 @@ export default class Url {
      */
     historyLength() {
         return window.history.length;
-    }
-
-    /**
-     * Prepend the profile link to the provided URL.
-     *
-     * @param {Object} options
-     * @param {String} (options.url)
-     * @param {String} (options.profileId)
-     * @returns {String} /p/profileName/my-url
-     */
-    getProfileLink(options = {}) {
-        const profileId = options.profileId || this.getProfileId();
-
-        // Remove the leading slash and profile link
-        const url = (options.url || '/')
-        .replace(/^\//, '')
-        .replace(/\/?p\/[^/]*\//, '');
-
-        return !profileId ? url : `/p/${profileId}/${url}`;
-    }
-
-    /**
-     * Return current profile ID.
-     *
-     * @returns {String}
-     */
-    getProfileId() {
-        const profileId = document.location.hash.match(/\/?p\/([^/]*)\//);
-        return (!profileId ? profileId : profileId[profileId.index]);
     }
 
     /**
@@ -192,7 +142,7 @@ export default class Url {
             }
         });
 
-        return this.getProfileLink({url, profileId: filterArgs.profileId});
+        return url;
     }
 
     /**

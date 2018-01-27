@@ -8,29 +8,28 @@ import Backbone from 'backbone';
 import Url from '../../../app/scripts/utils/Url';
 
 let sand;
-test('Url: before()', t => {
+test('utils/Url: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('Url: noteFilters', t => {
+test('utils/Url: noteFilters', t => {
     t.equal(typeof Url.prototype.channel, 'object', 'is an object');
     t.equal(Url.prototype.channel.channelName, 'utils/Url');
     t.end();
 });
 
-test('Url: noteFilters', t => {
+test('utils/Url: noteFilters', t => {
     t.equal(typeof Url.prototype.noteFilters, 'object', 'is an object');
     t.end();
 });
 
-test('Url: constructor()', t => {
+test('utils/Url: constructor()', t => {
     document.location.hash = '/p/default/';
     const reply = sand.spy(Url.prototype.channel, 'reply');
     const url   = new Url();
 
     t.equal(typeof url.hashOnStart, 'string', 'saves the original location hash');
-    t.equal(url.profileId, 'default', 'saves the current profile Id');
     t.equal(reply.called, true, 'starts replying to requests');
     t.equal(url.channel.request('getHashOnStart'), url.hashOnStart,
         'replies to getHashOnStart request');
@@ -40,7 +39,7 @@ test('Url: constructor()', t => {
     t.end();
 });
 
-test('Url: getHash()', t => {
+test('utils/Url: getHash()', t => {
     const url = new Url();
     Backbone.history.fragment = '/notes';
 
@@ -51,23 +50,7 @@ test('Url: getHash()', t => {
     t.end();
 });
 
-test('Url: checkProfile()', t => {
-    const reload = sand.stub(window.location, 'reload');
-    const url = new Url();
-
-    url.checkProfile();
-    t.equal(reload.notCalled, true, 'msg');
-
-    document.location.hash = '/p/new-profile/';
-    url.checkProfile();
-    t.equal(reload.called, true, 'msg');
-
-    sand.restore();
-    url.channel.stopReplying();
-    t.end();
-});
-
-test('Url: navigate()', t => {
+test('utils/Url: navigate()', t => {
     const url      = new Url();
     const navigate = sand.spy(Backbone.history, 'navigate');
 
@@ -80,17 +63,12 @@ test('Url: navigate()', t => {
     t.equal(navigate.calledWithMatch('https://noteLink', {trigger: false}), true,
         'generates link to a note');
 
-    sand.stub(url, 'getProfileLink').returns('https://example.com');
-    url.navigate({url: 'http://example.com', includeProfile: true});
-    t.equal(navigate.calledWithMatch('https://example.com', {trigger: true}), true,
-        'includes profile link');
-
     sand.restore();
     url.channel.stopReplying();
     t.end();
 });
 
-test('Url: navigateBack()', t => {
+test('utils/Url: navigateBack()', t => {
     const url      = new Url();
     const back     = sand.spy(window.history, 'back');
     const navigate = sand.stub(url, 'navigate');
@@ -100,7 +78,7 @@ test('Url: navigateBack()', t => {
     url.navigateBack({url: 'http://example.com'});
     t.equal(back.notCalled, true,
         'does not call window.history.back if location history is empty');
-    t.equal(navigate.calledWith({url: 'http://example.com', includeProfile: true}), true,
+    t.equal(navigate.calledWith({url: 'http://example.com'}), true,
         'calls this.navigate');
 
     length.returns(1);
@@ -112,52 +90,25 @@ test('Url: navigateBack()', t => {
     t.end();
 });
 
-test('Url: historyLength()', t => {
+test('utils/Url: historyLength()', t => {
     const url = new Url();
     t.equal(url.historyLength(), window.history.length, 'returns window.history.length');
     url.channel.stopReplying();
     t.end();
 });
 
-test('Url: getProfileLink()', t => {
-    const url = new Url();
-
-    const link = url.getProfileLink({profileId: 'default', url: '/p/notes/notes'});
-    t.equal(link, '/p/default/notes', 'ok');
-
-    sand.stub(url, 'getProfileId').returns('my-profile');
-    const link2 = url.getProfileLink({url: '/notes'});
-    t.equal(link2, '/p/my-profile/notes', 'msg');
-
-    url.channel.stopReplying();
-    t.end();
-});
-
-test('Url: getProfileId()', t => {
-    const url = new Url();
-
-    document.location.hash = '/p/test-profile1/';
-    t.equal(url.getProfileId(), 'test-profile1', 'returns correct profile');
-
-    document.location.hash = '/notes/p1';
-    t.equal(url.getProfileId(), null, 'returns correct profile');
-
-    url.channel.stopReplying();
-    t.end();
-});
-
-test('Url: getNoteLink()', t => {
+test('utils/Url: getNoteLink()', t => {
     const url = new Url();
     const spy = sand.spy(url, 'getNotesLink');
 
-    t.equal(url.getNoteLink({id: 'my-id'}), 'notes/show/my-id',
+    t.equal(url.getNoteLink({id: 'my-id'}), '/notes/show/my-id',
         'returns a link to a note');
     t.equal(spy.calledWith({id: 'my-id'}), true, 'calls getNotesLink method');
 
-    t.equal(url.getNoteLink({model: {id: 'test-id'}}), 'notes/show/test-id',
+    t.equal(url.getNoteLink({model: {id: 'test-id'}}), '/notes/show/test-id',
         'uses model.id');
 
-    t.equal(url.getNoteLink({}), 'notes',
+    t.equal(url.getNoteLink({}), '/notes',
         'returns notes link if both ID and model were not provided');
 
     sand.restore();
@@ -165,27 +116,25 @@ test('Url: getNoteLink()', t => {
     t.end();
 });
 
-test('Url: getNotesLink()', t => {
+test('utils/Url: getNotesLink()', t => {
     const url = new Url();
-    const spy = sand.spy(url, 'getProfileLink');
 
     let link = url.getNotesLink({
-        filterArgs: {filter: 'notebooks', query: 'id', page: '2', profileId: 'default'},
+        filterArgs: {filter: 'notebooks', query: 'id', page: '2'},
     });
-    t.equal(link, '/p/default/notes/f/notebooks/q/id/p2', 'returns a correct url');
-    t.equal(spy.called, true, 'calls getProfileLink()');
+    t.equal(link, '/notes/f/notebooks/q/id/p2', 'returns a correct url');
 
     link = url.getNotesLink({
         filterArgs: {filter: 'notebooks', query: 'id'},
     });
-    t.equal(link, 'notes/f/notebooks/q/id', 'returns a correct url');
+    t.equal(link, '/notes/f/notebooks/q/id', 'returns a correct url');
 
     sand.restore();
     url.channel.stopReplying();
     t.end();
 });
 
-test('Url: getFileLink()', t => {
+test('utils/Url: getFileLink()', t => {
     const url = new Url();
 
     let link = url.getFileLink({model: {id: 'my-id'}});

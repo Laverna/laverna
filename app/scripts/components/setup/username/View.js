@@ -4,6 +4,7 @@
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 import View from '../ContentView';
+import {configNames} from '../../../collections/configNames';
 
 /**
  * Ask for a user name.
@@ -41,10 +42,16 @@ export default class Username extends View {
         });
     }
 
-    serializeData() {
+    triggers() {
         return {
-            configs: Radio.request('collections/Configs', 'findConfigs'),
+            'click #welcome--auth': 'go:auth',
         };
+    }
+
+    serializeData() {
+        return _.extend({}, this.options, {
+            signalServer: configNames.sync.signalServer,
+        });
     }
 
     initialize() {

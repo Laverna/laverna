@@ -9,6 +9,7 @@ import sinon from 'sinon';
 import _ from '../../../../app/scripts/utils/underscore';
 import ContentView from '../../../../app/scripts/components/setup/ContentView';
 import View from '../../../../app/scripts/components/setup/username/View';
+import {configNames} from '../../../../app/scripts/collections/configNames';
 
 let sand;
 test('setup/username/View: before()', t => {
@@ -32,6 +33,22 @@ test('setup/username/Username: events()', t => {
     t.equal(typeof events, 'object');
     t.equal(events['click #welcome--import'], 'triggerImport');
     t.equal(events['change #import--data'], 'importData');
+    t.end();
+});
+
+test('setup/username/Username: triggers()', t => {
+    const trig = View.prototype.triggers();
+    t.equal(typeof trig, 'object');
+    t.equal(trig['click #welcome--auth'], 'go:auth');
+    t.end();
+});
+
+test('setup/username/Username: serializeData()', t => {
+    const view = new View({newIdentity: true});
+    t.deepEqual(view.serializeData(), {
+        newIdentity  : true,
+        signalServer : configNames.sync.signalServer,
+    });
     t.end();
 });
 

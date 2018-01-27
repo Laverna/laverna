@@ -16,12 +16,16 @@ test('setup/main: before()', t => {
 });
 
 test('setup/main: initialize()', t => {
-    const init = sand.stub(Controller.prototype, 'init');
-    const req  = sand.stub(Radio, 'request').callsFake((...args) => {
+    const init  = sand.stub(Controller.prototype, 'init');
+    const reply = sand.stub(Radio, 'reply');
+    const req   = sand.stub(Radio, 'request').callsFake((...args) => {
         args[2].callback();
     });
 
     initialize();
+    t.equal(reply.calledWith('components/setup', 'start'), true,
+        'replies to "start" request');
+
     t.equal(req.calledWithMatch('utils/Initializer', 'add', {
         name: 'App:components',
     }), true, 'adds App:components initializer');

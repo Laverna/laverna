@@ -38,8 +38,8 @@ test('models/diffsync/Core: profileId', t => {
     const req = sand.stub(Radio, 'request').returns('test');
 
     t.equal(Core.prototype.profileId, 'test', 'returns the result of the request');
-    t.equal(req.calledWith('utils/Url', 'getProfileId'), true,
-        'makes a "getProfileId" request');
+    t.equal(req.calledWith('collections/Profiles', 'getProfile'), true,
+        'makes a "getProfile" request');
 
     sand.restore();
     t.end();

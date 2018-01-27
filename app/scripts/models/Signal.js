@@ -48,7 +48,7 @@ export default class Signal {
         this.options = _.extend({}, options);
 
         // Set the signaling server address
-        this.changeServer(options);
+        // this.changeServer(options);
 
         // Start replying to requests
         this.channel.reply({
@@ -59,6 +59,13 @@ export default class Signal {
             sendInvite   : this.sendInvite,
             removeInvite : this.removeInvite,
         }, this);
+    }
+
+    /**
+     * Stop replying to requests.
+     */
+    destroy() {
+        this.channel.stopReplying();
     }
 
     /**

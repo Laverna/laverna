@@ -7,10 +7,12 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import * as openpgp from 'openpgp';
 
-import _ from 'underscore';
+import _ from '../../../../app/scripts/utils/underscore';
 import Controller from '../../../../app/scripts/components/setup/Controller';
 import View from '../../../../app/scripts/components/setup/View';
+import Profiles from '../../../../app/scripts/collections/Profiles';
 
+const profiles = new Profiles();
 let sand;
 test('setup/Controller: before()', t => {
     sand = sinon.sandbox.create();
@@ -22,24 +24,13 @@ test('setup/Controller: configsChannel', t => {
     t.end();
 });
 
-test('setup/Controller: configs', t => {
-    const configs = {test: '1'};
-    const req     = sand.stub(Radio, 'request').returns(configs);
+test('setup/Controller: profiles', t => {
+    const con = new Controller();
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Profiles', 'findProfiles')
+    .returns(profiles);
 
-    t.equal(Controller.prototype.configs, configs, 'returns the result of the request');
-    t.equal(req.calledWith('collections/Configs', 'findConfigs'), true,
-        'makes "findConfigs" request');
-
-    sand.restore();
-    t.end();
-});
-
-test('setup/Controller: profileId', t => {
-    const req = sand.stub(Radio, 'request').returns('test');
-
-    t.equal(Controller.prototype.profileId, 'test', 'returns the result of the request');
-    t.equal(req.calledWith('utils/Url', 'getProfileId'), true,
-        'makes "getProfileId" request');
+    t.equal(con.profiles, profiles);
 
     sand.restore();
     t.end();
@@ -61,25 +52,24 @@ test('setup/Controller: init()', t => {
     t.equal(con.show.called, true, 'renders the view');
     t.equal(con.listenToEvents.called, true, 'starts listening to events');
 
+    con.options.newIdentity = true;
+    con.isFirstStart.returns(false);
+    con.init();
+    t.equal(con.show.callCount, 2,
+        'renders the view if a user is trying to create a new identity');
+
     sand.restore();
     t.end();
 });
 
 test('setup/Controller: isFirstStart()', t => {
     const con     = new Controller();
-    const configs = {username: '', privateKey: '', publicKey: ''};
-    Object.defineProperty(con, 'configs', {get: () => configs});
+    Object.defineProperty(con, 'profiles', {get: () => profiles});
 
-    t.equal(con.isFirstStart(), true, 'returns false if "username" is empty');
+    t.equal(con.isFirstStart(), true, 'returns true if "profiles" is empty');
 
-    configs.username = 'hello';
-    t.equal(con.isFirstStart(), true, 'returns false if "privateKey" is empty');
-
-    configs.privateKey = 'privKey';
-    t.equal(con.isFirstStart(), true, 'returns false if "publicKey" is empty');
-
-    configs.publicKey = 'pubKey';
-    t.equal(con.isFirstStart(), false, 'returns true');
+    profiles.add({username: 'bob'});
+    t.equal(con.isFirstStart(), false, 'returns false if "profiles" is not empty');
 
     t.end();
 });
@@ -138,7 +128,8 @@ test('setup/Controller: onViewDestroy()', t => {
 test('setup/Controller: checkUser()', t => {
     const con     = new Controller();
     const req     = sand.stub(Radio, 'request').returns(Promise.resolve({}));
-    const confReq = sand.stub(con.configsChannel, 'request').returns(Promise.resolve());
+    Object.defineProperty(con, 'profiles', {get: () => profiles});
+
     const user    = {username: 'test'};
     const trigger = sand.stub();
     con.view      = {
@@ -148,21 +139,26 @@ test('setup/Controller: checkUser()', t => {
         },
     };
 
-    con.checkUser({username: 'test', signalServer: 'https://laverna.cc'})
+    profiles.add({username: 'bob'});
+    con.checkUser({username: 'bob', signalServer: 'https://laverna.cc'})
     .then(() => {
-        t.equal(confReq.calledWith('saveConfig', {
-            config: {
-                name  : 'signalServer',
-                value : 'https://laverna.cc',
-            },
-        }), true, 'changes the signaling server address in configs');
+        t.equal(con.options.signalServer, 'https://laverna.cc',
+            'creates "this.options.signalServer"');
+        t.equal(trigger.calledWith('name:taken', {user: profiles.get('bob')}), true,
+            'triggers "name:taken" event if a user is in "profiles"');
 
+        return con.checkUser({username: 'test', signalServer: 'https://laverna.cc'});
+    })
+    .then(() => {
         t.equal(req.calledWith('models/Signal', 'changeServer', {
             signal: 'https://laverna.cc',
         }), true, 'changes the signaling server address');
 
         t.equal(con.view.showRegister.calledWith({username: 'test'}), true,
             'shows the registration form if user does not exist on the server');
+
+        t.equal(con.options.username, 'test',
+            'creates "this.options.username"');
 
         req.returns(Promise.resolve(user));
         return con.checkUser({username: 'test'});
@@ -311,27 +307,42 @@ test('setup/Controller: register()', t => {
 
 test('setup/Controller: saveConfigs()', t => {
     const con = new Controller();
-    const req = sand.stub(con.configsChannel, 'request');
-    con.keys  = {privateKey: 'priv', publicKey: 'pub'};
+    Object.defineProperty(con, 'profiles', {get: () => profiles});
 
-    con.saveConfigs({username: 'test'});
-    t.equal(req.calledWith('saveConfigs', {
-        configs: [
-            {name: 'privateKey', value: con.keys.privateKey},
-            {name: 'publicKey', value: con.keys.publicKey},
-            {name: 'encrypt', value: 1},
-            {name: 'username', value: 'test'},
-        ],
-        noBackup : true,
-        profileId: con.profileId,
-    }), true, 'saves configs');
+    const profReq = sand.stub(profiles.channel, 'request').resolves();
+    const req     = sand.stub(con.configsChannel, 'request');
+    con.keys      = {privateKey: 'priv', publicKey: 'pub'};
+    con.options.signalServer = 'https://localhost:3000';
 
-    sand.restore();
-    t.end();
+    const res = con.saveConfigs({username: 'bob'});
+
+    t.equal(profReq.calledWith('createProfile', {
+        username   : 'bob',
+        privateKey : con.keys.privateKey,
+        publicKey  : con.keys.publicKey,
+    }), true, 'saves the new profile');
+
+    res.then(() => {
+        t.equal(req.calledWith('find', {profileId: 'bob'}), true,
+            'creates default configs');
+
+        t.equal(req.calledWith('saveConfigs', {
+            configs: [
+                {name: 'encrypt', value: 1},
+                {name: 'signalServer', value: con.options.signalServer},
+            ],
+            noBackup : true,
+            profileId: 'bob',
+        }), true, 'saves configs');
+
+        sand.restore();
+        t.end();
+    });
 });
 
 test('setup/Controller: export()', t => {
     const con   = new Controller();
+    con.options = {username: 'alice'};
 
     sand.stub(con, 'saveSync').resolves();
     global.Blob = sand.stub().returns('blob');
@@ -347,7 +358,7 @@ test('setup/Controller: export()', t => {
             type: 'text/plain',
         }), true, 'creates a blob of the private key');
 
-        t.equal(con.fileSaver.calledWithMatch({}, 'laverna-key.asc'), true,
+        t.equal(con.fileSaver.calledWithMatch({}, 'laverna-key-alice.asc'), true,
             'offers the user to save their private key');
         t.equal(con.view.destroy.called, true, 'destroyes the view');
 

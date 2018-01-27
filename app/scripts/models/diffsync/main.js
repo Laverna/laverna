@@ -8,20 +8,26 @@ import Peer from '../Peer';
 import Core from './Core';
 
 export default function initializer() {
-    const sync = Radio.request('collections/Configs', 'findConfig', {
-        name: 'cloudStorage',
-    });
+    // Instantiate the class that connects a user to the signaling server
+    const signal = new Signal();
 
-    if (sync === 'p2p' || sync === '0') {
-        // Initialize peer class and differential synchronization core
-        Radio.once('App', 'start', () => {
-            new Peer().init();
-            new Core().init();
+    function start() {
+        const sync = Radio.request('collections/Configs', 'findConfig', {
+            name: 'cloudStorage',
         });
 
-        // Instantiate the class that connects a user to the signaling server
-        return new Signal();
-    }
+        if (sync === 'p2p') {
+            new Peer().init();
+            new Core().init();
+        }
+        else {
+            signal.destroy();
+        }
+    };
+
+    // Initialize peer class and differential synchronization core
+    Radio.once('App', 'start', start);
+    return start;
 }
 
 // Add a new initializer

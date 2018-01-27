@@ -1,3 +1,12 @@
+<% if (newIdentity) { %>
+<div class="col-xs-12">
+    <button id="welcome--auth" class="btn btn-lg btn-block btn-default">
+        {{_.i18n('Back to auth')}}
+    </button>
+    <br/>
+</div>
+<% } %>
+
 <div class="col-xs-12 form-group text-left text--brand">
     <p>{{_.i18n('You opened Laverna for the first time on this device.')}}</p>
     <ul>
@@ -11,7 +20,7 @@
 </div>
 
 <div class="col-xs-12 form-group">
-    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="signalServer" value="{{configs.signalServer}}" placeholder="{{_.i18n('Signaling server')}}" title="{{_.i18n('Signaling server')}}" />
+    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="signalServer" value="{{signalServer}}" placeholder="{{_.i18n('Signaling server')}}" title="{{_.i18n('Signaling server')}}" />
 </div>
 
 <div class="col-xs-12" style="margin-bottom:10px">

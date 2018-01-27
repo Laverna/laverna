@@ -56,6 +56,7 @@ export default class View extends Mn.View {
     childViewEvents() {
         return {
             'show:username': 'showUsername',
+            'go:auth'      : 'destroy',
         };
     }
 
@@ -70,7 +71,7 @@ export default class View extends Mn.View {
      * Show the view that checks if a username exists.
      */
     showUsername() {
-        this.showChildView('content', new Username());
+        this.showChildView('content', new Username(this.options));
     }
 
     /**

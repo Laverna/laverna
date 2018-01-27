@@ -46,11 +46,11 @@ test('models/Signal: configs', t => {
 
 test('models/Signal: constructor()', t => {
     const reply  = sand.stub(Signal.prototype.channel, 'reply');
-    const change = sand.stub(Signal.prototype, 'changeServer');
+    // const change = sand.stub(Signal.prototype, 'changeServer');
     const sig    = new Signal({});
 
     t.equal(typeof sig.options, 'object', 'creates "options" property');
-    t.equal(change.called, true, 'changes the signaling server address');
+    // t.equal(change.called, true, 'changes the signaling server address');
 
     t.equal(reply.calledWith({
         changeServer : sig.changeServer,

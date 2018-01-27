@@ -31,21 +31,12 @@ export default class Controller extends Mn.Object {
     }
 
     /**
-     * App configs.
+     * Profiles.
      *
-     * @prop {Object}
+     * @prop {Object} Backbone collection with profile model.
      */
-    get configs() {
-        return Radio.request('collections/Configs', 'findConfigs');
-    }
-
-    /**
-     * Profile ID.
-     *
-     * @prop {String}
-     */
-    get profileId() {
-        return Radio.request('utils/Url', 'getProfileId');
+    get profiles() {
+        return Radio.request('collections/Profiles', 'findProfiles');
     }
 
     initialize() {
@@ -61,7 +52,7 @@ export default class Controller extends Mn.Object {
      */
     init() {
         // If it's not the first start, do nothing
-        if (!this.isFirstStart()) {
+        if (!this.isFirstStart() && !this.options.newIdentity) {
             return Promise.resolve(this.destroy());
         }
 
@@ -80,18 +71,14 @@ export default class Controller extends Mn.Object {
      * @returns {Boolean}
      */
     isFirstStart() {
-        return (
-            !this.configs.username.length ||
-            !this.configs.privateKey.length ||
-            !this.configs.publicKey.length
-        );
+        return (!this.profiles.length);
     }
 
     /**
      * Render the view.
      */
     show() {
-        this.view = new View();
+        this.view = new View(this.options);
         Radio.request('Layout', 'show', {region: 'brand', view: this.view});
         this.view.triggerMethod('ready');
     }
@@ -127,25 +114,26 @@ export default class Controller extends Mn.Object {
      * @returns {Promise}
      */
     checkUser({username, signalServer}) {
-        const view = this.view.getChildView('content');
+        // Set the new signal server address
+        this.options.signalServer = signalServer;
         Radio.request('models/Signal', 'changeServer', {signal: signalServer});
 
-        return this.configsChannel.request('saveConfig', {
-            config: {
-                name  : 'signalServer',
-                value : signalServer || this.configs.signalServer,
-            },
-        })
-        .then(() => {
-            return Radio.request('models/Signal', 'findUser', {username})
-            .catch(err => {
-                view.triggerMethod('signalServer:error', {err});
-                throw new Error(err);
-            });
+        const view    = this.view.getChildView('content');
+        const profile = this.profiles.findWhere({username});
+
+        if (profile) {
+            return Promise.resolve(view.triggerMethod('name:taken', {user: profile}));
+        }
+
+        return Radio.request('models/Signal', 'findUser', {username})
+        .catch(err => {
+            view.triggerMethod('signalServer:error', {err});
+            throw new Error(err);
         })
         .then(user => {
             // Show the registration form if user does not exist on the server
             if (_.isEmpty(user)) {
+                this.options.username = username;
                 return this.view.showRegister({username});
             }
 
@@ -256,16 +244,22 @@ export default class Controller extends Mn.Object {
      */
     saveConfigs({username}) {
         const configs = [
-            {name: 'privateKey', value: this.keys.privateKey},
-            {name: 'publicKey', value: this.keys.publicKey},
             {name: 'encrypt', value: 1},
-            {name: 'username', value: username},
+            {name: 'signalServer', value: this.options.signalServer},
         ];
 
-        return this.configsChannel.request('saveConfigs', {
-            configs,
-            noBackup  : true,
-            profileId : this.profileId,
+        const profile = _.extend({}, this.keys, {username});
+        return this.profiles.channel.request('createProfile', profile)
+        // Create default configs
+        .then(() => {
+            return this.configsChannel.request('find', {profileId: username});
+        })
+        .then(() => {
+            return this.configsChannel.request('saveConfigs', {
+                configs,
+                noBackup  : true,
+                profileId : username,
+            });
         });
     }
 
@@ -278,7 +272,7 @@ export default class Controller extends Mn.Object {
         const value = this.view.getChildView('content').ui.sync.val().trim();
         return this.configsChannel.request('saveConfig', {
             config    : {value, name: 'cloudStorage'},
-            profileId : this.profileId,
+            profileId : this.options.username,
         });
     }
 
@@ -291,7 +285,7 @@ export default class Controller extends Mn.Object {
         return this.saveSync()
         .then(() => {
             const blob = new Blob([this.keys.privateKey], {type: 'text/plain'});
-            this.fileSaver(blob, 'laverna-key.asc');
+            this.fileSaver(blob, `laverna-key-${this.options.username}.asc`);
             this.view.destroy();
         });
     }

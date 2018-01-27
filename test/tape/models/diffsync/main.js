@@ -27,16 +27,17 @@ test('models/diffsync/main: initializer()', t => {
     const init  = sand.stub(Peer.prototype, 'init');
     const init2 = sand.stub(Core.prototype, 'init');
 
-    initializer();
-    Radio.trigger('App', 'start');
+    const start = initializer();
+    t.equal(typeof start, 'function', 'returns the callback');
+
+    start();
     t.equal(init.called, true, 'initializes the peer class');
     t.equal(init2.called, true, 'initializes the differential synchronization core');
 
     req.withArgs('collections/Configs', 'findConfig', {name: 'cloudStorage'})
     .returns('dropbox');
 
-    initializer();
-    Radio.trigger('App', 'start');
+    start();
     t.equal(init.callCount, 1, 'does nothing if p2p is not used');
 
     sand.restore();

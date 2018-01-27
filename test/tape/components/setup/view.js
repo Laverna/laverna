@@ -47,6 +47,7 @@ test('setup/View: childViewEvents()', t => {
     const events = View.prototype.childViewEvents();
     t.equal(typeof events, 'object');
     t.equal(events['show:username'], 'showUsername');
+    t.equal(events['go:auth'], 'destroy');
     t.end();
 });
 

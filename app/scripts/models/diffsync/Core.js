@@ -44,7 +44,7 @@ export default class Core {
      * @prop {String}
      */
     get profileId() {
-        return Radio.request('utils/Url', 'getProfileId');
+        return Radio.request('collections/Profiles', 'getProfile');
     }
 
     constructor() {

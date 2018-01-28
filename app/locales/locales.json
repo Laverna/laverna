@@ -47,6 +47,10 @@
         "name": "French",
         "nativeName": "Français"
     },
+    "gl": {
+        "name": "Galician",
+        "nativeName": "Galego"
+    },
     "hi_in": {
         "name": "Hindi",
         "nativeName": "Hindi"

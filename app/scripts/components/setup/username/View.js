@@ -89,7 +89,7 @@ export default class Username extends View {
      * @param {Object} data={}
      */
     showImportMessage(data = {}) {
-        this.showWarning(data.error ? 'Import error' : 'Import success');
+        this.showWarning(data.msg);
     }
 
     /**

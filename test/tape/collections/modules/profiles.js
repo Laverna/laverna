@@ -77,13 +77,9 @@ test('collections/modules/Profiles: setUser()', t => {
 });
 
 test('collections/modules/Profiles: getUser()', t => {
-    const mod   = new Module();
+    const mod = new Module();
 
-    try {
-        mod.getUser();
-    } catch (e) {
-        t.equal(e.message, 'The profile model does not exist!');
-    }
+    t.equal(mod.getUser(), null, 'returns null');
 
     mod.profile = new Profile({username: 'bob'});
     t.equal(mod.getUser(), mod.profile, 'returns the profile model');

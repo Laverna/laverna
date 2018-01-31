@@ -98,13 +98,9 @@ test('setup/username/View: showImportMessage()', t => {
     sand.stub(_, 'i18n').callsFake(str => str);
     sand.stub(view, 'showWarning');
 
-    view.showImportMessage();
+    view.showImportMessage({msg: 'Import success'});
     t.equal(view.showWarning.calledWith('Import success'), true,
         'shows a success message');
-
-    view.showImportMessage({error: 'error'});
-    t.equal(view.showWarning.calledWith('Import error'), true,
-        'shows an error message');
 
     sand.restore();
     t.end();

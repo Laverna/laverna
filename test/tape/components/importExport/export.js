@@ -8,25 +8,24 @@ import Radio from 'backbone.radio';
 import _ from '../../../../app/scripts/utils/underscore';
 
 import Export from '../../../../app/scripts/components/importExport/Export';
-import Profiles from '../../../../app/scripts/collections/Profiles';
+import Profile from '../../../../app/scripts/models/Profile';
 import Notes from '../../../../app/scripts/collections/Notes';
 import Files from '../../../../app/scripts/collections/Files';
 import Tags from '../../../../app/scripts/collections/Tags';
 
+const user = new Profile({username: 'alice', privateKey: 'private key'});
 let sand;
 test('importExport/Export: before()', t => {
     sand = sinon.sandbox.create();
     t.end();
 });
 
-test('importExport/Export: profiles', t => {
-    const prof = new Profiles();
-    const req  = sand.stub(Radio, 'request')
-    .withArgs('collections/Profiles', 'findProfiles')
-    .returns(prof);
+test('importExport/Export: user', t => {
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Profiles', 'getUser')
+    .returns(user);
 
-    t.equal(Export.prototype.profiles, prof, 'returns an array of profiles');
-
+    t.equal(new Export().user, user.attributes);
     sand.restore();
     t.end();
 });
@@ -62,37 +61,36 @@ test('importExport/Export: init()', t => {
 });
 
 test('importExport/Export: exportData()', t => {
-    const con = new Export();
-    sand.stub(con, 'exportCollections');
+    const con = new Export({data: []});
+    sand.stub(con, 'exportCollections').resolves();
     sand.stub(con, 'saveToFile').returns(Promise.resolve());
 
     const res = con.exportData();
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(con.saveToFile.notCalled, true, 'does nothing if there is no data');
 
-    con.options = {data: {profile: [new Notes()]}};
-    con.exportData();
-    t.equal(con.exportCollections.calledWith(con.options.data.profile), true,
-        'exports data from every profile');
-    t.equal(con.saveToFile.called, true, 'saves the result to a ZIP file');
+    con.options = {data: [new Notes()]};
+    con.exportData()
+    .then(() => {
+        t.equal(con.exportCollections.called, true,
+            'exports data from every collection');
+        t.equal(con.saveToFile.called, true, 'saves the result to a ZIP file');
 
-    sand.restore();
-    t.end();
+        sand.restore();
+        t.end();
+    });
 });
-
 
 test('importExport/Export: exportKey()', t => {
     const con   = new Export();
-    global.Blob = sand.stub().callsFake(str => str);
+    global.Blob = sand.stub().callsFake(() => ['blob']);
+    Object.defineProperty(con, 'user', {get: () => user.attributes});
     sand.stub(con, 'saveAs');
     sand.spy(con, 'destroy');
 
-    sand.stub(Radio, 'request')
-    .withArgs('collections/Configs', 'findConfig', {name: 'privateKey'})
-    .returns('private key');
-
-    const res = con.exportKey();
-    t.equal(con.saveAs.calledWith(['private key'], 'lav-private-key.asc'), true,
+    con.exportKey();
+    t.equal(con.saveAs.calledWith(['blob']), true);
+    t.equal(con.saveAs.calledWith(['blob'], 'laverna-key-alice.asc'), true,
         'exports the private key');
     t.equal(con.destroy.called, true, 'destroyes itself');
 
@@ -101,19 +99,20 @@ test('importExport/Export: exportKey()', t => {
 });
 
 test('importExport/Export: export()', t => {
-    const con      = new Export();
-    const profiles = ['default', 'test'];
-    Object.defineProperty(con, 'profiles', {get: () => profiles});
+    const con = new Export();
+    sand.stub(con, 'fetchExportCollection').resolves();
     sand.stub(con, 'exportProfile');
     sand.stub(con, 'saveToFile');
 
     const res = con.export();
-    t.equal(con.exportProfile.calledWith('default'), true,
-        'export data from "default" profile');
-    t.equal(con.exportProfile.calledWith('test'), true,
-        'export data from "test" profile');
+    t.equal(con.exportProfile.calledWith(), true,
+        'exports the users profile');
 
     res.then(() => {
+        t.equal(con.fetchExportCollection.callCount, con.collections.length,
+            'exports all collections');
+        t.equal(con.fetchExportCollection.calledWith('Notes'), true,
+            'exports notes collection');
         t.equal(con.saveToFile.called, true,
             'saves the result to a ZIP file');
 
@@ -122,39 +121,49 @@ test('importExport/Export: export()', t => {
     });
 });
 
-test('importExport/Export: exportProfile()', t => {
-    const con = new Export();
-    const col = new Notes();
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve(col));
-    sand.stub(con, 'exportCollections');
+test('importExport/Export: fetchExportCollection()', t => {
+    const con   = new Export();
+    const notes = new Notes();
+    Object.defineProperty(con, 'profileId', {get: () => 'alice'});
 
-    const res = con.exportProfile('test');
-    t.equal(typeof res.then, 'function', 'returns a promise');
+    sand.stub(con, 'exportCollection');
+    sand.stub(Radio, 'request')
+    .withArgs('collections/Notes', 'find', {profileId: 'alice'})
+    .resolves(notes);
 
-    const colls = [];
-    _.each(con.collections, name => {
-        colls.push(col);
-        t.equal(req.calledWith(`collections/${name}`, 'find', {profileId: 'test'}),
-            true, `fetches ${name} collection`);
-    });
-
-    res.then(() => {
-        t.equal(con.exportCollections.calledWith(colls), true,
-            'exports data from the fetched collections');
+    con.fetchExportCollection('Notes')
+    .then(() => {
+        t.equal(con.exportCollection.calledWith(notes), true,
+            'exports the collection');
 
         sand.restore();
         t.end();
     });
 });
 
+test('importExport/Export: exportProfile()', t => {
+    const con = new Export();
+    con.zip   = {file: sand.stub()};
+    Object.defineProperty(con, 'user', {get: () => user.attributes});
+    const str = JSON.stringify([con.user]);
+
+    con.exportProfile();
+    t.equal(con.zip.file.calledWith('laverna-backups/profiles.json', str), true);
+
+    sand.restore();
+    t.end();
+});
+
 test('importExport/Export: exportCollections()', t => {
     const con = new Export();
     const col = new Notes();
     sand.stub(con, 'exportCollection');
+    sand.stub(con, 'exportProfile');
 
     con.exportCollections([col]);
     t.equal(con.exportCollection.calledWith(col), true,
         'exports data from each collection');
+    t.equal(con.exportProfile.called, true, 'export the users profile');
 
     sand.restore();
     t.end();
@@ -247,6 +256,7 @@ test('importExport/Export: exportFile()', t => {
 test('importExport/Export: saveToFile()', t => {
     const con = new Export();
     con.zip   = {generateAsync: sand.stub().returns(Promise.resolve('test'))};
+    Object.defineProperty(con, 'user', {get: () => user.attributes});
     sand.stub(con, 'destroy');
     sand.stub(con, 'saveAs');
 
@@ -254,7 +264,7 @@ test('importExport/Export: saveToFile()', t => {
     .then(() => {
         t.equal(con.zip.generateAsync.calledWith({type: 'blob'}), true,
             'generates ZIP blob');
-        t.equal(con.saveAs.calledWith('test', 'laverna-backup.zip'), true,
+        t.equal(con.saveAs.calledWith('test', 'laverna-backup-alice.zip'), true,
             'saves the blob in laverna-backup.zip archive');
 
         sand.restore();

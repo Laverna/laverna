@@ -208,13 +208,9 @@ export default class Module {
         const {model} = options;
         const data    = options.data  || model.attributes;
 
-        // Assume the model belongs to the user
-        if (!_.isUndefined(model.defaults.sharedBy) &&
-            !data.sharedBy && !model.get('sharedBy')) {
-            data.sharedBy = this.user.get('username');
-        }
-
         model.setEscape(data);
+        this.setSharedBy(model);
+
         let errors = null;
         if (!options.dontValidate) {
             errors = model.validate(model.attributes);
@@ -233,6 +229,22 @@ export default class Module {
             this.onSaveModel(model);
             this.channel.trigger('save:model', {model});
         });
+    }
+
+    /**
+     * Set sharedBy attribute to the user's name.
+     *
+     * @param {Object} model - Backbone model
+     * @returns {Boolean}
+     */
+    setSharedBy(model) {
+        if (!this.user || _.isUndefined(model.defaults.sharedBy) ||
+            model.get('sharedBy')) {
+            return false;
+        }
+
+        model.set('sharedBy', this.user.get('username'));
+        return true;
     }
 
     /**
@@ -339,13 +351,18 @@ export default class Module {
      * @param {Object} model = this.Model.prototype - Backbone model
      * @returns {Boolean}
      */
-    isEncryptEnabled(model = this.Model.prototype) {
+    isEncryptEnabled(model = this.Model.prototype) { // eslint-disable-line
         // The model doesn't have label names that should be encrypted
         if (_.isUndefined(model.encryptKeys)) {
             return false;
         }
 
         const configs = Radio.request('collections/Configs', 'findConfigs');
+
+        if (!configs) {
+            return false;
+        }
+
         const backup  = {encrypt: configs.encryptBackup.encrypt || 0};
 
         // Encryption is enabled either in the current configs or backup

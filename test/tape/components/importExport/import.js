@@ -8,6 +8,7 @@ import Radio from 'backbone.radio';
 import '../../../../app/scripts/utils/underscore';
 
 import Import from '../../../../app/scripts/components/importExport/Import';
+import Profile from '../../../../app/scripts/models/Profile';
 
 let sand;
 test('importExport/Import: before()', t => {
@@ -17,6 +18,15 @@ test('importExport/Import: before()', t => {
 
 test('importExport/Import: channel', t => {
     t.equal(Import.prototype.channel.channelName, 'components/importExport');
+    t.end();
+});
+
+test('importExport/Import: collections', t => {
+    t.equal(new Import().collections.length, 6);
+    t.deepEqual(
+        new Import().collections,
+        ['notebooks', 'tags', 'configs', 'users', 'files', 'profiles']
+    );
     t.end();
 });
 
@@ -58,8 +68,13 @@ test('importExport/Import: onSuccess', t => {
     const trig   = sand.stub(con.channel, 'trigger');
 
     con.onSuccess();
-    t.equal(trig.calledWith('completed'), true,
+    t.equal(trig.calledWith('completed', {msg: 'Import success'}), true,
         'triggers "completed" event');
+
+    con.isOldBackup = true;
+    con.onSuccess();
+    t.equal(trig.calledWith('completed', {msg: 'Old backup import success'}), true,
+        'triggers "completed" event for old backup');
 
     setTimeout(() => {
         t.equal(reload.called, true, 'reloads the page');
@@ -73,7 +88,7 @@ test('importExport/Import: onError', t => {
     const trig   = sand.stub(con.channel, 'trigger');
 
     con.onError('error');
-    t.equal(trig.calledWith('completed', {error: 'error'}),
+    t.equal(trig.calledWith('completed', {error: 'error', msg: 'Import error'}),
         true, 'triggers "completed" event');
 
     sand.restore();
@@ -200,22 +215,105 @@ test('importExport/Import: readZip()', t => {
 
 test('importExport/Import: import()', t => {
     const con = new Import();
+    const zip = {files: {
+        'laverna-backups/notes-db/configs.json': {name: 'configs.json'},
+    }};
+    sand.stub(con, 'importProfile').resolves();
+    sand.stub(con, 'importCollections').resolves();
+
+    con.import(zip)
+    .then(() => {
+        t.equal(con.isOldBackup, true, 'sets isOldBackup property to true');
+        t.equal(con.importCollections.calledWith(zip), true, 'imports the collection');
+        t.equal(con.importProfile.notCalled, true, 'does not import the profile');
+
+        zip.files = {'laverna-backups/alice/notes/1.json': {name: '1.json'}};
+        return con.import(zip);
+    })
+    .then(() => {
+        t.equal(con.importProfile.calledWith(zip), true, 'imports the profile');
+        t.equal(con.importCollections.callCount, 2, 'imports the collections too');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: importProfile()', t => {
+    const con   = new Import();
+    const req   = sand.stub(Radio, 'request').returns(null);
+    const async = sand.stub().resolves(JSON.stringify([{username: 'bob'}]));
+    const zip   = {
+        file  : sand.stub().returns({async}),
+        files : {'laverna-backups/alice/profiles.json': {name: 'profiles.json'}},
+    };
+    const user  = new Profile({username: 'alice'});
+    sand.stub(con, 'importCollection');
+
+    con.importProfile({files: []})
+    .catch(err => {
+        t.equal(err, 'You need to create a profile first!');
+
+        req.withArgs('collections/Profiles', 'getUser')
+        .returns(user);
+
+        return con.importProfile(zip);
+    })
+    .catch(err => {
+        t.equal(err, 'You cannot import another users backup!');
+
+        async.resolves(JSON.stringify([{username: 'alice'}]));
+        return con.importProfile(zip);
+    })
+    .then(() => {
+        t.equal(con.profile.username, 'alice');
+        t.equal(con.importCollection.calledWith({
+            data: [con.profile],
+            type: 'profiles',
+        }), true, 'imports the profile');
+        t.equal(req.calledWith('collections/Profiles', 'setUser', con.profile),
+            true, 'sets the profile');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: isCollectionFile()', t => {
+    const con = new Import();
+
+    t.equal(con.isCollectionFile({dir: true, name: 'name.json'}), false,
+        'returns false if it is a directory');
+
+    t.equal(con.isCollectionFile({name: '1.png'}), false,
+        'returns false if it is not a JSON file');
+
+    t.equal(con.isCollectionFile({name: 'profiles.json'}), false,
+        'returns false if it is profiles.json');
+
+    t.equal(con.isCollectionFile({name: 'notes/1.json'}), true);
+
+    t.end();
+});
+
+test('importExport/Import: importCollections()', t => {
+    const con = new Import();
     const zip = {files: [
+        {name: 'profiles.json'},
         {name: 'configs.json'},
         {name: 'test.png'},
         {name: '/dir', dir: true},
-        {name: 'notebooks.json'},
         {name: 'notes/1.json'},
+        {name: 'notebooks.json'},
     ]};
     sand.stub(con, 'readFile');
 
-    const res = con.import(zip);
-    t.equal(typeof res.then, 'function', 'returns a promise');
-    res.then(() => {
+    con.importCollections(zip)
+    .then(() => {
         t.equal(con.readFile.callCount, 3, 'ignores directories and non JSON files');
-        t.equal(con.readFile.calledWith(zip, zip.files[0]), true, 'imports configs');
-        t.equal(con.readFile.calledWith(zip, zip.files[3]), true, 'imports notebooks');
+        t.equal(con.readFile.calledWith(zip, zip.files[1]), true, 'imports configs');
         t.equal(con.readFile.calledWith(zip, zip.files[4]), true, 'imports notes');
+        t.equal(con.readFile.calledWith(zip, zip.files[5]), true, 'imports notebooks');
 
         sand.restore();
         t.end();
@@ -227,11 +325,12 @@ test('importExport/Import: readFile()', t => {
     const res   = JSON.stringify({id: '1'});
     const async = sand.stub().returns(Promise.resolve(res));
     con.zip     = {file: sand.stub().returns({async})};
+    con.profile = {username: 'alice'};
     sand.stub(con, 'importNote');
     sand.stub(con, 'importFile');
     sand.stub(con, 'importCollection');
 
-    const name = 'backup/default/notes/1.json';
+    const name = 'backup/notes-db/notes/1.json';
     con.readFile(con.zip, {name})
     .then(() => {
         t.equal(con.zip.file.calledWith(name), true,
@@ -240,20 +339,23 @@ test('importExport/Import: readFile()', t => {
         t.equal(con.importNote.calledWith({
             name,
             zip       : con.zip,
-            profileId : 'default',
+            profileId : 'notes-db',
             data      : {id: '1'},
         }), true, 'imports a note');
 
         return con.readFile(con.zip, {name: 'backup/default/files/1.json'});
     })
     .then(() => {
-        t.equal(con.importFile.called, true, 'imports files');
+        t.equal(con.importFile.calledWithMatch({
+            profileId: 'alice',
+            data     : {id: '1'},
+        }), true, 'imports files');
 
         return con.readFile(con.zip, {name: 'backup/default/notebooks.json'});
     })
     .then(() => {
         t.equal(con.importCollection.calledWith({
-            profileId : 'default',
+            profileId : 'alice',
             data      : {id: '1'},
             type      : 'notebooks',
         }), true, 'imports notebooks');

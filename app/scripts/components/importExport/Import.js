@@ -28,6 +28,15 @@ export default class Import extends Mn.Object {
         return Radio.channel('components/importExport');
     }
 
+    /**
+     * An array of collection names which are allowed to be imported.
+     *
+     * @prop {Array}
+     */
+    get collections() {
+        return ['notebooks', 'tags', 'configs', 'users', 'files', 'profiles'];
+    }
+
     init() { // eslint-disable-line complexity
         if (this.options.files && this.options.files.length) {
             if (this.isZipFile()) {
@@ -46,8 +55,13 @@ export default class Import extends Mn.Object {
      * If import is successful, trigger "completed" and reload the page after 800ms.
      */
     onSuccess() {
-        this.channel.trigger('completed');
-        window.setTimeout(() => document.location.reload(), 800);
+        const msg = !this.isOldBackup ? 'Import success' : 'Old backup import success';
+        this.channel.trigger('completed', {msg});
+
+        // Reload the page only if it isn't a backup from an older version
+        if (!this.isOldBackup) {
+            window.setTimeout(() => document.location.reload(), 800);
+        }
     }
 
     /**
@@ -57,7 +71,7 @@ export default class Import extends Mn.Object {
      */
     onError(error) {
         log('error', error);
-        this.channel.trigger('completed', {error});
+        this.channel.trigger('completed', {error, msg: 'Import error'});
     }
 
     /**
@@ -168,12 +182,55 @@ export default class Import extends Mn.Object {
      * @returns {Promise}
      */
     import(zip) {
+        if (!_.isUndefined(zip.files['laverna-backups/notes-db/configs.json'])) {
+            this.isOldBackup = true;
+            return this.importCollections(zip);
+        }
+
+        return this.importProfile(zip)
+        .then(() => this.importCollections(zip));
+    }
+
+    /**
+     * Import a user's profile data.
+     *
+     * @param {Object} zip
+     * @returns {Promise}
+     */
+    importProfile(zip) {
+        const file = zip.files['laverna-backups/profiles.json'];
+        const user = Radio.request('collections/Profiles', 'getUser');
+
+        if (!file && !user) {
+            return Promise.reject('You need to create a profile first!');
+        }
+
+        return zip.file('laverna-backups/profiles.json').async('string')
+        .then(res => {
+            this.profile = JSON.parse(res)[0];
+
+            if (user && this.profile.username !== user.get('username')) {
+                return Promise.reject('You cannot import another users backup!');
+            }
+
+            return this.importCollection({data: [this.profile], type: 'profiles'});
+        })
+        .then(() => Radio.request('collections/Profiles', 'setUser', this.profile));
+    }
+
+    /**
+     * Import all collections from the backup.
+     *
+     * @param {Object} zip
+     * @returns {Promise}
+     */
+    importCollections(zip) {
         const promises = [];
         let configFile;
 
         _.each(zip.files, file => {
             // Ignore directories and non JSON files
-            if (file.dir || _.last(file.name.split('.')) !== 'json') {
+            if (!this.isCollectionFile(file)) {
                 return;
             }
 
@@ -191,6 +248,19 @@ export default class Import extends Mn.Object {
     }
 
     /**
+     * Return true if it's a file that contains collection data.
+     *
+     * @param {Object} file
+     * @returns {Boolean}
+     */
+    isCollectionFile(file) {
+        return (
+            !file.dir && _.last(file.name.split('.')) === 'json' &&
+            file.name.indexOf('profiles.json') === -1
+        );
+    }
+
+    /**
      * Read a file from the ZIP archive.
      *
      * @param {Object} zip
@@ -201,7 +271,7 @@ export default class Import extends Mn.Object {
         return zip.file(file.name).async('string')
         .then(res => {
             const path      = file.name.split('/');
-            const profileId = path[1] === 'notes-db' ? 'default' : path[1];
+            const profileId = path[1] !== 'notes-db' ? this.profile.username : path[1];
             const data      = JSON.parse(res);
 
             if (path[2] === 'notes') {
@@ -286,8 +356,7 @@ export default class Import extends Mn.Object {
      */
     importCollection(options) {
         // Do nothing if the collection name is incorrect
-        const types = ['notebooks', 'tags', 'configs', 'users', 'files'];
-        if (_.indexOf(types, options.type) === -1) {
+        if (_.indexOf(this.collections, options.type) === -1) {
             return Promise.resolve();
         }
 

@@ -21,12 +21,12 @@ const log = deb('lav:components/importExport/Export');
 export default class Export extends Mn.Object {
 
     /**
-     * An array of profile names.
+     * Current user's profile model data.
      *
-     * @prop {Array}
+     * @prop {Object}
      */
-    get profiles() {
-        return Radio.request('collections/Profiles', 'findProfiles');
+    get user() {
+        return Radio.request('collections/Profiles', 'getUser').attributes;
     }
 
     /**
@@ -35,7 +35,7 @@ export default class Export extends Mn.Object {
      * @prop {String}
      */
     get profileId() {
-        return Radio.request('collections/Profiles', 'getProfile');
+        return this.user.username;
     }
 
     /**
@@ -75,16 +75,15 @@ export default class Export extends Mn.Object {
         const {data} = this.options;
 
         // There is no data to export
-        if (!_.keys(data).length) {
+        if (data.length) {
             return Promise.resolve();
         }
 
         /* Data structure should be similar to this:
-         * {default: [Notes, Notebooks, Tags], profile2: []},
+         * [Notes, Notebooks, Tags]
          */
-        _.each(data, collections => this.exportCollections(collections));
-
-        return this.saveToFile()
+        return this.exportCollections(data)
+        .then(() => this.saveToFile())
         .catch(err => log('error', err));
     }
 
@@ -92,50 +91,54 @@ export default class Export extends Mn.Object {
      * Export the OpenPGP private key
      */
     exportKey() {
-        const key = Radio.request('collections/Configs', 'findConfig', {
-            name: 'privateKey',
-        });
-        const blob = new Blob([key], {type: 'text/plain;charset=ascii'});
+        const blob = new Blob(
+            [this.user.privateKey],
+            {type: 'text/plain;charset=ascii'}
+        );
 
-        this.saveAs(blob, 'lav-private-key.asc');
+        this.saveAs(blob, `laverna-key-${this.user.username}.asc`);
         this.destroy();
     }
 
     /**
-     * Fetch collections from each profile and start exporting them.
+     * Fetch collections from a profile and export them.
      *
      * @returns {Promise}
      */
     export() {
         const promises = [];
 
-        _.each(this.profiles, profileId => {
-            promises.push(this.exportProfile(profileId));
+        // Export profile data
+        this.exportProfile();
+
+        _.each(this.collections, type => {
+            promises.push(this.fetchExportCollection(type));
         });
 
         return Promise.all(promises)
-        .then(() => this.saveToFile())
+        .then(()   => this.saveToFile())
         .catch(err => log('error', err));
     }
 
     /**
-     * Fetch collections from a profile and export them.
+     * Fetch a collection and export it.
      *
-     * @param {String} profileId
+     * @param {String} type - collection name [notes|notebooks|...]
      * @returns {Promise}
      */
-    exportProfile(profileId) {
-        const promises = [];
+    fetchExportCollection(type) {
+        const profileId = this.profileId;
 
-        _.each(this.collections, type => {
-            promises.push(
-                Radio.request(`collections/${type}`, 'find', {profileId})
-            );
-        });
+        return Radio.request(`collections/${type}`, 'find', {profileId})
+        .then(collection => this.exportCollection(collection));
+    }
 
-        log(`export profile ${profileId}`);
-        return Promise.all(promises)
-        .then(collections => this.exportCollections(collections));
+    /**
+     * Export the user's profile data.
+     */
+    exportProfile() {
+        const user = JSON.stringify([this.user]);
+        this.zip.file('laverna-backups/profiles.json', user);
     }
 
     /**
@@ -145,6 +148,7 @@ export default class Export extends Mn.Object {
      */
     exportCollections(collections) {
         _.each(collections, collection => this.exportCollection(collection));
+        this.exportProfile();
     }
 
     /**
@@ -223,7 +227,7 @@ export default class Export extends Mn.Object {
      */
     saveToFile() {
         return this.zip.generateAsync({type: 'blob'})
-        .then(blob => this.saveAs(blob, 'laverna-backup.zip'))
+        .then(blob => this.saveAs(blob, `laverna-backup-${this.user.username}.zip`))
         .then(() => this.destroy());
     }
 

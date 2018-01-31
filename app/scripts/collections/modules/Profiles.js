@@ -79,7 +79,7 @@ export default class Profiles extends Module {
      */
     getUser() {
         if (!this.profile) {
-            throw new Error('The profile model does not exist!');
+            return null;
         }
 
         return this.profile;

@@ -36,6 +36,9 @@ test('Db: getDb()', t => {
         'creates a new localforage instance');
     t.equal(typeof res, 'object', 'returns localforage instance');
 
+    t.equal(db.getDb({profileId: 'notes-db', storeName: 'test'}), db.dbs['notes-db/test'],
+        'does not prefix notes-db');
+
     sand.restore();
     t.end();
 });
@@ -44,7 +47,7 @@ test('Db: getDb() - old instance', t => {
     const db       = new Db();
     const spy      = sand.spy(localforage, 'createInstance');
     const instance = {test: 1};
-    db.dbs['lav-test/tests'] = instance;
+    db.dbs['test/tests'] = instance;
 
     const res = db.getDb({profileId: 'test', storeName: 'tests'});
     t.equal(spy.notCalled, true, 'does not create a new instance');

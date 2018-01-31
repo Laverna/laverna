@@ -197,9 +197,8 @@ test('collections/modules/Module: isCollectionCached()', t => {
 test('collections/modules/Module: saveModel()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', test: '2'});
-    const user  = new Profile({username: 'bob'});
-    Object.defineProperty(mod, 'user', {get: () => user});
 
+    sand.stub(mod, 'setSharedBy');
     sand.spy(model, 'setEscape');
     sand.spy(model, 'validate');
     sand.stub(mod, 'encryptModel').returns(Promise.resolve());
@@ -209,10 +208,9 @@ test('collections/modules/Module: saveModel()', t => {
 
     const res = mod.saveModel({model, data: {title: 'Test'}});
     t.equal(typeof res.then, 'function', 'returns a promise');
+    t.equal(mod.setSharedBy.calledWith(model), true, 'sets "sharedBy" attribute');
 
     res.then(() => {
-        t.equal(model.setEscape.calledWithMatch({sharedBy: 'bob'}), true,
-            'sets "sharedBy" attribute');
         t.equal(model.validate.calledAfter(model.setEscape), true,
             'validates the model after setting new attributes');
 
@@ -225,23 +223,38 @@ test('collections/modules/Module: saveModel()', t => {
         t.equal(mod.onSaveModel.calledWith(model), true,
             'calls "onSaveModel" method after saving');
 
-        model.set('sharedBy', 'alice');
-        return mod.saveModel({model, data: {title: 'Test'}});
-    })
-    .then(() => {
-        t.equal(model.get('sharedBy'), 'alice',
-            'does not change "sharedBy" attribute');
-
-        return mod.saveModel({model: user, data: {username: 'alice'}});
-    })
-    .then(() => {
-        t.equal(user.get('sharedBy'), undefined,
-            'does not set "sharedBy" attribute if the model does not use it');
-
         mod.channel.stopReplying();
         sand.restore();
         t.end();
     });
+});
+
+test('collections/modules/Module: setSharedBy()', t => {
+    const mod   = new Module();
+    const model = new mod.Model({id: '1', test: '2'});
+    const user  = new Profile({username: 'alice'});
+
+    mod.setSharedBy(model);
+    t.equal(model.get('sharedBy'), '',
+        'does not set "sharedBy" if user property is undefined');
+
+    Object.defineProperty(mod, 'user', {get: () => user});
+
+    mod.setSharedBy(model);
+    t.equal(model.get('sharedBy'), 'alice', 'changes "sharedBy" attribute');
+
+    model.set('sharedBy', 'bob');
+    mod.setSharedBy(model);
+    t.equal(model.get('sharedBy'), 'bob',
+        'does not change sharedBy if it was already set');
+
+    const edit = new Edit();
+    t.equal(mod.setSharedBy(edit), false,
+        'returns false if the model does not use sharedBy');
+    t.equal(edit.get('sharedBy'), undefined, 'does not set "sharedBy"');
+
+    sand.restore();
+    t.end();
 });
 
 test('collections/modules/Module: onSaveModel()', t => {
@@ -395,10 +408,14 @@ test('collections/modules/Module: remove() - ID', t => {
 
 test('collections/modules/Module: isEncryptEnabled()', t => {
     const mod = new Module();
-    const rad = Radio.channel('collections/Configs');
+    const req = sand.stub(Radio, 'request');
+
+    req.returns(null);
+    t.equal(mod.isEncryptEnabled(), false, 'returns false if configs is equal to null');
 
     let configs = {encryptBackup: {encrypt: 1}};
-    rad.reply('findConfigs', () => configs);
+    req.withArgs('collections/Configs', 'findConfigs')
+    .returns(configs);
 
     t.equal(mod.isEncryptEnabled({}), false,
         'returns false if a model does not have encryptKeys property');
@@ -409,7 +426,6 @@ test('collections/modules/Module: isEncryptEnabled()', t => {
 
     mod.channel.stopReplying();
     sand.restore();
-    rad.stopReplying();
     t.end();
 });
 

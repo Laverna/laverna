@@ -37,8 +37,14 @@ export default class Db extends WorkerModule {
      */
     getDb(options) {
         const {storeName} = options;
-        const profileId   = `lav-${options.profileId}`;
+        let profileId     = options.profileId;
         const id          = `${profileId}/${storeName}`;
+
+        /* Add the prefix only if it's not "notes-db" profile to
+           be compatible with old backups */
+        if (profileId !== 'notes-db') {
+            profileId = `lav-${profileId}`;
+        }
 
         this.dbs[id] = this.dbs[id] || localforage.createInstance({
             storeName,

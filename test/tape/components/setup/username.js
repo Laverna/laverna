@@ -80,13 +80,19 @@ test('setup/username/Username: importData()', t => {
     const view   = new View();
     const target = {files: [1, 2]};
     const req    = sand.stub(view.importChannel, 'request');
+    view.ui      = {
+        signalServer : {val: () => 'localhost'},
+        username     : {val: () => 'alice'},
+    };
 
     view.importData({target: {files: []}});
     t.equal(req.notCalled, true, 'does nothing if there are no files');
 
     view.importData({target});
     t.equal(req.calledWith('import', {
-        files: target.files,
+        files        : target.files,
+        signalServer : 'localhost',
+        username     : 'alice',
     }), true, 'tries to import data to the current device');
 
     sand.restore();

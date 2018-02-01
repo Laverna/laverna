@@ -80,7 +80,11 @@ export default class Username extends View {
             return;
         }
 
-        this.importChannel.request('import', {files});
+        this.importChannel.request('import', {
+            files,
+            signalServer : this.ui.signalServer.val().trim(),
+            username     : this.ui.username.val().trim(),
+        });
     }
 
     /**

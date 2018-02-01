@@ -64,7 +64,7 @@ const configNames = {
         signalServer       : 'http://localhost:3000',
         deviceId           : '',
         peers              : [],
-        cloudStorage       : '0',
+        cloudStorage       : 'p2p',
         dropboxKey         : '',
         dropboxAccessToken : '',
     },

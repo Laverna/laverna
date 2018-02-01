@@ -6,9 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import '../../../../app/scripts/utils/underscore';
+import * as openpgp from 'openpgp';
 
 import Import from '../../../../app/scripts/components/importExport/Import';
 import Profile from '../../../../app/scripts/models/Profile';
+import Profiles from '../../../../app/scripts/collections/Profiles';
 
 let sand;
 test('importExport/Import: before()', t => {
@@ -18,6 +20,26 @@ test('importExport/Import: before()', t => {
 
 test('importExport/Import: channel', t => {
     t.equal(Import.prototype.channel.channelName, 'components/importExport');
+    t.end();
+});
+
+test('importExport/Import: user', t => {
+    const user = new Profile({username: 'alice'});
+    sand.stub(Radio, 'request').withArgs('collections/Profiles', 'getUser')
+    .returns(user);
+
+    t.equal(new Import().user, user);
+    sand.restore();
+    t.end();
+});
+
+test('importExport/Import: profiles', t => {
+    const profiles = new Profile({username: 'alice'});
+    sand.stub(Radio, 'request').withArgs('collections/Profiles', 'findProfiles')
+    .returns(profiles);
+
+    t.equal(new Import().profiles, profiles);
+    sand.restore();
     t.end();
 });
 
@@ -36,14 +58,18 @@ test('importExport/Import: init()', t => {
     const iKey  = sand.stub(con, 'importKey');
 
     t.equal(typeof con.init().then, 'function', 'returns a promise');
-    t.equal(iData.notCalled, true, 'does not import any data if the array of files is empty');
-    t.equal(iKey.notCalled, true, 'does not import the private key if the array of files is empty');
+    t.equal(iData.notCalled, true,
+        'does not import any data if the array of files is empty');
+    t.equal(iKey.notCalled, true,
+        'does not import the private key if the array of files is empty');
 
     con.options = {files: [{type: 'application/json', name: 'test.md'}]};
     con.init()
     .then(() => {
-        t.equal(iData.notCalled, true, 'does not import any data if it is not a ZIP archive');
-        t.equal(iKey.notCalled, true, 'does not import the private key if it is not a private key');
+        t.equal(iData.notCalled, true,
+            'does not import any data if it is not a ZIP archive');
+        t.equal(iKey.notCalled, true,
+            'does not import the private key if it is not a private key');
 
         con.options = {files: [{type: 'application/zip', name: 'b.zip'}]};
         return con.init();
@@ -153,16 +179,32 @@ test('importExport/Import: importData()', t => {
 test('importExport/Import: importKey()', t => {
     const file = {name: 'key.asc'};
     const con  = new Import({files: [file]});
-    const req  = sand.stub(Radio, 'request');
-    sand.stub(con, 'readText').resolves('private key');
+    const res  = {username: 'alice', key: {primaryKey: {armor: 'armor'}}};
+
+    const getKey        = sand.stub(con, 'getPrivateKey').resolves(null);
+    const importProfile = sand.stub(con, 'importProfileFromKey').returns(true);
     sand.stub(con, 'onSuccess');
+    sand.stub(con, 'onError');
 
     con.importKey()
     .then(() => {
-        t.equal(con.readText.calledWith(file), true, 'reads the private key');
-        t.equal(req.calledWith('collections/Configs', 'saveConfig', {
-            config: {value: 'private key', name: 'privateKey'},
-        }), true, 'saves the key');
+        t.equal(con.onError.called, true, 'shows an error');
+        t.equal(importProfile.notCalled, true, 'does not call importProfileFromKey()');
+
+        getKey.resolves({key: {}, username: null});
+        return con.importKey();
+    })
+    .then(() => {
+        t.equal(con.onError.callCount, 2, 'shows an error');
+        t.equal(importProfile.notCalled, true, 'does not call importProfileFromKey()');
+
+        getKey.resolves(res);
+        return con.importKey();
+    })
+    .then(() => {
+        t.equal(con.getPrivateKey.calledWith(file), true, 'reads the key');
+        t.equal(importProfile.calledWith(res), true,
+            'tries to recover a profile with the private OpenPGP key');
         t.equal(con.onSuccess.called, true, 'calls onSuccess()');
 
         sand.restore();
@@ -170,7 +212,110 @@ test('importExport/Import: importKey()', t => {
     });
 });
 
-test('importExport/Import: readKey()', t => {
+test('importExport/Import: getPrivateKey()', t => {
+    const con  = new Import();
+    const file = {file: ''};
+    const key  = {isPublic: () => false};
+
+    sand.stub(con, 'readText').withArgs(file)
+    .resolves('private key');
+    const readArmored = sand.stub(openpgp.key, 'readArmored').returns({err: 'error'});
+    sand.stub(con, 'getUsernameFromKey').returns('alice');
+
+    con.getPrivateKey(file)
+    .catch(err => {
+        t.equal(err.message, 'error', 'throws an error');
+        t.equal(readArmored.calledWith('private key'), true, 'reads the key');
+
+        readArmored.returns({keys: [{isPublic: () => true}]});
+        return con.getPrivateKey(file);
+    })
+    .then(res => {
+        t.equal(res, null, 'returns null if it is not a private key');
+
+        readArmored.returns({keys: [key]});
+        return con.getPrivateKey(file);
+    })
+    .then(res => {
+        t.deepEqual(res, {key, username: 'alice'}, 'returns the key and username');
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: getUsernameFromKey()', t => {
+    const con = new Import({username: 'bob'});
+    const key = {users: [{userId: {userid: 'alice <alice@localhost>'}}]};
+
+    t.equal(con.getUsernameFromKey(key), 'bob', 'reads the username from this.options');
+
+    con.options.username = '';
+    t.equal(con.getUsernameFromKey(key), 'alice', 'reads the username from the key');
+
+    key.users[0].userId.userid = '';
+    t.equal(con.getUsernameFromKey(key), null,
+        'returns null if the key does not contain username');
+
+    key.users[0].userId.userid = '<alice@localhost>';
+    t.equal(con.getUsernameFromKey(key), null,
+        'returns null if the key does not contain username');
+
+    key.users[0].userId.userid = 'alice <alice@localhost>';
+    Object.defineProperty(con, 'profiles', {get: () => {
+        return new Profiles({username: 'alice'});
+    }});
+    t.equal(con.getUsernameFromKey(key), null,
+        'returns null if the profile already exists');
+
+    t.end();
+});
+
+test('importExport/Import: importProfileFromKey()', t => {
+    const con = new Import({signalServer: 'localhost'});
+    const req = sand.stub(Radio, 'request').resolves({fingerprint: ''});
+
+    const key = {
+        armor      : () => 'armored private key',
+        primaryKey : {fingerprint: '1234'},
+        toPublic   : () => {
+            return {armor: () => 'armored public key'};
+        },
+    };
+
+    const res = con.importProfileFromKey({key, username: 'alice'});
+    t.equal(req.calledWith('models/Signal', 'changeServer', {signal: 'localhost'}),
+        true, 'changes the signaling server');
+    t.equal(req.calledWith('models/Signal', 'findUser', {username: 'alice'}), true,
+        'fetches the user from the signaling server');
+
+    res.then(res => {
+        t.equal(res, false, 'returns false if fingerprints do not match');
+
+        req.resolves({});
+        return con.importProfileFromKey({key, username: 'alice'});
+    })
+    .then(res => {
+        t.equal(res, false,
+            'returns false if the signaling server returned empty result');
+
+        req.resolves({fingerprint: '1234'});
+        return con.importProfileFromKey({key, username: 'alice'});
+    })
+    .then(res => {
+        t.equal(res, true, 'returns true if it recovered the profile');
+
+        t.equal(req.calledWithMatch('collections/Profiles', 'createProfile', {
+            username   : 'alice',
+            privateKey : 'armored private key',
+            publicKey  : 'armored public key',
+        }), true, 'saves the profile');
+
+        sand.restore();
+        t.end();
+    });
+});
+
+test('importExport/Import: readText()', t => {
     const con  = new Import();
     const file = {name: 'k.asc'};
 
@@ -400,7 +545,7 @@ test('importExport/Import: readMarkdown()', t => {
         t.equal(asyncZ.notCalled, true, 'does nothing if data contains encrypted data');
 
         data = {encryptedData: ''};
-        con.importNote({zip, data: {}, name: '1.json'})
+        con.importNote({zip, data: {}, name: '1.json'});
     })
     .then(() => {
         t.equal(zip.file.calledWith('1.md'), true, 'reads the Markdown file');

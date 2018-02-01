@@ -5,6 +5,7 @@ import Mn from 'backbone.marionette';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 import JSZip from 'jszip';
+import * as openpgp from 'openpgp';
 
 import deb from 'debug';
 
@@ -26,6 +27,24 @@ export default class Import extends Mn.Object {
      */
     get channel() {
         return Radio.channel('components/importExport');
+    }
+
+    /**
+     * Current user's profile data.
+     *
+     * @prop {Object}
+     */
+    get user() {
+        return Radio.request('collections/Profiles', 'getUser');
+    }
+
+    /**
+     * Available profiles.
+     *
+     * @prop {Object} Backbone collection
+     */
+    get profiles() {
+        return Radio.request('collections/Profiles', 'findProfiles');
     }
 
     /**
@@ -130,14 +149,104 @@ export default class Import extends Mn.Object {
         // Trigger an event that import proccess started
         this.channel.trigger('started');
 
-        return this.readText(this.options.files[0])
-        .then(value => {
-            return Radio.request('collections/Configs', 'saveConfig', {
-                config: {value, name: 'privateKey'},
-            });
+        return this.getPrivateKey(this.options.files[0])
+        .then(res => {
+            if (!res || !res.key || !res.username) {
+                return null;
+            }
+
+            return this.importProfileFromKey(res);
         })
-        .then(()   => this.onSuccess())
+        .then(res => {
+            if (!res) {
+                return this.onError('Could not recover your profile from the key!');
+            }
+
+            this.onSuccess();
+        })
         .catch(err => this.onError(err));
+    }
+
+    /**
+     * Read the armored key and check it.
+     *
+     * @param {Object} keyFile
+     * @returns {Promise} - returns null if the key isn't compatible
+     */
+    getPrivateKey(keyFile) {
+        return this.readText(keyFile)
+        .then(armorKey => {
+            const {keys, err} = openpgp.key.readArmored(armorKey);
+            if (err) {
+                throw new Error(err);
+            }
+
+            // Don't import if it's just a public key
+            if (keys[0].isPublic()) {
+                return null;
+            }
+
+            return {
+                key      : keys[0],
+                username : this.getUsernameFromKey(keys[0]),
+            };
+        });
+    }
+
+    /**
+     * Get the username from the private key.
+     *
+     * @param {Object} key
+     * @returns {String} returns null if username doesn't exist
+     */
+    getUsernameFromKey(key) { // eslint-disable-line
+        let username = this.options.username;
+
+        // If username wasn't provided, try to get it from the private key
+        if (!username || !username.length) {
+            username = key.users[0].userId.userid.split('<')[0].trim();
+        }
+
+        if (!username || !username.length) {
+            log('The key does not contain the username!');
+            return null;
+        }
+        else if (this.profiles && this.profiles.get({username})) {
+            log(`Profile ${username} already exists!`);
+            return null;
+        }
+
+        return username;
+    }
+
+    /**
+     * Import a user's profile from an OpenPGP private key.
+     *
+     * @param {Object} key
+     * @returns {Promise} resolves with boolean
+     */
+    importProfileFromKey({key, username}) {
+        // First, change the signaling server
+        Radio.request('models/Signal', 'changeServer', {
+            signal: this.options.signalServer,
+        });
+
+        // Try to get the user from signaling server
+        return Radio.request('models/Signal', 'findUser', {username})
+        .then(user => {
+            // The user does not exist on the server or fingerprints don't match
+            if (_.isEmpty(user) || user.fingerprint !== key.primaryKey.fingerprint) {
+                return false;
+            }
+
+            // Save the profile
+            return Radio.request('collections/Profiles', 'createProfile', {
+                username,
+                privateKey : key.armor(),
+                publicKey  : key.toPublic().armor(),
+            })
+            .then(() => true);
+        });
     }
 
     /**
@@ -199,9 +308,8 @@ export default class Import extends Mn.Object {
      */
     importProfile(zip) {
         const file = zip.files['laverna-backups/profiles.json'];
-        const user = Radio.request('collections/Profiles', 'getUser');
 
-        if (!file && !user) {
+        if (!file && !this.user) {
             return Promise.reject('You need to create a profile first!');
         }
 
@@ -209,7 +317,7 @@ export default class Import extends Mn.Object {
         .then(res => {
             this.profile = JSON.parse(res)[0];
 
-            if (user && this.profile.username !== user.get('username')) {
+            if (this.user && this.profile.username !== this.user.get('username')) {
                 return Promise.reject('You cannot import another users backup!');
             }
 

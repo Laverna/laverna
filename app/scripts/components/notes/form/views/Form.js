@@ -270,6 +270,12 @@ export default class Form extends Mn.View {
 
         // Trigger an event that the editor mode has changed
         this.channel.trigger('change:mode', {mode});
+
+        // Save in configs
+        Radio.request('collections/Configs', 'saveConfig', {
+            config: {name: 'editMode', value: mode},
+        });
+
         return false;
     }
 

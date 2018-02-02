@@ -305,6 +305,7 @@ test('notes/form/views/Form: switchMode()', t => {
     sand.stub(View.prototype, 'initialize');
     const view = new View({});
     view.ui    = {form: {trigger: sand.stub()}};
+    const req  = sand.stub(Radio, 'request').returns();
     sand.stub(view, 'previewMode');
     sand.stub(view.channel, 'trigger');
 
@@ -318,6 +319,10 @@ test('notes/form/views/Form: switchMode()', t => {
     t.equal(view.previewMode.called, true, 'switches to another edit mode');
     t.equal(view.channel.trigger.calledWith('change:mode', {mode: 'preview'}), true,
         'triggers change:mode event');
+
+    t.equal(req.calledWith('collections/Configs', 'saveConfig', {
+        config: {name: 'editMode', value: 'preview'},
+    }), true, 'saves editMode setting');
 
     sand.restore();
     t.end();

@@ -4,9 +4,12 @@
 import test from 'tape';
 import proxyquire from 'proxyquire';
 import sinon from 'sinon';
+import md5 from 'js-md5';
 
+import '../../../../app/scripts/utils/underscore';
 import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
 import Files from '../../../../app/scripts/collections/Files';
+import File from '../../../../app/scripts/models/File';
 
 const toBlob = sinon.stub().returns('blob');
 const Module  = proxyquire('../../../../app/scripts/collections/modules/Files', {
@@ -33,6 +36,34 @@ test('collections/modules/Files: constructor()', t => {
         addFiles   : mod.addFiles,
         createUrls : mod.createUrls,
     }), true, 'replies to additional requests');
+
+    sand.restore();
+    t.end();
+});
+
+test('collections/modules/Files: saveModel()', t => {
+    const mod   = new Module();
+    const model = new File({});
+    const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
+
+    const opt = {model, data: {src: 'file-src'}};
+    mod.saveModel(opt);
+    t.equal(model.id, md5.create().update('file-src').hex(), // eslint-disable-line
+        'uses md5 sum of the data.src as the ID');
+    t.equal(save.calledWith(opt), true, 'saves the file');
+
+    const model2 = new File({src: 'file-src2'});
+    mod.saveModel({data: {}, model: model2});
+    t.equal(model2.id, md5.create().update('file-src2').hex(), // eslint-disable-line
+        'uses md5 sum of the src atribute as the ID');
+
+    const model3 = new File();
+    mod.saveModel({data: {id: 'id'}, model: model3});
+    t.equal(model3.id, undefined, 'does nothing if data contains the ID');
+
+    const model4 = new File({id: 'id'});
+    mod.saveModel({data: {}, model: model4});
+    t.equal(model4.id, 'id', 'does nothing if model has an ID');
 
     sand.restore();
     t.end();

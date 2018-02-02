@@ -5,6 +5,7 @@ import _ from 'underscore';
 import toBlob from 'blueimp-canvas-to-blob';
 import Module from './Module';
 import Collection from '../Files';
+import md5 from 'js-md5';
 
 /**
  * Files collection module.
@@ -33,6 +34,19 @@ export default class Files extends Module {
             addFiles   : this.addFiles,
             createUrls : this.createUrls,
         }, this);
+    }
+
+    saveModel(options) {
+        const {model, data} = options;
+
+        // Use md5 sum of the file as an ID to avoid duplicates
+        if (!model.get('id') && !data.id) {
+            const src = data.src || model.get('src');
+            const id  = md5.create().update(src).hex(); // eslint-disable-line
+            model.set({id});
+        }
+
+        return super.saveModel(options);
     }
 
     /**

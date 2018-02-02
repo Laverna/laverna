@@ -137,6 +137,7 @@
 	"Signal server error #0": "Failed to connect to the signaling server!",
 	"Signal server: username is taken": "This username is taken. If it was you who claimed this username, upload your key pair or try another username.",
 	"Setup: wrong key": "You selected a wrong key! Perhaps it is not your account.",
+	"Warning! File attachments are not encrypted for performance reasons!": "Warning! File attachments are not encrypted for performance reasons!",
     "encryption": {
         "provide password": "Please, provide your password",
         "change password": "Type your password here to change it",

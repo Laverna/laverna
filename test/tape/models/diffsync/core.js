@@ -22,7 +22,12 @@ test('models/diffsync/Core: channel', t => {
     t.end();
 });
 
-test('models/diffsync/Core: channel', t => {
+test('models/diffsync/Core: peerChannel', t => {
+    t.equal(Core.prototype.peerChannel.channelName, 'models/Peer');
+    t.end();
+});
+
+test('models/diffsync/Core: configs', t => {
     const conf = {test: true};
     const req  = sand.stub(Radio, 'request').returns(conf);
 
@@ -47,6 +52,7 @@ test('models/diffsync/Core: profileId', t => {
 
 test('models/diffsync/Core: constructor()', t => {
     const reply = sand.stub(Core.prototype.channel, 'reply');
+    const on    = sand.stub(Core.prototype.peerChannel, 'on');
     const core  = new Core();
 
     t.equal(typeof core.options, 'object', 'creates "options" property');
@@ -62,6 +68,8 @@ test('models/diffsync/Core: constructor()', t => {
         stopPeerWait   : core.stopPeerWait,
         getClientPeers : core.getClientPeers,
     }, core), true, 'starts replying to requests');
+
+    t.equal(on.calledWith('close:peer'), true, 'listens to "close:peer" event');
 
     sand.restore();
     t.end();
@@ -215,6 +223,18 @@ test('models/diffsync/Core: stopPeerWait()', t => {
     t.equal(clear.calledWith(1), true, 'clears the timeout');
     t.equal(core.pending['bob@1'], 0, 'changes pending status');
     t.equal(core.isPending(peer), false, 'isPending() returns false');
+
+    sand.restore();
+    t.end();
+});
+
+test('models/diffsync/Core: onClosePeer()', t => {
+    const core = new Core();
+    const stop = sand.stub(core, 'stopPeerWait');
+
+    const peer = {username: 'alice', deviceId: '1'};
+    core.onClosePeer({peer});
+    t.equal(stop.calledWith(peer), true, 'stops waiting for a peers response');
 
     sand.restore();
     t.end();

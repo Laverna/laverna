@@ -30,6 +30,15 @@ export default class Core {
     }
 
     /**
+     * Peer channel (models/Peer)
+     *
+     * @returns {Object}
+     */
+    get peerChannel() {
+        return Radio.channel('models/Peer');
+    }
+
+    /**
      * App configs.
      *
      * @prop {Object}
@@ -100,6 +109,9 @@ export default class Core {
             stopPeerWait   : this.stopPeerWait,
             getClientPeers : this.getClientPeers,
         }, this);
+
+        // Listen to peer events
+        this.peerChannel.on('close:peer', this.onClosePeer.bind(this));
     }
 
     /**
@@ -223,6 +235,16 @@ export default class Core {
             window.clearTimeout(this.pending[id]);
             this.pending[id] = 0;
         }
+    }
+
+    /**
+     * After a peer is destroyed and connection is lost, stop waiting for the
+     * peer's response.
+     *
+     * @param {Object} {peer}
+     */
+    onClosePeer({peer}) {
+        this.stopPeerWait(peer);
     }
 
 }

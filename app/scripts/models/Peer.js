@@ -58,6 +58,10 @@ export default class Peer {
     }
 
     constructor() {
+        this.options = {
+            reconnectTimer: 20000,
+        };
+
         /**
          * {@link https://en.wikipedia.org/wiki/STUN|STUN}
          * and {@link https://en.wikipedia.org/wiki/TURN|TURN} server list.
@@ -96,18 +100,22 @@ export default class Peer {
      *
      * @returns {Promise}
      */
-    init() {
+    async init() {
         log('connecting...');
 
-        return this.fetchUsers()
-        .then(()   => this.signal.request('connect'))
-        .then(res  => {
-            log('connected to signaling server', this.users);
+        try {
+            await this.fetchUsers();
+
+            const res = await this.signal.request('connect');
             if (res) {
+                log('connected to signaling server', this.users);
                 return this.onSignalConnect(res);
             }
-        })
-        .catch(err => log('error', err));
+        }
+        catch (e) {
+            log('error', e);
+            throw new Error(e);
+        }
     }
 
     /**
@@ -115,9 +123,8 @@ export default class Peer {
      *
      * @returns {Promise}
      */
-    fetchUsers() {
-        return Radio.request('collections/Users', 'find')
-        .then(users => this.users = users);
+    async fetchUsers() {
+        this.users = await Radio.request('collections/Users', 'find');
     }
 
     /**
@@ -148,6 +155,8 @@ export default class Peer {
      */
     sendOffers() {
         const users = _.pluck(_.pluck(this.users.getActive(), 'attributes'), 'username');
+
+        // A user should send offers to themselves to connect with other devices
         users.push(this.user.username);
 
         log('sending offers to', users);
@@ -241,32 +250,36 @@ export default class Peer {
             return log('Ignore the offer: untrusted user');
         }
         else if (this.isTheSameDevice(user) || (peer && peer.instance.connected)) {
-            return log('Ignore the offer: the same device or the peer already exist');
+            return log('Ignore the offer: the same device or the peer already exist', user);
         }
         else if (peer && peer.instance.destroyed) {
-            this.peers = _.without(this.peers, peer);
+            this.destroyPeer({peer});
         }
 
         this.socket.emit('sendOffer', user);
-        this.connectPeer(user, false);
     }
 
     /**
      * Received a connection offer.
      *
      * @param {Object} user
+     * @param {Boolean} initiator
      */
-    onOffer(user) { // eslint-disable-line complexity
-        const peer = this.getPeer(user);
+    onOffer({user, initiator}) { // eslint-disable-line complexity
+        let peer = this.getPeer(user);
+        log('received an offer', user);
+
         if (!this.isTrustedUser(user) || (peer && peer.instance.connected)) {
             return log('Ignoring the peer: untrusted user or peer already exists!');
         }
         else if (peer && peer.instance.destroyed) {
-            this.peers = _.without(this.peers, peer);
+            this.destroyPeer({peer});
+            peer = null;
         }
 
-        // Make the receiving offer a peer an initiator
-        this.connectPeer(user, true);
+        if (!peer) {
+            this.connectPeer(user, initiator === true);
+        }
     }
 
     /**
@@ -275,18 +288,38 @@ export default class Peer {
      * @param {String} username
      * @param {String} deviceId
      * @param {Boolean} initiator=false
+     * @returns {Object} peer
      */
     connectPeer({username, deviceId}, initiator = false) {
         const instance = new SimplePeer({
             initiator,
-            trickle : true,
-            config  : {iceServers: this.iceServers},
+            trickle        : true,
+            config         : {iceServers: this.iceServers},
+            reconnectTimer : 2000,
         });
 
         log(`connecting to a new peer ${username}/${deviceId}`);
         const peer = {username, deviceId, initiator, instance};
+
+        // Try to reconnect to the peer
+        if (!initiator) {
+            this.reconnectToPeer(peer);
+        }
+
         this.peers.push(peer);
         this.listenToPeer(peer);
+        return peer;
+    }
+
+    /**
+     * Wait and try to connect to a peer again.
+     */
+    reconnectToPeer(peer) {
+        peer.waitId = setTimeout(() => {
+            if (!peer.instance.connected) {
+                this.sendOfferTo({user: _.pick(peer, 'username', 'deviceId')});
+            }
+        }, this.options.reconnectTimer);
     }
 
     /**
@@ -295,7 +328,7 @@ export default class Peer {
      * @param {Object} peer - SimplePeer instance
      */
     listenToPeer(peer) {
-        peer.instance.on('error', err => log('peer error', err));
+        peer.instance.on('error', error => this.onPeerError(peer, error));
 
         peer.instance.on('close', () => this.onPeerClose(peer));
 
@@ -304,6 +337,24 @@ export default class Peer {
         peer.instance.on('connect', () => this.onConnect({peer}));
 
         peer.instance.on('data', data => this.onData({peer, data}));
+    }
+
+    /**
+     * Peer connection error.
+     *
+     * @param {Object} peer
+     * @param {Object} error
+     */
+    onPeerError(peer, error) {
+        log('error', error);
+
+        this.destroyPeer({peer});
+        Radio.request('utils/Notify', 'show', {
+            title   : _.i18n('Peer connection error'),
+            content : _.i18n('Failed to connect to {{peer}}', {
+                peer: `${peer.username}@${peer.deviceId}`,
+            }),
+        });
     }
 
     /**
@@ -319,6 +370,7 @@ export default class Peer {
 
         log(`connection with @${peer.username} was dropped, reconnecting...`);
         const user = _.pick(peer, 'username', 'deviceId');
+        this.destroyPeer({peer});
         this.sendOfferTo({user});
     }
 
@@ -329,19 +381,24 @@ export default class Peer {
      * @param {Object} peer
      * @returns {Promise}
      */
-    sendSignal({signal, peer}) {
+    async sendSignal({signal, peer}) {
         log('sending a signal info...', signal);
         const data = JSON.stringify({signal});
+        let signature;
 
-        return Radio.request('models/Encryption', 'sign', {data})
-        .then(signature => {
-            this.socket.emit('sendSignal', {
-                signal,
-                signature,
-                to: {username: peer.username, deviceId: peer.deviceId},
-            });
-        })
-        .catch(err => log('error', err));
+        try {
+            signature = await Radio.request('models/Encryption', 'sign', {data});
+        }
+        catch (e) {
+            log('error', err);
+            throw new Error(e);
+        }
+
+        this.socket.emit('sendSignal', {
+            signal,
+            signature,
+            to: {username: peer.username, deviceId: peer.deviceId},
+        });
     }
 
     /**
@@ -352,7 +409,7 @@ export default class Peer {
      * @param {String} data.signature
      * @param {String} data.signal
      */
-    onSignal(data) {
+    async onSignal(data) {
         log('received signal', data);
         const peer = this.getPeer(data.from);
 
@@ -360,22 +417,27 @@ export default class Peer {
             return log('peer does not exist', data);
         }
 
-        return Radio.request('models/Encryption', 'verify', {
-            username : data.from.username,
-            message  : data.signature,
-        })
-        .then(res => {
-            const signalData = JSON.stringify({signal: data.signal});
+        let res;
+        try {
+            res = await Radio.request('models/Encryption', 'verify', {
+                username : data.from.username,
+                message  : data.signature,
+            });
+        }
+        catch (e) {
+            log('error', e);
+            throw new Error(e);
+        }
 
-            if (!res.signatures[0].valid || res.data !== signalData) {
-                log('Could not verify signal signature');
-                return this.destroyPeer({peer});
-            }
+        const signalData = JSON.stringify({signal: data.signal});
 
-            log('verified the signature', res);
-            peer.instance.signal(data.signal);
-        })
-        .catch(err => log('error', err));
+        if (!res.signatures[0].valid || res.data !== signalData) {
+            log('Could not verify signal signature');
+            return this.destroyPeer({peer});
+        }
+
+        log('verified the signature', res);
+        peer.instance.signal(data.signal);
     }
 
     /**
@@ -384,8 +446,12 @@ export default class Peer {
      * @param {Object} peer
      */
     destroyPeer({peer}) {
-        peer.instance.destroy();
+        if (!peer.instance.destroyed) {
+            peer.instance.destroy();
+        }
+
         this.peers = _.without(this.peers, peer);
+        this.channel.trigger('close:peer', {peer});
     }
 
     /**
@@ -409,22 +475,20 @@ export default class Peer {
      * @param {String} peer.deviceId
      * @param {Object} data
      */
-    send({peer, data}) {
+    async send({peer, data}) {
         const peerObj = this.getPeer({username: peer.username, deviceId: peer.deviceId});
 
         if (!_.isObject(peerObj) || !peerObj.instance.connected || !data) {
             return log(`peer ${peer.username} ${peer.deviceId} is offline`);
         }
 
-        return this.createBufferChunks(JSON.stringify(data))
-        .then(buffer => {
-            const {bufferId, bufferLength} = buffer;
-            log('the buffer is', buffer);
+        const buffer = await this.createBufferChunks(JSON.stringify(data));
+        const {bufferId, bufferLength} = buffer;
+        log('the buffer is', buffer);
 
-            _.each(buffer.chunks, chunk => {
-                const str = JSON.stringify({chunk, bufferId, bufferLength});
-                peerObj.instance.send(Buffer.from(str, 'utf8'));
-            });
+        _.each(buffer.chunks, chunk => {
+            const str = JSON.stringify({chunk, bufferId, bufferLength});
+            peerObj.instance.send(Buffer.from(str, 'utf8'));
         });
     }
 
@@ -435,7 +499,7 @@ export default class Peer {
      * @returns {Promise} - resolves with an object which contains
      * an array of buffer chunks
      */
-    createBufferChunks(str) {
+    async createBufferChunks(str) {
         const buff   = Buffer.from(str, 'utf8');
         const chunks = [];
 
@@ -451,10 +515,8 @@ export default class Peer {
             chunks.push(buff.slice(i, i + maxSize));
         }
 
-        return Radio.request('models/Encryption', 'random')
-        .then(bufferId => {
-            return {bufferId, chunks, bufferLength: buff.length};
-        });
+        const bufferId = await Radio.request('models/Encryption', 'random');
+        return {bufferId, chunks, bufferLength: buff.length};
     }
 
     /**

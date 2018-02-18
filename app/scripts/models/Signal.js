@@ -105,7 +105,7 @@ export default class Signal {
             }
 
             throw new Error(e);
-        };
+        }
     }
 
     /**

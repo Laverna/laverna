@@ -70,14 +70,14 @@ export default class Notes extends Module {
      * @returns {Promise}
      */
     async remove(options) {
-        const model = await this.findOrFetch(options)
+        const model = await this.findOrFetch(options);
         // If the model is already in trash, remove it
         if (Number(model.get('trash')) === 1) {
             return super.remove(options);
         }
 
         // Otherwise, just change its 'trash' attribute to 1
-        await this.saveModel({model, data: {trash: 1}})
+        await this.saveModel({model, data: {trash: 1}});
         this.channel.trigger('destroy:model', {model});
     }
 
@@ -165,7 +165,7 @@ export default class Notes extends Module {
      * @returns {Promise}
      */
     async findModel(options) {
-        const model = await super.findModel(options)
+        const model = await super.findModel(options);
         if (options.findAttachments) {
             return this.findAttachments({model});
         }

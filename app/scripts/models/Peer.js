@@ -250,7 +250,7 @@ export default class Peer {
             return log('Ignore the offer: untrusted user');
         }
         else if (this.isTheSameDevice(user) || (peer && peer.instance.connected)) {
-            return log('Ignore the offer: the same device or the peer already exist', user);
+            return log('Ignore the offer: the same device or the peer already exist');
         }
         else if (peer && peer.instance.destroyed) {
             this.destroyPeer({peer});
@@ -315,7 +315,7 @@ export default class Peer {
      * Wait and try to connect to a peer again.
      */
     reconnectToPeer(peer) {
-        peer.waitId = setTimeout(() => {
+        peer.waitId = setTimeout(() => { // eslint-disable-line
             if (!peer.instance.connected) {
                 this.sendOfferTo({user: _.pick(peer, 'username', 'deviceId')});
             }
@@ -389,9 +389,9 @@ export default class Peer {
         try {
             signature = await Radio.request('models/Encryption', 'sign', {data});
         }
-        catch (e) {
+        catch (err) {
             log('error', err);
-            throw new Error(e);
+            throw new Error(err);
         }
 
         this.socket.emit('sendSignal', {
@@ -409,7 +409,7 @@ export default class Peer {
      * @param {String} data.signature
      * @param {String} data.signal
      */
-    async onSignal(data) {
+    async onSignal(data) { // eslint-disable-line complexity
         log('received signal', data);
         const peer = this.getPeer(data.from);
 

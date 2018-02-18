@@ -76,7 +76,7 @@ export default class Tags extends Module {
      * @param {Object} options.model
      * @returns {Promise}
      */
-    async saveModel(options) {
+    async saveModel(options) { // eslint-disable-line complexity
         const {model, data} = options;
 
         // If the tag is about to be removed, don't generate a new ID

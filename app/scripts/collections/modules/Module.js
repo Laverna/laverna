@@ -142,7 +142,7 @@ export default class Module {
      * @param {String} [options.profileId] - profile id
      * @returns {Promise}
      */
-    async find(options = {}) {
+    async find(options = {}) { // eslint-disable-line complexity
         const collection = await this.fetch(_.omit(options, 'conditions'));
         if (options.filter || options.conditions) {
             collection.filterList(options);

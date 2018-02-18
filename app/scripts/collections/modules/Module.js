@@ -98,16 +98,16 @@ export default class Module {
      * @param {String} [options.profileId] - profile ID
      * @returns {Promise}
      */
-    findModel(options = {}) {
+    async findModel(options = {}) {
         // If id was not provided, return a model with default values
         if (!options[this.idAttribute]) {
-            return Promise.resolve(new this.Model(null, options));
+            return new this.Model(null, options);
         }
 
         // The model exists in the collection
         const collModel = this.findCollectionModel(options);
         if (collModel) {
-            return Promise.resolve(collModel);
+            return collModel;
         }
 
         // Instantiate a new model
@@ -116,8 +116,8 @@ export default class Module {
         }, options);
 
         // Fetch and decrypt the model
-        return model.fetch()
-        .then(() => this.decryptModel(model));
+        await model.fetch();
+        return this.decryptModel(model);
     }
 
     /**
@@ -142,19 +142,17 @@ export default class Module {
      * @param {String} [options.profileId] - profile id
      * @returns {Promise}
      */
-    find(options = {}) {
-        return this.fetch(_.omit(options, 'conditions'))
-        .then(collection => { // eslint-disable-line complexity
-            if (options.filter || options.conditions) {
-                collection.filterList(options);
-            }
+    async find(options = {}) {
+        const collection = await this.fetch(_.omit(options, 'conditions'));
+        if (options.filter || options.conditions) {
+            collection.filterList(options);
+        }
 
-            if (collection.paginate && options.perPage !== 0) {
-                collection.paginate();
-            }
+        if (collection.paginate && options.perPage !== 0) {
+            collection.paginate();
+        }
 
-            return collection;
-        });
+        return collection;
     }
 
     /**
@@ -165,18 +163,18 @@ export default class Module {
      * @param {Object} options
      * @returns {Promise} collection
      */
-    fetch(options) {
+    async fetch(options) {
         // If the collection is already cached, return its clone
         if (this.isCollectionCached(options)) {
-            return Promise.resolve(this.collection.clone());
+            return this.collection.clone();
         }
 
         this.collection = new this.Collection(null, options);
 
         // Fetch and decrypt the collection
-        return this.collection.fetch(options)
-        .then(() => this.decryptCollection(this.collection))
-        .then(() => this.collection.clone());
+        await this.collection.fetch(options);
+        await this.decryptCollection(this.collection);
+        return this.collection.clone();
     }
 
     /**
@@ -204,7 +202,7 @@ export default class Module {
      * @fires channel#update:model - after saving a model
      * @returns {Promise} - resolves with a model
      */
-    saveModel(options) { //eslint-disable-line
+    async saveModel(options) { //eslint-disable-line
         const {model} = options;
         const data    = options.data  || model.attributes;
 
@@ -223,12 +221,10 @@ export default class Module {
         }
 
         // Encrypt the model and save
-        return this.encryptModel(model)
-        .then(() => model.save(model.getData(), {validate: false}))
-        .then(() => {
-            this.onSaveModel(model);
-            this.channel.trigger('save:model', {model});
-        });
+        await this.encryptModel(model);
+        await model.save(model.getData(), {validate: false});
+        this.onSaveModel(model);
+        this.channel.trigger('save:model', {model});
     }
 
     /**
@@ -297,13 +293,14 @@ export default class Module {
      * @fires collections/{Name}#save:object:{modelId}
      * @returns {Promise}
      */
-    saveModelObject(options) {
+    async saveModelObject(options) {
         const model = new this.Model(options.data, options);
 
-        return this.decryptModel(model)
-        .then(() => this.saveModel({model, dontValidate: options.dontValidate}))
-        .then(() => this.channel.trigger(`save:object:${model.id}`, {model}))
-        .then(() => model);
+        await this.decryptModel(model);
+        await this.saveModel({model, dontValidate: options.dontValidate});
+
+        this.channel.trigger(`save:object:${model.id}`, {model});
+        return model;
     }
 
     /**
@@ -335,14 +332,14 @@ export default class Module {
      * @fires channel#destroy:model
      * @returns {Promise}
      */
-    remove(options) {
+    async remove(options) {
         const idAttr = this.idAttribute;
         const data   = {[idAttr]: options[idAttr] || options.model[idAttr]};
         const model  = new this.Model(data, options);
 
         data.trash = 2;
-        return this.saveModel({model, data})
-        .then(() => this.channel.trigger('destroy:model', {model}));
+        await this.saveModel({model, data});
+        this.channel.trigger('destroy:model', {model});
     }
 
     /**
@@ -391,14 +388,14 @@ export default class Module {
      * @fires encrypt#decryptCollection
      * @returns {Promise} resolves with a decrypted collection
      */
-    decryptCollection(coll = this.collection) {
+    async decryptCollection(coll = this.collection) {
         if (!this.isEncryptEnabled()) {
-            return Promise.resolve(coll);
+            return coll;
         }
 
         const collection = coll.fullCollection || coll;
-        return Radio.request('models/Encryption', 'decryptCollection', {collection})
-        .then(() => coll);
+        await Radio.request('models/Encryption', 'decryptCollection', {collection});
+        return coll;
     }
 
     /**

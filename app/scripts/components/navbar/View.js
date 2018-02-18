@@ -199,7 +199,7 @@ export default class View extends Mn.View {
              * @returns {Boolean}
              */
             isSyncEnabled() {
-                return this.configs.cloudStorage === 'dropbox';
+                return ['dropbox', 'p2p'].indexOf(this.configs.cloudStorage) !== -1;
             },
         };
     }

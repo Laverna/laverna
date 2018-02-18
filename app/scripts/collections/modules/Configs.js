@@ -67,14 +67,14 @@ export default class Configs extends Module {
      * @param {String} options.profileId
      * @returns {Promise}
      */
-    find(options) {
+    async find(options) {
         // Use the cached collection
         if (this.collection && this.collection.length) {
-            return Promise.resolve(this.collection);
+            return this.collection;
         }
 
-        return super.find(options)
-        .then(() => this.checkOrCreate());
+        await super.find(options);
+        return this.checkOrCreate();
     }
 
     saveModel(options) {
@@ -112,9 +112,9 @@ export default class Configs extends Module {
      *
      * @returns {Promise} resolves with collection
      */
-    checkOrCreate() {
+    async checkOrCreate() {
         if (!this.collection.hasNewConfigs()) {
-            return Promise.resolve(this.collection);
+            return this.collection;
         }
 
         // The collection is empty. Probably the first start
@@ -123,8 +123,8 @@ export default class Configs extends Module {
         }
 
         // Create default configs
-        return this.collection.createDefault()
-        .then(() => super.find({profileId: this.collection.profileId}));
+        await this.collection.createDefault();
+        return super.find({profileId: this.collection.profileId});
     }
 
     /**
@@ -169,18 +169,16 @@ export default class Configs extends Module {
      * @param {String} options.profileId
      * @returns {Promise}
      */
-    saveConfig(options) {
+    async saveConfig(options) {
         const {config} = options;
 
-        return this.findModel(_.extend({}, options, {name: config.name}))
-        .then(model => {
-            if (!model) {
-                return;
-            }
+        const model = await this.findModel(_.extend({}, options, {name: config.name}));
+        if (!model) {
+            return;
+        }
 
-            const opt = _.extend({}, options, {model, data: config});
-            return this.saveModel(opt);
-        });
+        const opt = _.extend({}, options, {model, data: config});
+        return this.saveModel(opt);
     }
 
     /**
@@ -211,11 +209,9 @@ export default class Configs extends Module {
      *
      * @returns {Promise}
      */
-    createDeviceId() {
-        return Radio.request('models/Encryption', 'random', {number: 6})
-        .then(rand => {
-            return this.saveConfig({config: {name: 'deviceId', value: rand}});
-        });
+    async createDeviceId() {
+        const rand = await Radio.request('models/Encryption', 'random', {number: 6});
+        return this.saveConfig({config: {name: 'deviceId', value: rand}});
     }
 
     /**
@@ -226,25 +222,23 @@ export default class Configs extends Module {
      * @param {String} deviceId
      * @returns {Promise}
      */
-    updatePeer({username, deviceId}) {
+    async updatePeer({username, deviceId}) {
         if (!username || !deviceId) {
-            return Promise.resolve();
+            return;
         }
 
-        return this.findModel({name: 'peers'})
-        .then(model => {
-            const value = model.get('value');
-            const peer  = _.findWhere(value, {username, deviceId});
+        const model = await this.findModel({name: 'peers'});
+        const value = model.get('value');
+        const peer  = _.findWhere(value, {username, deviceId});
 
-            if (peer) {
-                peer.lastSeen = Date.now();
-            }
-            else {
-                value.push({username, deviceId, lastSeen: Date.now()});
-            }
+        if (peer) {
+            peer.lastSeen = Date.now();
+        }
+        else {
+            value.push({username, deviceId, lastSeen: Date.now()});
+        }
 
-            return this.saveModel({model, data: {value}});
-        });
+        return this.saveModel({model, data: {value}});
     }
 
 }

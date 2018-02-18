@@ -88,8 +88,8 @@ export default class Controller extends Mn.Object {
         this.options.tab = this.options.tab || 'general';
 
         return this.fetch()
-        .then(res => this.show(res))
-        .then(() => this.listenToEvents())
+        .then(res  => this.show(res))
+        .then(()   => this.listenToEvents())
         .catch(err => log('error', err));
     }
 
@@ -179,20 +179,19 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    confirmNavigate(...args) {
+    async confirmNavigate(...args) {
         // Don't show the confirmation dialog if there are no changes
         if (!this.hasChanges()) {
-            return Promise.resolve(this.navigate(...args));
+            return this.navigate(...args);
         }
 
-        return Radio.request('components/confirm', 'show', {
+        const res = await Radio.request('components/confirm', 'show', {
             content: _.i18n('You have unsaved changes'),
-        })
-        .then(res => {
-            if (res === 'confirm') {
-                return this.navigate(...args);
-            }
         });
+
+        if (res === 'confirm') {
+            return this.navigate(...args);
+        }
     }
 
     /**

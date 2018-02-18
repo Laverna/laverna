@@ -49,11 +49,10 @@ export default class Controller {
      * @param {Object} options.model - notebook/tag model
      * @returns {Promise}
      */
-    remove(options) {
+    async remove(options) {
         const {model} = options;
-
-        return this.showConfirm(model)
-        .then(res => this.requestRemove(model, res));
+        const res     = await this.showConfirm(model);
+        this.requestRemove(model, res);
     }
 
     /**

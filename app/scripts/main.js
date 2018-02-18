@@ -2,6 +2,7 @@
  * @file main.js - load dependencies and start the app.
  * @license MPL-2.0
  */
+import 'babel-polyfill';
 import FastClick from 'fastclick';
 import Hammer from 'hammerjs';
 import Promise from 'es6-promise';

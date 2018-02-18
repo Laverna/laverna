@@ -36,10 +36,11 @@ export default class Notebooks extends Module {
      * removed too
      * @returns {Promise}
      */
-    remove(options) {
-        return this.updateChildren(options.model)
-        .then(() => Radio.request('collections/Notes', 'changeNotebookId', options))
-        .then(() => super.remove(options));
+    async remove(options) {
+        await this.updateChildren(options.model);
+        await Radio.request('collections/Notes', 'changeNotebookId', options);
+
+        return super.remove(options);
     }
 
     /**
@@ -48,18 +49,18 @@ export default class Notebooks extends Module {
      * @param {Object} model - notebook model
      * @returns {Promise}
      */
-    updateChildren(model) {
-        return this.getChildren({parentId: model.id, profileId: model.profileId})
-        .then(collection => {
-            const promises = [];
-            const data     = {parentId: model.get('parentId')};
+    async updateChildren(model) {
+        const profileId  = model.profileId;
+        const collection = await this.getChildren({parentId: model.id, profileId});
 
-            collection.each(notebook => {
-                promises.push(this.saveModel({data, model: notebook}));
-            });
+        const promises = [];
+        const data     = {parentId: model.get('parentId')};
 
-            return Promise.all(promises);
+        collection.each(notebook => {
+            promises.push(this.saveModel({data, model: notebook}));
         });
+
+        return Promise.all(promises);
     }
 
     /**
@@ -89,18 +90,15 @@ export default class Notebooks extends Module {
      * @param {Object} options
      * @returns {Promise}
      */
-    find(options) {
+    async find(options) {
         const sortField = Radio.channel('collections/Configs').request(
             'findConfig', {name: 'sortnotebooks'}
         );
-        const opt = _.extend({sortField}, options);
+        const opt        = _.extend({sortField}, options);
+        const collection = await super.find(opt);
 
-        return super.find(opt)
-        .then(coll => {
-            const collection = coll;
-            collection.models = collection.getTree();
-            return collection;
-        });
+        collection.models = collection.getTree();
+        return collection;
     }
 
 }

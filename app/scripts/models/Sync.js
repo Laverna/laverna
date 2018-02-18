@@ -98,16 +98,14 @@ export default class Sync {
      * @param {Object} options
      * @returns {Promise}
      */
-    findItem(model, options) {
-        return this.db.processRequest('findItem', [options])
-        .then(data => {
-            if (!data) {
-                return Promise.reject('not found');
-            }
+    async findItem(model, options) {
+        const data = await this.db.processRequest('findItem', [options]);
+        if (!data) {
+            return Promise.reject('not found');
+        }
 
-            model.set(data || {});
-            return model;
-        });
+        model.set(data || {});
+        return model;
     }
 
     /**
@@ -117,15 +115,13 @@ export default class Sync {
      * @param {Object} options
      * @returns {Promise}
      */
-    find(collection, options) {
-        return this.db.processRequest('find', [options])
-        .then(models => {
-            if (models && models.length) {
-                collection.add(models);
-            }
+    async find(collection, options) {
+        const models = await this.db.processRequest('find', [options]);
+        if (models && models.length) {
+            collection.add(models);
+        }
 
-            return collection;
-        });
+        return collection;
     }
 
     /**
@@ -149,13 +145,13 @@ export default class Sync {
      * @param {Object} options
      * @returns {Promise}
      */
-    save(model, options) {
+    async save(model, options) {
         const opt = _.extend({
             data: model.getData(),
         }, options);
 
-        return this.db.processRequest('save', [opt])
-        .then(data => model.set(data));
+        const data = await this.db.processRequest('save', [opt]);
+        model.set(data);
     }
 
     /**

@@ -45,18 +45,19 @@ export default class Notes extends Module {
      * from the content and saved.
      * @returns {Promise}
      */
-    saveModel(options) {
+    async saveModel(options) {
         if (_.isUndefined(options.saveTags) || !options.saveTags) {
             return super.saveModel(options);
         }
 
         const data = options.data || options.model.attributes;
 
-        return Radio.request('collections/Tags', 'addTags', {
+        await Radio.request('collections/Tags', 'addTags', {
             tags      : data.tags,
             profileId : options.model.profileId,
-        })
-        .then(() => super.saveModel(options));
+        });
+
+        return super.saveModel(options);
     }
 
     /**
@@ -68,18 +69,16 @@ export default class Notes extends Module {
      * @fires collections/Notes#destroy:model
      * @returns {Promise}
      */
-    remove(options) {
-        return this.findOrFetch(options)
-        .then(model => {
-            // If the model is already in trash, remove it
-            if (Number(model.get('trash')) === 1) {
-                return super.remove(options);
-            }
+    async remove(options) {
+        const model = await this.findOrFetch(options)
+        // If the model is already in trash, remove it
+        if (Number(model.get('trash')) === 1) {
+            return super.remove(options);
+        }
 
-            // Otherwise, just change its 'trash' attribute to 1
-            return this.saveModel({model, data: {trash: 1}})
-            .then(() => this.channel.trigger('destroy:model', {model}));
-        });
+        // Otherwise, just change its 'trash' attribute to 1
+        await this.saveModel({model, data: {trash: 1}})
+        this.channel.trigger('destroy:model', {model});
     }
 
     /**
@@ -107,12 +106,10 @@ export default class Notes extends Module {
      * @param {String} (options.id) - id of a note
      * @returns {Promise}
      */
-    restore(options) {
-        return this.findOrFetch(options)
-        .then(model => {
-            return this.saveModel({model, data: {trash: 0}})
-            .then(() => this.channel.trigger('restore:model', {model}));
-        });
+    async restore(options) {
+        const model = await this.findOrFetch(options);
+        await this.saveModel({model, data: {trash: 0}});
+        this.channel.trigger('restore:model', {model});
     }
 
     /**
@@ -124,7 +121,7 @@ export default class Notes extends Module {
      * moved to trash
      * @returns {Promise}
      */
-    changeNotebookId(options) {
+    async changeNotebookId(options) {
         const {model} = options;
         const data    = {notebookId: 0};
 
@@ -133,12 +130,12 @@ export default class Notes extends Module {
             data.trash = 1;
         }
 
-        return this.find({
+        const notes = await this.find({
             profileId  : model.profileId,
             conditions : {notebookId: model.id},
-        })
-        .then(notes => notes.fullCollection || notes)
-        .then(collection => this.save({collection, data}));
+        });
+        const collection = notes.fullCollection || notes;
+        return this.save({collection, data});
     }
 
     /**
@@ -167,15 +164,13 @@ export default class Notes extends Module {
      * and files should be fetched too
      * @returns {Promise}
      */
-    findModel(options) {
-        return super.findModel(options)
-        .then(model => {
-            if (options.findAttachments) {
-                return this.findAttachments({model});
-            }
+    async findModel(options) {
+        const model = await super.findModel(options)
+        if (options.findAttachments) {
+            return this.findAttachments({model});
+        }
 
-            return model;
-        });
+        return model;
     }
 
     /**
@@ -215,12 +210,12 @@ export default class Notes extends Module {
      * @param {Object} model
      * @returns {Promise}
      */
-    findNotebook(model) {
-        return Radio.request('collections/Notebooks', 'findModel', {
+    async findNotebook(model) {
+        const notebook = await Radio.request('collections/Notebooks', 'findModel', {
             profileId : model.profileId,
             id        : model.get('notebookId'),
-        })
-        .then(notebook => model.set('notebook', notebook));
+        });
+        model.set('notebook', notebook);
     }
 
     /**
@@ -229,12 +224,12 @@ export default class Notes extends Module {
      * @param {Object} model
      * @returns {Promise}
      */
-    findFiles(model) {
-        return Radio.request('collections/Files', 'findFiles', {
+    async findFiles(model) {
+        const files = await Radio.request('collections/Files', 'findFiles', {
             profileId : model.profileId,
             ids       : model.get('files'),
-        })
-        .then(files => model.set('fileModels', files));
+        });
+        model.set('fileModels', files);
     }
 
 }

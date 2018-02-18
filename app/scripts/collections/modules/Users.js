@@ -51,30 +51,28 @@ export default class Users extends Module {
         }, this);
     }
 
-    find(...args) {
+    async find(...args) {
         if (this.collection) {
-            return Promise.resolve(this.collection);
+            return this.collection;
         }
 
-        return super.find(...args)
-        .then(() => this.collection);
+        await super.find(...args);
+        return this.collection;
     }
 
-    saveModel(options) {
+    async saveModel(options) {
         const privKey = Radio.request('collections/Configs', 'findConfig', {
             name: 'privateKey',
         });
 
-        return super.saveModel(options)
-        .then(() => {
-            /* Add a users key to the array of public keys
-               if the user's private key exists */
-            if (privKey && privKey.length) {
-                Radio.request('models/Encryption', 'readUserKey', {model: options.model});
-            }
+        await super.saveModel(options);
 
-            return options.model;
-        });
+        // Add a users key to the array of public keys if the user's private key exists
+        if (privKey && privKey.length) {
+            Radio.request('models/Encryption', 'readUserKey', {model: options.model});
+        }
+
+        return options.model;
     }
 
     /**
@@ -87,13 +85,13 @@ export default class Users extends Module {
      * @fires channel#destroy:model
      * @returns {Promise}
      */
-    remove(options) {
+    async remove(options) {
         const idAttr = this.idAttribute;
         const data   = {[idAttr]: options[idAttr] || options.model.get(idAttr)};
         const model  = new this.Model(data, {profileId: options.profileId});
 
-        return model.destroy()
-        .then(() => this.collection.remove(model));
+        await model.destroy();
+        return this.collection.remove(model);
     }
 
     /**
@@ -103,14 +101,12 @@ export default class Users extends Module {
      * @param {Object} model
      * @returns {Promise}
      */
-    acceptInvite({model}) {
+    async acceptInvite({model}) {
         this.removeServerInvite(model);
         const data = {pendingAccept: false, pendingInvite: false};
 
-        return this.saveModel({model, data})
-        .then(() => {
-            Radio.request('models/Peer', 'sendOfferTo', {user: model.attributes});
-        });
+        await this.saveModel({model, data});
+        Radio.request('models/Peer', 'sendOfferTo', {user: model.attributes});
     }
 
     /**
@@ -118,13 +114,11 @@ export default class Users extends Module {
      *
      * @param {String} {username}
      */
-    acceptIfPending({username}) {
-        return this.findModel({username})
-        .then(model => {
-            if (model.get('pendingInvite')) {
-                return this.acceptInvite({model});
-            }
-        });
+    async acceptIfPending({username}) {
+        const model = await this.findModel({username});
+        if (model.get('pendingInvite')) {
+            return this.acceptInvite({model});
+        }
     }
 
     /**
@@ -199,16 +193,16 @@ export default class Users extends Module {
      * @param {Object} options
      * @returns {Promise}
      */
-    invite(options) {
+    async invite(options) {
         if (!this.checkKey(options.user.publicKey, options.user.fingerprint)) {
             log('wrong user fingerprint', options.user);
-            return Promise.resolve(false);
+            return false;
         }
 
         log('saving and sending the invite...');
-        return this.addUser(options, {pendingInvite: true})
-        .then(() => Radio.request('models/Signal', 'sendInvite', options.user))
-        .then(() => true);
+        await this.addUser(options, {pendingInvite: true});
+        await Radio.request('models/Signal', 'sendInvite', options.user);
+        return true;
     }
 
     /**
@@ -265,14 +259,13 @@ export default class Users extends Module {
      * @param {Object} model
      * @returns {Promise}
      */
-    autoAcceptInvite(options, keys, model) {
-        return this.checkInviteSignature(options, keys)
-        .then(res => {
-            if (res && model.get('fingerprint') === options.fingerprint &&
-                model.get('pendingInvite')) {
-                return this.acceptInvite({model});
-            }
-        });
+    async autoAcceptInvite(options, keys, model) {
+        const res = await this.checkInviteSignature(options, keys);
+
+        if (res && model.get('fingerprint') === options.fingerprint &&
+            model.get('pendingInvite')) {
+            return this.acceptInvite({model});
+        }
     }
 
     /**
@@ -283,17 +276,15 @@ export default class Users extends Module {
      * @param {Array} keys
      * @returns {Promise}
      */
-    saveNewInvite(options, keys) {
-        return this.checkInviteSignature(options, keys)
-        .then(res => {
-            if (!res) {
-                log('Ignore invite - incorrect signature');
-                return false;
-            }
+    async saveNewInvite(options, keys) {
+        const res = await this.checkInviteSignature(options, keys);
+        if (!res) {
+            log('Ignore invite - incorrect signature');
+            return false;
+        }
 
-            return this.addUser({user: options}, {pendingAccept: true})
-            .then(() => true);
-        });
+        await this.addUser({user: options}, {pendingAccept: true});
+        return true;
     }
 
     /**
@@ -306,20 +297,18 @@ export default class Users extends Module {
      * @param {Array} keys - an array which contains the user's public key
      * @returns {Promise} resolves with true if the signature is correct
      */
-    checkInviteSignature(options, keys) {
-        return Radio.request('models/Encryption', 'verify', {
+    async checkInviteSignature(options, keys) {
+        const res = await Radio.request('models/Encryption', 'verify', {
             message    : options.signature,
             publicKeys : keys,
-        })
-        .then(res => {
-            const data = JSON.parse(res.data);
-
-            return (
-                res.signatures[0].valid &&
-                data.from === options.username &&
-                data.to   === this.user.username
-            );
         });
+        const data = JSON.parse(res.data);
+
+        return (
+            res.signatures[0].valid &&
+            data.from === options.username &&
+            data.to   === this.user.username
+        );
     }
 
 }

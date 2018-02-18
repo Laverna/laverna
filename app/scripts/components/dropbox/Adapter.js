@@ -116,21 +116,19 @@ export default class Adapter {
     /**
      * Authenticate in browser.
      */
-    authBrowser() {
+    async authBrowser() {
         const url     = window.electron ? 'http://localhost:9000/' : document.location;
         const authUrl = this.dbx.getAuthenticationUrl(url);
-
-        return Radio.request('components/confirm', 'show', {
+        const answer  = await Radio.request('components/confirm', 'show', {
             content: _.i18n('dropbox.auth confirm'),
-        })
-        .then(answer => {
-            if (answer === 'confirm') {
-                window.location = authUrl;
-                if (window.electron) {
-                    return this.authElectron();
-                }
-            }
         });
+
+        if (answer === 'confirm') {
+            window.location = authUrl;
+            if (window.electron) {
+                return this.authElectron();
+            }
+        }
     }
 
     /**
@@ -177,16 +175,15 @@ export default class Adapter {
      * @param {String} accessToken
      * @returns {Promise}
      */
-    saveAccessToken(accessToken) {
-        return Radio.request('collections/Configs', 'saveConfig', {
+    async saveAccessToken(accessToken) {
+        await Radio.request('collections/Configs', 'saveConfig', {
             config: {name: 'dropboxAccessToken', value: accessToken},
-        })
-        .then(() => {
-            // Redirect to the main page again
-            Radio.request('utils/Url', 'navigate', {url: '/'});
-            this.configs.accessToken = accessToken;
-            return true;
         });
+
+        // Redirect to the main page again
+        Radio.request('utils/Url', 'navigate', {url: '/'});
+        this.configs.accessToken = accessToken;
+        return true;
     }
 
     /**
@@ -196,19 +193,17 @@ export default class Adapter {
      * @param {String} type - [notes|notebooks|tags|files]
      * @returns {Promise}
      */
-    find({profileId, type}) {
-        return this.readDir({path: `/${profileId}/${type}`})
-        .then(resp => {
-            const promises = [];
+    async find({profileId, type}) {
+        const resp     = await this.readDir({path: `/${profileId}/${type}`});
+        const promises = [];
 
-            _.each(resp.entries, file => {
-                if (file.name.search('.json') !== -1) {
-                    promises.push(this.readFile({path: file.path_lower}));
-                }
-            });
-
-            return Promise.all(promises);
+        _.each(resp.entries, file => {
+            if (file.name.search('.json') !== -1) {
+                promises.push(this.readFile({path: file.path_lower}));
+            }
         });
+
+        return Promise.all(promises);
     }
 
     /**
@@ -238,16 +233,14 @@ export default class Adapter {
      * @param {String} {path} - path of the file
      * @returns {Promise}
      */
-    readFile({path}) {
-        return this.dbx.filesDownload({path})
-        .then(resp => {
-            return new Promise(resolve => {
-                const reader = new FileReader();
-                reader.addEventListener('loadend', () => {
-                    resolve(JSON.parse(reader.result));
-                });
-                reader.readAsText(resp.fileBlob);
+    async readFile({path}) {
+        const resp = await this.dbx.filesDownload({path});
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.addEventListener('loadend', () => {
+                resolve(JSON.parse(reader.result));
             });
+            reader.readAsText(resp.fileBlob);
         });
     }
 

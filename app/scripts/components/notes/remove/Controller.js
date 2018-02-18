@@ -62,9 +62,9 @@ export default class Controller {
      * @param {String} options.id
      * @returns {Promise}
      */
-    removeById(options) {
-        return Radio.request('collections/Notes', 'findModel', options)
-        .then(model => this.removeModel(_.extend({model}, options)));
+    async removeById(options) {
+        const model = await Radio.request('collections/Notes', 'findModel', options);
+        return this.removeModel(_.extend({model}, options));
     }
 
     /**
@@ -76,17 +76,15 @@ export default class Controller {
      * a confirmation dialog
      * @returns {Promise}
      */
-    removeModel(options) {
+    async removeModel(options) {
         const {model} = options;
 
-        return (options.force ? Promise.resolve('confirm') : this.showConfirm(model))
-        .then(res => {
-            if (res !== 'confirm') {
-                return;
-            }
+        const res = await (options.force ?  'confirm' : this.showConfirm(model));
+        if (res !== 'confirm') {
+            return;
+        }
 
-            return Radio.request('collections/Notes', 'remove', {model});
-        });
+        return Radio.request('collections/Notes', 'remove', {model});
     }
 
     /**

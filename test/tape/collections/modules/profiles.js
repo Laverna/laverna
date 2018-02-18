@@ -113,7 +113,7 @@ test('collections/modules/Profiles: changePassphrase() - reject', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: changePassphrase() - success', t => {
+test('collections/modules/Profiles: changePassphrase() - success', async t => {
     const mod = new Module();
     const opt = {
         model         : new Profile({username: 'alice'}),
@@ -121,20 +121,18 @@ test('collections/modules/Profiles: changePassphrase() - success', t => {
         newPassphrase : '2',
     };
 
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve('newKey'));
+    const req = sand.stub(mod.encryptChannel, 'request').resolves('newKey');
     sand.stub(mod, 'saveModel');
 
-    mod.changePassphrase(opt)
-    .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'changePassphrase', opt),
-            true, 'changes the passphrase');
-        t.equal(mod.saveModel.calledWith({
-            model : opt.model,
-            data  : {privateKey: 'newKey'},
-        }), true, 'saves the new private key');
+    await mod.changePassphrase(opt);
+    t.equal(req.calledWith('changePassphrase', opt),
+        true, 'changes the passphrase');
+    t.equal(mod.saveModel.calledWith({
+        model : opt.model,
+        data  : {privateKey: 'newKey'},
+    }), true, 'saves the new private key');
 
-        sand.restore();
-        mod.channel.stopReplying();
-        t.end();
-    });
+    sand.restore();
+    mod.channel.stopReplying();
+    t.end();
 });

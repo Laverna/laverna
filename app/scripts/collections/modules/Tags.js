@@ -60,15 +60,13 @@ export default class Tags extends Module {
      * @param {String} options.profileId
      * @returns {Promise}
      */
-    addTag(options) {
-        const opt = options;
+    async addTag(options) {
+        const opt   = options;
+        const id    = await this.getId({data: opt});
+        const model = new this.Model({id});
 
-        return this.getId({data: opt})
-        .then(id => {
-            const model = new this.Model({id});
-            model.setEscape(opt);
-            return super.saveModel({model});
-        });
+        model.setEscape(opt);
+        return super.saveModel({model});
     }
 
     /**
@@ -78,7 +76,7 @@ export default class Tags extends Module {
      * @param {Object} options.model
      * @returns {Promise}
      */
-    saveModel(options) {
+    async saveModel(options) {
         const {model, data} = options;
 
         // If the tag is about to be removed, don't generate a new ID
@@ -86,18 +84,15 @@ export default class Tags extends Module {
             return super.saveModel(options);
         }
 
-        return this.getId(options)
-        .then(id => {
-            // If it is a new model or it has the same ID, do nothing
-            if (!model.id || model.id === id) {
-                return model.set({id});
-            }
+        const id = await this.getId(options);
 
-            // Otherwise, remove the previous model
-            return this.remove({model})
-            .then(() => model.set({id}));
-        })
-        .then(() => super.saveModel(options));
+        // If it is not a new model and its ID has changed, remove it
+        if (model.id && model.id !== id) {
+            await this.remove({model});
+        }
+
+        model.set({id});
+        return super.saveModel(options);
     }
 
     /**
@@ -108,11 +103,11 @@ export default class Tags extends Module {
      * @param {Object} [options.model]
      * @returns {Promise}
      */
-    getId(options) {
+    async getId(options) {
         const name = (options.data || {}).name || options.model.get('name');
+        const sha  = await Radio.request('models/Encryption', 'sha256', {text: name});
 
-        return Radio.request('models/Encryption', 'sha256', {text: name})
-        .then(sha => sha.join(''));
+        return sha.join('');
     }
 
 }

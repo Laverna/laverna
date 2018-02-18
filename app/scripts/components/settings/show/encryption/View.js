@@ -88,20 +88,19 @@ export default class View extends Mn.View {
     /**
      * Ask a user if they are sure they want to disable encryption.
      */
-    useEncryption() {
+    async useEncryption() {
         // Don't show the confirmation dialog if a user is enabling encryption
         if (this.ui.useEncrypt.is(':checked')) {
             return true;
         }
 
-        return Radio.request('components/confirm', 'show', {
+        const answer = await Radio.request('components/confirm', 'show', {
             content: _.i18n('Are you sure you want to disable encryption?'),
-        })
-        .then(answer => {
-            if (answer === 'reject') {
-                this.ui.useEncrypt.prop('checked', true);
-            }
         });
+
+        if (answer === 'reject') {
+            this.ui.useEncrypt.prop('checked', true);
+        }
     }
 
     /**

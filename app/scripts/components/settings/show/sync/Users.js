@@ -40,14 +40,14 @@ export default class Users extends Mn.View {
      * @param {String} content
      * @returns {Promise}
      */
-    showConfirm(e, content) {
+    async showConfirm(e, content) {
         const username = this.$(e.currentTarget).attr('data-user');
         const model    = this.collection.get(username);
 
-        return Radio.request('components/confirm', 'show', {
+        const res = await Radio.request('components/confirm', 'show', {
             content: _.i18n(content, model.getData()),
-        })
-        .then(res => [res, model]);
+        });
+        return [res, model];
     }
 
     /**
@@ -56,13 +56,12 @@ export default class Users extends Mn.View {
      * @param {Object} e
      * @returns {Promise}
      */
-    rejectInvite(e) {
-        return this.showConfirm(e, 'Confirm you want to reject the invite')
-        .then(([res, model]) => {
-            if (res === 'confirm') {
-                return model.channel.request('rejectInvite', {model});
-            }
-        });
+    async rejectInvite(e) {
+        const msg = 'Confirm you want to reject the invite';
+        const [res, model] = await this.showConfirm(e, msg);
+        if (res === 'confirm') {
+            return model.channel.request('rejectInvite', {model});
+        }
     }
 
     /**
@@ -71,13 +70,12 @@ export default class Users extends Mn.View {
      * @param {Object} e
      * @returns {Promise}
      */
-    acceptInvite(e) {
-        return this.showConfirm(e, 'Confirm you want to add the user to trust')
-        .then(([res, model]) => {
-            if (res === 'confirm') {
-                return model.channel.request('acceptInvite', {model});
-            }
-        });
+    async acceptInvite(e) {
+        const msg = 'Confirm you want to add the user to trust';
+        const [res, model] = await this.showConfirm(e, msg);
+        if (res === 'confirm') {
+            return model.channel.request('acceptInvite', {model});
+        }
     }
 
     /**
@@ -86,15 +84,13 @@ export default class Users extends Mn.View {
      * @param {Object} e
      * @returns {Promise}
      */
-    removeFromTrust(e) {
+    async removeFromTrust(e) {
         e.preventDefault();
-
-        return this.showConfirm(e, 'Confirm you want to remove the user from trust')
-        .then(([res, model]) => {
-            if (res === 'confirm') {
-                return model.channel.request('remove', {model});
-            }
-        });
+        const msg = 'Confirm you want to remove the user from trust';
+        const [res, model] = await this.showConfirm(e, msg);
+        if (res === 'confirm') {
+            return model.channel.request('remove', {model});
+        }
     }
 
     serializeData() {

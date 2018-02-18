@@ -41,15 +41,15 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    init() {
-        return this.fetch()
-        .then(results => {
-            this.model     = results[0];
-            this.notebooks = results[1];
-        })
-        .then(() => this.show())
-        .then(() => this.listenToEvents())
-        .catch(err => log('error', err));
+    async init() {
+        try {
+            await this.fetch();
+            this.show();
+            this.listenToEvents();
+        }
+        catch (e) {
+            log('error', e);
+        }
     }
 
     onDestroy() {
@@ -61,13 +61,13 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    fetch() {
-        return Promise.all([
-            this.notesChannel.request('findModel', _.extend({
-                findAttachments: !_.isNull(this.options.id),
-            }, this.options)),
-            Radio.request('collections/Notebooks', 'find'),
-        ]);
+    async fetch() {
+        this.model = await this.notesChannel.request('findModel', _.extend({
+            findAttachments: !_.isNull(this.options.id),
+        }, this.options));
+
+        this.notebooks = await Radio.request('collections/Notebooks', 'find');
+        return this.model;
     }
 
     /**
@@ -136,25 +136,28 @@ export default class Controller extends Mn.Object {
      * triggered from autoSave method
      * @returns {Promise}
      */
-    save(options = {}) {
-        return this.getData()
-        .then(data => this.checkTitle(data))
-        .then(data => {
-            return this.notesChannel.request('saveModel', {
+    async save(options = {}) {
+        let data = await this.getData();
+        data     = this.checkTitle(data);
+
+        try {
+            await this.notesChannel.request('saveModel', {
                 data,
                 saveTags : options.autoSave !== true,
                 model    : this.view.model,
             });
-        })
-        .then(() => {
-            Radio.trigger('components/notes', 'save:model', {model: this.view.model});
+        }
+        catch (e) {
+            log('save error:', e);
+            throw new Error(e);
+        }
 
-            // Redirect to the previous page if isn't auto save
-            if (options.autoSave !== true) {
-                return this.redirect(false);
-            }
-        })
-        .catch(err => log('error', err));
+        Radio.trigger('components/notes', 'save:model', {model: this.view.model});
+
+        // Redirect to the previous page if isn't auto save
+        if (options.autoSave !== true) {
+            return this.redirect(false);
+        }
     }
 
     /**
@@ -162,16 +165,14 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise} resolves with an object
      */
-    getData() {
+    async getData() {
         const notebookId = this.view.getChildView('notebooks').ui
         .notebookId.val().trim();
 
-        return Radio.request('components/editor', 'getData')
-        .then(data => {
-            return _.extend({}, data, {
-                notebookId,
-                title: this.view.ui.title.val().trim(),
-            });
+        const data = await Radio.request('components/editor', 'getData');
+        return _.extend({}, data, {
+            notebookId,
+            title: this.view.ui.title.val().trim(),
         });
     }
 
@@ -197,20 +198,17 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    checkChanges() {
-        return this.getData()
-        .then(res => {
-            this.model.setEscape(res);
-            const data = _.omit(this.model.attributes, this.ignoreKeys);
+    async checkChanges() {
+        const res = await this.getData();
+        this.model.setEscape(res);
+        const data = _.omit(this.model.attributes, this.ignoreKeys);
 
-            // There aren't any changes
-            if (_.isEqual(this.dataBeforeChange, data)) {
-                return this.redirect(false);
-            }
+        // There aren't any changes
+        if (_.isEqual(this.dataBeforeChange, data)) {
+            return this.redirect(false);
+        }
 
-            return this.showCancelConfirm();
-        })
-        .catch(err => log('error', err));
+        return this.showCancelConfirm();
     }
 
     /**
@@ -219,14 +217,19 @@ export default class Controller extends Mn.Object {
      * @fires model#synced
      * @returns {Promise}
      */
-    onSaveObject() {
-        return this.fetch()
-        .then(([model]) => {
-            this.view.model.htmlContent = model.htmlContent;
-            this.view.model.set(model.attributes);
-            this.view.model.trigger('synced');
-        })
-        .catch(err => log('error', err));
+    async onSaveObject() {
+        let model;
+        try {
+            model = await this.fetch();
+        }
+        catch (e) {
+            log('error', e);
+            throw new Error(e);
+        }
+
+        this.view.model.htmlContent = model.htmlContent;
+        this.view.model.set(model.attributes);
+        this.view.model.trigger('synced');
     }
 
     /**
@@ -235,18 +238,16 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    showCancelConfirm() {
-        return Radio.request('components/confirm', 'show', {
+    async showCancelConfirm() {
+        const res = await Radio.request('components/confirm', 'show', {
             content: _.i18n('You have unsaved changes'),
-        })
-        .then(res => {
-            if (res === 'confirm') {
-                return this.redirect();
-            }
+        });
 
-            return this.onRejectCancel();
-        })
-        .catch(err => log('cancel confirm error', err));
+        if (res === 'confirm') {
+            return this.redirect();
+        }
+
+        return this.onRejectCancel();
     }
 
     /**
@@ -256,10 +257,10 @@ export default class Controller extends Mn.Object {
      * be removed or restored to the original state before redirecting
      * @returns {Promise}
      */
-    redirect(preRedirect = true) {
-        return (preRedirect ? this.preRedirect() : Promise.resolve())
-        .then(() => Radio.request('utils/Url', 'navigateBack'))
-        .then(() => this.view.destroy());
+    async redirect(preRedirect = true) {
+        await (preRedirect ? this.preRedirect() : Promise.resolve());
+        Radio.request('utils/Url', 'navigateBack');
+        this.view.destroy();
     }
 
     /**

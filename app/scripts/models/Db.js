@@ -77,16 +77,16 @@ export default class Db extends WorkerModule {
      * It will filter items by those conditions.
      * @returns {Promise}
      */
-    find(options) {
+    async find(options) {
         const {conditions} = options;
         const models       = [];
 
-        return this.getDb(options).iterate(value => {
+        await this.getDb(options).iterate(value => {
             if (value && (!conditions || _.isMatch(value, conditions))) {
                 models.push(value);
             }
-        })
-        .then(() => models);
+        });
+        return models;
     }
 
     /**
@@ -99,15 +99,15 @@ export default class Db extends WorkerModule {
      * @param {Object} options.data - data that should be saved
      * @returns {Promise}
      */
-    save(options) {
+    async save(options) {
         const {data}      = options;
         const idAttribute = options.idAttribute || 'id';
 
         // Generate a new ID if it wasn't provided
         data[idAttribute] = (data[idAttribute] || options.id) || uuid.v1();
 
-        return this.getDb(options).setItem(data[idAttribute], data)
-        .then(() => data);
+        await this.getDb(options).setItem(data[idAttribute], data);
+        return data;
     }
 
     /**

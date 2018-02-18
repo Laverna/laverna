@@ -34,19 +34,23 @@ export default class Controller extends Mn.Object {
      * @param {Object} options
      * @returns {Promise}
      */
-    init() {
-        const opt = this.options.filterArgs;
+    async init() {
+        const opt = _.extend({}, this.options.filterArgs, {
+            perPage: this.configs.pagination,
+        });
 
         // Show a loader
         Radio.request('Layout', 'showLoader', {region: 'sidebar'});
 
         // Fetch notes
-        return Radio.request('collections/Notes', 'find', _.extend({}, opt, {
-            perPage   : this.configs.pagination,
-        }))
-        .then(collection => this.show(collection))
-        .then(() => this.listenToEvents())
-        .catch(err => log('Error', err));
+        try {
+            const collection = await Radio.request('collections/Notes', 'find', opt);
+            this.show(collection);
+            this.listenToEvents();
+        }
+        catch (e) {
+            log('Error', e);
+        }
     }
 
     onDestroy() {

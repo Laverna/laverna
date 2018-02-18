@@ -295,10 +295,10 @@ export default class Encryption {
      * it should be encrypted
      * @returns {Promise} - resolves with an encrypted string
      */
-    encrypt(options) {
+    async encrypt(options) {
         const keys = this.getUserKeys(options.username);
-        return this.openpgp.encrypt(_.extend({}, keys, options))
-        .then(enc => enc.data);
+        const enc  = await this.openpgp.encrypt(_.extend({}, keys, options));
+        return enc.data;
     }
 
     /**
@@ -312,14 +312,14 @@ export default class Encryption {
      * the message
      * @returns {Promise}
      */
-    decrypt(options) {
+    async decrypt(options) {
         const keys = this.getUserKeys(options.username);
         const data = _.extend({}, keys, options, {
             message : this.openpgp.message.readArmored(options.message),
         });
 
-        return this.openpgp.decrypt(data)
-        .then(clearText => clearText.data);
+        const clearText = await this.openpgp.decrypt(data);
+        return clearText.data;
     }
 
     /**
@@ -330,7 +330,7 @@ export default class Encryption {
      * @param {String} [username]
      * @returns {Promise} resolve with the model
      */
-    encryptModel({model, username}) {
+    async encryptModel({model, username}) {
         // Don't encrypt if encryption is disabled
         if (!Number(this.configs.encrypt)) {
             log('do not encrypt');
@@ -339,11 +339,9 @@ export default class Encryption {
 
         const data = _.pick(model.attributes, model.encryptKeys);
 
-        return this.encrypt({username, data: JSON.stringify(data)})
-        .then(encryptedData => {
-            model.set({encryptedData});
-            return model;
-        });
+        const encryptedData = await this.encrypt({username, data: JSON.stringify(data)});
+        model.set({encryptedData});
+        return model;
     }
 
     /**
@@ -354,19 +352,16 @@ export default class Encryption {
      * @param {String} [username]
      * @returns {Promise} resolves with the model
      */
-    decryptModel({model, username}) {
+    async decryptModel({model, username}) {
         const message = model.attributes.encryptedData;
 
         if (!message.length) {
-            return Promise.resolve(model);
+            return model;
         }
 
-        return this.decrypt({message, username})
-        .then(decrypted => {
-            const data = JSON.parse(decrypted);
-            model.set(data);
-            return model;
-        });
+        const decrypted = await this.decrypt({message, username});
+        model.set(JSON.parse(decrypted));
+        return model;
     }
 
     /**

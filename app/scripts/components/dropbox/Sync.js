@@ -82,16 +82,17 @@ export default class Sync {
      *
      * @returns {Promise}
      */
-    init() {
-        return this.adapter.checkAuth()
-        .then(authenticated => {
+    async init() {
+        try {
+            const authenticated = await this.adapter.checkAuth();
             if (authenticated) {
                 return this.start();
             }
-
             log('Authentication failed');
-        })
-        .catch(err => log('error', err));
+        }
+        catch (e) {
+            log('Dropbox auth error', e);
+        }
     }
 
     /**
@@ -172,21 +173,16 @@ export default class Sync {
      * @param {String} name - Notes, Notebooks, Files, Tags...
      * @returns {Promise}
      */
-    syncCollection(name) {
-        return Radio.request(`collections/${name}`, 'find')
-        .then(collection => {
-            return this.adapter.find({
-                type      : collection.storeName,
-                profileId : this.profileId,
-            })
-            .then(files => {
-                return {files, collection: collection.fullCollection || collection};
-            });
-        })
-        .then(data => {
-            return this.syncRemoteChanges(data)
-            .then(() => this.syncLocalChanges(data));
+    async syncCollection(name) {
+        const collection = await Radio.request(`collections/${name}`, 'find');
+        const files      = await this.adapter.find({
+            type      : collection.storeName,
+            profileId : this.profileId,
         });
+        const data = {files, collection: collection.fullCollection || collection};
+
+        await this.syncRemoteChanges(data);
+        await this.syncLocalChanges(data);
     }
 
     /**

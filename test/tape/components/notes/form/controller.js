@@ -72,12 +72,12 @@ test('notes/form/Controller: onDestroy()', t => {
     t.end();
 });
 
-test('notes/form/Controller: fetch()', t => {
+test('notes/form/Controller: fetch()', async t => {
     const con     = new Controller({id: '1'});
     const req     = sand.stub(Radio, 'request');
-    const noteReq = sand.stub(con.notesChannel, 'request');
+    const noteReq = sand.stub(con.notesChannel, 'request').resolves();
 
-    con.fetch();
+    await con.fetch();
     t.equal(noteReq.calledWith('findModel', {
         id              : '1',
         findAttachments : true,
@@ -254,28 +254,26 @@ test('notes/form/Controller: checkChanges()', t => {
     });
 });
 
-test('notes/form/Controller: onSaveObject()', t => {
+test('notes/form/Controller: onSaveObject()', async t => {
     const con         = new Controller({});
     con.view          = {model: new Note({title: 'Old'})};
     const model       = new Note({title: 'Changed title'});
     model.htmlContent = 'HTML';
 
-    sand.stub(con, 'fetch').returns(Promise.resolve([model]));
+    sand.stub(con, 'fetch').resolves(model);
     sand.stub(con.view.model, 'trigger');
 
-    con.onSaveObject()
-    .then(() => {
-        t.equal(con.fetch.called, true, 're-fetches the model');
-        t.equal(con.view.model.htmlContent, model.htmlContent,
-            'updates html content');
-        t.deepEqual(con.view.model.attributes, model.attributes,
-            'updates model attributes');
-        t.equal(con.view.model.trigger.calledWith('synced'), true,
-            'triggers "synced" event');
+    await con.onSaveObject();
+    t.equal(con.fetch.called, true, 're-fetches the model');
+    t.equal(con.view.model.htmlContent, model.htmlContent,
+        'updates html content');
+    t.deepEqual(con.view.model.attributes, model.attributes,
+        'updates model attributes');
+    t.equal(con.view.model.trigger.calledWith('synced'), true,
+        'triggers "synced" event');
 
-        sand.restore();
-        t.end();
-    });
+    sand.restore();
+    t.end();
 });
 
 test('notes/form/Controller: showCancelConfirm()', t => {

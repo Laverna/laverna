@@ -72,11 +72,9 @@ export default class Controller extends Mn.Object {
      * @param {Object} options
      * @returns {Promise}
      */
-    changeTitle(options) {
-        return this.changeDocumentTitle(options)
-        .then(titleOptions => {
-            this.view.triggerMethod('change:title', {titleOptions});
-        });
+    async changeTitle(options) {
+        const titleOptions = await this.changeDocumentTitle(options);
+        this.view.triggerMethod('change:title', {titleOptions});
     }
 
     /**
@@ -85,13 +83,17 @@ export default class Controller extends Mn.Object {
      * @param {Object} options
      * @returns {Promise}
      */
-    init(options) {
+    async init(options) {
         this.options = _.extend({}, options);
 
-        return this.fetch()
-        .then(() => this.show())
-        .then(() => this.listenToEvents())
-        .catch(err => log('error', err));
+        try {
+            await this.fetch();
+            this.show();
+            this.listenToEvents();
+        }
+        catch (e) {
+            log('error', e);
+        }
     }
 
     /**
@@ -99,17 +101,11 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    fetch() {
+    async fetch() {
         const options = {conditions: {trash: 0}};
 
-        return Promise.all([
-            Radio.request('collections/Notebooks', 'find', options),
-            this.changeDocumentTitle(this.options),
-        ])
-        .then(res => {
-            this.notebooks = res[0];
-            this.options.titleOptions = res[1];
-        });
+        this.notebooks = await Radio.request('collections/Notebooks', 'find', options);
+        this.options.titleOptions = await this.changeDocumentTitle(this.options);
     }
 
     /**

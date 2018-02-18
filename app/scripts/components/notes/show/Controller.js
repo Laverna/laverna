@@ -33,15 +33,19 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    init() {
+    async init() {
         log('options', this.options);
 
         Radio.request('Layout', 'showLoader', {region: 'content'});
 
-        return this.fetch()
-        .then(model => this.show(model))
-        .then(() => this.listenToEvents())
-        .catch(err => log('error', err));
+        try {
+            const model = await this.fetch();
+            this.show(model);
+            this.listenToEvents();
+        }
+        catch (e) {
+            log('error', e);
+        }
     }
 
     onDestroy() {
@@ -115,14 +119,19 @@ export default class Controller extends Mn.Object {
      * @fires model#synced
      * @returns {Promise}
      */
-    onSaveObject() {
-        return this.fetch()
-        .then(model => {
-            this.view.model.htmlContent = model.htmlContent;
-            this.view.model.set(model.attributes);
-            this.view.model.trigger('synced');
-        })
-        .catch(err => log('error', err));
+    async onSaveObject() {
+        let model;
+        try {
+            model = await this.fetch();
+        }
+        catch (e) {
+            log('error', e);
+            throw new Error('error', e);
+        }
+
+        this.view.model.htmlContent = model.htmlContent;
+        this.view.model.set(model.attributes);
+        this.view.model.trigger('synced');
     }
 
     /**
@@ -131,23 +140,28 @@ export default class Controller extends Mn.Object {
      * @param {Object} data - Promise
      * @param {String} data.taskId
      */
-    toggleTask(data) {
+    async toggleTask(data) {
         const {model}  = this.view;
         const {taskId} = data;
 
-        return Radio.request('components/markdown', 'toggleTask', {
-            taskId,
-            content: model.get('content'),
-        })
-        .then((data = {}) => {
-            model.htmlContent = data.htmlContent;
-
-            return Radio.request('collections/Notes', 'saveModel', {
-                model,
-                data: _.pick(data, 'content', 'taskCompleted', 'taskAll'),
+        let mData;
+        try {
+            mData = await Radio.request('components/markdown', 'toggleTask', {
+                taskId,
+                content: model.get('content'),
             });
-        })
-        .catch(err => log('toggleTask() error:', err));
+        }
+        catch (e) {
+            log('toggleTask() error:', e);
+            throw new Error(e);
+        }
+
+        model.htmlContent = data.htmlContent;
+
+        return Radio.request('collections/Notes', 'saveModel', {
+            model,
+            data: _.pick(mData, 'content', 'taskCompleted', 'taskAll'),
+        });
     }
 
     /**

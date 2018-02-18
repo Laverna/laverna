@@ -114,36 +114,32 @@ test('settings/show/encryption/View: showPasswordView()', t => {
     t.end();
 });
 
-test('settings/show/encryption/View: useEncryption()', t => {
+test('settings/show/encryption/View: useEncryption()', async t => {
     const view = new View();
     const req  = sand.stub(Radio, 'request').resolves('confirm');
     const is   = sand.stub().returns(true);
     view.ui    = {useEncrypt: {is, prop: sand.stub()}};
 
-    t.equal(view.useEncryption(), true,
+    const res1 = await view.useEncryption();
+    t.equal(res1, true,
         'returns "true" if a user is enabling encryption');
     t.equal(req.notCalled, true, 'does not show the confirmation dialog');
     is.returns(false);
 
-    const res = view.useEncryption();
-    t.equal(typeof res.then, 'function', 'returns a promise');
+    await view.useEncryption();
     t.equal(req.calledWith('components/confirm', 'show'), true,
         'shows the confirmation dialog');
 
-    res.then(() => {
-        t.equal(view.ui.useEncrypt.prop.notCalled, true,
-            'does nothing if a user confirmed they want to disable encryption');
+    t.equal(view.ui.useEncrypt.prop.notCalled, true,
+        'does nothing if a user confirmed they want to disable encryption');
 
-        req.resolves('reject');
-        return view.useEncryption();
-    })
-    .then(() => {
-        t.equal(view.ui.useEncrypt.prop.calledWith('checked', true), true,
-            're-enables encryption if a user changed their mind');
+    req.resolves('reject');
+    await view.useEncryption();
+    t.equal(view.ui.useEncrypt.prop.calledWith('checked', true), true,
+        're-enables encryption if a user changed their mind');
 
-        sand.restore();
-        t.end();
-    });
+    sand.restore();
+    t.end();
 });
 
 test('settings/show/encryption/View: serializeData()', t => {

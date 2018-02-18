@@ -162,7 +162,7 @@ test('notes/show/Controller: onSaveObject()', t => {
     });
 });
 
-test('notes/show/Controller: toggleTask()', t => {
+test('notes/show/Controller: toggleTask()', async t => {
     const con = new Controller();
     con.view  = {model: new Note({id: '1', content: 'Test'})};
 
@@ -172,25 +172,22 @@ test('notes/show/Controller: toggleTask()', t => {
         taskCompleted : 1,
         taskAll       : 2,
     };
-    const request = sand.stub(Radio, 'request').returns(Promise.resolve(result));
+    const request = sand.stub(Radio, 'request').resolves(result);
 
-    const res = con.toggleTask({taskId: 1});
-    t.equal(typeof res.then, 'function', 'returns a promise');
+    const res = await con.toggleTask({taskId: 1});
 
     t.equal(request.calledWithMatch('markdown', 'toggleTask', {
         taskId  : 1,
         content : con.view.model.get('content'),
     }), true, 'makes toggleTask request');
 
-    res.then(() => {
-        t.equal(request.calledWithMatch('collections/Notes', 'saveModel', {
-            model : con.view.model,
-            data  : _.pick(result, 'content', 'taskCompleted', 'taskAll'),
-        }), true, 'msg');
+    t.equal(request.calledWithMatch('collections/Notes', 'saveModel', {
+        model : con.view.model,
+        data  : _.pick(result, 'content', 'taskCompleted', 'taskAll'),
+    }), true, 'saves the model');
 
-        sand.restore();
-        t.end();
-    });
+    sand.restore();
+    t.end();
 });
 
 test('notes/show/Controller: restoreModel()', t => {

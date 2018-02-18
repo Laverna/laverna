@@ -113,9 +113,9 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    onSetup() {
-        return Radio.request('components/setup', 'start', {newIdentity: true})
-        .then(() => this.fetchShow());
+    async onSetup() {
+        await Radio.request('components/setup', 'start', {newIdentity: true});
+        this.fetchShow();
     }
 
     /**

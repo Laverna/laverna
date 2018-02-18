@@ -24,6 +24,10 @@ export default class Profiles extends Module {
         return Collection;
     }
 
+    get encryptChannel() {
+        return Radio.channel('models/Encryption');
+    }
+
     constructor() {
         super();
 
@@ -105,7 +109,7 @@ export default class Profiles extends Module {
      * @param {String} options.newPassphrase
      * @returns {Promise}
      */
-    changePassphrase(options) {
+    async changePassphrase(options) {
         if (options.oldPassphrase === options.newPassphrase) {
             return Promise.reject('New and old passphrase are the same');
         }
@@ -115,8 +119,8 @@ export default class Profiles extends Module {
 
         const {model} = options;
 
-        return Radio.request('models/Encryption', 'changePassphrase', options)
-        .then(privateKey => this.saveModel({model, data: {privateKey}}));
+        const privateKey = await this.encryptChannel.request('changePassphrase', options);
+        return this.saveModel({model, data: {privateKey}});
     }
 
 }

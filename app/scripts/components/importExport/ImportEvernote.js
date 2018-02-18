@@ -72,15 +72,19 @@ export default class ImportEvernote extends Import {
      *
      * @returns {Promise}
      */
-    importData() {
+    async importData() {
         // Trigger an event that import proccess started
         this.channel.trigger('started');
 
-        return this.getXml()
-        .then(this.xml2js)
-        .then(data => this.importElements(data))
-        .then(()   => this.onSuccess())
-        .catch(err => this.onError(err));
+        try {
+            const xml = await this.getXml();
+            const data = await this.xml2js(xml);
+            await this.importElements(data);
+            return this.onSuccess();
+        }
+        catch (e) {
+            return this.onError(e);
+        }
     }
 
     /**
@@ -133,24 +137,22 @@ export default class ImportEvernote extends Import {
      * @param {Array} elements - note elements
      * @returns {Promise}
      */
-    importNote(elements) {
+    async importNote(elements) {
         const data = this.parseData(elements);
         log('note data', data);
 
-        return Radio.request('components/markdown', 'parse', data.note)
-        .then(mData => {
-            const note = _.extend(data.note, mData);
+        const mData = await Radio.request('components/markdown', 'parse', data.note);
+        const note  = _.extend(data.note, mData);
 
-            return Promise.all([
-                Radio.request('collections/Tags', 'addTags', {tags: data.note.tags}),
-                Radio.request('collections/Files', 'addFiles', {files: data.files}),
-                Radio.request('collections/Notes', 'saveModelObject', {
-                    data         : note,
-                    dontValidate : true,
-                    saveTags     : true,
-                }),
-            ]);
-        });
+        return Promise.all([
+            Radio.request('collections/Tags', 'addTags', {tags: data.note.tags}),
+            Radio.request('collections/Files', 'addFiles', {files: data.files}),
+            Radio.request('collections/Notes', 'saveModelObject', {
+                data         : note,
+                dontValidate : true,
+                saveTags     : true,
+            }),
+        ]);
     }
 
     /**

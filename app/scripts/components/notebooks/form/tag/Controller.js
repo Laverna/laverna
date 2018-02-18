@@ -31,8 +31,8 @@ export default class Controller extends Mn.Object {
     init() {
         return this.fetch()
         .then(model => this.show(model))
-        .then(() => this.listenToEvents())
-        .catch(err => log('error', err));
+        .then(()    => this.listenToEvents())
+        .catch(err  => log('error', err));
     }
 
     /**

@@ -113,7 +113,7 @@ export default class Controller extends Mn.Object {
      * @param {String} signalServer
      * @returns {Promise}
      */
-    checkUser({username, signalServer}) {
+    async checkUser({username, signalServer}) {
         // Set the new signal server address
         this.options.signalServer = signalServer;
         Radio.request('models/Signal', 'changeServer', {signal: signalServer});
@@ -125,21 +125,23 @@ export default class Controller extends Mn.Object {
             return Promise.resolve(view.triggerMethod('name:taken', {user: profile}));
         }
 
-        return Radio.request('models/Signal', 'findUser', {username})
-        .catch(err => {
+        let user;
+        try {
+            user = await Radio.request('models/Signal', 'findUser', {username});
+        }
+        catch (err) {
             view.triggerMethod('signalServer:error', {err});
             throw new Error(err);
-        })
-        .then(user => {
-            // Show the registration form if user does not exist on the server
-            if (_.isEmpty(user)) {
-                this.options.username = username;
-                return this.view.showRegister({username});
-            }
+        }
 
-            log('the username is taken!!!', user);
-            view.triggerMethod('name:taken', {user});
-        });
+        // Show the registration form if user does not exist on the server
+        if (_.isEmpty(user)) {
+            this.options.username = username;
+            return this.view.showRegister({username});
+        }
+
+        log('the username is taken!!!', user);
+        view.triggerMethod('name:taken', {user});
     }
 
     /**
@@ -150,27 +152,24 @@ export default class Controller extends Mn.Object {
      * @param {Object} {file}
      * @returns {Promise}
      */
-    readKey({file}) {
-        const reader = new FileReader();
-
-        return new Promise(resolve => {
+    async readKey({file}) {
+        const armorKey = await new Promise(resolve => {
+            const reader  = new FileReader();
             reader.onload = evt => resolve(evt.target.result);
             reader.readAsText(file);
-        })
-        .then(armorKey => {
-            const {keys, err} = openpgp.key.readArmored(armorKey);
+        });
+        const {keys, err} = openpgp.key.readArmored(armorKey);
 
-            // Accept only a private key
-            if (err || keys[0].isPublic()) {
-                return this.view.getChildView('content').triggerMethod('key:error', {
-                    err: 'You need to upload your private key!',
-                });
-            }
-
-            log('key is', keys[0]);
-            this.view.getChildView('content').triggerMethod('ready:key', {
-                key: keys[0],
+        // Accept only a private key
+        if (err || keys[0].isPublic()) {
+            return this.view.getChildView('content').triggerMethod('key:error', {
+                err: 'You need to upload your private key!',
             });
+        }
+
+        log('key is', keys[0]);
+        this.view.getChildView('content').triggerMethod('ready:key', {
+            key: keys[0],
         });
     }
 
@@ -185,20 +184,21 @@ export default class Controller extends Mn.Object {
      * @fires view#save:after
      * @returns {Promise}
      */
-    save({username, keyData, keys, register}) {
+    async save({username, keyData, keys, register}) {
         const view  = this.view.getChildView('content');
         view.triggerMethod('save:before');
 
         log('save keys are', keys);
-        return (keys ? Promise.resolve(keys) : this.generateKeyPair(keyData))
-        .then(keys => this.keys = keys)
-        .then(()   => this.register({username, register}))
-        .then(()   => this.saveConfigs({username}))
-        .then(()   => this.view.triggerMethod('save:after', {username}))
-        .catch(err => {
+        try {
+            this.keys = (keys ? keys : await this.generateKeyPair(keyData));
+            await this.register({username, register});
+            await this.saveConfigs({username});
+            this.view.triggerMethod('save:after', {username});
+        }
+        catch (err) {
             log('save error', err);
             view.triggerMethod('save:error', {err});
-        });
+        }
     }
 
     /**
@@ -242,24 +242,20 @@ export default class Controller extends Mn.Object {
      * @param {String} username
      * @returns {Promise}
      */
-    saveConfigs({username}) {
+    async saveConfigs({username}) {
         const configs = [
             {name: 'encrypt', value: 1},
             {name: 'signalServer', value: this.options.signalServer},
         ];
-
         const profile = _.extend({}, this.keys, {username});
-        return this.profiles.channel.request('createProfile', profile)
-        // Create default configs
-        .then(() => {
-            return this.configsChannel.request('find', {profileId: username});
-        })
-        .then(() => {
-            return this.configsChannel.request('saveConfigs', {
-                configs,
-                noBackup  : true,
-                profileId : username,
-            });
+
+        // Create the profile and its configs
+        await this.profiles.channel.request('createProfile', profile);
+        await this.configsChannel.request('find', {profileId: username});
+        return this.configsChannel.request('saveConfigs', {
+            configs,
+            noBackup  : true,
+            profileId : username,
         });
     }
 
@@ -281,13 +277,11 @@ export default class Controller extends Mn.Object {
      *
      * @returns {Promise}
      */
-    export() {
-        return this.saveSync()
-        .then(() => {
-            const blob = new Blob([this.keys.privateKey], {type: 'text/plain'});
-            this.fileSaver(blob, `laverna-key-${this.options.username}.asc`);
-            this.view.destroy();
-        });
+    async export() {
+        await this.saveSync();
+        const blob = new Blob([this.keys.privateKey], {type: 'text/plain'});
+        this.fileSaver(blob, `laverna-key-${this.options.username}.asc`);
+        this.view.destroy();
     }
 
 }

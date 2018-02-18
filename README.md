@@ -9,8 +9,8 @@
   [![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna/badge.svg?branch=dev)](https://coveralls.io/github/Laverna/laverna)
   [![Code Climate](https://codeclimate.com/github/Laverna/laverna/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna)
   ![Version](https://img.shields.io/badge/Version-0.7.51-blue.svg)
-  
-  <h3>    
+
+  <h3>
     <a href="https://gitter.im/Laverna/laverna">
       Gitter
     </a>
@@ -56,7 +56,7 @@
 
 ## Quick Start (recommended)
 
-* Open [laverna.cc](https://laverna.cc/) and get started in less than 30 seconds. 
+* Open [laverna.cc](https://laverna.cc/) and get started in less than 30 seconds.
 * No extra steps are required!
 
 ## Install Desktop App (beta)
@@ -168,8 +168,6 @@ $ git clone git@github.com:Laverna/server.git
 ```
 <br/>
 
-**2. Install dependencies:**
-
 ```bash
 $ cd server && npm install
 ```
@@ -196,7 +194,7 @@ Localizations [are available here.](https://github.com/Laverna/laverna/blob/dev/
 
 ## Encryption
 
-The current Laverna release (on `master`) uses the [SJCL](http://bitwiseshiftleft.github.io/sjcl/) library to implement the AES algorithm. 
+The current Laverna release (on `master`) uses the [SJCL](http://bitwiseshiftleft.github.io/sjcl/) library to implement the AES algorithm.
 
 **However, in our effort to permanently enhance the application's security**, Laverna is implementing OpenPGP encryption via [OpenPGP.js](https://github.com/openpgpjs/openpgpjs).
 

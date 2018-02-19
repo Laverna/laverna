@@ -14,7 +14,7 @@
   },
   "main": "electron.js",
   "dependencies": {
-    "chokidar": "^1.6.0",
+    "chokidar": "^2.0.0",
     "electron-context-menu": "^0.6.0",
     "electron-window-state": "^3.0.3",
     "finalhandler": "^0.5.0",

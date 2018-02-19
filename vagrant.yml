@@ -1,0 +1,58 @@
+---
+- hosts: all
+  become: true
+  vars:
+    node_version: "6.11.0"
+  roles: [vagrant-base]
+  tasks:
+    - name: check if node is installed
+      command: ls /usr/local/node-{{ node_version }}/bin
+      register: node_result
+      failed_when: false
+      changed_when: false
+
+    - name: set node facts
+      set_fact:
+        node_installed: "{{ node_result.rc == 0 | bool }}"
+        node_shared_dir: /usr/local/node
+        node_install_dir: "/usr/local/node-{{ node_version }}"
+
+    - name: create node installation directory
+      file: path={{ node_install_dir }} state=directory mode=0755 owner=root group=root
+
+    - name: download node
+      unarchive:
+        src: https://nodejs.org/dist/v{{ node_version }}/node-v{{ node_version }}-linux-x64.tar.xz
+        remote_src: true
+        dest: "{{ node_install_dir}}"
+        extra_opts: ["--strip-components", "1"]
+      when: not node_installed
+
+    - name: create node installation symlink
+      file:
+        src: "{{ node_install_dir }}"
+        dest: "{{ node_shared_dir }}"
+        owner: root
+        group: root
+        state: link
+
+    - name: create node executable symlinks
+      file:
+        src: "{{ node_install_dir }}/bin/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        owner: root
+        group: root
+        state: link
+      with_items:
+        - node
+        - npm
+
+    - name: create environment profile for node
+      copy:
+        content: |
+          #!/usr/bin/env bash
+          export PATH="$PATH:{{ node_shared_dir }}/bin"
+        dest: /etc/profile.d/99-node.sh
+        owner: root
+        group: root
+        mode: 0755

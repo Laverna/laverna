@@ -70,7 +70,7 @@ gulp.task('release', $.sequence(
 /**
  * Build for android
  */
-gulp.task('release-mobile', plugins.sequence(
+gulp.task('release-mobile', $.sequence(
     'clean:release',
     ['copyDist', 'copyRelease'],
     'npm:install',

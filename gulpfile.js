@@ -68,6 +68,16 @@ gulp.task('release', $.sequence(
 ));
 
 /**
+ * Build for android
+ */
+gulp.task('release-mobile', $.sequence(
+    'clean:release',
+    ['copyDist', 'copyRelease'],
+    'npm:install',
+	'mobile:build'
+));
+
+/**
  * Gulp server.
  * ``gulp --root dist`` to serve dist folder.
  */

@@ -3,5 +3,12 @@
         <span class="list--item--title -note">{= _.cleanXSS(title, false, true) }</span>
         <span class="favorite list--item--favorite icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
     </h4>
-    <p class="list-group-item-text list--item--text">{{ getContent() }}</p>
+    
+    <p class="list--item--text">
+        <!--{{ getContent() }}-->
+        <% _(getTags()).each(function(t) { %>
+        <span class="label label-default">{{t}}</span>
+        <% }) %>
+    </p>
+
 </a>

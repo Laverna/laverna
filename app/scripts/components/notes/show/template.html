@@ -20,6 +20,7 @@
         </a>
             <% } %>
         <% } %>
+
         <a href="#notes/edit/{{id}}" class="btn -note btn-default note--edit">
             <span class="icon-pencil"></span>
             <span class="hidden-xs">{{_.i18n('Edit')}}</span>
@@ -85,7 +86,7 @@
             <% } %>
         </p>
 
-        <div>
+        <div class="note--content">
             {=content}
         </div>
     </div>

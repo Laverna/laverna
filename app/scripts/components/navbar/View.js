@@ -51,7 +51,6 @@ export default class View extends Mn.View {
 
     events() {
         return {
-//            'click #header--add'            : 'navigateAdd',
 	        'click #header--add--notebook'  : 'navigateAddNotebook',
     	    'click #header--add--tag'	    : 'navigateAddTag',
             'click #header--about'          : 'showAbout',

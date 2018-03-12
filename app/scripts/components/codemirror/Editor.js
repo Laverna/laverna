@@ -93,6 +93,10 @@ export default class Codemirror {
                 tag    : '```\r\n',
                 tagEnd : '\r\n```',
             },
+            checkbox: {
+                tag    : '[ ] ',
+                tagEnd : '\r\n',
+            },
             'unordered-list': {
                 replace : /^(\s*)(\*|\-|\+)\s+/, // eslint-disable-line
                 tag     : '* ',
@@ -114,6 +118,7 @@ export default class Codemirror {
             'headingAction',
             'linkAction',
             'codeAction',
+            'checkboxAction',
             'numberedListAction',
             'listAction',
             'attachmentAction',
@@ -399,6 +404,27 @@ export default class Codemirror {
         );
         this.instance.focus();
     }
+
+    /**
+     * Create a checkbox
+     */
+    checkboxAction() {
+        const state = this.getState();
+        const {start, end} = this.getCursor();
+
+
+        const text = this.instance.getSelection();
+        this.instance.replaceSelection(
+            this.marks.checkbox.tag + text + this.marks.checkbox.tagEnd
+        );
+
+        this.instance.setSelection(
+            {line : start.line + 1, ch : start.ch},
+            {line : end.line + 1,   ch : end.ch}
+        );
+        this.instance.focus();
+    }
+
 
     /**
      * Convert selected text to unordered list.

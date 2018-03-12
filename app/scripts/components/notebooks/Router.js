@@ -50,4 +50,9 @@ Radio.once('App', 'init', () => {
     Radio.reply('components/notebooks', 'notebookForm', opt => {
         return controller.notebookFormReply(opt);
     });
+    
+    // Start replying to "tagForm" request
+    Radio.reply('components/notebooks', 'tagForm', opt => {
+        return controller.tagFormReply(opt);
+    });
 });

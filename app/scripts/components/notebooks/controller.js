@@ -3,6 +3,7 @@
  * @license MPL-2.0
  */
 import deb from 'debug';
+import Radio from 'backbone.radio';
 
 import List from './list/Controller';
 import NotebookForm from './form/notebook/Controller';
@@ -12,6 +13,7 @@ import './remove/Controller';
 const log = deb('lav:components/notebooks/controller');
 
 export default {
+           
 
     /**
      * Show a list of notebooks and tags.
@@ -55,4 +57,14 @@ export default {
         return new TagForm({id}).init();
     },
 
+
+    /**
+     * The method is called once notebookForm request is made.
+     *
+     * @param {Object} options
+     * @returns {Promise} resolved once a new notebook is created
+     */
+    tagFormReply(options) {
+        this.tagForm(options.id);
+    },
 };

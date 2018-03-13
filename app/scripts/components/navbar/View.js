@@ -51,13 +51,14 @@ export default class View extends Mn.View {
 
     events() {
         return {
-            'click #header--add'     : 'navigateAdd',
-            'click #header--about'   : 'showAbout',
-            'click #header--sync'    : 'triggerSync',
-            'click #header--sbtn'    : 'showSearch',
-            'blur @ui.search'        : 'hideSearch',
-            'keyup @ui.search'       : 'onSearchKeyup',
-            'submit #header--search' : 'onSearchSubmit',
+	        'click #header--add--notebook'  : 'navigateAddNotebook',
+    	    'click #header--add--tag'	    : 'navigateAddTag',
+            'click #header--about'          : 'showAbout',
+            'click #header--sync'           : 'triggerSync',
+            'click #header--sbtn'           : 'showSearch',
+            'blur @ui.search'               : 'hideSearch',
+            'keyup @ui.search'              : 'onSearchKeyup',
+            'submit #header--search'        : 'onSearchSubmit',
         };
     }
 
@@ -82,7 +83,26 @@ export default class View extends Mn.View {
      * @fires components/navbar#show:form
      */
     navigateAdd() {
-        this.channel.trigger('show:form');
+        //this.channel.trigger('show:form');
+        Radio.request('components/notes', 'showForm', {});
+    }
+    
+    /**
+     * Show a form to create a notebook.
+     *
+     * @fires components/navbar#show:form
+     */
+    navigateAddNotebook() {
+        Radio.request('components/notebooks', 'notebookForm', {});
+    }
+
+    /**
+     * Show a form to either create a note/notebook.
+     *
+     * @fires components/navbar#show:form
+     */
+    navigateAddTag() {
+        Radio.request('components/notebooks', 'tagForm', {});
     }
 
     /**

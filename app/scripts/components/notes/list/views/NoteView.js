@@ -71,6 +71,11 @@ export default class NoteView extends Mn.View {
             // Return the first 50 characters of the content
             getContent() {
                 return _.unescape(this.content).substring(0, 50);
+
+            },
+
+            getTags() {
+                return this.tags;
             },
 
             // Return the link to a note

@@ -1,0 +1,45 @@
+<% if (newIdentity) { %>
+<div class="col-xs-12">
+    <button id="welcome--auth" class="btn btn-lg btn-block btn-default">
+        {{_.i18n('Back to auth')}}
+    </button>
+    <br/>
+</div>
+<% } %>
+
+<div class="col-xs-12 form-group text-left text--brand">
+    <p>{{_.i18n('You opened Laverna for the first time on this device.')}}</p>
+    <ul>
+        <li>{{_.i18n('Please enter your username.')}}</li>
+        <li>{{_.i18n('Or import your data from the previous device.')}}</li>
+    </ul>
+</div>
+
+<div class="col-xs-12 form-group">
+    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="username" placeholder="{{_.i18n('Username')}}" title="{{_.i18n('Username')}}" />
+</div>
+
+<div class="col-xs-12 form-group">
+    <input class="form-control col-xs-12 input-lg input--brand" type="text" name="signalServer" value="{{signalServer}}" placeholder="{{_.i18n('Signaling server')}}" title="{{_.i18n('Signaling server')}}" />
+</div>
+
+<div class="col-xs-12" style="margin-bottom:10px">
+    <div class="alert alert-warning hidden"></div>
+
+    <input id="import--key" class="hide" type="file">
+    <button data-file="#import--key" type="button" class="btn btn-default btn-block btn--import hidden">
+        <i class="icon-key"></i> {{_.i18n('Upload key pair')}}
+    </button>
+</div>
+
+<div class="col-xs-6">
+    <input id="import--data" class="hide" type="file"/>
+    <button id="welcome--import" type="button" class="btn btn-lg btn-block btn-warning pull-right">
+        {{_.i18n('Import')}}
+    </button>
+</div>
+<div class="col-xs-6">
+    <button id="welcome--next" class="btn btn-lg btn-block btn-success pull-left" disabled="disabled">
+        {{_.i18n('Next')}}
+    </button>
+</div>

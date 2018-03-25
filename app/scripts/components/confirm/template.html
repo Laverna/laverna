@@ -1,0 +1,18 @@
+<div class="modal-dialog modal-mini">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="modal-title">{{ getTitle() }}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{= _.cleanXSS(content) }</p>
+        </div>
+        <div class="modal-footer">
+            <% _.each(buttons, function(btn) { %>
+            <button type="button" class="btn {{btn.class || 'btn-default'}}" data-event="{{btn.event}}">
+                {{ _.i18n(btn.name) }}
+            </button>
+            <% }) %>
+        </div>
+    </div>
+</div>

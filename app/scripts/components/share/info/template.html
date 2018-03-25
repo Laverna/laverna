@@ -1,0 +1,17 @@
+<div class="alert alert-info">
+    Before adding a user to trust, check their key fingerprint.
+    You can ask the user to share their fingerprint by email or phone.
+</div>
+
+<div class="list-group-item">
+    <div class="pull-right">
+        <button class="btn btn-success share--trust">
+            {{_.i18n('Add to trust')}}
+        </button>
+    </div>
+    <div>
+        <i class="icon-user"></i>
+        <h4>{{user.username}}</h4>
+        <p>{{_.i18n('Key fingerprint')}}: <mark>{{_.splitBy4(user.fingerprint)}}</mark></p>
+    </div>
+</div>

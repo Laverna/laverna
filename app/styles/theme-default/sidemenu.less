@@ -31,6 +31,40 @@
     font-size  : 1.3em;
 }
 
+.sidemenu--item.list-child-item {
+    padding-top : 0px;
+    padding-bottom : 0px;
+    min-height  : 0px;
+}
+
+.label-branch {
+    letter-spacing: -0.11em;
+}
+.label-branch-last {
+    .label-branch;
+}
+
+/* Center right pipe symbol (verticle box middle right) */
+.label-branch:before {
+    content: "\251C";
+    /* line up with dashes */
+    font-size: 10pt;
+}
+
+/* Bottom right pipe symbol (verticle box right) */
+.label-branch-last:before {
+    content: "\2514";
+    /* line up with dashes */
+    font-size: 10pt;
+    position: relative;
+    top: 0.04em;
+}
+
+.label-branch-indent {
+    display: inline-block;
+}
+
+
 .sidemenu--close {
     cursor: pointer;
 }

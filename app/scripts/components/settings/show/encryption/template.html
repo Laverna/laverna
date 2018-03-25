@@ -1,0 +1,25 @@
+<div class="form-group">
+    <div class="col-sm-12 checkbox">
+         <label class="control-label">
+             <input id="useEncryption" type="checkbox" name="encrypt" <% if(Number(models.encrypt) === 1) { %> checked<% } %> >
+             {{ _.i18n('Use encryption') }}
+         </label>
+    </div>
+</div>
+
+<% if (privateKey) { %>
+<div class="center-block">
+    <header>
+        <h3>{{_.i18n('Your key')}}</h3>
+    </header>
+
+    <button id="btn--privateKey" type="button" class="btn btn-default btn-block">
+        <i class="icon-lock"></i>
+        {{privateKey.users[0].userId.userid}}
+    </button>
+    <button id="btn--passphrase" type="button" class="btn btn-default btn-block">
+        <i class="icon-pencil"></i>
+        {{_.i18n('Change passphrase')}}
+    </button>
+</div>
+<% } %>

@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = function(gulp, plugins) {
+module.exports = function(gulp) {
     return function() {
-        return gulp.src('./dist')
-        .pipe(plugins.shell([
-            'mkdir -p ./release/laverna',
-            'cp -R ./dist ./release/laverna/dist',
-        ]));
+        return gulp.src([
+            './dist',
+        ], {base: './'})
+        .pipe(gulp.dest('./release/laverna/dist'));
     };
 };
+

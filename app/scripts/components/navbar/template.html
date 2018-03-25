@@ -1,0 +1,88 @@
+<nav class="header navbar navbar-default navbar-static-top -left" id="sidebar--nav">
+<div class="container-fluid header--container -left">
+
+    <ul class="nav navbar-nav navbar-left header--col--left">
+        <li class="header--col--left--drawer">
+            <a href="#" class="btn-link header--title sidemenu--open -text-elipsis">
+                <i class="icon-menu header--icon"></i>
+                <span id="header--title" class="hidden-xs hidden-sm">{{title}}</span>
+            </a>
+        </li>
+
+        <li class="header--col--left--search">
+            <button id="header--sbtn" class="btn navbar-btn header--sbtn" title="{{_.i18n('Search')}}">
+                <i class="icon-search"></i>
+            </button>
+        </li>
+    </ul>
+
+    <form id="header--search" class="header--search" role="search">
+        <input id="header--search--input" class="header--search--input form-control"
+            type="text" placeholder="{{_.i18n('Search')}}" value="{{args.query}}" />
+    </form>
+
+    <div class="navbar-right header--right navbar-btn">
+        <% if (isSyncEnabled()) { %>
+        <button class="btn header--sbtn col-xs-6" id="header--sync">
+            <span id="header--sync--icon" class="icon-arrows"></span>
+        </button>
+        <% } %>
+        <button id="header--add--tag" class="header--add btn btn-secondary">
+            <span class="icon-tag"></span>
+        </button>
+        <button id="header--add--notebook" class="header--add btn btn-secondary">
+            <span class="icon-notebook"></span>
+        </button>
+        <a class="btn btn-success" href="#notes/add">
+            <i class="icon-doc-new"></i>
+        </a>
+    </div>
+
+</div>
+</nav>
+
+<div class="sidemenu">
+    <div class="list-group">
+        <div class="list-group-item sidemenu--item -disabled sidemenu--close">
+            <i class="icon-left-open-big"></i>
+            {{_.i18n('Menu')}}
+            <button type="button" class="close" aria-hidden="true">
+                &times;
+            </button>
+        </div>
+
+        <div class="list-group-item sidemenu--item -disabled">{{_.i18n('General')}}</div>
+
+        <a class="list-group-item sidemenu--item" href="#notes">
+            <i class="icon-note"></i> {{_.i18n('All Notes')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#notes/f/favorite">
+            <i class="icon-favorite"></i> {{_.i18n('Favorites')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#notes/f/trashed">
+            <i class="icon-trashed"></i> {{_.i18n('Trash')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#notebooks">
+            <i class="icon-notebook"></i> {{_.i18n('Notebooks & tags')}}
+        </a>
+        <a class="list-group-item sidemenu--item" href="#notes/f/task">
+            <i class="icon-ok"></i> {{ _.i18n('Open Tasks') }}
+        </a>
+
+        <% if (notebooks !== null && notebooks.length) { %>
+        <div class="list-group-item sidemenu--item -disabled">{{_.i18n('Notebooks')}}</div>
+        <% notebooks.forEach(function(notebook) { %>
+        <a class="list-group-item sidemenu--item" href="#notes/f/notebook/q/{{notebook.id}}">
+            <i class="icon-notebook"></i>  {=_.cleanXSS(notebook.name)}
+        </a>
+        <% }); } %>
+
+        <div class="list-group-item sidemenu--item -disabled">{{_.i18n('Other')}}</div>
+        <a class="list-group-item sidemenu--item" href="#settings">
+            <i class="icon-cog"></i>  {{_.i18n('Settings')}}
+        </a>
+        <a id="header--about" class="list-group-item sidemenu--item" href="#">
+            <i class="icon-help-circled"></i>  {{_.i18n('About')}}
+        </a>
+    </div>
+</div>

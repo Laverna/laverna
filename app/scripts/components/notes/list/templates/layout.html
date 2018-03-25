@@ -1,0 +1,21 @@
+<!-- List of notes here -->
+<div class="list"></div>
+
+<% if (collection.pagination.total > 0) { %>
+<nav class="navbar navbar-static-bottom navbar-bottom list--pager" id="pageNav">
+    <div class="btn-group btn-group-justified" role="button">
+        <div class="btn-group">
+            <button class="list--pager--btn btn btn-default<% if(!collection.hasPreviousPage()) { %> disabled<% } %>"
+                type="button" id="prevPage">
+                {{ _.i18n('Newer') }}
+            </button>
+        </div>
+        <div class="btn-group">
+            <button class="list--pager--btn btn btn-default<% if(!collection.hasNextPage()) { %> disabled<% } %>"
+                type="button" id="nextPage">
+                {{ _.i18n('Older') }}
+            </button>
+        </div>
+    </div>
+</nav>
+<% } %>

@@ -1,0 +1,32 @@
+<header>
+    <h1 class="header--brand"><i class="icon-lock"></i></h1>
+    <h1 class="header--brand">{{title}}</h1>
+</header>
+
+<div class="container-fluid container--white" id="container--encryption--proceed">
+    <div class="row">
+        <div class="col-xs-12 text-left text--brand">
+        <% if (!encrypt) { %>
+            <p>{{_.i18n('Data decryption after disabling encryption')}}</p>
+        <% } else { %>
+            <p>{{_.i18n('Data encryption after enabling encryption')}}</p>
+        <% } %>
+        </div>
+
+        <div class="col-xs-12">
+            <button type="button" class="btn btn-lg btn-block btn-warning pull-left" id="btn--proceed">
+                {{_.i18n('Proceed')}}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid hide" id="container--encryption--progress">
+    <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-success" id="progress"
+            aria-valuenow="2" aria-valuemin="0" aria-valuemax=""
+            role="progressbar" style="width: 0%"></div>
+    </div>
+
+    <h4 class="text-center">{{ _.i18n('Please wait') }}...</h4>
+</div>

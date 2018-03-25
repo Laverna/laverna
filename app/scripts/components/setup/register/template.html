@@ -1,0 +1,59 @@
+<div class="form--register">
+    <div class="col-xs-12 text-left text--brand">
+        <p>{{_.i18n('You are about to register a new Laverna account. To continue,')}}</p>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="alert alert-danger hidden"></div>
+    </div>
+
+    <div class="col-xs-12">
+        <input id="import--data" class="hide" type="file">
+        <button data-file="#import--data" type="button" class="btn btn-default btn-block btn-success btn--import -small">
+            <i class="icon-key"></i> {{ _.i18n('Upload existing OpenPGP key') }}
+        </button>
+        <br />
+    </div>
+
+    <div class="col-xs-12 text-left text--brand">
+        <p>{{_.i18n('Or enter your details bellow')}}:</p>
+    </div>
+
+    <div class="col-xs-12 form-group">
+        <input type="name" name="name" value="{{username}}" placeholder="{{_.i18n('Your name')}}" value="" class="form-control col-xs-12 input-lg input--brand" />
+    </div>
+
+    <div class="col-xs-12 form-group">
+        <input type="password" placeholder="{{_.i18n('Passphrase')}}" class="form-control col-xs-12 input-lg input--brand" name="password"/>
+    </div>
+
+    <div class="col-xs-12 form-group">
+        <input type="password" placeholder="{{_.i18n('Re-enter the passphrase')}}" class="form-control col-xs-12 input-lg input--brand" name="passwordRe"/>
+    </div>
+
+    <div class="col-xs-12 form-group text-left text--brand">
+        <p>{{_.i18n('Choose a strong and hard to guess passphrase')}}.</p>
+        <p><b>{{_.i18n('Please make sure you remember the passphrase you have set')}}.</b></p>
+    </div>
+
+    <div class="col-xs-6">
+        <button id="welcome--previous" class="btn btn-lg btn-block btn-success pull-right">
+            {{_.i18n('Previous')}}
+        </button>
+    </div>
+    <div class="col-xs-6">
+        <button id="welcome--next" class="btn btn-lg btn-block btn-success pull-left" disabled="disabled">
+            {{_.i18n('Next')}}
+        </button>
+    </div>
+</div>
+
+<div class="welcome--wait hidden">
+    <p class="text-center loader" style="font-size:3em">
+        <i class="icon icon-arrows animate-spin"></i>
+    </p>
+    <h3 class="text-center">{{_.i18n('Please wait')}}...</h3>
+    <p class="text-center welcome--text">
+        {{_.i18n('We are generating your encryption key and registering a new account.')}}
+    </p>
+</div>

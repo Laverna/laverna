@@ -1,0 +1,14 @@
+<a href="#{{ link() }}" class="list--item -note list-group-item {{ isActive() }}" id="note-{{ id }}" data-id="{{ id }}">
+    <h4 class="list-group-item-heading clearfix">
+        <span class="list--item--title -note">{= _.cleanXSS(title, false, true) }</span>
+        <span class="favorite list--item--favorite icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
+    </h4>
+    
+    <p class="list--item--text">
+        <!--{{ getContent() }}-->
+        <% _(getTags()).each(function(t) { %>
+        <span class="label label-default">{{t}}</span>
+        <% }) %>
+    </p>
+
+</a>

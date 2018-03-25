@@ -1,0 +1,25 @@
+<nav class="layout--navbar header navbar navbar-static-top -settings -right -tab-{{tab}}">
+<div class="container-fluid">
+    <div class="navbar-left header--left navbar-btn">
+        <button title="{{_.i18n('Show sidebar')}}" id="show--sidebar" class="btn btn-default visible-xs">
+            <span class="icon-left-open"></span>
+        </button>
+    </div>
+
+    <div class="navbar-right header--right navbar-btn">
+        <button type="button" class="btn btn-default settings--cancel">
+            {{ _.i18n('Close') }}
+        </button>
+        <button type="button" class="btn btn-success settings--save">
+            <i class="icon-save"></i>
+            <span class="save-btn-text">{{ _.i18n('Save') }}</span>
+        </button>
+    </div>
+</div>
+</nav>
+
+<div class="layout--body -scroll -settings">
+    <div class="container-fluid -settings">
+        <div class="settings--content form form-horizontal"></div>
+    </div>
+</div>

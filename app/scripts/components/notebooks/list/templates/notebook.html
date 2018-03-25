@@ -1,0 +1,15 @@
+<a class="list--item -notebook list-group-item" href="#notes/f/notebook/q/{{id}}" data-id="{{id}}"
+style="{{getPadding()}}">
+    <i class="icon-notebook"></i>
+    {=_.cleanXSS(name)}
+</a>
+
+<div class="list--buttons btn-group dropdown">
+    <button class="drop-edit btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu{{id}}">
+        <li><a class="edit-link" href="#notebooks/edit/{{id}}">{{ _.i18n('Edit') }}</a></li>
+        <li><a class="remove-link" href="#">{{ _.i18n('Remove') }}</a></li>
+    </ul>
+</div>

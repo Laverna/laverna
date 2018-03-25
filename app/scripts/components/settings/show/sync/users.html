@@ -1,0 +1,54 @@
+<% if (pendingUsers.length) { %>
+<div class="form-group">
+    <h3>{{_.i18n('Pending invites')}}</h3>
+
+    <div class="list-group">
+        <% _.each(pendingUsers, function(pendingUser) { %>
+        <div class="list-group-item">
+            <h4>{{pendingUser.get('username')}}</h4>
+            <p>{{_.i18n('Key fingerprint')}}: <mark>{{_.splitBy4(pendingUser.get('fingerprint'))}}</mark></p>
+            <p class="text-center">
+                <button class="btn btn-warning sync--invite--reject" data-user="{{pendingUser.get('username')}}">
+                    {{_.i18n('Reject')}}
+                </button>
+                <button class="btn btn-success sync--invite--accept" data-user="{{pendingUser.get('username')}}">
+                    {{_.i18n('Accept')}}
+                </button>
+            </p>
+        </div>
+        <% }) %>
+    </div>
+</div>
+<% } %>
+
+<% if (trustedUsers.length) { %>
+<div class="form-group">
+    <h3>{{_.i18n('Users you trust')}}</h3>
+
+    <div class="list-group">
+        <% _.each(trustedUsers, function(trustedUser) { %>
+        <div class="list-group-item">
+            <div class="pull-right dropdown">
+                <button class="btn btn-sm btn-default" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">{{_.i18n('Shared with') + ' ' + trustedUser.get('username')}}</a></li>
+                    <li><a href="#">{{_.i18n('Shared by') + ' ' + trustedUser.get('username')}}</a></li>
+                    <li><a class="sync--trust--remove" href="#" data-user="{{trustedUser.get('username')}}">{{_.i18n('Remove from trust')}}</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>
+                    {{trustedUser.get('username')}}
+                    <% if (trustedUser.get('pendingInvite')) { %>
+                    <small>{{_.i18n('pending approval')}}</small>
+                    <% } %>
+                </h4>
+                <p>{{_.i18n('Key fingerprint')}}: <mark>{{_.splitBy4(trustedUser.get('fingerprint'))}}</mark></p>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</div>
+<% } %>

@@ -1,0 +1,33 @@
+<% if (!_.isEmpty(collection.models)) { %>
+<h4>{{_.i18n('Users you trust')}}:</h4>
+<div class="list-group">
+    <% _.each(collection.getTrusted(), function(user) { %>
+    <div class="list-group-item">
+        <div class="pull-right">
+            <% if (model.isSharedWith(user.get('username'))) { %>
+            <button class="btn btn-success share--toggle" data-user="{{user.get('username')}}">
+                {{_.i18n('Shared')}}
+            </button>
+            <% } else { %>
+            <button class="btn btn-default share--toggle" data-user="{{user.get('username')}}">
+                {{_.i18n('Share')}}
+            </button>
+            <% } %>
+        </div>
+        <div>
+            <h4>
+                {{user.get('username')}}
+                <% if (user.get('pendingInvite')) { %>
+                <small>{{_.i18n('pending invite')}}</small>
+                <% } %>
+            </h4>
+            <p>{{_.i18n('Key fingerprint')}}: <mark>{{_.splitBy4(user.get('fingerprint'))}}</mark></p>
+        </div>
+    </div>
+    <% }) %>
+</div>
+<% } %>
+
+<div class="alert alert-info">
+    {{_.i18n('Please note that when you share a document with someone, you give them read and write access.')}}
+</div>

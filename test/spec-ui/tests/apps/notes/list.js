@@ -93,7 +93,7 @@ module.exports = {
     //     .expect.element('.layout--body.-form').not.to.be.present.before(2000);
     // },
 
-    'changes favourite status of an active note if favourite button is clicked': function(client) {
+    'changes favorite status of an active note if favorite button is clicked': function(client) {
         client
         .click('.list--group .favorite')
         .expect.element('.list--group .icon-favorite').to.be.present.before(2000);
@@ -107,7 +107,7 @@ module.exports = {
         .waitForElementPresent('.list--group .icon-favorite', 2000);
     },
 
-    'navigates to favourite page on "gf" shortcut': function(client) {
+    'navigates to favorite page on "gf" shortcut': function(client) {
         client
         .keys('gf')
         .pause(300)

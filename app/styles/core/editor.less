@@ -213,7 +213,10 @@
 
     -webkit-appearance: none;
        -moz-appearance: none;
-            appearance: none;
+            appearance: none; 
+
+    font-family: inherit;
+    font-size: 14px;
 }
 @media (max-width: 400px) {
     .editor--notebooks {
@@ -245,18 +248,22 @@
 }
 
 #editor--footer{
-	position:absolute;
-	bottom:0;
-	margin-left:auto;
-	padding-left: 15px;
-	overflow:visible;
+    background  : #f5f5f5;
+    bottom      : 0;
+    font-family : inherit;
     font-size   : 14px;
-    font-family : "fontello";
+    margin-left : auto;
+    overflow    : visible;
+    padding     : 0 15px;
+    position    : fixed;
+    z-index     : 2;
+    display     : block;
+    width       : 100%;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-  	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

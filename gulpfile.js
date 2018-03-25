@@ -1,60 +1,64 @@
 'use strict';
-var gulp    = require('gulp'),
-    pkg     = require('./package.json'),
-    plugins = require('gulp-load-plugins')();
 
-plugins.del         = require('del');
-plugins.browserSync = require('browser-sync').create();
+/**
+ * @file Gulp tasks.
+ * @example gulp // Default task. Builds and serves the app.
+ * @example gulp build --distDir='~/laverna-dist' // To build the project and
+ * place it in ~/laverna-dist folder.
+ */
+const gulp = require('gulp'),
+    pkg    = require('./package.json'),
+    $      = require('gulp-load-plugins')();
 
-function getTask(task) {
-    return require('./gulps/' + task)(gulp, plugins, pkg);
+$.del         = require('del');
+$.browserSync = require('browser-sync').create();
+$.distDir     = $.util.env.distDir || './dist';
+
+/**
+ * Create a new Gulp task.
+ *
+ * @param {String} name - name of the task file
+ */
+function createTask(name) {
+    const task = require(`./gulps/${name}`)(gulp, $, pkg);
+
+    if (typeof task === 'function') {
+        gulp.task(name, task);
+    }
 }
 
-// Add Gulp tasks
+// Load and create tasks
 [
-    'jshint' , 'jsonlint'   , 'mocha'       , 'nightwatch',
-    'less'   , 'prism'      , 'require'     , 'electron'  ,
-    'htmlmin', 'cssmin'     , 'htmlManifest', 'mobile'    ,
-    'copy'   , 'copyRelease', 'copyDist'    ,
-    'serve'  , 'clean'      , 'npm'
-]
-.forEach(function(task) {
-    var taskFun = getTask(task);
+    'bundle',
+    'clean',
+    'css',
+    'html',
+    'lint',
+    'serve',
+    'test',
+    'copy',
+].forEach(createTask);
 
-    // It has several tasks
-    if (typeof taskFun === 'function') {
-        gulp.task(task, taskFun);
-    }
-});
-
-gulp.task('release:after', function() {
+gulp.task('release:after', () => {
     return gulp.src('./release')
-    .pipe(plugins.shell([
+    .pipe($.shell([
         'cd ./release && zip -r ../release/webapp.zip ./laverna',
     ]));
 });
 
 /**
- * Unit tests.
- */
-gulp.task('test', ['jsonlint', 'jshint', 'mocha']);
-
-/**
  * Build the app.
  * ``gulp build --dev`` to build without minifying.
  */
-gulp.task('build', plugins.sequence(
-    // 'test',
+gulp.task('build', $.sequence(
     'clean:dist',
-    ['prism', 'less'],
-    ['copy', 'require', 'htmlmin', 'cssmin'],
-    'htmlManifest'
+    ['bundle', 'copy', 'css', 'html']
 ));
 
 /**
  * Prepare the release files.
  */
-gulp.task('release', plugins.sequence(
+gulp.task('release', $.sequence(
     'build',
     'clean:release',
     ['copyDist', 'copyRelease'],
@@ -64,10 +68,17 @@ gulp.task('release', plugins.sequence(
 ));
 
 /**
+ * Build for android
+ */
+gulp.task('release-mobile', $.sequence(
+    'clean:release',
+    ['copyDist', 'copyRelease'],
+    'npm:install',
+	'mobile:build'
+));
+
+/**
  * Gulp server.
  * ``gulp --root dist`` to serve dist folder.
  */
-gulp.task('default', plugins.sequence(
-    ['less', 'prism'],
-    ['serve:start', 'serve:watch']
-));
+gulp.task('default', $.sequence('build', 'serve'));

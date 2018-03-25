@@ -1,0 +1,29 @@
+{
+  "minify": true,
+  "options": [
+    "setClasses"
+  ],
+  "feature-detects": [
+      "blob",
+      "crypto",
+      "crypto/getrandomvalues",
+      "es6/promises",
+      "fullscreen-api",
+      "mathml",
+      "notification",
+      "storage/localstorage",
+      "storage/sessionstorage",
+      "storage/websqldatabase",
+      "websockets",
+      "websockets/binary",
+      "workers/blobworkers",
+      "workers/dataworkers",
+      "workers/sharedworkers",
+      "workers/transferables",
+      "workers/webworkers",
+      "indexeddb",
+      "storage/localstorage",
+      "storage/sessionstorage",
+      "storage/websqldatabase"
+  ]
+}

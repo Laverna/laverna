@@ -36,3 +36,25 @@
         bottom: 40px !important;
     }
 }
+
+.container--white {
+    background-color: #FFF;
+    border-radius: 4px;
+    color: darken(#FFF, 70%);
+    > .row {
+        padding: 30px 10px;
+    }
+    .input--brand {
+        color: darken(#FFF, 60%);
+        &::placeholder {
+            color: darken(#FFF, 40%);
+        }
+        &:hover {
+            border-color: darken(#FFF, 10%);
+        }
+        &:focus,
+        &:active {
+            border-color: darken(#FFF, 50%);
+        }
+    }
+}

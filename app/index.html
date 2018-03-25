@@ -7,7 +7,8 @@
         <meta name="description" content="Note taking web app with markdown support">
         <meta name="format-detection" content="telephone=no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1,
-                maximum-scale=1, minimum-scale=1, width=device-width, height=device-height">
+            maximum-scale=1, minimum-scale=1, width=device-width, height=device-height">
+
         <!-- Add to home screen support (Safari) -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="apple-touch-icon" href="images/icon/icon-76x76.png">
@@ -29,38 +30,18 @@
         <meta name="msapplication-square310x310logo" content="images/icon/icon-310x310.png" />
 
         <link rel="stylesheet" href="styles/core.css">
-        <link rel="stylesheet" href="styles/theme-default.css">
-
-
-        <script src="bower_components/modernizr/modernizr.js"></script>
+        <link rel="stylesheet" href="styles/theme-default.css" id="lav--theme">
     </head>
     <body class="-noscroll">
 
-        <div class="layout" id="wrapper">
-            <div id="sidebar" class="layout--sidebar">
-                <div id="sidebar--navbar" class="layout--navbar"></div>
-                <div id="sidebar--content" class="layout--body -scroll"></div>
-            </div>
-
-            <div id="content" class="layout--content hidden-xs"></div>
-
-            <div id="layout--backdrop" class="layout--backdrop"></div>
-
-            <div id="layout--brand" class="layout--brand -loading">
-				<div id="loading--circle" class="loading--circle -loading">
-					<div></div>
-			 	</div>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div id="modal"></div>
+        <div class="layout" id="wrapper"></div>
 
         <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
         <!-- {{cordova}} -->
-        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+        <script src="scripts/vendor.js"></script>
+        <script src="scripts/main.js"></script>
     </body>
 </html>

@@ -1,7 +1,7 @@
 {
     "Search": "Søg",
     "All notes": "Alle noter",
-    "Favourites": "Foretrukne",
+    "Favorites": "Foretrukne",
     "Favorite": "Favorit",
     "Trash": "Papirkurv",
     "Open tasks": "Åbne opgaver",
@@ -10,9 +10,9 @@
     "About": "Om",
     "Save": "Gem",
     "Save & Exit": "Gem & Luk",
-    "Cancel": "Annuler",
+    "Cancel": "Annuller",
     "Full screen": "Fuld skærm",
-    "Preview": "Smugkig",
+    "Preview": "Forhåndsvisning",
     "Normal": "Normal",
     "Select notebook": "Vælg notesbog",
     "Title": "Titel",
@@ -71,12 +71,12 @@
     "appCreateNote": "Opret ny note",
     "appSearch": "Søg efter note",
     "appKeyboardHelp": "Tastaturhjælp",
-    "Change keybindings": "Ændre indstillinger for genvejstaster",
+    "Change keybindings": "Skift genvejstaster",
     "Donate": "Donér",
     "Github page": "Github side",
     "Report bugs and issues here": "Anmeld fejl og problemer her",
     "Report bugs through email": "Anmeld fejl via email",
-    "Credits": "Anerkendelse",
+    "Credits": "Anerkendelser",
     "List of contributors": "Liste over bidragsydere",
     "List of all used libraries": "Liste over alle benyttede libraries",
     "Are you sure?": "Er du helt sikker?",
@@ -113,7 +113,7 @@
         "errorConfirmAuth": "Prøv igen",
         "backup": {
             "title": "Foretag backup af data",
-            "content": "Vær venlig at downloade din backup-fil, før du forsætter. Denne indeholder dekrypteret tidligere data fra tidligere profiler. Opbevar denne et sikkert sted.",
+            "content": "Vær venlig at downloade din backup-fil, før du fortsætter. Denne indeholder dekrypteret tidligere data fra tidligere profiler. Opbevar denne et sikkert sted.",
             "next": "Fortsæt uden at downloade en backup-fil"
         },
         "state": {
@@ -146,7 +146,7 @@
         "name": "Angiv venligst et navn for notesbogen",
         "confirm remove": "Notesbogen **{{name}}** vil blive **fjernet permanent**!",
         "remove with notes": "Ja, fjern med vedhæftede noter",
-        "remove": "Ja tak, fjern"
+        "remove": "Ja, fjern"
     },
     "tags": {
         "name": "Tagnavn er obligatorisk",

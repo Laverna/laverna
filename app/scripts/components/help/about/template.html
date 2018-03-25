@@ -1,0 +1,44 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="modal-title">
+                Laverna <small>Beta v{{constants.version}}</small>
+            </h2>
+        </div>
+        <div class="modal-body">
+            <h3>{{ _.i18n('About') }}:</h3>
+            <ul class="list-unstyled">
+                <li><a target="_blank" href="https://github.com/Laverna/laverna">{{ _.i18n('Github Page') }}</a></li>
+                <li><a target="_blank" href="https://www.mozilla.org/en-US/MPL/2.0/">MPL-2.0 {{ _.i18n('License') }}</a></li>
+                <li><a target="_blank" href="https://github.com/Laverna/laverna/issues">{{ _.i18n('Report bugs and issues here') }}</a></li>
+                <li><a href="mailto:lavernaproject@gmail.com">{{ _.i18n('Report bugs through email') }}</a></li>
+            </ul>
+            <hr/>
+            <h3>{{ _.i18n('Donate') }}</h3>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <a class="btn btn-success" target="_blank" href="https://www.bountysource.com/teams/laverna">
+                        Bountysource
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-warning" href="bitcoin:1Q68HfLjNvWbLFr3KGK6nfXg7vc3hpDr11">
+                        Bitcoin
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-default" href="litecoin:LVXArmrqVCJW58mEuLWK4hDVoCaQaiPNgy">
+                        Litecoin
+                    </a>
+                </div>
+            </div>
+            <hr/>
+            <h3>{{ _.i18n('Credits') }}:</h3>
+            <ul class="list-unstyled">
+                <li><a target="_blank" href="https://github.com/Laverna/laverna/graphs/contributors">{{ _.i18n('List of contributors') }}</a></li>
+                <li><a target="_blank" href="https://github.com/Laverna/laverna/blob/master/bower.json">{{ _.i18n('List of all used libraries') }}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

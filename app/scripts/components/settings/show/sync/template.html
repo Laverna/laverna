@@ -1,0 +1,10 @@
+<div class="form-group">
+    <h3>{{_.i18n('Synchronization method')}}</h3>
+    <select class="form-control col-xs-12" name="cloudStorage">
+        <option {{_.selectOption(models.cloudStorage, 'p2p')}}value="p2p">Peer to peer</option>
+        <option {{_.selectOption(models.cloudStorage, 'dropbox')}}value="dropbox">Dropbox</option>
+        <option {{_.selectOption(models.cloudStorage, 'remotestorage')}}value="remotestorage">RemoteStorage</option>
+    </select>
+</div>
+
+<div id="sync--content"></div>

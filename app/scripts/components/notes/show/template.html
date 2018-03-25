@@ -1,0 +1,93 @@
+<nav class="layout--navbar header navbar navbar-static-top -note">
+<div class="container-fluid">
+    <div class="navbar-left header--left navbar-btn">
+        <button title="{{_.i18n('Show sidebar')}}" id="show--sidebar" class="btn -note btn-default visible-xs">
+            <span class="icon-left-open"></span>
+        </button>
+    </div>
+
+    <div class="navbar-right header--right navbar-btn dropdown">
+        <% if (cloudStorage === 'p2p') { %>
+            <% if (sharedBy === username) { %>
+        <a class="btn -note btn-default note--share" href="#">
+            <span class="icon-share"></span>
+            {{_.i18n('Share')}}
+        </a>
+            <% } else { %>
+        <a class="btn -note btn-default" href="#" title="{{_.i18n('Shared by')}} {{sharedBy}}">
+            <span class="icon-share"></span>
+            {{sharedBy}}
+        </a>
+            <% } %>
+        <% } %>
+
+        <a href="#notes/edit/{{id}}" class="btn -note btn-default note--edit">
+            <span class="icon-pencil"></span>
+            <span class="hidden-xs">{{_.i18n('Edit')}}</span>
+        </a>
+        <a href="#" class="btn -note btn-default note--remove">
+            <span class="icon-trashed"></span>
+            <span class="hidden-xs"><% if (trash === 0) { %>{{_.i18n('Delete')}}<% } else { %> {{_.i18n('Forever')}}<% } %></span>
+        </a>
+        <% if (trash !== 1) { %>
+        <a href="#settings" class="btn -note btn-default">
+            <span class="icon-cog"></span>
+            <span>{{_.i18n('Settings')}}</span>
+        </a>
+        <% } else { %>
+        <a href="#" class="btn -note btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <b class="caret"></b>
+        </a>
+        <div class="dropdown-menu">
+            <div class="btn-group">
+                <a href="#" class="note--restore btn">
+                    <span class="icon-undo icon--block"></span>
+                    {{_.i18n('Restore')}}
+                </a>
+                <a href="#settings" class="btn">
+                    <span class="icon-cog icon--block"></span>
+                    {{_.i18n('Settings')}}
+                </a>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+</nav>
+
+<div class="layout--body -scroll -note">
+    <div class="content container-fluid -note" data-id="{{id}}">
+        <header>
+            <h1 class="page-header -note">
+                {=_.cleanXSS(title)}
+                <small class="note--date">{{createdDate()}}</small>
+                <button type="button" class="btn btn-link btn--favorite pull-right">
+                    <span class="btn--favorite--icon icon-star-empty <% if (isFavorite === 1) {%>icon-favorite<% } %>"></span>
+                </button>
+            </h1>
+        </header>
+
+        <% if (taskAll !== 0) { %>
+        <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar"
+                aria-valuenow="{{taskCompleted}}" aria-valuemin="0" aria-valuemax="{{taskAll}}" style="width: {{getProgress(taskCompleted, taskAll)}}%">
+                <span class="progress-percent">
+                    {{getProgress()}}%
+                </span>
+            </div>
+        </div>
+        <% } %>
+
+        <p class="note--notebook">
+            <% if (notebook && notebook.id) { %>
+            <a href="#notes/f/notebook/q/{{notebook.id}}">
+                <i class="icon-notebook"></i> {=_.cleanXSS(notebook.name)}
+            </a>
+            <% } %>
+        </p>
+
+        <div class="note--content">
+            {=content}
+        </div>
+    </div>
+</div>

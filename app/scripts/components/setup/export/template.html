@@ -1,0 +1,25 @@
+<div class="form--register">
+    <div class="col-xs-12 text-left text--brand">
+        <p>{{_.i18n('You successfuly claimed username')}} <mark>{{username}}</mark>.</p>
+        <p>{{_.i18n('To keep your notes available on every device, choose one of the synchronization options')}}:</p>
+    </div>
+
+    <div class="col-xs-12 form-group">
+        <select class="form-control col-xs-12 input-lg input--brand" name="sync">
+            <option value="p2p">Peer to peer</option>
+            <option value="dropbox">Dropbox</option>
+            <option value="remotestorage">RemoteStorage</option>
+        </select>
+    </div>
+
+    <div class="col-xs-12 text-left text--brand">
+        <p><b>{{_.i18n('Please download your private key and keep it in a safe place. If you lose your private key, you will lose your data and your username.')}}</b></p>
+    </div>
+
+    <div class="col-xs-12">
+        <button id="welcome--last" class="btn btn-lg btn-block btn-success">
+            <i class="icon-lock"></i>
+            {{_.i18n('Download my key')}}
+        </button>
+    </div>
+</div>

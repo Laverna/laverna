@@ -1,0 +1,33 @@
+<fieldset>
+    <legend>{{_.i18n('Backup your private key')}}</legend>
+    <div class="form-group container-fluid">
+        <button id="export--key" type="button" class="btn btn-default btn-block">
+            <i class="icon-cog"></i> {{ _.i18n('Backup') }}
+        </button>
+    </div>
+</fieldset>
+<br/>
+
+<fieldset>
+    <legend>{{_.i18n('Backup everything')}}</legend>
+    <div class="form-group container-fluid">
+        <input accept=".zip" id="import--data" class="hide" type="file">
+        <button data-file="#import--data" type="button" class="btn btn-default btn-block btn--import">
+            <i class="icon-note"></i> {{ _.i18n('Recover from backup') }}
+        </button>
+        <button id="export--data" type="button" class="btn btn-default btn-block">
+            <i class="icon-note"></i> {{ _.i18n('Backup everything') }}
+        </button>
+    </div>
+</fieldset>
+<br/>
+
+<fieldset>
+    <legend>{{_.i18n('Import from other services')}}</legend>
+    <div class="form-group container-fluid">
+        <input accept=".enex" id="import--evernote" class="hide" type="file">
+        <button data-file="#import--evernote" type="button" class="btn btn-default btn-block btn--import">
+            <i class="icon-note"></i> {{ _.i18n("Import from Evernote's backup") }}
+        </button>
+    </div>
+</fieldset>

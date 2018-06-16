@@ -37,6 +37,7 @@ define([
             // Editor settings
             'editMode'           : 'preview',
             'indentUnit'         : '4',
+            'pageZoom'           : '100',
 
             // Encryption settings
             'encrypt'            : '0',

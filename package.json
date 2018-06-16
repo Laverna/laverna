@@ -43,7 +43,7 @@
     "gulp-manifest": "^0.1.1",
     "gulp-mocha-phantomjs": "^0.11.0",
     "gulp-mocha-selenium": "^1.0.0",
-    "gulp-nightwatch": "^0.3.0",
+    "gulp-nightwatch": "^0.3.3",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-requirejs-optimize": "^1.2.0",

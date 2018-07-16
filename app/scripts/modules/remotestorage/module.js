@@ -11,25 +11,25 @@ define([
     'backbone.radio',
     'marionette',
     'modules',
-    'modules/remotestorage/classes/sync'
-], function(_, Radio, Marionette, Modules, Sync) {
+    'modules/remotestorage/classes/sync',
+], (_, Radio, Marionette, Modules, Sync) => {
     'use strict';
 
-    var RemoteStorage = Modules.module('RemoteStorage', {});
+    const RemoteStorage = Modules.module('RemoteStorage', {});
 
     /**
      * Initializers & finalizers of the module
      */
-    RemoteStorage.on('start', function() {
+    RemoteStorage.on('start', () => {
         console.info('RemoteStorage started');
         new Sync();
     });
 
-    RemoteStorage.on('stop', function() {
+    RemoteStorage.on('stop', () => {
     });
 
     // Add a global module initializer
-    Radio.request('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', () => {
         RemoteStorage.start();
     });
 

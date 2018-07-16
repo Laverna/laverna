@@ -11,29 +11,29 @@ define([
     'backbone.radio',
     'marionette',
     'modules',
-    'modules/fs/classes/sync'
-], function(_, Radio, Marionette, Modules, Sync) {
+    'modules/fs/classes/sync',
+], (_, Radio, Marionette, Modules, Sync) => {
     'use strict';
 
     /**
      * Module which synchronizes all models to a file system.
      * (Works only on Electron app)
      */
-    var FS = Modules.module('FS', {});
+    const FS = Modules.module('FS', {});
 
     /**
      * Initializers & finalizers of the module
      */
-    FS.on('start', function() {
+    FS.on('start', () => {
         console.info('FS started');
         new Sync();
     });
 
-    FS.on('stop', function() {
+    FS.on('stop', () => {
     });
 
     // Add a global module initializer
-    Radio.request('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', () => {
         FS.start();
     });
 

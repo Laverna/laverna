@@ -9,32 +9,32 @@
 define([
     'tv4',
     'backbone.radio',
-    'remotestorage'
-], function(tv4, Radio) {
+    'remotestorage',
+], (tv4, Radio) => {
     'use strict';
 
     // Make TV4 globally available because RemoteStorage needs it.
     window.tv4 = tv4;
-    var RS = new RemoteStorage({
+    const RS = new RemoteStorage({
         logging            : false,
         cordovaRedirectUri : 'https://laverna.cc',
         changeEvents : {
             local    : false,
             window   : false,
             remote   : true,
-            conflict : true
-        }
+            conflict : true,
+        },
     });
 
 
     /**
      * Sometimes hash is not saved automatically after starting Backbone router.
      */
-    var md = Radio.request('global', 'hash:original');
+    let md = Radio.request('global', 'hash:original');
     md = md.match(/access_token=([^&]+)/);
     if (md && !RS.remote.token) {
         RS.remote.configure({
-            token: md[1]
+            token: md[1],
         });
     }
 

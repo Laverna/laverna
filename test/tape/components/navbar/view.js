@@ -41,8 +41,10 @@ test('navbar/View: events()', t => {
     const events = View.prototype.events();
     t.equal(typeof events, 'object', 'returns an object');
 
-    t.equal(events['click #header--add'], 'navigateAdd',
-        'opens a form if the "add" button is clicked');
+    t.equal(events['click #header--add--tag'], 'navigateAddTag',
+        'opens a new tag form if the "add" button is clicked');
+    t.equal(events['click #header--add--notebook'], 'navigateAddNotebook',
+        'opens a new notebook form if the "add" button is clicked');
     t.equal(events['click #header--about'], 'showAbout',
         'shows "about" page');
     t.equal(events['click #header--sync'], 'triggerSync',
@@ -101,7 +103,7 @@ test('navbar/View: onDestroy()', t => {
     t.end();
 });
 
-test('navbar/View: navigateAdd()', t => {
+test('navbar/View: navigateAddNotebook()', t => {
     const view = new View({notebooks: new Notebooks()});
     sand.stub(view.channel, 'trigger');
 

@@ -11,16 +11,16 @@ define([
     'q',
     'marionette',
     'backbone.radio',
-    'modules/fs/classes/adapter'
-], function(_, Q, Marionette, Radio, FS) {
+    'modules/fs/classes/adapter',
+], (_, Q, Marionette, Radio, FS) => {
     'use strict';
 
     /**
      * File system synchronizer.
      */
-    var Controller = Marionette.Object.extend({
+    const Controller = Marionette.Object.extend({
 
-        initialize: function() {
+        initialize() {
 
             FS.path = Radio.request('configs', 'get:config', 'module:fs:folder');
 
@@ -33,16 +33,19 @@ define([
             }
 
             // Create current profile's folder
-            FS.path = FS.path + '/' + (Radio.request('uri', 'profile') || 'notes-db') + '/';
+            FS.path = `${FS.path}/${Radio.request('uri', 'profile') || 'notes-db'}/`;
             FS.checkDirs();
 
             // Check for changes on file system
             this.checkChanges();
 
             // Listen to Laverna events
-            this.listenTo(Radio.channel('notes'), 'sync:model destroy:model restore:model', this.onSave);
-            this.listenTo(Radio.channel('notebooks'), 'sync:model destroy:model restore:model', this.onSave);
-            this.listenTo(Radio.channel('tags'), 'sync:model destroy:model restore:model', this.onSave);
+            this.listenTo(Radio.channel('notes'), 
+                'sync:model destroy:model restore:model', this.onSave);
+            this.listenTo(Radio.channel('notebooks'), 
+                'sync:model destroy:model restore:model', this.onSave);
+            this.listenTo(Radio.channel('tags'), 
+                'sync:model destroy:model restore:model', this.onSave);
 
             // Listen to FS events
             this.listenTo(Radio.channel('fs'), 'change', this.onFsChange);
@@ -51,25 +54,26 @@ define([
         /**
          * Check for changes on start.
          */
-        checkChanges: function() {
-            var promises = [],
-                self     = this;
+        checkChanges() {
+            // what is promises even doing?
+            const promises = [];
+            const self     = this;
 
-            _.each(['notes', 'notebooks', 'tags'], function(module) {
+            _.each(['notes', 'notebooks', 'tags'], module => {
                 return Q.all([
                     Radio.request(module, 'fetch', {encrypt: true}),
-                    FS.getList(module)
+                    FS.getList(module),
                 ])
-                .spread(function(localData, remoteData) {
+                .spread((localData, remoteData) => {
                     return self.syncAll(localData, remoteData, module);
                 });
             });
 
             return _.reduce(promises, Q.when, new Q())
-            .then(function() {
+            .then(() => {
                 self.startWatch();
             })
-            .fail(function(e) {
+            .fail(e => {
                 console.error('Error:', e);
             });
         },
@@ -77,32 +81,32 @@ define([
         /**
          * Start watching for FS changes.
          */
-        startWatch: function() {
+        startWatch() {
             FS.startWatch();
         },
 
         /**
          * Synchronize FS and IndexedDB.
          */
-        syncAll: function(localData, remoteData, module) {
-            var promises = [];
+        syncAll(localData, remoteData, module) {
+            const promises = [];
 
-            localData = (localData.fullCollection || localData).toJSON();
+            const localColData = (localData.fullCollection || localData).toJSON();
 
             // First, check if there are any changes in IndexedDB
             promises.push.apply(
                 promises,
-                this.checkLocalChanges(localData, remoteData, module)
+                this.checkLocalChanges(localColData, remoteData, module)
             );
 
             // Then, check if there are any changes on file system
             promises.push.apply(
                 promises,
-                this.checkRemoteChanges(localData, remoteData, module)
+                this.checkRemoteChanges(localColData, remoteData, module)
             );
 
             return _.reduce(promises, Q.when, new Q())
-            .fail(function(e) {
+            .fail(e => {
                 console.error('Error:', e);
             });
         },
@@ -110,16 +114,16 @@ define([
         /**
          * Synchronize models from IndexedDB to file system.
          */
-        checkLocalChanges: function(localData, remoteData, module) {
-            var promises = [];
+        checkLocalChanges(localData, remoteData, module) {
+            const promises = [];
 
-            _.each(localData, function(lModel) {
-                var model = _.findWhere(remoteData, {id: lModel.id});
+            _.each(localData, lModel => {
+                const model = _.findWhere(remoteData, {id: lModel.id});
                 if (model && model.updated >= lModel.updated) {
                     return;
                 }
 
-                promises.push(function() {
+                promises.push(() => {
                     return FS.writeFile(module, lModel);
                 });
             });
@@ -130,9 +134,10 @@ define([
         /**
          * Synchronize models from file system to IndexedDB.
          */
-        checkRemoteChanges: function(localData, remoteData, module) {
-            var newData = _.filter(remoteData, function(rModel) {
-                var model = _.findWhere(localData, {id: rModel.id});
+        checkRemoteChanges(localData, remoteData, module) {
+            const newData = _.filter(remoteData, mod => {
+                const rModel = mod;
+                const model = _.findWhere(localData, {id: rModel.id});
                 rModel.content = rModel.content || '';
 
                 if (model && model.updated >= rModel.updated &&
@@ -149,9 +154,9 @@ define([
         /**
          * Laverna triggered `change` event.
          */
-        onSave: function(model) {
+        onSave(model) {
             FS.writeFile(model.storeName, model.attributes)
-            .fail(function(e) {
+            .fail(e => {
                 console.error('onSave error:', e);
             });
         },
@@ -159,12 +164,12 @@ define([
         /**
          * File system triggered `change` event.
          */
-        onFsChange: function(data) {
+        onFsChange(data) {
 
             return Radio.request(data.storeName, 'get:model', {
-                id: data.data.id
+                id: data.data.id,
             })
-            .then(function(model) {
+            .then(model => {
                 data.data = _.extend({}, model.attributes, data.data);
 
                 // Don't parse content
@@ -174,7 +179,7 @@ define([
 
                 // Parse tasks and tags
                 return Radio.request('markdown', 'parse', data.data.content)
-                .then(function(env) {
+                .then(env => {
                     data.data = _.extend(
                         data.data,
                         _.pick(env, 'tags', 'tasks', 'taskCompleted', 'taskAll', 'files')
@@ -183,7 +188,7 @@ define([
                     return [data, model];
                 });
             })
-            .spread(function(data, model) {
+            .spread((data, model) => {
 
                 // Nothing's changed
                 if (_.isEqual(data.data, model.attributes)) {
@@ -192,7 +197,7 @@ define([
 
                 return Radio.request(data.storeName, 'save:raw', data.data);
             })
-            .fail(function(e) {
+            .fail(e => {
                 console.error('onFsChange error:', e);
             });
         },

@@ -9,23 +9,23 @@
 define([
     'underscore',
     'q',
-    'backbone.radio'
-], function(_, Q, Radio) {
+    'backbone.radio',
+], (_, Q, Radio) => {
     'use strict';
 
     // A hack to trick Nodejs modules not to register as RequireJS modules
-    var def    = _.clone(define.amd);
+    let def    = _.clone(define.amd);
     define.amd = false;
 
-    var glob     = requireNode(window.nodeDir + 'glob'),
-        fs       = requireNode(window.nodeDir + 'graceful-fs'),
-        chokidar = requireNode(window.nodeDir + 'chokidar'),
-        Adapter;
+    const glob     = requireNode(`${window.nodeDir}glob`);
+    const fs       = requireNode(`${window.nodeDir}graceful-fs`);
+    const chokidar = requireNode(`${window.nodeDir}chokidar`);
+
 
     define.amd = _.clone(def);
     def        = undefined;
 
-    Adapter = {
+    const Adapter = {
 
         /**
          * Since module isn't ready yet, sync to /tmp folder (for now)
@@ -36,7 +36,7 @@ define([
         /**
          * Check if directories exist. If they don't, create them.
          */
-        checkDirs: function() {
+        checkDirs() {
             if (!this.isDirSync(this.path)) {
                 fs.mkdirSync(this.path);
             }
@@ -51,10 +51,11 @@ define([
         /**
          * Check if a dir exists.
          */
-        isDirSync: function(path) {
+        isDirSync(path) {
             try {
                 return fs.statSync(path).isDirectory();
-            } catch (e) {
+            }
+            catch (e) {
                 if (e.code === 'ENOENT') {
                     return false;
                 }
@@ -67,10 +68,10 @@ define([
         /**
          * Overwrite a file with data.
          */
-        _write: function(name, data) {
-            var defer = Q.defer();
+        _write(name, data) {
+            const defer = Q.defer();
 
-            fs.writeFile(this.path + name, data, function(err) {
+            fs.writeFile(this.path + name, data, err => {
                 if (err) {
                     return defer.reject(err);
                 }
@@ -86,10 +87,10 @@ define([
          *
          * @type string name
          */
-        _read: function(name) {
-            var defer = Q.defer();
+        _read(name) {
+            const defer = Q.defer();
 
-            fs.readFile(name, 'utf8', function(err, data) {
+            fs.readFile(name, 'utf8', (err, data) => {
                 if (err) {
                     return defer.reject(err);
                 }
@@ -103,17 +104,17 @@ define([
         /**
          * Save model data to the FS.
          */
-        writeFile: function(module, model) {
-            var name     = module + '/' + model.id,
-                data     = JSON.stringify(_.omit(model, 'content')),
-                promises = [
-                    this._write(name + '.json', data)
-                ];
+        writeFile(module, model) {
+            const name     = `${module}/${model.id}`;
+            const data     = JSON.stringify(_.omit(model, 'content'));
+            const promises = [
+                this._write(`${name}.json`, data),
+            ];
 
             // Save content into a separate Markdown file
             if (model.content) {
                 promises.push(
-                    this._write(name + '.md', model.content)
+                    this._write(`${name}.md`, model.content)
                 );
             }
 
@@ -124,29 +125,29 @@ define([
         /**
          * Watch for changes.
          */
-        startWatch: function() {
-            var watcher = chokidar.watch(Adapter.path, {
-                persistent: true
+        startWatch() {
+            const watcher = chokidar.watch(Adapter.path, {
+                persistent: true,
             });
 
-            watcher.on('change', function(file) {
+            watcher.on('change', file => {
                 Adapter._read(file)
-                .then(function(data) {
+                .then(data => {
 
-                    var obj = Adapter.getFileInfo(file);
-
+                    const obj = Adapter.getFileInfo(file);
+                    let mddata;
                     // The file has Markdown extension
                     if (obj.ext === 'md') {
-                        data = {content: data, id: obj.id};
+                        mddata = {content: data, id: obj.id};
                     }
                     else if (obj.ext === 'json') {
-                        data = JSON.parse(data);
+                        mddata = JSON.parse(data);
                     }
 
                     // Trigger an event
                     Radio.trigger('fs', 'change', {
                         storeName : obj.storeName,
-                        data      : data
+                        mddata,
                     });
                 });
             });
@@ -155,14 +156,14 @@ define([
         /**
          * Get the content of all files.
          */
-        getList: function(type) {
-            var defer = Q.defer(),
-                dir   = Adapter.path + (type ? type + '/' : '') + '*.*';
+        getList(type) {
+            const defer = Q.defer();
+            const dir   = `${Adapter.path + (type ? `${type}/` : '')}*.*`;
 
             // First, read get the list of all files in a folder
-            glob(dir, {}, function(err, files) {
+            glob(dir, {}, (err, files) => {
                 Adapter.getFiles(files)
-                .then(function(data) {
+                .then(data => {
                     defer.resolve(type ? data[type] : data);
                 });
             });
@@ -175,25 +176,25 @@ define([
          *
          * @type array files
          */
-        getFiles: function(files) {
-            var promises = [];
+        getFiles(files) {
+            const promises = [];
 
-            _.each(files, function(file) {
-
+            _.each(files, file => {
+                let filepath;
                 // Add the path to a place where the file is located
                 if (file.search(Adapter.path) === -1) {
-                    file = Adapter.path + file;
+                    filepath = Adapter.path + file;
                 }
 
                 // Read the file
-                promises.push(Adapter._read(file));
+                promises.push(Adapter._read(filepath));
             });
 
             return Q.all(promises)
-            .then(function(data) {
+            .then(data => {
                 return _.object(files, data);
             })
-            .then(function(data) {
+            .then(data => {
                 return Adapter.filesToObject(data);
             });
         },
@@ -201,41 +202,41 @@ define([
         /**
          * Get extension, type, and ID from file name.
          */
-        getFileInfo: function(fileName) {
-            var key  = fileName.split('/');
+        getFileInfo(fileName) {
+            const key  = fileName.split('/');
 
             // Get a model ID
-            fileName  = _.last(key).split('.');
+            const modelId  = _.last(key).split('.');
 
             return {
-                ext      : fileName[1],
+                ext      : modelId[1],
 
                 // Get store name (notes|notebooks|tags)
                 storeName: key[key.length - 2],
-                id       : fileName[0]
+                id       : modelId[0],
             };
         },
 
         /**
          * Convert data to model structure.
          */
-        filesToObject: function(data) {
-            var obj = {};
+        filesToObject(data) {
+            const obj = {};
 
-            _.each(data, function(value, key) {
-                key = Adapter.getFileInfo(key);
+            _.each(data, (value, key) => {
+                const objKey = Adapter.getFileInfo(key);
 
                 // Separate models by their store names
-                obj[key.storeName]     = obj[key.storeName] || {};
-                obj[key.storeName][key.id] = obj[key.storeName][key.id] || {};
+                obj[objKey.storeName]     = obj[objKey.storeName] || {};
+                obj[objKey.storeName][objKey.id] = obj[objKey.storeName][objKey.id] || {};
 
                 // The file has Markdown extension
-                if (key.ext === 'md') {
-                    obj[key.storeName][key.id].content = value;
+                if (objKey.ext === 'md') {
+                    obj[objKey.storeName][objKey.id].content = value;
                 }
-                else if (key.ext === 'json') {
-                    obj[key.storeName][key.id] = _.extend(
-                        obj[key.storeName][key.id], JSON.parse(value)
+                else if (objKey.ext === 'json') {
+                    obj[objKey.storeName][objKey.id] = _.extend(
+                        obj[objKey.storeName][objKey.id], JSON.parse(value)
                     );
                 }
             });

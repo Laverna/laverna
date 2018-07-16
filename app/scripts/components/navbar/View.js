@@ -1,4 +1,5 @@
 /**
+ * 
  * @module components/navbar/View
  */
 import Mn from 'backbone.marionette';

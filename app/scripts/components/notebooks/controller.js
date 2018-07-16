@@ -3,7 +3,7 @@
  * @license MPL-2.0
  */
 import deb from 'debug';
-import Radio from 'backbone.radio';
+// import Radio from 'backbone.radio';
 
 import List from './list/Controller';
 import NotebookForm from './form/notebook/Controller';

@@ -9,20 +9,19 @@
 define([
     'underscore',
     'q',
-    'mathjax'
-], function(_, Q, MathJax) {
+    'mathjax',
+], (_, Q, MathJax) => {
     'use strict';
 
-    var MathHelper = {
+    const MathHelper = {
 
         /**
          * Render MathJax.
          */
-        render: function(view) {
-            var $divs;
+        render(view) {
 
             this.view = view || this.view;
-            $divs = this.view.$el.find('.math');
+            const $divs = this.view.$el.find('.math');
 
             // Don't bother with processing MathJax
             if (!$divs.length) {
@@ -30,10 +29,10 @@ define([
             }
 
             return this.preProcess($divs)
-            .then(function() {
+            .then(() => {
                 MathJax.Hub.Queue(['Typeset', MathJax.Hub, $divs.toArray()]);
             })
-            .fail(function(e) {
+            .fail(e => {
                 console.error('MathJax Error:', e);
             });
         },
@@ -41,8 +40,8 @@ define([
         /**
          * Process MathJax expressions.
          */
-        preProcess: function($divs) {
-            var groups   = [],
+        preProcess($divs) {
+            let groups   = [],
                 promises = [],
                 defer,
                 ng;
@@ -51,16 +50,16 @@ define([
              * Divide divs into groups of 5 elements in order to
              * preprocess MathJax later.
              */
-            $divs.each(function(i, val) {
+            $divs.each((i, val) => {
                 ng = Math.trunc(i / 5);
                 groups[ng] = groups[ng] || [];
                 groups[ng].push(val);
             });
 
-            _.each(groups, function(group) {
-                promises.push(function() {
+            _.each(groups, group => {
+                promises.push(() => {
                     defer = Q.defer();
-                    MathJax.Hub.PreProcess(group, function() {
+                    MathJax.Hub.PreProcess(group, () => {
                         defer.resolve();
                     });
 
@@ -69,7 +68,7 @@ define([
             });
 
             return _.reduce(promises, Q.when, new Q())
-            .then(function() {
+            .then(() => {
                 promises = null;
                 defer    = null;
                 groups   = null;

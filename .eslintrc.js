@@ -37,7 +37,7 @@ module.exports = {
 
         // Warn about console.* and debugger
         'no-alert'    : 1,
-        'no-console'  : 1,
+        'no-console'  : 0,
         'no-debugger' : 1,
 
         // References
@@ -59,12 +59,13 @@ module.exports = {
         // Strings
         'template-curly-spacing' : [2, 'never'],
         'no-useless-escape'      : 2,
+        'no-control-regex'       : 0,
 
         // Functions
         'wrap-iife'             : 2,
         'no-loop-func'          : 2,
         'prefer-rest-params'    : 2,
-        'no-param-reassign'     : [2, {'props': true}],
+        'no-param-reassign'     : [1, {'props': true}],
         'prefer-arrow-callback' : [2, {'allowNamedFunctions': true}],
         'arrow-parens'          : [2, 'as-needed'],
         // 'arrow-body-style'      : [2, 'as-needed'],
@@ -88,8 +89,8 @@ module.exports = {
 
         // Complexity
         'max-statements': [2, 20],
-        'max-params'    : [2, 3],
-        'complexity'    : [2, 4],
+        'max-params'    : [1, 3],
+        'complexity'    : [2, 5],
         'max-depth'     : [2, 4],
         'max-nested-callbacks': [2, 3],
     },

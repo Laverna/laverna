@@ -409,7 +409,7 @@ export default class Codemirror {
      * Create a checkbox
      */
     checkboxAction() {
-        const state = this.getState();
+        // const state = this.getState();
         const {start, end} = this.getCursor();
 
 

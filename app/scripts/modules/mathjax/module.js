@@ -11,14 +11,14 @@ define([
     'modules',
     'backbone.radio',
     'mathjax',
-    'modules/mathjax/libs/mathjax'
-], function(_, Modules, Radio, MathJax, math) {
+    'modules/mathjax/libs/mathjax',
+], (_, Modules, Radio, MathJax, math) => {
     'use strict';
 
     /**
      * MathJax module. Renders MathJax.
      */
-    var MathjaxModule = Modules.module('MathjaxModule', {});
+    const MathjaxModule = Modules.module('MathjaxModule', {});
 
     // Configure MathJax
     MathJax.Hub.Config({
@@ -28,14 +28,14 @@ define([
             displayMath    : [['$$', '$$']],
             processClass   : 'math',
             ignoreClass    : 'layout',
-            processEscapes : true
-        }
+            processEscapes : true,
+        },
     });
 
     /**
      * Initializers & finalizers of the module
      */
-    MathjaxModule.on('start', function(view) {
+    MathjaxModule.on('start', view => {
         // Render MathJax on start
         math.render(view);
 
@@ -43,28 +43,28 @@ define([
         Radio.on('editor', 'preview:refresh', _.debounce(math.render, 350), math);
     });
 
-    MathjaxModule.on('stop', function() {
+    MathjaxModule.on('stop', () => {
         console.info('MathJax has stopped');
 
-        math.view = null;
+        // math.view = null;
         Radio.off('editor', 'preview:refresh');
     });
 
     /**
      * Start listening to events.
      */
-    Radio.request('init', 'add', 'module', function() {
+    Radio.request('init', 'add', 'module', () => {
 
         // When a note is shown, start this module
         Radio.on('noteView', {
             'view:render'  : MathjaxModule.start,
-            'view:destroy' : MathjaxModule.stop
+            'view:destroy' : MathjaxModule.stop,
         }, MathjaxModule);
 
         // When an editor view is shown, start this module
         Radio.on('editor', {
             'view:render'  : MathjaxModule.start,
-            'view:destroy' : MathjaxModule.stop
+            'view:destroy' : MathjaxModule.stop,
         }, MathjaxModule);
     });
 

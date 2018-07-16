@@ -10,40 +10,39 @@ define([
     'underscore',
     'marionette',
     'backbone.radio',
-    'text!modules/fs/templates/settings.html'
-], function(_, Marionette, Radio, Tmpl) {
+    'text!modules/fs/templates/settings.html',
+], (_, Marionette, Radio, Tmpl) => {
     'use strict';
 
     /**
      * Shows FS module's configs.
      */
-    var dialog = requireNode('electron').remote.dialog,
-        View;
-
-    View = Marionette.ItemView.extend({
+    const dialog = requireNode('electron').remote.dialog;
+        
+    const View = Marionette.ItemView.extend({
         template: _.template(Tmpl),
 
         ui: {
-            input: '.input--fs'
+            input: '.input--fs',
         },
 
         events : {
             'click .btn--fs': 'showFolderDialog',
         },
 
-        initialize: function() {
+        initialize() {
         },
 
-        serializeData: function() {
+        serializeData() {
             return {
-                models: this.collection.getConfigs()
+                models: this.collection.getConfigs(),
             };
         },
 
-        showFolderDialog: function(e) {
+        showFolderDialog(e) {
             e.preventDefault();
 
-            var folder = dialog.showOpenDialog({properties: ['openDirectory']});
+            const folder = dialog.showOpenDialog({properties: ['openDirectory']});
 
             if (!folder) {
                 return;
@@ -53,7 +52,7 @@ define([
 
             this.collection.trigger('new:value', {
                 name  : 'module:fs:folder',
-                value : folder[0]
+                value : folder[0],
             });
         },
 

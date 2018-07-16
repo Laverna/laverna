@@ -37,7 +37,7 @@ export default class View extends Mn.View {
         return {
             profiles: this.options.profiles.toJSON(),
         };
-    }
+    } 
 
     /**
      * Focus on password input.

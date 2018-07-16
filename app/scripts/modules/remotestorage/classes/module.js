@@ -8,100 +8,100 @@
 /* global define, RemoteStorage */
 define([
     'underscore',
-    'modules/remotestorage/classes/rs'
-], function(_, RS) {
+    'modules/remotestorage/classes/rs',
+], (_, RS) => {
     'use strict';
 
     /**
      * RemoteStorage module.
      */
-    RemoteStorage.defineModule('laverna', function(prClient) {
+    RemoteStorage.defineModule('laverna', prClient => {
         prClient.declareType('notes', {
-            '$schema':     'http://json-schema.org/draft-03/schema#',
-            'description': 'Notes',
-            'type' : 'object',
-            'properties': {
-                'id': {
-                    'type'     : 'string',
-                    'required' : true
+            $schema:     'http://json-schema.org/draft-03/schema#',
+            description: 'Notes',
+            type : 'object',
+            properties: {
+                id: {
+                    type     : 'string',
+                    required : true,
                 },
-                'title': {
-                    'type': 'string'
+                title: {
+                    type: 'string',
                 },
-                'content': {
-                    'type': 'string'
+                content: {
+                    type: 'string',
                 },
-                'taskAll':  {
-                    'type': 'number'
+                taskAll:  {
+                    type: 'number',
                 },
-                'taskCompleted':  {
-                    'type': 'number'
+                taskCompleted:  {
+                    type: 'number',
                 },
-                'created':  {
-                    'type': 'number'
+                created:  {
+                    type: 'number',
                 },
-                'updated':  {
-                    'type': 'number'
+                updated:  {
+                    type: 'number',
                 },
-                'notebookId':  {
-                    'type': 'string'
+                notebookId:  {
+                    type: 'string',
                 },
-                'tags':  {
-                    'type': 'array'
+                tags:  {
+                    type: 'array',
                 },
-                'isFavorite':  {
-                    'type': 'number'
+                isFavorite:  {
+                    type: 'number',
                 },
-                'trash':  {
-                    'type': 'number'
+                trash:  {
+                    type: 'number',
                 },
                 /*
                 'files': {
                     'type': 'array'
                 }
                 */
-            }
+            },
         });
 
         prClient.declareType('notebooks', {
-            '$schema':     'http://json-schema.org/draft-03/schema#',
-            'description': 'Notebooks',
-            'type' : 'object',
-            'properties': {
-                'id': {
-                    'type'     : 'string',
-                    'format'   : 'id',
-                    'required' : true
+            $schema:     'http://json-schema.org/draft-03/schema#',
+            description: 'Notebooks',
+            type : 'object',
+            properties: {
+                id: {
+                    type     : 'string',
+                    format   : 'id',
+                    required : true,
                 },
-                'parentId': {
-                    'type': 'string'
+                parentId: {
+                    type: 'string',
                 },
-                'name': {
-                    'type': 'string'
+                name: {
+                    type: 'string',
                 },
-                'updated':  {
-                    'type': 'number'
-                }
-            }
+                updated:  {
+                    type: 'number',
+                },
+            },
         });
 
         prClient.declareType('tags', {
-            '$schema':     'http://json-schema.org/draft-03/schema#',
-            'description': 'Tags',
-            'type' : 'object',
-            'properties': {
-                'id': {
-                    'type'     : 'string',
-                    'format'   : 'id',
-                    'required' : true
+            $schema:     'http://json-schema.org/draft-03/schema#',
+            description: 'Tags',
+            type : 'object',
+            properties: {
+                id: {
+                    type     : 'string',
+                    format   : 'id',
+                    required : true,
                 },
-                'name': {
-                    'type': 'string'
+                name: {
+                    type: 'string',
                 },
-                'updated':  {
-                    'type': 'number'
+                updated:  {
+                    type: 'number',
                 },
-            }
+            },
         });
 
         return {
@@ -109,7 +109,7 @@ define([
                 on      : prClient.on,
                 profile : null,
 
-                init: function(profile) {
+                init(profile) {
                     // RS.caching.set('/', 'FLUSH');
                     prClient.cache('');
                     this.profile = profile;
@@ -120,8 +120,8 @@ define([
                  * @type object obj model.attributes
                  * @type array  encryptKeys
                  */
-                save: function(type, obj, encryptKeys) {
-                    obj = _.clone(obj);
+                save(type, targetObj, encryptKeys) {
+                    let obj = _.clone(targetObj);
                     obj.id = obj.id.toString();
 
                     if (typeof obj.notebookId !== 'undefined') {
@@ -136,23 +136,26 @@ define([
                         obj = _.omit(obj, encryptKeys);
                     }
 
-                    return prClient.storeObject(type, this.profile + '/' + type + '/' + obj.id, obj);
+                    return prClient.storeObject(type, 
+                        `${this.profile}/${type}/${obj.id}`, obj);
                 },
 
-                destroy: function(type, obj) {
-                    obj.id = obj.id.toString();
-                    return prClient.remove(this.profile + '/' + type + '/' + obj.id);
+                destroy(type, obj) {
+                    // obj.id = obj.id.toString();
+                    return prClient.remove(
+                        `${this.profile}/${type}/${obj.id.toString()}`);
                 },
 
-                getAll: function(type) {
-                    return prClient.getAll(this.profile + '/' + type + '/');
+                getAll(type) {
+                    return prClient.getAll(`${this.profile}/${type}/`);
                 },
 
-                getById: function(type, obj) {
-                    obj.id = obj.id.toString();
-                    return prClient.getObject(this.profile + '/' + type + '/' + obj.id);
-                }
-            }
+                getById(type, obj) {
+                    // obj.id = obj.id.toString();
+                    return prClient.getObject(
+                        `${this.profile}/${type}/${obj.id.toString()}`);
+                },
+            },
         };
     });
 

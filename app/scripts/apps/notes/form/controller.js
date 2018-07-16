@@ -166,7 +166,11 @@ define([
 
                 // User perhaps wants to cancel editing,
                 // if not, deleteData will be set false again in onConfirmCancel
-                self.deleteData = true;
+                // BUG 917:  Changed self.deleteData to false from true.  Appears to
+                // solve the issue while still allowing the "ok" button to trash the
+                // note as expected.  deleteData does not appear to work when set to
+                // false in onConfirmCancel.
+                self.deleteData = false;
                 Radio.request('Confirm', 'start', $.t('You have unsaved changes'));
             })
             .fail(function(e) {
@@ -207,7 +211,6 @@ define([
             // Rebind keybindings again because TW bootstrap modal overrites ESC.
             this.view.trigger('bind:keys');
             this.view.options.isClosed = false;
-
             if (this.view.options.focus !== 'editor') {
                 return this.view.ui[this.view.options.focus].focus();
             }

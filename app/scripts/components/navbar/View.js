@@ -84,7 +84,7 @@ export default class View extends Mn.View {
      * @fires components/navbar#show:form
      */
     navigateAdd() {
-        //this.channel.trigger('show:form');
+        // this.channel.trigger('show:form');
         Radio.request('components/notes', 'showForm', {});
     }
     

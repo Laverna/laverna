@@ -14,7 +14,7 @@
     "device.js": "git://github.com/matthewhudson/device.js#0.2.7",
     "dropzone": "~4.3.0",
     "enquire": "~2.1.2",
-    "FileSaver": "*",
+    "FileSaver": "1.3.2",
     "fuse": "~2.3.0",
     "hammerjs": "~2.0.8",
     "i18next": "~3.4.1",

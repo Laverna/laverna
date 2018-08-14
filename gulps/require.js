@@ -52,6 +52,7 @@ module.exports = function(gulp, plugins) {
                 'apps/settings/show/views/general',
                 'apps/settings/show/views/importExport',
                 'apps/settings/show/views/keybindings',
+                'apps/settings/show/views/editor',
                 'apps/settings/show/views/profiles',
                 'apps/settings/show/views/showView',
                 'apps/settings/show/views/sync',

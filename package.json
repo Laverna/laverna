@@ -1,10 +1,10 @@
 {
   "name": "laverna",
-  "version": "0.7.51",
+  "version": "0.7.54",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Laverna/laverna"
+    "url": "https://github.com/oleg-fiksel/laverna"
   },
   "scripts": {
     "start": "node ./server.js",
@@ -14,7 +14,7 @@
   },
   "main": "electron.js",
   "dependencies": {
-    "chokidar": "^1.6.0",
+    "chokidar": "^2.0.0",
     "electron-context-menu": "^0.6.0",
     "electron-window-state": "^3.0.3",
     "finalhandler": "^0.5.0",
@@ -43,7 +43,7 @@
     "gulp-manifest": "^0.1.1",
     "gulp-mocha-phantomjs": "^0.11.0",
     "gulp-mocha-selenium": "^1.0.0",
-    "gulp-nightwatch": "^0.3.0",
+    "gulp-nightwatch": "^0.3.3",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-requirejs-optimize": "^1.2.0",

@@ -90,6 +90,11 @@ define([
     // @ToMove somewhere else
     App.channel.on('app:start', function() {
         $('.-loading').removeClass('-loading');
+
+        var pageZoom = parseInt(Radio.request('configs', 'get:config', 'pageZoom'), 10);
+        if(typeof pageZoom === 'number') {
+            $('html').css('zoom', pageZoom + '%');
+        }
     });
 
     Radio.reply('global', 'device', function(method) {

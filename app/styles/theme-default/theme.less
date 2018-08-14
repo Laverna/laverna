@@ -1,0 +1,201 @@
+/**
+ * Dark theme.
+ */
+@theme-primary : #252830;
+@theme-success : #1BC98E;
+@theme-info    : #1997C6;
+@theme-danger  : #E64759;
+@theme-warning : #E4D836;
+@theme-fg      : lighten(#A7A7A7, 12%);
+
+@color--brand: @theme-success;
+@color--info : @theme-info;
+
+// Note view
+@layout--note--bg    : @theme-primary;
+@layout--note--color : @theme-fg;
+
+// Header
+@header--bg            : @theme-primary;
+@header--color         : @theme-fg;
+@header--shadow        : 1px 1px 1px -1px @theme-fg;
+@header--right--shadow : 0px -1px 1px 1px @theme-fg;
+
+// Buttons in note view
+@btn--note--bg         : @theme-primary;
+@btn--note--hover      : @theme-primary;
+
+// Sidemenu
+@sidemenu--bg          : @theme-primary;
+@sidemenu--item        : @theme-primary;
+@sidemenu--item--color : @theme-fg;
+
+// Pagedown bar
+@pagedown--bar--bg    : @theme-primary;
+@pagedown--bar--border: lighten(@theme-primary, 15%);
+@pagedown--bar--color : lighten(@theme-primary, 10%);
+
+// Buttons
+@pagedown--btn--hover--bg    : lighten(@theme-primary, 10%);
+@pagedown--btn--hover--color : @theme-fg;
+
+body {
+    background-color : @theme-primary;
+    color            : @theme-fg;
+}
+.layout--brand {
+    background-color: @theme-primary;
+}
+.container--white {
+    background-color: lighten(@theme-primary, 15%);
+    color: #fff;
+}
+.layout--sidebar {
+    border-right-color: lighten(@theme-primary, 20%);
+}
+.page-header.-note {
+    color: #FFF;
+}
+hr {
+    border-color: lighten(@theme-primary, 10%);
+}
+
+// Buttons
+.btn {
+    color: #FFF;
+    border-radius: 0;
+}
+.btn-default {
+    background-color : lighten(@theme-primary, 8%);
+    color            : lighten(@theme-fg, 5%);
+    border-color     : lighten(@theme-primary, 10%);
+    &:hover {
+        background-color : lighten(@theme-primary, 15%);
+        color            : #FFF;
+    }
+}
+.btn-warning {
+    background-color: @theme-warning;
+    &:hover {
+        background-color: darken(@theme-warning, 14%);
+    }
+}
+.btn-danger {
+    background-color: @theme-danger;
+    &:hover {
+        background-color: darken(@theme-danger, 14%);
+    }
+}
+.btn-info {
+    background-color: @theme-info;
+    &:hover {
+        background-color: darken(@theme-info, 14%);
+    }
+}
+
+// Editor styles
+.editor--fullscreen.-preview .layout--content {
+    background-color: lighten(@theme-primary, 10%);
+}
+.CodeMirror,
+.editor--fullscreen.-preview .editor--preview,
+.editor--input,
+.editor--layout {
+    background-color : @theme-primary;
+    color            : #FFF;
+}
+.cm-s-default .cm-header,
+.cm-link {
+    color: #FFF;
+}
+.cm-comment {
+    background-color: lighten(@theme-primary, 10%);
+}
+
+// Forms
+.form-control {
+    background-color : @theme-primary;
+    border-color     : lighten(@theme-primary, 15%);
+    color            : #FFF;
+    border-radius    : 0;
+    &:focus {
+        border-color: lighten(@theme-primary, 30%);
+    }
+}
+.container--white .input--brand {
+    color: #FFF;
+}
+.form-control[disabled],
+.form-control[readonly],
+.fieldset[disabled] .form-control {
+    background-color : lighten(@theme-primary, 8%);
+}
+legend {
+    color        : #FFF;
+    border-color : lighten(@theme-primary, 45%);
+}
+
+.progress {
+    border-radius: 2px;
+}
+
+// Modal window
+.modal-content {
+    background-color : @theme-primary;
+    color            : #FFF;
+    border-radius    : 0;
+}
+.modal-header,
+.modal-footer,
+.modal--group {
+    border-color: lighten(@theme-primary, 15%);
+}
+.form-group.modal--group {
+    border-bottom: 1px solid lighten(@theme-primary, 15%);
+}
+
+// Notes list
+.list--navbar {
+    border-color: lighten(@theme-primary, 15%);
+}
+.list-group-item,
+a.list-group-item,
+a.list--item,
+.list--item {
+    background-color  : transparent;
+    color             : @theme-fg;
+    border-color      : lighten(@theme-primary, 15%);
+    border-left-width : 0;
+    &:hover {
+        background-color: lighten(@theme-primary, 10%);
+    }
+    .list-group-item-heading {
+        color: #FFF;
+    }
+    .list-group-item-text {
+        color: @theme-fg;
+    }
+}
+
+.table-striped {
+    tbody tr {
+        &:nth-of-type(2n+1) {
+            background-color: lighten(@theme-primary, 2%);
+        }
+        td {
+            border-color: lighten(@theme-primary, 8%);
+        }
+    }
+}
+.table-hover {
+    tbody tr:hover {
+        background-color: lighten(@theme-primary, 20%);
+    }
+}
+
+.dropdown-menu {
+    background-color: lighten(@theme-primary, 8%);
+    > li > a {
+        color: lighten(@theme-fg, 10%);
+    }
+}

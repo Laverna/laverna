@@ -48,12 +48,6 @@ Download the latest [Laverna release][13] for your operating system. After downl
 
 The package can be found [here](https://aur.archlinux.org/packages/laverna/). 
 
-For installation please use :
-
-```bash
-$ pacaur -S laverna
-```
-
 For issue about installation please report [here](https://github.com/funilrys/PKGBUILD/issues/new) or contact [@funilrys](https://github.com/funilrys) on gitter [here](https://gitter.im/funilrys_/PKGBUILD)
 
 

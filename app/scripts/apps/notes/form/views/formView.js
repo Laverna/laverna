@@ -69,7 +69,9 @@ define([
             // Form
             form       : '.editor--form',
             saveBtn    :  '.editor--save',
-            title      : '#editor--input--title'
+            title      : '#editor--input--title',
+            micBtn      :  '.editor--mic',
+            micIcon     : '#editor--micIcon'
         },
 
         events: {
@@ -78,7 +80,9 @@ define([
             // Handle saving
             'submit @ui.form'      : 'save',
             'click @ui.saveBtn'    : 'save',
-            'click .editor--cancel'  : 'cancel'
+            'click .editor--cancel'  : 'cancel',
+            'click @ui.micBtn'    : 'micBtnClick',
+
         },
 
         initialize: function() {
@@ -175,6 +179,39 @@ define([
             this.options.redirect = true;
             this.trigger('save');
 
+            return false;
+        },
+
+        micBtnClick: function() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // if none exists -> undefined
+            if(SpeechRecognition) {
+                
+                const recognition = new SpeechRecognition(); // manages full recognition process
+                recognition.continuous = true;
+
+
+                if(this.ui.micIcon[0].classList.contains("fa-microphone")) { // Start Voice Recognition
+                    
+                    // toggle micTcon
+                    this.ui.micIcon[0].classList.remove("fa-microphone");
+                    this.ui.micIcon[0].classList.add("fa-microphone-slash");
+                    
+                   
+                  }
+                  else { // end voice recognition
+
+                    //toggle micIcon
+                    this.ui.micIcon[0].classList.remove("fa-microphone-slash");
+                    this.ui.micIcon[0].classList.add("fa-microphone");
+                    
+                    
+                  }
+
+            }
+
+            else{
+                console.log("Sorry, Your Browser does not support speech Recognition");
+            }
             return false;
         },
 

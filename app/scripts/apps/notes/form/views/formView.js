@@ -253,7 +253,7 @@ define([
             }
 
             else{
-                alert("Sorry, Your Browser does not support speech Recognition");
+                alert("Sorry, Your Browser does not support Voice Recognition");
             }
             return false;
         },

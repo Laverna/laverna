@@ -5,6 +5,11 @@
     </div>
 
     <ul class="nav navbar-nav navbar-right header--right">
+        <li>
+            <button type= "button" title="click to add notes by voice" class="editor--mic btn header--btn ">
+                <i id = "editor--micIcon" class="fa fa-microphone"></i>
+            </button>
+        </li>
         <li class="dropdown">
             <button type="button" title="Mode" class="btn header--btn btn-default" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <i class="icon-fullscreen"></i> <b class="caret hidden-xs"></b>
@@ -44,7 +49,8 @@
 </nav>
 
 <div class="layout--body -scroll -form">
-    <div class="container-fluid editor--container">
+    <div class="container-fluid editor--container"> 
+
         <form class="editor--form form-horizontal col-xs-12" action="#" method="post">
             <div class="form-group">
                 <input id="editor--input--title" class="form-control -borderless" name="title"

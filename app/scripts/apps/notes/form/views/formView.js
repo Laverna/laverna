@@ -16,8 +16,9 @@ define([
     'behaviors/content',
     'apps/notes/form/behaviors/desktop',
     'apps/notes/form/behaviors/mobile',
+    'modules/codemirror/module',
     'mousetrap.global'
-], function($, _, Marionette, Radio, Mousetrap, Tmpl, Behavior, Desktop, Mobile) {
+], function($, _, Marionette, Radio, Mousetrap, Tmpl, Behavior, Desktop, Mobile,codeMirror) {
     'use strict';
 
     /**
@@ -69,7 +70,9 @@ define([
             // Form
             form       : '.editor--form',
             saveBtn    :  '.editor--save',
-            title      : '#editor--input--title'
+            title      : '#editor--input--title',
+            micBtn      :  '.editor--mic',
+            micIcon     : '#editor--micIcon'
         },
 
         events: {
@@ -78,7 +81,9 @@ define([
             // Handle saving
             'submit @ui.form'      : 'save',
             'click @ui.saveBtn'    : 'save',
-            'click .editor--cancel'  : 'cancel'
+            'click .editor--cancel'  : 'cancel',
+            'click @ui.micBtn'    : 'micBtnClick',
+
         },
 
         initialize: function() {
@@ -156,9 +161,9 @@ define([
                 return;
             }
 
-			// Don't save tags when auto save notes
-			// so that no unfinished tags are saved
-			this.options.saveTags = false;
+            // Don't save tags when auto save notes
+            // so that no unfinished tags are saved
+            this.options.saveTags = false;
 
             this.options.redirect = false;
             console.log('Auto saving the note...');
@@ -170,11 +175,86 @@ define([
                 e.preventDefault();
             }
 
-			this.options.saveTags = true;
+            this.options.saveTags = true;
             this.options.isClosed = true;
             this.options.redirect = true;
             this.trigger('save');
 
+            return false;
+        },
+
+        micBtnClick: function() {
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // if none exists -> undefined
+            
+            if(SpeechRecognition) {
+
+                const recognition = new SpeechRecognition(); // manages full recognition process
+                recognition.continuous = true;
+                SpeechRecognition.interimResults = true; //display interim results
+
+
+                if(this.ui.micIcon[0].classList.contains("fa-microphone")) { // Start Voice Recognition
+
+                    // toggle micTcon
+                    this.ui.micIcon[0].classList.remove("fa-microphone");
+                    this.ui.micIcon[0].classList.add("fa-microphone-slash");
+
+                    //start recognition
+                    recognition.start();
+                    
+
+                }
+                else { // end voice recognition
+
+                    //toggle micIcon
+                    this.ui.micIcon[0].classList.remove("fa-microphone-slash");
+                    this.ui.micIcon[0].classList.add("fa-microphone");
+
+                    //stop recognition
+                    recognition.stop();
+
+                }
+
+
+                recognition.onresult = function (event) {
+
+                    //recognize voice
+                    const current = event.resultIndex;
+                    const transcript = event.results[current][0].transcript;
+                   
+                    //update the editor
+
+                    if (transcript.toLowerCase().trim() === "enter") {
+                        var text = codeMirror.controller.editor.getValue();
+                        codeMirror.controller.editor.setValue(text+"\n");
+                    }
+                    else if (transcript.toLowerCase().trim() === "comma") {
+                        var text = codeMirror.controller.editor.getValue();
+                        codeMirror.controller.editor.setValue(text+",");
+                    }
+                    else if (transcript.toLowerCase().trim() === "period") {
+                        var text = codeMirror.controller.editor.getValue();
+                        codeMirror.controller.editor.setValue(text+".");
+                    }
+                    else if (transcript.toLowerCase().trim() === "exclamation mark") {
+                        var text = codeMirror.controller.editor.getValue();
+                        codeMirror.controller.editor.setValue(text+"!");
+                    }
+                    else {
+                        var text = codeMirror.controller.editor.getValue();
+                        codeMirror.controller.editor.setValue(text+transcript);
+
+                    }
+
+                
+                }
+
+            }
+
+            else{
+                alert("Sorry, Your Browser does not support Voice Recognition");
+            }
             return false;
         },
 
